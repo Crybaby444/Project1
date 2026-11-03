@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { testDatabaseUrl } from './test-db';
+import { testDatabaseUrl } from './test-db.mjs';
 
 /** Brings the test database schema up to date before any test file runs. */
 export default function setup(): void {

@@ -21,3 +21,6 @@ test-results/
 
 # os
 .DS_Store
+
+# next.js generated
+next-env.d.ts

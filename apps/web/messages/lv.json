@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "title": "Yoyo — nomā jebko no cilvēkiem tuvumā",
+    "description": "Nomā PS5 nedēļas nogalei vai urbjmašīnu vienam darbam no cilvēkiem tuvumā. Sarakstieties, parakstiet līgumu un maksājiet ar aizsargātu drošības naudu Yoyo."
+  },
+  "home": {
+    "tagline": "Nomā jebko no cilvēkiem tuvumā.",
+    "lead": "No PS5 nedēļas nogalei līdz urbjmašīnai vienam darbam. Tā vienmēr atgriežas, gluži kā jojo."
+  },
+  "language": {
+    "label": "Valoda",
+    "en": "English",
+    "lv": "Latviešu",
+    "ru": "Русский"
+  },
+  "theme": {
+    "toggle": "Pārslēgt tēmu",
+    "light": "Gaišā",
+    "dark": "Tumšā",
+    "system": "Kā sistēmā"
+  },
+  "notFound": {
+    "title": "Šī lapa aizripoja",
+    "body": "Mēs neatradām meklēto. Iespējams, lapa ir pārvietota vai saite ir bojāta.",
+    "back": "Uz sākumlapu"
+  }
+}

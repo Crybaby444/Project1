@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "title": "Yoyo — rent anything from people nearby",
+    "description": "Rent a PS5 for the weekend or a drill for one job from people nearby. Chat, sign and pay with a protected deposit on Yoyo."
+  },
+  "home": {
+    "tagline": "Rent anything from people nearby.",
+    "lead": "From a PS5 for the weekend to a drill for one job. It always comes back, like a yo-yo."
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "lv": "Latviešu",
+    "ru": "Русский"
+  },
+  "theme": {
+    "toggle": "Switch theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "notFound": {
+    "title": "This page rolled away",
+    "body": "We couldn't find what you were looking for. It may have moved, or the link is broken.",
+    "back": "Back to home"
+  }
+}

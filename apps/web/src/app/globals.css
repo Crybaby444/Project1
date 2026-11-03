@@ -1,0 +1,64 @@
+@import 'tailwindcss';
+@import '../styles/tokens.css';
+
+/* Map DESIGN.md tokens to Tailwind utilities: bg-canvas, text-ink, border-ink, rounded-pill, font-display… */
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-band: var(--band);
+  --color-mist: var(--mist);
+  --color-ink: var(--ink);
+  --color-cta: var(--cta-bg);
+  --color-cta-fg: var(--cta-fg);
+  --color-marquee: var(--marquee-bg);
+  --color-marquee-fg: var(--marquee-fg);
+  --color-sticker-blue: var(--sticker-blue);
+  --color-sticker-mint: var(--sticker-mint);
+  --color-sticker-lavender: var(--sticker-lavender);
+  --color-sticker-ember: var(--sticker-ember);
+  --color-sticker-sun: var(--sticker-sun);
+  --color-sticker-violet: var(--sticker-violet);
+
+  --font-display: var(--font-display-face), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-body-face), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    background-color: var(--canvas);
+    color: var(--ink);
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    transition:
+      background-color var(--dur-base) var(--ease-yoyo),
+      color var(--dur-base) var(--ease-yoyo);
+  }
+
+  /* Visible focus everywhere: 2px outline, 3px offset (DESIGN.md §9). */
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+  }
+}
+
+/* All motion is disabled for people who ask for less of it (DESIGN.md §1). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

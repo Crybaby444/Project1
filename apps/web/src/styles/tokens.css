@@ -1,0 +1,79 @@
+/*
+ * Design tokens from DESIGN.md ("Project adaptations" §2, plus the reference palette).
+ * Components never use raw colours; they use these variables through Tailwind utilities.
+ */
+
+:root {
+  /* Sticker palette — identical in both themes. */
+  --sticker-blue: #4da2ff;
+  --sticker-mint: #55db9c;
+  --sticker-lavender: #e9ccff;
+  --sticker-ember: #fb4903;
+  --sticker-sun: #ffd731;
+  --sticker-violet: #5c4ade;
+
+  /* Motion durations: 150–450 ms (the curve is --ease-yoyo below). */
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-slow: 450ms;
+}
+
+/*
+ * Shapes and the motion curve are Tailwind theme values, so they exist both as CSS variables
+ * (var(--radius-pill), var(--ease-yoyo)) and as utilities (rounded-pill, ease-yoyo).
+ */
+@theme {
+  --radius-pill: 9999px; /* buttons, tags, navigation */
+  --radius-card: 20px;
+  --radius-card-xl: 40px;
+  --radius-media: 14px; /* minimum for photos */
+  --ease-yoyo: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Light theme (default). */
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+  --canvas: #dceeff; /* Sky Wash */
+  --surface: #ffffff; /* Paper White */
+  --band: #cccccc; /* Concrete Gray */
+  --mist: #e9e9e9; /* Soft Mist */
+  --ink: #000000; /* Carbon: text and 1px outlines */
+  --cta-bg: #000000;
+  --cta-fg: #ffffff;
+  --marquee-bg: #000000;
+  --marquee-fg: #ffffff;
+  --sticker-edge: transparent;
+}
+
+/* Dark theme, set explicitly by the theme script or the user's choice. */
+[data-theme='dark'] {
+  color-scheme: dark;
+  --canvas: #0d0e16;
+  --surface: #171823;
+  --band: #1f2030;
+  --mist: #2a2b3a;
+  --ink: #ffffff;
+  --cta-bg: #ffffff;
+  --cta-fg: #000000;
+  --marquee-bg: #ffffff;
+  --marquee-fg: #000000;
+  --sticker-edge: #ffffff; /* white die-cut edge around stickers */
+}
+
+/* Without JavaScript, still follow a dark OS until a theme is set explicitly. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --canvas: #0d0e16;
+    --surface: #171823;
+    --band: #1f2030;
+    --mist: #2a2b3a;
+    --ink: #ffffff;
+    --cta-bg: #ffffff;
+    --cta-fg: #000000;
+    --marquee-bg: #ffffff;
+    --marquee-fg: #000000;
+    --sticker-edge: #ffffff;
+  }
+}

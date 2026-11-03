@@ -1,6 +1,6 @@
 import swc from 'unplugin-swc';
 import { defineConfig } from 'vitest/config';
-import { testDatabaseUrl } from './test/test-db.js';
+import { testDatabaseUrl } from './test/test-db.mjs';
 
 export default defineConfig({
   plugins: [
@@ -9,7 +9,7 @@ export default defineConfig({
   ],
   test: {
     include: ['src/**/*.test.ts', 'test/**/*.test.ts'],
-    globalSetup: ['test/global-setup.ts'],
+    globalSetup: ['test/global-setup.mts'],
     // Tests share one database, so files run one after another.
     fileParallelism: false,
     env: {
