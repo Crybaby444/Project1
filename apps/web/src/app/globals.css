@@ -46,6 +46,13 @@
   }
 }
 
+/* Theme switch: the new theme is revealed by a growing circle (see switch-theme.ts), not a cross-fade. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 /* All motion is disabled for people who ask for less of it (DESIGN.md §1). */
 @media (prefers-reduced-motion: reduce) {
   *,

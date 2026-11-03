@@ -13,12 +13,13 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
-  // e2e runs against the production build (`turbo run e2e` builds first).
+  // e2e runs against the production build (`turbo run e2e` builds first). Never reuse a running
+  // server: a stale one would silently test an old build (a busy port fails loudly instead).
   webServer: [
     {
       command: 'pnpm start',
       url: webUrl,
-      reuseExistingServer: !process.env['CI'],
+      reuseExistingServer: false,
       timeout: 120_000,
     },
   ],
