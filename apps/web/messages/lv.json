@@ -93,5 +93,15 @@
       "yoyo": "Yoyo"
     },
     "headingSample": "Nomā. Lieto. Atdod."
+  },
+  "marquee": {
+    "pause": "Apturēt skrejošo tekstu",
+    "resume": "Atsākt skrejošo tekstu"
+  },
+  "error": {
+    "title": "Kaut kas nogāja greizi",
+    "body": "Mūsu pusē kaut kas salūza. Mēģiniet vēlreiz, un, ja tas atkārtojas, atgriezieties pēc minūtes.",
+    "retry": "Mēģināt vēlreiz",
+    "back": "Uz sākumlapu"
   }
 }

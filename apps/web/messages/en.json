@@ -93,5 +93,15 @@
       "yoyo": "Yoyo"
     },
     "headingSample": "Rent it. Use it. Return it."
+  },
+  "marquee": {
+    "pause": "Pause the scrolling text",
+    "resume": "Resume the scrolling text"
+  },
+  "error": {
+    "title": "Something went sideways",
+    "body": "Something broke on our side. Try again, and if it keeps happening, come back in a minute.",
+    "retry": "Try again",
+    "back": "Back to home"
   }
 }
