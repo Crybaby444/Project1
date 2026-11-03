@@ -1,0 +1,8 @@
+/** Motion tokens mirrored from tokens.css for JS-driven animations. */
+export const EASE_YOYO = 'cubic-bezier(.2,.8,.2,1)';
+
+export const DURATION = { fast: 150, base: 250, slow: 450 } as const;
+
+export function prefersReducedMotion(): boolean {
+  return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}

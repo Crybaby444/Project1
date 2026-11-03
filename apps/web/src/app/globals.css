@@ -73,3 +73,10 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Circular theme reveal (switch-theme.ts drives the clip-path on the new snapshot). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
