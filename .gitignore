@@ -1,3 +1,23 @@
 .superpowers/
 .impeccable/hook.cache.json
 .claude/worktrees/
+
+# dependencies & builds
+node_modules/
+dist/
+.next/
+.turbo/
+coverage/
+*.tsbuildinfo
+
+# env
+.env
+.env.local
+.env.*.local
+
+# test artifacts
+playwright-report/
+test-results/
+
+# os
+.DS_Store
