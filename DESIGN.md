@@ -438,10 +438,11 @@ The reference above is the base design system. The rules below extend it and, wh
    - Cancelled: Soft Mist
    Mint Pop stays decorative and is not a "success" colour. Form errors use an Ember icon plus text.
 5. **Fonts.** Lateral and Aeonik Pro are commercial, so free substitutes are used.
-   - Display: a heavy display face at line-height 0.78–0.85. The final pick is made in the design phase, and the brainstorm mockup used Bowlby One.
-   - UI and body: Satoshi or General Sans (Fontshare, free licence), the closest match to Aeonik, with `system-ui` as the fallback.
+   - Every font must cover Latin Extended (Latvian: ā č ē ģ ī ķ ļ ņ š ū ž) **and Cyrillic** (Russian). Bowlby One, Satoshi and General Sans fail this, so they are out.
+   - Display: a heavy display face with Cyrillic at line-height 0.78–0.85. Candidate: Unbounded (OFL). The final pick is made in the design phase.
+   - UI and body: an Aeonik-like grotesk with Cyrillic. Candidates: Onest or Manrope (OFL), with `system-ui` as the fallback.
    - The weight (500/700) and letter-spacing rules from the reference still apply.
-   - Once licences are bought (budget permitting), swap in the real Lateral and Aeonik Pro. Fonts are wired through a single token file, so the swap is a config change.
+   - Once licences are bought (budget permitting), swap in the real Lateral and Aeonik Pro, after checking they include Cyrillic. Fonts are wired through a single token file, so the swap is a config change.
 6. **Ribbon.** Built as vector (SVG) tubes. Shading comes from layered flat strokes (a darker underside and a lighter highlight) plus a grain texture for the inflatable material. Gradient fills are still not allowed. The SVG ribbons can be swapped for pre-rendered 3D images later.
 7. **App screens** (catalog, item page, booking and deal flow, chat, dashboard, admin) use the same tokens: colours, 1px outlines, pills and radii, with no shadows. They do not use display-size type, ribbons or sticker clusters, for usability. Those are reserved for the landing page, section banners and empty states.
 8. **Borders.** 1px solid Carbon (white in dark mode) on all interactive elements and cards, as in the reference.
@@ -450,7 +451,7 @@ The reference above is the base design system. The rules below extend it and, wh
    - The focus ring is always visible: a 2px outline with a 3px offset, Carbon in light mode and white in dark mode.
    - Body text on app screens is at least 14px.
    - Touch targets are at least 40px.
-10. **Languages.** English is the default and Latvian the second language, with i18n built in from day one. Layouts must tolerate longer Latvian strings.
+10. **Languages.** English is the default, plus Latvian and Russian, with i18n built in from day one. Layouts must tolerate longer Latvian and Russian strings.
 11. **Brand.** The product is called **Yoyo** (planned domain `yoyo.rent`), and the idea is that a rented item always comes back.
    - Wordmark: "YOYO" in the display face.
    - Logo mark: a circular 1px-outlined badge showing a yo-yo / "Y", replacing the reference's "S" badge.
