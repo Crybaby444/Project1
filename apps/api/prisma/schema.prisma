@@ -1,0 +1,13 @@
+// Yoyo database schema. Connection settings live in prisma.config.ts (Prisma 7).
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "cjs"
+  // Emit `.js` import specifiers so the compiled dist/ output resolves under Node.
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
