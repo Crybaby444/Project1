@@ -7,6 +7,7 @@ export default defineConfig({
     globals: true,
     include: ['src/**/*.test.ts', 'test/**/*.test.ts'],
     setupFiles: ['./test/setup.ts'],
+    globalSetup: ['./test/global-setup.ts'],
     fileParallelism: false,
   },
 });

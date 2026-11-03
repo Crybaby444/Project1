@@ -12,7 +12,8 @@
     "test": "prisma generate && vitest run",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
-    "db:seed": "prisma db seed"
+    "db:seed": "prisma db seed",
+    "openapi:emit": "prisma generate && tsx scripts/emit-openapi.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.2.8",
