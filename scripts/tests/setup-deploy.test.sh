@@ -57,7 +57,8 @@ else
 fi
 if grep -q "^API_URL='https://api.example.com'$" "$env_file" 2>/dev/null; then pass "the API URL is saved without a trailing slash"; else fail "the API URL is saved without a trailing slash"; fi
 if grep -q "^WEB_URL='https://yoyo.example.com'$" "$env_file" 2>/dev/null; then pass "the site URL is saved"; else fail "the site URL is saved"; fi
-mode="$(stat -f %Lp "$env_file" 2>/dev/null || stat -c %a "$env_file" 2>/dev/null || echo missing)"
+# GNU stat (Linux) first: on Linux `stat -f` means "file system status" and would not fail.
+mode="$(stat -c %a "$env_file" 2>/dev/null || stat -f %Lp "$env_file" 2>/dev/null || echo missing)"
 if [[ "$mode" == "600" ]]; then pass "the file is private (0600)"; else fail "the file is private (0600), got $mode"; fi
 
 if (( failures )); then
