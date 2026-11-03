@@ -23,6 +23,40 @@
   --font-body: var(--font-body-face), ui-sans-serif, system-ui, sans-serif;
 }
 
+/* Brand motion (DESIGN.md "Project adaptations" §1): stickers react only to the pointer; the marquee loops. */
+@theme {
+  --animate-sticker-wobble: sticker-wobble 450ms var(--ease-yoyo);
+  --animate-sticker-spin: sticker-spin 450ms var(--ease-yoyo);
+  --animate-marquee: marquee 30s linear infinite;
+
+  @keyframes sticker-wobble {
+    25% {
+      transform: rotate(-12deg) scale(1.06);
+    }
+    55% {
+      transform: rotate(9deg) scale(1.08);
+    }
+    80% {
+      transform: rotate(-4deg) scale(1.03);
+    }
+  }
+
+  @keyframes sticker-spin {
+    from {
+      transform: rotate(0deg) scale(1.12);
+    }
+    to {
+      transform: rotate(360deg) scale(1);
+    }
+  }
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
 @layer base {
   html {
     background-color: var(--canvas);
