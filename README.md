@@ -63,4 +63,33 @@ pnpm --filter @yoyo/api-client generate
 pnpm lint        # линтер
 pnpm typecheck   # проверка типов
 pnpm test        # тесты (тесты API работают с базой yoyo_test)
+pnpm e2e         # сквозные тесты в браузере (сами запускают API и сайт)
 ```
+
+Те же проверки, плюс сборка Docker-образа API, запускает GitHub Actions на каждый push.
+
+## Развёртывание
+
+Всё бесплатно: база данных в **Neon**, API в Docker на **Render**, сайт на **Vercel**. Сервисы следят за веткой `main` и сами выкатывают каждое изменение.
+
+Первую настройку делает владелец пошаговым мастером:
+
+```bash
+./scripts/setup-deploy.sh
+```
+
+Мастер открывает нужные страницы, говорит, что нажимать, и сохраняет адреса и строку подключения **только на этом компьютере** в `.env.deploy` (файл в git не попадает).
+
+| Где | Переменная | Значение |
+|-----|-----------|----------|
+| Render (API) | `DATABASE_URL` | строка подключения Neon (прямая, без pooling) |
+| Render (API) | `WEB_ORIGIN` | адрес сайта на Vercel |
+| Render (API) | `NODE_ENV` | `production` (задано в `render.yaml`) |
+| Render (API) | `PORT` | задаёт сам Render |
+| Vercel (сайт) | `NEXT_PUBLIC_API_URL` | адрес API на Render, без `/api/v1` |
+| Vercel (сайт) | `NEXT_PUBLIC_SHOW_STYLEGUIDE` | `false` |
+| Vercel (сайт) | `ENABLE_EXPERIMENTAL_COREPACK` | `1` (Vercel берёт pnpm той же версии, что и проект) |
+
+> Бесплатный сервер Render «засыпает» через 15 минут без запросов и просыпается до минуты. Перед показом откройте адрес API заранее.
+
+Шрифты, домен, почтовый сервис и хостинг меняются через эти настройки и `apps/web/src/styles/fonts.ts`, без переделки кода.

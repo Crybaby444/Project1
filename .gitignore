@@ -24,3 +24,6 @@ test-results/
 
 # next.js generated
 next-env.d.ts
+
+# deploy wizard output (local only, holds the database connection string)
+.env.deploy
