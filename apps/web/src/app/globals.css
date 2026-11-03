@@ -64,6 +64,39 @@
   }
 }
 
+/* Brand motion: stickers rest still, wobble on hover, spin once on click; the marquee loops. */
+@keyframes yoyo-wobble {
+  0%, 100% { transform: rotate(var(--sticker-rotate, 0deg)); }
+  30% { transform: rotate(calc(var(--sticker-rotate, 0deg) - 8deg)) scale(1.04); }
+  65% { transform: rotate(calc(var(--sticker-rotate, 0deg) + 6deg)) scale(1.04); }
+}
+
+@keyframes yoyo-spin {
+  from { transform: rotate(var(--sticker-rotate, 0deg)); }
+  to { transform: rotate(calc(var(--sticker-rotate, 0deg) + 360deg)); }
+}
+
+@keyframes yoyo-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.yoyo-sticker {
+  transform: rotate(var(--sticker-rotate, 0deg));
+}
+
+.yoyo-sticker:hover {
+  animation: yoyo-wobble var(--dur-slow) var(--ease-yoyo);
+}
+
+.yoyo-sticker[data-spinning] {
+  animation: yoyo-spin var(--dur-slow) var(--ease-yoyo);
+}
+
+.yoyo-marquee-track {
+  animation: yoyo-marquee 40s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
