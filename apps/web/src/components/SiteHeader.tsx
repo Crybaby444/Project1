@@ -1,4 +1,5 @@
 import { Link } from '@/i18n/navigation';
+import { ThemeToggle } from './theme/ThemeToggle';
 import { LanguageSwitcher } from './ui/LanguageSwitcher';
 import { LogoMark } from './ui/LogoMark';
 
@@ -10,6 +11,7 @@ export function SiteHeader() {
       </Link>
       <div className="flex flex-wrap items-center gap-2">
         <LanguageSwitcher />
+        <ThemeToggle />
       </div>
     </header>
   );
