@@ -17,6 +17,13 @@ export default defineConfig({
   // server: a stale one would silently test an old build (a busy port fails loudly instead).
   webServer: [
     {
+      // The real API (built dist), so the styleguide can show live health.
+      command: 'pnpm --filter @yoyo/api start:prod',
+      url: 'http://localhost:4000/api/v1/health',
+      reuseExistingServer: false,
+      timeout: 120_000,
+    },
+    {
       command: 'pnpm start',
       url: webUrl,
       reuseExistingServer: false,
