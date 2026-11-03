@@ -8,3 +8,4 @@ allowBuilds:
   esbuild: true
   prisma: true
   '@scarf/scarf': false
+  '@parcel/watcher': false

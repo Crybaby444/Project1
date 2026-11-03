@@ -12,7 +12,10 @@ export function parseThemePreference(value: string | undefined): ThemePreference
     : 'system';
 }
 
-export function resolveTheme(preference: ThemePreference, systemPrefersDark: boolean): ResolvedTheme {
+export function resolveTheme(
+  preference: ThemePreference,
+  systemPrefersDark: boolean,
+): ResolvedTheme {
   if (preference === 'system') return systemPrefersDark ? 'dark' : 'light';
   return preference;
 }

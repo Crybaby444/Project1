@@ -1,0 +1,49 @@
+/* Design tokens from DESIGN.md (reference + "Project adaptations"). */
+
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+
+  --canvas: #dceeff; /* Sky Wash */
+  --surface: #ffffff; /* Paper White */
+  --band: #cccccc; /* Concrete Gray */
+  --mist: #e9e9e9; /* Soft Mist */
+  --ink: #000000; /* Carbon: text and 1px outlines */
+  --cta-bg: #000000;
+  --cta-fg: #ffffff;
+  --marquee-bg: #000000;
+  --marquee-fg: #ffffff;
+  --sticker-edge: transparent;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --canvas: #0d0e16;
+  --surface: #171823;
+  --band: #1f2030;
+  --mist: #2a2b3a;
+  --ink: #ffffff;
+  --cta-bg: #ffffff;
+  --cta-fg: #000000;
+  --marquee-bg: #ffffff;
+  --marquee-fg: #000000;
+  --sticker-edge: #ffffff; /* thin white die-cut edge around stickers */
+}
+
+:root {
+  /* Sticker palette — identical in both themes */
+  --sticker-blue: #4da2ff;
+  --sticker-mint: #55db9c;
+  --sticker-lavender: #e9ccff;
+  --sticker-ember: #fb4903;
+  --sticker-sun: #ffd731;
+  --sticker-violet: #5c4ade;
+}
+
+/*
+ * Fonts, motion and radii are declared in the Tailwind @theme block in
+ * src/app/globals.css, which emits them as :root variables with these names:
+ * --font-display, --font-body, --ease-yoyo, --dur-fast|base|slow,
+ * --radius-pill, --radius-card, --radius-card-xl, --radius-media.
+ */

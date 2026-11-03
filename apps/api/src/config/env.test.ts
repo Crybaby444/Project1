@@ -17,6 +17,8 @@ describe('loadEnv', () => {
 
   it('coerces PORT and rejects garbage', () => {
     expect(loadEnv({ ...valid, PORT: '5000' }).PORT).toBe(5000);
-    expect(() => loadEnv({ ...valid, PORT: 'abc', NODE_ENV: 'staging' })).toThrow(/PORT[\s\S]*NODE_ENV|NODE_ENV[\s\S]*PORT/);
+    expect(() => loadEnv({ ...valid, PORT: 'abc', NODE_ENV: 'staging' })).toThrow(
+      /PORT[\s\S]*NODE_ENV|NODE_ENV[\s\S]*PORT/,
+    );
   });
 });

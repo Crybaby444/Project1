@@ -14,7 +14,14 @@ describe('status colours', () => {
   });
 
   it('maps every status tone to a colour', () => {
-    expect(STATUS_TONES).toEqual(['requested', 'active', 'deposit', 'dispute', 'completed', 'cancelled']);
+    expect(STATUS_TONES).toEqual([
+      'requested',
+      'active',
+      'deposit',
+      'dispute',
+      'completed',
+      'cancelled',
+    ]);
     expect(STATUS_TONE_COLOR).toEqual({
       requested: '#ffd731',
       active: '#4da2ff',

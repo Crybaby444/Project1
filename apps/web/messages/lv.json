@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "title": "Yoyo — nomā jebko no cilvēkiem tuvumā",
+    "description": "Aizņemies vajadzīgo no kaimiņiem un pelni ar lietām, kuras lieto reti. Katra noma atgriežas — kā jojo."
+  },
+  "home": {
+    "tagline": "Nomā jebko no cilvēkiem tuvumā.",
+    "lead": "Aizņemies vajadzīgo uz dienu vai nedēļu, un ļauj savām lietām pelnīt, kamēr tās gaida plauktā. Viss atgriežas — kā jojo."
+  },
+  "language": {
+    "label": "Valoda",
+    "en": "English",
+    "lv": "Latviešu",
+    "ru": "Русский"
+  },
+  "theme": {
+    "toggle": "Mainīt tēmu",
+    "light": "Gaišā",
+    "dark": "Tumšā",
+    "system": "Kā sistēmā"
+  },
+  "notFound": {
+    "title": "Šī lapa aizripoja",
+    "body": "Mēs neatradām meklēto. Iespējams, lapa ir pārvietota vai saitē ir kļūda.",
+    "back": "Atpakaļ uz sākumu"
+  }
+}

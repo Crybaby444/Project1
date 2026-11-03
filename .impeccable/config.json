@@ -6,54 +6,42 @@
       {
         "rule": "dark-glow",
         "value": "*",
-        "files": [
-          ".superpowers/brainstorm/12151-1793714186/content/styles.html"
-        ],
+        "files": [".superpowers/brainstorm/12151-1793714186/content/styles.html"],
         "createdAt": "2026-11-03T14:37:05.923Z",
         "reason": "Throwaway brainstorm mockup; Glow direction reproduces the user's own reference video (glowing green headline and halos)"
       },
       {
         "rule": "marquee",
         "value": "*",
-        "files": [
-          ".superpowers/brainstorm/12151-1793714186/content/styles.html"
-        ],
+        "files": [".superpowers/brainstorm/12151-1793714186/content/styles.html"],
         "createdAt": "2026-11-03T14:37:05.946Z",
         "reason": "Throwaway brainstorm mockup; Sticker direction reproduces the user-supplied Slush style reference, which specifies a marquee banner (pauses on hover)"
       },
       {
         "rule": "overused-font",
         "value": "*",
-        "files": [
-          ".superpowers/brainstorm/12151-1793714186/content/styles.html"
-        ],
+        "files": [".superpowers/brainstorm/12151-1793714186/content/styles.html"],
         "createdAt": "2026-11-03T14:37:05.970Z",
         "reason": "Throwaway brainstorm mockup; fonts mirror the user-supplied Reflect reference (Inter V body) and its listed substitutes; final type chosen in design phase"
       },
       {
         "rule": "codex-grid-background",
         "value": "*",
-        "files": [
-          ".superpowers/brainstorm/12151-1793714186/content/styles.html"
-        ],
+        "files": [".superpowers/brainstorm/12151-1793714186/content/styles.html"],
         "createdAt": "2026-11-03T14:37:05.994Z",
         "reason": "Throwaway brainstorm mockup; Glow direction reproduces grid lines visible in the user's reference video"
       },
       {
         "rule": "gradient-text",
         "value": "*",
-        "files": [
-          ".superpowers/brainstorm/12151-1793714186/content/styles.html"
-        ],
+        "files": [".superpowers/brainstorm/12151-1793714186/content/styles.html"],
         "createdAt": "2026-11-03T14:37:06.018Z",
         "reason": "Throwaway brainstorm mockup; user-supplied Reflect reference specifies the cosmic gradient on accent text only"
       },
       {
         "rule": "cramped-padding",
         "value": "*",
-        "files": [
-          ".superpowers/brainstorm/12151-1793714186/content/names.html"
-        ],
+        "files": [".superpowers/brainstorm/12151-1793714186/content/names.html"],
         "createdAt": "2026-11-03T14:48:44.133Z",
         "reason": "Throwaway brainstorm mockup; flagged child is the full-bleed decorative ribbon SVG, which DESIGN.md specifies as full-bleed; the wordmark text itself is centred with wide inset"
       }
