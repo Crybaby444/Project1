@@ -1,0 +1,20 @@
+# Render Blueprint for the Yoyo API (free web service, Docker, WebSocket-capable).
+# Render → New → Blueprint → pick this repository. Secrets are entered in the dashboard.
+services:
+  - type: web
+    name: yoyo-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    branch: main
+    dockerfilePath: ./apps/api/Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: WEB_ORIGIN
+        sync: false

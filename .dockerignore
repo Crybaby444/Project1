@@ -1,0 +1,19 @@
+# Docker build context is the repository root (see apps/api/Dockerfile).
+**/node_modules
+**/dist
+**/.next
+**/.turbo
+**/coverage
+**/*.tsbuildinfo
+**/.env
+**/.env.local
+**/.env.*.local
+apps/web/playwright-report
+apps/web/test-results
+apps/api/src/generated
+.git
+.github
+.claude
+.superpowers
+.impeccable
+docs

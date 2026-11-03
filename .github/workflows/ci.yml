@@ -92,3 +92,56 @@ jobs:
             apps/web/playwright-report
             apps/web/test-results
           retention-days: 7
+
+  docker:
+    name: API Docker image builds and serves health
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: yoyo
+          POSTGRES_PASSWORD: yoyo
+          POSTGRES_DB: yoyo_prod_like
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U yoyo -d yoyo_prod_like"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build image (same Dockerfile Render uses)
+        run: docker build -f apps/api/Dockerfile -t yoyo-api .
+
+      - name: Start the container like production
+        run: |
+          docker run -d --name api --network host \
+            -e DATABASE_URL=postgresql://yoyo:yoyo@localhost:5432/yoyo_prod_like \
+            -e WEB_ORIGIN=https://yoyo.example \
+            -e PORT=4100 \
+            yoyo-api
+
+      - name: Migrations ran and health is ok
+        run: |
+          for attempt in $(seq 1 30); do
+            if body=$(curl -fsS http://localhost:4100/api/v1/health); then
+              echo "$body"
+              echo "$body" | grep -q '"status":"ok"' && exit 0
+            fi
+            sleep 2
+          done
+          docker logs api
+          exit 1
+
+      - name: Swagger UI is hidden in production
+        run: test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:4100/api/docs)" = "404"
+
+      - name: Container logs
+        if: always()
+        run: docker logs api || true
