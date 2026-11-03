@@ -202,8 +202,9 @@ run_wizard() {
 
 TOTAL_STAGES=5
 
-# Everything captured here stays on this computer only (.env.deploy is git-ignored).
-ENV_FILE="${ENV_FILE:-.env.deploy}"
+# Everything captured here stays on this computer only: the repository root's git-ignored
+# .env.deploy, wherever the wizard is started from. YOYO_DEPLOY_ENV_FILE overrides the location.
+ENV_FILE="${YOYO_DEPLOY_ENV_FILE:-$(cd "$(dirname "$0")/.." && pwd)/.env.deploy}"
 REPO="Crybaby444/Project1"
 
 # to_clipboard VALUE copies VALUE so it can be pasted into a dashboard (macOS pbcopy).
