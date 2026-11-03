@@ -11,3 +11,10 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+/// Runtime-adjustable settings (deadlines, fee %). A missing row means the default from @yoyo/shared applies.
+model Setting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}

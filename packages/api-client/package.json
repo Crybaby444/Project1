@@ -1,0 +1,40 @@
+{
+  "name": "@yoyo/api-client",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Typed client for the Yoyo API, generated from its OpenAPI document",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "generate": "openapi-typescript ../../apps/api/openapi.json -o src/schema.d.ts",
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "openapi-fetch": "0.17.0"
+  },
+  "devDependencies": {
+    "openapi-typescript": "7.13.0",
+    "tsup": "9.0.0",
+    "vitest": "5.0.5"
+  }
+}

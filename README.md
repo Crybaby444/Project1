@@ -28,21 +28,32 @@
    ```bash
    export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
    ```
-2. Создать базы для разработки и для тестов:
+2. Создать локальную роль `yoyo` (пароль `yoyo`, только для разработки) и базы для разработки и тестов:
    ```bash
-   createdb yoyo_dev
-   createdb yoyo_test
+   psql -d postgres -c "CREATE ROLE yoyo LOGIN PASSWORD 'yoyo' CREATEDB;"
+   createdb -O yoyo yoyo_dev
+   createdb -O yoyo yoyo_test
    ```
-3. Поставить зависимости и создать файл настроек API:
+   Право `CREATEDB` нужно Prisma: при `migrate dev` она создаёт временную «теневую» базу.
+3. Поставить зависимости, создать файл настроек API, применить миграции и заполнить настройки по умолчанию:
    ```bash
    pnpm install
    cp apps/api/.env.example apps/api/.env
+   pnpm --filter @yoyo/api db:migrate
+   pnpm --filter @yoyo/api db:seed
    ```
 4. Запустить API:
    ```bash
    pnpm --filter @yoyo/api dev
    ```
-   Проверка: <http://localhost:4000/api/v1/health> отвечает `{"status":"ok","db":"up",…}`.
+   Проверка: <http://localhost:4000/api/v1/health> отвечает `{"status":"ok","db":"up",…}`. Документация API (Swagger, только не в production): <http://localhost:4000/api/docs>.
+
+После изменения API обновите описание и типизированный клиент:
+
+```bash
+pnpm --filter @yoyo/api openapi:emit
+pnpm --filter @yoyo/api-client generate
+```
 
 Письма, которые отправляет сайт при локальной разработке, не уходят наружу. Они видны в Mailpit: <http://localhost:8025>.
 

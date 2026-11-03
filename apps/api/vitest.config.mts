@@ -1,5 +1,6 @@
 import swc from 'unplugin-swc';
 import { defineConfig } from 'vitest/config';
+import { testDatabaseUrl } from './test/test-db.js';
 
 export default defineConfig({
   plugins: [
@@ -8,11 +9,12 @@ export default defineConfig({
   ],
   test: {
     include: ['src/**/*.test.ts', 'test/**/*.test.ts'],
+    globalSetup: ['test/global-setup.ts'],
     // Tests share one database, so files run one after another.
     fileParallelism: false,
     env: {
       NODE_ENV: 'test',
-      DATABASE_URL: process.env['TEST_DATABASE_URL'] ?? 'postgresql://localhost:5432/yoyo_test',
+      DATABASE_URL: testDatabaseUrl,
       WEB_ORIGIN: 'http://localhost:3000',
     },
   },

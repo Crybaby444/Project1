@@ -17,4 +17,7 @@ export const SETTING_DEFAULTS = {
 
 export type SettingKey = keyof typeof SETTING_DEFAULTS;
 
-export type SettingValue<K extends SettingKey> = (typeof SETTING_DEFAULTS)[K];
+/** Widens a literal default (e.g. `10`) to its primitive type, so other values can be stored. */
+type Widen<T> = T extends number ? number : T extends string ? string : T extends boolean ? boolean : T;
+
+export type SettingValue<K extends SettingKey> = Widen<(typeof SETTING_DEFAULTS)[K]>;

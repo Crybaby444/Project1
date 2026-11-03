@@ -2,6 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { ENV, loadEnv } from './config/env';
 import { HealthController } from './health/health.controller';
 import { PrismaModule } from './prisma/prisma.module';
+import { SettingsModule } from './settings/settings.module';
 
 @Global()
 @Module({
@@ -11,7 +12,7 @@ import { PrismaModule } from './prisma/prisma.module';
 class EnvModule {}
 
 @Module({
-  imports: [EnvModule, PrismaModule],
+  imports: [EnvModule, PrismaModule, SettingsModule],
   controllers: [HealthController],
 })
 export class AppModule {}
