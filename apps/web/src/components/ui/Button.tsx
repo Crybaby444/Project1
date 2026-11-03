@@ -30,8 +30,8 @@ const VARIANTS: Record<Variant, string> = {
 };
 
 const SIZES: Record<Size, string> = {
-  md: 'min-h-10 px-4 text-[14px]',
-  lg: 'min-h-12 px-6 text-[15px]',
+  md: 'min-h-10 px-4 py-2 text-[14px]',
+  lg: 'min-h-12 px-6 py-2.5 text-[15px]',
 };
 
 function classes(variant: Variant, size: Size, className = '') {

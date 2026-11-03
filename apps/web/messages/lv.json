@@ -23,5 +23,69 @@
     "title": "Šeit nekā nav",
     "body": "Šī lapa ir aizripojusi. Atgriezīsimies pareizajā ceļā.",
     "back": "Uz sākumlapu"
+  },
+  "apiStatus": {
+    "label": "API statuss",
+    "checking": "Pārbauda API…",
+    "online": "API darbojas",
+    "offline": "API nav pieejams"
+  },
+  "status": {
+    "requested": "Pieprasīts",
+    "active": "Aktīvs",
+    "deposit": "Depozīts iesaldēts",
+    "dispute": "Strīds",
+    "completed": "Pabeigts",
+    "cancelled": "Atcelts"
+  },
+  "styleguide": {
+    "title": "Stila ceļvedis",
+    "intro": "DESIGN.md marķieri un komponenti abās tēmās un visās trīs valodās.",
+    "colors": "Krāsas",
+    "surfaces": "Virsmas",
+    "stickerPalette": "Uzlīmju palete",
+    "typography": "Tipogrāfija",
+    "display": "Virsraksti",
+    "body": "Pamatteksts",
+    "samples": {
+      "en": "The quick brown fox jumps over the lazy dog.",
+      "lv": "Glāžšķūņa rūķīši dzērumā čiepj Baha koncertflīģeļu vākus.",
+      "ru": "Съешь же ещё этих мягких французских булок, да выпей чаю."
+    },
+    "buttons": "Pogas",
+    "primary": "Īrēt šo lietu",
+    "ghost": "Rakstīt īpašniekam",
+    "large": "Atrast kaut ko tuvumā",
+    "loading": "Saglabā",
+    "link": "Uz sākumlapu",
+    "disabled": "Nav pieejams",
+    "iconButtons": "Ikonu pogas",
+    "favourite": "Pievienot izlasei",
+    "share": "Kopīgot",
+    "chips": "Birkas",
+    "chipTools": "Instrumenti",
+    "chipCamping": "Kempings",
+    "chipElectronics": "Elektronika",
+    "chipParty": "Ballītes un pasākumi",
+    "cards": "Kartītes",
+    "cardTitle": "Akumulatora urbjmašīna",
+    "cardBody": "Novieto kursoru virs kartītes — tā sasveras kā atlīmējama uzlīme.",
+    "cardFeatured": "Izcelta kartīte ar 40 px rādiusu.",
+    "fields": "Lauki",
+    "emailLabel": "E-pasts",
+    "emailHint": "Izmantosim to tikai rezervāciju paziņojumiem.",
+    "emailError": "Ievadi e-pasta adresi, piemēram, vards@example.com",
+    "nameLabel": "Vārds un uzvārds",
+    "statuses": "Statusi",
+    "stickers": "Uzlīmes",
+    "stickersHint": "Novieto kursoru, lai sašūpotu, noklikšķini, lai pagrieztu.",
+    "stickerVerified": "Pārbaudīts",
+    "marquee": "Skrejošā rinda",
+    "marqueeItems": {
+      "a": "Īrē PS5 nedēļas nogalei",
+      "b": "Aizņemies urbjmašīnu no kaimiņa",
+      "c": "Kempinga inventārs no 5 € dienā",
+      "d": "Viss atgriežas"
+    }
   }
 }

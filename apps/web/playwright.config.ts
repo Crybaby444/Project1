@@ -19,6 +19,12 @@ export default defineConfig({
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: [
     {
+      command: 'pnpm --filter @yoyo/api start:prod',
+      url: 'http://localhost:4000/api/v1/health',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+    },
+    {
       command: 'pnpm start',
       url: baseURL,
       reuseExistingServer: !process.env.CI,

@@ -23,5 +23,69 @@
     "title": "Nothing here",
     "body": "This page has rolled away. Let’s get you back on track.",
     "back": "Back to home"
+  },
+  "apiStatus": {
+    "label": "API status",
+    "checking": "Checking API…",
+    "online": "API online",
+    "offline": "API offline"
+  },
+  "status": {
+    "requested": "Requested",
+    "active": "Active",
+    "deposit": "Deposit frozen",
+    "dispute": "Dispute",
+    "completed": "Completed",
+    "cancelled": "Cancelled"
+  },
+  "styleguide": {
+    "title": "Styleguide",
+    "intro": "Tokens and components from DESIGN.md, in both themes and all three languages.",
+    "colors": "Colours",
+    "surfaces": "Surfaces",
+    "stickerPalette": "Sticker palette",
+    "typography": "Typography",
+    "display": "Display",
+    "body": "Body",
+    "samples": {
+      "en": "The quick brown fox jumps over the lazy dog.",
+      "lv": "Glāžšķūņa rūķīši dzērumā čiepj Baha koncertflīģeļu vākus.",
+      "ru": "Съешь же ещё этих мягких французских булок, да выпей чаю."
+    },
+    "buttons": "Buttons",
+    "primary": "Rent this item",
+    "ghost": "Message the owner",
+    "large": "Find something nearby",
+    "loading": "Saving",
+    "link": "Back to home",
+    "disabled": "Unavailable",
+    "iconButtons": "Icon buttons",
+    "favourite": "Add to favourites",
+    "share": "Share",
+    "chips": "Chips",
+    "chipTools": "Tools",
+    "chipCamping": "Camping",
+    "chipElectronics": "Electronics",
+    "chipParty": "Party and events",
+    "cards": "Cards",
+    "cardTitle": "Cordless drill",
+    "cardBody": "Hover over this card: it tilts like a sticker being peeled.",
+    "cardFeatured": "Featured card with a 40px radius.",
+    "fields": "Fields",
+    "emailLabel": "Email",
+    "emailHint": "We only use it for booking updates.",
+    "emailError": "Enter an email address like name@example.com",
+    "nameLabel": "Full name",
+    "statuses": "Statuses",
+    "stickers": "Stickers",
+    "stickersHint": "Hover to wobble, click to spin.",
+    "stickerVerified": "Verified",
+    "marquee": "Marquee",
+    "marqueeItems": {
+      "a": "Rent a PS5 for the weekend",
+      "b": "Borrow a drill next door",
+      "c": "Camping gear from €5 a day",
+      "d": "Everything comes back"
+    }
   }
 }

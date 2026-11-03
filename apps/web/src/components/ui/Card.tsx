@@ -1,5 +1,6 @@
 'use client';
 
+import type { StickerColor } from '@yoyo/shared';
 import type { HTMLAttributes, PointerEvent } from 'react';
 
 const MAX_TILT_DEG = 5;
@@ -9,6 +10,18 @@ type CardProps = HTMLAttributes<HTMLDivElement> & {
   interactive?: boolean;
   /** Featured cards use the larger 40px radius. */
   featured?: boolean;
+  /** Fills the card with a sticker colour instead of the surface colour. */
+  color?: StickerColor;
+};
+
+const FILL: Record<StickerColor | 'surface', string> = {
+  surface: 'bg-surface text-ink',
+  blue: 'bg-sticker-blue text-black',
+  mint: 'bg-sticker-mint text-black',
+  lavender: 'bg-sticker-lavender text-black',
+  ember: 'bg-sticker-ember text-black',
+  sun: 'bg-sticker-sun text-black',
+  violet: 'bg-sticker-violet text-white',
 };
 
 function setTilt(el: HTMLElement, rx: number, ry: number) {
@@ -16,8 +29,15 @@ function setTilt(el: HTMLElement, rx: number, ry: number) {
   el.style.setProperty('--ry', `${ry}deg`);
 }
 
-export function Card({ interactive = false, featured = false, className = '', children, ...rest }: CardProps) {
-  const base = `border border-ink bg-surface p-6 text-ink ${featured ? 'rounded-card-xl' : 'rounded-card'}`;
+export function Card({
+  interactive = false,
+  featured = false,
+  color,
+  className = '',
+  children,
+  ...rest
+}: CardProps) {
+  const base = `border border-ink p-6 ${FILL[color ?? 'surface']} ${featured ? 'rounded-card-xl' : 'rounded-card'}`;
 
   if (!interactive) {
     return (

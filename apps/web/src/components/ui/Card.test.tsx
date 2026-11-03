@@ -19,3 +19,12 @@ describe('Card', () => {
     expect(card.style.getPropertyValue('--ry')).toBe('0deg');
   });
 });
+
+describe('Card colour', () => {
+  it('replaces the surface fill with a sticker colour', () => {
+    render(<Card color="lavender">Featured</Card>);
+    const card = screen.getByText('Featured');
+    expect(card.className).toContain('bg-sticker-lavender');
+    expect(card.className).not.toContain('bg-surface');
+  });
+});
