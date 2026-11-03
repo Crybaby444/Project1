@@ -72,6 +72,15 @@ pnpm e2e         # сквозные тесты в браузере (сами з�
 
 Всё бесплатно: база данных в **Neon**, API в Docker на **Render**, сайт на **Vercel**. Сервисы следят за веткой `main` и сами выкатывают каждое изменение.
 
+**Работает сейчас:**
+
+| Что | Адрес |
+|-----|-------|
+| Сайт | <https://yoyo-rent.vercel.app> (`/lv`, `/ru`) |
+| API | <https://yoyo-api.onrender.com/api/v1/health> |
+
+Проект Vercel: `yoyo-rent`. Сервис Render: `yoyo-api` (Blueprint `yoyo`, Frankfurt). База Neon: проект `yoyo` (Frankfurt, Postgres 17).
+
 Первую настройку делает владелец пошаговым мастером:
 
 ```bash
