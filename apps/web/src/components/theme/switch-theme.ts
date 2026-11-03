@@ -1,7 +1,8 @@
+import { DURATION, EASE_YOYO } from '@/lib/motion';
+
 export type Point = { x: number; y: number };
 
-const REVEAL_MS = 450;
-const EASE_YOYO = 'cubic-bezier(0.2, 0.8, 0.2, 1)';
+const REVEAL_MS = DURATION.slow;
 
 /** The circular reveal runs only when motion is welcome and the browser can do it. */
 export function shouldAnimateThemeChange(prefersReducedMotion: boolean, supportsViewTransition: boolean): boolean {

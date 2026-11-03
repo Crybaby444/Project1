@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
+import { Button } from '@/components/ui/Button';
 
 export default function NotFound() {
   const t = useTranslations('notFound');
@@ -11,12 +11,7 @@ export default function NotFound() {
       </p>
       <h1 className="text-3xl font-bold">{t('title')}</h1>
       <p className="max-w-[46ch] leading-relaxed">{t('body')}</p>
-      <Link
-        href="/"
-        className="inline-flex min-h-10 items-center rounded-pill bg-cta px-5 text-[13px] font-bold tracking-[0.03em] text-cta-fg uppercase transition-transform duration-200 ease-yoyo hover:-translate-y-0.5 active:scale-[0.97]"
-      >
-        {t('back')}
-      </Link>
+      <Button href="/">{t('back')}</Button>
     </main>
   );
 }
