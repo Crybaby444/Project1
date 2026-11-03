@@ -11,7 +11,14 @@ const PATHS: Record<StatusTone, string> = {
 
 export function StatusIcon({ tone }: { tone: StatusTone }) {
   return (
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d={PATHS[tone]} />
     </svg>
   );

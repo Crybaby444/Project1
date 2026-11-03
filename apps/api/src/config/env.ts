@@ -14,7 +14,9 @@ export function loadEnv(source: Record<string, string | undefined>): Env {
   const result = EnvSchema.safeParse(source);
   if (!result.success) {
     const keys = [...new Set(result.error.issues.map((issue) => issue.path.join('.')))];
-    const details = result.error.issues.map((issue) => `  ${issue.path.join('.')}: ${issue.message}`).join('\n');
+    const details = result.error.issues
+      .map((issue) => `  ${issue.path.join('.')}: ${issue.message}`)
+      .join('\n');
     throw new Error(`Invalid environment variables: ${keys.join(', ')}\n${details}`);
   }
   return result.data;

@@ -3,58 +3,30 @@
   "ui": "stream",
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "dist/**",
-        ".next/**",
-        "!.next/cache/**"
-      ],
-      "env": [
-        "NEXT_PUBLIC_*"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
+      "env": ["NEXT_PUBLIC_*"]
     },
     "lint": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "typecheck": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "test": {
-      "dependsOn": [
-        "^build"
-      ],
-      "env": [
-        "DATABASE_URL",
-        "WEB_ORIGIN"
-      ]
+      "dependsOn": ["^build"],
+      "env": ["DATABASE_URL", "WEB_ORIGIN"]
     },
     "e2e": {
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "cache": false,
-      "env": [
-        "NEXT_PUBLIC_*",
-        "DATABASE_URL",
-        "WEB_ORIGIN"
-      ]
+      "env": ["NEXT_PUBLIC_*", "DATABASE_URL", "WEB_ORIGIN"]
     },
     "dev": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
     }
   },
-  "globalPassThroughEnv": [
-    "PLAYWRIGHT_CHROMIUM_EXECUTABLE",
-    "CI"
-  ]
+  "globalPassThroughEnv": ["PLAYWRIGHT_CHROMIUM_EXECUTABLE", "CI"]
 }

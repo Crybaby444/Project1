@@ -18,11 +18,18 @@ import { StatusIcon } from './StatusIcon';
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 const SURFACES = ['--canvas', '--surface', '--band', '--mist', '--ink'] as const;
-const STICKERS = ['--sticker-blue', '--sticker-mint', '--sticker-lavender', '--sticker-ember', '--sticker-sun', '--sticker-violet'] as const;
+const STICKERS = [
+  '--sticker-blue',
+  '--sticker-mint',
+  '--sticker-lavender',
+  '--sticker-ember',
+  '--sticker-sun',
+  '--sticker-violet',
+] as const;
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="flex flex-col gap-4 border-t border-ink pt-6">
+    <section className="border-ink flex flex-col gap-4 border-t pt-6">
       <h2 className="text-[24px] leading-[1.2] font-bold">{title}</h2>
       {children}
     </section>
@@ -31,8 +38,12 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 function Swatch({ token }: { token: string }) {
   return (
-    <li className="flex min-w-0 items-center gap-3 rounded-card border border-ink bg-surface p-2 pr-4">
-      <span aria-hidden="true" className="size-10 shrink-0 rounded-full border border-ink" style={{ background: `var(${token})` }} />
+    <li className="rounded-card border-ink bg-surface flex min-w-0 items-center gap-3 border p-2 pr-4">
+      <span
+        aria-hidden="true"
+        className="border-ink size-10 shrink-0 rounded-full border"
+        style={{ background: `var(${token})` }}
+      />
       <code className="truncate text-[14px]">{token}</code>
     </li>
   );
@@ -51,7 +62,7 @@ export default function StyleguidePage({ params }: { params: Promise<{ locale: s
         <h1 className="font-display text-[clamp(40px,9vw,110px)] leading-[0.85] font-extrabold break-words uppercase">
           {t('title')}
         </h1>
-        <p className="max-w-[60ch] text-ink-muted">{t('intro')}</p>
+        <p className="text-ink-muted max-w-[60ch]">{t('intro')}</p>
         <ApiStatusPill />
       </header>
 
@@ -72,7 +83,9 @@ export default function StyleguidePage({ params }: { params: Promise<{ locale: s
 
       <Section title={t('typography')}>
         <p className="text-[14px] font-bold">{t('display')}</p>
-        <p className="font-display text-[clamp(56px,14vw,200px)] leading-[0.8] font-extrabold break-words">YOYO</p>
+        <p className="font-display text-[clamp(56px,14vw,200px)] leading-[0.8] font-extrabold break-words">
+          YOYO
+        </p>
         <p className="text-[14px] font-bold">{t('body')}</p>
         <ul className="flex flex-col gap-3">
           {LOCALES.map((sampleLocale) => (
@@ -102,12 +115,29 @@ export default function StyleguidePage({ params }: { params: Promise<{ locale: s
         <h3 className="text-[14px] font-bold">{t('iconButtons')}</h3>
         <div className="flex items-center gap-3">
           <IconButton label={t('favourite')}>
-            <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="var(--sticker-ember)" stroke="currentColor" strokeWidth="1.5">
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="var(--sticker-ember)"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
               <path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20Z" />
             </svg>
           </IconButton>
           <IconButton label={t('share')}>
-            <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              strokeLinecap="round"
+            >
               <path d="M12 15V3M7.5 7.5 12 3l4.5 4.5M5 13v6.5h14V13" />
             </svg>
           </IconButton>
@@ -115,16 +145,14 @@ export default function StyleguidePage({ params }: { params: Promise<{ locale: s
       </Section>
 
       <Section title={t('chips')}>
-        <ChipDemo
-          labels={[t('chipTools'), t('chipCamping'), t('chipElectronics'), t('chipParty')]}
-        />
+        <ChipDemo labels={[t('chipTools'), t('chipCamping'), t('chipElectronics'), t('chipParty')]} />
       </Section>
 
       <Section title={t('cards')}>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Card interactive>
             <h3 className="text-[24px] leading-[1.2] font-bold">{t('cardTitle')}</h3>
-            <p className="mt-2 text-ink-muted">{t('cardBody')}</p>
+            <p className="text-ink-muted mt-2">{t('cardBody')}</p>
           </Card>
           <Card featured color="lavender">
             <p className="text-[15px] font-bold">{t('cardFeatured')}</p>

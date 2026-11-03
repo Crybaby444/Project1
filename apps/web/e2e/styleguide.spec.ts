@@ -29,7 +29,9 @@ for (const theme of ['light', 'dark'] as const) {
 
         const results = await new AxeBuilder({ page }).analyze();
         const serious = results.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
-        expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([]);
+        expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual(
+          [],
+        );
         expect(errors).toEqual([]);
       });
 
@@ -67,7 +69,7 @@ test.describe('reduced motion', () => {
 
 test('the marquee moves without reduced motion', async ({ page }) => {
   await page.goto('/styleguide');
-  expect(await page.locator('[data-marquee-track]').evaluate((el) => getComputedStyle(el).animationName)).toBe(
-    'yoyo-marquee',
-  );
+  expect(
+    await page.locator('[data-marquee-track]').evaluate((el) => getComputedStyle(el).animationName),
+  ).toBe('yoyo-marquee');
 });

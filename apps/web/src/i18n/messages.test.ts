@@ -37,7 +37,11 @@ describe('messages', () => {
 
   it('labels every language in its own language', () => {
     for (const locale of LOCALES) {
-      expect((messages[locale]!.language as Tree)).toMatchObject({ en: 'English', lv: 'Latviešu', ru: 'Русский' });
+      expect(messages[locale]!.language as Tree).toMatchObject({
+        en: 'English',
+        lv: 'Latviešu',
+        ru: 'Русский',
+      });
     }
   });
 });

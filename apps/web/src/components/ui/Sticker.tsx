@@ -78,7 +78,13 @@ export function Sticker({ kind, label, size = 64, rotate = 0, className = '' }: 
     >
       <svg viewBox="-2 -2 68 68" width={size} height={size} className="block overflow-visible">
         {/* die-cut edge, visible only in dark mode */}
-        <path d={shape.body} fill="none" stroke="var(--sticker-edge)" strokeWidth="5" strokeLinejoin="round" />
+        <path
+          d={shape.body}
+          fill="none"
+          stroke="var(--sticker-edge)"
+          strokeWidth="5"
+          strokeLinejoin="round"
+        />
         <path d={shape.body} fill={shape.fill} stroke="#000" strokeWidth="1.25" strokeLinejoin="round" />
         {shape.detail && (
           <path

@@ -69,7 +69,7 @@ export function Card({
       data-interactive="true"
       onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}
-      className={`${base} [transform:perspective(900px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))] transition-transform duration-[250ms] ease-yoyo will-change-transform hover:[transform:perspective(900px)_translateY(-6px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))] motion-reduce:hover:[transform:none] ${className}`}
+      className={`${base} ease-yoyo [transform:perspective(900px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))] transition-transform duration-[250ms] will-change-transform hover:[transform:perspective(900px)_translateY(-6px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))] motion-reduce:hover:[transform:none] ${className}`}
     >
       {children}
     </div>

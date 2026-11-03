@@ -23,9 +23,12 @@ function Row({ items, hidden = false }: { items: string[]; hidden?: boolean }) {
 export function Marquee({ items, className = '' }: MarqueeProps) {
   return (
     <div
-      className={`group overflow-hidden border-y border-marquee-bg bg-marquee-bg py-2.5 text-[12px] leading-none font-bold tracking-[0.032em] text-marquee-fg uppercase ${className}`}
+      className={`group border-marquee-bg bg-marquee-bg text-marquee-fg overflow-hidden border-y py-2.5 text-[12px] leading-none font-bold tracking-[0.032em] uppercase ${className}`}
     >
-      <div data-marquee-track className="yoyo-marquee-track flex w-max group-hover:[animation-play-state:paused]">
+      <div
+        data-marquee-track
+        className="yoyo-marquee-track flex w-max group-hover:[animation-play-state:paused]"
+      >
         <Row items={items} />
         <Row items={items} hidden />
       </div>

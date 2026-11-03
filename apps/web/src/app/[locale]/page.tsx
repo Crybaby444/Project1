@@ -14,7 +14,7 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
       <p className="max-w-[22ch] text-[clamp(24px,4vw,48px)] leading-[1.1] font-bold text-balance">
         {t('tagline')}
       </p>
-      <p className="max-w-[60ch] text-[15px] leading-[1.5] text-ink-muted sm:text-base">{t('lead')}</p>
+      <p className="text-ink-muted max-w-[60ch] text-[15px] leading-[1.5] sm:text-base">{t('lead')}</p>
     </main>
   );
 }

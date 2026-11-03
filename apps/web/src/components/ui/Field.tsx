@@ -34,12 +34,12 @@ export function Field({ label, hint, error, children, className = '' }: FieldPro
       </label>
       {control}
       {hint && !error && (
-        <p id={hintId} className="px-1 text-[14px] text-ink-muted">
+        <p id={hintId} className="text-ink-muted px-1 text-[14px]">
           {hint}
         </p>
       )}
       {error && (
-        <p id={errorId} className="flex items-center gap-1.5 px-1 text-[14px] font-bold text-ink">
+        <p id={errorId} className="text-ink flex items-center gap-1.5 px-1 text-[14px] font-bold">
           <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16" className="shrink-0">
             <circle cx="8" cy="8" r="7.5" fill="var(--sticker-ember)" stroke="var(--ink)" />
             <path d="M8 4.5v4.5M8 11.2v.3" stroke="#000" strokeWidth="1.75" strokeLinecap="round" />

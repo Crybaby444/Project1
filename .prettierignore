@@ -4,3 +4,6 @@ pnpm-lock.yaml
 **/schema.d.ts
 **/src/generated
 apps/api/openapi.json
+docs/superpowers
+DESIGN.md
+.impeccable

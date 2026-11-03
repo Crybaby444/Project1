@@ -75,7 +75,10 @@ export function ThemeProvider({
     setResolved(nextResolved);
   }, []);
 
-  const value = useMemo(() => ({ preference, resolved, setPreference }), [preference, resolved, setPreference]);
+  const value = useMemo(
+    () => ({ preference, resolved, setPreference }),
+    [preference, resolved, setPreference],
+  );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

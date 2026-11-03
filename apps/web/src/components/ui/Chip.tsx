@@ -26,7 +26,7 @@ export function Chip({ pressed, onPressedChange, color = 'sun', icon, children, 
       type="button"
       aria-pressed={pressed}
       onClick={() => onPressedChange(!pressed)}
-      className={`inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-full border border-ink px-4 text-[14px] font-bold tracking-[0.03em] transition-[transform,background-color] duration-150 ease-yoyo hover:-translate-y-0.5 hover:-rotate-[4deg] active:scale-[.97] even:hover:rotate-[4deg] ${
+      className={`border-ink ease-yoyo inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-full border px-4 text-[14px] font-bold tracking-[0.03em] transition-[transform,background-color] duration-150 hover:-translate-y-0.5 hover:-rotate-[4deg] even:hover:rotate-[4deg] active:scale-[.97] ${
         pressed ? PRESSED_BG[color] : 'bg-surface text-ink hover:bg-mist'
       } ${className}`}
     >

@@ -13,8 +13,11 @@ export function StatusBadge({ tone, icon, children, className = '' }: StatusBadg
   return (
     <span
       data-tone={tone}
-      style={{ backgroundColor: STATUS_TONE_COLOR[tone], color: tone === 'completed' ? '#ffffff' : '#000000' }}
-      className={`inline-flex min-h-7 items-center gap-1.5 rounded-full border border-ink px-3 text-[13px] leading-none font-bold tracking-[0.03em] ${className}`}
+      style={{
+        backgroundColor: STATUS_TONE_COLOR[tone],
+        color: tone === 'completed' ? '#ffffff' : '#000000',
+      }}
+      className={`border-ink inline-flex min-h-7 items-center gap-1.5 rounded-full border px-3 text-[13px] leading-none font-bold tracking-[0.03em] ${className}`}
     >
       <span aria-hidden="true" className="inline-grid size-3.5 place-items-center [&>svg]:size-full">
         {icon}

@@ -8,12 +8,12 @@
 
 ## Структура
 
-| Пакет | Что внутри |
-|-------|------------|
-| `apps/api` (`@yoyo/api`) | NestJS + Prisma (PostgreSQL), все маршруты под `/api/v1` |
-| `apps/web` (`@yoyo/web`) | Next.js (App Router), Tailwind v4, next-intl (EN/LV/RU) |
-| `packages/shared` (`@yoyo/shared`) | Общие константы и zod-схемы |
-| `packages/api-client` (`@yoyo/api-client`) | Типизированный клиент API из OpenAPI |
+| Пакет                                      | Что внутри                                               |
+| ------------------------------------------ | -------------------------------------------------------- |
+| `apps/api` (`@yoyo/api`)                   | NestJS + Prisma (PostgreSQL), все маршруты под `/api/v1` |
+| `apps/web` (`@yoyo/web`)                   | Next.js (App Router), Tailwind v4, next-intl (EN/LV/RU)  |
+| `packages/shared` (`@yoyo/shared`)         | Общие константы и zod-схемы                              |
+| `packages/api-client` (`@yoyo/api-client`) | Типизированный клиент API из OpenAPI                     |
 
 ## Локальный запуск
 
@@ -64,13 +64,13 @@ pnpm --filter @yoyo/api exec prisma db seed       # настройки по ум
 pnpm dev                                          # API на :4000, веб на :3000
 ```
 
-| Команда | Что делает |
-|---------|------------|
-| `pnpm lint` | ESLint во всех пакетах |
-| `pnpm typecheck` | Проверка типов |
-| `pnpm test` | Модульные и интеграционные тесты (Vitest) |
-| `pnpm build` | Сборка всех пакетов |
-| `pnpm e2e` | Сквозные тесты Playwright |
+| Команда          | Что делает                                |
+| ---------------- | ----------------------------------------- |
+| `pnpm lint`      | ESLint во всех пакетах                    |
+| `pnpm typecheck` | Проверка типов                            |
+| `pnpm test`      | Модульные и интеграционные тесты (Vitest) |
+| `pnpm build`     | Сборка всех пакетов                       |
+| `pnpm e2e`       | Сквозные тесты Playwright                 |
 
 Проверка API: `curl -s localhost:4000/api/v1/health` → `{"status":"ok","db":"up","version":"…"}`.
 Если база недоступна, ответ `503` с `{"status":"degraded","db":"down"}`.

@@ -5,7 +5,11 @@ import { StatusBadge } from './StatusBadge';
 
 describe('StatusBadge', () => {
   it('exposes its tone and keeps a visible text label', () => {
-    render(<StatusBadge tone="dispute" icon={<svg aria-hidden="true" />}>Dispute</StatusBadge>);
+    render(
+      <StatusBadge tone="dispute" icon={<svg aria-hidden="true" />}>
+        Dispute
+      </StatusBadge>,
+    );
     expect(screen.getByText('Dispute').closest('[data-tone]')).toHaveAttribute('data-tone', 'dispute');
   });
 

@@ -21,7 +21,10 @@ export function ThemeToggle() {
 
   return (
     <IconButton label={t('toggle')} title={`${t('toggle')} · ${t(preference)}`} onClick={onClick}>
-      <span className="grid transition-transform duration-[450ms] ease-yoyo dark:-rotate-90" aria-hidden="true">
+      <span
+        className="ease-yoyo grid transition-transform duration-[450ms] dark:-rotate-90"
+        aria-hidden="true"
+      >
         <svg
           viewBox="0 0 24 24"
           width="20"

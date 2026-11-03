@@ -4,7 +4,10 @@ import { createApiClient } from '@yoyo/api-client';
 import { type ApiHealth, useApiHealth } from './use-api-health';
 
 function mockFetch(status: number, body: unknown) {
-  return vi.fn(async () => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } }));
+  return vi.fn(
+    async () =>
+      new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } }),
+  );
 }
 
 async function settle(fetchImpl: typeof fetch): Promise<ApiHealth> {
@@ -25,7 +28,9 @@ describe('useApiHealth', () => {
   });
 
   it('is offline when the API reports degraded', async () => {
-    expect(await settle(mockFetch(503, { status: 'degraded', db: 'down', version: '0.1.0' }))).toBe('offline');
+    expect(await settle(mockFetch(503, { status: 'degraded', db: 'down', version: '0.1.0' }))).toBe(
+      'offline',
+    );
   });
 
   it('is offline when the request fails', async () => {

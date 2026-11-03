@@ -2,7 +2,10 @@ import { DURATION, EASE_YOYO } from '@/lib/motion';
 
 export type Point = { x: number; y: number };
 
-export function shouldAnimateThemeChange(prefersReducedMotion: boolean, supportsViewTransition: boolean): boolean {
+export function shouldAnimateThemeChange(
+  prefersReducedMotion: boolean,
+  supportsViewTransition: boolean,
+): boolean {
   return supportsViewTransition && !prefersReducedMotion;
 }
 
