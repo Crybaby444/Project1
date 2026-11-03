@@ -1,7 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 3000;
-const baseURL = `http://localhost:${PORT}`;
+const WEB_PORT = 3000;
+const baseURL = `http://localhost:${WEB_PORT}`;
+const reuse = !process.env['CI'];
 
 export default defineConfig({
   testDir: './e2e',
@@ -17,9 +18,15 @@ export default defineConfig({
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: [
     {
-      command: 'pnpm start',
+      command: 'pnpm --filter @yoyo/api start:prod',
+      url: 'http://localhost:4000/api/v1/health',
+      reuseExistingServer: reuse,
+      timeout: 120_000,
+    },
+    {
+      command: 'pnpm --filter @yoyo/web start',
       url: baseURL,
-      reuseExistingServer: !process.env['CI'],
+      reuseExistingServer: reuse,
       timeout: 120_000,
     },
   ],

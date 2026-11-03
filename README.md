@@ -49,7 +49,7 @@ cp apps/web/.env.example apps/web/.env.local
 | `DATABASE_URL`                | API | `postgresql://localhost:5432/yoyo_dev` | База разработки. Тесты сами заменяют `yoyo_dev` на `yoyo_test` (или берут `TEST_DATABASE_URL`) |
 | `WEB_ORIGIN`                  | API | `http://localhost:3000`                | Адрес сайта для CORS                                                                           |
 | `PORT`                        | API | `4000`                                 | Порт API                                                                                       |
-| `NEXT_PUBLIC_API_URL`         | веб | `http://localhost:4000/api/v1`         | Адрес API для сайта                                                                            |
+| `NEXT_PUBLIC_API_URL`         | веб | `http://localhost:4000`                | Адрес сервера API, без `/api/v1` (пути клиента уже его содержат)                               |
 | `NEXT_PUBLIC_SHOW_STYLEGUIDE` | веб | `true`                                 | Показывать `/styleguide` (в production — `false`)                                              |
 
 ### Команды
