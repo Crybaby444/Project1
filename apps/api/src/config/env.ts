@@ -4,8 +4,13 @@ export const EnvSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().int().positive().default(4000),
   DATABASE_URL: z.url(),
-  /** The web app origin allowed to call the API with credentials (CORS). */
-  WEB_ORIGIN: z.url(),
+  /** Give up on a new database connection after this long instead of hanging (pg's default is "never"). */
+  DB_CONNECT_TIMEOUT_MS: z.coerce.number().int().positive().default(5000),
+  /**
+   * The web app origin allowed to call the API with credentials (CORS). Normalized to a bare origin:
+   * browsers send `Origin: https://site` with no slash or path, so `https://site/` must still match.
+   */
+  WEB_ORIGIN: z.url().transform((value) => new URL(value).origin),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

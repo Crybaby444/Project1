@@ -13,7 +13,14 @@ describe('loadEnv', () => {
   });
 
   it('applies defaults for optional variables', () => {
-    expect(loadEnv(valid)).toMatchObject({ PORT: 4000, NODE_ENV: 'development' });
+    expect(loadEnv(valid)).toMatchObject({ PORT: 4000, NODE_ENV: 'development', DB_CONNECT_TIMEOUT_MS: 5000 });
+  });
+
+  it('normalizes WEB_ORIGIN to a bare origin, so a trailing slash cannot break CORS', () => {
+    expect(loadEnv({ ...valid, WEB_ORIGIN: 'https://yoyo.vercel.app/' }).WEB_ORIGIN).toBe('https://yoyo.vercel.app');
+    expect(loadEnv({ ...valid, WEB_ORIGIN: 'https://yoyo.vercel.app/some/path' }).WEB_ORIGIN).toBe(
+      'https://yoyo.vercel.app',
+    );
   });
 
   it('coerces PORT from a string and rejects junk', () => {
