@@ -1,0 +1,61 @@
+/*
+ * Design tokens from DESIGN.md (reference + "Project adaptations", which take precedence).
+ * Light theme on :root / [data-theme=light], dark theme on [data-theme=dark].
+ */
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+  --canvas: #dceeff; /* Sky Wash */
+  --surface: #ffffff; /* Paper White */
+  --band: #cccccc; /* Concrete Gray */
+  --mist: #e9e9e9; /* Soft Mist */
+  --ink: #000000; /* Carbon: text and 1px outlines */
+  --ink-muted: #2e2e38;
+  --cta-bg: #000000;
+  --cta-fg: #ffffff;
+  --marquee-bg: #000000;
+  --marquee-fg: #ffffff;
+  --sticker-edge: transparent;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --canvas: #0d0e16;
+  --surface: #171823;
+  --band: #1f2030;
+  --mist: #2a2b3a;
+  --ink: #ffffff;
+  --ink-muted: #d4d5e0;
+  --cta-bg: #ffffff;
+  --cta-fg: #000000;
+  --marquee-bg: #ffffff;
+  --marquee-fg: #000000;
+  --sticker-edge: #ffffff; /* thin white die-cut edge around stickers */
+}
+
+:root {
+  /* Sticker palette — identical in both themes */
+  --sticker-blue: #4da2ff;
+  --sticker-mint: #55db9c;
+  --sticker-lavender: #e9ccff;
+  --sticker-ember: #fb4903;
+  --sticker-sun: #ffd731;
+  --sticker-violet: #5c4ade;
+  --status-cancelled: #e9e9e9;
+
+  /* Font stacks; the faces themselves come from src/styles/fonts.ts */
+  --font-display: var(--font-yoyo-display), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-yoyo-body), ui-sans-serif, system-ui, sans-serif;
+
+  /* Motion */
+  --ease-yoyo: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-slow: 450ms;
+
+  /* Radii */
+  --radius-pill: 9999px;
+  --radius-card: 20px;
+  --radius-card-xl: 40px;
+  --radius-media: 14px;
+}

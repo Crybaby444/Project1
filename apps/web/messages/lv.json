@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "title": "Yoyo — īrē jebko no cilvēkiem tuvumā",
+    "description": "Īrē instrumentus, inventāru un ierīces no kaimiņiem, nevis pērc. Viss, ko īrē, atgriežas — kā jojo."
+  },
+  "home": {
+    "tagline": "Īrē jebko no cilvēkiem tuvumā.",
+    "lead": "Urbjmašīna nedēļas nogalei, telts ceļojumam, spēļu konsole ballītei — no kaimiņiem, kuriem tā jau ir. Viss, ko īrē, atgriežas — kā jojo."
+  },
+  "language": {
+    "label": "Valoda",
+    "en": "English",
+    "lv": "Latviešu",
+    "ru": "Русский"
+  },
+  "theme": {
+    "toggle": "Mainīt tēmu",
+    "light": "Gaiša",
+    "dark": "Tumša",
+    "system": "Kā sistēmā"
+  },
+  "notFound": {
+    "title": "Šeit nekā nav",
+    "body": "Šī lapa ir aizripojusi. Atgriezīsimies pareizajā ceļā.",
+    "back": "Uz sākumlapu"
+  }
+}

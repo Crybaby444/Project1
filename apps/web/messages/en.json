@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "title": "Yoyo — rent anything from people nearby",
+    "description": "Rent tools, gear and gadgets from neighbours instead of buying them. Everything you rent comes back, like a yo-yo."
+  },
+  "home": {
+    "tagline": "Rent anything from people nearby.",
+    "lead": "A drill for the weekend, a tent for the trip, a console for the party — from neighbours who already have one. Everything you rent comes back, like a yo-yo."
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "lv": "Latviešu",
+    "ru": "Русский"
+  },
+  "theme": {
+    "toggle": "Switch theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "notFound": {
+    "title": "Nothing here",
+    "body": "This page has rolled away. Let’s get you back on track.",
+    "back": "Back to home"
+  }
+}

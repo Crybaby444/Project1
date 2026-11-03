@@ -6,5 +6,7 @@ allowBuilds:
   '@prisma/engines': true
   '@swc/core': true
   esbuild: true
+  sharp: true
+  '@parcel/watcher': true
   prisma: true
   '@scarf/scarf': false

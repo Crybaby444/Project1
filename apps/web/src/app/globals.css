@@ -1,0 +1,75 @@
+@import 'tailwindcss';
+@import '../styles/tokens.css';
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-band: var(--band);
+  --color-mist: var(--mist);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-cta-bg: var(--cta-bg);
+  --color-cta-fg: var(--cta-fg);
+  --color-marquee-bg: var(--marquee-bg);
+  --color-marquee-fg: var(--marquee-fg);
+  --color-sticker-blue: var(--sticker-blue);
+  --color-sticker-mint: var(--sticker-mint);
+  --color-sticker-lavender: var(--sticker-lavender);
+  --color-sticker-ember: var(--sticker-ember);
+  --color-sticker-sun: var(--sticker-sun);
+  --color-sticker-violet: var(--sticker-violet);
+
+  --font-display: var(--font-yoyo-display), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-yoyo-body), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-yoyo-body), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-pill: var(--radius-pill);
+  --radius-card: var(--radius-card);
+  --radius-card-xl: var(--radius-card-xl);
+  --radius-media: var(--radius-media);
+
+  --ease-yoyo: var(--ease-yoyo);
+}
+
+@layer base {
+  html {
+    background: var(--canvas);
+    color: var(--ink);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 1.39;
+    letter-spacing: -0.01em;
+    font-feature-settings: 'tnum';
+    background: var(--canvas);
+    color: var(--ink);
+    overflow-x: clip;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--sticker-sun);
+    color: #000000;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
