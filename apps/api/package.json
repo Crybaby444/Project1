@@ -9,7 +9,10 @@
     "start:prod": "node --env-file-if-exists=.env dist/main.js",
     "lint": "eslint .",
     "typecheck": "prisma generate && tsc -p tsconfig.json --noEmit",
-    "test": "prisma generate && vitest run"
+    "test": "prisma generate && vitest run",
+    "openapi:emit": "prisma generate && tsx scripts/emit-openapi.ts",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "prisma db seed"
   },
   "dependencies": {
     "@nestjs/common": "12.3.2",

@@ -7,3 +7,10 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+/// Platform settings editable at runtime; defaults live in @yoyo/shared SETTING_DEFAULTS.
+model Setting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}
