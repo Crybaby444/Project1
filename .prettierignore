@@ -1,0 +1,6 @@
+pnpm-lock.yaml
+**/dist
+**/.next
+**/schema.d.ts
+**/src/generated
+apps/api/openapi.json

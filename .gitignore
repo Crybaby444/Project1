@@ -1,3 +1,15 @@
 .superpowers/
 .impeccable/hook.cache.json
 .claude/worktrees/
+
+node_modules/
+dist/
+.next/
+.turbo/
+coverage/
+*.tsbuildinfo
+.env
+.env.local
+playwright-report/
+test-results/
+apps/api/src/generated/
