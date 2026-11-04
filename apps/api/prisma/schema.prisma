@@ -60,6 +60,12 @@ model User {
   phoneCodes       PhoneCode[]
   listings         Listing[]      @relation("ListingOwner")
   reviewedListings Listing[]      @relation("ListingReviewer")
+  rentals          Booking[]      @relation("BookingRenter")
+  lendings         Booking[]      @relation("BookingOwner")
+  offersMade       Offer[]        @relation("OfferRenter")
+  offersReceived   Offer[]        @relation("OfferOwner")
+  payments         Payment[]
+  payouts          Payout[]
 }
 
 /// One refresh token of a session. Rotation chains tokens of the same family; reuse revokes the family.
@@ -247,6 +253,8 @@ model Listing {
   category       Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   photos         ListingPhoto[]
   unavailability Unavailability[]
+  bookings       Booking[]
+  offers         Offer[]
 
   @@index([ownerId])
   @@index([status, categoryId])
@@ -289,5 +297,384 @@ model GeoCache {
   payload   Json
   createdAt DateTime @default(now())
 
+  @@index([createdAt])
+}
+
+// ---- Deals and wallet (plan 8) ------------------------------------------------------------------
+
+/** BOOKING_STATUSES of @yoyo/domain. */
+enum BookingStatus {
+  REQUESTED
+  ACCEPTED
+  PAID
+  ACTIVE
+  RETURNED
+  DAMAGE_CLAIMED
+  DISPUTED
+  COMPLETED
+  DECLINED
+  EXPIRED
+  CANCELLED
+}
+
+/** TIMER_KINDS of @yoyo/domain. */
+enum TimerKind {
+  REQUEST_EXPIRY
+  PAYMENT_EXPIRY
+  HANDOVER_DEADLINE
+  HANDOVER_CONFIRM
+  RETURN_CONFIRM
+  INSPECTION
+  DAMAGE_REPLY
+}
+
+enum PaymentMethod {
+  WALLET
+  CARD
+}
+
+enum PriceSource {
+  LISTED
+  AGREED
+}
+
+enum DisputeReason {
+  DAMAGE
+  NOT_RETURNED
+  NOT_HANDED_OVER
+}
+
+enum ResolveDecision {
+  REFUND_DEPOSIT
+  DEPOSIT_TO_OWNER
+  REFUND_ALL
+  CONFIRM_HANDOVER
+}
+
+enum BookingOutcome {
+  DEPOSIT_REFUNDED
+  DEPOSIT_TO_OWNER
+  REFUNDED_ALL
+}
+
+enum CancelledBy {
+  RENTER
+  OWNER
+  ADMIN
+}
+
+/**
+ * A deal: the snapshot @yoyo/domain decides on, column by column. Only the API's BookingsService
+ * writes it, after `decide()`. `reserved` holds the rental days while they are taken; the exclusion
+ * constraint Booking_no_double_booking (migration `deals`) makes a second overlapping reservation of the
+ * same listing impossible. At most one timer is armed: `timerKind` due at `timerDueAt`.
+ */
+model Booking {
+  id                  String                    @id @default(cuid())
+  listingId           String
+  renterId            String
+  ownerId             String
+  offerId             String?                   @unique
+  status              BookingStatus
+  /// First and last rental day, both included, in `timeZone`.
+  start               DateTime                  @db.Date
+  end                 DateTime                  @db.Date
+  timeZone            String
+  /// The renter's note to the owner.
+  message             String?
+  days                Int
+  dailyCents          Int
+  baseCents           Int
+  discountPercent     Int
+  discountCents       Int
+  rentCents           Int
+  serviceFeeCents     Int
+  depositCents        Int
+  totalCents          Int
+  ownerPayoutCents    Int
+  priceSource         PriceSource
+  renterSignedAt      DateTime?
+  ownerSignedAt       DateTime?
+  paymentMethod       PaymentMethod?
+  ownerHandedOverAt   DateTime?
+  renterReceivedAt    DateTime?
+  renterReturnedAt    DateTime?
+  ownerReceivedBackAt DateTime?
+  declineReason       String?
+  damageDescription   String?
+  damagePhotoIds      String[]                  @default([])
+  damageClaimedAt     DateTime?
+  disputeReason       DisputeReason?
+  disputeOpenedAt     DateTime?
+  disputeNote         String?
+  resolutionDecision  ResolveDecision?
+  resolutionComment   String?
+  resolvedById        String?
+  resolvedAt          DateTime?
+  outcome             BookingOutcome?
+  cancelledBy         CancelledBy?
+  cancelReason        String?
+  cancelledAt         DateTime?
+  timerKind           TimerKind?
+  timerDueAt          DateTime?
+  /// daterange of the taken days while reserved (RESERVE_DATES … RELEASE_DATES); written with raw SQL.
+  reserved            Unsupported("daterange")?
+  /// Counts every change; an action with an older version is refused (optimistic locking).
+  version             Int                       @default(0)
+  createdAt           DateTime                  @default(now())
+  updatedAt           DateTime                  @updatedAt
+  completedAt         DateTime?
+
+  listing  Listing        @relation(fields: [listingId], references: [id], onDelete: Restrict)
+  renter   User           @relation("BookingRenter", fields: [renterId], references: [id], onDelete: Restrict)
+  owner    User           @relation("BookingOwner", fields: [ownerId], references: [id], onDelete: Restrict)
+  offer    Offer?         @relation(fields: [offerId], references: [id], onDelete: SetNull)
+  events   BookingEvent[]
+  contract Contract?
+  photos   BookingPhoto[]
+  payments Payment[]
+
+  @@index([renterId, updatedAt])
+  @@index([ownerId, updatedAt])
+  @@index([listingId])
+  @@index([timerDueAt])
+  @@index([status])
+}
+
+/** Every change of a booking, never edited: who did what, from which status to which. */
+model BookingEvent {
+  id         String         @id @default(cuid())
+  bookingId  String
+  /// The domain event (`ACCEPT`, `TIMEOUT`…) or `REQUEST` for the first one.
+  type       String
+  /// RENTER | OWNER | ADMIN | SYSTEM
+  actorKind  String
+  actorId    String?
+  fromStatus BookingStatus?
+  toStatus   BookingStatus
+  /// The event's data (reason, note, timer…), never card details.
+  data       Json           @default("{}")
+  /// SYSTEM_MESSAGE templates for the chat (plan 9).
+  messages   String[]       @default([])
+  createdAt  DateTime       @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId, createdAt])
+}
+
+/** The rental contract's terms, frozen when the owner accepts; the PDF is drawn from them in any language. */
+model Contract {
+  bookingId String   @id
+  terms     Json
+  /// sha256 of the canonical JSON of `terms`; printed on the PDF.
+  termsHash String
+  createdAt DateTime @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+}
+
+enum BookingPhotoKind {
+  HANDOVER
+  RETURN
+  DAMAGE
+}
+
+/** A photo of the item's condition at handover, at return, or of damage (spec §6 HandoverPhoto). */
+model BookingPhoto {
+  id         String           @id @default(cuid())
+  bookingId  String
+  uploaderId String
+  kind       BookingPhotoKind
+  storageKey String           @unique
+  width      Int
+  height     Int
+  bytes      Int
+  format     String
+  createdAt  DateTime         @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId, kind])
+}
+
+enum OfferStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  WITHDRAWN
+  EXPIRED
+  USED
+}
+
+/** A renter's own daily price for given days (spec §4.6); an accepted one is used by one booking request. */
+model Offer {
+  id         String      @id @default(cuid())
+  listingId  String
+  renterId   String
+  ownerId    String
+  start      DateTime    @db.Date
+  end        DateTime    @db.Date
+  dailyCents Int
+  status     OfferStatus @default(PENDING)
+  expiresAt  DateTime
+  answeredAt DateTime?
+  createdAt  DateTime    @default(now())
+
+  listing Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  renter  User     @relation("OfferRenter", fields: [renterId], references: [id], onDelete: Cascade)
+  owner   User     @relation("OfferOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  booking Booking?
+
+  @@index([renterId, createdAt])
+  @@index([ownerId, createdAt])
+  @@index([status, expiresAt])
+}
+
+/** OperationKind of @yoyo/domain. */
+enum LedgerKind {
+  TOP_UP
+  WITHDRAWAL
+  BOOKING_PAYMENT
+  RENT_RELEASE
+  DEPOSIT_REFUND
+  DEPOSIT_TO_OWNER
+  BOOKING_REFUND
+}
+
+/**
+ * One journal entry of the double-entry ledger. Its postings (LedgerEntry) sum to zero: a deferred
+ * constraint trigger checks that at commit. Neither is ever changed or deleted.
+ */
+model LedgerOperation {
+  id        String     @id @default(cuid())
+  kind      LedgerKind
+  bookingId String?
+  /// Whose wallet operation it is (top-ups and payouts).
+  userId    String?
+  createdAt DateTime   @default(now())
+
+  entries LedgerEntry[]
+  payout  Payout?
+
+  @@index([bookingId])
+  @@index([createdAt])
+}
+
+/** A posting: whole cents into (+) or out of (−) an account (`wallet:<userId>`, `escrow:<bookingId>`…). */
+model LedgerEntry {
+  id          BigInt @id @default(autoincrement())
+  operationId String
+  account     String
+  amount      Int
+
+  operation LedgerOperation @relation(fields: [operationId], references: [id], onDelete: Restrict)
+
+  @@index([account, id])
+  @@index([operationId])
+}
+
+/**
+ * The balance of an account: a cache of the sum of its postings, written in the same transaction
+ * (spec §6 Wallet for `wallet:` accounts). Wallets, escrow and deposits never go below zero (CHECK).
+ */
+model LedgerAccount {
+  id        String   @id
+  balance   Int      @default(0)
+  updatedAt DateTime @updatedAt
+}
+
+enum PaymentPurpose {
+  BOOKING
+  TOP_UP
+}
+
+enum MoneyJobStatus {
+  PENDING
+  DONE
+  FAILED
+}
+
+/** Money taken from a card through the PaymentProvider. Only the brand and last 4 digits are kept. */
+model Payment {
+  id            String         @id @default(cuid())
+  userId        String
+  bookingId     String?
+  purpose       PaymentPurpose
+  amountCents   Int
+  refundedCents Int            @default(0)
+  providerRef   String         @unique
+  brand         String
+  last4         String
+  createdAt     DateTime       @default(now())
+
+  user    User            @relation(fields: [userId], references: [id], onDelete: Restrict)
+  booking Booking?        @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  refunds PaymentRefund[]
+
+  @@index([userId, createdAt])
+  @@index([bookingId])
+}
+
+/** Money going back to a card. Written with the ledger operation, sent to the provider after commit. */
+model PaymentRefund {
+  id          String         @id @default(cuid())
+  paymentId   String
+  amountCents Int
+  status      MoneyJobStatus @default(PENDING)
+  providerRef String?
+  attempts    Int            @default(0)
+  lastError   String?
+  createdAt   DateTime       @default(now())
+  doneAt      DateTime?
+
+  payment Payment @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+
+  @@index([status, createdAt])
+}
+
+/** A withdrawal to a card (spec §6 Payout): the wallet is debited at once, the provider pays out after. */
+model Payout {
+  id               String         @id @default(cuid())
+  userId           String
+  amountCents      Int
+  brand            String
+  last4            String
+  /// The provider's token of the destination card (never the card number).
+  destinationToken String
+  status           MoneyJobStatus @default(PENDING)
+  providerRef      String?
+  attempts         Int            @default(0)
+  lastError        String?
+  operationId      String         @unique
+  createdAt        DateTime       @default(now())
+  doneAt           DateTime?
+
+  user      User            @relation(fields: [userId], references: [id], onDelete: Restrict)
+  operation LedgerOperation @relation(fields: [operationId], references: [id], onDelete: Restrict)
+
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+}
+
+enum IdempotencyState {
+  IN_PROGRESS
+  DONE
+}
+
+/** A client's Idempotency-Key and the answer it got, kept 24 hours; the same request again gets that answer. */
+model IdempotencyKey {
+  userId      String
+  key         String
+  /// `POST /api/v1/wallet/top-ups`
+  scope       String
+  /// sha256 of scope and body: the same key with another request is refused.
+  requestHash String
+  state       IdempotencyState @default(IN_PROGRESS)
+  statusCode  Int?
+  body        Json?
+  createdAt   DateTime         @default(now())
+
+  @@id([userId, key])
   @@index([createdAt])
 }
