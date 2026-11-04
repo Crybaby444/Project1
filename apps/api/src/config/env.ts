@@ -14,8 +14,10 @@ const EnvObject = z.object({
   /** Give up on a new database connection after this long instead of hanging (pg's default is "never"). */
   DB_CONNECT_TIMEOUT_MS: z.coerce.number().int().positive().default(5000),
   /**
-   * The web app origin allowed to call the API with credentials (CORS). Normalized to a bare origin:
-   * browsers send `Origin: https://site` with no slash or path, so `https://site/` must still match.
+   * The web app origin allowed to call the API with credentials (CORS); also the base of email links,
+   * Google's redirect_uri and the post-login redirect. Must be https in production. Normalized to a
+   * bare origin: browsers send `Origin: https://site` with no slash or path, so `https://site/` must
+   * still match.
    */
   WEB_ORIGIN: z.url().transform((value) => new URL(value).origin),
   /**
@@ -34,11 +36,12 @@ const EnvObject = z.object({
   /** HS256 key for access tokens and other signed values. Render generates it (render.yaml). */
   JWT_SECRET: z.string().min(32),
   /**
-   * Outgoing mail server, e.g. `smtps://me%40gmail.com:app-password@smtp.gmail.com:465`.
+   * Outgoing mail server, e.g. `smtps://resend:<API_KEY>@smtp.resend.com:2465` (Resend; Render's free
+   * tier blocks ports 25, 465 and 587).
    * Defaults to the local Mailpit outside production; unset in production means mail is disabled.
    */
   SMTP_URL: z.preprocess(blankAsUnset, z.url({ protocol: /^smtps?$/ }).optional()),
-  /** Sender of every email. With Gmail SMTP it must be the Gmail address (or one of its aliases). */
+  /** Sender of every email, on a domain the mail service verified, e.g. `Yoyo <no-reply@yoyo.rent>`. */
   MAIL_FROM: z.preprocess(blankAsUnset, z.string().min(3).default('Yoyo <no-reply@yoyo.local>')),
   /**
    * Emails sent per 24 hours from the whole API (in memory, per instance). Over it, mail is skipped and
@@ -67,6 +70,13 @@ const EnvObject = z.object({
 });
 
 export const EnvSchema = EnvObject.superRefine((env, ctx) => {
+  if (env.NODE_ENV === 'production' && !env.WEB_ORIGIN.startsWith('https://')) {
+    ctx.addIssue({
+      code: 'custom',
+      path: ['WEB_ORIGIN'],
+      message: 'must be an https:// origin in production (Secure cookies, email links, Google redirects)',
+    });
+  }
   if (env.NODE_ENV === 'production' && env.SMS_PROVIDER === 'mailbox') {
     ctx.addIssue({
       code: 'custom',

@@ -11,6 +11,12 @@
       ],
       "cache": false,
       "outputs": []
+    },
+    "build": {
+      "env": [
+        "SITE_ORIGIN",
+        "LEGACY_HOSTS"
+      ]
     }
   }
 }

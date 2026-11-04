@@ -24,6 +24,16 @@ services:
       # Browser → Vercel proxy → Render load balancer → API: trust those two hops for the client address.
       - key: TRUST_PROXY_HOPS
         value: "2"
+      # The same value as PROXY_SECRET on Vercel (at least 32 characters). Set it on Vercel first: with it
+      # the API trusts X-Forwarded-For only on requests from the site proxy (README, «Свой домен»).
+      - key: PROXY_SECRET
+        sync: false
+      # At most this many emails per 24 hours (Resend's free tier sends 100 a day).
+      - key: MAIL_DAILY_LIMIT
+        value: "90"
+      # Registrations per hour from all addresses together.
+      - key: REGISTRATION_HOURLY_CAP
+        value: "100"
       # Optional. Left empty, the feature is off and the API still starts (see README, «Аккаунты»).
       - key: SMTP_URL
         sync: false

@@ -242,7 +242,7 @@ describe('my account', () => {
 
 describe('phone confirmation in production without an SMS provider', () => {
   it('is reported as unavailable and its routes answer 404 AUTH_PROVIDER_DISABLED', async () => {
-    const t = await createTestApp({ env: { NODE_ENV: 'production' } });
+    const t = await createTestApp({ env: { NODE_ENV: 'production', WEB_ORIGIN: 'https://yoyo.rent' } });
     try {
       await resetAccounts(t.prisma);
       expect((await request(t.server).get('/api/v1/auth/providers')).body).toEqual({ google: false, phone: false });

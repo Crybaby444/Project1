@@ -6,6 +6,8 @@ const valid = {
   WEB_ORIGIN: 'http://localhost:3000',
   JWT_SECRET: 'x'.repeat(32),
 };
+/** Production needs an https site origin. */
+const prod = { ...valid, NODE_ENV: 'production', WEB_ORIGIN: 'https://yoyo.rent' };
 
 describe('loadEnv', () => {
   it('names every missing required variable in a single error', () => {
@@ -58,10 +60,10 @@ describe('loadEnv', () => {
   it('sends mail to the local Mailpit in development and test, and nowhere in production unless configured', () => {
     expect(loadEnv(valid).SMTP_URL).toBe('smtp://localhost:1025');
     expect(loadEnv({ ...valid, NODE_ENV: 'test' }).SMTP_URL).toBe('smtp://localhost:1025');
-    expect(loadEnv({ ...valid, NODE_ENV: 'production' }).SMTP_URL).toBeUndefined();
-    expect(loadEnv({ ...valid, NODE_ENV: 'production', SMTP_URL: '' }).SMTP_URL).toBeUndefined();
+    expect(loadEnv(prod).SMTP_URL).toBeUndefined();
+    expect(loadEnv({ ...prod, SMTP_URL: '' }).SMTP_URL).toBeUndefined();
     expect(
-      loadEnv({ ...valid, NODE_ENV: 'production', SMTP_URL: 'smtps://me%40gmail.com:app-pass@smtp.gmail.com:465' })
+      loadEnv({ ...prod, SMTP_URL: 'smtps://me%40gmail.com:app-pass@smtp.gmail.com:465' })
         .SMTP_URL,
     ).toBe('smtps://me%40gmail.com:app-pass@smtp.gmail.com:465');
   });
@@ -94,12 +96,12 @@ describe('loadEnv', () => {
   it('simulates SMS by email outside production and has no SMS provider in production by default', () => {
     expect(loadEnv(valid).SMS_PROVIDER).toBe('mailbox');
     expect(loadEnv({ ...valid, NODE_ENV: 'test' }).SMS_PROVIDER).toBe('mailbox');
-    expect(loadEnv({ ...valid, NODE_ENV: 'production' }).SMS_PROVIDER).toBeUndefined();
-    expect(loadEnv({ ...valid, NODE_ENV: 'production', SMS_PROVIDER: '' }).SMS_PROVIDER).toBeUndefined();
+    expect(loadEnv(prod).SMS_PROVIDER).toBeUndefined();
+    expect(loadEnv({ ...prod, SMS_PROVIDER: '' }).SMS_PROVIDER).toBeUndefined();
   });
 
   it('never lets production "confirm" phones by email, and knows no other SMS provider yet', () => {
-    expect(() => loadEnv({ ...valid, NODE_ENV: 'production', SMS_PROVIDER: 'mailbox' })).toThrow(/SMS_PROVIDER/);
+    expect(() => loadEnv({ ...prod, SMS_PROVIDER: 'mailbox' })).toThrow(/SMS_PROVIDER/);
     expect(() => loadEnv({ ...valid, SMS_PROVIDER: 'twilio' })).toThrow(/SMS_PROVIDER/);
   });
 
@@ -149,5 +151,13 @@ describe('loadEnv', () => {
     expect(loadEnv(valid).MAIL_DAILY_LIMIT).toBe(90);
     expect(loadEnv({ ...valid, MAIL_DAILY_LIMIT: '2900' }).MAIL_DAILY_LIMIT).toBe(2900);
     expect(() => loadEnv({ ...valid, MAIL_DAILY_LIMIT: '-1' })).toThrow(/MAIL_DAILY_LIMIT/);
+  });
+
+  it('requires an https WEB_ORIGIN in production (cookies, links and Google redirects depend on it)', () => {
+    expect(loadEnv({ ...prod, WEB_ORIGIN: 'https://yoyo.rent/' }).WEB_ORIGIN).toBe('https://yoyo.rent');
+    expect(() => loadEnv({ ...prod, WEB_ORIGIN: 'http://yoyo.rent' })).toThrow(/WEB_ORIGIN.*https/);
+    expect(loadEnv({ ...valid, NODE_ENV: 'development', WEB_ORIGIN: 'http://localhost:3000' }).WEB_ORIGIN).toBe(
+      'http://localhost:3000',
+    );
   });
 });

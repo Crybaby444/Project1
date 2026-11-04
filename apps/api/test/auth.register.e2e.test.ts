@@ -146,7 +146,7 @@ describe('registration when the mail server fails', () => {
 
 describe('registration in production', () => {
   it('marks the session cookies Secure', async () => {
-    const t = await createTestApp({ env: { NODE_ENV: 'production' } });
+    const t = await createTestApp({ env: { NODE_ENV: 'production', WEB_ORIGIN: 'https://yoyo.rent' } });
     try {
       await resetAccounts(t.prisma);
       const res = await request(t.server).post('/api/v1/auth/register').send(anna);
