@@ -300,11 +300,15 @@ export const AdminListingsResponseSchema = z.object({ items: z.array(AdminListin
 
 export type AdminListingsResponse = z.infer<typeof AdminListingsResponseSchema>;
 
-/** `version`: the version the administrator reviewed; if the owner changed the listing since, 409. */
-export const ApproveListingRequestSchema = z.object({ version: z.number().int().min(0).optional() });
+/**
+ * `version`: the version the administrator reviewed. Required, so a decision always names what was
+ * looked at: if the owner changed the listing since (a new title, other photos), 409.
+ */
+export const ApproveListingRequestSchema = z.object({ version: z.number().int().min(0) });
 
 /** The reason is shown to the owner and emailed to them. */
 export const RejectListingRequestSchema = z.object({
   reason: z.string().max(2000).transform(cleanText).pipe(z.string().min(10).max(500)),
-  version: z.number().int().min(0).optional(),
+  /** The version the administrator reviewed (see ApproveListingRequestSchema). */
+  version: z.number().int().min(0),
 });

@@ -43,10 +43,11 @@ export class ModerationController {
 
   @Post(':id/approve')
   @HttpCode(200)
-  @ApiBody({ type: ApproveListingDto, required: false })
+  @ApiBody({ type: ApproveListingDto })
   @ZodResponse({ status: 200, type: AdminListingResponseDto, description: 'Published; the owner gets an email' })
   @ApiErrors(400, 401, 403, 404, 409)
   async approve(@CurrentUser() admin: PublicUser, @Param('id') id: string, @Req() req: Request): Promise<AdminListingResponse> {
+    // A bare POST counts as `{}`, so a missing version is reported as `fields.version`.
     const { version } = parseOptionalBody(ApproveListingRequestSchema, req.body);
     return { listing: await this.moderation.decide(id, admin, { action: 'approve' }, version) };
   }

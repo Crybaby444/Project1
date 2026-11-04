@@ -47,7 +47,7 @@ describe('listing moderation', () => {
 
     it('does not let an administrator approve their own listing', async () => {
       const own = await seedListing(t, admin.user, { status: 'PENDING_REVIEW' });
-      expect((await admin.post(`/admin/listings/${own.id}/approve`).expect(403)).body.error.code).toBe('AUTH_FORBIDDEN');
+      expect((await admin.post(`/admin/listings/${own.id}/approve`).send({ version: own.version }).expect(403)).body.error.code).toBe('AUTH_FORBIDDEN');
     });
   });
 
@@ -74,7 +74,7 @@ describe('listing moderation', () => {
     it('publishes the listing and emails the owner in their language with a link to it', async () => {
       const listing = await seedListing(t, anna.user, { status: 'PENDING_REVIEW' });
 
-      const res = await admin.post(`/admin/listings/${listing.id}/approve`).expect(200);
+      const res = await admin.post(`/admin/listings/${listing.id}/approve`).send({ version: listing.version }).expect(200);
 
       expect(res.body.listing).toMatchObject({
         status: 'PUBLISHED',
@@ -92,9 +92,9 @@ describe('listing moderation', () => {
     it('refuses a listing that is not in review with 409, and a missing one with 404', async () => {
       for (const status of ['DRAFT', 'PUBLISHED', 'REJECTED', 'HIDDEN', 'ARCHIVED'] as const) {
         const listing = await seedListing(t, anna.user, { status });
-        expect((await admin.post(`/admin/listings/${listing.id}/approve`).expect(409)).body.error.code, status).toBe('INVALID_STATUS');
+        expect((await admin.post(`/admin/listings/${listing.id}/approve`).send({ version: listing.version }).expect(409)).body.error.code, status).toBe('INVALID_STATUS');
       }
-      await admin.post('/admin/listings/nope/approve').expect(404);
+      await admin.post('/admin/listings/nope/approve').send({ version: 0 }).expect(404);
     });
 
     it('refuses to approve a version the owner has changed since the administrator looked', async () => {
@@ -103,10 +103,29 @@ describe('listing moderation', () => {
       expect(res.body.error.details).toEqual({ currentVersion: listing.version });
     });
 
+    it('needs the version the administrator reviewed, so content swapped in after they looked is never published unseen', async () => {
+      const listing = await seedListing(t, anna.user, { status: 'PENDING_REVIEW' });
+      const seen = (await admin.get(`/admin/listings`).expect(200)).body.items[0];
+      expect(seen.title).toBe(listing.title);
+      // While the administrator reads it, the owner swaps the title (the listing stays in review).
+      await anna.patch(`/listings/${listing.id}`).send({ version: seen.version, title: 'Totally different thing now' }).expect(200);
+
+      for (const res of [
+        await admin.post(`/admin/listings/${listing.id}/approve`),
+        await admin.post(`/admin/listings/${listing.id}/approve`).send({}),
+        await admin.post(`/admin/listings/${listing.id}/reject`).send({ reason: 'Please add a photo of the charger.' }),
+      ]) {
+        expect(res.status, JSON.stringify(res.body)).toBe(400);
+        expect(res.body.error.fields, JSON.stringify(res.body)).toHaveProperty('version');
+      }
+      await admin.post(`/admin/listings/${listing.id}/approve`).send({ version: seen.version }).expect(409);
+      expect((await t.prisma.listing.findUniqueOrThrow({ where: { id: listing.id } })).status).toBe('PENDING_REVIEW');
+    });
+
     it('keeps the date of the first publication when an edited listing is approved again', async () => {
       const first = new Date('2026-01-01T10:00:00Z');
       const listing = await seedListing(t, anna.user, { status: 'PENDING_REVIEW', publishedAt: first });
-      const res = await admin.post(`/admin/listings/${listing.id}/approve`).expect(200);
+      const res = await admin.post(`/admin/listings/${listing.id}/approve`).send({ version: listing.version }).expect(200);
       expect(res.body.listing.publishedAt).toBe(first.toISOString());
     });
   });
@@ -115,8 +134,8 @@ describe('listing moderation', () => {
     it('needs a reason of 10–500 characters', async () => {
       const listing = await seedListing(t, anna.user, { status: 'PENDING_REVIEW' });
       expect((await admin.post(`/admin/listings/${listing.id}/reject`).send({}).expect(400)).body.error.fields).toHaveProperty('reason');
-      await admin.post(`/admin/listings/${listing.id}/reject`).send({ reason: 'Too short' }).expect(400);
-      await admin.post(`/admin/listings/${listing.id}/reject`).send({ reason: 'x'.repeat(501) }).expect(400);
+      await admin.post(`/admin/listings/${listing.id}/reject`).send({ reason: 'Too short', version: listing.version }).expect(400);
+      await admin.post(`/admin/listings/${listing.id}/reject`).send({ reason: 'x'.repeat(501), version: listing.version }).expect(400);
       await admin.post(`/admin/listings/${listing.id}/reject`).expect(400);
     });
 
@@ -126,7 +145,7 @@ describe('listing moderation', () => {
 
       const res = await admin
         .post(`/admin/listings/${listing.id}/reject`)
-        .send({ reason: '  The photos show a <b>different</b> drill. ' })
+        .send({ reason: '  The photos show a <b>different</b> drill. ', version: listing.version })
         .expect(200);
 
       expect(res.body.listing).toMatchObject({ status: 'REJECTED', rejectionReason: 'The photos show a different drill.', reviewedById: admin.user.id });
@@ -142,7 +161,7 @@ describe('listing moderation', () => {
     it('writes English for an English owner, with no language prefix in the link', async () => {
       const carl = await signedInClient(t, { locale: 'en' });
       const listing = await seedListing(t, carl.user, { status: 'PENDING_REVIEW' });
-      await admin.post(`/admin/listings/${listing.id}/reject`).send({ reason: 'Please add a photo of the charger.' }).expect(200);
+      await admin.post(`/admin/listings/${listing.id}/reject`).send({ reason: 'Please add a photo of the charger.', version: listing.version }).expect(200);
       await t.mailSent();
       const mail = await mailbox.latestTo(carl.email);
       expect(mail.subject).toBe(en.listingRejected.subject);

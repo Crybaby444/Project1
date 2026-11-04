@@ -47,16 +47,16 @@ export class ModerationService {
   /**
    * Approves (PUBLISHED) or rejects (REJECTED, with the reason) a listing in review and emails the
    * owner in their language. Only PENDING_REVIEW can be decided (409 otherwise); an administrator
-   * never decides on their own listing (403). With `version`, a listing the owner changed since the
-   * administrator looked at it is refused (409).
+   * never decides on their own listing (403). `version` is the one the administrator reviewed: a
+   * listing the owner changed since is refused (409), so nothing unseen is ever published.
    */
-  async decide(id: string, admin: PublicUser, decision: Decision, version?: number): Promise<AdminListing> {
+  async decide(id: string, admin: PublicUser, decision: Decision, version: number): Promise<AdminListing> {
     const listing = await this.prisma.listing.findUnique({ where: { id }, include: { owner: true } });
     if (!listing) throw new AppError('NOT_FOUND', 404, 'Listing not found');
     if (listing.ownerId === admin.id) throw new AppError('AUTH_FORBIDDEN', 403, 'Another administrator reviews your own listings');
     const status = nextStatus(listing.status, decision.action);
     if (status === null || status === 'REMOVED') throw invalidStatus(listing.status);
-    if (version !== undefined && version !== listing.version) throw this.listings.stale(listing.version);
+    if (version !== listing.version) throw this.listings.stale(listing.version);
 
     const now = this.clock.now();
     await this.listings.transition(listing, status, {

@@ -983,7 +983,7 @@ export interface components {
             total: number;
         };
         ApproveListingDto: {
-            version?: number;
+            version: number;
         };
         AdminListingResponseDto_Output: {
             listing: {
@@ -1050,7 +1050,7 @@ export interface components {
         };
         RejectListingDto: {
             reason: string;
-            version?: number;
+            version: number;
         };
         GeoSearchResponseDto_Output: {
             results: {
@@ -2945,7 +2945,7 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": components["schemas"]["ApproveListingDto"];
             };
