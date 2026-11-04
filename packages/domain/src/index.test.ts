@@ -35,6 +35,16 @@ describe('@yoyo/domain entry point', () => {
         'validateOffer',
         'validatePricing',
         'DEFAULT_BOOKING_SETTINGS',
+        // ledger
+        'applyOperation',
+        'assertBalanced',
+        'bookingPayment',
+        'bookingRefund',
+        'depositRefund',
+        'depositToOwner',
+        'rentRelease',
+        'topUp',
+        'withdraw',
       ].sort(),
     );
   });
