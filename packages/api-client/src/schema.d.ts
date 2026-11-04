@@ -276,38 +276,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/admin/users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["AdminController_users"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/categories": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["CategoriesController_list"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/me/listings": {
         parameters: {
             query?: never;
@@ -413,6 +381,38 @@ export interface paths {
         };
         get?: never;
         put: operations["ListingsController_unavailability"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CategoriesController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminController_users"];
+        put?: never;
         post?: never;
         delete?: never;
         options?: never;
@@ -680,67 +680,6 @@ export interface components {
         PhoneVerifyDto: {
             code: string;
         };
-        AdminUsersResponseDto_Output: {
-            items: {
-                id: string;
-                email: string;
-                name: string;
-                city: string | null;
-                about: string | null;
-                /** @enum {string} */
-                locale: "en" | "lv" | "ru";
-                /** @enum {string} */
-                theme: "system" | "light" | "dark";
-                /** @enum {string} */
-                role: "USER" | "ADMIN";
-                emailVerified: boolean;
-                phone: string | null;
-                phoneVerified: boolean;
-                /** Format: date-time */
-                createdAt: string;
-                /** Format: date-time */
-                blockedAt: string | null;
-                /** Format: date-time */
-                deletedAt: string | null;
-            }[];
-            total: number;
-        };
-        CategoryNode_Output: {
-            id: string;
-            slug: string;
-            /** @enum {string} */
-            sticker: "blue" | "mint" | "lavender" | "ember" | "sun" | "violet";
-            icon: string;
-            names: {
-                en: string;
-                lv: string;
-                ru: string;
-            };
-            attributes: {
-                key: string;
-                /** @enum {string} */
-                type: "TEXT" | "NUMBER" | "BOOLEAN" | "SELECT";
-                required: boolean;
-                unit: string | null;
-                labels: {
-                    en: string;
-                    lv: string;
-                    ru: string;
-                };
-                options: {
-                    value: string;
-                    labels: {
-                        en: string;
-                        lv: string;
-                        ru: string;
-                    };
-                }[] | null;
-            }[];
-            children: components["schemas"]["CategoryNode_Output"][];
-        };
-        CategoriesResponseDto_Output: {
-            categories: components["schemas"]["CategoryNode_Output"][];
-        };
         MyListingsResponseDto_Output: {
             items: {
                 id: string;
@@ -885,6 +824,67 @@ export interface components {
                 end: string;
             }[];
             version: number;
+        };
+        CategoryNode_Output: {
+            id: string;
+            slug: string;
+            /** @enum {string} */
+            sticker: "blue" | "mint" | "lavender" | "ember" | "sun" | "violet";
+            icon: string;
+            names: {
+                en: string;
+                lv: string;
+                ru: string;
+            };
+            attributes: {
+                key: string;
+                /** @enum {string} */
+                type: "TEXT" | "NUMBER" | "BOOLEAN" | "SELECT";
+                required: boolean;
+                unit: string | null;
+                labels: {
+                    en: string;
+                    lv: string;
+                    ru: string;
+                };
+                options: {
+                    value: string;
+                    labels: {
+                        en: string;
+                        lv: string;
+                        ru: string;
+                    };
+                }[] | null;
+            }[];
+            children: components["schemas"]["CategoryNode_Output"][];
+        };
+        CategoriesResponseDto_Output: {
+            categories: components["schemas"]["CategoryNode_Output"][];
+        };
+        AdminUsersResponseDto_Output: {
+            items: {
+                id: string;
+                email: string;
+                name: string;
+                city: string | null;
+                about: string | null;
+                /** @enum {string} */
+                locale: "en" | "lv" | "ru";
+                /** @enum {string} */
+                theme: "system" | "light" | "dark";
+                /** @enum {string} */
+                role: "USER" | "ADMIN";
+                emailVerified: boolean;
+                phone: string | null;
+                phoneVerified: boolean;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                blockedAt: string | null;
+                /** Format: date-time */
+                deletedAt: string | null;
+            }[];
+            total: number;
         };
         PhotoUploadResponseDto_Output: {
             photo: {
@@ -2007,76 +2007,6 @@ export interface operations {
             };
         };
     };
-    AdminController_users: {
-        parameters: {
-            query?: {
-                search?: string;
-                page?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Users, newest first, 20 a page */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminUsersResponseDto_Output"];
-                };
-            };
-            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorDto_Output"];
-                };
-            };
-            /** @description Not signed in or wrong credentials */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorDto_Output"];
-                };
-            };
-            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorDto_Output"];
-                };
-            };
-        };
-    };
-    CategoriesController_list: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Active categories as a tree, with their attributes */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CategoriesResponseDto_Output"];
-                };
-            };
-        };
-    };
     MyListingsController_list: {
         parameters: {
             query?: {
@@ -2607,6 +2537,76 @@ export interface operations {
             };
             /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    CategoriesController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Active categories as a tree, with their attributes */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoriesResponseDto_Output"];
+                };
+            };
+        };
+    };
+    AdminController_users: {
+        parameters: {
+            query?: {
+                search?: string;
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Users, newest first, 20 a page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUsersResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };

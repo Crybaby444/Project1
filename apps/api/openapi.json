@@ -1068,98 +1068,6 @@
         ]
       }
     },
-    "/api/v1/admin/users": {
-      "get": {
-        "operationId": "AdminController_users",
-        "parameters": [
-          {
-            "name": "search",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "minimum": 1,
-              "maximum": 100000,
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Users, newest first, 20 a page",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminUsersResponseDto_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorDto_Output"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not signed in or wrong credentials",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorDto_Output"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorDto_Output"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "admin"
-        ]
-      }
-    },
-    "/api/v1/categories": {
-      "get": {
-        "operationId": "CategoriesController_list",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Active categories as a tree, with their attributes",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CategoriesResponseDto_Output"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "categories"
-        ]
-      }
-    },
     "/api/v1/me/listings": {
       "get": {
         "operationId": "MyListingsController_list",
@@ -1815,6 +1723,98 @@
         },
         "tags": [
           "listings"
+        ]
+      }
+    },
+    "/api/v1/categories": {
+      "get": {
+        "operationId": "CategoriesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Active categories as a tree, with their attributes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoriesResponseDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "categories"
+        ]
+      }
+    },
+    "/api/v1/admin/users": {
+      "get": {
+        "operationId": "AdminController_users",
+        "parameters": [
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100000,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users, newest first, 20 a page",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUsersResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "admin"
         ]
       }
     },
@@ -3113,290 +3113,6 @@
           "code"
         ]
       },
-      "AdminUsersResponseDto_Output": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "email": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "city": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "about": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "locale": {
-                  "type": "string",
-                  "enum": [
-                    "en",
-                    "lv",
-                    "ru"
-                  ]
-                },
-                "theme": {
-                  "type": "string",
-                  "enum": [
-                    "system",
-                    "light",
-                    "dark"
-                  ]
-                },
-                "role": {
-                  "type": "string",
-                  "enum": [
-                    "USER",
-                    "ADMIN"
-                  ]
-                },
-                "emailVerified": {
-                  "type": "boolean"
-                },
-                "phone": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "phoneVerified": {
-                  "type": "boolean"
-                },
-                "createdAt": {
-                  "type": "string",
-                  "format": "date-time",
-                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
-                },
-                "blockedAt": {
-                  "type": "string",
-                  "format": "date-time",
-                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
-                  "nullable": true
-                },
-                "deletedAt": {
-                  "type": "string",
-                  "format": "date-time",
-                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
-                  "nullable": true
-                }
-              },
-              "required": [
-                "id",
-                "email",
-                "name",
-                "city",
-                "about",
-                "locale",
-                "theme",
-                "role",
-                "emailVerified",
-                "phone",
-                "phoneVerified",
-                "createdAt",
-                "blockedAt",
-                "deletedAt"
-              ],
-              "additionalProperties": false
-            }
-          },
-          "total": {
-            "type": "integer",
-            "minimum": -9007199254740991,
-            "maximum": 9007199254740991
-          }
-        },
-        "required": [
-          "items",
-          "total"
-        ],
-        "additionalProperties": false
-      },
-      "CategoryNode_Output": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "slug": {
-            "type": "string"
-          },
-          "sticker": {
-            "type": "string",
-            "enum": [
-              "blue",
-              "mint",
-              "lavender",
-              "ember",
-              "sun",
-              "violet"
-            ]
-          },
-          "icon": {
-            "type": "string"
-          },
-          "names": {
-            "type": "object",
-            "properties": {
-              "en": {
-                "type": "string"
-              },
-              "lv": {
-                "type": "string"
-              },
-              "ru": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "en",
-              "lv",
-              "ru"
-            ],
-            "additionalProperties": false
-          },
-          "attributes": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "key": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string",
-                  "enum": [
-                    "TEXT",
-                    "NUMBER",
-                    "BOOLEAN",
-                    "SELECT"
-                  ]
-                },
-                "required": {
-                  "type": "boolean"
-                },
-                "unit": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "labels": {
-                  "type": "object",
-                  "properties": {
-                    "en": {
-                      "type": "string"
-                    },
-                    "lv": {
-                      "type": "string"
-                    },
-                    "ru": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "en",
-                    "lv",
-                    "ru"
-                  ],
-                  "additionalProperties": false
-                },
-                "options": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "value": {
-                        "type": "string"
-                      },
-                      "labels": {
-                        "type": "object",
-                        "properties": {
-                          "en": {
-                            "type": "string"
-                          },
-                          "lv": {
-                            "type": "string"
-                          },
-                          "ru": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "en",
-                          "lv",
-                          "ru"
-                        ],
-                        "additionalProperties": false
-                      }
-                    },
-                    "required": [
-                      "value",
-                      "labels"
-                    ],
-                    "additionalProperties": false
-                  },
-                  "nullable": true
-                }
-              },
-              "required": [
-                "key",
-                "type",
-                "required",
-                "unit",
-                "labels",
-                "options"
-              ],
-              "additionalProperties": false
-            }
-          },
-          "children": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CategoryNode_Output"
-            }
-          }
-        },
-        "required": [
-          "id",
-          "slug",
-          "sticker",
-          "icon",
-          "names",
-          "attributes",
-          "children"
-        ],
-        "additionalProperties": false
-      },
-      "CategoriesResponseDto_Output": {
-        "type": "object",
-        "properties": {
-          "categories": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CategoryNode_Output"
-            }
-          }
-        },
-        "required": [
-          "categories"
-        ],
-        "additionalProperties": false
-      },
       "MyListingsResponseDto_Output": {
         "type": "object",
         "properties": {
@@ -4135,6 +3851,290 @@
         "required": [
           "periods",
           "version"
+        ],
+        "additionalProperties": false
+      },
+      "CategoryNode_Output": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "sticker": {
+            "type": "string",
+            "enum": [
+              "blue",
+              "mint",
+              "lavender",
+              "ember",
+              "sun",
+              "violet"
+            ]
+          },
+          "icon": {
+            "type": "string"
+          },
+          "names": {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "string"
+              },
+              "lv": {
+                "type": "string"
+              },
+              "ru": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "en",
+              "lv",
+              "ru"
+            ],
+            "additionalProperties": false
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "TEXT",
+                    "NUMBER",
+                    "BOOLEAN",
+                    "SELECT"
+                  ]
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "unit": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "labels": {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "lv": {
+                      "type": "string"
+                    },
+                    "ru": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en",
+                    "lv",
+                    "ru"
+                  ],
+                  "additionalProperties": false
+                },
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "labels": {
+                        "type": "object",
+                        "properties": {
+                          "en": {
+                            "type": "string"
+                          },
+                          "lv": {
+                            "type": "string"
+                          },
+                          "ru": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "en",
+                          "lv",
+                          "ru"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "labels"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "nullable": true
+                }
+              },
+              "required": [
+                "key",
+                "type",
+                "required",
+                "unit",
+                "labels",
+                "options"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryNode_Output"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "sticker",
+          "icon",
+          "names",
+          "attributes",
+          "children"
+        ],
+        "additionalProperties": false
+      },
+      "CategoriesResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryNode_Output"
+            }
+          }
+        },
+        "required": [
+          "categories"
+        ],
+        "additionalProperties": false
+      },
+      "AdminUsersResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "city": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "about": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "locale": {
+                  "type": "string",
+                  "enum": [
+                    "en",
+                    "lv",
+                    "ru"
+                  ]
+                },
+                "theme": {
+                  "type": "string",
+                  "enum": [
+                    "system",
+                    "light",
+                    "dark"
+                  ]
+                },
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "USER",
+                    "ADMIN"
+                  ]
+                },
+                "emailVerified": {
+                  "type": "boolean"
+                },
+                "phone": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "phoneVerified": {
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                },
+                "blockedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "nullable": true
+                },
+                "deletedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "nullable": true
+                }
+              },
+              "required": [
+                "id",
+                "email",
+                "name",
+                "city",
+                "about",
+                "locale",
+                "theme",
+                "role",
+                "emailVerified",
+                "phone",
+                "phoneVerified",
+                "createdAt",
+                "blockedAt",
+                "deletedAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "items",
+          "total"
         ],
         "additionalProperties": false
       },

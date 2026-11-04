@@ -285,6 +285,25 @@ export class ListingsService {
     await this.forgetFiles(removedKeys);
   }
 
+  /**
+   * Takes every listing of an owner whose account is being deleted out of the service, within `tx`:
+   * those never published go for good (like `remove`), the others are archived — kept for the deals
+   * that point at them, out of the catalog, without the exact point. Returns the storage keys of the
+   * photos that went, for `forgetFiles` once the transaction has committed.
+   */
+  async removeAllOf(ownerId: string, tx: Prisma.TransactionClient): Promise<string[]> {
+    // Locked, so a photo upload or a submit at the same moment is either before or after, as in `remove`.
+    await tx.$queryRaw`SELECT id FROM "Listing" WHERE "ownerId" = ${ownerId} FOR UPDATE`;
+    const neverPublished = { ownerId, publishedAt: null };
+    const photos = await tx.listingPhoto.findMany({ where: { listing: neverPublished }, select: { storageKey: true } });
+    await tx.listing.deleteMany({ where: neverPublished });
+    await tx.listing.updateMany({
+      where: { ownerId, publishedAt: { not: null } },
+      data: { status: 'ARCHIVED', lat: null, lng: null, version: { increment: 1 } },
+    });
+    return photos.map((photo) => photo.storageKey);
+  }
+
   /** Deletes stored photo files; a failure is logged, never thrown (the database no longer points at them). */
   async forgetFiles(keys: string[]): Promise<void> {
     const results = await Promise.allSettled(keys.map((key) => this.storage.delete(key)));
