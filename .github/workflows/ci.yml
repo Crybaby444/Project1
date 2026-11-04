@@ -142,6 +142,7 @@ jobs:
             -e DATABASE_URL=postgresql://yoyo:yoyo@localhost:5432/yoyo_prod_like \
             -e WEB_ORIGIN=https://yoyo.example \
             -e JWT_SECRET=ci-docker-only-jwt-secret-not-a-real-one \
+            -e TRUST_PROXY_HOPS=2 \
             -e PORT=4100 \
             yoyo-api
 

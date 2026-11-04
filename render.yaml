@@ -21,3 +21,20 @@ services:
       # Signs access tokens. Render generates a random 256-bit value once; never set it by hand.
       - key: JWT_SECRET
         generateValue: true
+      # Browser → Vercel proxy → Render load balancer → API: trust those two hops for the client address.
+      - key: TRUST_PROXY_HOPS
+        value: "2"
+      # Optional. Left empty, the feature is off and the API still starts (see README, «Аккаунты»).
+      - key: SMTP_URL
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      # No SMS_PROVIDER: production has no real SMS service yet, so phone confirmation stays off.

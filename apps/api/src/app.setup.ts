@@ -14,6 +14,12 @@ export function configureApp(app: INestApplication, env: Pick<Env, 'WEB_ORIGIN' 
     (app.getHttpAdapter().getInstance() as Express).set('trust proxy', env.TRUST_PROXY_HOPS);
   }
   app.use(helmet());
+  // Answers are per user and set cookies; the site's CDN (Vercel caches external rewrites by these
+  // headers) and any other cache must never store or share them.
+  app.use((_req: unknown, res: { setHeader(name: string, value: string): void }, next: () => void) => {
+    res.setHeader('Cache-Control', 'no-store');
+    next();
+  });
   app.use(cookieParser());
   // Answer CORS only for the web app's origin; any other origin gets no CORS headers at all.
   app.enableCors({

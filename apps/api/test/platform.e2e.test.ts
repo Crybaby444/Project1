@@ -108,6 +108,11 @@ describe('API platform: errors, validation and protection', () => {
     expect(res.headers['x-powered-by']).toBeUndefined();
   });
 
+  it('tells every cache not to store API responses (they are per user and set cookies)', async () => {
+    expect((await request(t.server).get('/api/v1/health')).headers['cache-control']).toBe('no-store');
+    expect((await request(t.server).get('/api/v1/nope')).headers['cache-control']).toBe('no-store');
+  });
+
   it('parses request cookies', async () => {
     const res = await request(t.server).get('/api/v1/__test/cookies').set('Cookie', 'yoyo_at=abc');
     expect(res.body.cookies).toEqual({ yoyo_at: 'abc' });
