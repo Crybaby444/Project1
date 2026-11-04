@@ -23,6 +23,19 @@ export const RegisterRequestSchema = z.object({
 
 export type RegisterRequest = z.infer<typeof RegisterRequestSchema>;
 
+/** Any non-empty password is checked: rules for new passwords do not apply to signing in. */
+export const LoginRequestSchema = z.object({
+  email: EmailSchema,
+  password: z.string().min(1).max(128),
+});
+
+export type LoginRequest = z.infer<typeof LoginRequestSchema>;
+
+/** Apps send the refresh token in the body; the site sends nothing (the cookie carries it). */
+export const RefreshRequestSchema = z.object({
+  refreshToken: z.string().min(1).max(256).optional(),
+});
+
 /** The token from an email link (`…?token=…`). */
 export const EmailTokenRequestSchema = z.object({ token: z.string().min(1).max(256) });
 
@@ -48,3 +61,12 @@ export type PublicUser = z.infer<typeof PublicUserSchema>;
 export const UserResponseSchema = z.object({ user: PublicUserSchema });
 
 export type UserResponse = z.infer<typeof UserResponseSchema>;
+
+/** The tokens are in the body only for apps (refresh token sent in the body, or a Bearer header). */
+export const RefreshResponseSchema = z.object({
+  user: PublicUserSchema,
+  accessToken: z.string().optional(),
+  refreshToken: z.string().optional(),
+});
+
+export type RefreshResponse = z.infer<typeof RefreshResponseSchema>;

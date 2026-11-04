@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MailModule } from '../mail/mail.module';
 import { AccessTokenService } from './access-token.service';
 import { AuthController } from './auth.controller';
+import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { PasswordService } from './password.service';
 import { RefreshTokenService } from './refresh-token.service';
@@ -9,7 +10,7 @@ import { RefreshTokenService } from './refresh-token.service';
 @Module({
   imports: [MailModule],
   controllers: [AuthController],
-  providers: [AuthService, PasswordService, AccessTokenService, RefreshTokenService],
-  exports: [AuthService, PasswordService, AccessTokenService, RefreshTokenService],
+  providers: [AuthService, AuthGuard, PasswordService, AccessTokenService, RefreshTokenService],
+  exports: [AuthService, AuthGuard, PasswordService, AccessTokenService, RefreshTokenService],
 })
 export class AuthModule {}

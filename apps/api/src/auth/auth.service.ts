@@ -1,6 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import { Inject, Injectable } from '@nestjs/common';
-import { DEFAULT_LOCALE, isLocale, type RegisterRequest } from '@yoyo/shared';
+import { DEFAULT_LOCALE, isLocale, type LoginRequest, type RegisterRequest } from '@yoyo/shared';
 import { CLOCK, type Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
 import { ENV, type Env } from '../config/env';
@@ -17,6 +17,8 @@ const HOUR = 3_600_000;
 export const EMAIL_VERIFICATION_TTL_MS = 24 * HOUR;
 
 const emailTaken = () => new AppError('AUTH_EMAIL_TAKEN', 409);
+const invalidCredentials = () => new AppError('AUTH_INVALID_CREDENTIALS', 401);
+const unauthenticated = () => new AppError('AUTH_UNAUTHENTICATED', 401);
 const invalidLink = () =>
   new AppError('VALIDATION_FAILED', 400, 'This link is not valid', { token: 'This link is not valid' });
 
@@ -82,6 +84,45 @@ export class AuthService {
       data: { usedAt: now },
     });
     return this.prisma.user.findUniqueOrThrow({ where: { id: row.userId } });
+  }
+
+  /**
+   * Wrong password, unknown email and password-less accounts all get the same 401, after the same
+   * argon2 work. Blocked accounts hear 403 only once the password was right.
+   */
+  async login(input: LoginRequest, meta: SessionMeta): Promise<{ user: User; session: SessionTokens }> {
+    const user = await this.prisma.user.findUnique({ where: { email: input.email } });
+    const passwordOk = await this.passwords.verify(user?.passwordHash ?? null, input.password);
+    if (!user || !passwordOk || user.deletedAt !== null) throw invalidCredentials();
+    if (user.blockedAt !== null) throw new AppError('AUTH_BLOCKED', 403);
+    return { user, session: await this.startSession(user, meta) };
+  }
+
+  /** Rotates the refresh token; blocked or deleted accounts lose the session instead. */
+  async refresh(refreshToken: string, meta: SessionMeta): Promise<{ user: User; session: SessionTokens }> {
+    const rotated = await this.refreshTokens.rotate(refreshToken, meta);
+    const user = await this.prisma.user.findUnique({ where: { id: rotated.userId } });
+    if (!user || user.deletedAt !== null || user.blockedAt !== null) {
+      await this.refreshTokens.revokeFamily(rotated.token);
+      if (user?.blockedAt) throw new AppError('AUTH_BLOCKED', 403);
+      throw unauthenticated();
+    }
+    const accessToken = await this.accessTokens.issue(user);
+    return { user, session: { accessToken, refreshToken: rotated.token } };
+  }
+
+  logout(refreshToken: string): Promise<void> {
+    return this.refreshTokens.revokeFamily(refreshToken);
+  }
+
+  logoutEverywhere(userId: string): Promise<void> {
+    return this.refreshTokens.revokeAll(userId);
+  }
+
+  /** A new confirmation link, unless the email is already confirmed. */
+  async resendVerification(userId: string): Promise<void> {
+    const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId } });
+    if (user.emailVerifiedAt === null) await this.sendVerification(user);
   }
 
   async startSession(user: User, meta: SessionMeta): Promise<SessionTokens> {
