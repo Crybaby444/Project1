@@ -31,6 +31,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { bookingNotFound, staleBooking } from './booking-errors';
 import { assertDamagePhotos } from './booking-photos.service';
 import { BookingRulesService } from './booking-rules.service';
+import { DealNotifier } from './deal-notifier';
 import { BOOKING_INCLUDE, serializeBooking, type BookingWithParties } from './booking.serializer';
 import { dateOf, snapshotData, toSnapshot } from './booking.store';
 import { EffectsExecutor, nothingAfter, type AfterCommit, type EffectContext } from './effects.executor';
@@ -87,6 +88,7 @@ export class BookingsService {
     private readonly effects: EffectsExecutor,
     private readonly ledger: LedgerService,
     private readonly moneyOut: MoneyOutService,
+    private readonly notifier: DealNotifier,
     @Inject(PAYMENT_PROVIDER) private readonly payments: PaymentProvider,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider,
@@ -359,9 +361,10 @@ export class BookingsService {
     return serializeBooking(row, s, role, availableActions(s, actor, ctx), this.urlFor);
   }
 
-  /** Work a committed decision left: money back to cards, emails (Task 13). */
+  /** Work a committed decision left: money back to cards, then the emails. */
   async afterCommit(after: AfterCommit): Promise<void> {
     for (const refund of after.refunds) await this.moneyOut.processRefund(refund);
+    await this.notifier.booking(after.notices);
   }
 
   /** The snapshot of a stored deal. */

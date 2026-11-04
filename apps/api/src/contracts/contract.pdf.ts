@@ -5,6 +5,7 @@ import { cents, formatMoney } from '@yoyo/domain';
 import type { Locale } from '@yoyo/shared';
 import { PDFDocument, rgb, type PDFFont, type PDFPage } from 'pdf-lib';
 import type { ContractTerms } from '../bookings/effects.executor';
+import { formatDay } from '../common/format';
 import { CONTRACT_TEXTS } from './contract-texts';
 
 /** Liberation Sans (SIL OFL 1.1, assets/fonts/LICENSE.txt): Latvian letters and Cyrillic included. */
@@ -141,13 +142,11 @@ export async function renderContract(input: ContractInput): Promise<Buffer> {
   doc.setModificationDate(input.now);
 
   const money = (amount: number) => formatMoney(cents(amount), locale);
-  // Latvian long dates come in the nominative ("2. marts"), which reads wrong inside a sentence: numbers instead.
   const numeric = locale === 'lv';
-  const dayStyle: Intl.DateTimeFormatOptions = numeric ? { day: '2-digit', month: '2-digit', year: 'numeric' } : { dateStyle: 'long' };
   const momentStyle: Intl.DateTimeFormatOptions = numeric
     ? { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }
     : { dateStyle: 'long', timeStyle: 'short' };
-  const day = (value: string) => new Intl.DateTimeFormat(locale, { ...dayStyle, timeZone: 'UTC' }).format(new Date(`${value}T12:00:00Z`));
+  const day = (value: string) => formatDay(value, locale);
   const moment = (value: Date | string) => new Intl.DateTimeFormat(locale, { ...momentStyle, timeZone: terms.timeZone }).format(new Date(value));
   const hours = {
     inspection: terms.deadlines.inspectionHours,

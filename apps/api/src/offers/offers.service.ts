@@ -4,6 +4,7 @@ import type { OfferRequest, OfferStatus, OfferView, PublicUser } from '@yoyo/sha
 import { CLOCK, type Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
 import { BookingRulesService } from '../bookings/booking-rules.service';
+import { DealNotifier } from '../bookings/deal-notifier';
 import { dayOf, dateOf } from '../bookings/booking.store';
 import { bookableListing, pricingOf } from '../bookings/listing-access';
 import type { Listing, Offer, User } from '../generated/prisma/client';
@@ -30,6 +31,7 @@ export class OffersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly rules: BookingRulesService,
+    private readonly notifier: DealNotifier,
     @Inject(CLOCK) private readonly clock: Clock,
   ) {}
 
@@ -64,6 +66,7 @@ export class OffersService {
         include: INCLUDE,
       });
     });
+    await this.notifier.offer('OFFER_MADE', offer.id);
     return this.serialize(offer);
   }
 
@@ -90,6 +93,7 @@ export class OffersService {
         : { status: 'DECLINED', answeredAt: this.clock.now() },
     });
     if (updated.count !== 1) throw unavailable();
+    await this.notifier.offer(accept ? 'OFFER_ACCEPTED' : 'OFFER_DECLINED', id);
     return this.serialize(await this.prisma.offer.findUniqueOrThrow({ where: { id }, include: INCLUDE }));
   }
 

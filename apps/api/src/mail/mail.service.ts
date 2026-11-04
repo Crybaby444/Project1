@@ -4,11 +4,13 @@ import { ENV, type Env } from '../config/env';
 import { createElement, type ReactElement } from 'react';
 import { render } from 'react-email';
 import { MAIL_PROVIDER, maskEmail, type MailProvider, type MailTemplate } from './mail.provider';
+import { DealEvent } from './templates/DealEvent';
+import type { DealRole } from './templates/deal-texts';
 import { ListingApproved } from './templates/ListingApproved';
 import { ListingRejected } from './templates/ListingRejected';
 import { PhoneCode } from './templates/PhoneCode';
 import { ResetPassword } from './templates/ResetPassword';
-import { textsFor, type MailTexts } from './templates/texts';
+import { fill as fillTexts, textsFor, type MailTexts } from './templates/texts';
 import { VerifyEmail } from './templates/VerifyEmail';
 
 export interface MailRecipient {
@@ -70,6 +72,42 @@ export class MailService implements OnApplicationShutdown {
   sendListingRejected(user: MailRecipient, listing: { title: string; reason: string; link: string }): Promise<void> {
     return this.deliver('listing-rejected', user, (t) => t.listingRejected.subject, (t, lang) =>
       createElement(ListingRejected, { t, lang, name: user.name, ...listing }),
+    );
+  }
+
+  /**
+   * A step of a deal or a price offer (plan 8): `deal.<template>.<role>` filled with `values`, a short
+   * summary of the deal and a button to `link`. Unknown template and role pairs are a bug (logged).
+   */
+  sendDealEvent(
+    user: MailRecipient,
+    mail: {
+      template: string;
+      role: DealRole;
+      values: (locale: string) => Record<string, string>;
+      summary: (locale: string) => { item: string; dates: string; total: string | null };
+      link: string;
+      button: 'button' | 'offerButton';
+    },
+  ): Promise<void> {
+    const textsOf = (t: MailTexts) => {
+      const texts = (t.deal as unknown as Record<string, Record<string, { subject: string; preview: string; heading: string; body: string }>>)[mail.template]?.[
+        mail.role
+      ];
+      if (!texts) throw new Error(`no texts for deal email ${mail.template}/${mail.role}`);
+      return texts;
+    };
+    return this.deliver('deal-event', user, (t) => fillTexts(textsOf(t).subject, mail.values(textsFor(user.locale).locale)), (t, lang) =>
+      createElement(DealEvent, {
+        t,
+        lang,
+        name: user.name,
+        texts: textsOf(t),
+        values: mail.values(lang),
+        summary: mail.summary(lang),
+        button: t.deal.common[mail.button],
+        link: mail.link,
+      }),
     );
   }
 
