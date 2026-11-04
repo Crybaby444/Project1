@@ -9,6 +9,7 @@ import { OriginGuard } from './common/origin.guard';
 import { RateLimiterModule } from './common/rate-limiter';
 import { ENV, loadEnv } from './config/env';
 import { GeoModule } from './geo/geo.module';
+import { IdempotencyInterceptor } from './idempotency/idempotency.interceptor';
 import { LedgerModule } from './ledger/ledger.module';
 import { HealthController } from './health/health.controller';
 import { ListingsModule } from './listings/listings.module';
@@ -47,6 +48,8 @@ class EnvModule {}
   controllers: [HealthController],
   providers: [
     { provide: APP_GUARD, useClass: OriginGuard },
+    // Before the serializer: a repeated request gets exactly the body the first one sent (plan 8).
+    { provide: APP_INTERCEPTOR, useClass: IdempotencyInterceptor },
     // Responses declared with @ZodResponse are parsed by their schema: unknown fields never leave the API.
     { provide: APP_INTERCEPTOR, useClass: ZodSerializerInterceptor },
   ],
