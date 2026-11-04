@@ -2,7 +2,8 @@ import { randomUUID } from 'node:crypto';
 import { Inject, Injectable } from '@nestjs/common';
 import { LISTING_LIMITS, type ListingPhoto } from '@yoyo/shared';
 import { AppError } from '../common/app-error';
-import { invalidStatus, ListingsService } from '../listings/listings.service';
+import { incomplete } from '../listings/listing-completeness';
+import { invalidStatus, ListingsService, mustStayComplete } from '../listings/listings.service';
 import { serializePhoto, type UrlFor } from '../listings/listing.serializer';
 import { PrismaService } from '../prisma/prisma.service';
 import { checkImage } from './image-check';
@@ -56,6 +57,9 @@ export class PhotosService {
     if (listing.status === 'ARCHIVED') throw invalidStatus(listing.status);
     const photo = listing.photos.find((candidate) => candidate.id === photoId);
     if (!photo) throw new AppError('NOT_FOUND', 404, 'Photo not found');
+    if (mustStayComplete(listing.status) && listing.photos.length <= 1) {
+      throw incomplete({ photos: 'A listing in review or in the catalog keeps at least one photo' });
+    }
     await this.prisma.$transaction(async (tx) => {
       await tx.listingPhoto.delete({ where: { id: photo.id } });
       await tx.listingPhoto.updateMany({ where: { listingId, position: { gt: photo.position } }, data: { position: { decrement: 1 } } });

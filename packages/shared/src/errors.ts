@@ -28,6 +28,8 @@ export const ERROR_CODES = [
   'PHOTO_LIMIT',
   /** Photo storage is not configured (or not reachable) on this deployment. */
   'STORAGE_DISABLED',
+  /** The listing cannot go to review yet: `fields` says what is missing, `details.steps` in which builder steps. */
+  'LISTING_INCOMPLETE',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];

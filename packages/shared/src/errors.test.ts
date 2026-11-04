@@ -23,6 +23,7 @@ describe('ERROR_CODES', () => {
         'PAYLOAD_TOO_LARGE',
         'PHOTO_LIMIT',
         'STORAGE_DISABLED',
+        'LISTING_INCOMPLETE',
       ].sort(),
     );
   });

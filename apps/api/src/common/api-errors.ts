@@ -6,7 +6,7 @@ import { createZodDto } from 'nestjs-zod';
 export class ApiErrorDto extends createZodDto(ApiErrorBodySchema) {}
 
 const DESCRIPTIONS: Record<number, string> = {
-  400: 'Invalid input (VALIDATION_FAILED, with fields)',
+  400: 'Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)',
   401: 'Not signed in or wrong credentials',
   403: 'Not allowed (blocked account, wrong role or foreign Origin)',
   404: 'Not found or not available',

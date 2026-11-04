@@ -142,6 +142,30 @@ export const DatePeriodSchema = z.object({ start: LocalDateSchema, end: LocalDat
 
 export type DatePeriod = z.infer<typeof DatePeriodSchema>;
 
+/** Replaces all unavailable days of a listing. */
+export const UnavailabilityRequestSchema = z.object({
+  periods: z.array(DatePeriodSchema).max(LISTING_LIMITS.unavailablePeriods),
+});
+
+/** The periods as stored: merged, sorted, the past ones dropped. `version` is the listing's new version. */
+export const UnavailabilityResponseSchema = z.object({ periods: z.array(DatePeriodSchema), version: z.number().int() });
+
+export type UnavailabilityResponse = z.infer<typeof UnavailabilityResponseSchema>;
+
+/** Steps of the listing builder (spec §4.3), as LISTING_INCOMPLETE names them in `details.steps`. */
+export const LISTING_STEPS = ['photos', 'basics', 'attributes', 'price', 'place'] as const;
+
+export type ListingStep = (typeof LISTING_STEPS)[number];
+
+/** The builder step a field of LISTING_INCOMPLETE belongs to. */
+export function stepOfField(field: string): ListingStep {
+  if (field === 'photos') return 'photos';
+  if (field === 'attributes' || field.startsWith('attributes.')) return 'attributes';
+  if (['dailyCents', 'weeklyDiscountPercent', 'depositCents', 'minDays', 'maxDays'].includes(field)) return 'price';
+  if (['city', 'district', 'lat', 'lng', 'timeZone'].includes(field)) return 'place';
+  return 'basics';
+}
+
 export const PhotoUrlsSchema = z.object({
   /** 160×120, cropped to fill. */
   thumb: z.string(),

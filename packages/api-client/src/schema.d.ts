@@ -356,6 +356,70 @@ export interface paths {
         patch: operations["ListingsController_update"];
         trace?: never;
     };
+    "/api/v1/listings/{id}/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ListingsController_submit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/listings/{id}/hide": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ListingsController_hide"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/listings/{id}/unhide": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ListingsController_unhide"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/listings/{id}/unavailability": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["ListingsController_unavailability"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/listings/{id}/photos": {
         parameters: {
             query?: never;
@@ -438,7 +502,7 @@ export interface components {
         ApiErrorDto_Output: {
             error: {
                 /** @enum {string} */
-                code: "VALIDATION_FAILED" | "AUTH_INVALID_CREDENTIALS" | "AUTH_EMAIL_TAKEN" | "AUTH_UNAUTHENTICATED" | "AUTH_FORBIDDEN" | "AUTH_BLOCKED" | "AUTH_PROVIDER_DISABLED" | "TOKEN_EXPIRED" | "TOKEN_USED" | "RATE_LIMITED" | "ORIGIN_FORBIDDEN" | "NOT_FOUND" | "INTERNAL" | "INVALID_STATUS" | "UNSUPPORTED_MEDIA" | "PAYLOAD_TOO_LARGE" | "PHOTO_LIMIT" | "STORAGE_DISABLED";
+                code: "VALIDATION_FAILED" | "AUTH_INVALID_CREDENTIALS" | "AUTH_EMAIL_TAKEN" | "AUTH_UNAUTHENTICATED" | "AUTH_FORBIDDEN" | "AUTH_BLOCKED" | "AUTH_PROVIDER_DISABLED" | "TOKEN_EXPIRED" | "TOKEN_USED" | "RATE_LIMITED" | "ORIGIN_FORBIDDEN" | "NOT_FOUND" | "INTERNAL" | "INVALID_STATUS" | "UNSUPPORTED_MEDIA" | "PAYLOAD_TOO_LARGE" | "PHOTO_LIMIT" | "STORAGE_DISABLED" | "LISTING_INCOMPLETE";
                 message: string;
                 fields?: {
                     [key: string]: string;
@@ -728,6 +792,19 @@ export interface components {
             };
             version: number;
         };
+        UnavailabilityRequestDto: {
+            periods: {
+                start: string;
+                end: string;
+            }[];
+        };
+        UnavailabilityResponseDto_Output: {
+            periods: {
+                start: string;
+                end: string;
+            }[];
+            version: number;
+        };
         PhotoUploadResponseDto_Output: {
             photo: {
                 id: string;
@@ -835,7 +912,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -875,7 +952,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -935,7 +1012,7 @@ export interface operations {
                     "application/json": components["schemas"]["UserResponseDto_Output"];
                 };
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -995,7 +1072,7 @@ export interface operations {
                     "application/json": components["schemas"]["UserResponseDto_Output"];
                 };
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -1089,7 +1166,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -1140,7 +1217,7 @@ export interface operations {
                     "application/json": components["schemas"]["UserResponseDto_Output"];
                 };
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -1191,7 +1268,7 @@ export interface operations {
                     "application/json": components["schemas"]["UserResponseDto_Output"];
                 };
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -1251,7 +1328,7 @@ export interface operations {
                     "application/json": components["schemas"]["RefreshResponseDto_Output"];
                 };
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -1300,7 +1377,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -1414,7 +1491,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -1474,7 +1551,7 @@ export interface operations {
                     "application/json": components["schemas"]["UserResponseDto_Output"];
                 };
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -1525,7 +1602,7 @@ export interface operations {
                     "application/json": components["schemas"]["RefreshResponseDto_Output"];
                 };
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -1583,7 +1660,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -1652,7 +1729,7 @@ export interface operations {
                     "application/json": components["schemas"]["UserResponseDto_Output"];
                 };
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -1720,7 +1797,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdminUsersResponseDto_Output"];
                 };
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -1789,7 +1866,7 @@ export interface operations {
                     "application/json": components["schemas"]["MyListingsResponseDto_Output"];
                 };
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -1840,7 +1917,7 @@ export interface operations {
                     "application/json": components["schemas"]["OwnerListingResponseDto_Output"];
                 };
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -2007,7 +2084,261 @@ export interface operations {
                     "application/json": components["schemas"]["OwnerListingResponseDto_Output"];
                 };
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ListingsController_submit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Sent to review (PENDING_REVIEW) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerListingResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ListingsController_hide: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Hidden from the catalog */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerListingResponseDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ListingsController_unhide: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Back in the catalog */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerListingResponseDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ListingsController_unavailability: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UnavailabilityRequestDto"];
+            };
+        };
+        responses: {
+            /** @description The unavailable days as stored: merged, sorted, past ones dropped */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnavailabilityResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -2081,7 +2412,7 @@ export interface operations {
                     "application/json": components["schemas"]["PhotoUploadResponseDto_Output"];
                 };
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -2188,7 +2519,7 @@ export interface operations {
                     "application/json": components["schemas"]["PhotoOrderResponseDto_Output"];
                 };
             };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
                 headers: {
                     [name: string]: unknown;

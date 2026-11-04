@@ -1,7 +1,9 @@
 import { isDeepStrictEqual } from 'node:util';
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { addDays, compareDates, DomainError, localDate, localDateIn, period, type LocalDate, type Period } from '@yoyo/domain';
 import {
   validateAttributes,
+  type DatePeriod,
   type ListingDraft,
   type ListingPatch,
   type ListingStatus,
@@ -15,8 +17,9 @@ import { AppError } from '../common/app-error';
 import type { Listing, Prisma } from '../generated/prisma/client';
 import { STORAGE_PROVIDER, type StorageProvider } from '../media/storage.provider';
 import { PrismaService } from '../prisma/prisma.service';
+import { incomplete, incompleteFields } from './listing-completeness';
 import { nextStatus, type EditKind } from './listing-status';
-import { serializeListing, serializeSummary, type ListingWithRelations, type UrlFor } from './listing.serializer';
+import { serializeListing, serializePeriods, serializeSummary, type ListingWithRelations, type UrlFor } from './listing.serializer';
 
 /** Fields whose change sends a live listing back to review; every other field is a term. */
 const CONTENT_FIELDS = ['title', 'description', 'categoryId', 'attributes', 'condition'] as const;
@@ -24,6 +27,50 @@ const CONTENT_FIELDS = ['title', 'description', 'categoryId', 'attributes', 'con
 const WITH_RELATIONS = { photos: true, unavailability: true } as const;
 
 type DraftData = Omit<Prisma.ListingUncheckedUpdateInput, 'id' | 'ownerId' | 'status' | 'version'>;
+
+/** Statuses in which a listing has been (or is being) checked by moderation, so it must stay complete. */
+export const mustStayComplete = (status: ListingStatus) => status === 'PENDING_REVIEW' || status === 'PUBLISHED' || status === 'HIDDEN';
+
+/**
+ * Checks every period with the core and returns them sorted, overlapping or touching ones merged
+ * (`[1–5]` and `[4–8]` → `[1–8]`; `[1–5]` and `[6–8]` too), those that ended before `today` dropped.
+ * Errors are keyed `periods.<i>.start|end`.
+ */
+export function mergePeriods(input: DatePeriod[], today: LocalDate): DatePeriod[] {
+  const fields: Record<string, string> = {};
+  const checked: Period[] = [];
+  for (const [i, raw] of input.entries()) {
+    let start: LocalDate | undefined;
+    let end: LocalDate | undefined;
+    try {
+      start = localDate(raw.start);
+    } catch {
+      fields[`periods.${i}.start`] = 'No such day';
+    }
+    try {
+      end = localDate(raw.end);
+    } catch {
+      fields[`periods.${i}.end`] = 'No such day';
+    }
+    if (start === undefined || end === undefined) continue;
+    try {
+      checked.push(period(start, end));
+    } catch (error) {
+      if (!(error instanceof DomainError)) throw error;
+      fields[`periods.${i}.end`] = 'Ends before it starts';
+    }
+  }
+  if (Object.keys(fields).length > 0) throw new AppError('VALIDATION_FAILED', 400, undefined, fields);
+
+  const merged: Period[] = [];
+  for (const p of checked.filter((p) => compareDates(p.end, today) >= 0).sort((a, b) => compareDates(a.start, b.start))) {
+    const last = merged.at(-1);
+    if (last && compareDates(p.start, addDays(last.end, 1)) <= 0) {
+      merged[merged.length - 1] = period(last.start, compareDates(p.end, last.end) > 0 ? p.end : last.end);
+    } else merged.push(p);
+  }
+  return merged.map((p) => ({ start: p.start, end: p.end }));
+}
 
 const notFound = () => new AppError('NOT_FOUND', 404, 'Listing not found');
 
@@ -105,8 +152,72 @@ export class ListingsService {
     );
     if (changed.length === 0) return serializeListing(listing, 'owner', this.urlFor);
     const kind: EditKind = changed.some((key) => (CONTENT_FIELDS as readonly string[]).includes(key)) ? 'content' : 'terms';
-    await this.write(listing, Object.fromEntries(changed.map((key) => [key, data[key as keyof DraftData]])), kind);
+    const changes = Object.fromEntries(changed.map((key) => [key, data[key as keyof DraftData]])) as DraftData;
+    if (mustStayComplete(listing.status)) {
+      await this.assertComplete({ ...listing, ...changes } as Listing, listing.photos.length);
+    }
+    await this.write(listing, changes, kind);
     return this.serialize(id);
+  }
+
+  /** 400 LISTING_INCOMPLETE unless the listing has everything review needs. */
+  async assertComplete(listing: Listing, photoCount: number): Promise<void> {
+    const category = listing.categoryId === null ? null : await this.categories.forListing(listing.categoryId);
+    const fields = incompleteFields(listing, photoCount, category);
+    if (Object.keys(fields).length > 0) throw incomplete(fields);
+  }
+
+  /** A complete draft or rejected listing goes to review; the old rejection reason is cleared. */
+  async submit(id: string, ownerId: string): Promise<OwnerListing> {
+    const listing = await this.owned(id, ownerId);
+    const status = nextStatus(listing.status, 'submit');
+    if (status === null || status === 'REMOVED') throw invalidStatus(listing.status);
+    await this.assertComplete(listing, listing.photos.length);
+    await this.transition(listing, status, { submittedAt: this.clock.now(), rejectionReason: null });
+    return this.serialize(id);
+  }
+
+  /** The owner takes a published listing out of the catalog (`hide`) or puts it back (`unhide`). */
+  async setVisibility(id: string, ownerId: string, action: 'hide' | 'unhide'): Promise<OwnerListing> {
+    const listing = await this.owned(id, ownerId);
+    const status = nextStatus(listing.status, action);
+    if (status === null || status === 'REMOVED') throw invalidStatus(listing.status);
+    await this.transition(listing, status, {});
+    return this.serialize(id);
+  }
+
+  /**
+   * Replaces the unavailable days. Each period is checked by the core (`period`: real days, end not
+   * before start); overlapping or touching periods are merged and those wholly in the past (in the
+   * listing's time zone) dropped. Dates are terms: a live listing stays live.
+   */
+  async setUnavailability(id: string, ownerId: string, input: DatePeriod[]): Promise<{ periods: DatePeriod[]; version: number }> {
+    const listing = await this.owned(id, ownerId);
+    if (listing.status === 'ARCHIVED') throw invalidStatus(listing.status);
+    const periods = mergePeriods(input, localDateIn(this.clock.now(), listing.timeZone));
+    await this.prisma.$transaction(async (tx) => {
+      await tx.unavailability.deleteMany({ where: { listingId: id } });
+      await tx.unavailability.createMany({
+        data: periods.map((p) => ({ listingId: id, start: new Date(`${p.start}T00:00:00Z`), end: new Date(`${p.end}T00:00:00Z`) })),
+      });
+      await this.write(listing, {}, 'terms', tx);
+    });
+    const fresh = await this.owned(id, ownerId);
+    return { periods: serializePeriods(fresh.unavailability), version: fresh.version };
+  }
+
+  /** Moves the listing to `status` (with `data`), counting the version up; 409 if it changed in between. */
+  async transition(
+    listing: Listing,
+    status: ListingStatus,
+    data: Prisma.ListingUncheckedUpdateManyInput,
+    tx: Prisma.TransactionClient = this.prisma,
+  ): Promise<void> {
+    const updated = await tx.listing.updateMany({
+      where: { id: listing.id, version: listing.version },
+      data: { ...data, status, version: { increment: 1 } },
+    });
+    if (updated.count === 0) throw await this.staleNow(listing.id);
   }
 
   /**

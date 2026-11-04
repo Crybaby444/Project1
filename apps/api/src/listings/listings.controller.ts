@@ -1,6 +1,12 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiNoContentResponse, ApiTags } from '@nestjs/swagger';
-import { ListingDraftSchema, type MyListingsResponse, type OwnerListingResponse, type PublicUser } from '@yoyo/shared';
+import {
+  ListingDraftSchema,
+  type MyListingsResponse,
+  type OwnerListingResponse,
+  type PublicUser,
+  type UnavailabilityResponse,
+} from '@yoyo/shared';
 import type { Request } from 'express';
 import { ZodResponse } from 'nestjs-zod';
 import { AuthGuard } from '../auth/auth.guard';
@@ -9,7 +15,15 @@ import { ApiErrors } from '../common/api-errors';
 import { parseOptionalBody } from '../common/parse-body';
 import { RateLimiter } from '../common/rate-limiter';
 import { RATE_LIMITS } from '../common/rate-limits';
-import { ListingDraftDto, ListingPatchDto, MyListingsQueryDto, MyListingsResponseDto, OwnerListingResponseDto } from './listings.dto';
+import {
+  ListingDraftDto,
+  ListingPatchDto,
+  MyListingsQueryDto,
+  MyListingsResponseDto,
+  OwnerListingResponseDto,
+  UnavailabilityRequestDto,
+  UnavailabilityResponseDto,
+} from './listings.dto';
 import { ListingsService } from './listings.service';
 
 /** The owner's side of listings. Someone else's listing does not exist here: every route answers 404. */
@@ -44,6 +58,41 @@ export class ListingsController {
   @ApiErrors(400, 401, 403, 404, 409)
   async update(@CurrentUser() user: PublicUser, @Param('id') id: string, @Body() body: ListingPatchDto): Promise<OwnerListingResponse> {
     return { listing: await this.listings.update(id, user.id, body) };
+  }
+
+  @Post(':id/submit')
+  @HttpCode(200)
+  @ZodResponse({ status: 200, type: OwnerListingResponseDto, description: 'Sent to review (PENDING_REVIEW)' })
+  @ApiErrors(400, 401, 403, 404, 409)
+  async submit(@CurrentUser() user: PublicUser, @Param('id') id: string): Promise<OwnerListingResponse> {
+    return { listing: await this.listings.submit(id, user.id) };
+  }
+
+  @Post(':id/hide')
+  @HttpCode(200)
+  @ZodResponse({ status: 200, type: OwnerListingResponseDto, description: 'Hidden from the catalog' })
+  @ApiErrors(401, 403, 404, 409)
+  async hide(@CurrentUser() user: PublicUser, @Param('id') id: string): Promise<OwnerListingResponse> {
+    return { listing: await this.listings.setVisibility(id, user.id, 'hide') };
+  }
+
+  @Post(':id/unhide')
+  @HttpCode(200)
+  @ZodResponse({ status: 200, type: OwnerListingResponseDto, description: 'Back in the catalog' })
+  @ApiErrors(401, 403, 404, 409)
+  async unhide(@CurrentUser() user: PublicUser, @Param('id') id: string): Promise<OwnerListingResponse> {
+    return { listing: await this.listings.setVisibility(id, user.id, 'unhide') };
+  }
+
+  @Put(':id/unavailability')
+  @ZodResponse({ status: 200, type: UnavailabilityResponseDto, description: 'The unavailable days as stored: merged, sorted, past ones dropped' })
+  @ApiErrors(400, 401, 403, 404, 409)
+  async unavailability(
+    @CurrentUser() user: PublicUser,
+    @Param('id') id: string,
+    @Body() body: UnavailabilityRequestDto,
+  ): Promise<UnavailabilityResponse> {
+    return this.listings.setUnavailability(id, user.id, body.periods);
   }
 
   @Delete(':id')
