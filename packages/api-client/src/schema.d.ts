@@ -20,6 +20,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_register"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/verify-email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_verifyEmail"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -30,6 +62,46 @@ export interface components {
             /** @enum {string} */
             db: "up" | "down";
             version: string;
+        };
+        RegisterDto: {
+            email: string;
+            password: string;
+            name: string;
+            /** @enum {string} */
+            locale?: "en" | "lv" | "ru";
+        };
+        UserResponseDto_Output: {
+            user: {
+                id: string;
+                email: string;
+                name: string;
+                city: string | null;
+                about: string | null;
+                /** @enum {string} */
+                locale: "en" | "lv" | "ru";
+                /** @enum {string} */
+                theme: "system" | "light" | "dark";
+                /** @enum {string} */
+                role: "USER" | "ADMIN";
+                emailVerified: boolean;
+                phone: string | null;
+                phoneVerified: boolean;
+                /** Format: date-time */
+                createdAt: string;
+            };
+        };
+        ApiErrorDto_Output: {
+            error: {
+                /** @enum {string} */
+                code: "VALIDATION_FAILED" | "AUTH_INVALID_CREDENTIALS" | "AUTH_EMAIL_TAKEN" | "AUTH_UNAUTHENTICATED" | "AUTH_FORBIDDEN" | "AUTH_BLOCKED" | "AUTH_PROVIDER_DISABLED" | "TOKEN_EXPIRED" | "TOKEN_USED" | "RATE_LIMITED" | "ORIGIN_FORBIDDEN" | "NOT_FOUND" | "INTERNAL";
+                message: string;
+                fields?: {
+                    [key: string]: string;
+                };
+            };
+        };
+        EmailTokenDto: {
+            token: string;
         };
     };
     responses: never;
@@ -65,6 +137,117 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HealthResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_register: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegisterDto"];
+            };
+        };
+        responses: {
+            /** @description Account created and signed in (session cookies) */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AuthController_verifyEmail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EmailTokenDto"];
+            };
+        };
+        responses: {
+            /** @description Email confirmed */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Link or code used up (TOKEN_USED) or expired (TOKEN_EXPIRED) */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
         };

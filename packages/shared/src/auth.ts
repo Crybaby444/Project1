@@ -1,0 +1,50 @@
+import { z } from 'zod';
+import { LOCALES } from './locale';
+import { THEME_PREFERENCES } from './theme';
+
+export const ROLES = ['USER', 'ADMIN'] as const;
+
+export type Role = (typeof ROLES)[number];
+
+/** Trimmed and lowercased first, so `  Anna@Mail.LV ` and `anna@mail.lv` are one and the same account. */
+export const EmailSchema = z.string().trim().toLowerCase().pipe(z.email().max(254));
+
+/** Taken exactly as typed: spaces count. */
+export const PasswordSchema = z.string().min(8).max(128);
+
+export const NameSchema = z.string().trim().min(1).max(60);
+
+export const RegisterRequestSchema = z.object({
+  email: EmailSchema,
+  password: PasswordSchema,
+  name: NameSchema,
+  locale: z.enum(LOCALES).optional(),
+});
+
+export type RegisterRequest = z.infer<typeof RegisterRequestSchema>;
+
+/** The token from an email link (`…?token=…`). */
+export const EmailTokenRequestSchema = z.object({ token: z.string().min(1).max(256) });
+
+/** The signed-in user as the API shows them to themselves. Never carries secrets. */
+export const PublicUserSchema = z.object({
+  id: z.string(),
+  email: z.string(),
+  name: z.string(),
+  city: z.string().nullable(),
+  about: z.string().nullable(),
+  locale: z.enum(LOCALES),
+  theme: z.enum(THEME_PREFERENCES),
+  role: z.enum(ROLES),
+  emailVerified: z.boolean(),
+  /** The confirmed phone number (E.164), or null. */
+  phone: z.string().nullable(),
+  phoneVerified: z.boolean(),
+  createdAt: z.iso.datetime(),
+});
+
+export type PublicUser = z.infer<typeof PublicUserSchema>;
+
+export const UserResponseSchema = z.object({ user: PublicUserSchema });
+
+export type UserResponse = z.infer<typeof UserResponseSchema>;

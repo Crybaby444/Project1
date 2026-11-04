@@ -160,6 +160,21 @@ jobs:
       - name: Swagger UI is hidden in production
         run: test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:4100/api/docs)" = "404"
 
+      - name: Registration works in the production image (argon2 binary, Secure cookies, mail disabled)
+        run: |
+          code=$(curl -s -o register.json -D register.headers -w '%{http_code}' \
+            -X POST http://localhost:4100/api/v1/auth/register \
+            -H 'Content-Type: application/json' \
+            -d '{"email":"ci-smoke@yoyo.example","password":"correct horse battery","name":"CI"}')
+          cat register.json; echo
+          test "$code" = "201"
+          grep -qi '^set-cookie: yoyo_at=.*; Secure' register.headers
+          for attempt in $(seq 1 10); do
+            docker logs api 2>&1 | grep -q 'mail disabled: verify-email to c\*\*\*@yoyo.example' && exit 0
+            sleep 1
+          done
+          echo "expected a 'mail disabled' log line"; exit 1
+
       - name: Container logs
         if: always()
         run: docker logs api || true
