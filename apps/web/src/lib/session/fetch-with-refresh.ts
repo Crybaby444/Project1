@@ -58,14 +58,31 @@ function writeRefreshedAt(): void {
  *   there is an answer, not an expired session. Only logout-all and resend-verification, which need
  *   a session, are.
  * - A request that still gets 401 after a refresh is returned as is: the session is over, no loop.
+ * - When the API refuses the refresh (or the repeat), `onSessionLost` listeners hear that the session
+ *   is over, once per refresh, so the whole site shows the person as signed out (not for a network
+ *   failure or a server error: those keep the session).
  */
 export function createFetchWithRefresh(baseFetch: Fetch = (...args) => globalThis.fetch(...args)) {
   let inFlight: Promise<boolean> | null = null;
+  const lostListeners = new Set<() => void>();
+
+  function sessionLost(): void {
+    lostListeners.forEach((listener) => listener());
+  }
+
+  /** Subscribes to "the API says this session is over"; returns the unsubscribe function. */
+  function onSessionLost(listener: () => void): () => void {
+    lostListeners.add(listener);
+    return () => {
+      lostListeners.delete(listener);
+    };
+  }
 
   async function doRefresh(): Promise<boolean> {
     try {
       const response = await baseFetch(REFRESH_PATH, { method: 'POST', credentials: 'same-origin' });
       if (response.ok) writeRefreshedAt();
+      else if (response.status === 401 || response.status === 403) sessionLost();
       return response.ok;
     } catch {
       return false;
@@ -95,11 +112,13 @@ export function createFetchWithRefresh(baseFetch: Fetch = (...args) => globalThi
     const response = await baseFetch(input, init);
     if (!(await asksForRefresh(response))) return response;
     if (!(await refreshOnce())) return response;
-    return baseFetch(repeat, init);
+    const repeated = await baseFetch(repeat, init);
+    if (await asksForRefresh(repeated)) sessionLost();
+    return repeated;
   }
 
-  return { fetchWithRefresh, refreshOnce };
+  return { fetchWithRefresh, refreshOnce, onSessionLost };
 }
 
-/** The app-wide instance (the browser API client uses it). */
-export const { fetchWithRefresh, refreshOnce } = createFetchWithRefresh();
+/** The app-wide instance (the browser API client uses it; SessionProvider listens to onSessionLost). */
+export const { fetchWithRefresh, refreshOnce, onSessionLost } = createFetchWithRefresh();

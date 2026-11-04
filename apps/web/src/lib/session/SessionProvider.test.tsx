@@ -82,6 +82,23 @@ describe('SessionProvider', () => {
     expect(latest.session?.endedAt).toEqual(expect.any(Number));
   });
 
+  it('becomes anonymous at once when a request finds the session over (refresh refused, Review Focus 1)', async () => {
+    const listeners = new Set<() => void>();
+    const onSessionLost = (listener: () => void) => {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    };
+    const { client } = fakeApi(meRoute(testUser()));
+    renderWithSession(<Probe />, { client, onSessionLost });
+    await waitFor(() => expect(screen.getByTestId('status')).toHaveTextContent('in:'));
+
+    act(() => listeners.forEach((listener) => listener()));
+
+    await waitFor(() => expect(screen.getByTestId('status')).toHaveTextContent('anonymous'));
+    // Not a sign-out of their own: a closed page asks them to sign in again and come back.
+    expect(latest.session?.endedAt).toBeNull();
+  });
+
   it('reads the hint from the yoyo_session cookie', () => {
     expect(hasSessionHint('a=1; yoyo_session=1; b=2')).toBe(true);
     expect(hasSessionHint('a=1; yoyo_sessionx=1')).toBe(false);

@@ -3,9 +3,10 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { ApiClient } from '@yoyo/api-client';
 import { SESSION_HINT_COOKIE, type PublicUser } from '@yoyo/shared';
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { api } from '@/lib/api';
 import { ApiError, unwrap } from './api-error';
+import { onSessionLost as appOnSessionLost } from './fetch-with-refresh';
 
 export type SessionStatus = 'loading' | 'authenticated' | 'anonymous';
 
@@ -60,11 +61,14 @@ export function SessionProvider({
   children,
   client = api,
   hasSession = hasSessionHint,
+  onSessionLost = appOnSessionLost,
 }: {
   children: ReactNode;
   client?: ApiClient;
   /** Whether a session may exist (tests replace the cookie check). */
   hasSession?: () => boolean;
+  /** "The API refused to renew the session" (fetchWithRefresh); tests pass their own. */
+  onSessionLost?: (listener: () => void) => () => void;
 }) {
   const queryClient = useQueryClient();
   const query = useQuery({
@@ -90,6 +94,17 @@ export function SessionProvider({
     queryClient.removeQueries({ predicate: (q) => q.queryKey[0] !== SESSION_QUERY_KEY[0] });
     queryClient.setQueryData(SESSION_QUERY_KEY, null);
   }, [queryClient]);
+
+  // Any request can find the session over (signed out everywhere, blocked, expired): the whole site
+  // shows a visitor at once, and a closed page sends them to sign in and back (endedAt stays as is).
+  useEffect(
+    () =>
+      onSessionLost(() => {
+        queryClient.removeQueries({ predicate: (q) => q.queryKey[0] !== SESSION_QUERY_KEY[0] });
+        queryClient.setQueryData(SESSION_QUERY_KEY, null);
+      }),
+    [onSessionLost, queryClient],
+  );
 
   const refresh = useCallback(async () => {
     // A GET /me already on its way may have been answered before the change; ask again after it.

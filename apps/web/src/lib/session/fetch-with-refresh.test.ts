@@ -213,6 +213,57 @@ describe('fetchWithRefresh', () => {
     expect(refreshCalls(calls)).toHaveLength(2);
   });
 
+  it('tells its listeners once that the session is over when the refresh is refused (Review Focus 1)', async () => {
+    const { fetch } = fakeApi({ refreshWorks: false });
+    const { fetchWithRefresh, onSessionLost } = createFetchWithRefresh(fetch);
+    const lost = vi.fn();
+    onSessionLost(lost);
+
+    await Promise.all(Array.from({ length: 10 }, () => fetchWithRefresh('/api/v1/me')));
+
+    expect(lost).toHaveBeenCalledTimes(1);
+  });
+
+  it('also says the session is over when the repeated request is refused after a refresh', async () => {
+    const { fetch: base } = fakeApi({ refreshWorks: true });
+    const fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+      const response = await base(input, init);
+      return String(input instanceof Request ? input.url : input).endsWith('/api/v1/me')
+        ? unauthenticated()
+        : response;
+    }) as typeof globalThis.fetch;
+    const { fetchWithRefresh, onSessionLost } = createFetchWithRefresh(fetch);
+    const lost = vi.fn();
+    onSessionLost(lost);
+
+    await fetchWithRefresh('/api/v1/me');
+
+    expect(lost).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not end the session for a network failure or a server error during the refresh', async () => {
+    let refreshAnswer: () => Response = () => {
+      throw new TypeError('Failed to fetch');
+    };
+    const fetch = (async (input: RequestInfo | URL) => {
+      if (String(input instanceof Request ? input.url : input).endsWith('/auth/refresh')) return refreshAnswer();
+      return unauthenticated();
+    }) as typeof globalThis.fetch;
+    const { fetchWithRefresh, onSessionLost } = createFetchWithRefresh(fetch);
+    const lost = vi.fn();
+    const stop = onSessionLost(lost);
+
+    await fetchWithRefresh('/api/v1/me');
+    refreshAnswer = () => json(502, { error: { code: 'INTERNAL', message: 'x' } });
+    await fetchWithRefresh('/api/v1/me');
+    expect(lost).not.toHaveBeenCalled();
+
+    stop();
+    refreshAnswer = unauthenticated;
+    await fetchWithRefresh('/api/v1/me');
+    expect(lost).not.toHaveBeenCalled(); // unsubscribed
+  });
+
   it('treats a network failure during the refresh as "not refreshed"', async () => {
     const fetch = (async (input: RequestInfo | URL) => {
       if (String(input instanceof Request ? input.url : input).endsWith('/auth/refresh'))

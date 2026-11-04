@@ -32,10 +32,13 @@ export function renderWithSession(
     client,
     locale = 'en',
     hasSession = true,
+    onSessionLost,
   }: {
     client: ApiClient;
     locale?: TestLocale;
     /** Whether the session hint cookie is there. */ hasSession?: boolean;
+    /** Stands in for fetchWithRefresh's "the session is over" signal. */
+    onSessionLost?: (listener: () => void) => () => void;
   },
 ): RenderResult & { queryClient: QueryClient } {
   const queryClient = new QueryClient({
@@ -44,7 +47,11 @@ export function renderWithSession(
   const result = render(
     <NextIntlClientProvider locale={locale} messages={messages[locale]}>
       <QueryClientProvider client={queryClient}>
-        <SessionProvider client={client} hasSession={() => hasSession}>
+        <SessionProvider
+          client={client}
+          hasSession={() => hasSession}
+          {...(onSessionLost && { onSessionLost })}
+        >
           <ThemeProvider initialPreference="system">
             <ToastProvider>{ui}</ToastProvider>
           </ThemeProvider>
