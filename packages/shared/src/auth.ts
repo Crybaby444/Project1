@@ -46,6 +46,49 @@ export const ResetPasswordRequestSchema = z.object({
   password: PasswordSchema,
 });
 
+/** Optional profile text: trimmed, and an empty string clears the field (stored as null). */
+const ProfileText = (max: number) =>
+  z
+    .string()
+    .trim()
+    .max(max)
+    .transform((value) => (value === '' ? null : value))
+    .nullable()
+    .optional();
+
+/** Only these fields can change here; anything else in the body is ignored. */
+export const UpdateProfileRequestSchema = z.object({
+  name: NameSchema.optional(),
+  city: ProfileText(60),
+  about: ProfileText(500),
+  locale: z.enum(LOCALES).optional(),
+  theme: z.enum(THEME_PREFERENCES).optional(),
+});
+
+export type UpdateProfileRequest = z.infer<typeof UpdateProfileRequestSchema>;
+
+export const ChangePasswordRequestSchema = z.object({
+  currentPassword: z.string().min(1).max(128),
+  newPassword: PasswordSchema,
+});
+
+/** Accounts with a password confirm the deletion with it; Google-only accounts have none to give. */
+export const DeleteAccountRequestSchema = z.object({
+  password: z.string().min(1).max(128).optional(),
+});
+
+/** E.164 (`+` and 7–15 digits); spaces, dashes, dots and brackets people type are dropped first. */
+export const PhoneRequestSchema = z.object({
+  phone: z
+    .string()
+    .transform((value) => value.replace(/[\s\-().]/g, ''))
+    .pipe(z.string().regex(/^\+[1-9]\d{6,14}$/, 'Enter the number in international format, e.g. +37120000000')),
+});
+
+export const PhoneVerifyRequestSchema = z.object({
+  code: z.string().trim().regex(/^\d{6}$/, 'The code has 6 digits'),
+});
+
 /** The signed-in user as the API shows them to themselves. Never carries secrets. */
 export const PublicUserSchema = z.object({
   id: z.string(),
@@ -78,8 +121,12 @@ export const RefreshResponseSchema = z.object({
 
 export type RefreshResponse = z.infer<typeof RefreshResponseSchema>;
 
-/** Which sign-in methods this deployment offers. */
-export const ProvidersResponseSchema = z.object({ google: z.boolean() });
+/** Which sign-in and confirmation methods this deployment offers. */
+export const ProvidersResponseSchema = z.object({
+  google: z.boolean(),
+  /** False until a real SMS provider is configured: a "phone confirmed" mark must mean something. */
+  phone: z.boolean(),
+});
 
 export type ProvidersResponse = z.infer<typeof ProvidersResponseSchema>;
 

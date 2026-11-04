@@ -91,6 +91,18 @@ describe('loadEnv', () => {
     );
   });
 
+  it('simulates SMS by email outside production and has no SMS provider in production by default', () => {
+    expect(loadEnv(valid).SMS_PROVIDER).toBe('mailbox');
+    expect(loadEnv({ ...valid, NODE_ENV: 'test' }).SMS_PROVIDER).toBe('mailbox');
+    expect(loadEnv({ ...valid, NODE_ENV: 'production' }).SMS_PROVIDER).toBeUndefined();
+    expect(loadEnv({ ...valid, NODE_ENV: 'production', SMS_PROVIDER: '' }).SMS_PROVIDER).toBeUndefined();
+  });
+
+  it('never lets production "confirm" phones by email, and knows no other SMS provider yet', () => {
+    expect(() => loadEnv({ ...valid, NODE_ENV: 'production', SMS_PROVIDER: 'mailbox' })).toThrow(/SMS_PROVIDER/);
+    expect(() => loadEnv({ ...valid, SMS_PROVIDER: 'twilio' })).toThrow(/SMS_PROVIDER/);
+  });
+
   it('rejects a negative or fractional TRUST_PROXY_HOPS', () => {
     expect(() => loadEnv({ ...valid, TRUST_PROXY_HOPS: '-1' })).toThrow(/TRUST_PROXY_HOPS/);
     expect(() => loadEnv({ ...valid, TRUST_PROXY_HOPS: '1.5' })).toThrow(/TRUST_PROXY_HOPS/);

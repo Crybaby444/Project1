@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MailModule } from '../mail/mail.module';
+import { SmsModule } from '../sms/sms.module';
 import { AccessTokenService } from './access-token.service';
 import { AuthController } from './auth.controller';
 import { AuthGuard } from './auth.guard';
@@ -9,7 +10,7 @@ import { PasswordService } from './password.service';
 import { RefreshTokenService } from './refresh-token.service';
 
 @Module({
-  imports: [MailModule],
+  imports: [MailModule, SmsModule],
   controllers: [AuthController],
   providers: [AuthService, AuthGuard, GoogleOAuthService, PasswordService, AccessTokenService, RefreshTokenService],
   exports: [AuthService, AuthGuard, PasswordService, AccessTokenService, RefreshTokenService],

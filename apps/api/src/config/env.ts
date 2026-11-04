@@ -38,12 +38,30 @@ const EnvObject = z.object({
   GOOGLE_AUTH_URL: z.url().default('https://accounts.google.com/o/oauth2/v2/auth'),
   GOOGLE_TOKEN_URL: z.url().default('https://oauth2.googleapis.com/token'),
   GOOGLE_JWKS_URL: z.url().default('https://www.googleapis.com/oauth2/v3/certs'),
+  /**
+   * Who delivers phone confirmation codes. `mailbox` only simulates SMS (the code arrives by email,
+   * so it proves nothing about the phone): the default outside production, never allowed in it.
+   * Without a provider, phone confirmation is switched off.
+   */
+  SMS_PROVIDER: z.preprocess(blankAsUnset, z.enum(['mailbox']).optional()),
 });
 
-export const EnvSchema = EnvObject.transform((env) => ({
-  ...env,
-  SMTP_URL: env.SMTP_URL ?? (env.NODE_ENV === 'production' ? undefined : LOCAL_SMTP_URL),
-}));
+export const EnvSchema = EnvObject.superRefine((env, ctx) => {
+  if (env.NODE_ENV === 'production' && env.SMS_PROVIDER === 'mailbox') {
+    ctx.addIssue({
+      code: 'custom',
+      path: ['SMS_PROVIDER'],
+      message: '"mailbox" only simulates SMS by email and is not allowed in production',
+    });
+  }
+}).transform((env) => {
+  const production = env.NODE_ENV === 'production';
+  return {
+    ...env,
+    SMTP_URL: env.SMTP_URL ?? (production ? undefined : LOCAL_SMTP_URL),
+    SMS_PROVIDER: env.SMS_PROVIDER ?? (production ? undefined : ('mailbox' as const)),
+  };
+});
 
 export type Env = z.infer<typeof EnvSchema>;
 

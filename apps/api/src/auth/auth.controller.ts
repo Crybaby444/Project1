@@ -16,6 +16,7 @@ import { RateLimiter } from '../common/rate-limiter';
 import { RATE_LIMITS } from '../common/rate-limits';
 import { clientIp, sessionMeta } from '../common/request-meta';
 import { ENV, type Env } from '../config/env';
+import { SMS_PROVIDER, type SmsProvider } from '../sms/sms.provider';
 import {
   EmailTokenDto,
   ForgotPasswordDto,
@@ -57,6 +58,7 @@ export class AuthController {
     private readonly google: GoogleOAuthService,
     private readonly limiter: RateLimiter,
     @Inject(ENV) private readonly env: Pick<Env, 'NODE_ENV' | 'WEB_ORIGIN'>,
+    @Inject(SMS_PROVIDER) private readonly sms: SmsProvider | null,
   ) {}
 
   private get secureCookies(): boolean {
@@ -66,7 +68,7 @@ export class AuthController {
   @Get('providers')
   @ZodResponse({ status: 200, type: ProvidersResponseDto, description: 'Sign-in methods this deployment offers' })
   providers(): ProvidersResponse {
-    return { google: this.google.enabled };
+    return { google: this.google.enabled, phone: this.sms !== null };
   }
 
   @Get('google')
