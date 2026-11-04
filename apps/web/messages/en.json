@@ -11,13 +11,15 @@
     "label": "Language",
     "en": "English",
     "lv": "Latviešu",
-    "ru": "Русский"
+    "ru": "Русский",
+    "current": "Language: {name}"
   },
   "theme": {
     "toggle": "Switch theme",
     "light": "Light",
     "dark": "Dark",
-    "system": "System"
+    "system": "System",
+    "label": "Theme"
   },
   "notFound": {
     "title": "This page rolled away",
@@ -106,5 +108,41 @@
   },
   "session": {
     "loading": "Checking that you are signed in…"
+  },
+  "header": {
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "account": "Account menu",
+    "settings": "Settings",
+    "signOut": "Sign out",
+    "signedOut": "You are signed out."
+  },
+  "banner": {
+    "verifyEmail": {
+      "title": "Please confirm your email: we sent you a link.",
+      "resend": "Send the email again",
+      "sent": "Email sent. Check your inbox."
+    }
+  },
+  "errors": {
+    "VALIDATION_FAILED": "Some fields need another look.",
+    "AUTH_INVALID_CREDENTIALS": "Wrong email or password.",
+    "AUTH_EMAIL_TAKEN": "An account with this email already exists. Sign in instead?",
+    "AUTH_UNAUTHENTICATED": "Your session has ended. Sign in again.",
+    "AUTH_FORBIDDEN": "You do not have access to this.",
+    "AUTH_BLOCKED": "This account is blocked.",
+    "AUTH_PROVIDER_DISABLED": "This way of signing in is not available right now.",
+    "TOKEN_EXPIRED": "This link has expired.",
+    "TOKEN_USED": "This link has already been used.",
+    "RATE_LIMITED": "Too many attempts. Try again a little later.",
+    "OAUTH_CANCELLED": "Google sign-in was cancelled. Try again, or sign in with your email.",
+    "OAUTH_STATE_INVALID": "This Google sign-in took too long or was started in another tab. Start it again.",
+    "OAUTH_FAILED": "Google sign-in did not work. Try again, or sign in with your email.",
+    "ORIGIN_FORBIDDEN": "This request came from an unexpected page. Reload it and try again.",
+    "NOT_FOUND": "We could not find that.",
+    "INTERNAL": "Something broke on our side. Try again in a minute.",
+    "NETWORK": "We cannot reach Yoyo. Check your connection and try again.",
+    "fieldInvalid": "Check this field.",
+    "retryIn": "Too many attempts. Try again in {seconds} s."
   }
 }

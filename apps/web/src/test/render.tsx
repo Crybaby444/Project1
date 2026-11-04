@@ -3,6 +3,8 @@ import { render, type RenderResult } from '@testing-library/react';
 import type { ApiClient } from '@yoyo/api-client';
 import { NextIntlClientProvider } from 'next-intl';
 import type { ReactElement } from 'react';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
+import { ToastProvider } from '@/components/ui/Toast';
 import { SessionProvider } from '@/lib/session/SessionProvider';
 import en from '../../messages/en.json';
 import lv from '../../messages/lv.json';
@@ -20,10 +22,21 @@ export function renderWithIntl(ui: ReactElement, locale: TestLocale = 'en'): Ren
   );
 }
 
-/** Like renderWithIntl, plus a fresh query cache and the session from `client` (see test/fake-api). */
+/**
+ * Like renderWithIntl, plus what the layout provides: a fresh query cache, the session from `client`
+ * (see test/fake-api), the theme and toasts.
+ */
 export function renderWithSession(
   ui: ReactElement,
-  { client, locale = 'en' }: { client: ApiClient; locale?: TestLocale },
+  {
+    client,
+    locale = 'en',
+    hasSession = true,
+  }: {
+    client: ApiClient;
+    locale?: TestLocale;
+    /** Whether the session hint cookie is there. */ hasSession?: boolean;
+  },
 ): RenderResult & { queryClient: QueryClient } {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
@@ -31,7 +44,11 @@ export function renderWithSession(
   const result = render(
     <NextIntlClientProvider locale={locale} messages={messages[locale]}>
       <QueryClientProvider client={queryClient}>
-        <SessionProvider client={client}>{ui}</SessionProvider>
+        <SessionProvider client={client} hasSession={() => hasSession}>
+          <ThemeProvider initialPreference="system">
+            <ToastProvider>{ui}</ToastProvider>
+          </ThemeProvider>
+        </SessionProvider>
       </QueryClientProvider>
     </NextIntlClientProvider>,
   );

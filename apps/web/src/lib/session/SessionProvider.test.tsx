@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { describe, expect, it } from 'vitest';
 import { fakeApi, meRoute, testUser } from '@/test/fake-api';
 import { renderWithSession } from '@/test/render';
-import { useSession } from './SessionProvider';
+import { hasSessionHint, useSession } from './SessionProvider';
 
 const latest: { session?: ReturnType<typeof useSession> } = {};
 
@@ -38,6 +38,20 @@ describe('SessionProvider', () => {
 
     await waitFor(() => expect(screen.getByTestId('status')).toHaveTextContent('anonymous'));
     expect(session.user).toBeNull();
+  });
+
+  it('does not ask the API at all when this browser has no session hint (a visitor)', async () => {
+    const { client, calls } = fakeApi(meRoute(testUser()));
+    renderWithSession(<Probe />, { client, hasSession: false });
+
+    await waitFor(() => expect(screen.getByTestId('status')).toHaveTextContent('anonymous'));
+    expect(calls).toHaveLength(0);
+  });
+
+  it('reads the hint from the yoyo_session cookie', () => {
+    expect(hasSessionHint('a=1; yoyo_session=1; b=2')).toBe(true);
+    expect(hasSessionHint('a=1; yoyo_sessionx=1')).toBe(false);
+    expect(hasSessionHint('')).toBe(false);
   });
 
   it('signs out through POST /auth/logout and becomes anonymous', async () => {

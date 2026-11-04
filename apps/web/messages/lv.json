@@ -11,13 +11,15 @@
     "label": "Valoda",
     "en": "English",
     "lv": "Latviešu",
-    "ru": "Русский"
+    "ru": "Русский",
+    "current": "Valoda: {name}"
   },
   "theme": {
     "toggle": "Pārslēgt tēmu",
     "light": "Gaišā",
     "dark": "Tumšā",
-    "system": "Kā sistēmā"
+    "system": "Kā sistēmā",
+    "label": "Tēma"
   },
   "notFound": {
     "title": "Šī lapa aizripoja",
@@ -106,5 +108,41 @@
   },
   "session": {
     "loading": "Pārbaudām, vai esat pieteicies…"
+  },
+  "header": {
+    "signIn": "Pieteikties",
+    "signUp": "Reģistrēties",
+    "account": "Konta izvēlne",
+    "settings": "Iestatījumi",
+    "signOut": "Iziet",
+    "signedOut": "Sesija ir beigta."
+  },
+  "banner": {
+    "verifyEmail": {
+      "title": "Lūdzu, apstipriniet e-pastu: mēs jums nosūtījām saiti.",
+      "resend": "Sūtīt vēstuli vēlreiz",
+      "sent": "Vēstule nosūtīta. Pārbaudiet iesūtni."
+    }
+  },
+  "errors": {
+    "VALIDATION_FAILED": "Dažus laukus vajag pārbaudīt vēlreiz.",
+    "AUTH_INVALID_CREDENTIALS": "Nepareizs e-pasts vai parole.",
+    "AUTH_EMAIL_TAKEN": "Konts ar šo e-pastu jau pastāv. Varbūt pieteikties?",
+    "AUTH_UNAUTHENTICATED": "Sesija ir beigusies. Piesakieties vēlreiz.",
+    "AUTH_FORBIDDEN": "Jums tam nav piekļuves.",
+    "AUTH_BLOCKED": "Šis konts ir bloķēts.",
+    "AUTH_PROVIDER_DISABLED": "Šis pieteikšanās veids pašlaik nav pieejams.",
+    "TOKEN_EXPIRED": "Šīs saites derīgums ir beidzies.",
+    "TOKEN_USED": "Šī saite jau ir izmantota.",
+    "RATE_LIMITED": "Pārāk daudz mēģinājumu. Pamēģiniet nedaudz vēlāk.",
+    "OAUTH_CANCELLED": "Pieteikšanās ar Google tika atcelta. Mēģiniet vēlreiz vai piesakieties ar e-pastu.",
+    "OAUTH_STATE_INVALID": "Pieteikšanās ar Google ilga pārāk ilgi vai tika sākta citā cilnē. Sāciet no jauna.",
+    "OAUTH_FAILED": "Pieteikšanās ar Google neizdevās. Mēģiniet vēlreiz vai piesakieties ar e-pastu.",
+    "ORIGIN_FORBIDDEN": "Pieprasījums nāca no negaidītas lapas. Pārlādējiet to un mēģiniet vēlreiz.",
+    "NOT_FOUND": "To neizdevās atrast.",
+    "INTERNAL": "Pie mums kaut kas salūza. Mēģiniet vēlreiz pēc minūtes.",
+    "NETWORK": "Nevaram sazināties ar Yoyo. Pārbaudiet savienojumu un mēģiniet vēlreiz.",
+    "fieldInvalid": "Pārbaudiet šo lauku.",
+    "retryIn": "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc {seconds} s."
   }
 }

@@ -26,8 +26,22 @@ type SessionContextValue = Session & { client: ApiClient };
 
 const SessionContext = createContext<SessionContextValue | null>(null);
 
-/** The signed-in user, or null for a visitor (401). Other failures (API down) count as signed out too. */
-async function fetchMe(client: ApiClient): Promise<PublicUser | null> {
+/** Set by the API next to the session cookies (readable, no secret): this browser may have a session. */
+const SESSION_HINT_COOKIE = 'yoyo_session';
+
+export function hasSessionHint(
+  cookies: string = typeof document === 'undefined' ? '' : document.cookie,
+): boolean {
+  return cookies.split(/;\s*/).some((pair) => pair.startsWith(`${SESSION_HINT_COOKIE}=`));
+}
+
+/**
+ * The signed-in user, or null for a visitor. Without the hint cookie there is no session to ask
+ * about, so a visitor's pages make no request (and log no 401). A 401 or any other failure (API down)
+ * counts as signed out.
+ */
+async function fetchMe(client: ApiClient, hasSession: () => boolean): Promise<PublicUser | null> {
+  if (!hasSession()) return null;
   try {
     return (await unwrap(client.GET('/api/v1/me'))).user;
   } catch (error) {
@@ -40,11 +54,20 @@ async function fetchMe(client: ApiClient): Promise<PublicUser | null> {
  * Holds the signed-in user for the whole site (TanStack Query, key SESSION_QUERY_KEY).
  * `client` is the API client to use; tests pass a fake one.
  */
-export function SessionProvider({ children, client = api }: { children: ReactNode; client?: ApiClient }) {
+export function SessionProvider({
+  children,
+  client = api,
+  hasSession = hasSessionHint,
+}: {
+  children: ReactNode;
+  client?: ApiClient;
+  /** Whether a session may exist (tests replace the cookie check). */
+  hasSession?: () => boolean;
+}) {
   const queryClient = useQueryClient();
   const query = useQuery({
     queryKey: SESSION_QUERY_KEY,
-    queryFn: () => fetchMe(client),
+    queryFn: () => fetchMe(client, hasSession),
     staleTime: 60_000,
     retry: false,
   });

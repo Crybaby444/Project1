@@ -7,7 +7,8 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import { themeInitScript } from '@/components/theme/theme-script';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
-import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { SiteHeader } from '@/components/layout/SiteHeader';
+import { ToastProvider } from '@/components/ui/Toast';
 import { routing } from '@/i18n/routing';
 import { QueryProvider } from '@/lib/session/QueryProvider';
 import { SessionProvider } from '@/lib/session/SessionProvider';
@@ -40,15 +41,15 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="bg-canvas text-ink min-h-dvh">
+      <body className="bg-canvas text-ink flex min-h-dvh flex-col">
         <NextIntlClientProvider>
           <QueryProvider>
             <SessionProvider>
               <ThemeProvider initialPreference={preference}>
-                <div className="fixed top-4 right-4 z-50">
-                  <ThemeToggle />
-                </div>
-                {children}
+                <ToastProvider>
+                  <SiteHeader />
+                  <div className="flex flex-1 flex-col *:w-full">{children}</div>
+                </ToastProvider>
               </ThemeProvider>
             </SessionProvider>
           </QueryProvider>
