@@ -49,8 +49,28 @@ export function canonicalJson(value: unknown): string {
   return JSON.stringify(value) ?? 'null';
 }
 
+/** The contract's terms as stored (plain JSON): what both sides agreed to when the owner accepted. */
+export interface ContractTerms {
+  contractId: string;
+  acceptedAt: string;
+  renter: { id: string; name: string; email: string };
+  owner: { id: string; name: string; email: string };
+  listing: {
+    id: string;
+    title: string;
+    condition: 'NEW' | 'LIKE_NEW' | 'GOOD' | 'FAIR' | null;
+    city: string | null;
+    district: string | null;
+    rules: { preset: string[]; custom: string[] };
+  };
+  period: { start: string; end: string };
+  timeZone: string;
+  quote: { [K in keyof BookingSnapshot['quote']]: K extends 'priceSource' ? 'LISTED' | 'AGREED' : number };
+  deadlines: { handoverConfirmHours: number; returnConfirmHours: number; inspectionHours: number; damageReplyHours: number };
+}
+
 /** The contract's terms as they stand when the owner accepts; later edits of the listing do not change them. */
-export function contractTerms(row: BookingWithParties, next: BookingSnapshot, settings: BookingSettings, now: Date) {
+export function contractTerms(row: BookingWithParties, next: BookingSnapshot, settings: BookingSettings, now: Date): ContractTerms {
   const rules = (row.listing.rules ?? { preset: [], custom: [] }) as { preset: string[]; custom: string[] };
   return {
     contractId: next.id,
@@ -77,7 +97,6 @@ export function contractTerms(row: BookingWithParties, next: BookingSnapshot, se
   };
 }
 
-export type ContractTerms = ReturnType<typeof contractTerms>;
 
 /**
  * Carries out the effects of one decision of @yoyo/domain inside the transaction that saves it, in the
@@ -116,7 +135,7 @@ export class EffectsExecutor {
         case 'GENERATE_CONTRACT': {
           const terms = contractTerms(ctx.row, next, ctx.settings, ctx.now);
           const termsHash = createHash('sha256').update(canonicalJson(terms)).digest('hex');
-          await tx.contract.create({ data: { bookingId: next.id, terms, termsHash, createdAt: ctx.now } });
+          await tx.contract.create({ data: { bookingId: next.id, terms: terms as unknown as Prisma.InputJsonObject, termsHash, createdAt: ctx.now } });
           break;
         }
         case 'LEDGER': {

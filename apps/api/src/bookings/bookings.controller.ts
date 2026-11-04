@@ -1,6 +1,6 @@
-import { Body, Controller, Get, HttpCode, Param, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, Query, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOkResponse, ApiProduces, ApiTags } from '@nestjs/swagger';
 import {
   BookingPhotoResponseSchema,
   BookingPhotosResponseSchema,
@@ -9,6 +9,7 @@ import {
   type BookingPhotoResponse,
   type BookingPhotosResponse,
   BookingActionRequestSchema,
+  LOCALES,
   BookingRequestSchema,
   BookingResponseSchema,
   BookingsPageSchema,
@@ -20,7 +21,10 @@ import {
   type PublicUser,
   type QuoteResponse,
 } from '@yoyo/shared';
+import type { Response } from 'express';
 import { createZodDto, ZodResponse } from 'nestjs-zod';
+import { z } from 'zod';
+import { ContractService } from '../contracts/contract.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { ApiErrors } from '../common/api-errors';
@@ -34,6 +38,7 @@ import { BookingsService } from './bookings.service';
 class BookingPhotoResponseDto extends createZodDto(BookingPhotoResponseSchema) {}
 class BookingPhotosResponseDto extends createZodDto(BookingPhotosResponseSchema) {}
 class BookingPhotoUploadQueryDto extends createZodDto(BookingPhotoUploadQuerySchema) {}
+class ContractQueryDto extends createZodDto(z.object({ lang: z.enum(LOCALES).optional() })) {}
 class BookingActionRequestDto extends createZodDto(BookingActionRequestSchema) {}
 class BookingRequestDto extends createZodDto(BookingRequestSchema) {}
 class BookingResponseDto extends createZodDto(BookingResponseSchema) {}
@@ -50,8 +55,21 @@ export class BookingsController {
   constructor(
     private readonly bookings: BookingsService,
     private readonly photos: BookingPhotosService,
+    private readonly contracts: ContractService,
     private readonly limiter: RateLimiter,
   ) {}
+
+  /** The rental contract (from ACCEPTED on) in `lang`, or in the viewer's language. */
+  @Get(':id/contract.pdf')
+  @ApiProduces('application/pdf')
+  @ApiOkResponse({ description: 'The contract as a PDF', schema: { type: 'string', format: 'binary' } })
+  @ApiErrors(400, 401, 403, 404)
+  async contract(@CurrentUser() user: PublicUser, @Param('id') id: string, @Query() query: ContractQueryDto, @Res() res: Response): Promise<void> {
+    const pdf = await this.contracts.pdf(id, user, query.lang);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="yoyo-contract-${id}.pdf"`);
+    res.send(pdf);
+  }
 
   /** One photo per request in the `file` field (10 MB, JPEG/PNG/WebP), like listing photos. */
   @Post(':id/photos')
