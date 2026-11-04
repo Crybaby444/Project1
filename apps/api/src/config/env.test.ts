@@ -55,6 +55,29 @@ describe('loadEnv', () => {
     expect(loadEnv({ ...valid, TRUST_PROXY_HOPS: '' }).TRUST_PROXY_HOPS).toBe(0);
   });
 
+  it('sends mail to the local Mailpit in development and test, and nowhere in production unless configured', () => {
+    expect(loadEnv(valid).SMTP_URL).toBe('smtp://localhost:1025');
+    expect(loadEnv({ ...valid, NODE_ENV: 'test' }).SMTP_URL).toBe('smtp://localhost:1025');
+    expect(loadEnv({ ...valid, NODE_ENV: 'production' }).SMTP_URL).toBeUndefined();
+    expect(loadEnv({ ...valid, NODE_ENV: 'production', SMTP_URL: '' }).SMTP_URL).toBeUndefined();
+    expect(
+      loadEnv({ ...valid, NODE_ENV: 'production', SMTP_URL: 'smtps://me%40gmail.com:app-pass@smtp.gmail.com:465' })
+        .SMTP_URL,
+    ).toBe('smtps://me%40gmail.com:app-pass@smtp.gmail.com:465');
+  });
+
+  it('accepts only smtp:// or smtps:// mail servers and never echoes the URL with its password', () => {
+    expect(() => loadEnv({ ...valid, SMTP_URL: 'https://user:hunter2@mail.example' })).toThrow(/SMTP_URL/);
+    expect(() => loadEnv({ ...valid, SMTP_URL: 'https://user:hunter2@mail.example' })).toThrow(
+      expect.objectContaining({ message: expect.not.stringContaining('hunter2') }),
+    );
+  });
+
+  it('has a default sender address', () => {
+    expect(loadEnv(valid).MAIL_FROM).toBe('Yoyo <no-reply@yoyo.local>');
+    expect(loadEnv({ ...valid, MAIL_FROM: 'Yoyo <me@gmail.com>' }).MAIL_FROM).toBe('Yoyo <me@gmail.com>');
+  });
+
   it('rejects a negative or fractional TRUST_PROXY_HOPS', () => {
     expect(() => loadEnv({ ...valid, TRUST_PROXY_HOPS: '-1' })).toThrow(/TRUST_PROXY_HOPS/);
     expect(() => loadEnv({ ...valid, TRUST_PROXY_HOPS: '1.5' })).toThrow(/TRUST_PROXY_HOPS/);

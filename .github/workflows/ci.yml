@@ -31,6 +31,17 @@ jobs:
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
+      # Catches the mail the API sends (SMTP 1025, HTTP API 8025), as Mailpit does locally.
+      mailpit:
+        image: axllent/mailpit:v1.33.0
+        ports:
+          - 1025:1025
+          - 8025:8025
+        options: >-
+          --health-cmd "/mailpit readyz"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
 
     env:
       # API (also used by the e2e API server)
@@ -39,6 +50,7 @@ jobs:
       WEB_ORIGIN: http://localhost:3000
       # CI-only signing key (not a secret: it signs nothing outside this job).
       JWT_SECRET: ci-only-jwt-secret-not-used-anywhere-else
+      SMTP_URL: smtp://localhost:1025
       # Web build (NEXT_PUBLIC_* are baked in at build time)
       NEXT_PUBLIC_API_URL: http://localhost:4000
       NEXT_PUBLIC_SHOW_STYLEGUIDE: 'true'

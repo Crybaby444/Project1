@@ -1,0 +1,33 @@
+{
+  "common": {
+    "greeting": "Hi {name},",
+    "linkFallback": "If the button does not work, copy this link into your browser:",
+    "footer": "Yoyo — rent anything from people nearby."
+  },
+  "verifyEmail": {
+    "subject": "Confirm your email for Yoyo",
+    "preview": "One click and your Yoyo account is ready.",
+    "heading": "Confirm your email",
+    "body": "Welcome to Yoyo! Confirm that this address is yours, so the people you rent with can reach you.",
+    "button": "Confirm email",
+    "expiry": "The link works for 24 hours.",
+    "ignore": "If you did not create a Yoyo account, just ignore this email."
+  },
+  "resetPassword": {
+    "subject": "Reset your Yoyo password",
+    "preview": "Set a new password for your Yoyo account.",
+    "heading": "Reset your password",
+    "body": "We got a request to reset the password of your Yoyo account. If it was you, set a new one:",
+    "button": "Set a new password",
+    "expiry": "The link works for 1 hour and only once.",
+    "ignore": "If you did not ask for this, ignore this email: your password stays the same."
+  },
+  "phoneCode": {
+    "subject": "Your Yoyo phone confirmation code",
+    "preview": "Enter this code on Yoyo to confirm your phone.",
+    "heading": "Confirm your phone",
+    "body": "Enter this code on Yoyo to confirm your phone number:",
+    "expiry": "The code works for 10 minutes.",
+    "ignore": "If you did not ask for a code, just ignore this email."
+  }
+}

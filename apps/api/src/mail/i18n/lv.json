@@ -1,0 +1,33 @@
+{
+  "common": {
+    "greeting": "Sveiki, {name}!",
+    "linkFallback": "Ja poga nestrādā, iekopē šo saiti pārlūkā:",
+    "footer": "Yoyo — nomā jebko no cilvēkiem tuvumā."
+  },
+  "verifyEmail": {
+    "subject": "Apstiprini savu e-pastu Yoyo",
+    "preview": "Viens klikšķis, un tavs Yoyo konts ir gatavs.",
+    "heading": "Apstiprini savu e-pastu",
+    "body": "Prieks, ka esi Yoyo! Apstiprini, ka šī adrese ir tava, lai cilvēki, ar kuriem nomā lietas, var ar tevi sazināties.",
+    "button": "Apstiprināt e-pastu",
+    "expiry": "Saite ir derīga 24 stundas.",
+    "ignore": "Ja tu neveidoji Yoyo kontu, vienkārši ignorē šo e-pastu."
+  },
+  "resetPassword": {
+    "subject": "Yoyo paroles atjaunošana",
+    "preview": "Iestati jaunu paroli savam Yoyo kontam.",
+    "heading": "Atjauno paroli",
+    "body": "Saņēmām pieprasījumu atjaunot tava Yoyo konta paroli. Ja tas biji tu, iestati jaunu:",
+    "button": "Iestatīt jaunu paroli",
+    "expiry": "Saite ir derīga 1 stundu un tikai vienu reizi.",
+    "ignore": "Ja tu to nepieprasīji, ignorē šo e-pastu: parole paliks tā pati."
+  },
+  "phoneCode": {
+    "subject": "Tavs Yoyo tālruņa apstiprināšanas kods",
+    "preview": "Ievadi šo kodu Yoyo, lai apstiprinātu tālruni.",
+    "heading": "Apstiprini tālruni",
+    "body": "Ievadi šo kodu Yoyo, lai apstiprinātu savu tālruņa numuru:",
+    "expiry": "Kods ir derīgs 10 minūtes.",
+    "ignore": "Ja tu nepieprasīji kodu, vienkārši ignorē šo e-pastu."
+  }
+}
