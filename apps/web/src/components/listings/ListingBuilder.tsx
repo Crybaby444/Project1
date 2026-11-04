@@ -21,12 +21,16 @@ import { StepSection } from './StepSection';
 import { AttributesStep } from './steps/AttributesStep';
 import { BasicsStep } from './steps/BasicsStep';
 import { PhotosStep } from './steps/PhotosStep';
+import { PriceStep } from './steps/PriceStep';
+import { RulesStep } from './steps/RulesStep';
 
 /** The fields of each step; steps added by later tasks register here. */
 const STEP_CONTENT: Partial<Record<BuilderStep, () => ReactNode>> = {
   photos: () => <PhotosStep />,
   basics: () => <BasicsStep />,
   attributes: () => <AttributesStep />,
+  price: () => <PriceStep />,
+  rules: () => <RulesStep />,
 };
 
 /**

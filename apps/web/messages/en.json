@@ -481,6 +481,31 @@
       "cancel": "Cancel",
       "hint": "Cards show this 4:3 frame. “Upload the whole photo” keeps everything, and the card crops it in the middle.",
       "loading": "Opening the photo…"
+    },
+    "price": {
+      "daily": "Price a day",
+      "dailyHint": "From €1 to €10,000.",
+      "weekly": "Discount for 7 days or more",
+      "weeklyHint": "In percent, 0 for none. Longer rentals with a discount book more often.",
+      "deposit": "Deposit",
+      "depositHint": "Frozen while the item is away and returned in full when it comes back as agreed. 0 for none.",
+      "minDays": "Shortest rental",
+      "maxDays": "Longest rental",
+      "daysHint": "In days, from 1 to 365.",
+      "days": "days",
+      "payout": "You receive",
+      "payoutFor": "For {days, plural, one {# day} other {# days}}",
+      "payoutDiscount": "with −{percent}%",
+      "payoutNote": "Renters pay Yoyo’s service fee on top; the deposit goes back to them after the return.",
+      "payoutWaiting": "Fill in a valid price to see what you receive."
+    },
+    "rules": {
+      "presets": "Ready-made rules",
+      "custom": "Your own rules",
+      "customHint": "Up to {max} short rules, 3–120 characters each.",
+      "customLabel": "Rule {number}",
+      "add": "Add a rule",
+      "remove": "Remove rule {number}"
     }
   }
 }

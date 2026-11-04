@@ -41,8 +41,8 @@ export function useCheckText(): (check: Check) => string {
 
 /**
  * Shares the draft and its checks with every step. A field shows an error when the API refused it,
- * when it breaks a draft rule after the person left it (too long, out of range), or, after a submit
- * attempt, when review still needs it.
+ * when it breaks a draft rule (too long, out of range) and the person left it or autosave is holding
+ * it back, or, after a submit attempt, when review still needs it.
  */
 export function BuilderProvider({
   draft,
@@ -79,9 +79,10 @@ export function BuilderProvider({
       }
       const local = checks.draft[field] ?? (attempted ? checks.submit[field] : undefined);
       if (!local) return undefined;
-      return touched.has(field) || attempted ? checkText(local) : undefined;
+      // A field autosave is holding back shows why, even if the person has not left it yet.
+      return touched.has(field) || attempted || draft.state === 'invalid' ? checkText(local) : undefined;
     },
-    [draft.serverErrors, checks, attempted, touched, checkText, tErrors],
+    [draft.serverErrors, draft.state, checks, attempted, touched, checkText, tErrors],
   );
 
   const touch = useCallback(
