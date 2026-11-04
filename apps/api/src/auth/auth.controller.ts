@@ -10,7 +10,16 @@ import { RateLimiter } from '../common/rate-limiter';
 import { RATE_LIMITS } from '../common/rate-limits';
 import { clientIp, sessionMeta } from '../common/request-meta';
 import { ENV, type Env } from '../config/env';
-import { EmailTokenDto, LoginDto, RefreshDto, RefreshResponseDto, RegisterDto, UserResponseDto } from './auth.dto';
+import {
+  EmailTokenDto,
+  ForgotPasswordDto,
+  LoginDto,
+  RefreshDto,
+  RefreshResponseDto,
+  RegisterDto,
+  ResetPasswordDto,
+  UserResponseDto,
+} from './auth.dto';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { clearAuthCookies, REFRESH_COOKIE, setAuthCookies } from './cookies';
@@ -63,6 +72,24 @@ export class AuthController {
   async resendVerification(@CurrentUser() user: PublicUser): Promise<void> {
     this.limiter.hit(RATE_LIMITS.resendVerification(user.id));
     await this.auth.resendVerification(user.id);
+  }
+
+  @Post('forgot-password')
+  @HttpCode(202)
+  @ApiAcceptedResponse({ description: 'If the account exists, a reset link is on its way (same answer either way)' })
+  @ApiErrors(400, 403, 429)
+  async forgotPassword(@Body() body: ForgotPasswordDto, @Req() req: Request): Promise<void> {
+    this.limiter.hit(RATE_LIMITS.forgotPassword(clientIp(req), body.email));
+    await this.auth.forgotPassword(body.email);
+  }
+
+  @Post('reset-password')
+  @ZodResponse({ status: 200, type: UserResponseDto, description: 'Password changed; every session ended' })
+  @ApiErrors(400, 403, 410)
+  async resetPassword(@Body() body: ResetPasswordDto, @Res({ passthrough: true }) res: Response): Promise<UserResponse> {
+    const user = await this.auth.resetPassword(body.token, body.password);
+    clearAuthCookies(res, this.secureCookies); // whatever session this browser had is gone now
+    return { user: toPublicUser(user) };
   }
 
   @Post('login')

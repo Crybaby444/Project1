@@ -15,6 +15,8 @@ import { hashToken, RefreshTokenService, type SessionMeta } from './refresh-toke
 const HOUR = 3_600_000;
 /** The email confirmation link works for 24 hours. */
 export const EMAIL_VERIFICATION_TTL_MS = 24 * HOUR;
+/** The password reset link works for 1 hour. */
+export const PASSWORD_RESET_TTL_MS = HOUR;
 
 const emailTaken = () => new AppError('AUTH_EMAIL_TAKEN', 409);
 const invalidCredentials = () => new AppError('AUTH_INVALID_CREDENTIALS', 401);
@@ -117,6 +119,35 @@ export class AuthService {
 
   logoutEverywhere(userId: string): Promise<void> {
     return this.refreshTokens.revokeAll(userId);
+  }
+
+  /** Emails a reset link if the account exists. Callers answer 202 either way (no account enumeration). */
+  async forgotPassword(email: string): Promise<void> {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user || user.deletedAt !== null) return;
+    const token = await this.issueEmailToken(user.id, 'RESET_PASSWORD', PASSWORD_RESET_TTL_MS);
+    void this.mail.sendPasswordReset(user, webLink(this.env.WEB_ORIGIN, user.locale, '/reset-password', token));
+  }
+
+  /**
+   * Sets the new password and ends every session (a stolen session must not survive a reset). The link
+   * proves the user reads that mailbox, so the email counts as confirmed too.
+   */
+  async resetPassword(token: string, password: string): Promise<User> {
+    const row = await this.consumeEmailToken(token, 'RESET_PASSWORD');
+    const now = this.clock.now();
+    const passwordHash = await this.passwords.hash(password);
+    const current = await this.prisma.user.findUniqueOrThrow({ where: { id: row.userId } });
+    const user = await this.prisma.user.update({
+      where: { id: row.userId },
+      data: { passwordHash, emailVerifiedAt: current.emailVerifiedAt ?? now },
+    });
+    await this.prisma.emailToken.updateMany({
+      where: { userId: row.userId, type: 'RESET_PASSWORD', usedAt: null },
+      data: { usedAt: now },
+    });
+    await this.refreshTokens.revokeAll(row.userId);
+    return user;
   }
 
   /** A new confirmation link, unless the email is already confirmed. */

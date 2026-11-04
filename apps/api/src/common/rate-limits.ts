@@ -15,6 +15,11 @@ export const RATE_LIMITS = {
     { key: `login:ip-email:${ip}|${email}`, limit: 5, windowMs: MINUTE },
     { key: `login:email:${email}`, limit: 20, windowMs: HOUR },
   ],
+  /** 3 an hour per address and email, and 5 an hour per email from any address. */
+  forgotPassword: (ip: string, email: string): RateRule[] => [
+    { key: `forgot-password:ip-email:${ip}|${email}`, limit: 3, windowMs: HOUR },
+    { key: `forgot-password:email:${email}`, limit: 5, windowMs: HOUR },
+  ],
   /** One confirmation email a minute per user. */
   resendVerification: (userId: string): RateRule[] => [
     { key: `resend-verification:user:${userId}`, limit: 1, windowMs: MINUTE },

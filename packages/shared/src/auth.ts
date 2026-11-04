@@ -39,6 +39,13 @@ export const RefreshRequestSchema = z.object({
 /** The token from an email link (`…?token=…`). */
 export const EmailTokenRequestSchema = z.object({ token: z.string().min(1).max(256) });
 
+export const ForgotPasswordRequestSchema = z.object({ email: EmailSchema });
+
+export const ResetPasswordRequestSchema = z.object({
+  token: z.string().min(1).max(256),
+  password: PasswordSchema,
+});
+
 /** The signed-in user as the API shows them to themselves. Never carries secrets. */
 export const PublicUserSchema = z.object({
   id: z.string(),
