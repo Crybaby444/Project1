@@ -14,9 +14,11 @@ const ROLES = new Set<string>(Object.values(Role));
 export interface AccessClaims {
   sub: string;
   role: Role;
+  /** The session (refresh-token family) the token belongs to; revoking the family ends the token too. */
+  sid: string;
 }
 
-/** Short-lived HS256 JWTs carrying `{ sub, role }`. */
+/** Short-lived HS256 JWTs carrying `{ sub, role, sid }`. */
 @Injectable()
 export class AccessTokenService {
   private readonly key: Uint8Array;
@@ -28,9 +30,9 @@ export class AccessTokenService {
     this.key = new TextEncoder().encode(env.JWT_SECRET);
   }
 
-  issue(user: { id: string; role: Role }): Promise<string> {
+  issue(user: { id: string; role: Role }, sid: string): Promise<string> {
     const now = Math.floor(this.clock.now().getTime() / 1000);
-    return new SignJWT({ role: user.role })
+    return new SignJWT({ role: user.role, sid })
       .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
       .setSubject(user.id)
       .setAudience(AUDIENCE)
@@ -52,10 +54,10 @@ export class AccessTokenService {
       if (error instanceof errors.JWTExpired) throw new AppError('TOKEN_EXPIRED', 401);
       throw new AppError('AUTH_UNAUTHENTICATED', 401);
     }
-    const { sub, role } = payload;
-    if (typeof sub !== 'string' || typeof role !== 'string' || !ROLES.has(role)) {
+    const { sub, role, sid } = payload;
+    if (typeof sub !== 'string' || typeof role !== 'string' || !ROLES.has(role) || typeof sid !== 'string' || !sid) {
       throw new AppError('AUTH_UNAUTHENTICATED', 401);
     }
-    return { sub, role: role as Role };
+    return { sub, role: role as Role, sid };
   }
 }

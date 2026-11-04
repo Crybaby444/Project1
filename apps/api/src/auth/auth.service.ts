@@ -118,7 +118,7 @@ export class AuthService {
       if (user?.blockedAt) throw new AppError('AUTH_BLOCKED', 403);
       throw unauthenticated();
     }
-    const accessToken = await this.accessTokens.issue(user);
+    const accessToken = await this.accessTokens.issue(user, rotated.familyId);
     return { user, session: { accessToken, refreshToken: rotated.token } };
   }
 
@@ -220,10 +220,8 @@ export class AuthService {
   }
 
   async startSession(user: User, meta: SessionMeta): Promise<SessionTokens> {
-    const [accessToken, refresh] = await Promise.all([
-      this.accessTokens.issue(user),
-      this.refreshTokens.issue(user.id, meta),
-    ]);
+    const refresh = await this.refreshTokens.issue(user.id, meta);
+    const accessToken = await this.accessTokens.issue(user, refresh.familyId);
     return { accessToken, refreshToken: refresh.token };
   }
 

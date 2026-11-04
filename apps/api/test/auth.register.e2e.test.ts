@@ -53,7 +53,7 @@ describe('registration and email verification', () => {
     expect(refresh).toMatch(/SameSite=Lax/);
 
     const claims = await t.app.get(AccessTokenService).verify(cookieValue(res.headers['set-cookie'], 'yoyo_at')!);
-    expect(claims).toEqual({ sub: res.body.user.id, role: 'USER' });
+    expect(claims).toEqual({ sub: res.body.user.id, role: 'USER', sid: expect.any(String) });
     expect(JSON.stringify(res.body)).not.toContain(cookieValue(res.headers['set-cookie'], 'yoyo_rt')!);
   });
 

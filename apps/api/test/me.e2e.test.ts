@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { AccessTokenService } from '../src/auth/access-token.service';
+import { RefreshTokenService } from '../src/auth/refresh-token.service';
 import { resetAccounts } from './support/db';
 import { cookieLine, cookieValue, createTestApp, type TestApp } from './support/test-app';
 import { seedUser } from './support/users';
@@ -149,7 +150,8 @@ describe('my account', () => {
 
     it('deletes a Google-only account (no password to confirm with)', async () => {
       const { user } = await seedUser(t, { password: null, emailVerified: true });
-      const token = await t.app.get(AccessTokenService).issue(user);
+      const session = await t.app.get(RefreshTokenService).issue(user.id, {});
+      const token = await t.app.get(AccessTokenService).issue(user, session.familyId);
       const res = await request(t.server).delete('/api/v1/me').set('Authorization', `Bearer ${token}`);
       expect(res.status).toBe(204);
     });

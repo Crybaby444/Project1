@@ -16,6 +16,8 @@ export interface SessionMeta {
 export interface IssuedRefreshToken {
   token: string;
   expiresAt: Date;
+  /** The session the token belongs to; access tokens carry it as `sid`. */
+  familyId: string;
 }
 
 /** SHA-256 (hex) of an opaque token: the only form in which tokens are stored. */
@@ -39,8 +41,8 @@ export class RefreshTokenService {
 
   /** Starts a new session (or continues `familyId`). */
   async issue(userId: string, meta: SessionMeta, familyId?: string): Promise<IssuedRefreshToken> {
-    const { token, expiresAt } = await this.create(this.prisma, userId, meta, familyId ?? randomUUID());
-    return { token, expiresAt };
+    const { token, expiresAt, familyId: family } = await this.create(this.prisma, userId, meta, familyId ?? randomUUID());
+    return { token, expiresAt, familyId: family };
   }
 
   /** Swaps a live token for a new one; throws 401 AUTH_UNAUTHENTICATED for anything else. */
@@ -70,7 +72,19 @@ export class RefreshTokenService {
       await this.revokeFamilyId(current.familyId);
       throw unauthenticated();
     }
-    return { userId: current.userId, token: next.token, expiresAt: next.expiresAt };
+    return { userId: current.userId, token: next.token, expiresAt: next.expiresAt, familyId: next.familyId };
+  }
+
+  /**
+   * Whether the session still has a live (not revoked, not expired) refresh token. Every way of ending
+   * a session revokes its refresh tokens, so this is what tells the auth guard the session is over.
+   */
+  async isLive(userId: string, familyId: string): Promise<boolean> {
+    const live = await this.prisma.refreshToken.findFirst({
+      where: { familyId, userId, revokedAt: null, expiresAt: { gt: this.clock.now() } },
+      select: { id: true },
+    });
+    return live !== null;
   }
 
   /** Ends the session the token belongs to (logout). Unknown tokens are ignored. */
@@ -114,6 +128,6 @@ export class RefreshTokenService {
         createdAt: now,
       },
     });
-    return { id: row.id, token, expiresAt };
+    return { id: row.id, token, expiresAt, familyId };
   }
 }
