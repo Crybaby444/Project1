@@ -104,8 +104,8 @@ stateDiagram-v2
     ACCEPTED --> EXPIRED: TIMEOUT PAYMENT_EXPIRY
     PAID --> PAID: MARK_HANDED_OVER
     PAID --> ACTIVE: CONFIRM_RECEIVED или TIMEOUT HANDOVER_CONFIRM
-    PAID --> DISPUTED: REPORT_NOT_RECEIVED
-    PAID --> CANCELLED: CANCEL до «Передал»
+    PAID --> DISPUTED: REPORT_NOT_RECEIVED или TIMEOUT HANDOVER_DEADLINE
+    PAID --> CANCELLED: CANCEL до «Передал» (арендатор — до первого дня)
     ACTIVE --> ACTIVE: MARK_RETURNED
     ACTIVE --> RETURNED: CONFIRM_RETURNED или TIMEOUT RETURN_CONFIRM
     ACTIVE --> DISPUTED: REPORT_NOT_RETURNED
@@ -124,7 +124,7 @@ stateDiagram-v2
 
 ### Таблица переходов
 
-`ttl(x) = min(now + x часов, endOfDayIn(period.start, timeZone))`: после конца первого дня аренды неотвеченный запрос и неоплаченная бронь теряют смысл. Таймеры передачи, возврата, проверки и ответа на повреждение — `now + x часов`.
+`ttl(x) = min(now + x часов, endOfDayIn(period.start, timeZone))`: после конца первого дня аренды неотвеченный запрос и неоплаченная бронь теряют смысл. Таймеры передачи, возврата, проверки и ответа на повреждение — `now + x часов`. Срок передачи `HANDOVER_DEADLINE` — `endOfDayIn(period.start, timeZone) + handoverConfirmHours`: если к нему никто ничего не отметил, сделку разбирает администратор. «Сегодня» — `localDateIn(now, timeZone)`.
 
 | Из | Событие (кто) | Условие | В | Эффекты |
 |---|---|---|---|---|
@@ -134,13 +134,15 @@ stateDiagram-v2
 | REQUESTED | WITHDRAW (арендатор) | — | CANCELLED (by RENTER) | CANCEL_TIMER; NOTIFY OWNER; SYSTEM_MESSAGE CANCELLED |
 | REQUESTED | TIMEOUT REQUEST_EXPIRY | таймер взведён, срок наступил | EXPIRED | NOTIFY RENTER и OWNER; SYSTEM_MESSAGE EXPIRED |
 | ACCEPTED | SIGN (любая сторона) | повторная подпись ничего не меняет | ACCEPTED | SYSTEM_MESSAGE SIGNED |
-| ACCEPTED | PAY{method} (арендатор) | обе подписи (`CONTRACT_NOT_SIGNED`); для WALLET `walletAvailableCents ≥ total` (`INSUFFICIENT_FUNDS`) | PAID | CANCEL_TIMER PAYMENT_EXPIRY; LEDGER bookingPayment; NOTIFY OWNER; SYSTEM_MESSAGE PAID |
+| ACCEPTED | PAY{method} (арендатор) | обе подписи (`CONTRACT_NOT_SIGNED`); для WALLET `walletAvailableCents ≥ total` (`INSUFFICIENT_FUNDS`) | PAID | CANCEL_TIMER PAYMENT_EXPIRY; SCHEDULE HANDOVER_DEADLINE `endOfDayIn(period.start) + handoverConfirmHours`; LEDGER bookingPayment; NOTIFY OWNER; SYSTEM_MESSAGE PAID |
 | ACCEPTED | CANCEL{reason} (любая сторона) | — | CANCELLED | CANCEL_TIMER; RELEASE_DATES; NOTIFY другой стороне; SYSTEM_MESSAGE CANCELLED |
 | ACCEPTED | TIMEOUT PAYMENT_EXPIRY | таймер взведён, срок наступил | EXPIRED | RELEASE_DATES; NOTIFY RENTER и OWNER; SYSTEM_MESSAGE EXPIRED |
-| PAID | MARK_HANDED_OVER (владелец) | ещё не отмечено | PAID | SCHEDULE HANDOVER_CONFIRM `now + handoverConfirmHours`; NOTIFY RENTER; SYSTEM_MESSAGE HANDED_OVER |
-| PAID | CONFIRM_RECEIVED (арендатор) или TIMEOUT HANDOVER_CONFIRM | — | ACTIVE | CANCEL_TIMER HANDOVER_CONFIRM, если взведён; LEDGER rentRelease; NOTIFY OWNER; SYSTEM_MESSAGE RECEIVED |
-| PAID | REPORT_NOT_RECEIVED{note} (арендатор) | владелец отметил «Передал» | DISPUTED (NOT_HANDED_OVER) | CANCEL_TIMER HANDOVER_CONFIRM; NOTIFY ADMINS и OWNER; SYSTEM_MESSAGE DISPUTE_OPENED |
-| PAID | CANCEL{reason} (любая сторона) | владелец **ещё не** отметил «Передал» | CANCELLED (REFUNDED_ALL) | LEDGER bookingRefund; RELEASE_DATES; NOTIFY другой стороне; SYSTEM_MESSAGE CANCELLED |
+| PAID | MARK_HANDED_OVER (владелец) | ещё не отмечено (`ALREADY_HANDED_OVER`); сегодня не раньше `period.start − 1 день` (`TOO_EARLY`): вечер накануне можно | PAID | CANCEL_TIMER HANDOVER_DEADLINE; SCHEDULE HANDOVER_CONFIRM `now + handoverConfirmHours`; NOTIFY RENTER; SYSTEM_MESSAGE HANDED_OVER |
+| PAID | CONFIRM_RECEIVED (арендатор, в любой момент) или TIMEOUT HANDOVER_CONFIRM | — | ACTIVE | CANCEL_TIMER взведённого таймера передачи (HANDOVER_DEADLINE или HANDOVER_CONFIRM); LEDGER rentRelease; NOTIFY OWNER; SYSTEM_MESSAGE RECEIVED |
+| PAID | REPORT_NOT_RECEIVED{note} (арендатор) | владелец отметил «Передал» **или** сегодня не раньше `period.start` (владелец не пришёл), иначе `NOT_HANDED_OVER_YET` | DISPUTED (NOT_HANDED_OVER) | CANCEL_TIMER взведённого таймера; NOTIFY ADMINS и OWNER; SYSTEM_MESSAGE DISPUTE_OPENED |
+| PAID | TIMEOUT HANDOVER_DEADLINE | никто ничего не отметил (иначе таймер уже снят) | DISPUTED (NOT_HANDED_OVER) | NOTIFY ADMINS, RENTER и OWNER; SYSTEM_MESSAGE DISPUTE_OPENED |
+| PAID | CANCEL{reason} (владелец) | владелец **ещё не** отметил «Передал» (`ALREADY_HANDED_OVER`) | CANCELLED (REFUNDED_ALL) | CANCEL_TIMER HANDOVER_DEADLINE; LEDGER bookingRefund; RELEASE_DATES; NOTIFY RENTER; SYSTEM_MESSAGE CANCELLED |
+| PAID | CANCEL{reason} (арендатор) | «Передал» не отмечено **и** сегодня раньше `period.start` (`RENTAL_STARTED`); с первого дня — только CONFIRM_RECEIVED или REPORT_NOT_RECEIVED | CANCELLED (REFUNDED_ALL) | CANCEL_TIMER HANDOVER_DEADLINE; LEDGER bookingRefund; RELEASE_DATES; NOTIFY OWNER; SYSTEM_MESSAGE CANCELLED |
 | ACTIVE | MARK_RETURNED (арендатор) | ещё не отмечено | ACTIVE | SCHEDULE RETURN_CONFIRM `now + returnConfirmHours`; NOTIFY OWNER; SYSTEM_MESSAGE RETURNED |
 | ACTIVE | CONFIRM_RETURNED (владелец) или TIMEOUT RETURN_CONFIRM | — | RETURNED | CANCEL_TIMER RETURN_CONFIRM, если взведён; SCHEDULE INSPECTION `now + inspectionHours`; RELEASE_DATES; NOTIFY RENTER; SYSTEM_MESSAGE RECEIVED_BACK |
 | ACTIVE | REPORT_NOT_RETURNED{note} (владелец) | арендатор отметил «Вернул» **или** сегодня позже `period.end` | DISPUTED (NOT_RETURNED) | CANCEL_TIMER RETURN_CONFIRM, если взведён; NOTIFY ADMINS и RENTER; SYSTEM_MESSAGE DISPUTE_OPENED |
@@ -160,6 +162,7 @@ stateDiagram-v2
   - TIMEOUT для таймера, который не взведён или срок которого не наступил, ничего не меняет: `next === snapshot`, эффектов нет, ошибки нет. Фоновая задача может сработать поздно, дважды или рано без вреда.
   - Срок важнее опоздавшей задачи. Если срок взведённого таймера прошёл, сделка принимает только его TIMEOUT. Любое другое событие — `TRANSITION_NOT_ALLOWED` с `details.overdueTimer`. Так владелец не примет запрос и не заявит о повреждении после срока, даже если планировщик опоздал.
   - Уходя из статуса, сделка снимает его таймер эффектом CANCEL_TIMER. Таймер, который только что сработал, просто убирается из `next.timers`.
+  - Новый SCHEDULE заменяет взведённый таймер (CANCEL_TIMER старого). В PAID это HANDOVER_DEADLINE до отметки «Передал», затем HANDOVER_CONFIRM.
 - **Залог 0.** Переходы те же, проводок с залогом нет.
 - **Тексты.** Причины, заметки и комментарий админа — от 1 до 2000 символов, не пустые. Описание повреждения — от 10 до 2000 символов, фото — от 1 до 8 разных.
 - **Неизменяемость.** `next` — новый объект, `snapshot` не меняется. `updatedAt = now`; при переходе в COMPLETED заполняется `completedAt`.
@@ -193,7 +196,7 @@ stateDiagram-v2
 
 Другие концовки той же сделки:
 - **Повреждение признано.** Шаги 1–2, затем REPORT_DAMAGE и ACCEPT_DAMAGE: deposit −100,00 · кошелёк владельца +100,00. Владелец получил 145,00 €.
-- **Отмена до «Передал».** После шага 1 CANCEL: escrow −45,00 · deposit −100,00 · revenue −4,50 · карта +149,50. Всё вернулось, `outcome = REFUNDED_ALL`.
+- **Отмена до «Передал».** После шага 1 CANCEL (владелец — до отметки, арендатор — до первого дня аренды): escrow −45,00 · deposit −100,00 · revenue −4,50 · карта +149,50. Всё вернулось, `outcome = REFUNDED_ALL`.
 - **Оплата из кошелька.** То же самое, только вместо «карта» везде кошелёк арендатора, и залог возвращается в кошелёк.
 
 ## Тесты

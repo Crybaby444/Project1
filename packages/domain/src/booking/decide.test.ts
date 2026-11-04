@@ -62,7 +62,9 @@ function describeEffect(effect: Effect): string {
 const ledgerOf = (d: Decision) =>
   d.effects.flatMap((effect) => (effect.kind === 'LEDGER' ? [effect.operation] : []));
 
-const afterRentalEnded: DecideContext = { ...ctx, now: new Date('2026-11-12T22:30:00Z') }; // 13 Nov, 00:30 in Riga
+/** 5 Nov 2026, 12:00 in Riga: the first rental day. */
+const startDay: DecideContext = { ...ctx, now: new Date('2026-11-05T10:00:00Z') };
+const afterRentalEnded: DecideContext = { ...ctx, now: new Date('2026-11-07T22:30:00Z') }; // 8 Nov, 00:30 in Riga
 
 interface Row {
   readonly name: string;
@@ -154,6 +156,7 @@ const TABLE: readonly Row[] = [
     status: 'PAID',
     effects: [
       'CANCEL_TIMER PAYMENT_EXPIRY',
+      'SCHEDULE HANDOVER_DEADLINE',
       'LEDGER BOOKING_PAYMENT',
       'NOTIFY OWNER PAID',
       'SYSTEM_MESSAGE PAID',
@@ -167,6 +170,7 @@ const TABLE: readonly Row[] = [
     status: 'PAID',
     effects: [
       'CANCEL_TIMER PAYMENT_EXPIRY',
+      'SCHEDULE HANDOVER_DEADLINE',
       'LEDGER BOOKING_PAYMENT',
       'NOTIFY OWNER PAID',
       'SYSTEM_MESSAGE PAID',
@@ -213,7 +217,12 @@ const TABLE: readonly Row[] = [
     actor: owner,
     event: { type: 'MARK_HANDED_OVER' },
     status: 'PAID',
-    effects: ['SCHEDULE HANDOVER_CONFIRM', 'NOTIFY RENTER HANDED_OVER', 'SYSTEM_MESSAGE HANDED_OVER'],
+    effects: [
+      'CANCEL_TIMER HANDOVER_DEADLINE',
+      'SCHEDULE HANDOVER_CONFIRM',
+      'NOTIFY RENTER HANDED_OVER',
+      'SYSTEM_MESSAGE HANDED_OVER',
+    ],
   },
   {
     name: 'PAID → CONFIRM_RECEIVED by the renter after "handed over" → ACTIVE',
@@ -234,7 +243,12 @@ const TABLE: readonly Row[] = [
     actor: renter,
     event: { type: 'CONFIRM_RECEIVED' },
     status: 'ACTIVE',
-    effects: ['LEDGER RENT_RELEASE', 'NOTIFY OWNER RECEIVED', 'SYSTEM_MESSAGE RECEIVED'],
+    effects: [
+      'CANCEL_TIMER HANDOVER_DEADLINE',
+      'LEDGER RENT_RELEASE',
+      'NOTIFY OWNER RECEIVED',
+      'SYSTEM_MESSAGE RECEIVED',
+    ],
   },
   {
     name: 'PAID → TIMEOUT HANDOVER_CONFIRM → ACTIVE',
@@ -259,6 +273,34 @@ const TABLE: readonly Row[] = [
     ],
   },
   {
+    name: 'PAID → REPORT_NOT_RECEIVED by the renter from the start day, nothing marked → DISPUTED (NOT_HANDED_OVER)',
+    from: () => given('PAID'),
+    actor: renter,
+    event: { type: 'REPORT_NOT_RECEIVED', note: SAMPLE.note },
+    when: () => startDay,
+    status: 'DISPUTED',
+    effects: [
+      'CANCEL_TIMER HANDOVER_DEADLINE',
+      'NOTIFY ADMINS DISPUTE_OPENED',
+      'NOTIFY OWNER DISPUTE_OPENED',
+      'SYSTEM_MESSAGE DISPUTE_OPENED',
+    ],
+  },
+  {
+    name: 'PAID → TIMEOUT HANDOVER_DEADLINE, nothing marked → DISPUTED (NOT_HANDED_OVER)',
+    from: () => given('PAID'),
+    actor: system,
+    event: { type: 'TIMEOUT', timer: 'HANDOVER_DEADLINE' },
+    when: (s) => at(s, 'HANDOVER_DEADLINE'),
+    status: 'DISPUTED',
+    effects: [
+      'NOTIFY ADMINS DISPUTE_OPENED',
+      'NOTIFY RENTER DISPUTE_OPENED',
+      'NOTIFY OWNER DISPUTE_OPENED',
+      'SYSTEM_MESSAGE DISPUTE_OPENED',
+    ],
+  },
+  {
     name: 'PAID → CANCEL by the owner before "handed over" → CANCELLED, all refunded',
     from: () => given('PAID'),
     actor: owner,
@@ -266,6 +308,7 @@ const TABLE: readonly Row[] = [
     status: 'CANCELLED',
     outcome: 'REFUNDED_ALL',
     effects: [
+      'CANCEL_TIMER HANDOVER_DEADLINE',
       'LEDGER BOOKING_REFUND',
       'RELEASE_DATES',
       'NOTIFY RENTER CANCELLED',
@@ -279,7 +322,13 @@ const TABLE: readonly Row[] = [
     event: { type: 'CANCEL', reason: SAMPLE.reason },
     status: 'CANCELLED',
     outcome: 'REFUNDED_ALL',
-    effects: ['LEDGER BOOKING_REFUND', 'RELEASE_DATES', 'NOTIFY OWNER CANCELLED', 'SYSTEM_MESSAGE CANCELLED'],
+    effects: [
+      'CANCEL_TIMER HANDOVER_DEADLINE',
+      'LEDGER BOOKING_REFUND',
+      'RELEASE_DATES',
+      'NOTIFY OWNER CANCELLED',
+      'SYSTEM_MESSAGE CANCELLED',
+    ],
   },
   {
     name: 'ACTIVE → MARK_RETURNED by the renter → ACTIVE',
@@ -500,10 +549,10 @@ describe('what each transition records', () => {
       PAYMENT_EXPIRY: hoursAfterNow(24),
     });
 
-    const startDayEvening: DecideContext = { ...ctx, now: new Date('2026-11-10T19:00:00Z') }; // 21:00 in Riga
+    const startDayEvening: DecideContext = { ...ctx, now: new Date('2026-11-05T19:00:00Z') }; // 21:00 in Riga
     const requested = createRequest(requestInput(), startDayEvening).next;
     const accepted = step(requested, owner, { type: 'ACCEPT' }, later(startDayEvening, 2));
-    expect(accepted.timers).toEqual({ PAYMENT_EXPIRY: endOfDayIn(localDate('2026-11-10'), 'Europe/Riga') });
+    expect(accepted.timers).toEqual({ PAYMENT_EXPIRY: endOfDayIn(localDate('2026-11-05'), 'Europe/Riga') });
   });
 
   it('signing records who signed and when', () => {
@@ -680,7 +729,7 @@ describe('money in the transitions', () => {
 
 describe('conditions of a transition', () => {
   it('accepting needs the dates to be free', () => {
-    const taken = { ...ctx, blocked: [period(localDate('2026-11-12'), localDate('2026-11-15'))] };
+    const taken = { ...ctx, blocked: [period(localDate('2026-11-07'), localDate('2026-11-10'))] };
     expect(() => decide(given('REQUESTED'), owner, { type: 'ACCEPT' }, taken)).toThrow(
       code('DATES_UNAVAILABLE'),
     );
@@ -736,10 +785,27 @@ describe('conditions of a transition', () => {
     );
   });
 
-  it('"not received" needs the owner to have marked "handed over"', () => {
+  it('"not received" needs the owner to have marked "handed over", or the rental to have started', () => {
     expect(() =>
       decide(given('PAID'), renter, { type: 'REPORT_NOT_RECEIVED', note: SAMPLE.note }, ctx),
-    ).toThrow(code('TRANSITION_NOT_ALLOWED'));
+    ).toThrow(
+      expect.objectContaining({
+        code: 'TRANSITION_NOT_ALLOWED',
+        details: expect.objectContaining({ why: 'NOT_HANDED_OVER_YET' }),
+      }),
+    );
+    const disputed = decide(
+      given('PAID'),
+      renter,
+      { type: 'REPORT_NOT_RECEIVED', note: SAMPLE.note },
+      startDay,
+    );
+    expect(disputed.next.dispute).toEqual({
+      reason: 'NOT_HANDED_OVER',
+      openedAt: startDay.now,
+      note: SAMPLE.note,
+    });
+    expect(ledgerOf(disputed)).toEqual([]);
   });
 
   it('once the owner marked "handed over", nobody can cancel: only "received" or "not received" remain (Review Focus 3)', () => {
@@ -761,7 +827,7 @@ describe('conditions of a transition', () => {
     const active = given('ACTIVE');
     const report: BookingEvent = { type: 'REPORT_NOT_RETURNED', note: SAMPLE.note };
     expect(() => decide(active, owner, report, ctx)).toThrow(code('TRANSITION_NOT_ALLOWED'));
-    const lastDayEvening = { ...ctx, now: new Date('2026-11-12T21:30:00Z') }; // 23:30 on 12 Nov in Riga
+    const lastDayEvening = { ...ctx, now: new Date('2026-11-07T21:30:00Z') }; // 23:30 on 7 Nov in Riga
     expect(() => decide(active, owner, report, lastDayEvening)).toThrow(code('TRANSITION_NOT_ALLOWED'));
     expect(decide(active, owner, report, afterRentalEnded).next.status).toBe('DISPUTED');
   });
@@ -1064,5 +1130,111 @@ describe('settings and stored deadlines that are not real values (F1)', () => {
     ).toThrow(code('INVALID_INPUT'));
     expect(() => availableActions(corrupt, owner, ctx)).toThrow(code('INVALID_INPUT'));
     expect(() => availableActions(corrupt, system, later49)).toThrow(code('INVALID_INPUT'));
+  });
+});
+
+describe('the handover deadline (F2)', () => {
+  const handOver: BookingEvent = { type: 'MARK_HANDED_OVER' };
+  /** 10–12 Nov, paid on 4 Nov: the day before the start is 9 Nov. */
+  const paidEarly = () => {
+    let s = createRequest(
+      requestInput({ period: period(localDate('2026-11-10'), localDate('2026-11-12')) }),
+      ctx,
+    ).next;
+    s = step(s, owner, { type: 'ACCEPT' });
+    s = step(s, renter, { type: 'SIGN' });
+    s = step(s, owner, { type: 'SIGN' });
+    return step(s, renter, { type: 'PAY', method: 'CARD' });
+  };
+
+  it('paying arms the handover deadline: the end of the first day plus handoverConfirmHours', () => {
+    expect(given('PAID').timers).toEqual({
+      HANDOVER_DEADLINE: new Date(
+        endOfDayIn(localDate('2026-11-05'), 'Europe/Riga').getTime() + 48 * HOUR_MS,
+      ),
+    });
+  });
+
+  it('"handed over" can be marked from the day before the start, not earlier', () => {
+    const paid = paidEarly();
+    const tooEarly = { ...ctx, now: new Date('2026-11-08T21:59:59Z') }; // 23:59:59 on 8 Nov in Riga
+    expect(() => decide(paid, owner, handOver, tooEarly)).toThrow(
+      expect.objectContaining({
+        code: 'TRANSITION_NOT_ALLOWED',
+        details: expect.objectContaining({ why: 'TOO_EARLY' }),
+      }),
+    );
+    expect(() => decide(paid, owner, handOver, ctx)).toThrow(code('TRANSITION_NOT_ALLOWED'));
+    const eveningBefore = { ...ctx, now: new Date('2026-11-08T22:00:00Z') }; // 00:00 on 9 Nov in Riga
+    const handed = decide(paid, owner, handOver, eveningBefore);
+    expect(handed.next.ownerHandedOverAt).toEqual(eveningBefore.now);
+    expect(handed.next.timers).toEqual({
+      HANDOVER_CONFIRM: new Date(eveningBefore.now.getTime() + 48 * HOUR_MS),
+    });
+  });
+
+  it('opens a "not handed over" dispute when nobody marked anything by the deadline', () => {
+    const paid = given('PAID');
+    const d = decide(
+      paid,
+      system,
+      { type: 'TIMEOUT', timer: 'HANDOVER_DEADLINE' },
+      at(paid, 'HANDOVER_DEADLINE'),
+    );
+    expect(d.next.status).toBe('DISPUTED');
+    expect(d.next.dispute).toEqual({ reason: 'NOT_HANDED_OVER', openedAt: paid.timers.HANDOVER_DEADLINE });
+    expect(d.next.timers).toEqual({});
+    expect(ledgerOf(d)).toEqual([]);
+    // The admin settles it with the existing decisions.
+    expect(step(d.next, admin, resolve('REFUND_ALL')).status).toBe('CANCELLED');
+    expect(step(d.next, admin, resolve('CONFIRM_HANDOVER')).status).toBe('ACTIVE');
+  });
+
+  it('the renter can cancel alone only before the start day; the owner until "handed over"', () => {
+    const cancel: BookingEvent = { type: 'CANCEL', reason: SAMPLE.reason };
+    const lastEveningBefore = { ...ctx, now: new Date('2026-11-04T21:59:59Z') }; // 23:59:59 on 4 Nov in Riga
+    expect(decide(given('PAID'), renter, cancel, lastEveningBefore).next.status).toBe('CANCELLED');
+    const startMidnight = { ...ctx, now: new Date('2026-11-04T22:00:00Z') }; // 00:00 on 5 Nov in Riga
+    expect(() => decide(given('PAID'), renter, cancel, startMidnight)).toThrow(
+      expect.objectContaining({
+        code: 'TRANSITION_NOT_ALLOWED',
+        details: expect.objectContaining({ why: 'RENTAL_STARTED' }),
+      }),
+    );
+    expect(() => decide(given('PAID'), renter, cancel, startDay)).toThrow(code('TRANSITION_NOT_ALLOWED'));
+    expect(decide(given('PAID'), owner, cancel, startDay).next.outcome).toBe('REFUNDED_ALL');
+    // From the start day on the renter confirms or reports instead.
+    expect(decide(given('PAID'), renter, { type: 'CONFIRM_RECEIVED' }, startDay).next.status).toBe('ACTIVE');
+  });
+
+  it('keeps one timer at a time: the deadline until "handed over", then the confirmation window', () => {
+    const paid = given('PAID');
+    expect(Object.keys(paid.timers)).toEqual(['HANDOVER_DEADLINE']);
+    const handed = step(paid, owner, handOver);
+    expect(Object.keys(handed.timers)).toEqual(['HANDOVER_CONFIRM']);
+    expect(step(paid, renter, { type: 'CONFIRM_RECEIVED' }).timers).toEqual({});
+    expect(step(handed, renter, { type: 'CONFIRM_RECEIVED' }).timers).toEqual({});
+  });
+
+  it('a stale, early or repeated handover deadline changes nothing', () => {
+    const deadline: BookingEvent = { type: 'TIMEOUT', timer: 'HANDOVER_DEADLINE' };
+    const paid = given('PAID');
+    const due = at(paid, 'HANDOVER_DEADLINE');
+    // early
+    const early = decide(paid, system, deadline, { ...due, now: new Date(due.now.getTime() - 1) });
+    expect(early).toEqual({ next: paid, effects: [] });
+    // after "handed over" it is no longer armed
+    const handed = step(paid, owner, handOver);
+    expect(decide(handed, system, deadline, due)).toEqual({ next: handed, effects: [] });
+    // after "received"
+    const active = step(paid, renter, { type: 'CONFIRM_RECEIVED' });
+    expect(decide(active, system, deadline, later(due, 1))).toEqual({ next: active, effects: [] });
+    // twice
+    const first = decide(paid, system, deadline, due);
+    expect(decide(first.next, system, deadline, later(due, 1))).toEqual({ next: first.next, effects: [] });
+    // once due, the parties wait for the timer
+    expect(() => decide(paid, owner, handOver, due)).toThrow(
+      expect.objectContaining({ details: expect.objectContaining({ overdueTimer: 'HANDOVER_DEADLINE' }) }),
+    );
   });
 });

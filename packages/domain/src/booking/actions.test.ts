@@ -4,14 +4,40 @@ import { DomainError } from '../errors';
 import { cents } from '../money';
 import { availableActions } from './actions';
 import { decide } from './decide';
-import { SAMPLE_EVENTS, admin, at, ctx, given, owner, renter, stranger, system } from './test-support';
+import { createRequest } from './request';
+import {
+  SAMPLE_EVENTS,
+  admin,
+  at,
+  ctx,
+  given,
+  owner,
+  renter,
+  requestInput,
+  step,
+  stranger,
+  system,
+} from './test-support';
 import type { Actor, BookingEvent, BookingEventType, BookingSnapshot, DecideContext } from './types';
 
 const ACTORS: readonly Actor[] = [renter, owner, admin, system, stranger];
 const TYPES: readonly BookingEventType[] = [...new Set(SAMPLE_EVENTS.map((event) => event.type))];
 
 const { blocked: _blocked, ...withoutCalendar } = ctx;
-const afterRentalEnded: DecideContext = { ...ctx, now: new Date('2026-11-12T22:30:00Z') }; // 13 Nov in Riga
+/** 5 Nov 2026, 12:00 in Riga: the first rental day. */
+const startDay: DecideContext = { ...ctx, now: new Date('2026-11-05T10:00:00Z') };
+/** Paid on 4 Nov for 10–12 Nov: too early to hand over. */
+function paidEarly(): BookingSnapshot {
+  let s = createRequest(
+    requestInput({ period: period(localDate('2026-11-10'), localDate('2026-11-12')) }),
+    ctx,
+  ).next;
+  s = step(s, owner, { type: 'ACCEPT' });
+  s = step(s, renter, { type: 'SIGN' });
+  s = step(s, owner, { type: 'SIGN' });
+  return step(s, renter, { type: 'PAY', method: 'CARD' });
+}
+const afterRentalEnded: DecideContext = { ...ctx, now: new Date('2026-11-07T22:30:00Z') }; // 8 Nov in Riga
 
 function overdue(s: BookingSnapshot): DecideContext {
   const [timer] = Object.keys(s.timers) as (keyof BookingSnapshot['timers'])[];
@@ -25,7 +51,7 @@ const SITUATIONS: ReadonlyArray<readonly [string, BookingSnapshot, DecideContext
   [
     'REQUESTED, dates taken meanwhile',
     given('REQUESTED'),
-    { ...ctx, blocked: [period(localDate('2026-11-11'), localDate('2026-11-11'))] },
+    { ...ctx, blocked: [period(localDate('2026-11-06'), localDate('2026-11-06'))] },
   ],
   ['REQUESTED, calendar not given', given('REQUESTED'), withoutCalendar],
   ['REQUESTED, past its deadline', given('REQUESTED'), overdue(given('REQUESTED'))],
@@ -39,6 +65,9 @@ const SITUATIONS: ReadonlyArray<readonly [string, BookingSnapshot, DecideContext
   ],
   ['ACCEPTED, past its deadline', given('ACCEPTED'), overdue(given('ACCEPTED'))],
   ['PAID', given('PAID'), ctx],
+  ['PAID, start day, nothing marked', given('PAID'), startDay],
+  ['PAID, handover deadline over', given('PAID'), overdue(given('PAID'))],
+  ['PAID, paid well before the start', paidEarly(), ctx],
   ['PAID, handed over', given('PAID', { handedOver: true }), ctx],
   [
     'PAID, handover window over',
@@ -105,6 +134,12 @@ describe('availableActions', () => {
     expect(availableActions(signed, owner, ctx)).toEqual(['CANCEL']);
     expect(availableActions(given('PAID'), owner, ctx)).toEqual(['MARK_HANDED_OVER', 'CANCEL']);
     expect(availableActions(given('PAID'), renter, ctx)).toEqual(['CONFIRM_RECEIVED', 'CANCEL']);
+    expect(availableActions(given('PAID'), renter, startDay)).toEqual([
+      'CONFIRM_RECEIVED',
+      'REPORT_NOT_RECEIVED',
+    ]);
+    expect(availableActions(given('PAID'), owner, startDay)).toEqual(['MARK_HANDED_OVER', 'CANCEL']);
+    expect(availableActions(paidEarly(), owner, ctx)).toEqual(['CANCEL']);
     expect(availableActions(given('PAID', { handedOver: true }), owner, ctx)).toEqual([]);
     expect(availableActions(given('PAID', { handedOver: true }), renter, ctx)).toEqual([
       'CONFIRM_RECEIVED',
@@ -133,7 +168,7 @@ describe('availableActions', () => {
   });
 
   it('hides ACCEPT when the dates were taken meanwhile or the calendar is unknown', () => {
-    const taken = { ...ctx, blocked: [period(localDate('2026-11-11'), localDate('2026-11-11'))] };
+    const taken = { ...ctx, blocked: [period(localDate('2026-11-06'), localDate('2026-11-06'))] };
     expect(availableActions(given('REQUESTED'), owner, taken)).toEqual(['DECLINE']);
     expect(availableActions(given('REQUESTED'), owner, withoutCalendar)).toEqual(['DECLINE']);
   });

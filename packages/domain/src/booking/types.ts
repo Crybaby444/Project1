@@ -36,6 +36,8 @@ export function isTerminal(status: BookingStatus): boolean {
 export const TIMER_KINDS = [
   'REQUEST_EXPIRY',
   'PAYMENT_EXPIRY',
+  /** Paid, and nobody has marked the handover by the end of the first day plus `handoverConfirmHours`. */
+  'HANDOVER_DEADLINE',
   'HANDOVER_CONFIRM',
   'RETURN_CONFIRM',
   'INSPECTION',

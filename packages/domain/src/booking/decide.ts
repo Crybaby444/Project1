@@ -66,7 +66,8 @@ export function decide(
 
 /**
  * Builds the next snapshot. Timers the new status cannot hold are dropped with a CANCEL_TIMER effect,
- * except the one whose TIMEOUT is being handled: it has fired and is simply removed.
+ * except the one whose TIMEOUT is being handled: it has fired and is simply removed. A booking holds
+ * one timer at a time, so scheduling a new one also cancels whichever is armed.
  */
 function apply(
   s: BookingSnapshot,
@@ -82,7 +83,7 @@ function apply(
   for (const timer of TIMER_KINDS) {
     const due = s.timers[timer];
     if (due === undefined || timer === fired) continue;
-    if (kept.includes(timer)) timers[timer] = due;
+    if (kept.includes(timer) && change.schedule === undefined) timers[timer] = due;
     else effects.push({ kind: 'CANCEL_TIMER', timer });
   }
   if (change.schedule !== undefined) {

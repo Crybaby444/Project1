@@ -19,7 +19,7 @@ describe('createRequest', () => {
       renterId: RENTER_ID,
       ownerId: OWNER_ID,
       status: 'REQUESTED',
-      period: p('2026-11-10', '2026-11-12'),
+      period: p('2026-11-05', '2026-11-07'),
       timeZone: 'Europe/Riga',
       quote: quote({ pricing, days: 3, servicePercent: 10 }),
       timers: { REQUEST_EXPIRY: expiresAt },
@@ -84,10 +84,10 @@ describe('createRequest', () => {
   });
 
   it('refuses dates that are already taken', () => {
-    expect(() => createRequest(requestInput({ blocked: [p('2026-11-12', '2026-11-14')] }), ctx)).toThrow(
+    expect(() => createRequest(requestInput({ blocked: [p('2026-11-07', '2026-11-09')] }), ctx)).toThrow(
       expect.objectContaining({
         code: 'DATES_UNAVAILABLE',
-        details: { conflict: p('2026-11-12', '2026-11-14') },
+        details: { conflict: p('2026-11-07', '2026-11-09') },
       }),
     );
   });

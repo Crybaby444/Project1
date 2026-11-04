@@ -1,4 +1,4 @@
-import { compareDates, endOfDayIn, firstConflict, localDateIn } from '../dates';
+import { addDays, compareDates, endOfDayIn, firstConflict, localDateIn } from '../dates';
 import { DomainError } from '../errors';
 import { validateBookingSettings } from '../settings';
 import { bookingPayment, bookingRefund, depositRefund, depositToOwner, rentRelease } from '../ledger';
@@ -104,6 +104,15 @@ export function ttl(now: Date, hours: number, booking: Pick<BookingSnapshot, 'pe
 }
 
 const hoursAfter = (now: Date, hours: number): Date => new Date(now.getTime() + hours * HOUR_MS);
+
+/** A paid booking nobody hands over goes to an admin this long after the end of the first day. */
+export function handoverDeadline(booking: Pick<BookingSnapshot, 'period' | 'timeZone'>, hours: number): Date {
+  return hoursAfter(endOfDayIn(booking.period.start, booking.timeZone), hours);
+}
+
+/** "Today" in the item's time zone, compared with the rental's first day: < 0 before it. */
+const sinceStart = (s: BookingSnapshot, now: Date): number =>
+  compareDates(localDateIn(now, s.timeZone), s.period.start);
 
 function notAllowed(s: BookingSnapshot, actor: Actor, event: BookingEventType, why: string): DomainError {
   return new DomainError('TRANSITION_NOT_ALLOWED', { status: s.status, actor: actor.kind, event, why });
@@ -321,6 +330,10 @@ export const TRANSITIONS: readonly Transition[] = [
       }
       return {
         patch: { paymentMethod: method },
+        schedule: {
+          timer: 'HANDOVER_DEADLINE',
+          at: handoverDeadline(s, ctx.settings.handoverConfirmHours),
+        },
         effects: [
           ...ledger(bookingPayment({ bookingId: s.id, renterId: s.renterId, quote: s.quote, method })),
           notify('OWNER', 'PAID'),
@@ -354,9 +367,13 @@ export const TRANSITIONS: readonly Transition[] = [
     on: 'MARK_HANDED_OVER',
     by: ['OWNER'],
     to: 'PAID',
-    guard(s, actor) {
+    guard(s, actor, ctx) {
       if (s.ownerHandedOverAt !== undefined)
         throw notAllowed(s, actor, 'MARK_HANDED_OVER', 'ALREADY_HANDED_OVER');
+      // Early pickup the evening before is fine; weeks ahead is not.
+      const dayBefore = addDays(s.period.start, -1);
+      if (compareDates(localDateIn(ctx.now, s.timeZone), dayBefore) < 0)
+        throw notAllowed(s, actor, 'MARK_HANDED_OVER', 'TOO_EARLY');
     },
     run: (_s, _actor, _event, ctx) => ({
       patch: { ownerHandedOverAt: ctx.now },
@@ -375,11 +392,28 @@ export const TRANSITIONS: readonly Transition[] = [
   }),
   row({
     from: 'PAID',
+    on: 'TIMEOUT',
+    timer: 'HANDOVER_DEADLINE',
+    by: ['SYSTEM'],
+    to: 'DISPUTED',
+    run: (_s, _actor, _event, ctx) => ({
+      patch: { dispute: { reason: 'NOT_HANDED_OVER', openedAt: ctx.now } },
+      effects: [
+        notify('ADMINS', 'DISPUTE_OPENED'),
+        notify('RENTER', 'DISPUTE_OPENED'),
+        notify('OWNER', 'DISPUTE_OPENED'),
+        message('DISPUTE_OPENED'),
+      ],
+    }),
+  }),
+  row({
+    from: 'PAID',
     on: 'REPORT_NOT_RECEIVED',
     by: ['RENTER'],
     to: 'DISPUTED',
-    guard(s, actor) {
-      if (s.ownerHandedOverAt === undefined)
+    // The owner says "handed over", or the rental has started and the owner did not show up.
+    guard(s, actor, ctx) {
+      if (s.ownerHandedOverAt === undefined && sinceStart(s, ctx.now) < 0)
         throw notAllowed(s, actor, 'REPORT_NOT_RECEIVED', 'NOT_HANDED_OVER_YET');
     },
     run: (_s, _actor, event, ctx) => ({
@@ -397,8 +431,12 @@ export const TRANSITIONS: readonly Transition[] = [
     by: ['RENTER', 'OWNER'],
     to: 'CANCELLED',
     // Once the owner says "handed over", the renter may hold the item: no cancelling for a full refund.
-    guard(s, actor) {
+    // From the first rental day the renter may hold it unmarked, so cancelling alone ends there; the
+    // renter confirms or reports "not received" instead.
+    guard(s, actor, ctx) {
       if (s.ownerHandedOverAt !== undefined) throw notAllowed(s, actor, 'CANCEL', 'ALREADY_HANDED_OVER');
+      if (side(actor) === 'RENTER' && sinceStart(s, ctx.now) >= 0)
+        throw notAllowed(s, actor, 'CANCEL', 'RENTAL_STARTED');
     },
     run: (s, actor, event, ctx) => ({
       patch: {

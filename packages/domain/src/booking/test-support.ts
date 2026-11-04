@@ -63,14 +63,14 @@ export const pricing: ListingPricing = {
   maxDays: 30,
 };
 
-/** A request for 10–12 Nov 2026 (3 days: rent 45 €, fee 4.50 €, deposit 100 €, total 149.50 €). */
+/** A request for 5–7 Nov 2026, starting the day after NOW (3 days: rent 45 €, fee 4.50 €, deposit 100 €, total 149.50 €). */
 export function requestInput(overrides: Partial<RequestInput> = {}): RequestInput {
   return {
     id: 'booking-1',
     listingId: 'listing-1',
     renterId: RENTER_ID,
     ownerId: OWNER_ID,
-    period: period(localDate('2026-11-10'), localDate('2026-11-12')),
+    period: period(localDate('2026-11-05'), localDate('2026-11-07')),
     timeZone: 'Europe/Riga',
     pricing,
     blocked: [],
