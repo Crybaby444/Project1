@@ -146,6 +146,12 @@ describe('availableActions', () => {
     expect(availableActions(returned, system, overdue(returned))).toEqual(['TIMEOUT']);
   });
 
+  it('refuses a clock that is not a real moment', () => {
+    expect(() => availableActions(given('RETURNED'), owner, { ...ctx, now: new Date(Number.NaN) })).toThrow(
+      expect.objectContaining({ code: 'INVALID_INPUT' }),
+    );
+  });
+
   it('offers nothing in a closed booking or to someone outside it', () => {
     for (const status of ['COMPLETED', 'DECLINED', 'EXPIRED', 'CANCELLED'] as const) {
       for (const actor of ACTORS) expect(availableActions(given(status), actor, ctx)).toEqual([]);

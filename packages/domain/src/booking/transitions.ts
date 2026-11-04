@@ -565,6 +565,16 @@ export const TRANSITIONS: readonly Transition[] = [
 
 // ---- reading the table ---------------------------------------------------------------------------
 
+/**
+ * The clock the API passes in has to be a real moment: compared with an invalid date, every deadline
+ * would look due and every timer would fire.
+ */
+export function checkClock(now: Date): void {
+  if (!(now instanceof Date) || Number.isNaN(now.getTime())) {
+    throw new DomainError('INVALID_INPUT', { field: 'now', value: String(now) });
+  }
+}
+
 /** The timers a booking may have armed in `status`: those its TIMEOUT rows handle. */
 export function armableTimers(status: BookingStatus): readonly TimerKind[] {
   return TRANSITIONS.flatMap((t) => (t.from === status && t.timer !== undefined ? [t.timer] : []));

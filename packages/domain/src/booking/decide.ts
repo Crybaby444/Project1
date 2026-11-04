@@ -1,5 +1,5 @@
 import { DomainError } from '../errors';
-import { armableTimers, findTransition, mayAct, overdueTimer } from './transitions';
+import { armableTimers, checkClock, findTransition, mayAct, overdueTimer } from './transitions';
 import type { Change, Transition } from './transitions';
 import { TIMER_KINDS } from './types';
 import type {
@@ -15,6 +15,7 @@ import type {
 /**
  * Applies one event to a booking: the new snapshot plus the effects the API must carry out, or a
  * `DomainError`. Checks, in order:
+ * 0. `ctx.now` is a real moment (`INVALID_INPUT`);
  * 1. the actor is a party (`NOT_A_PARTY`); an admin may only RESOLVE, the system only fire timers;
  * 2. timers: a TIMEOUT whose timer is not armed or not yet due changes nothing; once a deadline has
  *    passed, only its TIMEOUT may act (`TRANSITION_NOT_ALLOWED` with `details.overdueTimer`);
@@ -27,6 +28,7 @@ export function decide(
   event: BookingEvent,
   ctx: DecideContext,
 ): Decision {
+  checkClock(ctx.now);
   if (!mayAct(snapshot, actor, event.type)) {
     throw new DomainError('NOT_A_PARTY', { actor: actor.kind, event: event.type });
   }

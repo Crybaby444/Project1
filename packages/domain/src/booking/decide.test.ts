@@ -867,6 +867,14 @@ describe('who may act', () => {
 describe('timers (Review Focus 2)', () => {
   const inspection: BookingEvent = { type: 'TIMEOUT', timer: 'INSPECTION' };
 
+  it('refuses a clock that is not a real moment instead of treating every deadline as due', () => {
+    const noClock = { ...ctx, now: new Date(Number.NaN) };
+    expect(() => decide(given('RETURNED'), system, inspection, noClock)).toThrow(code('INVALID_INPUT'));
+    expect(() => decide(given('RETURNED'), owner, { type: 'ALL_FINE' }, noClock)).toThrow(
+      code('INVALID_INPUT'),
+    );
+  });
+
   it('a timer that fires after the booking moved on changes nothing', () => {
     const done = decide(given('RETURNED'), owner, { type: 'ALL_FINE' }, ctx);
     const late = decide(done.next, system, inspection, later(ctx, 49));
