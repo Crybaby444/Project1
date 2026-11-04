@@ -176,6 +176,12 @@ jobs:
           done
           echo "expected a 'mail disabled' log line"; exit 1
 
+      - name: Photo processing works in the image and uploads are off without Cloudinary
+        run: |
+          docker exec -w /app api node -e "const s = require('sharp'); console.log('sharp', s.versions.sharp, 'libvips', s.versions.vips)"
+          docker logs api 2>&1 | grep -q 'STORAGE is not set: photo uploads are disabled'
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:4100/api/v1/categories)" = "200"
+
       - name: Container logs
         if: always()
         run: docker logs api || true

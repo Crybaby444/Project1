@@ -47,4 +47,10 @@ services:
         sync: false
       - key: ADMIN_PASSWORD
         sync: false
+      # Listing photos on Cloudinary. Without CLOUDINARY_URL (cloudinary://<key>:<secret>@<cloud>, from the
+      # Cloudinary console) the API still starts and photo uploads answer 503 (README, «Объявления»).
+      - key: STORAGE
+        value: cloudinary
+      - key: CLOUDINARY_URL
+        sync: false
       # No SMS_PROVIDER: production has no real SMS service yet, so phone confirmation stays off.
