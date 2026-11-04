@@ -308,12 +308,13 @@ export class BookingsService {
     if (!row || row.renterId !== user.id) throw bookingNotFound();
     if (version !== row.version) throw staleBooking(row.version);
     assertOwnerActive(row);
-    decide(
-      toSnapshot(row),
-      { kind: 'RENTER', userId: user.id },
-      { type: 'PAY', method: 'CARD' },
-      { now, settings },
-    );
+    try {
+      decide(toSnapshot(row), { kind: 'RENTER', userId: user.id }, { type: 'PAY', method: 'CARD' }, { now, settings });
+    } catch (error) {
+      // The payment deadline passed: charge nothing; the transaction fires the deadline (DEADLINE_PASSED).
+      if (error instanceof DomainError && error.details?.['overdueTimer'] !== undefined) return undefined;
+      throw error;
+    }
     const amountCents = row.totalCents;
     const result = await this.payments.charge({
       token: cardToken,

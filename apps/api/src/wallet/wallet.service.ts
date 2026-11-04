@@ -52,8 +52,9 @@ export class WalletService {
       description: 'Yoyo wallet top-up',
     });
     if (charge.status === 'DECLINED') throw charge.declineCode === 'invalid_token' ? unknownCard() : declined(charge.declineCode);
+    let payment;
     try {
-      const payment = await this.prisma.$transaction(async (tx) => {
+      payment = await this.prisma.$transaction(async (tx) => {
         const balances = await this.ledger.lock([walletAccount(userId)], tx);
         if ((balances.get(walletAccount(userId)) ?? 0) + amountCents > WALLET_LIMITS.balance) throw overLimit();
         await this.ledger.post(topUp(userId, cents(amountCents)), tx, { userId });
@@ -61,14 +62,15 @@ export class WalletService {
           data: { userId, purpose: 'TOP_UP', amountCents, providerRef: charge.ref, brand: charge.brand, last4: charge.last4 },
         });
       });
-      return {
-        balanceCents: await this.ledger.balance(walletAccount(userId)),
-        payment: { id: payment.id, amountCents, brand: payment.brand, last4: payment.last4 },
-      };
     } catch (error) {
       await this.moneyOut.giveBack({ ref: charge.ref, amountCents, brand: charge.brand, last4: charge.last4 }, { userId, purpose: 'TOP_UP' });
       throw error;
     }
+    // Outside the try: once the top-up is recorded, nothing may give its charge back.
+    return {
+      balanceCents: await this.ledger.balance(walletAccount(userId)),
+      payment: { id: payment.id, amountCents, brand: payment.brand, last4: payment.last4 },
+    };
   }
 
   /**

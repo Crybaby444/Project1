@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { LedgerService } from '../src/ledger/ledger.service';
 import { resetAccounts, resetDeals } from './support/db';
-import { act, CARDS, cardToken, newKey, requestBooking, step, topUp } from './support/deals';
+import { act, again, CARDS, cardToken, newKey, requestBooking, step, topUp } from './support/deals';
 import { resetListings, seedListing, signedInClient, type Client } from './support/listings';
 import { createTestApp, type TestApp } from './support/test-app';
 
@@ -167,6 +167,17 @@ describe('paying and the deposit rule', () => {
     ]);
     expect(await balance('external:card')).toBe(-14_950);
     await cleanBooks();
+  });
+
+  it('a card payment after the payment deadline charges nothing and lets the deadline win', async () => {
+    const id = await signedDeal();
+    t.clock.advance(25 * 3_600_000);
+    const late = await again(t, renter);
+    const token = await cardToken(late);
+    const res = await act(late, id, { type: 'PAY', method: 'CARD', cardToken: token }, 3);
+    expect(res.status).toBe(409);
+    expect(res.body.error).toMatchObject({ code: 'DEADLINE_PASSED', details: { status: 'EXPIRED' } });
+    expect(await t.prisma.payment.count()).toBe(0);
   });
 
   it('refuses to take money for a blocked owner', async () => {
