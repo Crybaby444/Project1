@@ -70,9 +70,11 @@ describe('TimersService.runDue', () => {
   });
 
   it('fires each timer once when two runs overlap', async () => {
-    const listing = await seedListing(t, owner.user, { status: 'PUBLISHED' });
     const ids = [];
-    for (let i = 0; i < 6; i++) ids.push((await requestBooking(t, renter, listing.id, 5, 6)).id);
+    for (let i = 0; i < 6; i++) {
+      const listing = await seedListing(t, owner.user, { status: 'PUBLISHED' });
+      ids.push((await requestBooking(t, renter, listing.id, 5, 6)).id);
+    }
     t.clock.advance(24 * HOUR + 1);
     const [a, b] = await Promise.all([timers.runDue(), timers.runDue()]);
     expect(a.fired + b.fired).toBe(6);

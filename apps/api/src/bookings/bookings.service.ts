@@ -17,10 +17,20 @@ import {
   type DecideContext,
   type TimerKind,
 } from '@yoyo/domain';
-import { BOOKINGS_PAGE_SIZE, type BookingEventInput, type BookingRequest, type ResolveRequest, type BookingStatus, type BookingView, type BookingsPage, type PublicUser, type QuoteResponse } from '@yoyo/shared';
+import {
+  BOOKINGS_PAGE_SIZE,
+  type BookingEventInput,
+  type BookingRequest,
+  type ResolveRequest,
+  type BookingStatus,
+  type BookingView,
+  type BookingsPage,
+  type PublicUser,
+  type QuoteResponse,
+} from '@yoyo/shared';
 import { CLOCK, type Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
-import type { Prisma } from '../generated/prisma/client';
+import { Prisma } from '../generated/prisma/client';
 import { LedgerService, walletAccount } from '../ledger/ledger.service';
 import type { UrlFor } from '../listings/listing.serializer';
 import { MoneyOutService } from '../payments/money-out.service';
@@ -41,6 +51,18 @@ export { bookingNotFound, staleBooking };
 
 const offerUnavailable = () => new AppError('OFFER_UNAVAILABLE', 409);
 
+/** One open request per renter and listing: the owner answers it first (or it expires). */
+const openRequest = (bookingId: string) =>
+  new AppError(
+    'ACTION_NOT_ALLOWED',
+    409,
+    'You already asked for this item; wait for the answer or withdraw it',
+    undefined,
+    {
+      why: 'OPEN_REQUEST',
+      ...(bookingId && { bookingId }),
+    },
+  );
 
 /** What is kept of an event in the deal's journal: never a card token. */
 function journalData(event: BookingEvent): Prisma.InputJsonObject {
@@ -57,7 +79,8 @@ export function toDomainEvent(input: BookingEventInput): BookingEvent {
 
 /** Nobody pays a deal whose owner was blocked or left (review of PR #3). */
 function assertOwnerActive(row: { owner: { blockedAt: Date | null; deletedAt: Date | null } }): void {
-  if (row.owner.blockedAt !== null || row.owner.deletedAt !== null) throw new AppError('LISTING_UNAVAILABLE', 409, 'The owner cannot take bookings now');
+  if (row.owner.blockedAt !== null || row.owner.deletedAt !== null)
+    throw new AppError('LISTING_UNAVAILABLE', 409, 'The owner cannot take bookings now');
 }
 
 /** A decision saved: what changed and what is left for after the commit. */
@@ -69,7 +92,10 @@ export interface Saved {
 }
 
 /** The viewer's side of a deal, or null when it is not theirs (administrators see every deal). */
-export function actorFor(row: { renterId: string; ownerId: string }, user: Pick<PublicUser, 'id' | 'role'>): Actor | null {
+export function actorFor(
+  row: { renterId: string; ownerId: string },
+  user: Pick<PublicUser, 'id' | 'role'>,
+): Actor | null {
   if (row.renterId === user.id) return { kind: 'RENTER', userId: user.id };
   if (row.ownerId === user.id) return { kind: 'OWNER', userId: user.id };
   if (user.role === 'ADMIN') return { kind: 'ADMIN', userId: user.id };
@@ -99,11 +125,17 @@ export class BookingsService {
   /** What renting `listingId` for these days would cost; for anyone, on a bookable listing only. */
   async quote(listingId: string, start: string, end: string): Promise<QuoteResponse> {
     const listing = await bookableListing(this.prisma, listingId).catch((error: unknown) => {
-      throw error instanceof AppError && error.code === 'LISTING_UNAVAILABLE' ? new AppError('NOT_FOUND', 404, 'Listing not found') : error;
+      throw error instanceof AppError && error.code === 'LISTING_UNAVAILABLE'
+        ? new AppError('NOT_FOUND', 404, 'Listing not found')
+        : error;
     });
     const settings = await this.rules.settings();
     const p = period(localDate(start), localDate(end));
-    const priced = quote({ pricing: pricingOf(listing), days: daysIn(p), servicePercent: settings.servicePercent });
+    const priced = quote({
+      pricing: pricingOf(listing),
+      days: daysIn(p),
+      servicePercent: settings.servicePercent,
+    });
     const blocked = await blockedPeriods(this.prisma, listingId);
     return { quote: { ...priced }, blocked: blocked.map((b) => ({ start: b.start, end: b.end })) };
   }
@@ -130,6 +162,11 @@ export class BookingsService {
         }
         agreedDailyCents = offer.dailyCents;
       }
+      const open = await tx.booking.findFirst({
+        where: { renterId: renter.id, listingId: listing.id, status: 'REQUESTED' },
+        select: { id: true },
+      });
+      if (open) throw openRequest(open.id);
       const { next, effects } = createRequest(
         {
           id: randomUUID(),
@@ -145,21 +182,31 @@ export class BookingsService {
         { now, settings },
       );
       if (input.offerId !== undefined) {
-        const used = await tx.offer.updateMany({ where: { id: input.offerId, status: 'ACCEPTED' }, data: { status: 'USED' } });
+        const used = await tx.offer.updateMany({
+          where: { id: input.offerId, status: 'ACCEPTED' },
+          data: { status: 'USED' },
+        });
         if (used.count !== 1) throw offerUnavailable();
       }
-      await tx.booking.create({
-        data: {
-          id: next.id,
-          listingId: next.listingId,
-          renterId: next.renterId,
-          ownerId: next.ownerId,
-          offerId: input.offerId ?? null,
-          message: input.message || null,
-          createdAt: next.createdAt,
-          ...snapshotData(next),
-        },
-      });
+      await tx.booking
+        .create({
+          data: {
+            id: next.id,
+            listingId: next.listingId,
+            renterId: next.renterId,
+            ownerId: next.ownerId,
+            offerId: input.offerId ?? null,
+            message: input.message || null,
+            createdAt: next.createdAt,
+            ...snapshotData(next),
+          },
+        })
+        .catch(async (error: unknown) => {
+          // Two requests at the same moment: the partial unique index Booking_one_open_request decides.
+          if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002')
+            throw openRequest('');
+          throw error;
+        });
       const row = await tx.booking.findUniqueOrThrow({ where: { id: next.id }, include: BOOKING_INCLUDE });
       const done = await this.effects.run(tx, { row, settings, now }, next, effects);
       await tx.bookingEvent.create({
@@ -189,7 +236,10 @@ export class BookingsService {
     const now = this.clock.now();
     const settings = await this.rules.settings();
     const event = toDomainEvent(input);
-    const charge = input.type === 'PAY' && input.cardToken !== undefined ? await this.chargeCard(id, user, version, input.cardToken, now, settings) : undefined;
+    const charge =
+      input.type === 'PAY' && input.cardToken !== undefined
+        ? await this.chargeCard(id, user, version, input.cardToken, now, settings)
+        : undefined;
     let outcome;
     try {
       outcome = await this.prisma.$transaction(async (tx) => {
@@ -199,27 +249,52 @@ export class BookingsService {
         if (version !== row.version) throw staleBooking(row.version);
         if (event.type === 'PAY') assertOwnerActive(row);
         if (event.type === 'REPORT_DAMAGE') await assertDamagePhotos(tx, row.id, event.photoIds);
-        const ctx: EffectContext & DecideContext = { ...(await this.context(tx, row, event, now, settings)), row, ...(charge && { charge }) };
+        const ctx: EffectContext & DecideContext = {
+          ...(await this.context(tx, row, event, now, settings)),
+          row,
+          ...(charge && { charge }),
+        };
         try {
           return { overdue: null, saved: await this.decideAndSave(tx, row, actor, event, ctx) };
         } catch (error) {
-          const timer = error instanceof DomainError ? (error.details?.['overdueTimer'] as TimerKind | undefined) : undefined;
+          const timer =
+            error instanceof DomainError
+              ? (error.details?.['overdueTimer'] as TimerKind | undefined)
+              : undefined;
           if (timer === undefined) throw error;
-          const saved = await this.decideAndSave(tx, row, { kind: 'SYSTEM' }, { type: 'TIMEOUT', timer }, ctx);
+          const saved = await this.decideAndSave(
+            tx,
+            row,
+            { kind: 'SYSTEM' },
+            { type: 'TIMEOUT', timer },
+            ctx,
+          );
           return { overdue: timer, saved };
         }
       });
     } catch (error) {
       // The card was charged but the deal did not take the payment: give the money back at once.
-      if (charge) await this.payments.refund({ paymentRef: charge.ref, amountCents: charge.amountCents, idempotencyKey: `undo:${charge.ref}` });
+      if (charge)
+        await this.payments.refund({
+          paymentRef: charge.ref,
+          amountCents: charge.amountCents,
+          idempotencyKey: `undo:${charge.ref}`,
+        });
       throw error;
     }
     if (charge && outcome.overdue !== null) {
-      await this.payments.refund({ paymentRef: charge.ref, amountCents: charge.amountCents, idempotencyKey: `undo:${charge.ref}` });
+      await this.payments.refund({
+        paymentRef: charge.ref,
+        amountCents: charge.amountCents,
+        idempotencyKey: `undo:${charge.ref}`,
+      });
     }
     await this.afterCommit(outcome.saved.after);
     if (outcome.overdue !== null) {
-      throw new AppError('DEADLINE_PASSED', 409, undefined, undefined, { timer: outcome.overdue, status: outcome.saved.next.status });
+      throw new AppError('DEADLINE_PASSED', 409, undefined, undefined, {
+        timer: outcome.overdue,
+        status: outcome.saved.next.status,
+      });
     }
     return this.view(id, user);
   }
@@ -230,15 +305,33 @@ export class BookingsService {
    * is never charged. Every attempt has its own provider key: a charge given back after a failed attempt
    * is never reused by a retry. The client's Idempotency-Key keeps double clicks to one attempt.
    */
-  private async chargeCard(id: string, user: PublicUser, version: number, cardToken: string, now: Date, settings: BookingSettings) {
+  private async chargeCard(
+    id: string,
+    user: PublicUser,
+    version: number,
+    cardToken: string,
+    now: Date,
+    settings: BookingSettings,
+  ) {
     const row = await this.prisma.booking.findUnique({ where: { id }, include: BOOKING_INCLUDE });
     if (!row || row.renterId !== user.id) throw bookingNotFound();
     if (version !== row.version) throw staleBooking(row.version);
     assertOwnerActive(row);
-    decide(toSnapshot(row), { kind: 'RENTER', userId: user.id }, { type: 'PAY', method: 'CARD' }, { now, settings });
+    decide(
+      toSnapshot(row),
+      { kind: 'RENTER', userId: user.id },
+      { type: 'PAY', method: 'CARD' },
+      { now, settings },
+    );
     const amountCents = row.totalCents;
-    const result = await this.payments.charge({ token: cardToken, amountCents, idempotencyKey: `booking:${id}:${randomUUID()}`, description: `Yoyo booking ${id}` });
-    if (result.status === 'DECLINED') throw result.declineCode === 'invalid_token' ? unknownCard() : declined(result.declineCode);
+    const result = await this.payments.charge({
+      token: cardToken,
+      amountCents,
+      idempotencyKey: `booking:${id}:${randomUUID()}`,
+      description: `Yoyo booking ${id}`,
+    });
+    if (result.status === 'DECLINED')
+      throw result.declineCode === 'invalid_token' ? unknownCard() : declined(result.declineCode);
     return { ref: result.ref, brand: result.brand, last4: result.last4, amountCents };
   }
 
@@ -246,7 +339,13 @@ export class BookingsService {
    * An administrator decides a dispute (RESOLVE): refund the deposit, give it to the owner, refund all,
    * or confirm the handover, as the domain allows for the dispute's reason. Never on their own deal.
    */
-  async resolve(id: string, admin: PublicUser, version: number, decision: ResolveRequest['decision'], comment: string): Promise<BookingView> {
+  async resolve(
+    id: string,
+    admin: PublicUser,
+    version: number,
+    decision: ResolveRequest['decision'],
+    comment: string,
+  ): Promise<BookingView> {
     const now = this.clock.now();
     const settings = await this.rules.settings();
     const saved = await this.prisma.$transaction(async (tx) => {
@@ -256,7 +355,13 @@ export class BookingsService {
       }
       if (version !== row.version) throw staleBooking(row.version);
       const event: BookingEvent = { type: 'RESOLVE', decision, comment };
-      return this.decideAndSave(tx, row, { kind: 'ADMIN', userId: admin.id }, event, await this.context(tx, row, event, now, settings));
+      return this.decideAndSave(
+        tx,
+        row,
+        { kind: 'ADMIN', userId: admin.id },
+        event,
+        await this.context(tx, row, event, now, settings),
+      );
     });
     await this.afterCommit(saved.after);
     return this.view(id, admin);
@@ -264,7 +369,9 @@ export class BookingsService {
 
   /** Locks the booking row for the rest of the transaction and loads it with its listing and parties. */
   async lockedRow(tx: Prisma.TransactionClient, id: string): Promise<BookingWithParties> {
-    const [locked] = await tx.$queryRaw<{ id: string }[]>`SELECT id FROM "Booking" WHERE id = ${id} FOR UPDATE`;
+    const [locked] = await tx.$queryRaw<
+      { id: string }[]
+    >`SELECT id FROM "Booking" WHERE id = ${id} FOR UPDATE`;
     if (!locked) throw bookingNotFound();
     return tx.booking.findUniqueOrThrow({ where: { id }, include: BOOKING_INCLUDE });
   }
@@ -281,7 +388,9 @@ export class BookingsService {
     // Every account the payment will post to is locked now, in the ledger's one order (sorted by id):
     // locking the wallet alone first would deadlock with a refund to the same wallet locking in order.
     // Held until the payment is saved, so two payments from one wallet queue and never spend it twice.
-    const balances = wallet ? await this.ledger.lock([wallet, `escrow:${row.id}`, `deposit:${row.id}`, 'platform:revenue'], tx) : null;
+    const balances = wallet
+      ? await this.ledger.lock([wallet, `escrow:${row.id}`, `deposit:${row.id}`, 'platform:revenue'], tx)
+      : null;
     return {
       now,
       settings,
@@ -309,7 +418,12 @@ export class BookingsService {
       data: { ...snapshotData(next), version: { increment: 1 } },
     });
     if (updated.count !== 1) throw staleBooking(row.version + 1);
-    const done = await this.effects.run(tx, { row, settings: ctx.settings, now: ctx.now, ...(ctx.charge && { charge: ctx.charge }) }, next, effects);
+    const done = await this.effects.run(
+      tx,
+      { row, settings: ctx.settings, now: ctx.now, ...(ctx.charge && { charge: ctx.charge }) },
+      next,
+      effects,
+    );
     await tx.bookingEvent.create({
       data: {
         bookingId: row.id,
@@ -335,8 +449,16 @@ export class BookingsService {
     return this.serialize(row, actor);
   }
 
-  async listMine(user: PublicUser, role: 'renter' | 'owner', status?: BookingStatus, page = 1): Promise<BookingsPage> {
-    const where: Prisma.BookingWhereInput = { [role === 'renter' ? 'renterId' : 'ownerId']: user.id, ...(status && { status }) };
+  async listMine(
+    user: PublicUser,
+    role: 'renter' | 'owner',
+    status?: BookingStatus,
+    page = 1,
+  ): Promise<BookingsPage> {
+    const where: Prisma.BookingWhereInput = {
+      [role === 'renter' ? 'renterId' : 'ownerId']: user.id,
+      ...(status && { status }),
+    };
     const [rows, total] = await Promise.all([
       this.prisma.booking.findMany({
         where,
@@ -358,7 +480,8 @@ export class BookingsService {
     const ctx: DecideContext = {
       now: this.clock.now(),
       settings: await this.rules.settings(),
-      ...(s.status === 'REQUESTED' && actor.kind === 'OWNER' && { blocked: await blockedPeriods(this.prisma, row.listingId, row.id) }),
+      ...(s.status === 'REQUESTED' &&
+        actor.kind === 'OWNER' && { blocked: await blockedPeriods(this.prisma, row.listingId, row.id) }),
     };
     const role = actor.kind === 'SYSTEM' ? 'ADMIN' : actor.kind;
     return serializeBooking(row, s, role, availableActions(s, actor, ctx), this.urlFor);

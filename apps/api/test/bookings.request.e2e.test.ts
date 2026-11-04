@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { resetAccounts, resetDeals } from './support/db';
-import { day, requestBooking } from './support/deals';
+import { again, day, requestBooking, step } from './support/deals';
 import { resetListings, seedListing, signedInClient, type Client } from './support/listings';
 import { createTestApp, type TestApp } from './support/test-app';
 
@@ -151,9 +151,24 @@ describe('POST /bookings', () => {
     );
   });
 
-  it('allows 20 requests an hour per renter', async () => {
+  it('keeps one open request per renter and listing', async () => {
     const listing = await published();
-    for (let i = 0; i < 20; i++) await requestBooking(t, renter, listing.id, 2, 3);
-    await renter.post('/bookings').send({ listingId: listing.id, start: day(t, 2), end: day(t, 3) }).expect(429);
+    const first = await requestBooking(t, renter, listing.id, 2, 3);
+    const again = await renter.post('/bookings').send({ listingId: listing.id, start: day(t, 5), end: day(t, 6) });
+    expect(again.status).toBe(409);
+    expect(again.body.error).toMatchObject({ code: 'ACTION_NOT_ALLOWED', details: { why: 'OPEN_REQUEST', bookingId: first.id } });
+    await step(renter, first.id, { type: 'WITHDRAW' });
+    await requestBooking(t, renter, listing.id, 5, 6);
+  });
+
+  it('allows 20 requests an hour and 30 a day per renter', async () => {
+    const listings = [];
+    for (let i = 0; i < 31; i++) listings.push(await published());
+    for (let i = 0; i < 20; i++) await requestBooking(t, renter, listings[i]!.id, 2, 3);
+    await renter.post('/bookings').send({ listingId: listings[20]!.id, start: day(t, 2), end: day(t, 3) }).expect(429);
+    t.clock.advance(3_600_000 + 1);
+    renter = await again(t, renter);
+    for (let i = 20; i < 30; i++) await requestBooking(t, renter, listings[i]!.id, 2, 3);
+    await renter.post('/bookings').send({ listingId: listings[30]!.id, start: day(t, 2), end: day(t, 3) }).expect(429);
   });
 });

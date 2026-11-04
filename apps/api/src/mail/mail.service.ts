@@ -19,6 +19,12 @@ export interface MailRecipient {
   locale: string;
 }
 
+/** Emails a person is waiting for right now (a link, a code); notifications must leave room for them. */
+const ACCOUNT_TEMPLATES: ReadonlySet<MailTemplate> = new Set(['verify-email', 'reset-password', 'phone-code']);
+
+/** Share of the daily budget only account emails may use (plan 8 review: deals must not mute sign-ups). */
+const ACCOUNT_RESERVE = 0.2;
+
 /** How long shutdown waits for mail that is still being sent. */
 const SHUTDOWN_GRACE_MS = 10_000;
 const HOUR = 3_600_000;
@@ -154,12 +160,17 @@ export class MailService implements OnApplicationShutdown {
 
   /**
    * Counts one mail against the global 24-hour budget (MAIL_DAILY_LIMIT, sliding window on the Clock).
-   * Over it, the mail is skipped and an error is logged at most once an hour.
+   * Notifications (deals, listings) stop at four fifths of it; the last fifth is kept for account emails
+   * (confirmation links, password resets, phone codes). Over it, the mail is skipped and an error is
+   * logged at most once an hour.
    */
   private withinBudget(template: MailTemplate): boolean {
     const now = this.clock.now().getTime();
     while (this.sentAt.length > 0 && this.sentAt[0]! <= now - DAY) this.sentAt.shift();
-    if (this.sentAt.length < this.env.MAIL_DAILY_LIMIT) {
+    const limit = ACCOUNT_TEMPLATES.has(template)
+      ? this.env.MAIL_DAILY_LIMIT
+      : this.env.MAIL_DAILY_LIMIT - Math.ceil(this.env.MAIL_DAILY_LIMIT * ACCOUNT_RESERVE);
+    if (this.sentAt.length < limit) {
       this.sentAt.push(now);
       return true;
     }

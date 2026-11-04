@@ -79,7 +79,8 @@ describe('deal emails', () => {
 
 describe('deal emails over the daily budget', () => {
   it('still lets the deal go on', async () => {
-    const small = await createTestApp({ env: { MAIL_DAILY_LIMIT: '1' } });
+    // 2 a day: one for notifications, one kept for account emails.
+    const small = await createTestApp({ env: { MAIL_DAILY_LIMIT: '2' } });
     try {
       await resetDeals(small.prisma);
       const o = await signedInClient(small, { locale: 'en' });

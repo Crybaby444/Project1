@@ -24,13 +24,20 @@ async function listing(ownerId: string): Promise<string> {
 }
 
 /** A booking row with only what the table requires; `reserved` is set by raw SQL like the API does. */
-async function booking(listingId: string, ownerId: string, renterId: string, start: string, end: string): Promise<string> {
+async function booking(
+  listingId: string,
+  ownerId: string,
+  renterId: string,
+  start: string,
+  end: string,
+  status: 'REQUESTED' | 'ACCEPTED' = 'ACCEPTED',
+): Promise<string> {
   const row = await prisma.booking.create({
     data: {
       listingId,
       ownerId,
       renterId,
-      status: 'REQUESTED',
+      status,
       start: new Date(`${start}T00:00:00Z`),
       end: new Date(`${end}T00:00:00Z`),
       timeZone: 'Europe/Riga',
@@ -86,6 +93,16 @@ describe('deal tables', () => {
     await reserve(b);
     await reserve(c);
     expect(await prisma.booking.count()).toBe(4);
+  });
+
+  it('keeps one open request per renter and listing', async () => {
+    const owner = await user();
+    const renter = await user();
+    const item = await listing(owner);
+    await booking(item, owner, renter, '2027-03-01', '2027-03-02', 'REQUESTED');
+    await expect(booking(item, owner, renter, '2027-04-01', '2027-04-02', 'REQUESTED')).rejects.toMatchObject({ code: 'P2002' });
+    await booking(item, owner, await user(), '2027-03-01', '2027-03-02', 'REQUESTED');
+    await booking(await listing(owner), owner, renter, '2027-03-01', '2027-03-02', 'REQUESTED');
   });
 
   it('refuses a booking that ends before it starts', async () => {
