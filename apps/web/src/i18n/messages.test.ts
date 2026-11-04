@@ -1,4 +1,4 @@
-import { LOCALES, type Locale } from '@yoyo/shared';
+import { LOCALES, RULE_PRESETS, type Locale } from '@yoyo/shared';
 import { describe, expect, it } from 'vitest';
 import en from '../../messages/en.json';
 import lv from '../../messages/lv.json';
@@ -30,6 +30,10 @@ function emptyValues(tree: Tree, prefix = ''): string[] {
 describe('interface messages', () => {
   it.each(['lv', 'ru'] as const)('%s has exactly the same keys as English', (locale) => {
     expect(flatKeys(messages[locale])).toEqual(flatKeys(messages.en));
+  });
+
+  it('labels every listing rule preset', () => {
+    expect(Object.keys(messages.en['listingRules'] as Tree).sort()).toEqual([...RULE_PRESETS].sort());
   });
 
   it.each(LOCALES)('%s has no empty strings', (locale) => {

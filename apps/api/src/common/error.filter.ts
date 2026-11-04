@@ -38,7 +38,12 @@ function codeForStatus(status: number): ErrorCode {
 
 function toErrorResponse(exception: unknown): ErrorResponse {
   if (exception instanceof AppError) {
-    const error = { code: exception.code, message: exception.message, ...(exception.fields && { fields: exception.fields }) };
+    const error = {
+      code: exception.code,
+      message: exception.message,
+      ...(exception.fields && { fields: exception.fields }),
+      ...(exception.details && { details: exception.details }),
+    };
     return {
       status: exception.status,
       body: { error },

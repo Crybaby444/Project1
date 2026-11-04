@@ -46,6 +46,8 @@ export const RATE_LIMITS = {
   verificationMail: (userId: string): RateRule[] => [
     { key: `verification-mail:user-day:${userId}`, limit: 5, windowMs: 24 * HOUR },
   ],
+  /** 30 new listings an hour per user: drafts are cheap, but not free. */
+  createListing: (userId: string): RateRule[] => [{ key: `create-listing:user:${userId}`, limit: 30, windowMs: HOUR }],
   /** One confirmation email a minute per user. */
   resendVerification: (userId: string): RateRule[] => [
     { key: `resend-verification:user:${userId}`, limit: 1, windowMs: MINUTE },

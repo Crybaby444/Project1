@@ -18,6 +18,8 @@ export const ERROR_CODES = [
   'ORIGIN_FORBIDDEN',
   'NOT_FOUND',
   'INTERNAL',
+  /** The listing is not in a status that allows this, or it changed elsewhere (`details.currentVersion`). */
+  'INVALID_STATUS',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];
@@ -34,6 +36,8 @@ export const ApiErrorBodySchema = z.object({
     message: z.string(),
     /** Per-field messages for invalid input, keyed by the field path (`email`, `address.city`). */
     fields: z.record(z.string(), z.string()).optional(),
+    /** Machine-readable facts about the error, e.g. `{ currentVersion: 4 }` for a stale listing edit. */
+    details: z.record(z.string(), z.unknown()).optional(),
   }),
 });
 

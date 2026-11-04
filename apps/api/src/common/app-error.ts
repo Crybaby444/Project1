@@ -14,6 +14,7 @@ const DEFAULT_MESSAGES: Record<ErrorCode, string> = {
   ORIGIN_FORBIDDEN: 'Requests from this origin are not allowed',
   NOT_FOUND: 'Not found',
   INTERNAL: 'Something went wrong on our side',
+  INVALID_STATUS: 'This is not possible in the current status',
 };
 
 /** An expected failure with a stable code; ErrorFilter turns it into the uniform error body. */
@@ -23,6 +24,7 @@ export class AppError extends Error {
     readonly status: number,
     message?: string,
     readonly fields?: Record<string, string>,
+    readonly details?: Record<string, unknown>,
   ) {
     super(message ?? DEFAULT_MESSAGES[code]);
     this.name = 'AppError';

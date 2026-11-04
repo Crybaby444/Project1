@@ -10,7 +10,7 @@ const DESCRIPTIONS: Record<number, string> = {
   401: 'Not signed in or wrong credentials',
   403: 'Not allowed (blocked account, wrong role or foreign Origin)',
   404: 'Not found or not available',
-  409: 'Conflict (e.g. AUTH_EMAIL_TAKEN)',
+  409: 'Conflict (e.g. AUTH_EMAIL_TAKEN, or INVALID_STATUS with details.currentVersion)',
   410: 'Link or code used up (TOKEN_USED) or expired (TOKEN_EXPIRED)',
   429: 'Too many attempts (RATE_LIMITED); see Retry-After',
 };
