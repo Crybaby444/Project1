@@ -330,5 +330,110 @@
     "title": "This page is for administrators",
     "body": "Your account does not have access here. If you think it should, ask the Yoyo team.",
     "back": "Back to home"
+  },
+  "listingCondition": {
+    "NEW": "New",
+    "LIKE_NEW": "Like new",
+    "GOOD": "Good",
+    "FAIR": "Fair"
+  },
+  "builder": {
+    "titleNew": "Lend an item",
+    "titleEdit": "Edit your listing",
+    "intro": "Go through the steps in any order. Everything saves as you type.",
+    "steps": {
+      "label": "Listing steps",
+      "photos": "Photos",
+      "basics": "Basics",
+      "attributes": "Details",
+      "price": "Price",
+      "place": "Where & when",
+      "rules": "Rules & publish",
+      "done": "done",
+      "number": "Step {number} of {total}"
+    },
+    "stepIntro": {
+      "photos": "Up to 8 photos. The first one is the cover of your card.",
+      "basics": "What the item is, its category and its condition.",
+      "attributes": "The details renters of this category look for.",
+      "price": "What a day costs, a discount for a week or more, and the deposit.",
+      "place": "Where people pick it up, and the days it is not available.",
+      "rules": "Your rules for renters, then send the listing for review."
+    },
+    "back": "Back",
+    "next": "Next",
+    "save": {
+      "idle": "Changes save automatically",
+      "saving": "Saving…",
+      "saved": "All changes saved",
+      "error": "Not saved yet. Trying again…",
+      "invalid": "Fix the marked fields to save them",
+      "conflict": "Saving stopped",
+      "readonly": "Deleted listings cannot be changed"
+    },
+    "conflict": {
+      "title": "This listing was changed in another tab",
+      "body": "We stopped saving here so the two versions do not overwrite each other. Load the latest version to keep working. Changes on this page that were not saved yet will be lost.",
+      "reload": "Load the latest version"
+    },
+    "preview": {
+      "open": "Preview",
+      "title": "How your card will look",
+      "label": "Preview of your card",
+      "noTitle": "Your title shows here",
+      "noPhoto": "The cover photo shows here",
+      "perDay": "{price} a day",
+      "noPrice": "Price a day",
+      "deposit": "Deposit {amount}",
+      "noDeposit": "No deposit",
+      "weekly": "−{percent}% for 7+ days",
+      "noPlace": "The district shows here",
+      "privacy": "Renters see the city and district, never the exact point.",
+      "close": "Close the preview"
+    },
+    "basics": {
+      "title": "Title",
+      "titleHint": "What it is, with the brand and model: “Bosch cordless drill”.",
+      "description": "Description",
+      "descriptionHint": "What is included, how it works, and anything a renter should know.",
+      "condition": "Condition",
+      "category": "Category",
+      "subcategory": "Subcategory",
+      "attributesReset": "The details of the previous category were cleared.",
+      "loadingCategories": "Loading the categories…"
+    },
+    "attributes": {
+      "needCategory": "Choose a subcategory first: the details depend on it.",
+      "toBasics": "Choose a category",
+      "required": "required",
+      "choose": "Choose…",
+      "yes": "Yes",
+      "no": "No",
+      "none": "This category has no extra details. Go on to the price."
+    },
+    "counter": "{count} / {max}",
+    "check": {
+      "required": "Fill this in.",
+      "tooShort": "At least {min, plural, one {# character} other {# characters}}.",
+      "tooLong": "At most {max, plural, one {# character} other {# characters}}.",
+      "number": "Enter a number, like 12 or 12,50.",
+      "priceRange": "From €{min} to €{max} a day.",
+      "discountRange": "From 0 to {max} %.",
+      "depositRange": "From €0 to €{max}.",
+      "daysRange": "From {min} to {max} days.",
+      "maxBelowMin": "At least the minimum rental.",
+      "chooseSubcategory": "Choose a subcategory.",
+      "attribute": "Check this value.",
+      "photos": "Add at least one photo.",
+      "point": "Put the pick-up point on the map."
+    },
+    "notFound": {
+      "title": "Listing not found",
+      "body": "It may have been deleted, or it belongs to another account.",
+      "toMine": "Go to my items"
+    },
+    "loadFailed": "We could not load this listing.",
+    "retry": "Try again",
+    "loading": "Loading the listing…"
   }
 }

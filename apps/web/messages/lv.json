@@ -330,5 +330,110 @@
     "title": "Šī lapa ir administratoriem",
     "body": "Tavam kontam šeit nav piekļuves. Ja domā, ka vajadzētu būt, sazinies ar Yoyo komandu.",
     "back": "Uz sākumlapu"
+  },
+  "listingCondition": {
+    "NEW": "Jauna",
+    "LIKE_NEW": "Kā jauna",
+    "GOOD": "Laba",
+    "FAIR": "Lietota"
+  },
+  "builder": {
+    "titleNew": "Izīrēt lietu",
+    "titleEdit": "Labot sludinājumu",
+    "intro": "Aizpildi soļus jebkurā secībā. Viss saglabājas, kamēr raksti.",
+    "steps": {
+      "label": "Sludinājuma soļi",
+      "photos": "Foto",
+      "basics": "Pamatinfo",
+      "attributes": "Detaļas",
+      "price": "Cena",
+      "place": "Kur un kad",
+      "rules": "Noteikumi un publicēšana",
+      "done": "gatavs",
+      "number": "{number}. solis no {total}"
+    },
+    "stepIntro": {
+      "photos": "Līdz 8 foto. Pirmais būs kartītes vāks.",
+      "basics": "Kas tā ir par lietu, tās kategorija un stāvoklis.",
+      "attributes": "Detaļas, ko šīs kategorijas īrnieki meklē.",
+      "price": "Cik maksā diena, atlaide no nedēļas un drošības nauda.",
+      "place": "Kur lietu var saņemt un kurās dienās tā nav pieejama.",
+      "rules": "Tavi noteikumi īrniekiem, pēc tam nosūti sludinājumu pārbaudei."
+    },
+    "back": "Atpakaļ",
+    "next": "Tālāk",
+    "save": {
+      "idle": "Izmaiņas saglabājas automātiski",
+      "saving": "Saglabā…",
+      "saved": "Visas izmaiņas saglabātas",
+      "error": "Vēl nav saglabāts. Mēģinām vēlreiz…",
+      "invalid": "Izlabo atzīmētos laukus, lai tos saglabātu",
+      "conflict": "Saglabāšana apturēta",
+      "readonly": "Dzēstus sludinājumus mainīt nevar"
+    },
+    "conflict": {
+      "title": "Šis sludinājums ir mainīts citā cilnē",
+      "body": "Šeit saglabāšanu apturējām, lai abas versijas viena otru nepārrakstītu. Ielādē jaunāko versiju, lai turpinātu. Šajā lapā vēl nesaglabātās izmaiņas zudīs.",
+      "reload": "Ielādēt jaunāko versiju"
+    },
+    "preview": {
+      "open": "Priekšskatījums",
+      "title": "Tā izskatīsies tava kartīte",
+      "label": "Kartītes priekšskatījums",
+      "noTitle": "Te būs nosaukums",
+      "noPhoto": "Te būs vāka foto",
+      "perDay": "{price} dienā",
+      "noPrice": "Cena dienā",
+      "deposit": "Drošības nauda {amount}",
+      "noDeposit": "Bez drošības naudas",
+      "weekly": "−{percent}% no 7 dienām",
+      "noPlace": "Te būs rajons",
+      "privacy": "Īrnieki redz pilsētu un rajonu, nekad precīzu punktu.",
+      "close": "Aizvērt priekšskatījumu"
+    },
+    "basics": {
+      "title": "Nosaukums",
+      "titleHint": "Kas tā ir, ar zīmolu un modeli: “Bosch akumulatora urbis”.",
+      "description": "Apraksts",
+      "descriptionHint": "Kas ir komplektā, kā tā darbojas un kas īrniekam jāzina.",
+      "condition": "Stāvoklis",
+      "category": "Kategorija",
+      "subcategory": "Apakškategorija",
+      "attributesReset": "Iepriekšējās kategorijas detaļas notīrītas.",
+      "loadingCategories": "Ielādē kategorijas…"
+    },
+    "attributes": {
+      "needCategory": "Vispirms izvēlies apakškategoriju: detaļas ir atkarīgas no tās.",
+      "toBasics": "Izvēlēties kategoriju",
+      "required": "obligāti",
+      "choose": "Izvēlies…",
+      "yes": "Jā",
+      "no": "Nē",
+      "none": "Šai kategorijai papildu detaļu nav. Turpini ar cenu."
+    },
+    "counter": "{count} / {max}",
+    "check": {
+      "required": "Aizpildi šo lauku.",
+      "tooShort": "Vismaz {min, plural, zero {# rakstzīmes} one {# rakstzīme} other {# rakstzīmes}}.",
+      "tooLong": "Ne vairāk kā {max, plural, zero {# rakstzīmes} one {# rakstzīme} other {# rakstzīmes}}.",
+      "number": "Ievadi skaitli, piemēram, 12 vai 12,50.",
+      "priceRange": "No {min} € līdz {max} € dienā.",
+      "discountRange": "No 0 līdz {max} %.",
+      "depositRange": "No 0 € līdz {max} €.",
+      "daysRange": "No {min} līdz {max} dienām.",
+      "maxBelowMin": "Ne mazāk kā minimālais termiņš.",
+      "chooseSubcategory": "Izvēlies apakškategoriju.",
+      "attribute": "Pārbaudi šo vērtību.",
+      "photos": "Pievieno vismaz vienu foto.",
+      "point": "Atzīmē saņemšanas punktu kartē."
+    },
+    "notFound": {
+      "title": "Sludinājums nav atrasts",
+      "body": "Iespējams, tas ir dzēsts vai pieder citam kontam.",
+      "toMine": "Uz manām lietām"
+    },
+    "loadFailed": "Neizdevās ielādēt šo sludinājumu.",
+    "retry": "Mēģināt vēlreiz",
+    "loading": "Ielādē sludinājumu…"
   }
 }
