@@ -1,5 +1,5 @@
 import { DomainError } from '../errors';
-import { checkClock, findTransition, mayAct, overdueTimer, transitionsFor } from './transitions';
+import { checkContext, findTransition, mayAct, overdueTimer, transitionsFor } from './transitions';
 import type { Actor, BookingEventType, BookingSnapshot, DecideContext } from './types';
 
 /** True when `check` passes; false when it refuses with a DomainError. */
@@ -21,7 +21,7 @@ function passes(check: () => void): boolean {
  * - After a deadline the sides get nothing; the system gets TIMEOUT until the timer has fired.
  */
 export function availableActions(s: BookingSnapshot, actor: Actor, ctx: DecideContext): BookingEventType[] {
-  checkClock(ctx.now);
+  checkContext(ctx);
   const overdue = overdueTimer(s, ctx.now);
   if (actor.kind === 'SYSTEM') {
     const fires =

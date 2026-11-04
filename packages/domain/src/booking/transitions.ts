@@ -1,5 +1,6 @@
 import { compareDates, endOfDayIn, firstConflict, localDateIn } from '../dates';
 import { DomainError } from '../errors';
+import { validateBookingSettings } from '../settings';
 import { bookingPayment, bookingRefund, depositRefund, depositToOwner, rentRelease } from '../ledger';
 import type { LedgerOperation, PaymentMethod } from '../ledger';
 import { TIMER_KINDS } from './types';
@@ -570,9 +571,21 @@ export const TRANSITIONS: readonly Transition[] = [
  * would look due and every timer would fire.
  */
 export function checkClock(now: Date): void {
-  if (!(now instanceof Date) || Number.isNaN(now.getTime())) {
-    throw new DomainError('INVALID_INPUT', { field: 'now', value: String(now) });
+  checkDate(now, 'now');
+}
+
+/** A moment the rules compare with: a Date that holds a real time, else `INVALID_INPUT`. */
+export function checkDate(value: unknown, field: string): Date {
+  if (!(value instanceof Date) || Number.isNaN(value.getTime())) {
+    throw new DomainError('INVALID_INPUT', { field, value: String(value) });
   }
+  return value;
+}
+
+/** The context every entry point checks first: a real clock and valid settings. */
+export function checkContext(ctx: DecideContext): void {
+  checkClock(ctx.now);
+  validateBookingSettings(ctx.settings);
 }
 
 /** The timers a booking may have armed in `status`: those its TIMEOUT rows handle. */
@@ -599,11 +612,15 @@ export function mayAct(s: BookingSnapshot, actor: Actor, type: BookingEventType)
   }
 }
 
-/** The armed timer whose deadline has passed, if any. */
+/**
+ * The armed timer whose deadline has passed, if any. A stored deadline that is not a real moment is
+ * refused (`INVALID_INPUT`): read as "not due", it would let a late action through; read as "due",
+ * it would fire at once.
+ */
 export function overdueTimer(s: BookingSnapshot, now: Date): TimerKind | undefined {
   return TIMER_KINDS.find((timer) => {
     const due = s.timers[timer];
-    return due !== undefined && due.getTime() <= now.getTime();
+    return due !== undefined && checkDate(due, `timers.${timer}`).getTime() <= now.getTime();
   });
 }
 

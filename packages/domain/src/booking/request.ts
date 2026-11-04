@@ -5,7 +5,7 @@ import { requireId } from '../ids';
 import type { Cents } from '../money';
 import { quote, validateOffer } from '../pricing';
 import type { ListingPricing } from '../pricing';
-import { ttl } from './transitions';
+import { checkContext, checkDate, ttl } from './transitions';
 import type { BookingSnapshot, DecideContext, Decision } from './types';
 
 export interface RequestInput {
@@ -31,6 +31,7 @@ export interface RequestInput {
  * the first rental day.
  */
 export function createRequest(input: RequestInput, ctx: DecideContext): Decision {
+  checkContext(ctx);
   for (const field of ['id', 'listingId', 'renterId', 'ownerId'] as const) requireId(input[field], field);
   if (input.renterId === input.ownerId) {
     throw new DomainError('CANNOT_RENT_OWN', { userId: input.renterId });
@@ -51,7 +52,7 @@ export function createRequest(input: RequestInput, ctx: DecideContext): Decision
     servicePercent: ctx.settings.servicePercent,
     ...(input.agreedDailyCents === undefined ? {} : { agreedDailyCents: input.agreedDailyCents }),
   });
-  const expiresAt = ttl(ctx.now, ctx.settings.requestTtlHours, input);
+  const expiresAt = checkDate(ttl(ctx.now, ctx.settings.requestTtlHours, input), 'timers.REQUEST_EXPIRY');
   const next: BookingSnapshot = {
     id: input.id,
     listingId: input.listingId,

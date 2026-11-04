@@ -1,5 +1,5 @@
 import { DomainError } from '../errors';
-import { armableTimers, checkClock, findTransition, mayAct, overdueTimer } from './transitions';
+import { armableTimers, checkContext, checkDate, findTransition, mayAct, overdueTimer } from './transitions';
 import type { Change, Transition } from './transitions';
 import { TIMER_KINDS } from './types';
 import type {
@@ -15,7 +15,7 @@ import type {
 /**
  * Applies one event to a booking: the new snapshot plus the effects the API must carry out, or a
  * `DomainError`. Checks, in order:
- * 0. `ctx.now` is a real moment (`INVALID_INPUT`);
+ * 0. `ctx.now` is a real moment and `ctx.settings` are valid (`INVALID_INPUT`);
  * 1. the actor is a party (`NOT_A_PARTY`); an admin may only RESOLVE, the system only fire timers;
  * 2. timers: a TIMEOUT whose timer is not armed or not yet due changes nothing; once a deadline has
  *    passed, only its TIMEOUT may act (`TRANSITION_NOT_ALLOWED` with `details.overdueTimer`);
@@ -28,14 +28,18 @@ export function decide(
   event: BookingEvent,
   ctx: DecideContext,
 ): Decision {
-  checkClock(ctx.now);
+  checkContext(ctx);
   if (!mayAct(snapshot, actor, event.type)) {
     throw new DomainError('NOT_A_PARTY', { actor: actor.kind, event: event.type });
   }
   if (event.type === 'TIMEOUT' && actor.kind === 'SYSTEM') {
     const due = snapshot.timers[event.timer];
     // A late, repeated or early job: nothing to do, and no error, so the scheduler can retry freely.
-    if (due === undefined || due.getTime() > ctx.now.getTime()) return { next: snapshot, effects: [] };
+    if (due === undefined) return { next: snapshot, effects: [] };
+    // A stored deadline that is not a real moment is refused rather than fired: NaN is never "not yet".
+    if (checkDate(due, `timers.${event.timer}`).getTime() > ctx.now.getTime()) {
+      return { next: snapshot, effects: [] };
+    }
   } else {
     const overdue = overdueTimer(snapshot, ctx.now);
     if (overdue !== undefined) {
@@ -82,6 +86,8 @@ function apply(
     else effects.push({ kind: 'CANCEL_TIMER', timer });
   }
   if (change.schedule !== undefined) {
+    // Every deadline the engine arms is a real moment; a bad one would be due at once or never.
+    checkDate(change.schedule.at, `timers.${change.schedule.timer}`);
     timers[change.schedule.timer] = change.schedule.at;
     effects.push({ kind: 'SCHEDULE', timer: change.schedule.timer, at: change.schedule.at });
   }

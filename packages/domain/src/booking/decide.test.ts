@@ -3,6 +3,7 @@ import { endOfDayIn, localDate, period } from '../dates';
 import { DomainError } from '../errors';
 import { bookingPayment, bookingRefund, depositRefund, rentRelease } from '../ledger';
 import { cents } from '../money';
+import { availableActions } from './actions';
 import { decide } from './decide';
 import { createRequest } from './request';
 import {
@@ -1000,5 +1001,68 @@ describe('everything the table does not list is refused', () => {
       }
     }
     expect(unexpected).toEqual([]);
+  });
+});
+
+describe('settings and stored deadlines that are not real values (F1)', () => {
+  const FIELDS = Object.keys(ctx.settings) as (keyof DecideContext['settings'])[];
+  const broken = (field: string): ReadonlyArray<readonly [string, DecideContext]> => {
+    const { [field as keyof DecideContext['settings']]: _dropped, ...missing } = ctx.settings;
+    return [
+      ['missing', { ...ctx, settings: missing as DecideContext['settings'] }],
+      ['NaN', { ...ctx, settings: { ...ctx.settings, [field]: Number.NaN } }],
+    ];
+  };
+
+  it.each(FIELDS)('refuses a missing or NaN %s before anything happens', (field) => {
+    for (const [, c] of broken(field)) {
+      expect(() => createRequest(requestInput(), c)).toThrow(code('INVALID_INPUT'));
+      expect(() => availableActions(given('RETURNED'), owner, c)).toThrow(code('INVALID_INPUT'));
+      // A due timer would otherwise fire and move money.
+      const returned = given('RETURNED');
+      expect(() =>
+        decide(
+          returned,
+          system,
+          { type: 'TIMEOUT', timer: 'INSPECTION' },
+          { ...at(returned, 'INSPECTION'), settings: c.settings },
+        ),
+      ).toThrow(code('INVALID_INPUT'));
+      expect(() => decide(returned, owner, { type: 'ALL_FINE' }, c)).toThrow(code('INVALID_INPUT'));
+    }
+  });
+
+  it('a NaN deadline setting cannot arm a timer that fires at once', () => {
+    const requested = given('REQUESTED');
+    const noTtl = { ...ctx, settings: { ...ctx.settings, paymentTtlHours: Number.NaN } };
+    expect(() => decide(requested, owner, { type: 'ACCEPT' }, noTtl)).toThrow(code('INVALID_INPUT'));
+  });
+
+  it('refuses to schedule a deadline that is not a real date', () => {
+    // Finite and positive, but past the last date a Date can hold.
+    const farAway = { ...ctx, settings: { ...ctx.settings, returnConfirmHours: 1e300 } };
+    expect(() => decide(given('ACTIVE'), renter, { type: 'MARK_RETURNED' }, farAway)).toThrow(
+      code('INVALID_INPUT'),
+    );
+  });
+
+  it('refuses a stored timer whose date is not a real moment instead of firing it', () => {
+    const returned = given('RETURNED');
+    const corrupt: BookingSnapshot = { ...returned, timers: { INSPECTION: new Date(Number.NaN) } };
+    const later49 = later(ctx, 49);
+    expect(() => decide(corrupt, system, { type: 'TIMEOUT', timer: 'INSPECTION' }, later49)).toThrow(
+      code('INVALID_INPUT'),
+    );
+    expect(() => decide(corrupt, owner, { type: 'ALL_FINE' }, ctx)).toThrow(code('INVALID_INPUT'));
+    expect(() =>
+      decide(
+        corrupt,
+        owner,
+        { type: 'REPORT_DAMAGE', description: SAMPLE.description, photoIds: SAMPLE.photoIds },
+        ctx,
+      ),
+    ).toThrow(code('INVALID_INPUT'));
+    expect(() => availableActions(corrupt, owner, ctx)).toThrow(code('INVALID_INPUT'));
+    expect(() => availableActions(corrupt, system, later49)).toThrow(code('INVALID_INPUT'));
   });
 });

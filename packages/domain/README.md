@@ -26,7 +26,7 @@ const { next, effects } = decide(snapshot, { kind: 'OWNER', userId }, { type: 'A
 | `money.ts` | `Cents`, `cents`, `add`, `sub`, `mulInt`, `percentOf`, `formatMoney` |
 | `dates.ts` | `LocalDate`, `localDate`, `localDateIn`, `addDays`, `diffDays`, `compareDates`, `endOfDayIn`, `Period`, `period`, `daysIn`, `overlaps`, `firstConflict`, `validateRentalPeriod`, `DEFAULT_TIME_ZONE` |
 | `pricing.ts` | `ListingPricing`, `PRICING_LIMITS`, `validatePricing`, `Quote`, `quote`, `validateOffer`, `WEEKLY_DISCOUNT_FROM_DAYS` |
-| `settings.ts` | `BookingSettings`, `DEFAULT_BOOKING_SETTINGS` |
+| `settings.ts` | `BookingSettings`, `DEFAULT_BOOKING_SETTINGS`, `validateBookingSettings` |
 | `ledger.ts` | `AccountId`, `Posting`, `LedgerOperation`, `PaymentMethod`, конструкторы операций, `assertBalanced`, `applyOperation` |
 | `booking/types.ts` | `BookingStatus`, `BookingSnapshot`, `Actor`, `BookingEvent`, `TimerKind`, `Effect`, `Decision`, `DecideContext`, `BOOKING_TEMPLATES` |
 | `booking/request.ts` | `createRequest` — запрос арендатора |
@@ -154,6 +154,7 @@ stateDiagram-v2
 
 ### Правила для всех строк
 
+- **Настройки и даты.** `createRequest`, `decide` и `availableActions` сначала проверяют `ctx.now` и настройки (`validateBookingSettings`): часы — конечное число больше 0, `servicePercent` — целое от 0 до 100, `maxAdvanceDays` и `reviewWindowDays` — целые больше 0. Иначе `INVALID_INPUT` с `details.field = 'settings.<имя>'`. Сохранённый срок таймера, который не является настоящей датой, не срабатывает и не считается «ещё не наступившим»: `INVALID_INPUT` с `details.field = 'timers.<таймер>'`. Каждый срок, который ставит ядро, проверяется так же.
 - **Кто может действовать.** RENTER и OWNER — только арендатор и владелец этой сделки, иначе `NOT_A_PARTY`. ADMIN может только RESOLVE, SYSTEM — только TIMEOUT. Событие, которого нет в таблице для этого статуса и актёра, — `TRANSITION_NOT_ALLOWED`. Невыполненное условие без своего кода — тоже `TRANSITION_NOT_ALLOWED` с `details.why`.
 - **Таймеры.** У сделки взведён не больше чем один таймер — таймер текущего шага.
   - TIMEOUT для таймера, который не взведён или срок которого не наступил, ничего не меняет: `next === snapshot`, эффектов нет, ошибки нет. Фоновая задача может сработать поздно, дважды или рано без вреда.
