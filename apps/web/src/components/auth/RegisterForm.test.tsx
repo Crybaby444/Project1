@@ -14,13 +14,18 @@ vi.mock('@/i18n/navigation', async (importOriginal) => ({
   useRouter: () => ({ replace, push: vi.fn(), refresh: vi.fn() }),
 }));
 
-function renderRegister(routes: FakeRoutes, locale: 'en' | 'lv' = 'en', next: string | null = null) {
+function renderRegister(
+  routes: FakeRoutes,
+  locale: 'en' | 'lv' = 'en',
+  next: string | null = null,
+  theme: 'system' | 'light' | 'dark' = 'system',
+) {
   const { client, calls } = fakeApi({
     ...meRoute(null),
     'GET /api/v1/auth/providers': { status: 200, body: { google: false, phone: false } },
     ...routes,
   });
-  renderWithSession(<RegisterForm next={next} />, { client, locale, hasSession: false });
+  renderWithSession(<RegisterForm next={next} />, { client, locale, hasSession: false, theme });
   return calls;
 }
 
@@ -117,5 +122,42 @@ describe('passwordStrength', () => {
     expect(passwordStrength('correct horse')).toBe(2);
     expect(passwordStrength('Correct-Horse-9')).toBe(3);
     expect(passwordStrength('correct horse battery staple')).toBe(3); // long passphrases are strong
+  });
+
+  it('keeps the theme the visitor chose before signing up, in the new profile too', async () => {
+    const user = userEvent.setup();
+    const calls = renderRegister(
+      {
+        'POST /api/v1/auth/register': { status: 201, body: { user: testUser({ theme: 'system' }) } },
+        'PATCH /api/v1/me': { status: 200, body: { user: testUser({ theme: 'dark' }) } },
+      },
+      'en',
+      null,
+      'dark',
+    );
+
+    await user.type(screen.getByLabelText(en.auth.fields.name), 'Anna');
+    await user.type(screen.getByLabelText(en.auth.fields.email), 'anna@mail.lv');
+    await user.type(screen.getByLabelText(en.auth.fields.password), 'correct horse battery');
+    await user.click(screen.getByRole('button', { name: en.auth.register.submit }));
+
+    await waitFor(() => expect(replace).toHaveBeenCalledWith('/'));
+    expect(calls.find((c) => c.method === 'PATCH' && c.path === '/api/v1/me')?.body).toEqual({
+      theme: 'dark',
+    });
+  });
+
+  it('does not touch the profile theme when the visitor follows the system', async () => {
+    const user = userEvent.setup();
+    const calls = renderRegister({
+      'POST /api/v1/auth/register': { status: 201, body: { user: testUser() } },
+    });
+    await user.type(screen.getByLabelText(en.auth.fields.name), 'Anna');
+    await user.type(screen.getByLabelText(en.auth.fields.email), 'anna@mail.lv');
+    await user.type(screen.getByLabelText(en.auth.fields.password), 'correct horse battery');
+    await user.click(screen.getByRole('button', { name: en.auth.register.submit }));
+
+    await waitFor(() => expect(replace).toHaveBeenCalledWith('/'));
+    expect(calls.some((c) => c.method === 'PATCH')).toBe(false);
   });
 });

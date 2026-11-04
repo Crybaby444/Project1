@@ -2,6 +2,7 @@
 
 import { RegisterRequestSchema } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
+import { useTheme } from '@/components/theme/ThemeProvider';
 import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/Field';
 import { INPUT_CLASS } from '@/components/ui/inputs';
@@ -62,6 +63,7 @@ export function RegisterForm({ next }: { next: string | null }) {
   const locale = useLocale();
   const client = useApiClient();
   const { setUser } = useSession();
+  const { preference: theme } = useTheme();
   const router = useRouter();
   useLeaveWhenSignedIn(next);
 
@@ -71,7 +73,16 @@ export function RegisterForm({ next }: { next: string | null }) {
       defaultValues: { name: '', email: '', password: '' },
       onSubmit: async (values) => {
         const body = { ...values, locale: locale as 'en' | 'lv' | 'ru' };
-        const { user } = await unwrap(client.POST('/api/v1/auth/register', { body }));
+        let { user } = await unwrap(client.POST('/api/v1/auth/register', { body }));
+        // A light or dark theme chosen before signing up becomes the new profile's, rather than the
+        // profile's "system" replacing it on screen (SyncThemeWithProfile).
+        if (theme !== 'system' && user.theme !== theme) {
+          try {
+            ({ user } = await unwrap(client.PATCH('/api/v1/me', { body: { theme } })));
+          } catch {
+            user = { ...user, theme }; // the account exists; the theme can be saved from the settings
+          }
+        }
         setUser(user);
         router.replace(safeNext(next));
       },

@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, type RenderResult } from '@testing-library/react';
 import type { ApiClient } from '@yoyo/api-client';
+import type { ThemePreference } from '@yoyo/shared';
 import { NextIntlClientProvider } from 'next-intl';
 import type { ReactElement } from 'react';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
@@ -33,12 +34,15 @@ export function renderWithSession(
     locale = 'en',
     hasSession = true,
     onSessionLost,
+    theme = 'system',
   }: {
     client: ApiClient;
     locale?: TestLocale;
     /** Whether the session hint cookie is there. */ hasSession?: boolean;
     /** Stands in for fetchWithRefresh's "the session is over" signal. */
     onSessionLost?: (listener: () => void) => () => void;
+    /** The theme this browser has chosen (the yoyo-theme cookie). */
+    theme?: ThemePreference;
   },
 ): RenderResult & { queryClient: QueryClient } {
   const queryClient = new QueryClient({
@@ -52,7 +56,7 @@ export function renderWithSession(
           hasSession={() => hasSession}
           {...(onSessionLost && { onSessionLost })}
         >
-          <ThemeProvider initialPreference="system">
+          <ThemeProvider initialPreference={theme}>
             <ToastProvider>{ui}</ToastProvider>
           </ThemeProvider>
         </SessionProvider>
