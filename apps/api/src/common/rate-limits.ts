@@ -58,4 +58,6 @@ export const RATE_LIMITS = {
   ],
   /** 20 card tokens an hour per user (the payment form makes one per payment). */
   cardToken: (userId: string): RateRule[] => [{ key: `card-token:user:${userId}`, limit: 20, windowMs: HOUR }],
+  /** 10 top-ups and 10 payouts an hour per user. */
+  walletMove: (userId: string, kind: 'top-up' | 'payout'): RateRule[] => [{ key: `wallet-${kind}:user:${userId}`, limit: 10, windowMs: HOUR }],
 };

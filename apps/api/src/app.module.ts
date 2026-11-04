@@ -18,6 +18,7 @@ import { MeModule } from './me/me.module';
 import { ModerationModule } from './moderation/moderation.module';
 import { PaymentsModule } from './payments/payments.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { WalletModule } from './wallet/wallet.module';
 import { SettingsModule } from './settings/settings.module';
 
 @Global()
@@ -44,6 +45,7 @@ class EnvModule {}
     MediaModule,
     ModerationModule,
     GeoModule,
+    WalletModule,
   ],
   controllers: [HealthController],
   providers: [

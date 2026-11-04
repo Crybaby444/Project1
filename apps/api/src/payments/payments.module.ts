@@ -4,6 +4,7 @@ import { CLOCK, type Clock } from '../clock/clock';
 import { ENV, type Env } from '../config/env';
 import { FakeCardProvider } from './fake-card.provider';
 import { PAYMENT_PROVIDER } from './payment.provider';
+import { MoneyOutService } from './money-out.service';
 import { PaymentsController } from './payments.controller';
 
 @Global()
@@ -17,7 +18,8 @@ import { PaymentsController } from './payments.controller';
       // PAYMENTS has one value today ("fake"); a real provider is another class behind PaymentProvider.
       useFactory: (env: Env, clock: Clock) => new FakeCardProvider(env.JWT_SECRET, clock),
     },
+    MoneyOutService,
   ],
-  exports: [PAYMENT_PROVIDER],
+  exports: [PAYMENT_PROVIDER, MoneyOutService],
 })
 export class PaymentsModule {}

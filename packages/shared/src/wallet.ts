@@ -59,3 +59,62 @@ export type CardToken = z.infer<typeof CardTokenSchema>;
 
 /** A card token from POST /payments/card-tokens; it works for 15 minutes. */
 export const CardTokenFieldSchema = z.string().min(10).max(1000).regex(/^tok_[A-Za-z0-9_.-]+$/, 'Not a card token');
+
+/** Bounds of wallet movements, in cents. */
+export const WALLET_LIMITS = {
+  topUp: { min: 100, max: 50_000 },
+  payout: { min: 100, max: 500_000 },
+  /** A wallet never holds more than this after a top-up. */
+  balance: 500_000,
+} as const;
+
+export const WalletSummarySchema = z.object({
+  /** What the user can spend or withdraw. */
+  balanceCents: z.number().int(),
+  /** Rent and deposits the user paid from the wallet that Yoyo still holds for open deals. */
+  heldCents: z.number().int(),
+});
+
+export type WalletSummary = z.infer<typeof WalletSummarySchema>;
+
+export const WalletTransactionsQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).max(10_000).optional(),
+  kind: z.enum(LEDGER_KINDS).optional(),
+});
+
+export const WalletTransactionsResponseSchema = z.object({
+  items: z.array(WalletTransactionSchema),
+  total: z.number().int(),
+});
+
+export type WalletTransactionsResponse = z.infer<typeof WalletTransactionsResponseSchema>;
+
+export const TopUpRequestSchema = z.object({
+  amountCents: z.number().int().min(WALLET_LIMITS.topUp.min).max(WALLET_LIMITS.topUp.max),
+  cardToken: CardTokenFieldSchema,
+});
+
+export const PayoutRequestSchema = z.object({
+  amountCents: z.number().int().min(WALLET_LIMITS.payout.min).max(WALLET_LIMITS.payout.max),
+  cardToken: CardTokenFieldSchema,
+});
+
+export const CardPaymentSchema = z.object({
+  id: z.string(),
+  amountCents: z.number().int(),
+  brand: z.string(),
+  last4: z.string(),
+});
+
+export const TopUpResponseSchema = z.object({ balanceCents: z.number().int(), payment: CardPaymentSchema });
+
+export type TopUpResponse = z.infer<typeof TopUpResponseSchema>;
+
+export const MONEY_JOB_STATUSES = ['PENDING', 'DONE', 'FAILED'] as const;
+
+export const PayoutResponseSchema = z.object({
+  balanceCents: z.number().int(),
+  payout: CardPaymentSchema.extend({ status: z.enum(MONEY_JOB_STATUSES) }),
+});
+
+export type PayoutResponse = z.infer<typeof PayoutResponseSchema>;
