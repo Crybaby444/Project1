@@ -310,7 +310,7 @@ export interface components {
         ApiErrorDto_Output: {
             error: {
                 /** @enum {string} */
-                code: "VALIDATION_FAILED" | "AUTH_INVALID_CREDENTIALS" | "AUTH_EMAIL_TAKEN" | "AUTH_UNAUTHENTICATED" | "AUTH_FORBIDDEN" | "AUTH_BLOCKED" | "AUTH_PROVIDER_DISABLED" | "TOKEN_EXPIRED" | "TOKEN_USED" | "RATE_LIMITED" | "ORIGIN_FORBIDDEN" | "NOT_FOUND" | "INTERNAL";
+                code: "VALIDATION_FAILED" | "AUTH_INVALID_CREDENTIALS" | "AUTH_EMAIL_TAKEN" | "AUTH_UNAUTHENTICATED" | "AUTH_FORBIDDEN" | "AUTH_BLOCKED" | "AUTH_PROVIDER_DISABLED" | "TOKEN_EXPIRED" | "TOKEN_USED" | "RATE_LIMITED" | "OAUTH_CANCELLED" | "OAUTH_STATE_INVALID" | "OAUTH_FAILED" | "ORIGIN_FORBIDDEN" | "NOT_FOUND" | "INTERNAL";
                 message: string;
                 fields?: {
                     [key: string]: string;
@@ -338,6 +338,7 @@ export interface components {
                 /** @enum {string} */
                 role: "USER" | "ADMIN";
                 emailVerified: boolean;
+                hasPassword: boolean;
                 phone: string | null;
                 phoneVerified: boolean;
                 /** Format: date-time */
@@ -375,6 +376,7 @@ export interface components {
                 /** @enum {string} */
                 role: "USER" | "ADMIN";
                 emailVerified: boolean;
+                hasPassword: boolean;
                 phone: string | null;
                 phoneVerified: boolean;
                 /** Format: date-time */
@@ -419,6 +421,7 @@ export interface components {
                 /** @enum {string} */
                 role: "USER" | "ADMIN";
                 emailVerified: boolean;
+                hasPassword: boolean;
                 phone: string | null;
                 phoneVerified: boolean;
                 /** Format: date-time */
@@ -539,39 +542,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Signed in (session cookies); redirect to the page the user started from */
+            /** @description Signed in (session cookies) and sent to the page the user started from; or, if the sign-in failed, sent to the site’s /login?oauthError=OAUTH_CANCELLED|OAUTH_STATE_INVALID|OAUTH_FAILED|AUTH_BLOCKED */
             302: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
-            };
-            /** @description Invalid input (VALIDATION_FAILED, with fields) */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorDto_Output"];
-                };
-            };
-            /** @description Not signed in or wrong credentials */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorDto_Output"];
-                };
-            };
-            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorDto_Output"];
-                };
             };
             /** @description Not found or not available */
             404: {

@@ -15,6 +15,12 @@ export const ERROR_CODES = [
   'TOKEN_EXPIRED',
   'TOKEN_USED',
   'RATE_LIMITED',
+  /** Google sign-in: the person cancelled on Google's screen. */
+  'OAUTH_CANCELLED',
+  /** Google sign-in: the attempt expired, or was started in another browser or tab. */
+  'OAUTH_STATE_INVALID',
+  /** Google sign-in: Google refused or could not be reached. */
+  'OAUTH_FAILED',
   'ORIGIN_FORBIDDEN',
   'NOT_FOUND',
   'INTERNAL',

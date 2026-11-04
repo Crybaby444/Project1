@@ -50,6 +50,7 @@ describe('PublicUserSchema', () => {
       theme: 'system',
       role: 'USER',
       emailVerified: false,
+      hasPassword: true,
       phone: null,
       phoneVerified: false,
       createdAt: '2026-11-03T10:00:00.000Z',

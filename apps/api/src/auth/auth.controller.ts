@@ -1,7 +1,10 @@
-import { Body, Controller, Get, HttpCode, Inject, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Inject, Logger, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { ApiAcceptedResponse, ApiBody, ApiFoundResponse, ApiNoContentResponse, ApiTags } from '@nestjs/swagger';
 import {
+  DEFAULT_LOCALE,
+  isLocale,
   RefreshRequestSchema,
+  type ErrorCode,
   type ProvidersResponse,
   type PublicUser,
   type RefreshResponse,
@@ -40,6 +43,7 @@ import {
   OAUTH_COOKIE_PATH,
   OAUTH_STATE_TTL_SECONDS,
   safeReturnTo,
+  type OAuthAttempt,
 } from './google-oauth.service';
 import { CurrentUser } from './current-user.decorator';
 import { toPublicUser } from './public-user';
@@ -49,11 +53,26 @@ function readCookie(req: Request, name: string): string | undefined {
 }
 
 const refreshCookie = (req: Request) => readCookie(req, REFRESH_COOKIE);
+
+/** next-intl remembers the visitor's language in this cookie on the site's own origin. */
+const SITE_LOCALE_COOKIE = 'NEXT_LOCALE';
+
+type OAuthErrorCode = Extract<ErrorCode, 'OAUTH_CANCELLED' | 'OAUTH_STATE_INVALID' | 'OAUTH_FAILED' | 'AUTH_BLOCKED'>;
+
+/** `/lv/items?x=1` → `{ prefix: '/lv', path: '/items?x=1' }`; English has no prefix. */
+export function splitLocalePrefix(returnTo: string): { prefix: string; path: string } {
+  const locale = localeFromPath(returnTo);
+  if (locale === DEFAULT_LOCALE || !returnTo.startsWith(`/${locale}`)) return { prefix: '', path: returnTo };
+  const rest = returnTo.slice(locale.length + 1);
+  return { prefix: `/${locale}`, path: rest.startsWith('/') ? rest : `/${rest}` };
+}
 const googleDisabled = () => new AppError('AUTH_PROVIDER_DISABLED', 404, 'Sign-in with Google is not available');
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
+  private readonly logger = new Logger('AuthController');
+
   constructor(
     private readonly auth: AuthService,
     private readonly google: GoogleOAuthService,
@@ -103,10 +122,18 @@ export class AuthController {
     res.redirect(302, url);
   }
 
-  /** Google sends the browser back here (through the site's /api proxy) with `code` and `state`. */
+  /**
+   * Google sends the browser back here (through the site's /api proxy) with `code` and `state`.
+   * A failed attempt goes back to the site's sign-in page with `?oauthError=CODE` (and `next`), so the
+   * person reads what happened in their language instead of a JSON body.
+   */
   @Get('google/callback')
-  @ApiFoundResponse({ description: 'Signed in (session cookies); redirect to the page the user started from' })
-  @ApiErrors(400, 401, 403, 404)
+  @ApiFoundResponse({
+    description:
+      'Signed in (session cookies) and sent to the page the user started from; or, if the sign-in failed, ' +
+      'sent to the site’s /login?oauthError=OAUTH_CANCELLED|OAUTH_STATE_INVALID|OAUTH_FAILED|AUTH_BLOCKED',
+  })
+  @ApiErrors(404)
   async googleCallback(
     @Query() query: GoogleCallbackQueryDto,
     @Req() req: Request,
@@ -115,18 +142,43 @@ export class AuthController {
     if (!this.google.enabled) throw googleDisabled();
     // One attempt, one use: the cookie goes whatever happens next.
     res.cookie(OAUTH_COOKIE, '', { httpOnly: true, sameSite: 'lax', secure: this.secureCookies, path: OAUTH_COOKIE_PATH, maxAge: 0 });
-    const attempt = await this.google.readAttempt(readCookie(req, OAUTH_COOKIE), query.state);
-    const back = `${this.env.WEB_ORIGIN}${attempt.returnTo}`;
-    if (query.error) {
-      res.redirect(302, back); // cancelled on Google's screen: back where the user started, still signed out
+
+    let attempt: OAuthAttempt;
+    try {
+      attempt = await this.google.readAttempt(readCookie(req, OAUTH_COOKIE), query.state);
+    } catch {
+      // No trustworthy returnTo: the language the site last showed this browser, if it said.
+      const locale = readCookie(req, SITE_LOCALE_COOKIE);
+      this.backToLogin(res, 'OAUTH_STATE_INVALID', locale && isLocale(locale) && locale !== DEFAULT_LOCALE ? `/${locale}` : '/');
       return;
     }
-    if (!query.code) throw new AppError('VALIDATION_FAILED', 400, 'Google sent no code', { code: 'Missing' });
+    if (query.error) {
+      this.backToLogin(res, 'OAUTH_CANCELLED', attempt.returnTo); // cancelled on Google's screen: still signed out
+      return;
+    }
 
-    const identity = await this.google.identify(query.code, attempt);
-    const user = await this.auth.signInWithGoogle(identity, localeFromPath(attempt.returnTo));
-    setAuthCookies(res, await this.auth.startSession(user, sessionMeta(req)), this.secureCookies);
-    res.redirect(302, back);
+    try {
+      if (!query.code) throw new AppError('OAUTH_FAILED', 400, 'Google sent no code');
+      const identity = await this.google.identify(query.code, attempt);
+      const user = await this.auth.signInWithGoogle(identity, localeFromPath(attempt.returnTo));
+      setAuthCookies(res, await this.auth.startSession(user, sessionMeta(req)), this.secureCookies);
+    } catch (error) {
+      if (!(error instanceof AppError)) {
+        this.logger.error(`Google sign-in failed: ${error instanceof Error ? (error.stack ?? error.message) : String(error)}`);
+      }
+      const code = error instanceof AppError && error.code === 'AUTH_BLOCKED' ? 'AUTH_BLOCKED' : 'OAUTH_FAILED';
+      this.backToLogin(res, code, attempt.returnTo);
+      return;
+    }
+    res.redirect(302, `${this.env.WEB_ORIGIN}${attempt.returnTo}`);
+  }
+
+  /** `https://site/lv/login?oauthError=CODE&next=/items` for a returnTo of `/lv/items`. */
+  private backToLogin(res: Response, code: OAuthErrorCode, returnTo: string): void {
+    const { prefix, path } = splitLocalePrefix(returnTo);
+    const params = new URLSearchParams({ oauthError: code });
+    if (path !== '/') params.set('next', path);
+    res.redirect(302, `${this.env.WEB_ORIGIN}${prefix}/login?${params}`);
   }
 
   @Post('register')
