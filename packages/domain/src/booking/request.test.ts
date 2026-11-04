@@ -55,6 +55,11 @@ describe('createRequest', () => {
     );
   });
 
+  it('books a week at the listed price when the weekly discount beats the accepted offer (F3)', () => {
+    const week = requestInput({ period: p('2026-11-05', '2026-11-11'), agreedDailyCents: cents(1300) });
+    expect(createRequest(week, ctx).next.quote).toMatchObject({ rentCents: 8400, priceSource: 'LISTED' });
+  });
+
   it('refuses renting your own item', () => {
     expect(() => createRequest(requestInput({ renterId: OWNER_ID }), ctx)).toThrow(code('CANNOT_RENT_OWN'));
   });

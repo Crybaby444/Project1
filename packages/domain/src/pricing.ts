@@ -44,10 +44,13 @@ export function validatePricing(p: ListingPricing): void {
   if (!within(p.maxDays, p.minDays, days.max)) invalidPricing('maxDays', p.maxDays);
 }
 
+/** Which price a quote uses: the listing's (with its weekly discount) or an accepted offer's. */
+export type PriceSource = 'LISTED' | 'AGREED';
+
 /** What a rental costs, split into the parts each side sees. All amounts are whole cents. */
 export interface Quote {
   readonly days: number;
-  /** The daily price used: the agreed one when an offer was accepted, the listing's otherwise. */
+  /** The daily price used: the agreed one or the listing's, whichever `priceSource` says. */
   readonly dailyCents: Cents;
   /** `dailyCents × days`. */
   readonly baseCents: Cents;
@@ -63,19 +66,25 @@ export interface Quote {
   readonly totalCents: Cents;
   /** What the owner receives: the rent. */
   readonly ownerPayoutCents: Cents;
+  readonly priceSource: PriceSource;
 }
 
 export interface QuoteInput {
   readonly pricing: ListingPricing;
   readonly days: number;
   readonly servicePercent: number;
-  /** A daily price agreed through an accepted offer. It is final: no weekly discount on top. */
+  /**
+   * A daily price agreed through an accepted offer. No weekly discount on top of it; if the listing
+   * with its discount is cheaper for the renter, the quote uses the listing instead.
+   */
   readonly agreedDailyCents?: Cents;
 }
 
 /**
  * Prices a rental. The discount and the fee are taken from the sums for the whole period and
- * rounded once each, so the total is always exactly the sum of its parts.
+ * rounded once each, so the total is always exactly the sum of its parts. With an agreed price, the
+ * renter pays whichever is cheaper: the agreed daily price with no discount, or the listed price with
+ * the weekly discount (on a tie, the agreed price).
  */
 export function quote({ pricing, days, servicePercent, agreedDailyCents }: QuoteInput): Quote {
   if (!Number.isSafeInteger(days)) {
@@ -87,12 +96,12 @@ export function quote({ pricing, days, servicePercent, agreedDailyCents }: Quote
   if (days > pricing.maxDays) {
     throw new DomainError('PERIOD_TOO_LONG', { days, maxDays: pricing.maxDays });
   }
-  const dailyCents = cents(agreedDailyCents ?? pricing.dailyCents);
-  const baseCents = mulInt(dailyCents, days);
-  const discountPercent =
-    agreedDailyCents === undefined && days >= WEEKLY_DISCOUNT_FROM_DAYS ? pricing.weeklyDiscountPercent : 0;
-  const discountCents = percentOf(baseCents, discountPercent);
-  const rentCents = sub(baseCents, discountCents);
+  const listed = rentAt(cents(pricing.dailyCents), days, weeklyDiscountFor(pricing, days));
+  const agreed = agreedDailyCents === undefined ? undefined : rentAt(cents(agreedDailyCents), days, 0);
+  const priceSource: PriceSource =
+    agreed !== undefined && agreed.rentCents <= listed.rentCents ? 'AGREED' : 'LISTED';
+  const { dailyCents, baseCents, discountPercent, discountCents, rentCents } =
+    priceSource === 'AGREED' && agreed !== undefined ? agreed : listed;
   const serviceFeeCents = percentOf(rentCents, servicePercent);
   const depositCents = cents(pricing.depositCents);
   return {
@@ -106,7 +115,17 @@ export function quote({ pricing, days, servicePercent, agreedDailyCents }: Quote
     depositCents,
     totalCents: add(rentCents, serviceFeeCents, depositCents),
     ownerPayoutCents: rentCents,
+    priceSource,
   };
+}
+
+const weeklyDiscountFor = (pricing: ListingPricing, days: number): number =>
+  days >= WEEKLY_DISCOUNT_FROM_DAYS ? pricing.weeklyDiscountPercent : 0;
+
+function rentAt(dailyCents: Cents, days: number, discountPercent: number) {
+  const baseCents = mulInt(dailyCents, days);
+  const discountCents = percentOf(baseCents, discountPercent);
+  return { dailyCents, baseCents, discountPercent, discountCents, rentCents: sub(baseCents, discountCents) };
 }
 
 /**

@@ -25,7 +25,7 @@ const { next, effects } = decide(snapshot, { kind: 'OWNER', userId }, { type: 'A
 | `errors.ts` | `DomainError`, `DOMAIN_ERROR_CODES` |
 | `money.ts` | `Cents`, `cents`, `add`, `sub`, `mulInt`, `percentOf`, `formatMoney` |
 | `dates.ts` | `LocalDate`, `localDate`, `localDateIn`, `addDays`, `diffDays`, `compareDates`, `endOfDayIn`, `Period`, `period`, `daysIn`, `overlaps`, `firstConflict`, `validateRentalPeriod`, `DEFAULT_TIME_ZONE` |
-| `pricing.ts` | `ListingPricing`, `PRICING_LIMITS`, `validatePricing`, `Quote`, `quote`, `validateOffer`, `WEEKLY_DISCOUNT_FROM_DAYS` |
+| `pricing.ts` | `ListingPricing`, `PRICING_LIMITS`, `validatePricing`, `Quote`, `PriceSource`, `quote`, `validateOffer`, `WEEKLY_DISCOUNT_FROM_DAYS` |
 | `settings.ts` | `BookingSettings`, `DEFAULT_BOOKING_SETTINGS`, `validateBookingSettings` |
 | `ledger.ts` | `AccountId`, `Posting`, `LedgerOperation`, `PaymentMethod`, конструкторы операций, `assertBalanced`, `applyOperation` |
 | `booking/types.ts` | `BookingStatus`, `BookingSnapshot`, `Actor`, `BookingEvent`, `TimerKind`, `Effect`, `Decision`, `DecideContext`, `BOOKING_TEMPLATES` |
@@ -53,9 +53,9 @@ const { next, effects } = decide(snapshot, { kind: 'OWNER', userId }, { type: 'A
 
 ## Цена (`quote`)
 
-1. Цена в день: договорная (`agreedDailyCents`, принятое предложение цены) или из объявления.
+1. Цена в день: из объявления или договорная (`agreedDailyCents`, принятое предложение цены).
 2. `base = цена в день × дни`.
-3. Недельная скидка — от 7 дней и только без договорной цены. Договорная цена окончательная, скидки с ней не складываются.
+3. Недельная скидка — от 7 дней и только к цене объявления; с договорной ценой скидки не складываются. С договорной ценой арендатор платит то, что дешевле: договорную цену без скидки или цену объявления со скидкой (при равенстве — договорную). Какая выбрана, говорит `priceSource: 'AGREED' | 'LISTED'`. Пример: 15 € в день и 20 % от 7 дней — неделя стоит 84,00 €; предложение 13 € в день дало бы 91,00 €, поэтому `rent` 84,00 € и `priceSource: 'LISTED'`.
 4. `rent = base − скидка`, `fee = percentOf(rent, servicePercent)`. Скидка и сбор считаются от сумм за весь период, а не по дням.
 5. `total = rent + fee + deposit` — платит арендатор. `ownerPayout = rent` — получает владелец.
 

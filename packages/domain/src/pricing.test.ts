@@ -79,6 +79,7 @@ describe('quote (Review Focus 5)', () => {
       depositCents: 10000,
       totalCents: 14950,
       ownerPayoutCents: 4500,
+      priceSource: 'LISTED',
     });
   });
 
@@ -107,6 +108,35 @@ describe('quote (Review Focus 5)', () => {
       discountCents: 0,
       rentCents: 8400,
     });
+  });
+
+  it('never charges more for an accepted offer than the listing with its weekly discount (F3)', () => {
+    // 7 days at 15 €/day with 20 % off: rent 84.00. An offer of 13 €/day would be 91.00.
+    expect(quote({ pricing: p, days: 7, servicePercent: 10, agreedDailyCents: cents(1300) })).toEqual({
+      ...quote({ pricing: p, days: 7, servicePercent: 10 }),
+      rentCents: 8400,
+      priceSource: 'LISTED',
+    });
+  });
+
+  it('uses the agreed price, with no discount on top, when it is really cheaper (F3)', () => {
+    expect(quote({ pricing: p, days: 7, servicePercent: 10, agreedDailyCents: cents(1100) })).toMatchObject({
+      dailyCents: 1100,
+      discountPercent: 0,
+      rentCents: 7700,
+      priceSource: 'AGREED',
+    });
+    expect(quote({ pricing: p, days: 3, servicePercent: 10, agreedDailyCents: cents(1300) })).toMatchObject({
+      rentCents: 3900,
+      priceSource: 'AGREED',
+    });
+    expect(quote({ pricing: p, days: 3, servicePercent: 10 }).priceSource).toBe('LISTED');
+  });
+
+  it('keeps the agreed price when both cost the same (F3)', () => {
+    expect(
+      quote({ pricing: p, days: 7, servicePercent: 10, agreedDailyCents: cents(1200) }).priceSource,
+    ).toBe('AGREED');
   });
 
   it('rounds the fee to the cent, half up', () => {
@@ -180,9 +210,14 @@ describe('quote (Review Focus 5)', () => {
           ...(s.agreed ? { agreedDailyCents: cents(offer) } : {}),
         });
 
-        for (const value of Object.values(q)) {
+        const { priceSource, ...amounts } = q;
+        for (const value of Object.values(amounts)) {
           expect(Number.isSafeInteger(value) && value >= 0).toBe(true);
         }
+        // An accepted offer never costs more than the listing (F3).
+        const listed = quote({ pricing, days, servicePercent: s.servicePercent });
+        expect(q.rentCents).toBeLessThanOrEqual(listed.rentCents);
+        expect(priceSource).toBe(s.agreed && offer * days <= listed.rentCents ? 'AGREED' : 'LISTED');
         expect(q.days).toBe(days);
         expect(q.baseCents).toBe(q.dailyCents * days);
         expect(q.rentCents).toBeLessThanOrEqual(q.baseCents);
