@@ -103,6 +103,24 @@ describe('loadEnv', () => {
     expect(() => loadEnv({ ...valid, SMS_PROVIDER: 'twilio' })).toThrow(/SMS_PROVIDER/);
   });
 
+  it('reads the optional admin account, normalizing the email', () => {
+    expect(loadEnv(valid).ADMIN_EMAIL).toBeUndefined();
+    expect(loadEnv({ ...valid, ADMIN_PASSWORD: ' ' }).ADMIN_PASSWORD).toBeUndefined();
+    expect(loadEnv({ ...valid, ADMIN_EMAIL: '  Admin@Yoyo.Rent ', ADMIN_PASSWORD: 'long enough secret' })).toMatchObject({
+      ADMIN_EMAIL: 'admin@yoyo.rent',
+      ADMIN_PASSWORD: 'long enough secret',
+    });
+  });
+
+  it('rejects an admin password shorter than 8 characters without printing it', () => {
+    expect(() => loadEnv({ ...valid, ADMIN_EMAIL: 'a@yoyo.rent', ADMIN_PASSWORD: 'hunter2' })).toThrow(
+      expect.objectContaining({ message: expect.stringMatching(/ADMIN_PASSWORD/) }),
+    );
+    expect(() => loadEnv({ ...valid, ADMIN_EMAIL: 'a@yoyo.rent', ADMIN_PASSWORD: 'hunter2' })).toThrow(
+      expect.objectContaining({ message: expect.not.stringContaining('hunter2') }),
+    );
+  });
+
   it('rejects a negative or fractional TRUST_PROXY_HOPS', () => {
     expect(() => loadEnv({ ...valid, TRUST_PROXY_HOPS: '-1' })).toThrow(/TRUST_PROXY_HOPS/);
     expect(() => loadEnv({ ...valid, TRUST_PROXY_HOPS: '1.5' })).toThrow(/TRUST_PROXY_HOPS/);

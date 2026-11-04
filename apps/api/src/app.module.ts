@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ZodSerializerInterceptor } from 'nestjs-zod';
+import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
 import { ClockModule } from './clock/clock';
 import { OriginGuard } from './common/origin.guard';
@@ -19,7 +20,16 @@ import { SettingsModule } from './settings/settings.module';
 class EnvModule {}
 
 @Module({
-  imports: [EnvModule, ClockModule, PrismaModule, RateLimiterModule, SettingsModule, AuthModule, MeModule],
+  imports: [
+    EnvModule,
+    ClockModule,
+    PrismaModule,
+    RateLimiterModule,
+    SettingsModule,
+    AuthModule,
+    MeModule,
+    AdminModule,
+  ],
   controllers: [HealthController],
   providers: [
     { provide: APP_GUARD, useClass: OriginGuard },

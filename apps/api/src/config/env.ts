@@ -1,3 +1,4 @@
+import { EmailSchema, PasswordSchema } from '@yoyo/shared';
 import { z } from 'zod';
 
 /** Hosting dashboards often keep a key with an empty value: treat that exactly like an unset variable. */
@@ -44,6 +45,12 @@ const EnvObject = z.object({
    * Without a provider, phone confirmation is switched off.
    */
   SMS_PROVIDER: z.preprocess(blankAsUnset, z.enum(['mailbox']).optional()),
+  /**
+   * The administrator account, created or promoted at every API start when both are set. An existing
+   * password is never overwritten, so ADMIN_PASSWORD only matters for the first start.
+   */
+  ADMIN_EMAIL: z.preprocess(blankAsUnset, EmailSchema.optional()),
+  ADMIN_PASSWORD: z.preprocess(blankAsUnset, PasswordSchema.optional()),
 });
 
 export const EnvSchema = EnvObject.superRefine((env, ctx) => {

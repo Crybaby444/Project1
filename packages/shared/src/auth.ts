@@ -121,6 +121,30 @@ export const RefreshResponseSchema = z.object({
 
 export type RefreshResponse = z.infer<typeof RefreshResponseSchema>;
 
+/** What an administrator sees about a user: the public shape plus moderation marks. */
+export const AdminUserSchema = PublicUserSchema.extend({
+  blockedAt: z.iso.datetime().nullable(),
+  deletedAt: z.iso.datetime().nullable(),
+});
+
+export type AdminUser = z.infer<typeof AdminUserSchema>;
+
+export const ADMIN_USERS_PAGE_SIZE = 20;
+
+export const AdminUsersQuerySchema = z.object({
+  /** Part of an email or a name, any letter case. */
+  search: z.string().trim().max(100).optional(),
+  /** 1-based page of ADMIN_USERS_PAGE_SIZE users, newest first. */
+  page: z.coerce.number().int().min(1).max(100_000).optional(),
+});
+
+export const AdminUsersResponseSchema = z.object({
+  items: z.array(AdminUserSchema),
+  total: z.number().int(),
+});
+
+export type AdminUsersResponse = z.infer<typeof AdminUsersResponseSchema>;
+
 /** Which sign-in and confirmation methods this deployment offers. */
 export const ProvidersResponseSchema = z.object({
   google: z.boolean(),

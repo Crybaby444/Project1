@@ -28,6 +28,7 @@ export async function seedUser(
       role: seed.role ?? 'USER',
       passwordHash: password === null ? null : await t.app.get(PasswordService).hash(password),
       emailVerifiedAt: seed.emailVerified ? t.clock.now() : null,
+      createdAt: t.clock.now(),
     },
   });
   return { user, email, password: password ?? '' };
