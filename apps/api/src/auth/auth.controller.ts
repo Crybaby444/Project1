@@ -4,7 +4,7 @@ import {
   DEFAULT_LOCALE,
   isLocale,
   RefreshRequestSchema,
-  type ErrorCode,
+  type OAuthErrorCode,
   type ProvidersResponse,
   type PublicUser,
   type RefreshResponse,
@@ -57,7 +57,6 @@ const refreshCookie = (req: Request) => readCookie(req, REFRESH_COOKIE);
 /** next-intl remembers the visitor's language in this cookie on the site's own origin. */
 const SITE_LOCALE_COOKIE = 'NEXT_LOCALE';
 
-type OAuthErrorCode = Extract<ErrorCode, 'OAUTH_CANCELLED' | 'OAUTH_STATE_INVALID' | 'OAUTH_FAILED' | 'AUTH_BLOCKED'>;
 
 /** `/lv/items?x=1` → `{ prefix: '/lv', path: '/items?x=1' }`; English has no prefix. */
 export function splitLocalePrefix(returnTo: string): { prefix: string; path: string } {

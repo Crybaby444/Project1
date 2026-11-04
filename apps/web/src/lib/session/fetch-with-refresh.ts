@@ -4,6 +4,10 @@ const LOCK_NAME = 'yoyo-refresh';
 /** When this browser last renewed the session (any tab), so a tab that waited for the lock can skip its own. */
 const REFRESHED_AT_KEY = 'yoyo-refreshed-at';
 const REFRESH_CODES = new Set(['AUTH_UNAUTHENTICATED', 'TOKEN_EXPIRED']);
+/** The auth endpoints that need a session, so an expired one is renewed for them like for /me. */
+const SESSION_AUTH_PATHS = new Set(['/api/v1/auth/logout-all', '/api/v1/auth/resend-verification']);
+/** Without Web Locks: a refresh by another tab this recent is reused instead of rotating the token again. */
+const RECENT_REFRESH_MS = 5000;
 
 type Fetch = typeof globalThis.fetch;
 
@@ -50,7 +54,9 @@ function writeRefreshedAt(): void {
  * - One refresh at a time for the whole app: parallel 401s share one `POST /auth/refresh`
  *   (a module-level promise), and tabs take turns through Web Locks where available.
  * - A tab that waited for another tab's refresh reuses it instead of rotating the token again.
- * - The `/auth/*` endpoints are never refreshed for (a 401 there is an answer, not an expired session).
+ * - The credential endpoints under `/auth/*` (login, refresh, reset…) are never refreshed for: a 401
+ *   there is an answer, not an expired session. Only logout-all and resend-verification, which need
+ *   a session, are.
  * - A request that still gets 401 after a refresh is returned as is: the session is over, no loop.
  */
 export function createFetchWithRefresh(baseFetch: Fetch = (...args) => globalThis.fetch(...args)) {
@@ -72,7 +78,9 @@ export function createFetchWithRefresh(baseFetch: Fetch = (...args) => globalThi
     const locks = typeof navigator !== 'undefined' ? navigator.locks : undefined;
     const run = locks
       ? locks.request(LOCK_NAME, async () => (readRefreshedAt() > requestedAt ? true : doRefresh()))
-      : doRefresh();
+      : Date.now() - readRefreshedAt() < RECENT_REFRESH_MS
+        ? Promise.resolve(true)
+        : doRefresh();
     inFlight = Promise.resolve(run).finally(() => {
       inFlight = null;
     });
@@ -80,7 +88,8 @@ export function createFetchWithRefresh(baseFetch: Fetch = (...args) => globalThi
   }
 
   async function fetchWithRefresh(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
-    if (pathOf(input).startsWith(AUTH_PREFIX)) return baseFetch(input, init);
+    const path = pathOf(input);
+    if (path.startsWith(AUTH_PREFIX) && !SESSION_AUTH_PATHS.has(path)) return baseFetch(input, init);
     // A Request's body can be read once, so keep a copy for the repeat.
     const repeat = input instanceof Request ? input.clone() : input;
     const response = await baseFetch(input, init);

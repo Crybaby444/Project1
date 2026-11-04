@@ -39,6 +39,8 @@ function fakeApi({
     if (url.endsWith('/api/v1/auth/login')) {
       return json(401, { error: { code: 'AUTH_INVALID_CREDENTIALS', message: 'Wrong email or password' } });
     }
+    if (url.endsWith('/api/v1/auth/logout-all'))
+      return signedIn ? new Response(null, { status: 204 }) : firstFailure();
     if (url.endsWith('/api/v1/me')) return signedIn ? json(200, { user: { id: 'u1' } }) : firstFailure();
     if (url.endsWith('/api/v1/forbidden'))
       return json(403, { error: { code: 'AUTH_FORBIDDEN', message: 'No' } });
@@ -53,6 +55,7 @@ describe('fetchWithRefresh', () => {
   beforeEach(() => {
     // Without Web Locks the module-level promise keeps refreshes to one at a time.
     vi.stubGlobal('navigator', { ...navigator, locks: undefined });
+    window.localStorage.clear();
   });
 
   afterEach(() => {
@@ -114,6 +117,24 @@ describe('fetchWithRefresh', () => {
     expect(response.status).toBe(401);
     expect((await response.json()).error.code).toBe('AUTH_INVALID_CREDENTIALS');
     expect(refreshCalls(calls)).toHaveLength(0);
+  });
+
+  it('does refresh for the auth endpoints that need a session (sign out everywhere, resend the email)', async () => {
+    const { fetch, calls } = fakeApi({ refreshWorks: true });
+    const { fetchWithRefresh } = createFetchWithRefresh(fetch);
+
+    expect((await fetchWithRefresh('/api/v1/auth/logout-all', { method: 'POST' })).status).toBe(204);
+    expect(refreshCalls(calls)).toHaveLength(1);
+  });
+
+  it('without Web Locks, skips its refresh when another tab refreshed a moment ago', async () => {
+    const { fetch, calls } = fakeApi({ refreshWorks: true });
+    const { refreshOnce } = createFetchWithRefresh(fetch);
+    window.localStorage.setItem('yoyo-refreshed-at', String(Date.now()));
+
+    await expect(refreshOnce()).resolves.toBe(true);
+    expect(refreshCalls(calls)).toHaveLength(0);
+    window.localStorage.removeItem('yoyo-refreshed-at');
   });
 
   it('passes other errors straight through', async () => {

@@ -1,4 +1,5 @@
 import { act, screen, waitFor } from '@testing-library/react';
+import { useState } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeApi, meRoute, testUser } from '@/test/fake-api';
 import { renderWithSession } from '@/test/render';
@@ -75,5 +76,44 @@ describe('RequireSession', () => {
 
     await waitFor(() => expect(replace).toHaveBeenCalledWith('/'));
     expect(replace).not.toHaveBeenCalledWith(expect.stringContaining('/login'));
+  });
+
+  it('sends a visitor to /login again once the sign-out is a while ago', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true, now: new Date('2026-11-04T12:00:00Z') });
+    const { client } = fakeApi(meRoute(testUser()));
+    let forget: () => void = () => {};
+    let show: (visible: boolean) => void = () => {};
+    function Leave() {
+      forget = useSession().forget;
+      return null;
+    }
+    function Page() {
+      const [visible, setVisible] = useState(true);
+      show = setVisible;
+      return visible ? (
+        <RequireSession>
+          <p>secret</p>
+        </RequireSession>
+      ) : null;
+    }
+    renderWithSession(
+      <>
+        <Leave />
+        <Page />
+      </>,
+      { client },
+    );
+    await screen.findByText('secret');
+    act(() => {
+      forget();
+      show(false); // the person left the page
+    });
+    vi.setSystemTime(new Date('2026-11-04T12:05:00Z'));
+    replace.mockClear();
+
+    act(() => show(true)); // later they open a protected page again
+
+    await waitFor(() => expect(replace).toHaveBeenCalledWith('/login?next=%2Fsettings'));
+    vi.useRealTimers();
   });
 });

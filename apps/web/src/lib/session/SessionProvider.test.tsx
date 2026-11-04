@@ -1,7 +1,7 @@
 import { act, screen, waitFor } from '@testing-library/react';
 import { useEffect } from 'react';
 import { describe, expect, it } from 'vitest';
-import { fakeApi, meRoute, testUser } from '@/test/fake-api';
+import { apiError, fakeApi, meRoute, testUser } from '@/test/fake-api';
 import { renderWithSession } from '@/test/render';
 import { hasSessionHint, useSession } from './SessionProvider';
 
@@ -46,6 +46,40 @@ describe('SessionProvider', () => {
 
     await waitFor(() => expect(screen.getByTestId('status')).toHaveTextContent('anonymous'));
     expect(calls).toHaveLength(0);
+  });
+
+  it('keeps the user through a passing API failure (only a 401 means signed out)', async () => {
+    let fail = false;
+    const { client } = fakeApi({
+      'GET /api/v1/me': () =>
+        fail ? apiError(502, 'INTERNAL') : { status: 200, body: { user: testUser() } },
+    });
+    renderWithSession(<Probe />, { client });
+    await waitFor(() => expect(screen.getByTestId('status')).toHaveTextContent('in:'));
+
+    fail = true;
+    await act(() => session.refresh().catch(() => {}));
+    await act(() => new Promise((resolve) => setTimeout(resolve, 30)));
+
+    expect(screen.getByTestId('status')).toHaveTextContent('in:Anna Bērziņa');
+  });
+
+  it('signing out still forgets the user when the API cannot be reached, without throwing', async () => {
+    const { client } = fakeApi({
+      ...meRoute(testUser()),
+      'POST /api/v1/auth/logout': apiError(500, 'INTERNAL'),
+    });
+    const failing = {
+      ...client,
+      POST: () => Promise.reject(new TypeError('Failed to fetch')),
+    } as typeof client;
+    renderWithSession(<Probe />, { client: failing });
+    await waitFor(() => expect(screen.getByTestId('status')).toHaveTextContent('in:'));
+
+    await act(() => session.signOut());
+
+    await waitFor(() => expect(screen.getByTestId('status')).toHaveTextContent('anonymous'));
+    expect(latest.session?.endedAt).toEqual(expect.any(Number));
   });
 
   it('reads the hint from the yoyo_session cookie', () => {

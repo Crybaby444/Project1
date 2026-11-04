@@ -8,7 +8,7 @@ const DESKTOP = { width: 1280, height: 800 };
 const PUBLIC_PAGES = ['/login', '/register', '/forgot-password', '/reset-password?token=x', '/verify-email'];
 const PRIVATE_PAGES = ['/settings', '/settings/security'];
 
-async function check(page: Page, path: string) {
+async function check(page: Page, path: string, theme: 'light' | 'dark') {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   page.on('console', (message) => {
@@ -18,6 +18,7 @@ async function check(page: Page, path: string) {
 
   await page.goto(path);
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
   await page.waitForLoadState('networkidle');
 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
@@ -43,7 +44,7 @@ for (const theme of ['light', 'dark'] as const) {
 
       for (const path of PUBLIC_PAGES) {
         test(`${path}: no serious a11y issues, fits the screen`, async ({ page }) => {
-          await check(page, path);
+          await check(page, path, theme);
         });
       }
 
@@ -52,12 +53,15 @@ for (const theme of ['light', 'dark'] as const) {
           page,
         }) => {
           await registerByApi(page.request, { locale: 'ru', name: 'Мария Петрова' });
-          await check(page, `/ru${path}`);
+          // Signed in, the theme saved in the profile wins over the cookie.
+          expect((await page.request.patch('/api/v1/me', { data: { theme } })).status()).toBe(200);
+          await check(page, `/ru${path}`, theme);
         });
       }
 
       test('the open user menu and the delete dialog pass too', async ({ page }) => {
         await registerByApi(page.request);
+        await page.request.patch('/api/v1/me', { data: { theme } });
         await page.goto('/settings/security');
         await page.getByRole('button', { name: /^Account menu/ }).click();
         await expect(page.getByRole('menu')).toBeVisible();

@@ -42,6 +42,7 @@ export function ProfileForm({ user }: { user: PublicUser }) {
     {
       defaultValues: { name: user.name, city: user.city ?? '', about: user.about ?? '', locale: user.locale },
       onSubmit: async (body) => {
+        const languageChanged = body.locale !== form.formState.defaultValues?.locale;
         const { user: saved } = await unwrap(client.PATCH('/api/v1/me', { body }));
         setUser(saved);
         form.reset({
@@ -50,8 +51,10 @@ export function ProfileForm({ user }: { user: PublicUser }) {
           about: saved.about ?? '',
           locale: saved.locale,
         });
-        // A new language is the confirmation itself: the page comes back in it.
-        if (saved.locale !== pageLocale) router.replace(pathname, { locale: saved.locale as Locale });
+        // A newly chosen language is the confirmation itself: the page comes back in it. Saving other
+        // fields never moves the page, even when the account language differs from this page's.
+        if (languageChanged && saved.locale !== pageLocale)
+          router.replace(pathname, { locale: saved.locale as Locale });
         else toast.show(t('saved'));
       },
     },

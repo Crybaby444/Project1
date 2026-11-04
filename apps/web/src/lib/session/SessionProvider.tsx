@@ -2,7 +2,7 @@
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { ApiClient } from '@yoyo/api-client';
-import type { PublicUser } from '@yoyo/shared';
+import { SESSION_HINT_COOKIE, type PublicUser } from '@yoyo/shared';
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 import { api } from '@/lib/api';
 import { ApiError, unwrap } from './api-error';
@@ -20,8 +20,8 @@ export type Session = {
   setUser(user: PublicUser | null): void;
   /** Forgets the user after the API has already ended the session (sign out everywhere, account deleted). */
   forget(): void;
-  /** True once the person ended the session themselves (closed pages then go home, not to /login). */
-  endedByUser: boolean;
+  /** When the person last ended the session themselves (the closed page they are on then goes home, not to /login). */
+  endedAt: number | null;
 };
 
 export const SESSION_QUERY_KEY = ['session', 'me'] as const;
@@ -29,9 +29,6 @@ export const SESSION_QUERY_KEY = ['session', 'me'] as const;
 type SessionContextValue = Session & { client: ApiClient };
 
 const SessionContext = createContext<SessionContextValue | null>(null);
-
-/** Set by the API next to the session cookies (readable, no secret): this browser may have a session. */
-const SESSION_HINT_COOKIE = 'yoyo_session';
 
 export function hasSessionHint(
   cookies: string = typeof document === 'undefined' ? '' : document.cookie,
@@ -41,15 +38,16 @@ export function hasSessionHint(
 
 /**
  * The signed-in user, or null for a visitor. Without the hint cookie there is no session to ask
- * about, so a visitor's pages make no request (and log no 401). A 401 or any other failure (API down)
- * counts as signed out.
+ * about, so a visitor's pages make no request (and log no 401). Other failures throw, so the query
+ * keeps the user it had.
  */
 async function fetchMe(client: ApiClient, hasSession: () => boolean): Promise<PublicUser | null> {
   if (!hasSession()) return null;
   try {
     return (await unwrap(client.GET('/api/v1/me'))).user;
   } catch (error) {
-    if (error instanceof ApiError) return null;
+    // Only "not signed in" or "blocked" mean no user; an API hiccup keeps the user already shown.
+    if (error instanceof ApiError && (error.status === 401 || error.status === 403)) return null;
     throw error;
   }
 }
@@ -73,21 +71,21 @@ export function SessionProvider({
     queryKey: SESSION_QUERY_KEY,
     queryFn: () => fetchMe(client, hasSession),
     staleTime: 60_000,
-    retry: false,
+    retry: (failures, error) => !(error instanceof ApiError && error.code !== 'NETWORK') && failures < 2,
   });
 
-  const [endedByUser, setEndedByUser] = useState(false);
+  const [endedAt, setEndedAt] = useState<number | null>(null);
 
   const setUser = useCallback(
     (user: PublicUser | null) => {
-      if (user) setEndedByUser(false);
+      if (user) setEndedAt(null);
       queryClient.setQueryData(SESSION_QUERY_KEY, user);
     },
     [queryClient],
   );
 
   const forget = useCallback(() => {
-    setEndedByUser(true);
+    setEndedAt(Date.now());
     // Private caches go with the user.
     queryClient.removeQueries({ predicate: (q) => q.queryKey[0] !== SESSION_QUERY_KEY[0] });
     queryClient.setQueryData(SESSION_QUERY_KEY, null);
@@ -102,17 +100,19 @@ export function SessionProvider({
   const signOut = useCallback(async () => {
     try {
       await client.POST('/api/v1/auth/logout');
-    } finally {
-      forget(); // whatever the API said, this browser forgets the user
+    } catch {
+      // Offline or API down: the cookies stay until they expire, but this browser forgets the user.
     }
+    forget();
   }, [client, forget]);
 
   const user = query.data ?? null;
+  // A first GET /me that failed (API down) leaves no user: treated as a visitor.
   const status: SessionStatus = query.isPending ? 'loading' : user ? 'authenticated' : 'anonymous';
 
   const value = useMemo(
-    () => ({ status, user, refresh, signOut, setUser, forget, endedByUser, client }),
-    [status, user, refresh, signOut, setUser, forget, endedByUser, client],
+    () => ({ status, user, refresh, signOut, setUser, forget, endedAt, client }),
+    [status, user, refresh, signOut, setUser, forget, endedAt, client],
   );
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 }
@@ -124,8 +124,8 @@ function useSessionContext(): SessionContextValue {
 }
 
 export function useSession(): Session {
-  const { status, user, refresh, signOut, setUser, forget, endedByUser } = useSessionContext();
-  return { status, user, refresh, signOut, setUser, forget, endedByUser };
+  const { status, user, refresh, signOut, setUser, forget, endedAt } = useSessionContext();
+  return { status, user, refresh, signOut, setUser, forget, endedAt };
 }
 
 /** The API client of the session (the app's, or a test's fake). */

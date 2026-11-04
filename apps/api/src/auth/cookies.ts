@@ -1,3 +1,4 @@
+import { SESSION_HINT_COOKIE } from '@yoyo/shared';
 import type { CookieOptions, Response } from 'express';
 import { ACCESS_TOKEN_TTL_SECONDS } from './access-token.service';
 import { DEVICE_COOKIE_TTL_SECONDS } from './device-cookie.service';
@@ -7,11 +8,8 @@ export const ACCESS_COOKIE = 'yoyo_at';
 export const REFRESH_COOKIE = 'yoyo_rt';
 /** Remembers that this browser signed in to an account before (device cookie, see DeviceCookieService). */
 export const DEVICE_COOKIE = 'yoyo_dev';
-/**
- * Not a secret and not proof of anything: it only tells the site's scripts that this browser has a
- * session (it lives as long as the refresh token), so a visitor's pages skip asking GET /me.
- */
-export const SESSION_HINT_COOKIE = 'yoyo_session';
+/** Readable hint that a session exists (see @yoyo/shared SESSION_HINT_COOKIE). */
+export { SESSION_HINT_COOKIE };
 /** The refresh token only travels to the endpoints that use it (refresh, logout). */
 export const REFRESH_COOKIE_PATH = '/api/v1/auth';
 

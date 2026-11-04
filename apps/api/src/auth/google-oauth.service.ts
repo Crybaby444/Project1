@@ -1,6 +1,6 @@
 import { createHash, randomBytes } from 'node:crypto';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { EmailSchema } from '@yoyo/shared';
+import { EmailSchema, safeSitePath } from '@yoyo/shared';
 import { createRemoteJWKSet, jwtVerify, SignJWT, type JWTPayload } from 'jose';
 import { CLOCK, type Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
@@ -159,10 +159,5 @@ export class GoogleOAuthService {
   }
 }
 
-/** Only a path on the site: `/…`, never `//host`, `/\host`, a full URL or control characters. */
-export function safeReturnTo(value: string | undefined): string {
-  if (!value || !value.startsWith('/') || value.startsWith('//') || value.includes('\\')) return '/';
-  // eslint-disable-next-line no-control-regex
-  if (/[\u0000-\u001f\u007f]/.test(value)) return '/';
-  return value;
-}
+/** Only a path on the site: `/…`, never `//host`, `/\\host`, a full URL or control characters (shared with the site). */
+export const safeReturnTo = (value: string | undefined): string => safeSitePath(value);

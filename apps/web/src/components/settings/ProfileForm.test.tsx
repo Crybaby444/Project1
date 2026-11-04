@@ -2,6 +2,7 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import en from '../../../messages/en.json';
+import lv from '../../../messages/lv.json';
 import { apiError, fakeApi, meRoute, testUser, type FakeRoutes } from '@/test/fake-api';
 import { renderWithSession } from '@/test/render';
 import { ProfileForm } from './ProfileForm';
@@ -80,5 +81,18 @@ describe('ProfileForm', () => {
     const city = screen.getByLabelText(en.settings.profile.city);
     await waitFor(() => expect(city).toHaveAttribute('aria-invalid', 'true'));
     expect(city).toHaveFocus();
+  });
+
+  it('keeps the page language when only other fields change on a page in another language', async () => {
+    const user = userEvent.setup();
+    const { client, calls } = fakeApi({ ...meRoute(anna), ...echo });
+    renderWithSession(<ProfileForm user={anna} />, { client, locale: 'lv' });
+
+    await user.type(screen.getByLabelText(lv.settings.profile.city), ' centrs');
+    await user.click(screen.getByRole('button', { name: lv.settings.profile.save }));
+
+    expect(await screen.findByText(lv.settings.profile.saved)).toBeVisible();
+    expect(calls.find((c) => c.method === 'PATCH')?.body).toMatchObject({ locale: 'en' });
+    expect(replace).not.toHaveBeenCalled();
   });
 });

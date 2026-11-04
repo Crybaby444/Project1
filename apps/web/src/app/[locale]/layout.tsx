@@ -8,6 +8,7 @@ import type { ReactNode } from 'react';
 import { themeInitScript } from '@/components/theme/theme-script';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { SiteHeader } from '@/components/layout/SiteHeader';
+import { SyncThemeWithProfile } from '@/components/theme/use-theme-choice';
 import { ToastProvider } from '@/components/ui/Toast';
 import { routing } from '@/i18n/routing';
 import { QueryProvider } from '@/lib/session/QueryProvider';
@@ -47,6 +48,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
             <SessionProvider>
               <ThemeProvider initialPreference={preference}>
                 <ToastProvider>
+                  <SyncThemeWithProfile />
                   <SiteHeader />
                   <div className="flex flex-1 flex-col *:w-full">{children}</div>
                 </ToastProvider>

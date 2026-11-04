@@ -82,14 +82,18 @@ describe('ResetPasswordForm', () => {
     expect(screen.queryByLabelText(en.auth.fields.newPassword, { exact: true })).toBeNull();
   });
 
-  it('still says the password changed when signing in afterwards fails', async () => {
-    renderReset('tok', {
+  it('still says the password changed when signing in afterwards fails, and forgets the old session', async () => {
+    const { client } = fakeApi({
+      ...meRoute(testUser()),
       'POST /api/v1/auth/reset-password': { status: 200, body: { user: testUser() } },
       'POST /api/v1/auth/login': apiError(429, 'RATE_LIMITED', {}, { 'Retry-After': '60' }),
     });
+    const { queryClient } = renderWithSession(<ResetPasswordForm token="tok" />, { client });
+    await waitFor(() => expect(queryClient.getQueryData(['session', 'me'])).toBeTruthy()); // signed in here
     await fill('correct horse battery', 'correct horse battery');
 
     expect(await screen.findByRole('heading', { name: en.auth.reset.changed.title })).toBeVisible();
+    expect(queryClient.getQueryData(['session', 'me'])).toBeNull(); // the API ended that session
     expect(screen.getByRole('link', { name: en.auth.reset.signIn })).toHaveAttribute('href', '/login');
     expect(replace).not.toHaveBeenCalled();
   });

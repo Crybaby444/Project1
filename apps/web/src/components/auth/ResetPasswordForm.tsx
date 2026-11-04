@@ -56,6 +56,7 @@ export function ResetPasswordForm({ token }: { token: string | null }) {
           setProblem(linkProblem);
           return;
         }
+        setUser(null); // the API has ended every session, this browser's included
         try {
           const { user } = await unwrap(client.POST('/api/v1/auth/login', { body: { email, password } }));
           setUser(user);

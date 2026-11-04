@@ -1,6 +1,6 @@
 'use client';
 
-import { isErrorCode, LoginRequestSchema } from '@yoyo/shared';
+import { isOAuthErrorCode, LoginRequestSchema } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/Button';
@@ -16,9 +16,6 @@ import { FormError } from './FormError';
 import { GoogleButton } from './GoogleButton';
 import { PasswordField } from './PasswordField';
 import { RetryAfterNotice } from './RetryAfterNotice';
-
-/** Codes the API's Google callback may send back in `?oauthError=`. */
-const OAUTH_ERRORS = new Set(['OAUTH_CANCELLED', 'OAUTH_STATE_INVALID', 'OAUTH_FAILED', 'AUTH_BLOCKED']);
 
 /** `/register?next=…` and friends: carries a safe next page along between the auth screens. */
 export function withNext(path: string, next: string | null): string {
@@ -55,8 +52,7 @@ export function LoginForm({ next, oauthError }: { next: string | null; oauthErro
     },
   );
 
-  const oauthMessage =
-    oauthError && OAUTH_ERRORS.has(oauthError) && isErrorCode(oauthError) ? tErrors(oauthError) : null;
+  const oauthMessage = isOAuthErrorCode(oauthError) ? tErrors(oauthError) : null;
 
   return (
     <AuthCard

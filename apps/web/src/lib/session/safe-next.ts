@@ -1,10 +1,9 @@
+import { safeSitePath } from '@yoyo/shared';
+
 /**
- * Where to go after signing in: only a path on this site (`/…`), never `//host`, `/\host`, a full URL,
- * a `javascript:` link or anything with control characters. Everything else becomes `/`.
- * The same rule as the API's `returnTo` for Google sign-in.
+ * Where to go after signing in (`?next=`): only a path on this site, everything else becomes `/`.
+ * The same rule as the API's Google `returnTo` (safeSitePath in @yoyo/shared).
  */
 export function safeNext(value: string | null | undefined): string {
-  if (!value || !value.startsWith('/') || value.startsWith('//') || value.includes('\\')) return '/';
-  if (/[\u0000-\u001f\u007f]/.test(value)) return '/';
-  return value;
+  return safeSitePath(value);
 }
