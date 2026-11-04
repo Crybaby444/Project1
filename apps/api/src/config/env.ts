@@ -23,6 +23,14 @@ const EnvObject = z.object({
    * X-Forwarded-For hops, so `req.ip` is the real client (Render: its load balancer + the Vercel proxy = 2).
    */
   TRUST_PROXY_HOPS: z.coerce.number().int().min(0).default(0),
+  /**
+   * Shared with the site, whose /api proxy sends it in `x-yoyo-proxy-secret`. When set, X-Forwarded-For
+   * is trusted for all TRUST_PROXY_HOPS only on requests that carry it (constant-time check), and for
+   * one hop fewer otherwise, so direct calls to the API cannot spoof their address. Unset: as before.
+   */
+  PROXY_SECRET: z.preprocess(blankAsUnset, z.string().min(32).optional()),
+  /** Registrations accepted per hour from all addresses together (a bot wave cannot flood the mail budget). */
+  REGISTRATION_HOURLY_CAP: z.preprocess(blankAsUnset, z.coerce.number().int().positive().default(100)),
   /** HS256 key for access tokens and other signed values. Render generates it (render.yaml). */
   JWT_SECRET: z.string().min(32),
   /**

@@ -59,7 +59,7 @@ export class AuthController {
     private readonly google: GoogleOAuthService,
     private readonly limiter: RateLimiter,
     private readonly devices: DeviceCookieService,
-    @Inject(ENV) private readonly env: Pick<Env, 'NODE_ENV' | 'WEB_ORIGIN'>,
+    @Inject(ENV) private readonly env: Pick<Env, 'NODE_ENV' | 'WEB_ORIGIN' | 'REGISTRATION_HOURLY_CAP'>,
     @Inject(SMS_PROVIDER) private readonly sms: SmsProvider | null,
   ) {}
 
@@ -137,7 +137,7 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<UserResponse> {
-    this.limiter.hit(RATE_LIMITS.register(clientIp(req)));
+    this.limiter.hit(RATE_LIMITS.register(clientIp(req), this.env.REGISTRATION_HOURLY_CAP));
     const { user, session } = await this.auth.register(body, sessionMeta(req));
     setAuthCookies(res, session, this.secureCookies);
     await this.rememberDevice(req, res, user.id);

@@ -26,8 +26,3 @@ export function resolveApiUrl(configured: string | undefined, nodeEnv: string | 
 export function apiBaseUrl(isBrowser: boolean, configured: string | undefined, nodeEnv: string | undefined): string {
   return isBrowser ? '' : resolveApiUrl(configured, nodeEnv);
 }
-
-/** Next.js rewrites: every /api path of the site goes to the same path on the API, before pages match. */
-export function apiRewrites(apiOrigin: string): { beforeFiles: { source: string; destination: string }[] } {
-  return { beforeFiles: [{ source: '/api/:path*', destination: `${apiOrigin.replace(/\/+$/, '')}/api/:path*` }] };
-}

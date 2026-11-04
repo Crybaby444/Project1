@@ -35,4 +35,23 @@ test.describe('accounts through the site’s /api proxy', () => {
     expect(logout).toBe(204);
     expect((await page.request.get('/api/v1/me')).status()).toBe(401);
   });
+
+  test('the site proxy adds the proxy secret, so the API trusts the forwarded client address', async ({ request }) => {
+    // With the secret the API reads the visitor from X-Forwarded-For (2 hops); without it, it would use
+    // the next hop, which is the same for both "visitors" here. The per-address login limit
+    // (30 a minute across all emails) shows which address the API used.
+    const run = `${Date.now()}-${Math.round(Math.random() * 1e6)}`;
+    const octet = () => 1 + Math.floor(Math.random() * 250);
+    const visitor = (n: number) => `198.51.${n}.${octet()}`;
+    const [first, second] = [visitor(100), visitor(101)];
+    const attempt = (from: string, i: number) =>
+      request.post('/api/v1/auth/login', {
+        headers: { 'X-Forwarded-For': `${from}, 192.0.2.1` },
+        data: { email: `spray-${run}-${i}@mail.lv`, password: 'nope-nope' },
+      });
+
+    for (let i = 1; i <= 30; i++) expect((await attempt(first, i)).status()).toBe(401);
+    expect((await attempt(first, 31)).status()).toBe(429);
+    expect((await attempt(second, 32)).status()).toBe(401);
+  });
 });

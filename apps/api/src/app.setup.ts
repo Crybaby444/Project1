@@ -4,15 +4,21 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { ErrorFilter } from './common/error.filter';
+import { clientIpMiddleware } from './common/request-meta';
 import type { Env } from './config/env';
 
 /** Single place for HTTP-level app configuration, shared by main.ts and the tests. */
-export function configureApp(app: INestApplication, env: Pick<Env, 'WEB_ORIGIN' | 'TRUST_PROXY_HOPS'>): void {
+export function configureApp(
+  app: INestApplication,
+  env: Pick<Env, 'WEB_ORIGIN' | 'TRUST_PROXY_HOPS'> & Partial<Pick<Env, 'PROXY_SECRET'>>,
+): void {
   app.setGlobalPrefix('api/v1');
   if (env.TRUST_PROXY_HOPS > 0) {
     // Behind N proxies req.ip is the client, not the last proxy (rate limits and session records use it).
     (app.getHttpAdapter().getInstance() as Express).set('trust proxy', env.TRUST_PROXY_HOPS);
   }
+  // The client address for rate limits and session records (PROXY_SECRET decides how far to trust XFF).
+  app.use(clientIpMiddleware(env));
   app.use(helmet());
   // Answers are per user and set cookies; the site's CDN (Vercel caches external rewrites by these
   // headers) and any other cache must never store or share them.

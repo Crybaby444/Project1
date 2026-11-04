@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { apiBaseUrl, apiRewrites, resolveApiUrl } from './api-url';
+import { apiBaseUrl, resolveApiUrl } from './api-url';
 
 describe('resolveApiUrl', () => {
   it('uses the configured API origin', () => {
@@ -25,13 +25,5 @@ describe('apiBaseUrl', () => {
   it('lets server code call the API origin directly', () => {
     expect(apiBaseUrl(false, 'https://yoyo-api.onrender.com', 'production')).toBe('https://yoyo-api.onrender.com');
     expect(apiBaseUrl(false, undefined, 'development')).toBe('http://localhost:4000');
-  });
-});
-
-describe('apiRewrites', () => {
-  it('proxies every /api path of the site to the same path on the API, before any page matches', async () => {
-    expect(apiRewrites('https://yoyo-api.onrender.com/')).toEqual({
-      beforeFiles: [{ source: '/api/:path*', destination: 'https://yoyo-api.onrender.com/api/:path*' }],
-    });
   });
 });

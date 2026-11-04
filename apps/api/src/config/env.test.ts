@@ -126,4 +126,22 @@ describe('loadEnv', () => {
     expect(() => loadEnv({ ...valid, TRUST_PROXY_HOPS: '1.5' })).toThrow(/TRUST_PROXY_HOPS/);
     expect(() => loadEnv({ ...valid, TRUST_PROXY_HOPS: 'two' })).toThrow(/TRUST_PROXY_HOPS/);
   });
+
+  it('reads an optional PROXY_SECRET of at least 32 characters and never prints a rejected one', () => {
+    expect(loadEnv(valid).PROXY_SECRET).toBeUndefined();
+    expect(loadEnv({ ...valid, PROXY_SECRET: '' }).PROXY_SECRET).toBeUndefined();
+    expect(loadEnv({ ...valid, PROXY_SECRET: 'p'.repeat(32) }).PROXY_SECRET).toBe('p'.repeat(32));
+    expect(() => loadEnv({ ...valid, PROXY_SECRET: 'short-proxy-secret' })).toThrow(
+      expect.objectContaining({ message: expect.stringMatching(/PROXY_SECRET/) }),
+    );
+    expect(() => loadEnv({ ...valid, PROXY_SECRET: 'short-proxy-secret' })).toThrow(
+      expect.objectContaining({ message: expect.not.stringContaining('short-proxy-secret') }),
+    );
+  });
+
+  it('caps registrations at 100 an hour by default, adjustable with REGISTRATION_HOURLY_CAP', () => {
+    expect(loadEnv(valid).REGISTRATION_HOURLY_CAP).toBe(100);
+    expect(loadEnv({ ...valid, REGISTRATION_HOURLY_CAP: '250' }).REGISTRATION_HOURLY_CAP).toBe(250);
+    expect(() => loadEnv({ ...valid, REGISTRATION_HOURLY_CAP: '0' })).toThrow(/REGISTRATION_HOURLY_CAP/);
+  });
 });

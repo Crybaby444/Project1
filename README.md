@@ -126,7 +126,7 @@ pnpm e2e         # сквозные тесты в браузере (сами з�
 
 ### Один домен для сайта и API
 
-Сайт проксирует `/api/*` на API (`rewrites` в `apps/web/next.config.ts`). Браузер говорит только с адресом сайта, поэтому cookie остаются cookie самого сайта даже на бесплатных адресах `vercel.app` и `onrender.com`.
+Сайт проксирует `/api/*` на API (`apps/web/src/proxy.ts`; заголовки запроса правилом `rewrites` в `next.config.ts` не добавить, а прокси передаёт API секрет `PROXY_SECRET`). Браузер говорит только с адресом сайта, поэтому cookie остаются cookie самого сайта даже на бесплатных адресах `vercel.app` и `onrender.com`.
 
 - Небезопасные запросы с чужим заголовком `Origin` API отклоняет (`403 ORIGIN_FORBIDDEN`).
 - Все ответы API помечены `Cache-Control: no-store`, чтобы CDN Vercel их не кэшировал.

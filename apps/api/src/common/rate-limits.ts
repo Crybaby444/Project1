@@ -5,14 +5,18 @@ const HOUR = 60 * MINUTE;
 
 /** Every attempt limit of the API in one place (plan 3, Global Constraints). */
 export const RATE_LIMITS = {
-  /** 10 registrations a minute per client address. */
-  register: (ip: string): RateRule[] => [{ key: `register:ip:${ip}`, limit: 10, windowMs: MINUTE }],
+  /** 10 registrations a minute per client address, and `hourlyCap` an hour from all addresses together. */
+  register: (ip: string, hourlyCap: number): RateRule[] => [
+    { key: `register:ip:${ip}`, limit: 10, windowMs: MINUTE },
+    { key: 'register:global', limit: hourlyCap, windowMs: HOUR },
+  ],
   /**
-   * 5 a minute per address and email, and 20 an hour per email from any address: addresses can be
-   * spoofed by calling the API directly, the email cannot.
+   * 5 a minute per address and email, 30 a minute per address across all emails (password spraying),
+   * and 20 an hour per email from any address: an address can change, the email cannot.
    */
   login: (ip: string, email: string): RateRule[] => [
     { key: `login:ip-email:${ip}|${email}`, limit: 5, windowMs: MINUTE },
+    { key: `login:ip:${ip}`, limit: 30, windowMs: MINUTE },
     { key: `login:email:${email}`, limit: 20, windowMs: HOUR },
   ],
   /**
