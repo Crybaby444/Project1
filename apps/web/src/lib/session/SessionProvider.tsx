@@ -3,7 +3,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { ApiClient } from '@yoyo/api-client';
 import type { PublicUser } from '@yoyo/shared';
-import { createContext, useCallback, useContext, useMemo, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 import { api } from '@/lib/api';
 import { ApiError, unwrap } from './api-error';
 
@@ -18,6 +18,10 @@ export type Session = {
   signOut(): Promise<void>;
   /** Shows a user the API has just returned (sign-in, profile update) without asking again; null signs out locally. */
   setUser(user: PublicUser | null): void;
+  /** Forgets the user after the API has already ended the session (sign out everywhere, account deleted). */
+  forget(): void;
+  /** True once the person ended the session themselves (closed pages then go home, not to /login). */
+  endedByUser: boolean;
 };
 
 export const SESSION_QUERY_KEY = ['session', 'me'] as const;
@@ -72,10 +76,22 @@ export function SessionProvider({
     retry: false,
   });
 
+  const [endedByUser, setEndedByUser] = useState(false);
+
   const setUser = useCallback(
-    (user: PublicUser | null) => queryClient.setQueryData(SESSION_QUERY_KEY, user),
+    (user: PublicUser | null) => {
+      if (user) setEndedByUser(false);
+      queryClient.setQueryData(SESSION_QUERY_KEY, user);
+    },
     [queryClient],
   );
+
+  const forget = useCallback(() => {
+    setEndedByUser(true);
+    // Private caches go with the user.
+    queryClient.removeQueries({ predicate: (q) => q.queryKey[0] !== SESSION_QUERY_KEY[0] });
+    queryClient.setQueryData(SESSION_QUERY_KEY, null);
+  }, [queryClient]);
 
   const refresh = useCallback(async () => {
     // A GET /me already on its way may have been answered before the change; ask again after it.
@@ -87,18 +103,16 @@ export function SessionProvider({
     try {
       await client.POST('/api/v1/auth/logout');
     } finally {
-      // Whatever the API said, this browser forgets the user; private caches go with them.
-      queryClient.removeQueries({ predicate: (q) => q.queryKey[0] !== SESSION_QUERY_KEY[0] });
-      queryClient.setQueryData(SESSION_QUERY_KEY, null);
+      forget(); // whatever the API said, this browser forgets the user
     }
-  }, [client, queryClient]);
+  }, [client, forget]);
 
   const user = query.data ?? null;
   const status: SessionStatus = query.isPending ? 'loading' : user ? 'authenticated' : 'anonymous';
 
   const value = useMemo(
-    () => ({ status, user, refresh, signOut, setUser, client }),
-    [status, user, refresh, signOut, setUser, client],
+    () => ({ status, user, refresh, signOut, setUser, forget, endedByUser, client }),
+    [status, user, refresh, signOut, setUser, forget, endedByUser, client],
   );
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 }
@@ -110,8 +124,8 @@ function useSessionContext(): SessionContextValue {
 }
 
 export function useSession(): Session {
-  const { status, user, refresh, signOut, setUser } = useSessionContext();
-  return { status, user, refresh, signOut, setUser };
+  const { status, user, refresh, signOut, setUser, forget, endedByUser } = useSessionContext();
+  return { status, user, refresh, signOut, setUser, forget, endedByUser };
 }
 
 /** The API client of the session (the app's, or a test's fake). */

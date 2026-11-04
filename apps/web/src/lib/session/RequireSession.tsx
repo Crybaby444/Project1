@@ -8,17 +8,18 @@ import { useSession } from './SessionProvider';
 /**
  * Shows its children only to a signed-in user. The check runs in the browser: the refresh cookie
  * only travels to /api/v1/auth, so the server cannot renew a session while rendering a page.
- * A visitor goes to /login and comes back here afterwards.
+ * A visitor goes to /login and comes back here afterwards; someone who just signed out goes home.
  */
 export function RequireSession({ children }: { children: ReactNode }) {
-  const { status } = useSession();
+  const { status, endedByUser } = useSession();
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations('session');
 
   useEffect(() => {
-    if (status === 'anonymous') router.replace(`/login?next=${encodeURIComponent(pathname)}`);
-  }, [status, pathname, router]);
+    if (status !== 'anonymous') return;
+    router.replace(endedByUser ? '/' : `/login?next=${encodeURIComponent(pathname)}`);
+  }, [status, endedByUser, pathname, router]);
 
   if (status === 'authenticated') return children;
 

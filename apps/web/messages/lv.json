@@ -248,5 +248,56 @@
         "body": "Iespējams, tā ir nogriezta. Atveriet to no vēstules vēlreiz vai palūdziet jaunu."
       }
     }
+  },
+  "settings": {
+    "title": "Iestatījumi",
+    "tabs": {
+      "profile": "Profils",
+      "security": "Drošība"
+    },
+    "profile": {
+      "title": "Profils",
+      "intro": "Ko redz cilvēki, ar kuriem nomājaties, un kā Yoyo ar jums sazinās.",
+      "name": "Vārds",
+      "city": "Pilsēta",
+      "cityHint": "Palīdz cilvēkiem tuvumā atrast jūsu lietas.",
+      "about": "Par jums",
+      "aboutHint": "Daži vārdi par sevi un to, ko iznomājat.",
+      "language": "Valoda",
+      "languageHint": "Vietnei un vēstulēm, ko jums sūtām.",
+      "save": "Saglabāt izmaiņas",
+      "saved": "Saglabāts.",
+      "appearance": "Izskats"
+    },
+    "security": {
+      "title": "Drošība",
+      "password": {
+        "title": "Parole",
+        "submit": "Mainīt paroli",
+        "changed": "Parole nomainīta. Citās ierīcēs sesijas ir beigtas.",
+        "wrongCurrent": "Šī nav jūsu pašreizējā parole.",
+        "google": "Jūs piesakāties ar Google, tāpēc kontam nav paroles, ko mainīt. To sargā jūsu Google konts."
+      },
+      "logoutAll": {
+        "title": "Iziet visās ierīcēs?",
+        "body": "Visas ierīces, kurās ir atvērts jūsu konts, arī šī, tiks izrakstītas uzreiz.",
+        "open": "Iziet visās ierīcēs",
+        "submit": "Iziet visās ierīcēs",
+        "done": "Visās ierīcēs sesijas ir beigtas.",
+        "intro": "Pazaudējāt tālruni vai pieteicāties svešā datorā? Beidziet visas sesijas uzreiz."
+      },
+      "delete": {
+        "title": "Dzēst kontu?",
+        "intro": "Dzēšot kontu, tiek izdzēsts jūsu profils un visas sesijas tiek beigtas. To nevar atsaukt.",
+        "open": "Dzēst kontu",
+        "body": "Profils tiks izdzēsts uz visiem laikiem, un visās ierīcēs sesijas tiks beigtas. To nevar atsaukt.",
+        "word": "DZĒST",
+        "confirmLabel": "Ierakstiet {word}, lai apstiprinātu",
+        "passwordLabel": "Jūsu parole",
+        "submit": "Dzēst neatgriezeniski",
+        "done": "Jūsu konts ir izdzēsts."
+      },
+      "cancel": "Atcelt"
+    }
   }
 }

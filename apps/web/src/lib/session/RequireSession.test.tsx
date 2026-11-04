@@ -1,8 +1,9 @@
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeApi, meRoute, testUser } from '@/test/fake-api';
 import { renderWithSession } from '@/test/render';
 import { RequireSession } from './RequireSession';
+import { useSession } from './SessionProvider';
 
 const replace = vi.fn();
 vi.mock('@/i18n/navigation', () => ({
@@ -50,5 +51,29 @@ describe('RequireSession', () => {
 
     expect(await screen.findByText('secret')).toBeVisible();
     expect(replace).not.toHaveBeenCalled();
+  });
+
+  it('goes home, not to /login, when the person ended the session on purpose', async () => {
+    const { client } = fakeApi(meRoute(testUser()));
+    let forget: () => void = () => {};
+    function Leave() {
+      forget = useSession().forget;
+      return null;
+    }
+    renderWithSession(
+      <>
+        <Leave />
+        <RequireSession>
+          <p>secret</p>
+        </RequireSession>
+      </>,
+      { client },
+    );
+    await screen.findByText('secret');
+
+    act(() => forget());
+
+    await waitFor(() => expect(replace).toHaveBeenCalledWith('/'));
+    expect(replace).not.toHaveBeenCalledWith(expect.stringContaining('/login'));
   });
 });

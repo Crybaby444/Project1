@@ -248,5 +248,56 @@
         "body": "It may be cut short. Open it from the email once more, or ask for a new one."
       }
     }
+  },
+  "settings": {
+    "title": "Settings",
+    "tabs": {
+      "profile": "Profile",
+      "security": "Security"
+    },
+    "profile": {
+      "title": "Profile",
+      "intro": "What people you rent with see, and how Yoyo talks to you.",
+      "name": "Name",
+      "city": "City",
+      "cityHint": "Helps people nearby find your things.",
+      "about": "About you",
+      "aboutHint": "A few words about yourself and what you lend.",
+      "language": "Language",
+      "languageHint": "For the site and for the emails we send you.",
+      "save": "Save changes",
+      "saved": "Saved.",
+      "appearance": "Appearance"
+    },
+    "security": {
+      "title": "Security",
+      "password": {
+        "title": "Password",
+        "submit": "Change password",
+        "changed": "Password changed. Your other devices are signed out.",
+        "wrongCurrent": "This is not your current password.",
+        "google": "You sign in with Google, so your account has no password to change. Your Google account keeps it safe."
+      },
+      "logoutAll": {
+        "title": "Sign out everywhere?",
+        "body": "Every device signed in to your account, this one included, is signed out at once.",
+        "open": "Sign out everywhere",
+        "submit": "Sign out everywhere",
+        "done": "You are signed out on every device.",
+        "intro": "Lost a phone, or signed in on someone else’s computer? End every session at once."
+      },
+      "delete": {
+        "title": "Delete your account?",
+        "intro": "Deleting your account removes your profile and signs you out everywhere. This cannot be undone.",
+        "open": "Delete account",
+        "body": "Your profile goes for good and you are signed out everywhere. This cannot be undone.",
+        "word": "DELETE",
+        "confirmLabel": "Type {word} to confirm",
+        "passwordLabel": "Your password",
+        "submit": "Delete for good",
+        "done": "Your account has been deleted."
+      },
+      "cancel": "Cancel"
+    }
   }
 }
