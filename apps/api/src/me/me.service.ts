@@ -46,8 +46,9 @@ export class MeService {
   }
 
   /**
-   * Soft delete: the row stays (for records that point at it later), everything personal goes, the
-   * email is freed for a new account, and the Google link is removed so it cannot sign back in.
+   * Soft delete: the row stays (for records that point at it later), everything personal goes (incl.
+   * the block reason and the sessions with their IP addresses and user agents), the email is freed for
+   * a new account, and the Google link is removed so it cannot sign back in.
    */
   async deleteAccount(userId: string, password: string | undefined): Promise<void> {
     const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId } });
@@ -67,13 +68,16 @@ export class MeService {
           phone: null,
           phoneVerifiedAt: null,
           emailVerifiedAt: null,
+          // Free text an admin wrote about the person; the block itself (blockedAt) stays on record.
+          blockedReason: null,
           deletedAt: now,
         },
       }),
       this.prisma.oAuthAccount.deleteMany({ where: { userId } }),
       this.prisma.emailToken.deleteMany({ where: { userId } }),
       this.prisma.phoneCode.deleteMany({ where: { userId } }),
+      // Ends every session and drops what sessions record about devices (IP address, user agent).
+      this.prisma.refreshToken.deleteMany({ where: { userId } }),
     ]);
-    await this.refreshTokens.revokeAll(userId);
   }
 }

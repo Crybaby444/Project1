@@ -141,6 +141,18 @@ describe('my account', () => {
       expect(again.status).toBe(201);
     });
 
+    it('keeps no session records (device, address) and no block reason of a deleted account', async () => {
+      const { agent, user, email, password } = await signedIn();
+      await request(t.server).post('/api/v1/auth/login').set('User-Agent', 'Second phone').send({ email, password }).expect(200);
+      await t.prisma.user.update({ where: { id: user.id }, data: { blockedReason: 'Spam to Anna Bērziņa' } });
+      expect(await t.prisma.refreshToken.count({ where: { userId: user.id } })).toBe(2);
+
+      await agent.delete('/api/v1/me').send({ password }).expect(204);
+
+      expect(await t.prisma.refreshToken.count({ where: { userId: user.id } })).toBe(0);
+      expect((await t.prisma.user.findUniqueOrThrow({ where: { id: user.id } })).blockedReason).toBeNull();
+    });
+
     it('refuses a wrong or missing password for an account that has one', async () => {
       const { agent } = await signedIn();
       expect((await agent.delete('/api/v1/me').send({ password: 'nope-nope' })).status).toBe(401);
