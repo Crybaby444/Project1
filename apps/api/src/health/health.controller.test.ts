@@ -13,7 +13,7 @@ describe('GET /api/v1/health when the database is unreachable', () => {
       providers: [{ provide: PrismaService, useValue: { isHealthy: async () => false } }],
     }).compile();
     const app = moduleRef.createNestApplication();
-    configureApp(app, { WEB_ORIGIN: 'http://localhost:3000' });
+    configureApp(app, { WEB_ORIGIN: 'http://localhost:3000', TRUST_PROXY_HOPS: 0 });
     await app.init();
 
     const res = await request(app.getHttpServer()).get('/api/v1/health');

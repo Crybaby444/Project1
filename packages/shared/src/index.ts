@@ -3,3 +3,4 @@ export * from './theme';
 export * from './settings';
 export * from './status';
 export * from './health';
+export * from './errors';

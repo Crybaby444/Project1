@@ -11,6 +11,11 @@ export const EnvSchema = z.object({
    * browsers send `Origin: https://site` with no slash or path, so `https://site/` must still match.
    */
   WEB_ORIGIN: z.url().transform((value) => new URL(value).origin),
+  /**
+   * How many reverse proxies sit in front of the API. With N > 0, Express trusts the last N
+   * X-Forwarded-For hops, so `req.ip` is the real client (Render: its load balancer + the Vercel proxy = 2).
+   */
+  TRUST_PROXY_HOPS: z.coerce.number().int().min(0).default(0),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

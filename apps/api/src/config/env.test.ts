@@ -35,4 +35,16 @@ describe('loadEnv', () => {
   it('rejects an unknown NODE_ENV', () => {
     expect(() => loadEnv({ ...valid, NODE_ENV: 'staging' })).toThrow(/NODE_ENV/);
   });
+
+  it('trusts no proxy by default and reads the number of proxy hops in front of the API', () => {
+    expect(loadEnv(valid).TRUST_PROXY_HOPS).toBe(0);
+    expect(loadEnv({ ...valid, TRUST_PROXY_HOPS: '2' }).TRUST_PROXY_HOPS).toBe(2);
+    expect(loadEnv({ ...valid, TRUST_PROXY_HOPS: '' }).TRUST_PROXY_HOPS).toBe(0);
+  });
+
+  it('rejects a negative or fractional TRUST_PROXY_HOPS', () => {
+    expect(() => loadEnv({ ...valid, TRUST_PROXY_HOPS: '-1' })).toThrow(/TRUST_PROXY_HOPS/);
+    expect(() => loadEnv({ ...valid, TRUST_PROXY_HOPS: '1.5' })).toThrow(/TRUST_PROXY_HOPS/);
+    expect(() => loadEnv({ ...valid, TRUST_PROXY_HOPS: 'two' })).toThrow(/TRUST_PROXY_HOPS/);
+  });
 });
