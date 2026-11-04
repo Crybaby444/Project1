@@ -18,3 +18,111 @@ model Setting {
   value     Json
   updatedAt DateTime @updatedAt
 }
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum EmailTokenType {
+  VERIFY_EMAIL
+  RESET_PASSWORD
+}
+
+/// An account. Soft-deleted accounts keep their row (deletedAt) with personal data wiped.
+model User {
+  id              String    @id @default(cuid())
+  /// Always trimmed and lowercase (also enforced by the CHECK constraint User_email_lowercase).
+  email           String    @unique
+  /// argon2id; null for accounts that only sign in with Google.
+  passwordHash    String?
+  name            String
+  city            String?
+  about           String?
+  /// Interface and email language: en | lv | ru.
+  locale          String    @default("en")
+  /// Theme preference: system | light | dark.
+  theme           String    @default("system")
+  role            Role      @default(USER)
+  emailVerifiedAt DateTime?
+  /// The verified phone number (E.164); set only once a code confirmed it.
+  phone           String?
+  phoneVerifiedAt DateTime?
+  blockedAt       DateTime?
+  blockedReason   String?
+  deletedAt       DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  refreshTokens RefreshToken[]
+  emailTokens   EmailToken[]
+  oauthAccounts OAuthAccount[]
+  phoneCodes    PhoneCode[]
+}
+
+/// One refresh token of a session. Rotation chains tokens of the same family; reuse revokes the family.
+model RefreshToken {
+  id           String    @id @default(cuid())
+  userId       String
+  familyId     String
+  /// SHA-256 of the token; the token itself is never stored.
+  tokenHash    String    @unique
+  expiresAt    DateTime
+  revokedAt    DateTime?
+  replacedById String?
+  userAgent    String?
+  ip           String?
+  createdAt    DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([familyId])
+}
+
+/// Single-use email link (verify email, reset password).
+model EmailToken {
+  id        String         @id @default(cuid())
+  userId    String
+  type      EmailTokenType
+  /// SHA-256 of the token from the link.
+  tokenHash String         @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime       @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+/// An external sign-in identity (e.g. Google `sub`) linked to a user.
+model OAuthAccount {
+  id                String   @id @default(cuid())
+  userId            String
+  provider          String
+  providerAccountId String
+  createdAt         DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+/// A one-time code sent to confirm a phone number.
+model PhoneCode {
+  id         String    @id @default(cuid())
+  userId     String
+  phone      String
+  /// Keyed hash of the 6-digit code.
+  codeHash   String
+  expiresAt  DateTime
+  attempts   Int       @default(0)
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
