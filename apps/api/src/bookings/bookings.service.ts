@@ -17,7 +17,7 @@ import {
   type DecideContext,
   type TimerKind,
 } from '@yoyo/domain';
-import { BOOKINGS_PAGE_SIZE, type BookingEventInput, type BookingRequest, type BookingStatus, type BookingView, type BookingsPage, type PublicUser, type QuoteResponse } from '@yoyo/shared';
+import { BOOKINGS_PAGE_SIZE, type BookingEventInput, type BookingRequest, type ResolveRequest, type BookingStatus, type BookingView, type BookingsPage, type PublicUser, type QuoteResponse } from '@yoyo/shared';
 import { CLOCK, type Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
 import type { Prisma } from '../generated/prisma/client';
@@ -238,6 +238,26 @@ export class BookingsService {
     const result = await this.payments.charge({ token: cardToken, amountCents, idempotencyKey: `booking:${id}:${randomUUID()}`, description: `Yoyo booking ${id}` });
     if (result.status === 'DECLINED') throw result.declineCode === 'invalid_token' ? unknownCard() : declined(result.declineCode);
     return { ref: result.ref, brand: result.brand, last4: result.last4, amountCents };
+  }
+
+  /**
+   * An administrator decides a dispute (RESOLVE): refund the deposit, give it to the owner, refund all,
+   * or confirm the handover, as the domain allows for the dispute's reason. Never on their own deal.
+   */
+  async resolve(id: string, admin: PublicUser, version: number, decision: ResolveRequest['decision'], comment: string): Promise<BookingView> {
+    const now = this.clock.now();
+    const settings = await this.rules.settings();
+    const saved = await this.prisma.$transaction(async (tx) => {
+      const row = await this.lockedRow(tx, id);
+      if (row.renterId === admin.id || row.ownerId === admin.id) {
+        throw new AppError('AUTH_FORBIDDEN', 403, 'Another administrator decides disputes of your own deals');
+      }
+      if (version !== row.version) throw staleBooking(row.version);
+      const event: BookingEvent = { type: 'RESOLVE', decision, comment };
+      return this.decideAndSave(tx, row, { kind: 'ADMIN', userId: admin.id }, event, await this.context(tx, row, event, now, settings));
+    });
+    await this.afterCommit(saved.after);
+    return this.view(id, admin);
   }
 
   /** Locks the booking row for the rest of the transaction and loads it with its listing and parties. */

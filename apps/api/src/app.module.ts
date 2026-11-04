@@ -22,6 +22,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { WalletModule } from './wallet/wallet.module';
 import { TimersModule } from './timers/timers.module';
+import { AdminDealsModule } from './admin-deals/admin-deals.module';
 import { SettingsModule } from './settings/settings.module';
 
 @Global()
@@ -52,6 +53,7 @@ class EnvModule {}
     BookingsModule,
     OffersModule,
     TimersModule,
+    AdminDealsModule,
   ],
   controllers: [HealthController],
   providers: [
