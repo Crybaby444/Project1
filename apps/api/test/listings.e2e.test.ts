@@ -226,6 +226,16 @@ describe('listings', () => {
       }
     });
 
+    it('removes a listing in its first review (never public) for good, and archives one that was public before', async () => {
+      const fresh = await seedListing(t, anna.user, { status: 'PENDING_REVIEW' });
+      await anna.delete(`/listings/${fresh.id}`).expect(204);
+      expect(await t.prisma.listing.findUnique({ where: { id: fresh.id } })).toBeNull();
+
+      const edited = await seedListing(t, anna.user, { status: 'PENDING_REVIEW', publishedAt: t.clock.now() });
+      await anna.delete(`/listings/${edited.id}`).expect(204);
+      expect((await t.prisma.listing.findUniqueOrThrow({ where: { id: edited.id } })).status).toBe('ARCHIVED');
+    });
+
     it('archives a rejected listing that was published before', async () => {
       const listing = await seedListing(t, anna.user, { status: 'REJECTED', publishedAt: t.clock.now() });
       await anna.delete(`/listings/${listing.id}`).expect(204);

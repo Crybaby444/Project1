@@ -145,6 +145,8 @@ export type DatePeriod = z.infer<typeof DatePeriodSchema>;
 /** Replaces all unavailable days of a listing. */
 export const UnavailabilityRequestSchema = z.object({
   periods: z.array(DatePeriodSchema).max(LISTING_LIMITS.unavailablePeriods),
+  /** The version the client last saw; if given and stale, 409 (another tab changed the listing). */
+  version: z.number().int().min(0).optional(),
 });
 
 /** The periods as stored: merged, sorted, the past ones dropped. `version` is the listing's new version. */
@@ -189,7 +191,11 @@ export const ListingPhotoSchema = z.object({
 export type ListingPhoto = z.infer<typeof ListingPhotoSchema>;
 
 /** The new order of a listing's photos: every photo id exactly once, the cover first. */
-export const PhotoOrderRequestSchema = z.object({ ids: z.array(z.string().max(64)).max(LISTING_LIMITS.photos) });
+export const PhotoOrderRequestSchema = z.object({
+  ids: z.array(z.string().max(64)).max(LISTING_LIMITS.photos),
+  /** The version the client last saw; if given and stale, 409 (another tab changed the listing). */
+  version: z.number().int().min(0).optional(),
+});
 
 /** `version` is the listing's version after the change: send it with the next PATCH. */
 export const PhotoUploadResponseSchema = z.object({ photo: ListingPhotoSchema, version: z.number().int() });

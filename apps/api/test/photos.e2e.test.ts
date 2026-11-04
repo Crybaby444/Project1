@@ -142,7 +142,9 @@ describe('listing photos', () => {
 
       expect((await anna.put(`/listings/${id}/photos/order`).send({ ids: ids.slice(0, 2) }).expect(400)).body.error.fields).toHaveProperty('ids');
       await anna.put(`/listings/${id}/photos/order`).send({ ids: [ids[0], ids[0], ids[1]] }).expect(400);
-      const res = await anna.put(`/listings/${id}/photos/order`).send({ ids: [ids[2], ids[0], ids[1]] }).expect(200);
+      const stale = await anna.put(`/listings/${id}/photos/order`).send({ ids: [ids[2], ids[0], ids[1]], version: 0 }).expect(409);
+      expect(stale.body.error.details).toEqual({ currentVersion: 3 });
+      const res = await anna.put(`/listings/${id}/photos/order`).send({ ids: [ids[2], ids[0], ids[1]], version: 3 }).expect(200);
 
       expect(res.body.photos.map((photo: { id: string; position: number }) => [photo.id, photo.position])).toEqual([
         [ids[2], 0],

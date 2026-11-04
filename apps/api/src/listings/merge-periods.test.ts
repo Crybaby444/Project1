@@ -36,6 +36,12 @@ describe('mergePeriods', () => {
     ]);
   });
 
+  it('handles the last day the calendar knows without failing', () => {
+    expect(mergePeriods([{ start: '2027-01-01', end: '9999-12-31' }, { start: '2027-02-01', end: '2027-02-02' }], today)).toEqual([
+      { start: '2027-01-01', end: '9999-12-31' },
+    ]);
+  });
+
   it('refuses end before start (core `period`) and days that do not exist, naming the field', () => {
     expect(() => mergePeriods([{ start: '2026-12-05', end: '2026-12-01' }], today)).toThrow(
       expect.objectContaining({ code: 'VALIDATION_FAILED', fields: { 'periods.0.end': expect.any(String) } }),

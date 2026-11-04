@@ -4,7 +4,7 @@ import { LISTING_LIMITS, type ListingPhoto } from '@yoyo/shared';
 import { AppError } from '../common/app-error';
 import { incomplete } from '../listings/listing-completeness';
 import { invalidStatus, ListingsService, mustStayComplete } from '../listings/listings.service';
-import { serializePhoto, type UrlFor } from '../listings/listing.serializer';
+import { byPosition, serializePhoto } from '../listings/listing.serializer';
 import { PrismaService } from '../prisma/prisma.service';
 import { checkImage } from './image-check';
 import { STORAGE_PROVIDER, type StorageProvider } from './storage.provider';
@@ -44,7 +44,7 @@ export class PhotosService {
         return created;
       });
       const { version } = await this.prisma.listing.findUniqueOrThrow({ where: { id: listingId }, select: { version: true } });
-      return { photo: serializePhoto(photo, this.urlFor), version };
+      return { photo: serializePhoto(photo, this.listings.urlFor), version };
     } catch (error) {
       await this.listings.forgetFiles([storageKey]);
       throw error;
@@ -69,14 +69,15 @@ export class PhotosService {
   }
 
   /** Sets the order from `ids`, which must name every photo of the listing exactly once. */
-  async reorder(listingId: string, ownerId: string, ids: string[]): Promise<{ photos: ListingPhoto[]; version: number }> {
+  async reorder(listingId: string, ownerId: string, ids: string[], version?: number): Promise<{ photos: ListingPhoto[]; version: number }> {
     const listing = await this.listings.owned(listingId, ownerId);
     if (listing.status === 'ARCHIVED') throw invalidStatus(listing.status);
+    if (version !== undefined && version !== listing.version) throw this.listings.stale(listing.version);
     const own = new Set(listing.photos.map((photo) => photo.id));
     if (ids.length !== own.size || new Set(ids).size !== ids.length || !ids.every((id) => own.has(id))) {
       throw new AppError('VALIDATION_FAILED', 400, undefined, { ids: 'Send every photo of the listing exactly once' });
     }
-    const current = [...listing.photos].sort((a, b) => a.position - b.position).map((photo) => photo.id);
+    const current = [...listing.photos].sort(byPosition).map((photo) => photo.id);
     if (current.some((id, position) => ids[position] !== id)) {
       await this.prisma.$transaction(async (tx) => {
         for (const [position, id] of ids.entries()) await tx.listingPhoto.update({ where: { id }, data: { position } });
@@ -85,10 +86,9 @@ export class PhotosService {
     }
     const fresh = await this.listings.owned(listingId, ownerId);
     return {
-      photos: [...fresh.photos].sort((a, b) => a.position - b.position).map((photo) => serializePhoto(photo, this.urlFor)),
+      photos: [...fresh.photos].sort(byPosition).map((photo) => serializePhoto(photo, this.listings.urlFor)),
       version: fresh.version,
     };
   }
 
-  private readonly urlFor: UrlFor = (key, variant) => this.storage.url(key, variant);
 }

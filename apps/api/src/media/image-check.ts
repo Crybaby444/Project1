@@ -59,13 +59,15 @@ let running = 0;
 const waiting: (() => void)[] = [];
 
 async function oneAtATime<T>(work: () => Promise<T>): Promise<T> {
+  // A finished task hands its slot straight to the next waiter, so nobody can slip in between.
   if (running >= MAX_PARALLEL) await new Promise<void>((resolve) => waiting.push(resolve));
-  running++;
+  else running++;
   try {
     return await work();
   } finally {
-    running--;
-    waiting.shift()?.();
+    const next = waiting.shift();
+    if (next) next();
+    else running--;
   }
 }
 

@@ -27,7 +27,8 @@ export function photoUrls(storageKey: string, urlFor: UrlFor): PhotoUrls {
   return { thumb: urlFor(storageKey, 'thumb'), card: urlFor(storageKey, 'card'), full: urlFor(storageKey, 'full') };
 }
 
-const byPosition = (a: ListingPhoto, b: ListingPhoto) => a.position - b.position;
+/** Photos in their order: the cover first. */
+export const byPosition = (a: ListingPhoto, b: ListingPhoto) => a.position - b.position;
 
 export function serializePhoto(photo: ListingPhoto, urlFor: UrlFor) {
   return { id: photo.id, width: photo.width, height: photo.height, position: photo.position, urls: photoUrls(photo.storageKey, urlFor) };

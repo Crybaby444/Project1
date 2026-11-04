@@ -1,6 +1,6 @@
 import { isDeepStrictEqual } from 'node:util';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { addDays, compareDates, DomainError, localDate, localDateIn, period, type LocalDate, type Period } from '@yoyo/domain';
+import { compareDates, diffDays, DomainError, localDate, localDateIn, period, type LocalDate, type Period } from '@yoyo/domain';
 import {
   validateAttributes,
   type DatePeriod,
@@ -11,7 +11,7 @@ import {
   type OwnerListingSummary,
   type PublicUser,
 } from '@yoyo/shared';
-import { CategoriesService } from '../categories/categories.service';
+import { CategoriesService, type CategoryForListing } from '../categories/categories.service';
 import { CLOCK, type Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
 import type { Listing, Prisma } from '../generated/prisma/client';
@@ -65,7 +65,8 @@ export function mergePeriods(input: DatePeriod[], today: LocalDate): DatePeriod[
   const merged: Period[] = [];
   for (const p of checked.filter((p) => compareDates(p.end, today) >= 0).sort((a, b) => compareDates(a.start, b.start))) {
     const last = merged.at(-1);
-    if (last && compareDates(p.start, addDays(last.end, 1)) <= 0) {
+    // diffDays, not addDays: `last.end + 1` would not exist after 9999-12-31.
+    if (last && diffDays(last.end, p.start) <= 1) {
       merged[merged.length - 1] = period(last.start, compareDates(p.end, last.end) > 0 ? p.end : last.end);
     } else merged.push(p);
   }
@@ -98,7 +99,7 @@ export class ListingsService {
   readonly urlFor: UrlFor = (key, variant) => this.storage.url(key, variant);
 
   async create(ownerId: string, draft: ListingDraft): Promise<OwnerListing> {
-    const data = await this.draftData(null, draft);
+    const { data } = await this.draftData(null, draft);
     const listing = await this.prisma.listing.create({
       data: { ...(data as Prisma.ListingUncheckedCreateInput), ownerId, status: 'DRAFT' },
       include: WITH_RELATIONS,
@@ -146,7 +147,7 @@ export class ListingsService {
     if (listing.status === 'ARCHIVED') throw invalidStatus(listing.status);
     if (version !== listing.version) throw this.stale(listing.version);
 
-    const data = await this.draftData(listing, draft);
+    const { data, category } = await this.draftData(listing, draft);
     const changed = (Object.keys(data) as (keyof ListingDraft)[]).filter(
       (key) => !isDeepStrictEqual(data[key as keyof DraftData], currentValue(listing, key)),
     );
@@ -154,10 +155,21 @@ export class ListingsService {
     const kind: EditKind = changed.some((key) => (CONTENT_FIELDS as readonly string[]).includes(key)) ? 'content' : 'terms';
     const changes = Object.fromEntries(changed.map((key) => [key, data[key as keyof DraftData]])) as DraftData;
     if (mustStayComplete(listing.status)) {
-      await this.assertComplete({ ...listing, ...changes } as Listing, listing.photos.length);
+      // Only problems this change brings are refused: if the catalog changed under a live listing
+      // (an attribute retired, say), its owner can still change the price, place or rules.
+      const before = incompleteFields(listing, listing.photos.length, await this.categoryOf(listing, category));
+      const after = incompleteFields({ ...listing, ...changes } as Listing, listing.photos.length, category);
+      const added = Object.fromEntries(Object.entries(after).filter(([field, message]) => before[field] !== message));
+      if (Object.keys(added).length > 0) throw incomplete(added);
     }
     await this.write(listing, changes, kind);
     return this.serialize(id);
+  }
+
+  /** The listing's current category, reusing `known` when it is that one. */
+  private async categoryOf(listing: Listing, known: CategoryForListing | null): Promise<CategoryForListing | null> {
+    if (listing.categoryId === null) return null;
+    return known?.id === listing.categoryId ? known : this.categories.forListing(listing.categoryId);
   }
 
   /** 400 LISTING_INCOMPLETE unless the listing has everything review needs. */
@@ -191,10 +203,18 @@ export class ListingsService {
    * before start); overlapping or touching periods are merged and those wholly in the past (in the
    * listing's time zone) dropped. Dates are terms: a live listing stays live.
    */
-  async setUnavailability(id: string, ownerId: string, input: DatePeriod[]): Promise<{ periods: DatePeriod[]; version: number }> {
+  async setUnavailability(
+    id: string,
+    ownerId: string,
+    input: DatePeriod[],
+    version?: number,
+  ): Promise<{ periods: DatePeriod[]; version: number }> {
     const listing = await this.owned(id, ownerId);
     if (listing.status === 'ARCHIVED') throw invalidStatus(listing.status);
+    if (version !== undefined && version !== listing.version) throw this.stale(listing.version);
     const periods = mergePeriods(input, localDateIn(this.clock.now(), listing.timeZone));
+    // The same dates again (an autosave) change nothing: no new version, no new place in the queue.
+    if (isDeepStrictEqual(periods, serializePeriods(listing.unavailability))) return { periods, version: listing.version };
     await this.prisma.$transaction(async (tx) => {
       await tx.unavailability.deleteMany({ where: { listingId: id } });
       await tx.unavailability.createMany({
@@ -227,32 +247,30 @@ export class ListingsService {
   async write(listing: Listing, data: DraftData, kind: EditKind, tx: Prisma.TransactionClient = this.prisma): Promise<void> {
     const status = nextStatus(listing.status, 'edit', kind);
     if (status === null || status === 'REMOVED') throw invalidStatus(listing.status);
-    const updated = await tx.listing.updateMany({
-      where: { id: listing.id, version: listing.version },
-      data: {
-        ...data,
-        status,
-        ...(status === 'PENDING_REVIEW' && { submittedAt: this.clock.now() }),
-        version: { increment: 1 },
-      } as Prisma.ListingUncheckedUpdateManyInput,
-    });
-    if (updated.count === 0) throw await this.staleNow(listing.id);
+    const changes = { ...data, ...(status === 'PENDING_REVIEW' && { submittedAt: this.clock.now() }) };
+    await this.transition(listing, status, changes as Prisma.ListingUncheckedUpdateManyInput, tx);
   }
 
   /**
-   * Drafts and rejected listings that were never public are deleted for good; anything that was
-   * published is archived: it disappears for everyone but stays for the deals that point at it.
+   * A listing that was never public (draft, rejected, or in its first review) is deleted for good,
+   * photo files included; one that was ever published is archived: it disappears for everyone but
+   * stays for the deals that point at it. Decided with the row locked, so a photo upload or a
+   * submit at the same moment is either before or after, never lost in between.
    */
   async remove(id: string, ownerId: string): Promise<void> {
-    const listing = await this.owned(id, ownerId);
-    const next = nextStatus(listing.status, 'delete');
-    if (next === null) throw invalidStatus(listing.status);
-    if (next === 'REMOVED' && listing.publishedAt === null) {
-      await this.prisma.listing.delete({ where: { id } });
-      await this.forgetFiles(listing.photos.map((photo) => photo.storageKey));
-      return;
-    }
-    await this.prisma.listing.update({ where: { id }, data: { status: 'ARCHIVED', version: { increment: 1 } } });
+    await this.owned(id, ownerId);
+    const removedKeys = await this.prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT id FROM "Listing" WHERE id = ${id} FOR UPDATE`;
+      const listing = await tx.listing.findUniqueOrThrow({ where: { id }, include: { photos: true } });
+      if (nextStatus(listing.status, 'delete') === null) throw invalidStatus(listing.status);
+      if (listing.publishedAt === null) {
+        await tx.listing.delete({ where: { id } });
+        return listing.photos.map((photo) => photo.storageKey);
+      }
+      await tx.listing.update({ where: { id }, data: { status: 'ARCHIVED', version: { increment: 1 } } });
+      return [];
+    });
+    await this.forgetFiles(removedKeys);
   }
 
   /** Deletes stored photo files; a failure is logged, never thrown (the database no longer points at them). */
@@ -280,7 +298,7 @@ export class ListingsService {
    * checked against it (draft mode: required ones may be missing). A new category clears the
    * attributes of the old one unless new attributes come along.
    */
-  private async draftData(listing: Listing | null, draft: ListingDraft): Promise<DraftData> {
+  private async draftData(listing: Listing | null, draft: ListingDraft): Promise<{ data: DraftData; category: CategoryForListing | null }> {
     const { attributes, rules, ...plain } = draft;
     const data: DraftData = { ...plain };
     const fields: Record<string, string> = {};
@@ -307,6 +325,6 @@ export class ListingsService {
     if (rules !== undefined) data.rules = rules;
 
     if (Object.keys(fields).length > 0) throw new AppError('VALIDATION_FAILED', 400, undefined, fields);
-    return data;
+    return { data, category };
   }
 }

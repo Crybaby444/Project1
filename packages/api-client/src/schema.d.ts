@@ -877,6 +877,7 @@ export interface components {
                 start: string;
                 end: string;
             }[];
+            version?: number;
         };
         UnavailabilityResponseDto_Output: {
             periods: {
@@ -901,6 +902,7 @@ export interface components {
         };
         PhotoOrderDto: {
             ids: string[];
+            version?: number;
         };
         PhotoOrderResponseDto_Output: {
             photos: {

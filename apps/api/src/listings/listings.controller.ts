@@ -92,7 +92,7 @@ export class ListingsController {
     @Param('id') id: string,
     @Body() body: UnavailabilityRequestDto,
   ): Promise<UnavailabilityResponse> {
-    return this.listings.setUnavailability(id, user.id, body.periods);
+    return this.listings.setUnavailability(id, user.id, body.periods, body.version);
   }
 
   @Delete(':id')

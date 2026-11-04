@@ -31,8 +31,9 @@ const LIVE: ReadonlySet<ListingStatus> = new Set(['PUBLISHED', 'HIDDEN']);
  * | PUBLISHED, HIDDEN, PENDING | delete           | ARCHIVED                             |
  * | ARCHIVED                   | anything         | not allowed                          |
  *
- * The service archives instead of removing a listing that was ever published (`publishedAt`), so
- * deals that point at it keep their item.
+ * Whether a deleted listing is removed or archived is finally decided by `publishedAt`: one that was
+ * ever published is archived (deals that point at it keep their item), one that never was is removed,
+ * whatever its status.
  */
 export function nextStatus(current: ListingStatus, action: ListingAction, change?: EditKind): NextStatus | null {
   if (current === 'ARCHIVED') return null;

@@ -90,6 +90,17 @@ describe('submitting, hiding and unavailable dates', () => {
       expect((await t.prisma.listing.findUniqueOrThrow({ where: { id: listing.id } })).title).toBe(listing.title);
     });
 
+    it('still lets the owner change terms when the catalog changed under the listing, refusing only new problems', async () => {
+      // An attribute that has since left the category: the listing is no longer complete by today's rules.
+      const listing = await seedListing(t, anna.user, { status: 'PUBLISHED', attributes: { power: 'battery', retired: 'old value' } });
+
+      const terms = await anna.patch(`/listings/${listing.id}`).send({ version: listing.version, dailyCents: 1900 }).expect(200);
+      expect(terms.body.listing).toMatchObject({ status: 'PUBLISHED', dailyCents: 1900 });
+
+      const worse = await anna.patch(`/listings/${listing.id}`).send({ version: listing.version + 1, title: 'Dr' }).expect(400);
+      expect(worse.body.error.fields).toEqual({ title: expect.any(String) });
+    });
+
     it('refuses to delete its last photo', async () => {
       const listing = await seedListing(t, anna.user, { status: 'PUBLISHED' });
       const photo = await t.prisma.listingPhoto.findFirstOrThrow({ where: { listingId: listing.id } });
@@ -145,6 +156,20 @@ describe('submitting, hiding and unavailable dates', () => {
       const replaced = await anna.put(`/listings/${listing.id}/unavailability`).send({ periods: [{ start: day(3), end: day(4) }] }).expect(200);
       expect(replaced.body.periods).toEqual([{ start: day(3), end: day(4) }]);
       expect((await anna.put(`/listings/${listing.id}/unavailability`).send({ periods: [] }).expect(200)).body.periods).toEqual([]);
+    });
+
+    it('changes nothing for the same dates again, and refuses a stale version', async () => {
+      const listing = await seedListing(t, anna.user, { status: 'PENDING_REVIEW', submittedAt: new Date('2026-01-01T00:00:00Z') });
+      const periods = [{ start: day(1), end: day(2) }];
+      const first = await anna.put(`/listings/${listing.id}/unavailability`).send({ periods, version: listing.version }).expect(200);
+      const submittedAt = (await t.prisma.listing.findUniqueOrThrow({ where: { id: listing.id } })).submittedAt;
+
+      const again = await anna.put(`/listings/${listing.id}/unavailability`).send({ periods }).expect(200);
+
+      expect(again.body.version).toBe(first.body.version);
+      expect((await t.prisma.listing.findUniqueOrThrow({ where: { id: listing.id } })).submittedAt).toEqual(submittedAt);
+      const stale = await anna.put(`/listings/${listing.id}/unavailability`).send({ periods: [], version: listing.version }).expect(409);
+      expect(stale.body.error.details).toEqual({ currentVersion: first.body.version });
     });
 
     it('refuses a period that ends before it starts, a day that does not exist and more than 50 periods', async () => {

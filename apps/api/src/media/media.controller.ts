@@ -77,7 +77,7 @@ export class PhotosController {
   @ZodResponse({ status: 200, type: PhotoOrderResponseDto, description: 'New order; the first photo is the cover' })
   @ApiErrors(400, 401, 403, 404, 409)
   async reorder(@CurrentUser() user: PublicUser, @Param('id') id: string, @Body() body: PhotoOrderDto): Promise<PhotoOrderResponse> {
-    return this.photos.reorder(id, user.id, body.ids);
+    return this.photos.reorder(id, user.id, body.ids, body.version);
   }
 
   @Delete(':photoId')
