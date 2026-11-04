@@ -3,6 +3,8 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ZodSerializerInterceptor } from 'nestjs-zod';
 import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
+import { BookingsModule } from './bookings/bookings.module';
+import { OffersModule } from './offers/offers.module';
 import { CategoriesModule } from './categories/categories.module';
 import { ClockModule } from './clock/clock';
 import { OriginGuard } from './common/origin.guard';
@@ -46,6 +48,8 @@ class EnvModule {}
     ModerationModule,
     GeoModule,
     WalletModule,
+    BookingsModule,
+    OffersModule,
   ],
   controllers: [HealthController],
   providers: [

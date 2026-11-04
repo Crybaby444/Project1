@@ -1,5 +1,7 @@
+import { addDays, localDateIn } from '@yoyo/domain';
 import { randomUUID } from 'node:crypto';
 import type { Client } from './listings';
+import type { TestApp } from './test-app';
 
 export const CARDS = {
   visa: '4242 4242 4242 4242',
@@ -23,4 +25,24 @@ export async function topUp(client: Client, amountCents: number): Promise<void> 
   const token = await cardToken(client);
   const res = await client.post('/wallet/top-ups').set('Idempotency-Key', newKey()).send({ amountCents, cardToken: token });
   if (res.status !== 201) throw new Error(`top-up: ${res.status} ${JSON.stringify(res.body)}`);
+}
+
+
+/** The day `offset` days from the test clock's today in Riga, as `YYYY-MM-DD`. */
+export function day(t: TestApp, offset: number): string {
+  return addDays(localDateIn(t.clock.now(), 'Europe/Riga'), offset);
+}
+
+/** Sends a booking request and returns the booking view. */
+export async function requestBooking(
+  t: TestApp,
+  renter: Client,
+  listingId: string,
+  from: number,
+  to: number,
+  extra: Record<string, unknown> = {},
+): Promise<{ id: string; version: number; status: string; actions: string[] } & Record<string, unknown>> {
+  const res = await renter.post('/bookings').send({ listingId, start: day(t, from), end: day(t, to), ...extra });
+  if (res.status !== 201) throw new Error(`booking request: ${res.status} ${JSON.stringify(res.body)}`);
+  return res.body.booking;
 }

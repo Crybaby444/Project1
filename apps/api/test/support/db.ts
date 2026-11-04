@@ -5,9 +5,12 @@ export async function resetAccounts(prisma: PrismaClient): Promise<void> {
   await prisma.$executeRawUnsafe('TRUNCATE TABLE "User" CASCADE');
 }
 
-/** Empties the deal and ledger tables (bookings go with their users and listings; the ledger does not). */
+/**
+ * Empties the deal and ledger tables (bookings go with their users and listings; the ledger does not)
+ * and the stored settings, so the deal rules run on their defaults.
+ */
 export async function resetDeals(prisma: PrismaClient): Promise<void> {
   await prisma.$executeRawUnsafe(
-    'TRUNCATE TABLE "LedgerEntry", "LedgerOperation", "LedgerAccount", "IdempotencyKey", "Booking", "Offer", "Payment", "Payout" CASCADE',
+    'TRUNCATE TABLE "LedgerEntry", "LedgerOperation", "LedgerAccount", "IdempotencyKey", "Booking", "Offer", "Payment", "Payout", "Setting" CASCADE',
   );
 }
