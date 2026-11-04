@@ -278,12 +278,15 @@ export class BookingsService {
     settings: BookingSettings,
   ): Promise<DecideContext> {
     const wallet = event.type === 'PAY' && event.method === 'WALLET' ? walletAccount(row.renterId) : null;
+    // Every account the payment will post to is locked now, in the ledger's one order (sorted by id):
+    // locking the wallet alone first would deadlock with a refund to the same wallet locking in order.
+    // Held until the payment is saved, so two payments from one wallet queue and never spend it twice.
+    const balances = wallet ? await this.ledger.lock([wallet, `escrow:${row.id}`, `deposit:${row.id}`, 'platform:revenue'], tx) : null;
     return {
       now,
       settings,
       ...(event.type === 'ACCEPT' && { blocked: await blockedPeriods(tx, row.listingId, row.id) }),
-      // Locked until the payment is saved: two payments from one wallet queue, never spend it twice.
-      ...(wallet && { walletAvailableCents: cents((await this.ledger.lock([wallet], tx)).get(wallet) ?? 0) }),
+      ...(wallet && balances && { walletAvailableCents: cents(balances.get(wallet) ?? 0) }),
     };
   }
 

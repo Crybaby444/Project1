@@ -174,6 +174,32 @@ describe('paying and the deposit rule', () => {
   });
 });
 
+describe('concurrent money of one wallet', () => {
+  it('a wallet payment and a refund to the same wallet at the same moment both go through (no deadlock)', async () => {
+    for (let round = 0; round < 10; round++) {
+      // A renter per round: the request limit per renter stays out of the way.
+      const payer = await signedInClient(t);
+      await topUp(payer, 10_000);
+      const listingA = await seedListing(t, owner.user, { status: 'PUBLISHED', dailyCents: 1000, depositCents: 1000 });
+      const listingB = await seedListing(t, owner.user, { status: 'PUBLISHED', dailyCents: 1000, depositCents: 1000 });
+      const a = await requestBooking(t, payer, listingA.id, 1, 1);
+      const b = await requestBooking(t, payer, listingB.id, 1, 1);
+      for (const id of [a.id, b.id]) {
+        await step(owner, id, { type: 'ACCEPT' });
+        await step(payer, id, { type: 'SIGN' });
+        await step(owner, id, { type: 'SIGN' });
+      }
+      await step(payer, b.id, { type: 'PAY', method: 'WALLET' });
+      const [pay, cancel] = await Promise.all([
+        act(payer, a.id, { type: 'PAY', method: 'WALLET' }, 3),
+        act(owner, b.id, { type: 'CANCEL', reason: 'Sorry' }, 4),
+      ]);
+      expect({ round, pay: pay.status, cancel: cancel.status }).toEqual({ round, pay: 200, cancel: 200 });
+    }
+    await cleanBooks();
+  });
+});
+
 /** Ids of damage photos on the booking (uploaded through the API from Task 9 on). */
 async function damagePhotos(bookingId: string): Promise<string[]> {
   const photo = await t.prisma.bookingPhoto.create({
