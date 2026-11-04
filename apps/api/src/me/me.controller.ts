@@ -52,13 +52,14 @@ export class MeController {
   /** Every other session ends; this device gets a fresh one (cookies, and tokens in the body for apps). */
   @Post('password')
   @ZodResponse({ status: 200, type: RefreshResponseDto, description: 'Password changed; other sessions ended' })
-  @ApiErrors(400, 401, 403)
+  @ApiErrors(400, 401, 403, 429)
   async changePassword(
     @CurrentUser() user: PublicUser,
     @Body() body: ChangePasswordDto,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<RefreshResponse> {
+    this.limiter.hit(RATE_LIMITS.passwordCheck(user.id));
     const changed = await this.me.changePassword(user.id, body.currentPassword, body.newPassword, sessionMeta(req));
     setAuthCookies(res, changed.session, this.secureCookies);
     const forApp = req.get('authorization') !== undefined;
@@ -69,9 +70,10 @@ export class MeController {
   @HttpCode(204)
   @ApiBody({ type: DeleteAccountDto, required: false })
   @ApiNoContentResponse({ description: 'Account deleted; every session ended; cookies cleared' })
-  @ApiErrors(400, 401, 403)
+  @ApiErrors(400, 401, 403, 429)
   async delete(@CurrentUser() user: PublicUser, @Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<void> {
     const body = parseOptionalBody(DeleteAccountRequestSchema, req.body);
+    this.limiter.hit(RATE_LIMITS.passwordCheck(user.id));
     await this.me.deleteAccount(user.id, body.password);
     clearAuthCookies(res, this.secureCookies);
   }

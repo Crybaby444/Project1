@@ -100,6 +100,20 @@ describe('my account', () => {
       expect((await login('new correct horse')).status).toBe(200);
     });
 
+    it('limits guesses of the current password like logins: the 6th within a minute is 429, here or on DELETE /me', async () => {
+      const { agent } = await signedIn();
+      const wrongChange = () =>
+        agent.post('/api/v1/me/password').send({ currentPassword: 'nope-nope', newPassword: 'new correct horse' });
+      for (let i = 0; i < 3; i++) expect((await wrongChange()).status).toBe(401);
+      for (let i = 0; i < 2; i++) expect((await agent.delete('/api/v1/me').send({ password: 'nope-nope' })).status).toBe(401);
+
+      const sixth = await wrongChange();
+
+      expect(sixth.status).toBe(429);
+      expect(Number(sixth.headers['retry-after'])).toBeGreaterThan(0);
+      expect((await agent.delete('/api/v1/me').send({ password: 'nope-nope' })).status).toBe(429);
+    });
+
     it('checks the new password', async () => {
       const { agent, password } = await signedIn();
       const res = await agent.post('/api/v1/me/password').send({ currentPassword: password, newPassword: 'short' });

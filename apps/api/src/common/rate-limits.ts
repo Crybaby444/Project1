@@ -20,6 +20,14 @@ export const RATE_LIMITS = {
     { key: `forgot-password:ip-email:${ip}|${email}`, limit: 3, windowMs: HOUR },
     { key: `forgot-password:email:${email}`, limit: 5, windowMs: HOUR },
   ],
+  /**
+   * Checks of a signed-in user's current password (change password, delete account) are guesses like
+   * logins: the same 5 a minute and 20 an hour, shared by both endpoints.
+   */
+  passwordCheck: (userId: string): RateRule[] => [
+    { key: `password-check:user:${userId}`, limit: 5, windowMs: MINUTE },
+    { key: `password-check:user-hour:${userId}`, limit: 20, windowMs: HOUR },
+  ],
   /** One phone code a minute per user. */
   phoneCode: (userId: string): RateRule[] => [{ key: `phone-code:user:${userId}`, limit: 1, windowMs: MINUTE }],
   /** One confirmation email a minute per user. */

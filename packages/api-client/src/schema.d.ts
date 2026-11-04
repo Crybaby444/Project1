@@ -1112,6 +1112,15 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
         };
     };
     MeController_update: {
@@ -1207,6 +1216,15 @@ export interface operations {
             };
             /** @description Not allowed (blocked account, wrong role or foreign Origin) */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
