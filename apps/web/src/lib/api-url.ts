@@ -1,7 +1,7 @@
 const LOCAL_API = 'http://localhost:4000';
 
 /**
- * The API origin the web app talks to (generated client paths already start with /api/v1).
+ * The API origin (generated client paths already start with /api/v1).
  * Development and tests fall back to the local API; a production build without
  * NEXT_PUBLIC_API_URL fails loudly instead of shipping a site that silently calls localhost.
  *
@@ -17,4 +17,12 @@ export function resolveApiUrl(configured: string | undefined, nodeEnv: string | 
     );
   }
   return LOCAL_API;
+}
+
+/**
+ * Where the typed client sends requests. In the browser: the site's own origin (`''`), whose /api/*
+ * Next.js proxies to the API, so the session cookies are first-party. On the server: the API itself.
+ */
+export function apiBaseUrl(isBrowser: boolean, configured: string | undefined, nodeEnv: string | undefined): string {
+  return isBrowser ? '' : resolveApiUrl(configured, nodeEnv);
 }
