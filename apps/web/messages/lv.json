@@ -141,6 +141,13 @@
     "ORIGIN_FORBIDDEN": "Pieprasījums nāca no negaidītas lapas. Pārlādējiet to un mēģiniet vēlreiz.",
     "NOT_FOUND": "To neizdevās atrast.",
     "INTERNAL": "Pie mums kaut kas salūza. Mēģiniet vēlreiz pēc minūtes.",
+    "INVALID_STATUS": "Sludinājums pa to laiku ir mainījies vai pašlaik to nevar izdarīt. Pārlādējiet lapu un mēģiniet vēlreiz.",
+    "UNSUPPORTED_MEDIA": "Šo failu nevar izmantot kā fotoattēlu. Augšupielādējiet JPEG, PNG vai WebP.",
+    "PAYLOAD_TOO_LARGE": "Fotoattēls ir pārāk liels. Augšupielādējiet mazāku par 10 MB.",
+    "PHOTO_LIMIT": "Sludinājumā var būt līdz 8 fotoattēliem. Izdzēsiet kādu, lai pievienotu citu.",
+    "STORAGE_DISABLED": "Fotoattēlus pašlaik nevar augšupielādēt. Mēģiniet vēlāk.",
+    "LISTING_INCOMPLETE": "Sludinājums vēl nav pabeigts. Aizpildiet atzīmētos laukus.",
+    "GEO_UNAVAILABLE": "Adrešu meklēšana pašlaik nedarbojas. Mēģiniet vēlreiz pēc minūtes.",
     "NETWORK": "Nevaram sazināties ar Yoyo. Pārbaudiet savienojumu un mēģiniet vēlreiz.",
     "fieldInvalid": "Pārbaudiet šo lauku.",
     "retryIn": "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc {seconds} s."
@@ -299,5 +306,13 @@
       },
       "cancel": "Atcelt"
     }
+  },
+  "listingRules": {
+    "ID_AT_PICKUP": "Saņemot uzrādīt personu apliecinošu dokumentu",
+    "RETURN_CLEAN": "Atdot tīru",
+    "NO_SMOKING": "Nesmēķēt lietas tuvumā",
+    "PICKUP_ONLY": "Tikai saņemšana uz vietas, bez piegādes",
+    "PETS_OK": "Drīkst lietot mājdzīvnieku tuvumā",
+    "CARE_INSTRUCTIONS": "Ievērot kopšanas norādījumus"
   }
 }

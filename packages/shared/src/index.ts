@@ -6,3 +6,7 @@ export * from './health';
 export * from './errors';
 export * from './auth';
 export * from './web';
+export * from './text';
+export * from './categories';
+export * from './listings';
+export * from './geo';

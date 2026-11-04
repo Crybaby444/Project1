@@ -54,10 +54,12 @@ model User {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
-  refreshTokens RefreshToken[]
-  emailTokens   EmailToken[]
-  oauthAccounts OAuthAccount[]
-  phoneCodes    PhoneCode[]
+  refreshTokens    RefreshToken[]
+  emailTokens      EmailToken[]
+  oauthAccounts    OAuthAccount[]
+  phoneCodes       PhoneCode[]
+  listings         Listing[]      @relation("ListingOwner")
+  reviewedListings Listing[]      @relation("ListingReviewer")
 }
 
 /// One refresh token of a session. Rotation chains tokens of the same family; reuse revokes the family.
@@ -125,4 +127,167 @@ model PhoneCode {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+/// Sticker colours of DESIGN.md (STICKER_COLORS in @yoyo/shared).
+enum Sticker {
+  blue
+  mint
+  lavender
+  ember
+  sun
+  violet
+}
+
+enum AttributeType {
+  TEXT
+  NUMBER
+  BOOLEAN
+  SELECT
+}
+
+/// The category tree. Reference data from src/categories/catalog-data.ts, kept in sync on every start
+/// (ensureCategories); a category that leaves the catalog is deactivated, never deleted.
+model Category {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  parentId  String?
+  sortOrder Int      @default(0)
+  sticker   Sticker
+  /// Icon name the site maps to a drawing.
+  icon      String
+  /// { en, lv, ru }
+  names     Json
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  parent     Category?           @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children   Category[]          @relation("CategoryTree")
+  attributes CategoryAttribute[]
+  listings   Listing[]
+
+  @@index([parentId])
+}
+
+/// A field the listing builder asks for in a category (spec §4.8).
+model CategoryAttribute {
+  id         String        @id @default(cuid())
+  categoryId String
+  key        String
+  type       AttributeType
+  required   Boolean       @default(false)
+  /// Unit symbol for numbers (`W`, `m`, `kg`).
+  unit       String?
+  /// { en, lv, ru }
+  labels     Json
+  /// SELECT only: [{ value, labels: { en, lv, ru } }]
+  options    Json?
+  sortOrder  Int           @default(0)
+
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, key])
+}
+
+enum ListingStatus {
+  DRAFT
+  PENDING_REVIEW
+  PUBLISHED
+  REJECTED
+  HIDDEN
+  ARCHIVED
+}
+
+enum ListingCondition {
+  NEW
+  LIKE_NEW
+  GOOD
+  FAIR
+}
+
+/// An item for rent. Status changes only by the table in src/listings/listing-status.ts. The exact
+/// point (lat, lng) is shown to the owner and administrators only; everyone else sees the district.
+model Listing {
+  id                    String            @id @default(cuid())
+  ownerId               String
+  categoryId            String?
+  status                ListingStatus     @default(DRAFT)
+  title                 String?
+  description           String?
+  condition             ListingCondition?
+  /// Values by CategoryAttribute.key, checked against the category's definitions.
+  attributes            Json              @default("{}")
+  dailyCents            Int?
+  weeklyDiscountPercent Int               @default(0)
+  depositCents          Int               @default(0)
+  minDays               Int               @default(1)
+  maxDays               Int               @default(30)
+  city                  String?
+  district              String?
+  lat                   Decimal?          @db.Decimal(9, 6)
+  lng                   Decimal?          @db.Decimal(9, 6)
+  timeZone              String            @default("Europe/Riga")
+  /// { preset: RulePreset[], custom: string[] }
+  rules                 Json              @default("{\"preset\":[],\"custom\":[]}")
+  /// Why moderation rejected it; shown to the owner.
+  rejectionReason       String?
+  submittedAt           DateTime?
+  reviewedAt            DateTime?
+  reviewedById          String?
+  /// When it was first published; a listing that was never public may be deleted for good.
+  publishedAt           DateTime?
+  /// Counts every change; a PATCH with an older version is refused (optimistic locking).
+  version               Int               @default(0)
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  owner          User             @relation("ListingOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  reviewedBy     User?            @relation("ListingReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  category       Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  photos         ListingPhoto[]
+  unavailability Unavailability[]
+
+  @@index([ownerId])
+  @@index([status, categoryId])
+}
+
+/// A photo of a listing; the file lives in the storage provider under `storageKey` (random, never the
+/// user's file name). Position 0 is the cover.
+model ListingPhoto {
+  id         String   @id @default(cuid())
+  listingId  String
+  storageKey String   @unique
+  width      Int
+  height     Int
+  bytes      Int
+  format     String
+  position   Int
+  createdAt  DateTime @default(now())
+
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@index([listingId, position])
+}
+
+/// Days the owner closed: from `start` to `end`, both included, in the listing's time zone.
+model Unavailability {
+  id        String   @id @default(cuid())
+  listingId String
+  start     DateTime @db.Date
+  end       DateTime @db.Date
+
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@index([listingId])
+}
+
+/// Geocoder answers (Nominatim), kept 30 days: the same search never asks it twice.
+model GeoCache {
+  /// `search:<lang>:<normalized query>` or `reverse:<lang>:<lat>,<lng>`
+  key       String   @id
+  payload   Json
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
 }

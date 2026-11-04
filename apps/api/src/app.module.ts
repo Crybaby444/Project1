@@ -3,12 +3,17 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ZodSerializerInterceptor } from 'nestjs-zod';
 import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
+import { CategoriesModule } from './categories/categories.module';
 import { ClockModule } from './clock/clock';
 import { OriginGuard } from './common/origin.guard';
 import { RateLimiterModule } from './common/rate-limiter';
 import { ENV, loadEnv } from './config/env';
+import { GeoModule } from './geo/geo.module';
 import { HealthController } from './health/health.controller';
+import { ListingsModule } from './listings/listings.module';
+import { MediaModule } from './media/media.module';
 import { MeModule } from './me/me.module';
+import { ModerationModule } from './moderation/moderation.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { SettingsModule } from './settings/settings.module';
 
@@ -29,6 +34,11 @@ class EnvModule {}
     AuthModule,
     MeModule,
     AdminModule,
+    CategoriesModule,
+    ListingsModule,
+    MediaModule,
+    ModerationModule,
+    GeoModule,
   ],
   controllers: [HealthController],
   providers: [

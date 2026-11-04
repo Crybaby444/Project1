@@ -4,7 +4,12 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { AccessTokenService } from '../src/auth/access-token.service';
 import { AuthService } from '../src/auth/auth.service';
 import { RefreshTokenService } from '../src/auth/refresh-token.service';
+import { existsSync } from 'node:fs';
+import type { LocalStorageProvider } from '../src/media/local-storage.provider';
+import { STORAGE_PROVIDER } from '../src/media/storage.provider';
 import { resetAccounts } from './support/db';
+import { testImages } from './support/images';
+import { seedListing } from './support/listings';
 import { cookieLine, cookieValue, createTestApp, type TestApp } from './support/test-app';
 import { seedUser } from './support/users';
 
@@ -166,6 +171,27 @@ describe('my account', () => {
 
       expect(await t.prisma.refreshToken.count({ where: { userId: user.id } })).toBe(0);
       expect((await t.prisma.user.findUniqueOrThrow({ where: { id: user.id } })).blockedReason).toBeNull();
+    });
+
+    it('takes the listings along: never-published ones are deleted with their photo files, the rest archived without the exact point', async () => {
+      const { agent, user, password } = await signedIn();
+      const storage = t.app.get(STORAGE_PROVIDER) as LocalStorageProvider;
+      const draft = await seedListing(t, user, { status: 'DRAFT' });
+      const firstReview = await seedListing(t, user, { status: 'PENDING_REVIEW' });
+      const published = await seedListing(t, user, { status: 'PUBLISHED' });
+      const hidden = await seedListing(t, user, { status: 'HIDDEN' });
+      const draftPhoto = await t.prisma.listingPhoto.findFirstOrThrow({ where: { listingId: draft.id } });
+      await storage.put(draftPhoto.storageKey, (await testImages()).jpeg, 'image/jpeg');
+      expect(existsSync(storage.pathOf(draftPhoto.storageKey))).toBe(true);
+
+      await agent.delete('/api/v1/me').send({ password }).expect(204);
+
+      expect(await t.prisma.listing.count({ where: { id: { in: [draft.id, firstReview.id] } } })).toBe(0);
+      expect(existsSync(storage.pathOf(draftPhoto.storageKey))).toBe(false);
+      for (const id of [published.id, hidden.id]) {
+        // Kept for the deals that point at it, but out of the catalog and without the owner's address.
+        expect(await t.prisma.listing.findUniqueOrThrow({ where: { id } })).toMatchObject({ status: 'ARCHIVED', lat: null, lng: null });
+      }
     });
 
     it('refuses a wrong or missing password for an account that has one', async () => {

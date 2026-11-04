@@ -72,7 +72,7 @@
             "description": "Redirect to Google’s consent screen"
           },
           "400": {
-            "description": "Invalid input (VALIDATION_FAILED, with fields)",
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
             "content": {
               "application/json": {
                 "schema": {
@@ -175,7 +175,7 @@
             }
           },
           "400": {
-            "description": "Invalid input (VALIDATION_FAILED, with fields)",
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
             "content": {
               "application/json": {
                 "schema": {
@@ -195,7 +195,7 @@
             }
           },
           "409": {
-            "description": "Conflict (e.g. AUTH_EMAIL_TAKEN)",
+            "description": "Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion)",
             "content": {
               "application/json": {
                 "schema": {
@@ -246,7 +246,7 @@
             }
           },
           "400": {
-            "description": "Invalid input (VALIDATION_FAILED, with fields)",
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
             "content": {
               "application/json": {
                 "schema": {
@@ -344,7 +344,7 @@
             "description": "If the account exists, a reset link is on its way (same answer either way)"
           },
           "400": {
-            "description": "Invalid input (VALIDATION_FAILED, with fields)",
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
             "content": {
               "application/json": {
                 "schema": {
@@ -405,7 +405,7 @@
             }
           },
           "400": {
-            "description": "Invalid input (VALIDATION_FAILED, with fields)",
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
             "content": {
               "application/json": {
                 "schema": {
@@ -466,7 +466,7 @@
             }
           },
           "400": {
-            "description": "Invalid input (VALIDATION_FAILED, with fields)",
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
             "content": {
               "application/json": {
                 "schema": {
@@ -537,7 +537,7 @@
             }
           },
           "400": {
-            "description": "Invalid input (VALIDATION_FAILED, with fields)",
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
             "content": {
               "application/json": {
                 "schema": {
@@ -591,7 +591,7 @@
             "description": "This session ended; cookies cleared"
           },
           "400": {
-            "description": "Invalid input (VALIDATION_FAILED, with fields)",
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
             "content": {
               "application/json": {
                 "schema": {
@@ -715,7 +715,7 @@
             }
           },
           "400": {
-            "description": "Invalid input (VALIDATION_FAILED, with fields)",
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
             "content": {
               "application/json": {
                 "schema": {
@@ -767,7 +767,7 @@
             "description": "Account deleted; every session ended; cookies cleared"
           },
           "400": {
-            "description": "Invalid input (VALIDATION_FAILED, with fields)",
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
             "content": {
               "application/json": {
                 "schema": {
@@ -838,7 +838,7 @@
             }
           },
           "400": {
-            "description": "Invalid input (VALIDATION_FAILED, with fields)",
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
             "content": {
               "application/json": {
                 "schema": {
@@ -902,7 +902,7 @@
             "description": "A 6-digit code is on its way (valid 10 minutes)"
           },
           "400": {
-            "description": "Invalid input (VALIDATION_FAILED, with fields)",
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
             "content": {
               "application/json": {
                 "schema": {
@@ -983,7 +983,7 @@
             }
           },
           "400": {
-            "description": "Invalid input (VALIDATION_FAILED, with fields)",
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
             "content": {
               "application/json": {
                 "schema": {
@@ -1038,6 +1038,685 @@
         ]
       }
     },
+    "/api/v1/me/listings": {
+      "get": {
+        "operationId": "MyListingsController_list",
+        "parameters": [
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "DRAFT",
+                "PENDING_REVIEW",
+                "PUBLISHED",
+                "REJECTED",
+                "HIDDEN",
+                "ARCHIVED"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "My listings, last changed first (archived ones only when asked for)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyListingsResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/api/v1/listings": {
+      "post": {
+        "operationId": "ListingsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ListingDraftDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "A new draft",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerListingResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many attempts (RATE_LIMITED); see Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/api/v1/listings/{id}": {
+      "get": {
+        "operationId": "ListingsController_get",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The whole listing (owner or administrator only)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerListingResponseDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "listings"
+        ]
+      },
+      "patch": {
+        "operationId": "ListingsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ListingPatchDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saved; content changes of a live listing send it to review",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerListingResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "listings"
+        ]
+      },
+      "delete": {
+        "operationId": "ListingsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted (never published) or archived (was published)"
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/api/v1/listings/{id}/submit": {
+      "post": {
+        "operationId": "ListingsController_submit",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sent to review (PENDING_REVIEW)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerListingResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/api/v1/listings/{id}/hide": {
+      "post": {
+        "operationId": "ListingsController_hide",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hidden from the catalog",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerListingResponseDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/api/v1/listings/{id}/unhide": {
+      "post": {
+        "operationId": "ListingsController_unhide",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Back in the catalog",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerListingResponseDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/api/v1/listings/{id}/unavailability": {
+      "put": {
+        "operationId": "ListingsController_unavailability",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnavailabilityRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The unavailable days as stored: merged, sorted, past ones dropped",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnavailabilityResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/api/v1/categories": {
+      "get": {
+        "operationId": "CategoriesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Active categories as a tree, with their attributes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoriesResponseDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "categories"
+        ]
+      }
+    },
     "/api/v1/admin/users": {
       "get": {
         "operationId": "AdminController_users",
@@ -1074,7 +1753,7 @@
             }
           },
           "400": {
-            "description": "Invalid input (VALIDATION_FAILED, with fields)",
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
             "content": {
               "application/json": {
                 "schema": {
@@ -1106,6 +1785,815 @@
         },
         "tags": [
           "admin"
+        ]
+      }
+    },
+    "/api/v1/listings/{id}/photos": {
+      "post": {
+        "operationId": "PhotosController_upload",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Stored; cleaned of metadata, at most 2048 px",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhotoUploadResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "File too large (PAYLOAD_TOO_LARGE)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Not a JPEG, PNG or WebP image (UNSUPPORTED_MEDIA)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many attempts (RATE_LIMITED); see Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "A service behind the API is unavailable (STORAGE_DISABLED, GEO_UNAVAILABLE)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/api/v1/listings/{id}/photos/order": {
+      "put": {
+        "operationId": "PhotosController_reorder",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhotoOrderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "New order; the first photo is the cover",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhotoOrderResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/api/v1/listings/{id}/photos/{photoId}": {
+      "delete": {
+        "operationId": "PhotosController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "photoId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Photo and its file deleted"
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/api/v1/media/{key}/{variant}": {
+      "get": {
+        "operationId": "MediaController_file",
+        "parameters": [
+          {
+            "name": "key",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "variant",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The image (WebP)",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "media"
+        ]
+      }
+    },
+    "/api/v1/admin/listings": {
+      "get": {
+        "operationId": "ModerationController_queue",
+        "parameters": [
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "DRAFT",
+                "PENDING_REVIEW",
+                "PUBLISHED",
+                "REJECTED",
+                "HIDDEN",
+                "ARCHIVED"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100000,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listings in a status (review queue by default), oldest first, 20 a page",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminListingsResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/listings/{id}/approve": {
+      "post": {
+        "operationId": "ModerationController_approve",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApproveListingDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Published; the owner gets an email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminListingResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/listings/{id}/reject": {
+      "post": {
+        "operationId": "ModerationController_reject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RejectListingDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rejected; the owner sees the reason and gets an email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminListingResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/geo/search": {
+      "get": {
+        "operationId": "GeoController_search",
+        "parameters": [
+          {
+            "name": "q",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minLength": 2,
+              "maxLength": 200,
+              "type": "string"
+            }
+          },
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "en",
+              "type": "string",
+              "enum": [
+                "en",
+                "lv",
+                "ru"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Up to 5 places",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeoSearchResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many attempts (RATE_LIMITED); see Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "A service behind the API is unavailable (STORAGE_DISABLED, GEO_UNAVAILABLE)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "geo"
+        ]
+      }
+    },
+    "/api/v1/geo/reverse": {
+      "get": {
+        "operationId": "GeoController_reverse",
+        "parameters": [
+          {
+            "name": "lat",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minimum": -90,
+              "maximum": 90,
+              "type": "number"
+            }
+          },
+          {
+            "name": "lng",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minimum": -180,
+              "maximum": 180,
+              "type": "number"
+            }
+          },
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "en",
+              "type": "string",
+              "enum": [
+                "en",
+                "lv",
+                "ru"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "City and district of a point (null when unknown)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeoReverseResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many attempts (RATE_LIMITED); see Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "A service behind the API is unavailable (STORAGE_DISABLED, GEO_UNAVAILABLE)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "geo"
         ]
       }
     }
@@ -1187,7 +2675,14 @@
                   "OAUTH_FAILED",
                   "ORIGIN_FORBIDDEN",
                   "NOT_FOUND",
-                  "INTERNAL"
+                  "INTERNAL",
+                  "INVALID_STATUS",
+                  "UNSUPPORTED_MEDIA",
+                  "PAYLOAD_TOO_LARGE",
+                  "PHOTO_LIMIT",
+                  "STORAGE_DISABLED",
+                  "LISTING_INCOMPLETE",
+                  "GEO_UNAVAILABLE"
                 ]
               },
               "message": {
@@ -1198,6 +2693,10 @@
                 "additionalProperties": {
                   "type": "string"
                 }
+              },
+              "details": {
+                "type": "object",
+                "additionalProperties": {}
               }
             },
             "required": [
@@ -1595,6 +3094,918 @@
           "code"
         ]
       },
+      "MyListingsResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "DRAFT",
+                    "PENDING_REVIEW",
+                    "PUBLISHED",
+                    "REJECTED",
+                    "HIDDEN",
+                    "ARCHIVED"
+                  ]
+                },
+                "title": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "categoryId": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "dailyCents": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991,
+                  "nullable": true
+                },
+                "cover": {
+                  "type": "object",
+                  "properties": {
+                    "thumb": {
+                      "type": "string"
+                    },
+                    "card": {
+                      "type": "string"
+                    },
+                    "full": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "thumb",
+                    "card",
+                    "full"
+                  ],
+                  "additionalProperties": false,
+                  "nullable": true
+                },
+                "photoCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "rejectionReason": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "submittedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "nullable": true
+                },
+                "publishedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "nullable": true
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "id",
+                "status",
+                "title",
+                "categoryId",
+                "dailyCents",
+                "cover",
+                "photoCount",
+                "rejectionReason",
+                "submittedAt",
+                "publishedAt",
+                "updatedAt",
+                "version"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "ListingDraftDto": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 320,
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 12000,
+            "nullable": true
+          },
+          "condition": {
+            "type": "string",
+            "enum": [
+              "NEW",
+              "LIKE_NEW",
+              "GOOD",
+              "FAIR",
+              null
+            ],
+            "nullable": true
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "dailyCents": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000000,
+            "nullable": true
+          },
+          "weeklyDiscountPercent": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "depositCents": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000000
+          },
+          "minDays": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000000000
+          },
+          "maxDays": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000000000
+          },
+          "city": {
+            "type": "string",
+            "maxLength": 240,
+            "nullable": true
+          },
+          "district": {
+            "type": "string",
+            "maxLength": 240,
+            "nullable": true
+          },
+          "lat": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90,
+            "nullable": true
+          },
+          "lng": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180,
+            "nullable": true
+          },
+          "timeZone": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "rules": {
+            "type": "object",
+            "properties": {
+              "preset": {
+                "maxItems": 6,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "ID_AT_PICKUP",
+                    "RETURN_CLEAN",
+                    "NO_SMOKING",
+                    "PICKUP_ONLY",
+                    "PETS_OK",
+                    "CARE_INSTRUCTIONS"
+                  ]
+                }
+              },
+              "custom": {
+                "maxItems": 5,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "maxLength": 480
+                }
+              }
+            },
+            "required": [
+              "preset",
+              "custom"
+            ]
+          }
+        }
+      },
+      "OwnerListingResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "listing": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "ownerId": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "DRAFT",
+                  "PENDING_REVIEW",
+                  "PUBLISHED",
+                  "REJECTED",
+                  "HIDDEN",
+                  "ARCHIVED"
+                ]
+              },
+              "categoryId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "condition": {
+                "type": "string",
+                "enum": [
+                  "NEW",
+                  "LIKE_NEW",
+                  "GOOD",
+                  "FAIR",
+                  null
+                ],
+                "nullable": true
+              },
+              "attributes": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": [
+                    "string",
+                    "number",
+                    "boolean"
+                  ]
+                }
+              },
+              "dailyCents": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991,
+                "nullable": true
+              },
+              "weeklyDiscountPercent": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "depositCents": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "minDays": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "maxDays": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "city": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "district": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timeZone": {
+                "type": "string"
+              },
+              "rules": {
+                "type": "object",
+                "properties": {
+                  "preset": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "ID_AT_PICKUP",
+                        "RETURN_CLEAN",
+                        "NO_SMOKING",
+                        "PICKUP_ONLY",
+                        "PETS_OK",
+                        "CARE_INSTRUCTIONS"
+                      ]
+                    }
+                  },
+                  "custom": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "preset",
+                  "custom"
+                ],
+                "additionalProperties": false
+              },
+              "photos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "width": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "height": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "position": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "urls": {
+                      "type": "object",
+                      "properties": {
+                        "thumb": {
+                          "type": "string"
+                        },
+                        "card": {
+                          "type": "string"
+                        },
+                        "full": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "thumb",
+                        "card",
+                        "full"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "width",
+                    "height",
+                    "position",
+                    "urls"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "unavailability": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                    },
+                    "end": {
+                      "type": "string",
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "publishedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                "nullable": true
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+              },
+              "lat": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "lng": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "rejectionReason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "submittedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                "nullable": true
+              },
+              "reviewedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                "nullable": true
+              },
+              "reviewedById": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "version": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "id",
+              "ownerId",
+              "status",
+              "categoryId",
+              "title",
+              "description",
+              "condition",
+              "attributes",
+              "dailyCents",
+              "weeklyDiscountPercent",
+              "depositCents",
+              "minDays",
+              "maxDays",
+              "city",
+              "district",
+              "timeZone",
+              "rules",
+              "photos",
+              "unavailability",
+              "publishedAt",
+              "createdAt",
+              "updatedAt",
+              "lat",
+              "lng",
+              "rejectionReason",
+              "submittedAt",
+              "reviewedAt",
+              "reviewedById",
+              "version"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "listing"
+        ],
+        "additionalProperties": false
+      },
+      "ListingPatchDto": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 320,
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 12000,
+            "nullable": true
+          },
+          "condition": {
+            "type": "string",
+            "enum": [
+              "NEW",
+              "LIKE_NEW",
+              "GOOD",
+              "FAIR",
+              null
+            ],
+            "nullable": true
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "dailyCents": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000000,
+            "nullable": true
+          },
+          "weeklyDiscountPercent": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "depositCents": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000000
+          },
+          "minDays": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000000000
+          },
+          "maxDays": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000000000
+          },
+          "city": {
+            "type": "string",
+            "maxLength": 240,
+            "nullable": true
+          },
+          "district": {
+            "type": "string",
+            "maxLength": 240,
+            "nullable": true
+          },
+          "lat": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90,
+            "nullable": true
+          },
+          "lng": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180,
+            "nullable": true
+          },
+          "timeZone": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "rules": {
+            "type": "object",
+            "properties": {
+              "preset": {
+                "maxItems": 6,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "ID_AT_PICKUP",
+                    "RETURN_CLEAN",
+                    "NO_SMOKING",
+                    "PICKUP_ONLY",
+                    "PETS_OK",
+                    "CARE_INSTRUCTIONS"
+                  ]
+                }
+              },
+              "custom": {
+                "maxItems": 5,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "maxLength": 480
+                }
+              }
+            },
+            "required": [
+              "preset",
+              "custom"
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "version"
+        ]
+      },
+      "UnavailabilityRequestDto": {
+        "type": "object",
+        "properties": {
+          "periods": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "start": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                },
+                "end": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                }
+              },
+              "required": [
+                "start",
+                "end"
+              ]
+            }
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "periods"
+        ]
+      },
+      "UnavailabilityResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "periods": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "start": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                },
+                "end": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                }
+              },
+              "required": [
+                "start",
+                "end"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "version": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "periods",
+          "version"
+        ],
+        "additionalProperties": false
+      },
+      "CategoryNode_Output": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "sticker": {
+            "type": "string",
+            "enum": [
+              "blue",
+              "mint",
+              "lavender",
+              "ember",
+              "sun",
+              "violet"
+            ]
+          },
+          "icon": {
+            "type": "string"
+          },
+          "names": {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "string"
+              },
+              "lv": {
+                "type": "string"
+              },
+              "ru": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "en",
+              "lv",
+              "ru"
+            ],
+            "additionalProperties": false
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "TEXT",
+                    "NUMBER",
+                    "BOOLEAN",
+                    "SELECT"
+                  ]
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "unit": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "labels": {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "lv": {
+                      "type": "string"
+                    },
+                    "ru": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en",
+                    "lv",
+                    "ru"
+                  ],
+                  "additionalProperties": false
+                },
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "labels": {
+                        "type": "object",
+                        "properties": {
+                          "en": {
+                            "type": "string"
+                          },
+                          "lv": {
+                            "type": "string"
+                          },
+                          "ru": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "en",
+                          "lv",
+                          "ru"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "labels"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "nullable": true
+                }
+              },
+              "required": [
+                "key",
+                "type",
+                "required",
+                "unit",
+                "labels",
+                "options"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryNode_Output"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "sticker",
+          "icon",
+          "names",
+          "attributes",
+          "children"
+        ],
+        "additionalProperties": false
+      },
+      "CategoriesResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryNode_Output"
+            }
+          }
+        },
+        "required": [
+          "categories"
+        ],
+        "additionalProperties": false
+      },
       "AdminUsersResponseDto_Output": {
         "type": "object",
         "properties": {
@@ -1709,6 +4120,930 @@
         "required": [
           "items",
           "total"
+        ],
+        "additionalProperties": false
+      },
+      "PhotoUploadResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "photo": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "width": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "height": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "position": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "urls": {
+                "type": "object",
+                "properties": {
+                  "thumb": {
+                    "type": "string"
+                  },
+                  "card": {
+                    "type": "string"
+                  },
+                  "full": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "thumb",
+                  "card",
+                  "full"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "id",
+              "width",
+              "height",
+              "position",
+              "urls"
+            ],
+            "additionalProperties": false
+          },
+          "version": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "photo",
+          "version"
+        ],
+        "additionalProperties": false
+      },
+      "PhotoOrderDto": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "maxItems": 8,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 64
+            }
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "ids"
+        ]
+      },
+      "PhotoOrderResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "photos": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "width": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "height": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "position": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "urls": {
+                  "type": "object",
+                  "properties": {
+                    "thumb": {
+                      "type": "string"
+                    },
+                    "card": {
+                      "type": "string"
+                    },
+                    "full": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "thumb",
+                    "card",
+                    "full"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "id",
+                "width",
+                "height",
+                "position",
+                "urls"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "version": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "photos",
+          "version"
+        ],
+        "additionalProperties": false
+      },
+      "AdminListingsResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "ownerId": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "DRAFT",
+                    "PENDING_REVIEW",
+                    "PUBLISHED",
+                    "REJECTED",
+                    "HIDDEN",
+                    "ARCHIVED"
+                  ]
+                },
+                "categoryId": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "title": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "description": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "condition": {
+                  "type": "string",
+                  "enum": [
+                    "NEW",
+                    "LIKE_NEW",
+                    "GOOD",
+                    "FAIR",
+                    null
+                  ],
+                  "nullable": true
+                },
+                "attributes": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean"
+                    ]
+                  }
+                },
+                "dailyCents": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991,
+                  "nullable": true
+                },
+                "weeklyDiscountPercent": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "depositCents": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "minDays": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "maxDays": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "city": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "district": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "timeZone": {
+                  "type": "string"
+                },
+                "rules": {
+                  "type": "object",
+                  "properties": {
+                    "preset": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "ID_AT_PICKUP",
+                          "RETURN_CLEAN",
+                          "NO_SMOKING",
+                          "PICKUP_ONLY",
+                          "PETS_OK",
+                          "CARE_INSTRUCTIONS"
+                        ]
+                      }
+                    },
+                    "custom": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "preset",
+                    "custom"
+                  ],
+                  "additionalProperties": false
+                },
+                "photos": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "width": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "height": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "position": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "urls": {
+                        "type": "object",
+                        "properties": {
+                          "thumb": {
+                            "type": "string"
+                          },
+                          "card": {
+                            "type": "string"
+                          },
+                          "full": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "thumb",
+                          "card",
+                          "full"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "width",
+                      "height",
+                      "position",
+                      "urls"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "unavailability": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "start": {
+                        "type": "string",
+                        "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                      },
+                      "end": {
+                        "type": "string",
+                        "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                      }
+                    },
+                    "required": [
+                      "start",
+                      "end"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "publishedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "nullable": true
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                },
+                "lat": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "lng": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "rejectionReason": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "submittedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "nullable": true
+                },
+                "reviewedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "nullable": true
+                },
+                "reviewedById": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "owner": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "email"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "id",
+                "ownerId",
+                "status",
+                "categoryId",
+                "title",
+                "description",
+                "condition",
+                "attributes",
+                "dailyCents",
+                "weeklyDiscountPercent",
+                "depositCents",
+                "minDays",
+                "maxDays",
+                "city",
+                "district",
+                "timeZone",
+                "rules",
+                "photos",
+                "unavailability",
+                "publishedAt",
+                "createdAt",
+                "updatedAt",
+                "lat",
+                "lng",
+                "rejectionReason",
+                "submittedAt",
+                "reviewedAt",
+                "reviewedById",
+                "version",
+                "owner"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "additionalProperties": false
+      },
+      "ApproveListingDto": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "version"
+        ]
+      },
+      "AdminListingResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "listing": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "ownerId": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "DRAFT",
+                  "PENDING_REVIEW",
+                  "PUBLISHED",
+                  "REJECTED",
+                  "HIDDEN",
+                  "ARCHIVED"
+                ]
+              },
+              "categoryId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "condition": {
+                "type": "string",
+                "enum": [
+                  "NEW",
+                  "LIKE_NEW",
+                  "GOOD",
+                  "FAIR",
+                  null
+                ],
+                "nullable": true
+              },
+              "attributes": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": [
+                    "string",
+                    "number",
+                    "boolean"
+                  ]
+                }
+              },
+              "dailyCents": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991,
+                "nullable": true
+              },
+              "weeklyDiscountPercent": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "depositCents": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "minDays": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "maxDays": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "city": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "district": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timeZone": {
+                "type": "string"
+              },
+              "rules": {
+                "type": "object",
+                "properties": {
+                  "preset": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "ID_AT_PICKUP",
+                        "RETURN_CLEAN",
+                        "NO_SMOKING",
+                        "PICKUP_ONLY",
+                        "PETS_OK",
+                        "CARE_INSTRUCTIONS"
+                      ]
+                    }
+                  },
+                  "custom": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "preset",
+                  "custom"
+                ],
+                "additionalProperties": false
+              },
+              "photos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "width": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "height": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "position": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "urls": {
+                      "type": "object",
+                      "properties": {
+                        "thumb": {
+                          "type": "string"
+                        },
+                        "card": {
+                          "type": "string"
+                        },
+                        "full": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "thumb",
+                        "card",
+                        "full"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "width",
+                    "height",
+                    "position",
+                    "urls"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "unavailability": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                    },
+                    "end": {
+                      "type": "string",
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "publishedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                "nullable": true
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+              },
+              "lat": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "lng": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "rejectionReason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "submittedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                "nullable": true
+              },
+              "reviewedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                "nullable": true
+              },
+              "reviewedById": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "version": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "owner": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "email"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "id",
+              "ownerId",
+              "status",
+              "categoryId",
+              "title",
+              "description",
+              "condition",
+              "attributes",
+              "dailyCents",
+              "weeklyDiscountPercent",
+              "depositCents",
+              "minDays",
+              "maxDays",
+              "city",
+              "district",
+              "timeZone",
+              "rules",
+              "photos",
+              "unavailability",
+              "publishedAt",
+              "createdAt",
+              "updatedAt",
+              "lat",
+              "lng",
+              "rejectionReason",
+              "submittedAt",
+              "reviewedAt",
+              "reviewedById",
+              "version",
+              "owner"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "listing"
+        ],
+        "additionalProperties": false
+      },
+      "RejectListingDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "reason",
+          "version"
+        ]
+      },
+      "GeoSearchResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "city": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "district": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "lat": {
+                  "type": "number"
+                },
+                "lng": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "label",
+                "city",
+                "district",
+                "lat",
+                "lng"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "attribution": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "results",
+          "attribution"
+        ],
+        "additionalProperties": false
+      },
+      "GeoReverseResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "district": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "attribution": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "city",
+          "district",
+          "attribution"
         ],
         "additionalProperties": false
       }

@@ -29,5 +29,20 @@
     "body": "Enter this code on Yoyo to confirm your phone number:",
     "expiry": "The code works for 10 minutes.",
     "ignore": "If you did not ask for a code, just ignore this email."
+  },
+  "listingApproved": {
+    "subject": "Your listing is live on Yoyo",
+    "preview": "People nearby can now find and rent it.",
+    "heading": "Your listing is published",
+    "body": "Good news: “{title}” passed moderation and is now in the Yoyo catalog. People nearby can find it and send you requests.",
+    "button": "See the listing"
+  },
+  "listingRejected": {
+    "subject": "Your Yoyo listing needs changes",
+    "preview": "See what to fix and send it again.",
+    "heading": "Your listing needs a few changes",
+    "body": "Our moderators could not publish “{title}” yet. Here is why:",
+    "next": "Fix it and send it for review again; it only takes a moment.",
+    "button": "Edit the listing"
   }
 }

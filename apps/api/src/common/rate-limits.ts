@@ -46,6 +46,12 @@ export const RATE_LIMITS = {
   verificationMail: (userId: string): RateRule[] => [
     { key: `verification-mail:user-day:${userId}`, limit: 5, windowMs: 24 * HOUR },
   ],
+  /** 30 new listings an hour per user: drafts are cheap, but not free. */
+  createListing: (userId: string): RateRule[] => [{ key: `create-listing:user:${userId}`, limit: 30, windowMs: HOUR }],
+  /** 60 photo uploads an hour per user (each one is decoded and re-encoded on the server). */
+  photoUpload: (userId: string): RateRule[] => [{ key: `photo-upload:user:${userId}`, limit: 60, windowMs: HOUR }],
+  /** 30 address searches (search and reverse together) a minute per user. */
+  geo: (userId: string): RateRule[] => [{ key: `geo:user:${userId}`, limit: 30, windowMs: MINUTE }],
   /** One confirmation email a minute per user. */
   resendVerification: (userId: string): RateRule[] => [
     { key: `resend-verification:user:${userId}`, limit: 1, windowMs: MINUTE },

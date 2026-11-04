@@ -141,6 +141,13 @@
     "ORIGIN_FORBIDDEN": "This request came from an unexpected page. Reload it and try again.",
     "NOT_FOUND": "We could not find that.",
     "INTERNAL": "Something broke on our side. Try again in a minute.",
+    "INVALID_STATUS": "This listing changed in the meantime or cannot do that right now. Reload the page and try again.",
+    "UNSUPPORTED_MEDIA": "This file is not a photo we can use. Upload a JPEG, PNG or WebP.",
+    "PAYLOAD_TOO_LARGE": "This photo is too big. Upload one under 10 MB.",
+    "PHOTO_LIMIT": "A listing can have up to 8 photos. Remove one to add another.",
+    "STORAGE_DISABLED": "Photos cannot be uploaded right now. Try again later.",
+    "LISTING_INCOMPLETE": "The listing is not finished yet. Fill in the marked fields.",
+    "GEO_UNAVAILABLE": "Address search is not working right now. Try again in a minute.",
     "NETWORK": "We cannot reach Yoyo. Check your connection and try again.",
     "fieldInvalid": "Check this field.",
     "retryIn": "Too many attempts. Try again in {seconds} s."
@@ -299,5 +306,13 @@
       },
       "cancel": "Cancel"
     }
+  },
+  "listingRules": {
+    "ID_AT_PICKUP": "Show an ID at pickup",
+    "RETURN_CLEAN": "Return it clean",
+    "NO_SMOKING": "No smoking near the item",
+    "PICKUP_ONLY": "Pickup only, no delivery",
+    "PETS_OK": "Fine to use around pets",
+    "CARE_INSTRUCTIONS": "Follow the care instructions"
   }
 }
