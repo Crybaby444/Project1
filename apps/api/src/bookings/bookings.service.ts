@@ -28,19 +28,18 @@ import { PAYMENT_PROVIDER, type PaymentProvider } from '../payments/payment.prov
 import { declined, unknownCard } from '../wallet/wallet.service';
 import { STORAGE_PROVIDER, type StorageProvider } from '../media/storage.provider';
 import { PrismaService } from '../prisma/prisma.service';
+import { bookingNotFound, staleBooking } from './booking-errors';
+import { assertDamagePhotos } from './booking-photos.service';
 import { BookingRulesService } from './booking-rules.service';
 import { BOOKING_INCLUDE, serializeBooking, type BookingWithParties } from './booking.serializer';
 import { dateOf, snapshotData, toSnapshot } from './booking.store';
 import { EffectsExecutor, nothingAfter, type AfterCommit, type EffectContext } from './effects.executor';
 import { blockedPeriods, bookableListing, pricingOf } from './listing-access';
 
-export const bookingNotFound = () => new AppError('NOT_FOUND', 404, 'Booking not found');
+export { bookingNotFound, staleBooking };
 
 const offerUnavailable = () => new AppError('OFFER_UNAVAILABLE', 409);
 
-/** 409 INVALID_STATUS with the version the client should reload (as for listings). */
-export const staleBooking = (currentVersion: number) =>
-  new AppError('INVALID_STATUS', 409, 'The deal changed in the meantime', undefined, { currentVersion });
 
 /** What is kept of an event in the deal's journal: never a card token. */
 function journalData(event: BookingEvent): Prisma.InputJsonObject {
@@ -195,6 +194,7 @@ export class BookingsService {
         if (actor === null) throw bookingNotFound();
         if (version !== row.version) throw staleBooking(row.version);
         if (event.type === 'PAY') assertOwnerActive(row);
+        if (event.type === 'REPORT_DAMAGE') await assertDamagePhotos(tx, row.id, event.photoIds);
         const ctx: EffectContext & DecideContext = { ...(await this.context(tx, row, event, now, settings)), row, ...(charge && { charge }) };
         try {
           return { overdue: null, saved: await this.decideAndSave(tx, row, actor, event, ctx) };

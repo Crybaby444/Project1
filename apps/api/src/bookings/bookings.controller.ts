@@ -1,6 +1,13 @@
-import { Body, Controller, Get, HttpCode, Param, Post, Query, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, HttpCode, Param, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import {
+  BookingPhotoResponseSchema,
+  BookingPhotosResponseSchema,
+  BookingPhotoUploadQuerySchema,
+  LISTING_LIMITS,
+  type BookingPhotoResponse,
+  type BookingPhotosResponse,
   BookingActionRequestSchema,
   BookingRequestSchema,
   BookingResponseSchema,
@@ -17,11 +24,16 @@ import { createZodDto, ZodResponse } from 'nestjs-zod';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { ApiErrors } from '../common/api-errors';
+import { AppError } from '../common/app-error';
 import { RateLimiter } from '../common/rate-limiter';
 import { RATE_LIMITS } from '../common/rate-limits';
 import { Idempotent } from '../idempotency/idempotent.decorator';
+import { BookingPhotosService } from './booking-photos.service';
 import { BookingsService } from './bookings.service';
 
+class BookingPhotoResponseDto extends createZodDto(BookingPhotoResponseSchema) {}
+class BookingPhotosResponseDto extends createZodDto(BookingPhotosResponseSchema) {}
+class BookingPhotoUploadQueryDto extends createZodDto(BookingPhotoUploadQuerySchema) {}
 class BookingActionRequestDto extends createZodDto(BookingActionRequestSchema) {}
 class BookingRequestDto extends createZodDto(BookingRequestSchema) {}
 class BookingResponseDto extends createZodDto(BookingResponseSchema) {}
@@ -37,8 +49,34 @@ class QuoteResponseDto extends createZodDto(QuoteResponseSchema) {}
 export class BookingsController {
   constructor(
     private readonly bookings: BookingsService,
+    private readonly photos: BookingPhotosService,
     private readonly limiter: RateLimiter,
   ) {}
+
+  /** One photo per request in the `file` field (10 MB, JPEG/PNG/WebP), like listing photos. */
+  @Post(':id/photos')
+  @UseInterceptors(FileInterceptor('file', { limits: { fileSize: LISTING_LIMITS.photoBytes, files: 1, fields: 5, parts: 6 } }))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ schema: { type: 'object', required: ['file'], properties: { file: { type: 'string', format: 'binary' } } } })
+  @ZodResponse({ status: 201, type: BookingPhotoResponseDto, description: 'Stored, cleaned of metadata' })
+  @ApiErrors(400, 401, 403, 404, 409, 413, 415, 429, 503)
+  async upload(
+    @CurrentUser() user: PublicUser,
+    @Param('id') id: string,
+    @Query() query: BookingPhotoUploadQueryDto,
+    @UploadedFile() file: { buffer: Buffer } | undefined,
+  ): Promise<BookingPhotoResponse> {
+    if (!file) throw new AppError('VALIDATION_FAILED', 400, undefined, { file: 'Attach the photo in the "file" field' });
+    this.limiter.hit(RATE_LIMITS.photoUpload(user.id));
+    return { photo: await this.photos.add(id, user, query.kind, file.buffer) };
+  }
+
+  @Get(':id/photos')
+  @ZodResponse({ status: 200, type: BookingPhotosResponseDto, description: 'Handover, return and damage photos, oldest first' })
+  @ApiErrors(401, 403, 404)
+  async listPhotos(@CurrentUser() user: PublicUser, @Param('id') id: string): Promise<BookingPhotosResponse> {
+    return { items: await this.photos.list(id, user) };
+  }
 
   @Post()
   @Idempotent({ required: false })

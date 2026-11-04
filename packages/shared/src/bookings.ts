@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { LocalDateSchema } from './listings';
+import { LocalDateSchema, PhotoUrlsSchema } from './listings';
 import { cleanText } from './text';
 
 /** Statuses of a deal (BOOKING_STATUSES of @yoyo/domain; an API test keeps the two lists equal). */
@@ -238,3 +238,30 @@ export const ResolveRequestSchema = z.object({
 });
 
 export type ResolveRequest = z.infer<typeof ResolveRequestSchema>;
+
+export const BOOKING_PHOTO_KINDS = ['HANDOVER', 'RETURN', 'DAMAGE'] as const;
+
+export type BookingPhotoKind = (typeof BOOKING_PHOTO_KINDS)[number];
+
+/** A photo of the item's condition at handover or return, or of damage. */
+export const BookingPhotoSchema = z.object({
+  id: z.string(),
+  kind: z.enum(BOOKING_PHOTO_KINDS),
+  uploaderId: z.string(),
+  width: z.number().int(),
+  height: z.number().int(),
+  urls: PhotoUrlsSchema,
+  createdAt: z.iso.datetime(),
+});
+
+export type BookingPhoto = z.infer<typeof BookingPhotoSchema>;
+
+export const BookingPhotoUploadQuerySchema = z.object({ kind: z.enum(BOOKING_PHOTO_KINDS) });
+
+export const BookingPhotoResponseSchema = z.object({ photo: BookingPhotoSchema });
+
+export type BookingPhotoResponse = z.infer<typeof BookingPhotoResponseSchema>;
+
+export const BookingPhotosResponseSchema = z.object({ items: z.array(BookingPhotoSchema) });
+
+export type BookingPhotosResponse = z.infer<typeof BookingPhotosResponseSchema>;
