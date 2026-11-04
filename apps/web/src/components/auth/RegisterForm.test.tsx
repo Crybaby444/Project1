@@ -111,18 +111,6 @@ describe('RegisterForm', () => {
     await user.type(field, 'Correct-Horse-9');
     expect(screen.getByText(`${en.auth.strength.label}: ${en.auth.strength.strong}`)).toBeInTheDocument();
   });
-});
-
-describe('passwordStrength', () => {
-  it('has three levels by length and variety, and none for an empty password', () => {
-    expect(passwordStrength('')).toBe(0);
-    expect(passwordStrength('short')).toBe(1);
-    expect(passwordStrength('abcdefghij')).toBe(1); // long enough, one kind of character
-    expect(passwordStrength('abcdefgh12')).toBe(2);
-    expect(passwordStrength('correct horse')).toBe(2);
-    expect(passwordStrength('Correct-Horse-9')).toBe(3);
-    expect(passwordStrength('correct horse battery staple')).toBe(3); // long passphrases are strong
-  });
 
   it('keeps the theme the visitor chose before signing up, in the new profile too', async () => {
     const user = userEvent.setup();
@@ -159,5 +147,17 @@ describe('passwordStrength', () => {
 
     await waitFor(() => expect(replace).toHaveBeenCalledWith('/'));
     expect(calls.some((c) => c.method === 'PATCH')).toBe(false);
+  });
+});
+
+describe('passwordStrength', () => {
+  it('has three levels by length and variety, and none for an empty password', () => {
+    expect(passwordStrength('')).toBe(0);
+    expect(passwordStrength('short')).toBe(1);
+    expect(passwordStrength('abcdefghij')).toBe(1); // long enough, one kind of character
+    expect(passwordStrength('abcdefgh12')).toBe(2);
+    expect(passwordStrength('correct horse')).toBe(2);
+    expect(passwordStrength('Correct-Horse-9')).toBe(3);
+    expect(passwordStrength('correct horse battery staple')).toBe(3); // long passphrases are strong
   });
 });
