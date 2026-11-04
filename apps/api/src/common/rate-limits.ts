@@ -42,6 +42,10 @@ export const RATE_LIMITS = {
   ],
   /** One phone code a minute per user. */
   phoneCode: (userId: string): RateRule[] => [{ key: `phone-code:user:${userId}`, limit: 1, windowMs: MINUTE }],
+  /** At most 5 confirmation emails per account a day, the one sent at registration included. */
+  verificationMail: (userId: string): RateRule[] => [
+    { key: `verification-mail:user-day:${userId}`, limit: 5, windowMs: 24 * HOUR },
+  ],
   /** One confirmation email a minute per user. */
   resendVerification: (userId: string): RateRule[] => [
     { key: `resend-verification:user:${userId}`, limit: 1, windowMs: MINUTE },

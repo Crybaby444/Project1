@@ -3,6 +3,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DEFAULT_LOCALE, isLocale, type Locale, type LoginRequest, type RegisterRequest } from '@yoyo/shared';
 import { CLOCK, type Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
+import { RateLimiter } from '../common/rate-limiter';
+import { RATE_LIMITS } from '../common/rate-limits';
 import { ENV, type Env } from '../config/env';
 import { type EmailToken, type EmailTokenType, Prisma, type User } from '../generated/prisma/client';
 import { MailService } from '../mail/mail.service';
@@ -51,6 +53,7 @@ export class AuthService {
     private readonly accessTokens: AccessTokenService,
     private readonly refreshTokens: RefreshTokenService,
     private readonly mail: MailService,
+    private readonly limiter: RateLimiter,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(ENV) private readonly env: Pick<Env, 'WEB_ORIGIN'>,
   ) {}
@@ -231,7 +234,9 @@ export class AuthService {
     return { accessToken, refreshToken: refresh.token };
   }
 
+  /** Throws 429 once the account had its 5 confirmation emails of the day. */
   async sendVerification(user: User): Promise<void> {
+    this.limiter.hit(RATE_LIMITS.verificationMail(user.id));
     const token = await this.issueEmailToken(user.id, 'VERIFY_EMAIL', EMAIL_VERIFICATION_TTL_MS);
     void this.mail.sendVerifyEmail(user, webLink(this.env.WEB_ORIGIN, user.locale, '/verify-email', token));
   }

@@ -258,6 +258,32 @@ describe('sessions: login, refresh, logout and the auth guard', () => {
       expect((await agent.post('/api/v1/auth/resend-verification')).status).toBe(202);
     });
 
+    it('sends at most 5 confirmation emails per account a day, counting the one sent at registration', async () => {
+      const agent = request.agent(t.server);
+      await agent
+        .post('/api/v1/auth/register')
+        .send({ email: 'daily@mail.lv', password: 'correct horse', name: 'Daily' })
+        .expect(201);
+      for (let i = 1; i <= 4; i++) {
+        t.clock.advance(MINUTE);
+        expect((await agent.post('/api/v1/auth/resend-verification')).status).toBe(202);
+      }
+      await t.mailSent();
+      expect(t.mail.to('daily@mail.lv')).toHaveLength(5);
+
+      t.clock.advance(MINUTE);
+      const sixth = await agent.post('/api/v1/auth/resend-verification');
+      expect(sixth.status).toBe(429);
+      await t.mailSent();
+      expect(t.mail.to('daily@mail.lv')).toHaveLength(5);
+
+      t.clock.advance(24 * HOUR);
+      await agent.post('/api/v1/auth/refresh').expect(200); // the access cookie ran out meanwhile
+      expect((await agent.post('/api/v1/auth/resend-verification')).status).toBe(202);
+      await t.mailSent();
+      expect(t.mail.to('daily@mail.lv')).toHaveLength(6);
+    });
+
     it('answers 202 and sends nothing when the email is already confirmed', async () => {
       const { email, password } = await seedUser(t, { emailVerified: true });
       const agent = request.agent(t.server);
@@ -289,6 +315,24 @@ describe('the per-email login limit behind a proxy', () => {
       const twentyFirst = await attempt(21);
       expect(twentyFirst.status).toBe(429);
       expect(Number(twentyFirst.headers['retry-after'])).toBeGreaterThan(0);
+    } finally {
+      await t.close();
+    }
+  });
+});
+
+describe('the global daily mail budget (MAIL_DAILY_LIMIT)', () => {
+  it('skips mail once the budget is spent, but registration and password reset still succeed', async () => {
+    const t = await createTestApp({ env: { MAIL_DAILY_LIMIT: '1' } });
+    try {
+      await resetAccounts(t.prisma);
+      const register = (email: string) =>
+        request(t.server).post('/api/v1/auth/register').send({ email, password: 'correct horse', name: 'New' });
+      expect((await register('first@mail.lv')).status).toBe(201);
+      expect((await register('second@mail.lv')).status).toBe(201);
+      expect((await request(t.server).post('/api/v1/auth/forgot-password').send({ email: 'first@mail.lv' })).status).toBe(202);
+      await t.mailSent();
+      expect(t.mail.sent).toHaveLength(1);
     } finally {
       await t.close();
     }

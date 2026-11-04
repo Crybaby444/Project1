@@ -144,4 +144,10 @@ describe('loadEnv', () => {
     expect(loadEnv({ ...valid, REGISTRATION_HOURLY_CAP: '250' }).REGISTRATION_HOURLY_CAP).toBe(250);
     expect(() => loadEnv({ ...valid, REGISTRATION_HOURLY_CAP: '0' })).toThrow(/REGISTRATION_HOURLY_CAP/);
   });
+
+  it('budgets 90 emails a day by default (under Resend’s free 100), adjustable with MAIL_DAILY_LIMIT', () => {
+    expect(loadEnv(valid).MAIL_DAILY_LIMIT).toBe(90);
+    expect(loadEnv({ ...valid, MAIL_DAILY_LIMIT: '2900' }).MAIL_DAILY_LIMIT).toBe(2900);
+    expect(() => loadEnv({ ...valid, MAIL_DAILY_LIMIT: '-1' })).toThrow(/MAIL_DAILY_LIMIT/);
+  });
 });

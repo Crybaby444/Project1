@@ -1,4 +1,6 @@
 import { Inject, Injectable, Logger, type OnApplicationShutdown } from '@nestjs/common';
+import { CLOCK, type Clock } from '../clock/clock';
+import { ENV, type Env } from '../config/env';
 import { createElement, type ReactElement } from 'react';
 import { render } from 'react-email';
 import { MAIL_PROVIDER, maskEmail, type MailProvider, type MailTemplate } from './mail.provider';
@@ -15,6 +17,8 @@ export interface MailRecipient {
 
 /** How long shutdown waits for mail that is still being sent. */
 const SHUTDOWN_GRACE_MS = 10_000;
+const HOUR = 3_600_000;
+const DAY = 24 * HOUR;
 
 /**
  * Account emails in the recipient's language. Every send* resolves once the mail is handed over or has
@@ -25,8 +29,15 @@ const SHUTDOWN_GRACE_MS = 10_000;
 export class MailService implements OnApplicationShutdown {
   private readonly logger = new Logger('Mail');
   private readonly inFlight = new Set<Promise<void>>();
+  /** When each mail of the last 24 hours went out, oldest first (at most MAIL_DAILY_LIMIT). */
+  private readonly sentAt: number[] = [];
+  private lastBudgetAlertAt = Number.NEGATIVE_INFINITY;
 
-  constructor(@Inject(MAIL_PROVIDER) private readonly provider: MailProvider) {}
+  constructor(
+    @Inject(MAIL_PROVIDER) private readonly provider: MailProvider,
+    @Inject(CLOCK) private readonly clock: Clock,
+    @Inject(ENV) private readonly env: Pick<Env, 'MAIL_DAILY_LIMIT'>,
+  ) {}
 
   sendVerifyEmail(user: MailRecipient, link: string): Promise<void> {
     return this.deliver('verify-email', user, (t) => t.verifyEmail.subject, (t, lang) =>
@@ -67,6 +78,7 @@ export class MailService implements OnApplicationShutdown {
     subject: (t: MailTexts) => string,
     element: (t: MailTexts, lang: string) => ReactElement,
   ): Promise<void> {
+    if (!this.withinBudget(template)) return Promise.resolve();
     const task = (async () => {
       try {
         const { locale, t } = textsFor(user.locale);
@@ -84,5 +96,25 @@ export class MailService implements OnApplicationShutdown {
     this.inFlight.add(task);
     void task.finally(() => this.inFlight.delete(task));
     return task;
+  }
+
+  /**
+   * Counts one mail against the global 24-hour budget (MAIL_DAILY_LIMIT, sliding window on the Clock).
+   * Over it, the mail is skipped and an error is logged at most once an hour.
+   */
+  private withinBudget(template: MailTemplate): boolean {
+    const now = this.clock.now().getTime();
+    while (this.sentAt.length > 0 && this.sentAt[0]! <= now - DAY) this.sentAt.shift();
+    if (this.sentAt.length < this.env.MAIL_DAILY_LIMIT) {
+      this.sentAt.push(now);
+      return true;
+    }
+    if (now - this.lastBudgetAlertAt >= HOUR) {
+      this.lastBudgetAlertAt = now;
+      this.logger.error(
+        `daily mail budget of ${this.env.MAIL_DAILY_LIMIT} reached: ${template} and further mail skipped until it refills`,
+      );
+    }
+    return false;
   }
 }

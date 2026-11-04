@@ -40,6 +40,11 @@ const EnvObject = z.object({
   SMTP_URL: z.preprocess(blankAsUnset, z.url({ protocol: /^smtps?$/ }).optional()),
   /** Sender of every email. With Gmail SMTP it must be the Gmail address (or one of its aliases). */
   MAIL_FROM: z.preprocess(blankAsUnset, z.string().min(3).default('Yoyo <no-reply@yoyo.local>')),
+  /**
+   * Emails sent per 24 hours from the whole API (in memory, per instance). Over it, mail is skipped and
+   * an error is logged at most once an hour; requests still succeed. Default 90: under Resend's free 100.
+   */
+  MAIL_DAILY_LIMIT: z.preprocess(blankAsUnset, z.coerce.number().int().positive().default(90)),
   /** Google sign-in is on only when both the client id and secret are set (Google Cloud Console). */
   GOOGLE_CLIENT_ID: z.preprocess(blankAsUnset, z.string().optional()),
   GOOGLE_CLIENT_SECRET: z.preprocess(blankAsUnset, z.string().optional()),

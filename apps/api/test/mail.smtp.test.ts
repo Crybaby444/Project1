@@ -7,6 +7,7 @@ import lv from '../src/mail/i18n/lv.json';
 import { MailService } from '../src/mail/mail.service';
 import { SmtpMailProvider } from '../src/mail/smtp-mail.provider';
 import { mailbox } from './support/mailbox';
+import { FakeClock } from './support/fake-clock';
 
 const env = loadEnv(process.env);
 
@@ -14,7 +15,7 @@ describe('SMTP delivery (Mailpit)', () => {
   it('delivers a rendered email that arrives with sender, subject, HTML and text', async () => {
     const to = `smtp-${randomUUID()}@yoyo.test`;
     const link = `https://yoyo.test/lv/verify-email?token=${randomUUID()}`;
-    const mail = new MailService(new SmtpMailProvider(env.SMTP_URL!, 'Yoyo <no-reply@yoyo.local>'));
+    const mail = new MailService(new SmtpMailProvider(env.SMTP_URL!, 'Yoyo <no-reply@yoyo.local>'), new FakeClock(), env);
 
     await mail.sendVerifyEmail({ email: to, name: 'Anna', locale: 'lv' }, link);
 
