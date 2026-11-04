@@ -1,15 +1,47 @@
 'use client';
 
 import { LOCALES } from '@yoyo/shared';
+import { useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
+import { Suspense, type ReactNode, useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import { Link, usePathname } from '@/i18n/navigation';
 
-/** Pill switcher between EN / LV / RU that keeps the current page. */
+/** The current page with its query, so a language switch keeps `?token=` of an email link, `?next=`… */
+function useHere(): string {
+  const pathname = usePathname();
+  const query = useSearchParams()?.toString();
+  return query ? `${pathname}?${query}` : pathname;
+}
+
+/** The current page without its query: what a statically rendered page shows before it hydrates. */
+function HerePath({ children }: { children(href: string): ReactNode }) {
+  return children(usePathname());
+}
+
+function HereWithQuery({ children }: { children(href: string): ReactNode }) {
+  return children(useHere());
+}
+
+/**
+ * Gives `children` the address of this page in another language. useSearchParams needs a Suspense
+ * boundary on static pages; until it resolves, the links keep the path only.
+ */
+function Here({ children }: { children(href: string): ReactNode }) {
+  return (
+    <Suspense fallback={<HerePath>{children}</HerePath>}>
+      <HereWithQuery>{children}</HereWithQuery>
+    </Suspense>
+  );
+}
+
+/** Pill switcher between EN / LV / RU that keeps the current page (and its query). */
 export function LanguageSwitcher() {
+  return <Here>{(href) => <LanguagePills href={href} />}</Here>;
+}
+
+function LanguagePills({ href }: { href: string }) {
   const t = useTranslations('language');
   const current = useLocale();
-  const pathname = usePathname();
 
   return (
     <nav aria-label={t('label')}>
@@ -19,7 +51,7 @@ export function LanguageSwitcher() {
           return (
             <li key={locale}>
               <Link
-                href={pathname}
+                href={href}
                 locale={locale}
                 hrefLang={locale}
                 lang={locale}
@@ -43,9 +75,12 @@ export function LanguageSwitcher() {
  * opens a short list of the others. Esc or a click elsewhere closes it.
  */
 export function LanguageMenu({ className = '' }: { className?: string }) {
+  return <Here>{(href) => <LanguageMenuButton href={href} className={className} />}</Here>;
+}
+
+function LanguageMenuButton({ href, className }: { href: string; className: string }) {
   const t = useTranslations('language');
   const current = useLocale();
-  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -92,7 +127,7 @@ export function LanguageMenu({ className = '' }: { className?: string }) {
             return (
               <li key={locale}>
                 <Link
-                  href={pathname}
+                  href={href}
                   locale={locale}
                   hrefLang={locale}
                   lang={locale}

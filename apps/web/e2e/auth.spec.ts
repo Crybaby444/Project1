@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import en from '../messages/en.json' with { type: 'json' };
+import lv from '../messages/lv.json' with { type: 'json' };
 import {
   asOwnVisitor,
   formError,
@@ -164,5 +165,21 @@ test.describe('forgotten password', () => {
     await expect(formError(page)).toHaveText(en.errors.AUTH_INVALID_CREDENTIALS);
     await signInWithForm(page, email, newPassword, en.auth.login.submit);
     await expect(page.getByRole('button', { name: new RegExp(`^${en.header.account}`) })).toBeVisible();
+  });
+
+  test('switching the language on the reset page keeps the link working', async ({ page, context }) => {
+    const { email } = await registerByApi(page.request);
+    await context.clearCookies();
+    await page.goto('/forgot-password');
+    await page.getByLabel(en.auth.fields.email).fill(email);
+    await page.getByRole('button', { name: en.auth.forgot.submit }).click();
+    const mail = await latestTo(email, (m) => m.text.includes('/reset-password'));
+    const link = new URL(linkFrom(mail, '/reset-password'), 'http://site.test');
+    await page.goto(`${link.pathname}${link.search}`);
+
+    await page.getByRole('link', { name: 'Latviešu' }).click();
+
+    await expect(page).toHaveURL(new RegExp(`/lv/reset-password\\?token=${link.searchParams.get('token')}$`));
+    await expect(page.getByRole('heading', { level: 1, name: lv.auth.reset.title })).toBeVisible();
   });
 });
