@@ -1,10 +1,11 @@
 import 'reflect-metadata';
+import { Logger } from '@nestjs/common';
 import request from 'supertest';
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { runSeed } from '../prisma/seed';
 import { PasswordService } from '../src/auth/password.service';
 import { resetAccounts } from './support/db';
-import { createTestApp, type TestApp } from './support/test-app';
+import { cookieValue, createTestApp, type TestApp } from './support/test-app';
 import { seedUser } from './support/users';
 
 describe('admin: users list behind the ADMIN role', () => {
@@ -127,19 +128,69 @@ describe('the admin account from ADMIN_EMAIL / ADMIN_PASSWORD at API start', () 
     }
   });
 
-  it('promotes an existing account with that email and leaves its own password alone', async () => {
+  it('takes over an unconfirmed account squatting ADMIN_EMAIL: its password, sessions and links die', async () => {
     const setup = await createTestApp();
     await resetAccounts(setup.prisma);
-    await seedUser(setup, { email: 'admin@yoyo.test', password: 'my own password' });
+    const { user: squatter } = await seedUser(setup, { email: 'admin@yoyo.test', password: 'squatter password' });
+    const login = await request(setup.server)
+      .post('/api/v1/auth/login')
+      .send({ email: 'admin@yoyo.test', password: 'squatter password' })
+      .expect(200);
+    const squatterRefresh = cookieValue(login.headers['set-cookie'], 'yoyo_rt')!;
+    const now = setup.clock.now();
+    await setup.prisma.oAuthAccount.create({
+      data: { userId: squatter.id, provider: 'google', providerAccountId: 'squatter-sub', createdAt: now },
+    });
+    await setup.prisma.emailToken.create({
+      data: { userId: squatter.id, type: 'RESET_PASSWORD', tokenHash: 'squatter-link', expiresAt: new Date(now.getTime() + 3_600_000) },
+    });
+    await setup.prisma.phoneCode.create({
+      data: { userId: squatter.id, phone: '+37120000000', codeHash: 'x', expiresAt: new Date(now.getTime() + 600_000) },
+    });
+    await setup.close();
+
+    const warn = vi.spyOn(Logger.prototype, 'warn');
+    const t = await createTestApp({ env });
+    try {
+      const user = await t.prisma.user.findUniqueOrThrow({ where: { email: 'admin@yoyo.test' } });
+      expect(user.role).toBe('ADMIN');
+      expect(user.emailVerifiedAt).not.toBeNull();
+      const signIn = (password: string) => request(t.server).post('/api/v1/auth/login').send({ email: 'admin@yoyo.test', password });
+      expect((await signIn('squatter password')).status).toBe(401);
+      expect((await signIn('admin password 1')).status).toBe(200);
+      const refresh = await request(t.server).post('/api/v1/auth/refresh').send({ refreshToken: squatterRefresh });
+      expect(refresh.status).toBe(401);
+      expect(await t.prisma.oAuthAccount.count({ where: { userId: user.id } })).toBe(0);
+      expect(await t.prisma.emailToken.count({ where: { userId: user.id } })).toBe(0);
+      expect(await t.prisma.phoneCode.count({ where: { userId: user.id } })).toBe(0);
+      const warnings = warn.mock.calls.map((call) => String(call[0]));
+      expect(warnings.some((line) => line.includes('a***@yoyo.test'))).toBe(true);
+      expect(warnings.join('\n')).not.toContain('admin@yoyo.test');
+    } finally {
+      warn.mockRestore();
+      await t.close();
+    }
+  });
+
+  it('promotes a confirmed account with that email and keeps its password and sessions', async () => {
+    const setup = await createTestApp();
+    await resetAccounts(setup.prisma);
+    await seedUser(setup, { email: 'admin@yoyo.test', password: 'my own password', emailVerified: true });
+    const login = await request(setup.server)
+      .post('/api/v1/auth/login')
+      .send({ email: 'admin@yoyo.test', password: 'my own password' })
+      .expect(200);
+    const ownRefresh = cookieValue(login.headers['set-cookie'], 'yoyo_rt')!;
     await setup.close();
 
     const t = await createTestApp({ env });
     try {
       const user = await t.prisma.user.findUniqueOrThrow({ where: { email: 'admin@yoyo.test' } });
       expect(user.role).toBe('ADMIN');
-      const login = (password: string) => request(t.server).post('/api/v1/auth/login').send({ email: 'admin@yoyo.test', password });
-      expect((await login('my own password')).status).toBe(200);
-      expect((await login('admin password 1')).status).toBe(401);
+      const signIn = (password: string) => request(t.server).post('/api/v1/auth/login').send({ email: 'admin@yoyo.test', password });
+      expect((await signIn('my own password')).status).toBe(200);
+      expect((await signIn('admin password 1')).status).toBe(401);
+      expect((await request(t.server).post('/api/v1/auth/refresh').send({ refreshToken: ownRefresh })).status).toBe(200);
     } finally {
       await t.close();
     }

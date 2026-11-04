@@ -46,8 +46,8 @@ const EnvObject = z.object({
    */
   SMS_PROVIDER: z.preprocess(blankAsUnset, z.enum(['mailbox']).optional()),
   /**
-   * The administrator account, created or promoted at every API start when both are set. An existing
-   * password is never overwritten, so ADMIN_PASSWORD only matters for the first start.
+   * The administrator account, created or promoted at every API start when both are set. A confirmed
+   * account keeps its password; an unconfirmed one with this email is taken over (ADMIN_PASSWORD).
    */
   ADMIN_EMAIL: z.preprocess(blankAsUnset, EmailSchema.optional()),
   ADMIN_PASSWORD: z.preprocess(blankAsUnset, PasswordSchema.optional()),

@@ -29,7 +29,7 @@ export class AdminBootstrap implements OnApplicationBootstrap {
       return;
     }
     try {
-      await ensureAdmin(this.prisma, this.passwords, this.env, this.clock.now());
+      await ensureAdmin(this.prisma, this.passwords, this.env, this.clock.now(), this.logger);
       this.logger.log(`administrator account ready: ${maskEmail(email)}`);
     } catch (error) {
       this.logger.error(`could not ensure the administrator account: ${error instanceof Error ? error.message : String(error)}`);

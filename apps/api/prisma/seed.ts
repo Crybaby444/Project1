@@ -15,7 +15,7 @@ export interface SeedAdmin {
 /**
  * Writes every setting default that is still missing, and with `admin` also ensures the administrator
  * account (ADMIN_EMAIL / ADMIN_PASSWORD). Safe to run any number of times: values an admin already
- * changed, and an existing admin password, are never overwritten.
+ * changed, and the password of a confirmed admin account, are never overwritten.
  */
 export async function runSeed(prisma: PrismaClient, admin?: SeedAdmin): Promise<void> {
   for (const key of Object.keys(SETTING_DEFAULTS) as SettingKey[]) {
