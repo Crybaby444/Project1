@@ -6,6 +6,7 @@ import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 import { LogoMark } from '@/components/ui/LogoMark';
 import { Marquee } from '@/components/ui/Marquee';
 import { Wordmark } from '@/components/ui/Wordmark';
+import { displayFit } from '@/lib/display-fit';
 import { Section, StyleguideDemos } from './StyleguideDemos';
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
@@ -56,9 +57,14 @@ export default async function StyleguidePage({ params }: { params: Promise<{ loc
 
   return (
     <main className="mx-auto flex max-w-[1440px] flex-col gap-14 px-4 pt-12 pb-16 sm:px-8">
-      <header className="flex flex-col items-start gap-5">
+      <header className="@container flex flex-col items-start gap-5">
         <LogoMark size={48} />
-        <h1 className="font-display text-[clamp(2.75rem,9vw,5rem)] leading-[0.85] font-black uppercase">{t('title')}</h1>
+        <h1
+          style={displayFit(t('title'), { max: '5rem' })}
+          className="font-display text-display-fit leading-[0.85] font-black uppercase"
+        >
+          {t('title')}
+        </h1>
         <p className="max-w-[60ch] text-lg leading-relaxed">{t('intro')}</p>
         <ApiStatus />
       </header>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type ReactNode } from 'react';
 import { Sticker } from '@/components/ui/Sticker';
+import { displayFit } from '@/lib/display-fit';
 
 type AuthCardProps = {
   title: string;
@@ -31,12 +32,13 @@ export function AuthCard({ title, subtitle, children, footer, focusTitle = false
     <main className="flex flex-1 justify-center px-4 py-10 sm:py-16">
       <div className="flex w-full max-w-[30rem] flex-col gap-6">
         <section className="border-ink bg-surface rounded-card-xl relative flex flex-col gap-6 border p-6 sm:p-8">
-          <Sticker kind="yoyo" size={52} className="absolute -top-6 right-6 rotate-12" />
-          <header className="flex flex-col gap-2 pr-12">
+          <Sticker kind="yoyo" size={52} className="absolute -top-9 right-6 rotate-12" />
+          <header className="@container flex flex-col gap-2">
             <h1
               ref={titleRef}
               tabIndex={focusTitle ? -1 : undefined}
-              className="font-display text-[clamp(2rem,8vw,2.75rem)] leading-[0.85] font-black uppercase focus:outline-none"
+              style={displayFit(title, { max: '2.75rem' })}
+              className="font-display text-display-fit leading-[0.85] font-black uppercase focus:outline-none"
             >
               {title}
             </h1>
