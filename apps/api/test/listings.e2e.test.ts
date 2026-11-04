@@ -173,15 +173,35 @@ describe('listings', () => {
       expect(new Date(res.body.listing.submittedAt).getTime()).toBeGreaterThan(before.getTime());
     });
 
-    it('keeps a published listing published when only the price, rules or place change', async () => {
+    it('keeps a published listing published when only the price, ready-made rules, point or dates change', async () => {
       const listing = await seedListing(t, anna.user, { status: 'PUBLISHED' });
 
       const res = await anna
         .patch(`/listings/${listing.id}`)
-        .send({ version: listing.version, dailyCents: 1800, depositCents: 6000, rules: { preset: ['PETS_OK'], custom: [] }, district: 'Āgenskalns' })
+        .send({ version: listing.version, dailyCents: 1800, depositCents: 6000, rules: { preset: ['PETS_OK'], custom: [] }, lat: 56.95, lng: 24.08 })
         .expect(200);
 
-      expect(res.body.listing).toMatchObject({ status: 'PUBLISHED', dailyCents: 1800, district: 'Āgenskalns' });
+      expect(res.body.listing).toMatchObject({ status: 'PUBLISHED', dailyCents: 1800, lat: 56.95, rules: { preset: ['PETS_OK'], custom: [] } });
+    });
+
+    it('sends a published listing back to review when text the public reads changes: own rules, city or district', async () => {
+      const ads = 'Cheap pills, write to t.me/somebody';
+      for (const change of [
+        { rules: { preset: [], custom: [ads] } },
+        { city: 't.me/somebody' },
+        { district: 'Call +371 20000000 now' },
+      ]) {
+        const listing = await seedListing(t, anna.user, { status: 'PUBLISHED' });
+        const res = await anna.patch(`/listings/${listing.id}`).send({ version: listing.version, ...change }).expect(200);
+        expect(res.body.listing.status, JSON.stringify(change)).toBe('PENDING_REVIEW');
+      }
+      // Ticking a ready-made rule while keeping the own ones is still only a term.
+      const kept = await seedListing(t, anna.user, { status: 'PUBLISHED', rules: { preset: [], custom: ['Handle with care'] } });
+      const res = await anna
+        .patch(`/listings/${kept.id}`)
+        .send({ version: kept.version, rules: { preset: ['NO_SMOKING'], custom: ['Handle with care'] } })
+        .expect(200);
+      expect(res.body.listing.status).toBe('PUBLISHED');
     });
 
     it('treats a change of category or attributes as content, and setting the same title again as no change', async () => {

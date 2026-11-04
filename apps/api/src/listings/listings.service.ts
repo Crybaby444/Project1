@@ -6,6 +6,7 @@ import {
   type DatePeriod,
   type ListingDraft,
   type ListingPatch,
+  type ListingRules,
   type ListingStatus,
   type OwnerListing,
   type OwnerListingSummary,
@@ -21,8 +22,19 @@ import { incomplete, incompleteFields } from './listing-completeness';
 import { nextStatus, type EditKind } from './listing-status';
 import { serializeListing, serializePeriods, serializeSummary, type ListingWithRelations, type UrlFor } from './listing.serializer';
 
-/** Fields whose change sends a live listing back to review; every other field is a term. */
-const CONTENT_FIELDS = ['title', 'description', 'categoryId', 'attributes', 'condition'] as const;
+/**
+ * Fields whose change sends a live listing back to review: what moderation checked, and every text the
+ * owner writes that the public reads (city and district are shown on the card). Every other field is
+ * a term. Own rules are free text too, so `rules` counts as content when its `custom` part changes.
+ */
+const CONTENT_FIELDS: ReadonlySet<string> = new Set(['title', 'description', 'categoryId', 'attributes', 'condition', 'city', 'district']);
+
+/** Whether changing `key` of `listing` to `value` is a change of content (see CONTENT_FIELDS). */
+function isContentChange(listing: Listing, key: keyof ListingDraft, value: unknown): boolean {
+  if (CONTENT_FIELDS.has(key)) return true;
+  if (key === 'rules') return !isDeepStrictEqual((value as ListingRules).custom, (listing.rules as ListingRules | null)?.custom ?? []);
+  return false;
+}
 
 const WITH_RELATIONS = { photos: true, unavailability: true } as const;
 
@@ -152,7 +164,7 @@ export class ListingsService {
       (key) => !isDeepStrictEqual(data[key as keyof DraftData], currentValue(listing, key)),
     );
     if (changed.length === 0) return serializeListing(listing, 'owner', this.urlFor);
-    const kind: EditKind = changed.some((key) => (CONTENT_FIELDS as readonly string[]).includes(key)) ? 'content' : 'terms';
+    const kind: EditKind = changed.some((key) => isContentChange(listing, key, data[key as keyof DraftData])) ? 'content' : 'terms';
     const changes = Object.fromEntries(changed.map((key) => [key, data[key as keyof DraftData]])) as DraftData;
     if (mustStayComplete(listing.status)) {
       // Only problems this change brings are refused: if the catalog changed under a live listing

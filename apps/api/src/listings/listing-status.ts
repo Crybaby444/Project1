@@ -4,8 +4,10 @@ import type { ListingStatus } from '@yoyo/shared';
 export type ListingAction = 'submit' | 'approve' | 'reject' | 'hide' | 'unhide' | 'edit' | 'delete';
 
 /**
- * - `content`: what moderation checked — title, description, category, attributes, condition, photos.
- * - `terms`: price, deposit, rental days, rules, place and unavailable dates.
+ * - `content`: what moderation checked — title, description, category, attributes, condition, photos —
+ *   and every text the owner writes for the public: own rules, city and district.
+ * - `terms`: price, deposit, rental days, ready-made rules, the point on the map, time zone and
+ *   unavailable dates.
  */
 export type EditKind = 'content' | 'terms';
 
