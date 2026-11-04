@@ -9,6 +9,8 @@ import { themeInitScript } from '@/components/theme/theme-script';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { routing } from '@/i18n/routing';
+import { QueryProvider } from '@/lib/session/QueryProvider';
+import { SessionProvider } from '@/lib/session/SessionProvider';
 import { fontVariables } from '@/styles/fonts';
 import '../globals.css';
 
@@ -38,14 +40,18 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="min-h-dvh bg-canvas text-ink">
+      <body className="bg-canvas text-ink min-h-dvh">
         <NextIntlClientProvider>
-          <ThemeProvider initialPreference={preference}>
-            <div className="fixed top-4 right-4 z-50">
-              <ThemeToggle />
-            </div>
-            {children}
-          </ThemeProvider>
+          <QueryProvider>
+            <SessionProvider>
+              <ThemeProvider initialPreference={preference}>
+                <div className="fixed top-4 right-4 z-50">
+                  <ThemeToggle />
+                </div>
+                {children}
+              </ThemeProvider>
+            </SessionProvider>
+          </QueryProvider>
         </NextIntlClientProvider>
       </body>
     </html>

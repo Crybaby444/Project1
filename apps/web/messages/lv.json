@@ -103,5 +103,8 @@
     "body": "Mūsu pusē kaut kas salūza. Mēģiniet vēlreiz, un, ja tas atkārtojas, atgriezieties pēc minūtes.",
     "retry": "Mēģināt vēlreiz",
     "back": "Uz sākumlapu"
+  },
+  "session": {
+    "loading": "Pārbaudām, vai esat pieteicies…"
   }
 }

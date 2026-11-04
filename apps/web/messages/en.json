@@ -103,5 +103,8 @@
     "body": "Something broke on our side. Try again, and if it keeps happening, come back in a minute.",
     "retry": "Try again",
     "back": "Back to home"
+  },
+  "session": {
+    "loading": "Checking that you are signed in…"
   }
 }
