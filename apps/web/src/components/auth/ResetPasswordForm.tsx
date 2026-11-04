@@ -71,7 +71,11 @@ export function ResetPasswordForm({ token }: { token: string | null }) {
 
   if (problem) {
     return (
-      <AuthCard title={t(`reset.${problem}.title`)} subtitle={t(`reset.${problem}.body`)}>
+      <AuthCard
+        title={t(`reset.${problem}.title`)}
+        subtitle={t(`reset.${problem}.body`)}
+        focusTitle={token !== null}
+      >
         <Button href="/forgot-password" size="lg">
           {t('reset.requestNew')}
         </Button>
@@ -81,7 +85,7 @@ export function ResetPasswordForm({ token }: { token: string | null }) {
 
   if (changed) {
     return (
-      <AuthCard title={t('reset.changed.title')} subtitle={t('reset.changed.body')}>
+      <AuthCard title={t('reset.changed.title')} subtitle={t('reset.changed.body')} focusTitle>
         <Button href="/login" size="lg">
           {t('reset.signIn')}
         </Button>

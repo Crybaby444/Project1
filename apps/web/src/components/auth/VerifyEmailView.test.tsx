@@ -107,4 +107,12 @@ describe('VerifyEmailView', () => {
     expect(await screen.findByText(en.errors.INTERNAL)).toBeVisible();
     expect(screen.getByRole('button', { name: en.auth.verify.retry })).toBeVisible();
   });
+
+  it('moves the focus to the result once the check is done, so a screen reader hears it', async () => {
+    renderView('tok-focus', {
+      'POST /api/v1/auth/verify-email': { status: 200, body: { user: testUser({ emailVerified: true }) } },
+    });
+    const heading = await screen.findByRole('heading', { name: en.auth.verify.done.title });
+    await waitFor(() => expect(heading).toHaveFocus());
+  });
 });

@@ -83,7 +83,7 @@ export function VerifyEmailView({ token }: { token: string | null }) {
 
   if (state.kind === 'done') {
     return (
-      <AuthCard title={t('done.title')} subtitle={t('done.body')}>
+      <AuthCard title={t('done.title')} subtitle={t('done.body')} focusTitle>
         <Button href="/" size="lg">
           {t('continue')}
         </Button>
@@ -93,7 +93,7 @@ export function VerifyEmailView({ token }: { token: string | null }) {
 
   if (state.kind === 'failed') {
     return (
-      <AuthCard title={t('title')} subtitle={errorText(state.error)}>
+      <AuthCard title={t('title')} subtitle={errorText(state.error)} focusTitle>
         <Button size="lg" onClick={() => (setState({ kind: 'checking' }), check(true))}>
           {t('retry')}
         </Button>
@@ -102,7 +102,11 @@ export function VerifyEmailView({ token }: { token: string | null }) {
   }
 
   return (
-    <AuthCard title={t(`${state.problem}.title`)} subtitle={t(`${state.problem}.body`)}>
+    <AuthCard
+      title={t(`${state.problem}.title`)}
+      subtitle={t(`${state.problem}.body`)}
+      focusTitle={token !== null}
+    >
       {status === 'authenticated' && user && !user.emailVerified ? (
         <ResendAction />
       ) : status === 'authenticated' ? (

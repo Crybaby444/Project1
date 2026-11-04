@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import en from '../../../messages/en.json';
@@ -51,5 +51,11 @@ describe('ForgotPasswordForm', () => {
     await ask({ 'POST /api/v1/auth/forgot-password': apiError(500, 'INTERNAL') }, 'anna@mail.lv');
     expect(await screen.findByText(en.errors.INTERNAL)).toBeVisible();
     expect(screen.queryByRole('heading', { name: en.auth.forgot.sent.title })).toBeNull();
+  });
+
+  it('moves the focus to the "check your email" heading, so a screen reader hears it', async () => {
+    await ask({ 'POST /api/v1/auth/forgot-password': { status: 202 } }, 'anna@mail.lv');
+    const heading = await screen.findByRole('heading', { name: en.auth.forgot.sent.title });
+    await waitFor(() => expect(heading).toHaveFocus());
   });
 });

@@ -97,4 +97,16 @@ describe('ResetPasswordForm', () => {
     expect(screen.getByRole('link', { name: en.auth.reset.signIn })).toHaveAttribute('href', '/login');
     expect(replace).not.toHaveBeenCalled();
   });
+
+  it('moves the focus to the heading of the screen that replaces the form', async () => {
+    renderReset('tok', { 'POST /api/v1/auth/reset-password': apiError(410, 'TOKEN_USED') });
+    await fill('correct horse battery', 'correct horse battery');
+    const heading = await screen.findByRole('heading', { name: en.auth.reset.used.title });
+    await waitFor(() => expect(heading).toHaveFocus());
+  });
+
+  it('leaves the focus alone on a page that opens with a broken link', async () => {
+    renderReset(null, {});
+    expect(screen.getByRole('heading', { name: en.auth.reset.invalid.title })).not.toHaveFocus();
+  });
 });

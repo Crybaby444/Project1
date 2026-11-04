@@ -46,6 +46,7 @@ export function ForgotPasswordForm() {
         title={t('forgot.sent.title')}
         subtitle={t('forgot.sent.body', { email: sentTo })}
         footer={back}
+        focusTitle
       >
         <Button href="/login" variant="ghost" size="lg">
           {t('login.title')}
