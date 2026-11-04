@@ -1,6 +1,6 @@
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
-import { addDays, localDateIn, period } from '../dates';
+import { addDays, endOfDayIn, localDateIn, period } from '../dates';
 import { DomainError } from '../errors';
 import { applyOperation, assertBalanced, topUp } from '../ledger';
 import type { AccountId, PaymentMethod } from '../ledger';
@@ -10,7 +10,7 @@ import { availableActions } from './actions';
 import { decide } from './decide';
 import { createRequest } from './request';
 import { OWNER_ID, RENTER_ID, SAMPLE, admin, owner, renter, system } from './test-support';
-import { isTerminal } from './types';
+import { TIMER_KINDS, isTerminal } from './types';
 import type {
   Actor,
   BookingEvent,
@@ -27,42 +27,63 @@ import type {
  * much is in the renter's wallet) walks a random path to its end: at each step a random side does
  * one of its available actions, a random armed timer fires once its time has come, or time passes.
  * Leaving early (decline, withdraw, cancel) is less likely than going on, so long paths get walked;
- * the test then checks that every kind of ending was actually reached.
+ * the test then checks that every kind of ending was actually reached, including each timer's own
+ * ending and a "not returned" report after the rental is over. Waits sometimes jump past the end of
+ * the rental. Between steps the scheduler misfires: a TIMEOUT for a timer that is not armed or not yet
+ * due, and every fired timer once more; none of them may change anything or move money. At the end the
+ * renter's wallet and the card are checked too: refunds and the deposit go back the way they were paid.
  */
 
 const HOUR_MS = 3_600_000;
 const MINUTE_MS = 60_000;
 const START = new Date('2026-11-04T00:00:00Z');
 const MAX_STEPS = 300;
-const RUNS = 1000;
 /**
- * Locally the property takes about 0.4 s; on a busy CI runner (turbo runs every package at once) it
- * took 5.4 s, past vitest's default 5 s. fc.assert is synchronous, so this is a budget, not a cut-off.
+ * 3000 walks: the rarest required ending (a damage claim left unanswered until its deadline) then shows
+ * up about 15–30 times per run, so a run that misses it is around a one-in-a-billion event.
  */
-const BUDGET_MS = 60_000;
+const RUNS = 3000;
+/**
+ * 1000 walks took 5.4 s on a busy CI runner (turbo runs every package at once), past vitest's default
+ * 5 s; 3000 longer walks take about 7 s locally. fc.assert is synchronous, so this is a budget, not a
+ * cut-off.
+ */
+const BUDGET_MS = 120_000;
 
 const EXITS: ReadonlySet<BookingEventType> = new Set(['DECLINE', 'WITHDRAW', 'CANCEL']);
-const WEIGHT = { exit: 1, action: 6, timer: 1, wait: 1 } as const;
+const WEIGHT = { exit: 1, action: 6, timer: 1, wait: 1, pastEnd: 3, misfire: 1 } as const;
 
 type Choice =
   | { readonly kind: 'act'; readonly actor: Actor; readonly type: BookingEventType }
   | { readonly kind: 'timer'; readonly timer: TimerKind }
-  | { readonly kind: 'wait' };
+  | { readonly kind: 'wait' }
+  | { readonly kind: 'pastEnd' }
+  | { readonly kind: 'misfire' };
 
-function weightOf(choice: Choice): number {
-  if (choice.kind === 'act') return EXITS.has(choice.type) ? WEIGHT.exit : WEIGHT.action;
-  return choice.kind === 'timer' ? WEIGHT.timer : WEIGHT.wait;
+/**
+ * A side that rarely acts once the booking is paid, so its timers come due: the paths that end by a
+ * deadline get walked. Drawn again at every status change after payment; before payment both act
+ * normally, or most walks would just expire.
+ */
+const QUIET = ['NOBODY', 'RENTER', 'OWNER', 'BOTH'] as const;
+type Quiet = (typeof QUIET)[number];
+
+function weightOf(choice: Choice, quiet: Quiet): number {
+  if (choice.kind !== 'act') return WEIGHT[choice.kind];
+  if (EXITS.has(choice.type)) return WEIGHT.exit;
+  const silent = quiet === 'BOTH' || quiet === choice.actor.kind;
+  return silent ? WEIGHT.exit : WEIGHT.action;
 }
 
 /** A uniform index: fast-check's integers lean towards their bounds, which would favour the first and last choice. */
 const index = (g: fc.GeneratorValue, size: number): number =>
   g(() => fc.noBias(fc.integer({ min: 0, max: size - 1 })));
 
-function pick(choices: readonly Choice[], g: fc.GeneratorValue): Choice {
-  const total = choices.reduce((sum, choice) => sum + weightOf(choice), 0);
+function pick(choices: readonly Choice[], quiet: Quiet, g: fc.GeneratorValue): Choice {
+  const total = choices.reduce((sum, choice) => sum + weightOf(choice, quiet), 0);
   let ticket = index(g, total);
   for (const choice of choices) {
-    ticket -= weightOf(choice);
+    ticket -= weightOf(choice, quiet);
     if (ticket < 0) return choice;
   }
   throw new Error('no choice');
@@ -127,7 +148,8 @@ const scenario = fc.record({
   /** The renter's wallet before paying, in percent of the total: empty, exact, short or plenty. */
   walletPercentOfTotal: fc.oneof(fc.constant(0), fc.constant(100), fc.integer({ min: 0, max: 200 })),
   hoursAfterStart: fc.integer({ min: 0, max: 47 }),
-  startsInDays: fc.integer({ min: 0, max: 10 }),
+  /** Often today or tomorrow, so the handover can be marked before its deadline. */
+  startsInDays: fc.oneof(fc.constantFrom(0, 1), fc.integer({ min: 0, max: 10 })),
 });
 
 describe('money conservation (Review Focus 1)', () => {
@@ -163,6 +185,7 @@ describe('money conservation (Review Focus 1)', () => {
           );
           let s = created.next;
           let method = sc.method;
+          let quiet: Quiet = 'NOBODY';
           const { totalCents, rentCents, serviceFeeCents, depositCents } = s.quote;
 
           let balances = new Map<AccountId, number>();
@@ -175,6 +198,14 @@ describe('money conservation (Review Focus 1)', () => {
             blocked: [],
             walletAvailableCents: cents(balance(`wallet:${RENTER_ID}`)),
           });
+
+          /** A TIMEOUT that must be a no-op: same snapshot, no effects, no money. */
+          const expectNoop = (timer: TimerKind, label: string) => {
+            const d = decide(s, system, { type: 'TIMEOUT', timer }, context());
+            expect(d.next, `${label} TIMEOUT ${timer} changes nothing`).toBe(s);
+            expect(d.effects, `${label} TIMEOUT ${timer} has no effects`).toEqual([]);
+            reached.add(`misfire ${label}`);
+          };
 
           let reserved = 0;
           let released = 0;
@@ -215,7 +246,12 @@ describe('money conservation (Review Focus 1)', () => {
                 ),
                 ...(Object.keys(s.timers) as TimerKind[]).map((timer): Choice => ({ kind: 'timer', timer })),
                 { kind: 'wait' },
+                ...(s.status === 'ACTIVE' && now.getTime() < endOfDayIn(s.period.end, s.timeZone).getTime()
+                  ? [{ kind: 'pastEnd' } as const]
+                  : []),
+                { kind: 'misfire' },
               ],
+              quiet,
               g,
             );
 
@@ -223,12 +259,25 @@ describe('money conservation (Review Focus 1)', () => {
             if (choice.kind === 'wait') {
               now = new Date(now.getTime() + g(fc.integer, { min: 1, max: 24 }) * HOUR_MS);
               continue;
+            } else if (choice.kind === 'pastEnd') {
+              // A long wait in an active rental: past its end, where "not returned" can be reported.
+              const end = endOfDayIn(s.period.end, s.timeZone).getTime();
+              now = new Date(end + g(fc.integer, { min: 0, max: 48 * 60 }) * MINUTE_MS);
+              continue;
+            } else if (choice.kind === 'misfire') {
+              // A scheduler job for a timer that is not armed, or not due yet.
+              const timer = oneOf(g, TIMER_KINDS);
+              const due = s.timers[timer];
+              if (due === undefined) expectNoop(timer, 'unarmed');
+              else if (due.getTime() > now.getTime()) expectNoop(timer, 'early');
+              continue;
             } else if (choice.kind === 'timer') {
               const due = s.timers[choice.timer];
               if (due === undefined) throw new Error(`${choice.timer} is not armed`);
               const late = g(fc.integer, { min: 0, max: 180 }) * MINUTE_MS;
               now = new Date(Math.max(now.getTime(), due.getTime()) + late);
               decision = decide(s, system, { type: 'TIMEOUT', timer: choice.timer }, context());
+              reached.add(`timeout ${choice.timer}`);
             } else {
               const event = eventFor(choice.type, s, method, g);
               try {
@@ -243,11 +292,25 @@ describe('money conservation (Review Focus 1)', () => {
               }
             }
             expect(decision.next, 'a listed action or a due timer changes the booking').not.toBe(s);
+            if (
+              choice.kind === 'act' &&
+              choice.type === 'REPORT_NOT_RETURNED' &&
+              s.renterReturnedAt === undefined
+            ) {
+              reached.add('not returned after the rental');
+            }
             carryOut(decision.effects);
             expect(Object.keys(decision.next.timers).length, 'at most one armed timer').toBeLessThanOrEqual(
               1,
             );
+            // A new step, a new temper: who stays quiet is drawn again once the booking is paid.
+            if (decision.next.status !== s.status && decision.next.paymentMethod !== undefined) {
+              quiet = oneOf(g, QUIET);
+            }
             s = decision.next;
+            // The same job again, at once: the timer has fired, so nothing happens.
+            if (choice.kind === 'timer' && s.timers[choice.timer] === undefined)
+              expectNoop(choice.timer, 'repeated');
           }
 
           expect(s.timers, 'no timer left at the end').toEqual({});
@@ -269,6 +332,20 @@ describe('money conservation (Review Focus 1)', () => {
             s.status === 'COMPLETED' ? rentCents + (s.outcome === 'DEPOSIT_TO_OWNER' ? depositCents : 0) : 0;
           expect(balance(`wallet:${OWNER_ID}`), 'the owner earns the rent and an accepted deposit').toBe(
             ownerEarned,
+          );
+
+          // The renter's side: what the renter is out of pocket, and through which account it went.
+          const renterCost =
+            !paid || refunded
+              ? 0
+              : rentCents + serviceFeeCents + (s.outcome === 'DEPOSIT_TO_OWNER' ? depositCents : 0);
+          const fromWallet = s.paymentMethod === 'WALLET' ? renterCost : 0;
+          const fromCard = s.paymentMethod === 'CARD' ? renterCost : 0;
+          expect(balance(`wallet:${RENTER_ID}`), `the renter's wallet (${s.paymentMethod ?? 'unpaid'})`).toBe(
+            walletStart - fromWallet,
+          );
+          expect(balance('external:card'), `the card (${s.paymentMethod ?? 'unpaid'})`).toBe(
+            0 - walletStart - fromCard,
           );
 
           for (const ending of endingsOf(s)) reached.add(ending);
@@ -296,6 +373,11 @@ describe('money conservation (Review Focus 1)', () => {
           'paid by CARD',
           'paid by WALLET',
           'completed without deposit',
+          ...TIMER_KINDS.map((timer) => `timeout ${timer}`),
+          'not returned after the rental',
+          'misfire unarmed',
+          'misfire early',
+          'misfire repeated',
         ]),
       );
     },
