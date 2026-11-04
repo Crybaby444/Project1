@@ -1,4 +1,5 @@
 import { DomainError } from './errors';
+import { requireId } from './ids';
 import { cents } from './money';
 import type { Cents } from './money';
 import type { Quote } from './pricing';
@@ -39,16 +40,9 @@ export interface LedgerOperation {
 /** How the renter paid. Money always goes back the same way (spec §0). */
 export type PaymentMethod = 'WALLET' | 'CARD';
 
-function id(value: string, field: string): string {
-  if (typeof value !== 'string' || value === '') {
-    throw new DomainError('INVALID_INPUT', { field, value: String(value) });
-  }
-  return value;
-}
-
 /** The renter's wallet or the outside world, depending on how they paid. */
 function payerAccount(method: PaymentMethod, renterId: string): AccountId {
-  if (method === 'WALLET') return `wallet:${id(renterId, 'renterId')}`;
+  if (method === 'WALLET') return `wallet:${requireId(renterId, 'renterId')}`;
   if (method === 'CARD') return 'external:card';
   throw new DomainError('INVALID_INPUT', { field: 'method', value: String(method) });
 }
@@ -81,7 +75,7 @@ export function topUp(userId: string, amount: Cents): LedgerOperation {
   const value = positive(amount);
   return operation('TOP_UP', [
     ['external:card', -value],
-    [`wallet:${id(userId, 'userId')}`, value],
+    [`wallet:${requireId(userId, 'userId')}`, value],
   ]);
 }
 
@@ -89,7 +83,7 @@ export function topUp(userId: string, amount: Cents): LedgerOperation {
 export function withdraw(userId: string, amount: Cents): LedgerOperation {
   const value = positive(amount);
   return operation('WITHDRAWAL', [
-    [`wallet:${id(userId, 'userId')}`, -value],
+    [`wallet:${requireId(userId, 'userId')}`, -value],
     ['external:card', value],
   ]);
 }
@@ -103,7 +97,7 @@ interface BookingMoney {
 
 /** The renter pays the total: the rent is held in escrow, the deposit is frozen, the fee goes to Yoyo. */
 export function bookingPayment({ bookingId, renterId, quote, method }: BookingMoney): LedgerOperation {
-  const booking = id(bookingId, 'bookingId');
+  const booking = requireId(bookingId, 'bookingId');
   return operation(
     'BOOKING_PAYMENT',
     [
@@ -118,7 +112,7 @@ export function bookingPayment({ bookingId, renterId, quote, method }: BookingMo
 
 /** Everything paid goes back the way it came; Yoyo gives its fee back too. */
 export function bookingRefund({ bookingId, renterId, quote, method }: BookingMoney): LedgerOperation {
-  const booking = id(bookingId, 'bookingId');
+  const booking = requireId(bookingId, 'bookingId');
   return operation(
     'BOOKING_REFUND',
     [
@@ -137,14 +131,14 @@ export function rentRelease(input: {
   readonly ownerId: string;
   readonly rentCents: Cents;
 }): LedgerOperation | null {
-  const booking = id(input.bookingId, 'bookingId');
+  const booking = requireId(input.bookingId, 'bookingId');
   const rent = cents(input.rentCents);
   return orNull(
     operation(
       'RENT_RELEASE',
       [
         [`escrow:${booking}`, -rent],
-        [`wallet:${id(input.ownerId, 'ownerId')}`, rent],
+        [`wallet:${requireId(input.ownerId, 'ownerId')}`, rent],
       ],
       booking,
     ),
@@ -158,7 +152,7 @@ export function depositRefund(input: {
   readonly depositCents: Cents;
   readonly method: PaymentMethod;
 }): LedgerOperation | null {
-  const booking = id(input.bookingId, 'bookingId');
+  const booking = requireId(input.bookingId, 'bookingId');
   const deposit = cents(input.depositCents);
   return orNull(
     operation(
@@ -178,14 +172,14 @@ export function depositToOwner(input: {
   readonly ownerId: string;
   readonly depositCents: Cents;
 }): LedgerOperation | null {
-  const booking = id(input.bookingId, 'bookingId');
+  const booking = requireId(input.bookingId, 'bookingId');
   const deposit = cents(input.depositCents);
   return orNull(
     operation(
       'DEPOSIT_TO_OWNER',
       [
         [`deposit:${booking}`, -deposit],
-        [`wallet:${id(input.ownerId, 'ownerId')}`, deposit],
+        [`wallet:${requireId(input.ownerId, 'ownerId')}`, deposit],
       ],
       booking,
     ),

@@ -77,6 +77,10 @@ describe('production code', () => {
   it('is all scanned', () => {
     expect(productionFiles()).toEqual(
       expect.arrayContaining([
+        'booking/decide.ts',
+        'booking/request.ts',
+        'booking/transitions.ts',
+        'booking/types.ts',
         'dates.ts',
         'errors.ts',
         'index.ts',

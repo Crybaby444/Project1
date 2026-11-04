@@ -45,6 +45,14 @@ describe('@yoyo/domain entry point', () => {
         'rentRelease',
         'topUp',
         'withdraw',
+        // booking
+        'BOOKING_STATUSES',
+        'BOOKING_TEMPLATES',
+        'TERMINAL_STATUSES',
+        'TIMER_KINDS',
+        'createRequest',
+        'decide',
+        'isTerminal',
       ].sort(),
     );
   });
