@@ -115,7 +115,10 @@
     "account": "Konta izvēlne",
     "settings": "Iestatījumi",
     "signOut": "Iziet",
-    "signedOut": "Sesija ir beigta."
+    "signedOut": "Sesija ir beigta.",
+    "lendItem": "Izīrēt lietu",
+    "myListings": "Manas lietas",
+    "moderation": "Moderācija"
   },
   "banner": {
     "verifyEmail": {
@@ -314,5 +317,18 @@
     "PICKUP_ONLY": "Tikai saņemšana uz vietas, bez piegādes",
     "PETS_OK": "Drīkst lietot mājdzīvnieku tuvumā",
     "CARE_INSTRUCTIONS": "Ievērot kopšanas norādījumus"
+  },
+  "listingStatus": {
+    "DRAFT": "Melnraksts",
+    "PENDING_REVIEW": "Pārbaudē",
+    "PUBLISHED": "Publicēts",
+    "REJECTED": "Noraidīts",
+    "HIDDEN": "Paslēpts",
+    "ARCHIVED": "Dzēsts"
+  },
+  "noAccess": {
+    "title": "Šī lapa ir administratoriem",
+    "body": "Tavam kontam šeit nav piekļuves. Ja domā, ka vajadzētu būt, sazinies ar Yoyo komandu.",
+    "back": "Uz sākumlapu"
   }
 }

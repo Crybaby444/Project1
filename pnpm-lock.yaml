@@ -314,6 +314,9 @@ importers:
       '@yoyo/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
+      '@yoyo/domain':
+        specifier: workspace:*
+        version: link:../../packages/domain
       '@yoyo/shared':
         specifier: workspace:*
         version: link:../../packages/shared
