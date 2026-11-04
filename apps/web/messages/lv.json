@@ -144,5 +144,51 @@
     "NETWORK": "Nevaram sazināties ar Yoyo. Pārbaudiet savienojumu un mēģiniet vēlreiz.",
     "fieldInvalid": "Pārbaudiet šo lauku.",
     "retryIn": "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc {seconds} s."
+  },
+  "validation": {
+    "required": "Aizpildiet šo lauku.",
+    "tooShort": "Vismaz {min} rakstzīmes.",
+    "tooLong": "Ne vairāk kā {max} rakstzīmes.",
+    "email": "Ievadiet e-pasta adresi, piemēram, vards@example.com.",
+    "passwordMismatch": "Paroles nesakrīt.",
+    "invalid": "Pārbaudiet šo lauku."
+  },
+  "auth": {
+    "fields": {
+      "name": "Vārds",
+      "email": "E-pasts",
+      "password": "Parole",
+      "newPassword": "Jaunā parole",
+      "repeatPassword": "Atkārtojiet jauno paroli",
+      "currentPassword": "Pašreizējā parole"
+    },
+    "password": {
+      "show": "Rādīt paroli"
+    },
+    "strength": {
+      "label": "Paroles drošība",
+      "weak": "vāja",
+      "fair": "pieņemama",
+      "strong": "laba"
+    },
+    "or": "vai",
+    "google": "Turpināt ar Google",
+    "login": {
+      "title": "Pieteikties",
+      "subtitle": "Prieks jūs atkal redzēt Yoyo.",
+      "submit": "Pieteikties",
+      "forgot": "Aizmirsāt paroli?",
+      "noAccount": "Vēl nav konta?",
+      "register": "Reģistrēties"
+    },
+    "register": {
+      "title": "Reģistrēties",
+      "subtitle": "Nomājiet vajadzīgo no cilvēkiem tuvumā un iznomājiet to, ko lietojat reti.",
+      "nameHint": "To redzēs cilvēki, ar kuriem nomāsieties.",
+      "passwordHint": "Vismaz 8 rakstzīmes. Labi der daži vārdi pēc kārtas.",
+      "submit": "Izveidot kontu",
+      "haveAccount": "Jau ir konts?",
+      "signIn": "Pieteikties"
+    }
   }
 }

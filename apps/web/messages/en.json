@@ -144,5 +144,51 @@
     "NETWORK": "We cannot reach Yoyo. Check your connection and try again.",
     "fieldInvalid": "Check this field.",
     "retryIn": "Too many attempts. Try again in {seconds} s."
+  },
+  "validation": {
+    "required": "Fill in this field.",
+    "tooShort": "At least {min, plural, one {# character} other {# characters}}.",
+    "tooLong": "At most {max, plural, one {# character} other {# characters}}.",
+    "email": "Enter an email address like name@example.com.",
+    "passwordMismatch": "The passwords do not match.",
+    "invalid": "Check this field."
+  },
+  "auth": {
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "newPassword": "New password",
+      "repeatPassword": "Repeat the new password",
+      "currentPassword": "Current password"
+    },
+    "password": {
+      "show": "Show password"
+    },
+    "strength": {
+      "label": "Password strength",
+      "weak": "weak",
+      "fair": "okay",
+      "strong": "strong"
+    },
+    "or": "or",
+    "google": "Continue with Google",
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Welcome back to Yoyo.",
+      "submit": "Sign in",
+      "forgot": "Forgot your password?",
+      "noAccount": "No account yet?",
+      "register": "Sign up"
+    },
+    "register": {
+      "title": "Sign up",
+      "subtitle": "Rent what you need from people nearby, and lend what you rarely use.",
+      "nameHint": "People you rent with will see it.",
+      "passwordHint": "At least 8 characters. A few words in a row work well.",
+      "submit": "Create account",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in"
+    }
   }
 }
