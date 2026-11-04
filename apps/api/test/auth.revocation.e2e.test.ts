@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { SignJWT } from 'jose';
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { resetAccounts } from './support/db';
@@ -130,7 +131,6 @@ describe('revoking a session also ends its access token at once', () => {
 
   it('refuses an access token without a session family', async () => {
     const { user } = await seedUser(t);
-    const { SignJWT } = await import('jose');
     const nowSec = Math.floor(t.clock.now().getTime() / 1000);
     const legacy = await new SignJWT({ role: 'USER' })
       .setProtectedHeader({ alg: 'HS256' })

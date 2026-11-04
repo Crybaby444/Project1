@@ -109,6 +109,12 @@ export class AuthService {
     return { user, session: await this.startSession(user, meta) };
   }
 
+  /** The id of the live account with this email, if any. */
+  async accountIdFor(email: string): Promise<string | undefined> {
+    const user = await this.prisma.user.findUnique({ where: { email }, select: { id: true, deletedAt: true } });
+    return user && user.deletedAt === null ? user.id : undefined;
+  }
+
   /** Rotates the refresh token; blocked or deleted accounts lose the session instead. */
   async refresh(refreshToken: string, meta: SessionMeta): Promise<{ user: User; session: SessionTokens }> {
     const rotated = await this.refreshTokens.rotate(refreshToken, meta);

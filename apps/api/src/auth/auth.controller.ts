@@ -32,7 +32,8 @@ import {
 } from './auth.dto';
 import { AuthGuard } from './auth.guard';
 import { AuthService, localeFromPath } from './auth.service';
-import { clearAuthCookies, REFRESH_COOKIE, setAuthCookies } from './cookies';
+import { clearAuthCookies, DEVICE_COOKIE, REFRESH_COOKIE, setAuthCookies, setDeviceCookie } from './cookies';
+import { DeviceCookieService, type Device } from './device-cookie.service';
 import {
   GoogleOAuthService,
   OAUTH_COOKIE,
@@ -57,12 +58,27 @@ export class AuthController {
     private readonly auth: AuthService,
     private readonly google: GoogleOAuthService,
     private readonly limiter: RateLimiter,
+    private readonly devices: DeviceCookieService,
     @Inject(ENV) private readonly env: Pick<Env, 'NODE_ENV' | 'WEB_ORIGIN'>,
     @Inject(SMS_PROVIDER) private readonly sms: SmsProvider | null,
   ) {}
 
   private get secureCookies(): boolean {
     return this.env.NODE_ENV === 'production';
+  }
+
+  /** The device cookie this browser sent, if it is valid and belongs to the account with `email`. */
+  private async knownDevice(req: Request, email: string): Promise<Device | null> {
+    const device = await this.devices.read(readCookie(req, DEVICE_COOKIE));
+    if (!device) return null;
+    return (await this.auth.accountIdFor(email)) === device.userId ? device : null;
+  }
+
+  /** (Re)sets the device cookie after a successful sign-in, keeping the device id of this account. */
+  private async rememberDevice(req: Request, res: Response, userId: string): Promise<void> {
+    const previous = await this.devices.read(readCookie(req, DEVICE_COOKIE));
+    const deviceId = previous?.userId === userId ? previous.deviceId : undefined;
+    setDeviceCookie(res, await this.devices.issue(userId, deviceId), this.secureCookies);
   }
 
   @Get('providers')
@@ -124,6 +140,7 @@ export class AuthController {
     this.limiter.hit(RATE_LIMITS.register(clientIp(req)));
     const { user, session } = await this.auth.register(body, sessionMeta(req));
     setAuthCookies(res, session, this.secureCookies);
+    await this.rememberDevice(req, res, user.id);
     return { user: toPublicUser(user) };
   }
 
@@ -170,9 +187,15 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<UserResponse> {
-    this.limiter.hit(RATE_LIMITS.login(clientIp(req), body.email));
+    const device = await this.knownDevice(req, body.email);
+    this.limiter.hit(
+      device
+        ? RATE_LIMITS.loginFromDevice(clientIp(req), body.email, device.deviceId)
+        : RATE_LIMITS.login(clientIp(req), body.email),
+    );
     const { user, session } = await this.auth.login(body, sessionMeta(req));
     setAuthCookies(res, session, this.secureCookies);
+    await this.rememberDevice(req, res, user.id);
     return { user: toPublicUser(user) };
   }
 

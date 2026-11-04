@@ -1,9 +1,12 @@
 import type { CookieOptions, Response } from 'express';
 import { ACCESS_TOKEN_TTL_SECONDS } from './access-token.service';
+import { DEVICE_COOKIE_TTL_SECONDS } from './device-cookie.service';
 import { REFRESH_TOKEN_TTL_MS } from './refresh-token.service';
 
 export const ACCESS_COOKIE = 'yoyo_at';
 export const REFRESH_COOKIE = 'yoyo_rt';
+/** Remembers that this browser signed in to an account before (device cookie, see DeviceCookieService). */
+export const DEVICE_COOKIE = 'yoyo_dev';
 /** The refresh token only travels to the endpoints that use it (refresh, logout). */
 export const REFRESH_COOKIE_PATH = '/api/v1/auth';
 
@@ -24,6 +27,11 @@ export function setAuthCookies(res: Response, tokens: SessionTokens, secure: boo
     path: REFRESH_COOKIE_PATH,
     maxAge: REFRESH_TOKEN_TTL_MS,
   });
+}
+
+/** The device cookie only travels to the auth endpoints; it outlives sessions (logout keeps it). */
+export function setDeviceCookie(res: Response, value: string, secure: boolean): void {
+  res.cookie(DEVICE_COOKIE, value, { ...base(secure), path: REFRESH_COOKIE_PATH, maxAge: DEVICE_COOKIE_TTL_SECONDS * 1000 });
 }
 
 /** Max-Age=0 on both cookies, with the same paths they were set with, so the browser drops them. */

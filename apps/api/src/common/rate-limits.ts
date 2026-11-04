@@ -15,6 +15,14 @@ export const RATE_LIMITS = {
     { key: `login:ip-email:${ip}|${email}`, limit: 5, windowMs: MINUTE },
     { key: `login:email:${email}`, limit: 20, windowMs: HOUR },
   ],
+  /**
+   * Instead of the per-email hour bucket, for a browser that shows a valid device cookie of this
+   * account: 5 a minute per device. An attacker filling the per-email bucket cannot lock the owner out.
+   */
+  loginFromDevice: (ip: string, email: string, deviceId: string): RateRule[] => [
+    { key: `login:ip-email:${ip}|${email}`, limit: 5, windowMs: MINUTE },
+    { key: `login:device:${deviceId}`, limit: 5, windowMs: MINUTE },
+  ],
   /** 3 an hour per address and email, and 5 an hour per email from any address. */
   forgotPassword: (ip: string, email: string): RateRule[] => [
     { key: `forgot-password:ip-email:${ip}|${email}`, limit: 3, windowMs: HOUR },
