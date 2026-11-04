@@ -536,6 +536,43 @@
       "list": "Not available",
       "remove": "Make {period} available again",
       "saved": "Dates saved"
+    },
+    "status": {
+      "DRAFT": "A draft: only you can see it.",
+      "PENDING_REVIEW": "We check every listing before it goes live, usually within a day. Changes you make now keep it in the queue.",
+      "REJECTED": "This listing was not published. The reason from our team:",
+      "REJECTED_next": "Fix it, then send it for review again.",
+      "REJECTED_link": "Send it again",
+      "PUBLISHED": "Live in the catalog. Changing the title, description, category, details, condition, photos, your own rules, city or district sends it back to review. Price, deposit, rental days, ready-made rules, the point and the dates do not.",
+      "HIDDEN": "Hidden: renters cannot find it. Show it again whenever you like.",
+      "ARCHIVED": "Deleted. It is kept for past deals and cannot be changed."
+    },
+    "submit": {
+      "title": "Send for review",
+      "intro": "Our team checks the listing, then it appears in the catalog. You get an email either way.",
+      "left": "Still needed",
+      "leftStep": "{step}: {count, plural, one {# field} other {# fields}}",
+      "ready": "Everything review needs is filled in.",
+      "send": "Send for review",
+      "sent": "Sent for review. We will email you.",
+      "notNow": "Already in review."
     }
+  },
+  "listingActions": {
+    "hide": "Hide",
+    "unhide": "Show again",
+    "delete": "Delete",
+    "edit": "Edit",
+    "fix": "Fix it",
+    "hidden": "Hidden from the catalog.",
+    "shown": "Back in the catalog.",
+    "deleted": "Deleted.",
+    "archived": "Deleted. It is kept for past deals.",
+    "deleteTitle": "Delete this listing?",
+    "deleteDraft": "It is deleted for good, with its photos.",
+    "deleteLive": "It leaves the catalog for good. We keep it for past deals, but nobody can rent it any more.",
+    "deleteConfirm": "Delete listing",
+    "cancel": "Cancel",
+    "more": "More for “{title}”"
   }
 }

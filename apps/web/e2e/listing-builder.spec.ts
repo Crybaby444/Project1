@@ -115,6 +115,7 @@ test.describe('where and when', () => {
 
     // A click on the map moves the point; its district comes from the API's reverse search.
     const map = page.getByRole('region', { name: b.place.map });
+    await map.scrollIntoViewIfNeeded();
     const box = (await map.boundingBox())!;
     await page.mouse.click(box.x + 40, box.y + box.height / 2);
     await expect(page.getByLabel(b.place.district)).toHaveValue('Majori');
@@ -138,5 +139,73 @@ test.describe('where and when', () => {
     // The exact point is never part of the preview.
     const html = await page.getByRole('figure', { name: b.preview.label }).innerHTML();
     expect(html).not.toMatch(/56[.,]9|23[.,]7|24[.,]1/);
+  });
+});
+
+test.describe('send for review', () => {
+  test('a new owner goes through every step and sends the listing for review', async ({ page }) => {
+    await registerByApi(page.request);
+    await page.goto('/listings/new');
+
+    await uploadThroughCrop(page, 'item.jpg', 'whole');
+    await expect(page.getByRole('img', { name: 'Photo 1 of 1' })).toBeVisible();
+
+    await page.getByRole('button', { name: b.next, exact: true }).click();
+    await page.getByLabel(b.basics.title).fill('PlayStation 5 with two controllers');
+    await page.getByRole('radio', { name: 'Electronics' }).check({ force: true });
+    await page.getByRole('radio', { name: 'Game consoles' }).check({ force: true });
+    await page.getByRole('radio', { name: en.listingCondition.LIKE_NEW }).check({ force: true });
+    await page
+      .getByLabel(b.basics.description)
+      .fill('A PS5 with two controllers and three games, ready for a weekend of play.');
+
+    await page.getByRole('button', { name: b.next, exact: true }).click();
+    const details = page.locator('select');
+    for (const select of await details.all()) await select.selectOption({ index: 1 });
+    await page.getByLabel(/^Controllers/).fill('2');
+
+    await page.getByRole('button', { name: b.next, exact: true }).click();
+    await page.getByLabel(b.price.daily).fill('15');
+    await page.getByLabel(b.price.deposit).fill('100');
+
+    await page.getByRole('button', { name: b.next, exact: true }).click();
+    await page.getByRole('combobox', { name: b.place.search }).fill('Brīvības iela 1');
+    await page.getByRole('option', { name: /Brīvības iela 1/ }).click();
+    await expect(page.getByLabel(b.place.district)).toHaveValue('Centrs');
+
+    await page.getByRole('button', { name: b.next, exact: true }).click();
+    await page.getByRole('checkbox', { name: en.listingRules.ID_AT_PICKUP }).check({ force: true });
+    await expect(page.getByText(b.submit.ready)).toBeVisible();
+    await page.getByRole('button', { name: b.submit.send }).click();
+
+    await expect(page).toHaveURL(/\/dashboard\/lending$/);
+    const { items } = (await (await page.request.get('/api/v1/me/listings')).json()) as {
+      items: { status: string; title: string }[];
+    };
+    expect(items).toEqual([
+      expect.objectContaining({ status: 'PENDING_REVIEW', title: 'PlayStation 5 with two controllers' }),
+    ]);
+  });
+
+  test('a change saved in another tab stops this one instead of being overwritten', async ({
+    page,
+    context,
+  }) => {
+    await registerByApi(page.request);
+    const { createListingByApi } = await import('./support/listings');
+    const listing = await createListingByApi(page.request, { title: 'Camping tent' });
+    await page.goto(`/listings/${listing.id}/edit?step=basics`);
+    await expect(page.getByLabel(b.basics.title)).toHaveValue('Camping tent');
+
+    const other = await context.newPage();
+    await serveBlankMapTiles(other);
+    await other.goto(`/listings/${listing.id}/edit?step=basics`);
+    await other.getByLabel(b.basics.title).fill('Camping tent for four');
+    await expect(other.getByText(b.save.saved)).toBeVisible();
+
+    await page.getByLabel(b.basics.title).fill('Camping tent, two people');
+    await expect(page.getByRole('alert').filter({ hasText: b.conflict.title })).toBeVisible();
+    await page.getByRole('button', { name: b.conflict.reload }).click();
+    await expect(page.getByLabel(b.basics.title)).toHaveValue('Camping tent for four');
   });
 });

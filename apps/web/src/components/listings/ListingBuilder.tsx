@@ -24,6 +24,8 @@ import { PhotosStep } from './steps/PhotosStep';
 import { PlaceStep } from './steps/PlaceStep';
 import { PriceStep } from './steps/PriceStep';
 import { RulesStep } from './steps/RulesStep';
+import { SubmitPanel } from './steps/SubmitPanel';
+import { StatusBanner } from './StatusBanner';
 
 /** The fields of each step; steps added by later tasks register here. */
 const STEP_CONTENT: Partial<Record<BuilderStep, () => ReactNode>> = {
@@ -32,7 +34,12 @@ const STEP_CONTENT: Partial<Record<BuilderStep, () => ReactNode>> = {
   attributes: () => <AttributesStep />,
   price: () => <PriceStep />,
   place: () => <PlaceStep />,
-  rules: () => <RulesStep />,
+  rules: () => (
+    <div className="flex flex-col gap-8">
+      <RulesStep />
+      <SubmitPanel />
+    </div>
+  ),
 };
 
 /**
@@ -134,6 +141,7 @@ function BuilderLayout({
         <SaveIndicator state={draft.state} />
       </header>
 
+      <StatusBanner />
       {draft.state === 'conflict' && <ConflictNotice onReload={draft.reload} />}
       {categoriesFailed !== null && (
         <div

@@ -536,6 +536,43 @@
       "list": "Nav pieejama",
       "remove": "Padarīt {period} atkal pieejamu",
       "saved": "Datumi saglabāti"
+    },
+    "status": {
+      "DRAFT": "Melnraksts: to redzi tikai tu.",
+      "PENDING_REVIEW": "Mēs pārbaudām katru sludinājumu, pirms to publicējam, parasti dienas laikā. Izmaiņas tagad to atstās rindā.",
+      "REJECTED": "Šis sludinājums netika publicēts. Mūsu komandas iemesls:",
+      "REJECTED_next": "Izlabo to un nosūti pārbaudei vēlreiz.",
+      "REJECTED_link": "Nosūtīt vēlreiz",
+      "PUBLISHED": "Redzams katalogā. Nosaukuma, apraksta, kategorijas, detaļu, stāvokļa, foto, tavu noteikumu, pilsētas vai rajona maiņa to atkal nosūta pārbaudei. Cena, drošības nauda, īres dienas, gatavie noteikumi, punkts un datumi — nē.",
+      "HIDDEN": "Paslēpts: īrnieki to neatrod. Parādi to atkal, kad vēlies.",
+      "ARCHIVED": "Dzēsts. Tas tiek glabāts pagātnes darījumiem, un to nevar mainīt."
+    },
+    "submit": {
+      "title": "Nosūtīt pārbaudei",
+      "intro": "Mūsu komanda pārbauda sludinājumu, tad tas parādās katalogā. Jebkurā gadījumā saņemsi e-pastu.",
+      "left": "Vēl vajag",
+      "leftStep": "{step}: {count, plural, zero {# lauki} one {# lauks} other {# lauki}}",
+      "ready": "Viss pārbaudei vajadzīgais ir aizpildīts.",
+      "send": "Nosūtīt pārbaudei",
+      "sent": "Nosūtīts pārbaudei. Mēs tev uzrakstīsim.",
+      "notNow": "Jau tiek pārbaudīts."
     }
+  },
+  "listingActions": {
+    "hide": "Paslēpt",
+    "unhide": "Rādīt atkal",
+    "delete": "Dzēst",
+    "edit": "Labot",
+    "fix": "Izlabot",
+    "hidden": "Paslēpts no kataloga.",
+    "shown": "Atkal katalogā.",
+    "deleted": "Dzēsts.",
+    "archived": "Dzēsts. Tas tiek glabāts pagātnes darījumiem.",
+    "deleteTitle": "Dzēst šo sludinājumu?",
+    "deleteDraft": "Tas tiks dzēsts pavisam, kopā ar foto.",
+    "deleteLive": "Tas pavisam pazudīs no kataloga. Mēs to glabāsim pagātnes darījumiem, bet to vairs nevarēs īrēt.",
+    "deleteConfirm": "Dzēst sludinājumu",
+    "cancel": "Atcelt",
+    "more": "Vēl “{title}”"
   }
 }
