@@ -574,5 +574,35 @@
     "deleteConfirm": "Dzēst sludinājumu",
     "cancel": "Atcelt",
     "more": "Vēl “{title}”"
+  },
+  "myListings": {
+    "title": "Manas lietas",
+    "intro": "Viss, ko izīrē, no melnrakstiem līdz publicētiem sludinājumiem.",
+    "lend": "Izīrēt lietu",
+    "filters": "Rādīt",
+    "filter": {
+      "ALL": "Visi",
+      "DRAFT": "Melnraksti",
+      "PENDING_REVIEW": "Pārbaudē",
+      "PUBLISHED": "Publicēti",
+      "REJECTED": "Noraidīti",
+      "HIDDEN": "Paslēpti",
+      "ARCHIVED": "Dzēsti"
+    },
+    "emptyTitle": "Vēl nav ko izīrēt",
+    "emptyBody": "Pievieno pirmo lietu, ko reti lieto: urbi, telti, konsoli. Tas aizņem dažas minūtes un saglabājas pa ceļam.",
+    "emptyFilter": "Te pagaidām nekā nav.",
+    "untitled": "Bez nosaukuma",
+    "noPhoto": "Vēl nav foto",
+    "perDay": "{price} dienā",
+    "noPrice": "Vēl nav cenas",
+    "changed": "Mainīts {date}",
+    "reason": "Kāpēc netika publicēts",
+    "fix": "Izlabot",
+    "edit": "Labot",
+    "view": "Skatīt",
+    "loadFailed": "Neizdevās ielādēt tavas lietas.",
+    "retry": "Mēģināt vēlreiz",
+    "count": "{count, plural, zero {# lietas} one {# lieta} other {# lietas}}"
   }
 }

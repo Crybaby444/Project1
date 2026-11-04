@@ -574,5 +574,35 @@
     "deleteConfirm": "Delete listing",
     "cancel": "Cancel",
     "more": "More for “{title}”"
+  },
+  "myListings": {
+    "title": "My items",
+    "intro": "Everything you lend out, from drafts to live listings.",
+    "lend": "Lend an item",
+    "filters": "Show",
+    "filter": {
+      "ALL": "All",
+      "DRAFT": "Drafts",
+      "PENDING_REVIEW": "In review",
+      "PUBLISHED": "Published",
+      "REJECTED": "Rejected",
+      "HIDDEN": "Hidden",
+      "ARCHIVED": "Deleted"
+    },
+    "emptyTitle": "Nothing to lend yet",
+    "emptyBody": "Add the first thing you rarely use: a drill, a tent, a console. It takes a few minutes, and it saves as you go.",
+    "emptyFilter": "Nothing here right now.",
+    "untitled": "Untitled",
+    "noPhoto": "No photo yet",
+    "perDay": "{price} a day",
+    "noPrice": "No price yet",
+    "changed": "Changed {date}",
+    "reason": "Why it was not published",
+    "fix": "Fix it",
+    "edit": "Edit",
+    "view": "View",
+    "loadFailed": "We could not load your items.",
+    "retry": "Try again",
+    "count": "{count, plural, one {# item} other {# items}}"
   }
 }
