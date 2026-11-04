@@ -99,6 +99,15 @@ CREATE TABLE "Unavailability" (
     CONSTRAINT "Unavailability_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "GeoCache" (
+    "key" TEXT NOT NULL,
+    "payload" JSONB NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "GeoCache_pkey" PRIMARY KEY ("key")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Category_slug_key" ON "Category"("slug");
 
@@ -122,6 +131,9 @@ CREATE INDEX "ListingPhoto_listingId_position_idx" ON "ListingPhoto"("listingId"
 
 -- CreateIndex
 CREATE INDEX "Unavailability_listingId_idx" ON "Unavailability"("listingId");
+
+-- CreateIndex
+CREATE INDEX "GeoCache_createdAt_idx" ON "GeoCache"("createdAt");
 
 -- AddForeignKey
 ALTER TABLE "Category" ADD CONSTRAINT "Category_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

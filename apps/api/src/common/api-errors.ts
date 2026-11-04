@@ -15,7 +15,7 @@ const DESCRIPTIONS: Record<number, string> = {
   415: 'Not a JPEG, PNG or WebP image (UNSUPPORTED_MEDIA)',
   410: 'Link or code used up (TOKEN_USED) or expired (TOKEN_EXPIRED)',
   429: 'Too many attempts (RATE_LIMITED); see Retry-After',
-  503: 'Photo storage not configured or unreachable (STORAGE_DISABLED)',
+  503: 'A service behind the API is unavailable (STORAGE_DISABLED, GEO_UNAVAILABLE)',
 };
 
 /** Documents the uniform error body for the given statuses. */

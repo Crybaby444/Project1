@@ -24,6 +24,7 @@ describe('ERROR_CODES', () => {
         'PHOTO_LIMIT',
         'STORAGE_DISABLED',
         'LISTING_INCOMPLETE',
+        'GEO_UNAVAILABLE',
       ].sort(),
     );
   });

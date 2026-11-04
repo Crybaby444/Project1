@@ -8,6 +8,7 @@ import { ClockModule } from './clock/clock';
 import { OriginGuard } from './common/origin.guard';
 import { RateLimiterModule } from './common/rate-limiter';
 import { ENV, loadEnv } from './config/env';
+import { GeoModule } from './geo/geo.module';
 import { HealthController } from './health/health.controller';
 import { ListingsModule } from './listings/listings.module';
 import { MediaModule } from './media/media.module';
@@ -37,6 +38,7 @@ class EnvModule {}
     ListingsModule,
     MediaModule,
     ModerationModule,
+    GeoModule,
   ],
   controllers: [HealthController],
   providers: [

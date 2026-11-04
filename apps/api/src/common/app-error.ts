@@ -20,6 +20,7 @@ const DEFAULT_MESSAGES: Record<ErrorCode, string> = {
   PHOTO_LIMIT: 'A listing has at most 8 photos',
   STORAGE_DISABLED: 'Photo uploads are not available right now',
   LISTING_INCOMPLETE: 'The listing is not complete yet',
+  GEO_UNAVAILABLE: 'Address search is not available right now',
 };
 
 /** An expected failure with a stable code; ErrorFilter turns it into the uniform error body. */

@@ -1942,7 +1942,7 @@
             }
           },
           "503": {
-            "description": "Photo storage not configured or unreachable (STORAGE_DISABLED)",
+            "description": "A service behind the API is unavailable (STORAGE_DISABLED, GEO_UNAVAILABLE)",
             "content": {
               "application/json": {
                 "schema": {
@@ -2424,6 +2424,208 @@
           "admin"
         ]
       }
+    },
+    "/api/v1/geo/search": {
+      "get": {
+        "operationId": "GeoController_search",
+        "parameters": [
+          {
+            "name": "q",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minLength": 2,
+              "maxLength": 200,
+              "type": "string"
+            }
+          },
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "en",
+              "type": "string",
+              "enum": [
+                "en",
+                "lv",
+                "ru"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Up to 5 places",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeoSearchResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many attempts (RATE_LIMITED); see Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "A service behind the API is unavailable (STORAGE_DISABLED, GEO_UNAVAILABLE)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "geo"
+        ]
+      }
+    },
+    "/api/v1/geo/reverse": {
+      "get": {
+        "operationId": "GeoController_reverse",
+        "parameters": [
+          {
+            "name": "lat",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minimum": -90,
+              "maximum": 90,
+              "type": "number"
+            }
+          },
+          {
+            "name": "lng",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minimum": -180,
+              "maximum": 180,
+              "type": "number"
+            }
+          },
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "en",
+              "type": "string",
+              "enum": [
+                "en",
+                "lv",
+                "ru"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "City and district of a point (null when unknown)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeoReverseResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many attempts (RATE_LIMITED); see Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "A service behind the API is unavailable (STORAGE_DISABLED, GEO_UNAVAILABLE)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "geo"
+        ]
+      }
     }
   },
   "info": {
@@ -2506,7 +2708,8 @@
                   "PAYLOAD_TOO_LARGE",
                   "PHOTO_LIMIT",
                   "STORAGE_DISABLED",
-                  "LISTING_INCOMPLETE"
+                  "LISTING_INCOMPLETE",
+                  "GEO_UNAVAILABLE"
                 ]
               },
               "message": {
@@ -4768,6 +4971,82 @@
         "required": [
           "reason"
         ]
+      },
+      "GeoSearchResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "city": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "district": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "lat": {
+                  "type": "number"
+                },
+                "lng": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "label",
+                "city",
+                "district",
+                "lat",
+                "lng"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "attribution": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "results",
+          "attribution"
+        ],
+        "additionalProperties": false
+      },
+      "GeoReverseResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "district": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "attribution": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "city",
+          "district",
+          "attribution"
+        ],
+        "additionalProperties": false
       }
     }
   }

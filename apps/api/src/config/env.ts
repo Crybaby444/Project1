@@ -83,6 +83,11 @@ const EnvObject = z.object({
   ),
   /** Cloudinary's upload API; tests point it at a local fake. */
   CLOUDINARY_API_URL: z.url().default('https://api.cloudinary.com'),
+  /**
+   * The OpenStreetMap geocoder. The public one allows 1 request a second and needs an identifying
+   * User-Agent (both are kept); tests point it at a local fake.
+   */
+  NOMINATIM_URL: z.url().default('https://nominatim.openstreetmap.org'),
   /** Folder of the local storage, relative to the API's working directory. */
   UPLOADS_DIR: z.preprocess(blankAsUnset, z.string().default('.uploads')),
 });

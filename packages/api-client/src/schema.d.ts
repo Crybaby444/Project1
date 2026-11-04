@@ -532,6 +532,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/geo/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GeoController_search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/geo/reverse": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GeoController_reverse"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -550,7 +582,7 @@ export interface components {
         ApiErrorDto_Output: {
             error: {
                 /** @enum {string} */
-                code: "VALIDATION_FAILED" | "AUTH_INVALID_CREDENTIALS" | "AUTH_EMAIL_TAKEN" | "AUTH_UNAUTHENTICATED" | "AUTH_FORBIDDEN" | "AUTH_BLOCKED" | "AUTH_PROVIDER_DISABLED" | "TOKEN_EXPIRED" | "TOKEN_USED" | "RATE_LIMITED" | "ORIGIN_FORBIDDEN" | "NOT_FOUND" | "INTERNAL" | "INVALID_STATUS" | "UNSUPPORTED_MEDIA" | "PAYLOAD_TOO_LARGE" | "PHOTO_LIMIT" | "STORAGE_DISABLED" | "LISTING_INCOMPLETE";
+                code: "VALIDATION_FAILED" | "AUTH_INVALID_CREDENTIALS" | "AUTH_EMAIL_TAKEN" | "AUTH_UNAUTHENTICATED" | "AUTH_FORBIDDEN" | "AUTH_BLOCKED" | "AUTH_PROVIDER_DISABLED" | "TOKEN_EXPIRED" | "TOKEN_USED" | "RATE_LIMITED" | "ORIGIN_FORBIDDEN" | "NOT_FOUND" | "INTERNAL" | "INVALID_STATUS" | "UNSUPPORTED_MEDIA" | "PAYLOAD_TOO_LARGE" | "PHOTO_LIMIT" | "STORAGE_DISABLED" | "LISTING_INCOMPLETE" | "GEO_UNAVAILABLE";
                 message: string;
                 fields?: {
                     [key: string]: string;
@@ -1017,6 +1049,21 @@ export interface components {
         RejectListingDto: {
             reason: string;
             version?: number;
+        };
+        GeoSearchResponseDto_Output: {
+            results: {
+                label: string;
+                city: string | null;
+                district: string | null;
+                lat: number;
+                lng: number;
+            }[];
+            attribution: string;
+        };
+        GeoReverseResponseDto_Output: {
+            city: string[];
+            district: string[];
+            attribution: string;
         };
     };
     responses: never;
@@ -2666,7 +2713,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Photo storage not configured or unreachable (STORAGE_DISABLED) */
+            /** @description A service behind the API is unavailable (STORAGE_DISABLED, GEO_UNAVAILABLE) */
             503: {
                 headers: {
                     [name: string]: unknown;
@@ -3020,6 +3067,143 @@ export interface operations {
             };
             /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    GeoController_search: {
+        parameters: {
+            query: {
+                q: string;
+                lang?: "en" | "lv" | "ru";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Up to 5 places */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoSearchResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description A service behind the API is unavailable (STORAGE_DISABLED, GEO_UNAVAILABLE) */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    GeoController_reverse: {
+        parameters: {
+            query: {
+                lat: number;
+                lng: number;
+                lang?: "en" | "lv" | "ru";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description City and district of a point (null when unknown) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoReverseResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description A service behind the API is unavailable (STORAGE_DISABLED, GEO_UNAVAILABLE) */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };

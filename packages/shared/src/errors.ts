@@ -30,6 +30,8 @@ export const ERROR_CODES = [
   'STORAGE_DISABLED',
   /** The listing cannot go to review yet: `fields` says what is missing, `details.steps` in which builder steps. */
   'LISTING_INCOMPLETE',
+  /** Address search is unavailable right now (Nominatim down, or its queue is full). */
+  'GEO_UNAVAILABLE',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];

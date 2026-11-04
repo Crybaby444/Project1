@@ -281,3 +281,13 @@ model Unavailability {
 
   @@index([listingId])
 }
+
+/// Geocoder answers (Nominatim), kept 30 days: the same search never asks it twice.
+model GeoCache {
+  /// `search:<lang>:<normalized query>` or `reverse:<lang>:<lat>,<lng>`
+  key       String   @id
+  payload   Json
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
