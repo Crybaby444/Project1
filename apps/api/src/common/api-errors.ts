@@ -10,9 +10,12 @@ const DESCRIPTIONS: Record<number, string> = {
   401: 'Not signed in or wrong credentials',
   403: 'Not allowed (blocked account, wrong role or foreign Origin)',
   404: 'Not found or not available',
-  409: 'Conflict (e.g. AUTH_EMAIL_TAKEN, or INVALID_STATUS with details.currentVersion)',
+  409: 'Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion)',
+  413: 'File too large (PAYLOAD_TOO_LARGE)',
+  415: 'Not a JPEG, PNG or WebP image (UNSUPPORTED_MEDIA)',
   410: 'Link or code used up (TOKEN_USED) or expired (TOKEN_EXPIRED)',
   429: 'Too many attempts (RATE_LIMITED); see Retry-After',
+  503: 'Photo storage not configured or unreachable (STORAGE_DISABLED)',
 };
 
 /** Documents the uniform error body for the given statuses. */

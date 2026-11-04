@@ -164,6 +164,18 @@ export const ListingPhotoSchema = z.object({
 
 export type ListingPhoto = z.infer<typeof ListingPhotoSchema>;
 
+/** The new order of a listing's photos: every photo id exactly once, the cover first. */
+export const PhotoOrderRequestSchema = z.object({ ids: z.array(z.string().max(64)).max(LISTING_LIMITS.photos) });
+
+/** `version` is the listing's version after the change: send it with the next PATCH. */
+export const PhotoUploadResponseSchema = z.object({ photo: ListingPhotoSchema, version: z.number().int() });
+
+export type PhotoUploadResponse = z.infer<typeof PhotoUploadResponseSchema>;
+
+export const PhotoOrderResponseSchema = z.object({ photos: z.array(ListingPhotoSchema), version: z.number().int() });
+
+export type PhotoOrderResponse = z.infer<typeof PhotoOrderResponseSchema>;
+
 /** What anyone may see of a listing (plan 7): the district, never the exact point. */
 export const PublicListingSchema = z.object({
   id: z.string(),

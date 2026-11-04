@@ -20,6 +20,14 @@ export const ERROR_CODES = [
   'INTERNAL',
   /** The listing is not in a status that allows this, or it changed elsewhere (`details.currentVersion`). */
   'INVALID_STATUS',
+  /** The file is not a JPEG, PNG or WebP (checked by its bytes, not by its Content-Type). */
+  'UNSUPPORTED_MEDIA',
+  /** The upload is over the size limit (10 MB, or too many pixels). */
+  'PAYLOAD_TOO_LARGE',
+  /** The listing already has its 8 photos. */
+  'PHOTO_LIMIT',
+  /** Photo storage is not configured (or not reachable) on this deployment. */
+  'STORAGE_DISABLED',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];

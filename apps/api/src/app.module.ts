@@ -10,6 +10,7 @@ import { RateLimiterModule } from './common/rate-limiter';
 import { ENV, loadEnv } from './config/env';
 import { HealthController } from './health/health.controller';
 import { ListingsModule } from './listings/listings.module';
+import { MediaModule } from './media/media.module';
 import { MeModule } from './me/me.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { SettingsModule } from './settings/settings.module';
@@ -33,6 +34,7 @@ class EnvModule {}
     AdminModule,
     CategoriesModule,
     ListingsModule,
+    MediaModule,
   ],
   controllers: [HealthController],
   providers: [

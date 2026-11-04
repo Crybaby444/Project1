@@ -82,7 +82,7 @@ export async function seedListing(
       ownerId: owner.id,
       photos: {
         create: Array.from({ length: photos }, (_, position) => ({
-          storageKey: `seed-${crypto.randomUUID()}`,
+          storageKey: crypto.randomUUID(),
           width: 800,
           height: 600,
           bytes: 1000,

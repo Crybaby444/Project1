@@ -19,6 +19,10 @@ describe('ERROR_CODES', () => {
         'NOT_FOUND',
         'INTERNAL',
         'INVALID_STATUS',
+        'UNSUPPORTED_MEDIA',
+        'PAYLOAD_TOO_LARGE',
+        'PHOTO_LIMIT',
+        'STORAGE_DISABLED',
       ].sort(),
     );
   });

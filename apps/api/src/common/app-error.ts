@@ -15,6 +15,10 @@ const DEFAULT_MESSAGES: Record<ErrorCode, string> = {
   NOT_FOUND: 'Not found',
   INTERNAL: 'Something went wrong on our side',
   INVALID_STATUS: 'This is not possible in the current status',
+  UNSUPPORTED_MEDIA: 'Only JPEG, PNG and WebP images are accepted',
+  PAYLOAD_TOO_LARGE: 'The file is too large',
+  PHOTO_LIMIT: 'A listing has at most 8 photos',
+  STORAGE_DISABLED: 'Photo uploads are not available right now',
 };
 
 /** An expected failure with a stable code; ErrorFilter turns it into the uniform error body. */

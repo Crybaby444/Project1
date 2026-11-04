@@ -160,4 +160,24 @@ describe('loadEnv', () => {
       'http://localhost:3000',
     );
   });
+
+  describe('photo storage', () => {
+    it('defaults to the local folder outside production and to none in production', () => {
+      expect(loadEnv(valid)).toMatchObject({ STORAGE: 'local', UPLOADS_DIR: '.uploads' });
+      expect(loadEnv(prod).STORAGE).toBeUndefined();
+    });
+
+    it('never allows the local folder in production', () => {
+      expect(() => loadEnv({ ...prod, STORAGE: 'local' })).toThrow(/STORAGE/);
+    });
+
+    it('accepts cloudinary with or without CLOUDINARY_URL, and checks the URL without printing it', () => {
+      expect(loadEnv({ ...prod, STORAGE: 'cloudinary' }).CLOUDINARY_URL).toBeUndefined();
+      const url = 'cloudinary://123456:s3cr3t-value@yoyo';
+      expect(loadEnv({ ...prod, STORAGE: 'cloudinary', CLOUDINARY_URL: url }).CLOUDINARY_URL).toBe(url);
+      expect(() => loadEnv({ ...prod, CLOUDINARY_URL: 'https://s3cr3t-value@yoyo' })).toThrow(
+        expect.objectContaining({ message: expect.stringMatching(/CLOUDINARY_URL(?![\s\S]*s3cr3t)/) }),
+      );
+    });
+  });
 });

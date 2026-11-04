@@ -1,5 +1,5 @@
 import { isDeepStrictEqual } from 'node:util';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import {
   validateAttributes,
   type ListingDraft,
@@ -13,6 +13,7 @@ import { CategoriesService } from '../categories/categories.service';
 import { CLOCK, type Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
 import type { Listing, Prisma } from '../generated/prisma/client';
+import { STORAGE_PROVIDER, type StorageProvider } from '../media/storage.provider';
 import { PrismaService } from '../prisma/prisma.service';
 import { nextStatus, type EditKind } from './listing-status';
 import { serializeListing, serializeSummary, type ListingWithRelations, type UrlFor } from './listing.serializer';
@@ -37,14 +38,17 @@ function currentValue(listing: Listing, key: keyof ListingDraft): unknown {
 
 @Injectable()
 export class ListingsService {
+  private readonly logger = new Logger('Listings');
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly categories: CategoriesService,
     @Inject(CLOCK) private readonly clock: Clock,
+    @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider,
   ) {}
 
   /** Where each photo size is served. */
-  readonly urlFor: UrlFor = (key, variant) => `/api/v1/media/${key}/${variant}`;
+  readonly urlFor: UrlFor = (key, variant) => this.storage.url(key, variant);
 
   async create(ownerId: string, draft: ListingDraft): Promise<OwnerListing> {
     const data = await this.draftData(null, draft);
@@ -128,16 +132,27 @@ export class ListingsService {
    * Drafts and rejected listings that were never public are deleted for good; anything that was
    * published is archived: it disappears for everyone but stays for the deals that point at it.
    */
-  async remove(id: string, ownerId: string): Promise<{ removed: ListingWithRelations | null }> {
+  async remove(id: string, ownerId: string): Promise<void> {
     const listing = await this.owned(id, ownerId);
     const next = nextStatus(listing.status, 'delete');
     if (next === null) throw invalidStatus(listing.status);
     if (next === 'REMOVED' && listing.publishedAt === null) {
       await this.prisma.listing.delete({ where: { id } });
-      return { removed: listing };
+      await this.forgetFiles(listing.photos.map((photo) => photo.storageKey));
+      return;
     }
     await this.prisma.listing.update({ where: { id }, data: { status: 'ARCHIVED', version: { increment: 1 } } });
-    return { removed: null };
+  }
+
+  /** Deletes stored photo files; a failure is logged, never thrown (the database no longer points at them). */
+  async forgetFiles(keys: string[]): Promise<void> {
+    const results = await Promise.allSettled(keys.map((key) => this.storage.delete(key)));
+    for (const result of results) {
+      if (result.status === 'rejected') {
+        const reason = result.reason instanceof Error ? result.reason.message : String(result.reason);
+        this.logger.error(`could not delete a stored photo: ${reason}`);
+      }
+    }
   }
 
   stale(currentVersion: number): AppError {
