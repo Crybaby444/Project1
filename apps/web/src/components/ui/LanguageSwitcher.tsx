@@ -3,8 +3,19 @@
 import { LOCALES } from '@yoyo/shared';
 import { useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { Suspense, type ReactNode, useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
-import { Link, usePathname } from '@/i18n/navigation';
+import {
+  Suspense,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactNode,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from 'react';
+import { Link, usePathname, useRouter } from '@/i18n/navigation';
+import { prefersReducedMotion } from '@/lib/motion';
+import { shouldAnimateLanguageChange, switchLanguage } from './switch-language';
 
 /*
  * Language links are never prefetched. next-intl already skips it for the other languages; the link
@@ -12,6 +23,53 @@ import { Link, usePathname } from '@/i18n/navigation';
  * and when that prefetch is still on its way as the visitor picks Russian, its redirect resolves under
  * the new `ru` cookie, so "English" afterwards leads back to /ru.
  */
+
+/** Which control gets the focus after a switch: the pill of the new language, or the menu button. */
+type FocusTarget = 'current-pill' | 'menu-button';
+
+/**
+ * Click handler for a language link: a plain click switches through the router inside the language
+ * View Transition (see switch-language.ts), keeping the query and the scroll position. A click with
+ * a modifier (new tab, new window) or on the current language is left to the link. Next mounts the
+ * layout afresh for the new language, which drops the focus on the page body; it goes back to the
+ * same kind of control (`focusAfter`, matched in the new page: the pill or the menu button).
+ */
+function useSwitchTo(href: string, focusAfter: FocusTarget) {
+  const router = useRouter();
+  const current = useLocale();
+  return (event: MouseEvent<HTMLAnchorElement>, locale: string) => {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+    if (locale === current) return;
+    event.preventDefault();
+    void switchLanguage({
+      locale,
+      navigate: () => router.push(href, { locale, scroll: false }),
+      animate: shouldAnimateLanguageChange(
+        prefersReducedMotion(),
+        typeof document.startViewTransition === 'function',
+      ),
+      afterSwitch: () => {
+        if (document.activeElement && document.activeElement !== document.body) return;
+        // The pills and the menu are both in the header, one of them hidden: the hidden one refuses focus.
+        for (const element of document.querySelectorAll<HTMLElement>(
+          `[data-language-focus="${focusAfter}"]`,
+        )) {
+          element.focus();
+          if (document.activeElement === element) break;
+        }
+      },
+    });
+  };
+}
 
 /** The current page with its query, so a language switch keeps `?token=` of an email link, `?next=`… */
 function useHere(): string {
@@ -49,6 +107,7 @@ export function LanguageSwitcher() {
 function LanguagePills({ href }: { href: string }) {
   const t = useTranslations('language');
   const current = useLocale();
+  const switchTo = useSwitchTo(href, 'current-pill');
 
   return (
     <nav aria-label={t('label')}>
@@ -64,6 +123,8 @@ function LanguagePills({ href }: { href: string }) {
                 hrefLang={locale}
                 lang={locale}
                 aria-current={active ? 'true' : undefined}
+                data-language-focus={active ? 'current-pill' : undefined}
+                onClick={(event) => switchTo(event, locale)}
                 className={`inline-flex min-h-10 items-center rounded-pill px-4 text-[13px] font-bold tracking-[0.03em] uppercase transition-[background-color,color,transform] duration-200 ease-yoyo active:scale-[0.97] ${
                   active ? 'bg-cta text-cta-fg' : 'hover:-translate-y-px hover:bg-mist'
                 }`}
@@ -93,6 +154,7 @@ function LanguageMenuButton({ href, className }: { href: string; className: stri
   const rootRef = useRef<HTMLElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const listId = useId();
+  const switchTo = useSwitchTo(href, 'menu-button');
 
   useEffect(() => {
     if (!open) return;
@@ -118,6 +180,7 @@ function LanguageMenuButton({ href, className }: { href: string; className: stri
         type="button"
         aria-expanded={open}
         aria-controls={listId}
+        data-language-focus="menu-button"
         onClick={() => setOpen((value) => !value)}
         className="border-ink bg-surface text-ink inline-grid size-10 place-items-center rounded-pill border text-[12px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 ease-yoyo hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.94]"
       >
@@ -141,7 +204,10 @@ function LanguageMenuButton({ href, className }: { href: string; className: stri
                   hrefLang={locale}
                   lang={locale}
                   aria-current={active ? 'true' : undefined}
-                  onClick={() => setOpen(false)}
+                  onClick={(event) => {
+                    setOpen(false);
+                    switchTo(event, locale);
+                  }}
                   className={`flex min-h-10 items-center rounded-pill px-4 text-[13px] font-bold tracking-[0.03em] uppercase transition-colors duration-150 ease-yoyo ${
                     active ? 'bg-cta text-cta-fg' : 'hover:bg-mist'
                   }`}
