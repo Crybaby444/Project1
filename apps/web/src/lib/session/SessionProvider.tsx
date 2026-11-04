@@ -78,6 +78,8 @@ export function SessionProvider({
   );
 
   const refresh = useCallback(async () => {
+    // A GET /me already on its way may have been answered before the change; ask again after it.
+    await queryClient.cancelQueries({ queryKey: SESSION_QUERY_KEY, exact: true });
     await queryClient.refetchQueries({ queryKey: SESSION_QUERY_KEY, exact: true });
   }, [queryClient]);
 

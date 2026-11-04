@@ -189,6 +189,64 @@
       "submit": "Izveidot kontu",
       "haveAccount": "Jau ir konts?",
       "signIn": "Pieteikties"
+    },
+    "verify": {
+      "title": "E-pasta apstiprināšana",
+      "checking": "Pārbaudām saiti…",
+      "continue": "Turpināt",
+      "resend": "Sūtīt jaunu vēstuli",
+      "signIn": "Pieteikties",
+      "retry": "Mēģināt vēlreiz",
+      "done": {
+        "title": "E-pasts apstiprināts",
+        "body": "Paldies! Jūsu Yoyo konts ir gatavs."
+      },
+      "used": {
+        "title": "Šī saite jau ir izmantota",
+        "body": "Katra apstiprinājuma saite darbojas vienu reizi. Ja e-pastu jau apstiprinājāt, viss ir kārtībā."
+      },
+      "expired": {
+        "title": "Šī saite ir novecojusi",
+        "body": "Apstiprinājuma saites darbojas 24 stundas. Palūdziet jaunu un izmantojiet to drīz."
+      },
+      "invalid": {
+        "title": "Šī saite nedarbojas",
+        "body": "Iespējams, tā ir nogriezta. Atveriet to no vēstules vēlreiz vai palūdziet jaunu."
+      }
+    },
+    "forgot": {
+      "title": "Aizmirsāt paroli?",
+      "subtitle": "Ievadiet e-pastu, un mēs nosūtīsim saiti jaunas paroles izvēlei.",
+      "submit": "Sūtīt saiti",
+      "back": "Atpakaļ uz pieteikšanos",
+      "sent": {
+        "title": "Pārbaudiet e-pastu",
+        "body": "Ja adresei {email} ir Yoyo konts, saite jaunas paroles izvēlei jau ceļā. Tā darbojas 1 stundu. Nav atnākusi? Ieskatieties surogātpasta mapē."
+      }
+    },
+    "reset": {
+      "title": "Jauna parole",
+      "subtitle": "Izvēlieties jaunu paroli savam Yoyo kontam. Visās citās ierīcēs sesijas tiks beigtas.",
+      "submit": "Saglabāt paroli",
+      "done": "Parole nomainīta. Jūs esat pieteikušies.",
+      "requestNew": "Palūgt jaunu saiti",
+      "signIn": "Pieteikties",
+      "changed": {
+        "title": "Parole nomainīta",
+        "body": "Piesakieties ar jauno paroli."
+      },
+      "used": {
+        "title": "Šī saite jau ir izmantota",
+        "body": "Katra paroles maiņas saite darbojas vienu reizi. Palūdziet jaunu, ja paroli joprojām vajag nomainīt."
+      },
+      "expired": {
+        "title": "Šī saite ir novecojusi",
+        "body": "Paroles maiņas saites darbojas 1 stundu. Palūdziet jaunu un izmantojiet to drīz."
+      },
+      "invalid": {
+        "title": "Šī saite nedarbojas",
+        "body": "Iespējams, tā ir nogriezta. Atveriet to no vēstules vēlreiz vai palūdziet jaunu."
+      }
     }
   }
 }

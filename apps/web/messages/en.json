@@ -189,6 +189,64 @@
       "submit": "Create account",
       "haveAccount": "Already have an account?",
       "signIn": "Sign in"
+    },
+    "verify": {
+      "title": "Email confirmation",
+      "checking": "Checking your link…",
+      "continue": "Continue",
+      "resend": "Send a new email",
+      "signIn": "Sign in",
+      "retry": "Try again",
+      "done": {
+        "title": "Email confirmed",
+        "body": "Thank you! Your Yoyo account is ready."
+      },
+      "used": {
+        "title": "This link has already been used",
+        "body": "Each confirmation link works once. If you have already confirmed your email, everything is fine."
+      },
+      "expired": {
+        "title": "This link is too old",
+        "body": "Confirmation links work for 24 hours. Ask for a new one and use it soon."
+      },
+      "invalid": {
+        "title": "This link does not work",
+        "body": "It may be cut short. Open it from the email once more, or ask for a new one."
+      }
+    },
+    "forgot": {
+      "title": "Forgot your password?",
+      "subtitle": "Enter your email and we will send you a link to choose a new password.",
+      "submit": "Send the link",
+      "back": "Back to sign in",
+      "sent": {
+        "title": "Check your email",
+        "body": "If there is a Yoyo account for {email}, a link to choose a new password is on its way. It works for 1 hour. Not there? Look in the spam folder."
+      }
+    },
+    "reset": {
+      "title": "New password",
+      "subtitle": "Choose a new password for your Yoyo account. You will be signed out everywhere else.",
+      "submit": "Save the password",
+      "done": "Password changed. You are signed in.",
+      "requestNew": "Ask for a new link",
+      "signIn": "Sign in",
+      "changed": {
+        "title": "Password changed",
+        "body": "Sign in with your new password."
+      },
+      "used": {
+        "title": "This link has already been used",
+        "body": "Each reset link works once. Ask for a new one if you still need to change the password."
+      },
+      "expired": {
+        "title": "This link is too old",
+        "body": "Reset links work for 1 hour. Ask for a new one and use it soon."
+      },
+      "invalid": {
+        "title": "This link does not work",
+        "body": "It may be cut short. Open it from the email once more, or ask for a new one."
+      }
     }
   }
 }

@@ -1,13 +1,9 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useResendVerification } from '@/components/auth/use-resend-verification';
 import { Button } from '@/components/ui/Button';
-import { useToast } from '@/components/ui/Toast';
-import { useErrorText } from '@/lib/forms/error-text';
-import { ApiError, unwrap } from '@/lib/session/api-error';
-import { useApiClient, useSession } from '@/lib/session/SessionProvider';
-import { useCountdown } from '@/lib/use-countdown';
+import { useSession } from '@/lib/session/SessionProvider';
 
 function MailIcon() {
   return (
@@ -32,32 +28,15 @@ function MailIcon() {
 
 /** A thin strip under the header until the signed-in person confirms their email, with "send again". */
 export function VerifyEmailBanner() {
+  const { status, user } = useSession();
+  if (status !== 'authenticated' || !user || user.emailVerified) return null;
+  return <Banner />;
+}
+
+function Banner() {
   const t = useTranslations('banner.verifyEmail');
   const tErrors = useTranslations('errors');
-  const errorText = useErrorText();
-  const { status, user } = useSession();
-  const client = useApiClient();
-  const toast = useToast();
-  const [busy, setBusy] = useState(false);
-  const { secondsLeft, start } = useCountdown();
-
-  if (status !== 'authenticated' || !user || user.emailVerified) return null;
-
-  async function resend() {
-    setBusy(true);
-    try {
-      await unwrap(client.POST('/api/v1/auth/resend-verification'));
-      toast.show(t('sent'));
-    } catch (error) {
-      if (error instanceof ApiError && error.code === 'RATE_LIMITED' && error.retryAfterSeconds) {
-        start(error.retryAfterSeconds);
-      } else {
-        toast.show(errorText(error));
-      }
-    } finally {
-      setBusy(false);
-    }
-  }
+  const { resend, busy, retryInSeconds } = useResendVerification();
 
   return (
     <div className="border-ink bg-surface border-b">
@@ -65,12 +44,12 @@ export function VerifyEmailBanner() {
         <MailIcon />
         <p className="min-w-0 flex-1 text-sm font-bold">{t('title')}</p>
         <div className="flex flex-wrap items-center gap-3">
-          {secondsLeft > 0 && (
+          {retryInSeconds > 0 && (
             <p className="text-sm" aria-live="polite">
-              {tErrors('retryIn', { seconds: secondsLeft })}
+              {tErrors('retryIn', { seconds: retryInSeconds })}
             </p>
           )}
-          <Button variant="ghost" onClick={resend} loading={busy} disabled={secondsLeft > 0}>
+          <Button variant="ghost" onClick={resend} loading={busy} disabled={retryInSeconds > 0}>
             {t('resend')}
           </Button>
         </div>

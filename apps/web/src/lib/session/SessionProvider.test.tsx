@@ -92,3 +92,28 @@ describe('SessionProvider', () => {
     await waitFor(() => expect(screen.getByTestId('status')).toHaveTextContent('in:Jānis'));
   });
 });
+
+describe('SessionProvider refresh during the first request', () => {
+  it('asks again instead of reusing an answer that may predate the change', async () => {
+    let answer: (() => void) | undefined;
+    let verified = false;
+    const { client, calls } = fakeApi({
+      'GET /api/v1/me': () =>
+        new Promise((resolve) => {
+          const snapshot = verified;
+          answer = () => resolve({ status: 200, body: { user: testUser({ emailVerified: snapshot }) } });
+          if (verified) answer();
+        }),
+    });
+    renderWithSession(<Probe />, { client });
+    await waitFor(() => expect(calls).toHaveLength(1)); // the first GET /me is on its way
+
+    verified = true;
+    const refreshing = session.refresh();
+    answer!(); // the old answer arrives late
+    await act(() => refreshing);
+
+    expect(calls).toHaveLength(2);
+    await waitFor(() => expect(latest.session?.user?.emailVerified).toBe(true));
+  });
+});
