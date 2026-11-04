@@ -484,6 +484,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/listings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ModerationController_queue"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/listings/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ModerationController_approve"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/listings/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ModerationController_reject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -835,6 +883,140 @@ export interface components {
                 };
             }[];
             version: number;
+        };
+        AdminListingsResponseDto_Output: {
+            items: {
+                id: string;
+                ownerId: string;
+                /** @enum {string} */
+                status: "DRAFT" | "PENDING_REVIEW" | "PUBLISHED" | "REJECTED" | "HIDDEN" | "ARCHIVED";
+                categoryId: string | null;
+                title: string | null;
+                description: string | null;
+                /** @enum {string|null} */
+                condition: "NEW" | "LIKE_NEW" | "GOOD" | "FAIR" | null;
+                attributes: {
+                    [key: string]: string | number | boolean;
+                };
+                dailyCents: number | null;
+                weeklyDiscountPercent: number;
+                depositCents: number;
+                minDays: number;
+                maxDays: number;
+                city: string | null;
+                district: string | null;
+                timeZone: string;
+                rules: {
+                    preset: ("ID_AT_PICKUP" | "RETURN_CLEAN" | "NO_SMOKING" | "PICKUP_ONLY" | "PETS_OK" | "CARE_INSTRUCTIONS")[];
+                    custom: string[];
+                };
+                photos: {
+                    id: string;
+                    width: number;
+                    height: number;
+                    position: number;
+                    urls: {
+                        thumb: string;
+                        card: string;
+                        full: string;
+                    };
+                }[];
+                unavailability: {
+                    start: string;
+                    end: string;
+                }[];
+                /** Format: date-time */
+                publishedAt: string | null;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+                lat: number | null;
+                lng: number | null;
+                rejectionReason: string | null;
+                /** Format: date-time */
+                submittedAt: string | null;
+                /** Format: date-time */
+                reviewedAt: string | null;
+                reviewedById: string | null;
+                version: number;
+                owner: {
+                    id: string;
+                    name: string;
+                    email: string;
+                };
+            }[];
+            total: number;
+        };
+        ApproveListingDto: {
+            version?: number;
+        };
+        AdminListingResponseDto_Output: {
+            listing: {
+                id: string;
+                ownerId: string;
+                /** @enum {string} */
+                status: "DRAFT" | "PENDING_REVIEW" | "PUBLISHED" | "REJECTED" | "HIDDEN" | "ARCHIVED";
+                categoryId: string | null;
+                title: string | null;
+                description: string | null;
+                /** @enum {string|null} */
+                condition: "NEW" | "LIKE_NEW" | "GOOD" | "FAIR" | null;
+                attributes: {
+                    [key: string]: string | number | boolean;
+                };
+                dailyCents: number | null;
+                weeklyDiscountPercent: number;
+                depositCents: number;
+                minDays: number;
+                maxDays: number;
+                city: string | null;
+                district: string | null;
+                timeZone: string;
+                rules: {
+                    preset: ("ID_AT_PICKUP" | "RETURN_CLEAN" | "NO_SMOKING" | "PICKUP_ONLY" | "PETS_OK" | "CARE_INSTRUCTIONS")[];
+                    custom: string[];
+                };
+                photos: {
+                    id: string;
+                    width: number;
+                    height: number;
+                    position: number;
+                    urls: {
+                        thumb: string;
+                        card: string;
+                        full: string;
+                    };
+                }[];
+                unavailability: {
+                    start: string;
+                    end: string;
+                }[];
+                /** Format: date-time */
+                publishedAt: string | null;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+                lat: number | null;
+                lng: number | null;
+                rejectionReason: string | null;
+                /** Format: date-time */
+                submittedAt: string | null;
+                /** Format: date-time */
+                reviewedAt: string | null;
+                reviewedById: string | null;
+                version: number;
+                owner: {
+                    id: string;
+                    name: string;
+                    email: string;
+                };
+            };
+        };
+        RejectListingDto: {
+            reason: string;
+            version?: number;
         };
     };
     responses: never;
@@ -2646,6 +2828,198 @@ export interface operations {
             };
             /** @description Not found or not available */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ModerationController_queue: {
+        parameters: {
+            query?: {
+                status?: "DRAFT" | "PENDING_REVIEW" | "PUBLISHED" | "REJECTED" | "HIDDEN" | "ARCHIVED";
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Listings in a status (review queue by default), oldest first, 20 a page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminListingsResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ModerationController_approve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["ApproveListingDto"];
+            };
+        };
+        responses: {
+            /** @description Published; the owner gets an email */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminListingResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ModerationController_reject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RejectListingDto"];
+            };
+        };
+        responses: {
+            /** @description Rejected; the owner sees the reason and gets an email */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminListingResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };

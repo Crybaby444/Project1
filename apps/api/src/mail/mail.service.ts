@@ -4,6 +4,8 @@ import { ENV, type Env } from '../config/env';
 import { createElement, type ReactElement } from 'react';
 import { render } from 'react-email';
 import { MAIL_PROVIDER, maskEmail, type MailProvider, type MailTemplate } from './mail.provider';
+import { ListingApproved } from './templates/ListingApproved';
+import { ListingRejected } from './templates/ListingRejected';
 import { PhoneCode } from './templates/PhoneCode';
 import { ResetPassword } from './templates/ResetPassword';
 import { textsFor, type MailTexts } from './templates/texts';
@@ -54,6 +56,20 @@ export class MailService implements OnApplicationShutdown {
   sendPhoneCode(user: MailRecipient, code: string): Promise<void> {
     return this.deliver('phone-code', user, (t) => t.phoneCode.subject, (t, lang) =>
       createElement(PhoneCode, { t, lang, name: user.name, code }),
+    );
+  }
+
+  /** The listing passed moderation; `link` opens it on the site. */
+  sendListingApproved(user: MailRecipient, listing: { title: string; link: string }): Promise<void> {
+    return this.deliver('listing-approved', user, (t) => t.listingApproved.subject, (t, lang) =>
+      createElement(ListingApproved, { t, lang, name: user.name, ...listing }),
+    );
+  }
+
+  /** The listing did not pass: the moderator's reason, and `link` to edit it. */
+  sendListingRejected(user: MailRecipient, listing: { title: string; reason: string; link: string }): Promise<void> {
+    return this.deliver('listing-rejected', user, (t) => t.listingRejected.subject, (t, lang) =>
+      createElement(ListingRejected, { t, lang, name: user.name, ...listing }),
     );
   }
 

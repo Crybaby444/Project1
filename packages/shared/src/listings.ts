@@ -269,3 +269,36 @@ export const MyListingsQuerySchema = z.object({ status: z.enum(LISTING_STATUSES)
 export const MyListingsResponseSchema = z.object({ items: z.array(OwnerListingSummarySchema) });
 
 export type MyListingsResponse = z.infer<typeof MyListingsResponseSchema>;
+
+export const ADMIN_LISTINGS_PAGE_SIZE = 20;
+
+/** The moderation queue: PENDING_REVIEW by default, oldest first. */
+export const AdminListingsQuerySchema = z.object({
+  status: z.enum(LISTING_STATUSES).optional(),
+  /** 1-based page of ADMIN_LISTINGS_PAGE_SIZE listings. */
+  page: z.coerce.number().int().min(1).max(100_000).optional(),
+});
+
+/** A listing as moderation sees it: the whole listing and who owns it. */
+export const AdminListingSchema = OwnerListingSchema.extend({
+  owner: z.object({ id: z.string(), name: z.string(), email: z.string() }),
+});
+
+export type AdminListing = z.infer<typeof AdminListingSchema>;
+
+export const AdminListingResponseSchema = z.object({ listing: AdminListingSchema });
+
+export type AdminListingResponse = z.infer<typeof AdminListingResponseSchema>;
+
+export const AdminListingsResponseSchema = z.object({ items: z.array(AdminListingSchema), total: z.number().int() });
+
+export type AdminListingsResponse = z.infer<typeof AdminListingsResponseSchema>;
+
+/** `version`: the version the administrator reviewed; if the owner changed the listing since, 409. */
+export const ApproveListingRequestSchema = z.object({ version: z.number().int().min(0).optional() });
+
+/** The reason is shown to the owner and emailed to them. */
+export const RejectListingRequestSchema = z.object({
+  reason: z.string().max(2000).transform(cleanText).pipe(z.string().min(10).max(500)),
+  version: z.number().int().min(0).optional(),
+});

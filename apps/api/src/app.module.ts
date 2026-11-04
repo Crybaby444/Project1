@@ -12,6 +12,7 @@ import { HealthController } from './health/health.controller';
 import { ListingsModule } from './listings/listings.module';
 import { MediaModule } from './media/media.module';
 import { MeModule } from './me/me.module';
+import { ModerationModule } from './moderation/moderation.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { SettingsModule } from './settings/settings.module';
 
@@ -35,6 +36,7 @@ class EnvModule {}
     CategoriesModule,
     ListingsModule,
     MediaModule,
+    ModerationModule,
   ],
   controllers: [HealthController],
   providers: [

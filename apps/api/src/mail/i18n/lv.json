@@ -29,5 +29,20 @@
     "body": "Ievadi šo kodu Yoyo, lai apstiprinātu savu tālruņa numuru:",
     "expiry": "Kods ir derīgs 10 minūtes.",
     "ignore": "Ja tu nepieprasīji kodu, vienkārši ignorē šo e-pastu."
+  },
+  "listingApproved": {
+    "subject": "Tavs sludinājums ir publicēts Yoyo",
+    "preview": "Cilvēki tuvumā to jau var atrast un nomāt.",
+    "heading": "Tavs sludinājums ir publicēts",
+    "body": "Labas ziņas: “{title}” ir izgājis moderāciju un ir Yoyo katalogā. Cilvēki tuvumā to var atrast un sūtīt tev pieprasījumus.",
+    "button": "Apskatīt sludinājumu"
+  },
+  "listingRejected": {
+    "subject": "Tavā Yoyo sludinājumā jāveic izmaiņas",
+    "preview": "Apskati, kas jālabo, un nosūti vēlreiz.",
+    "heading": "Sludinājumā jāveic dažas izmaiņas",
+    "body": "Moderatori vēl nevarēja publicēt “{title}”. Lūk, kāpēc:",
+    "next": "Izlabo to un nosūti pārbaudei vēlreiz — tas aizņems tikai mirkli.",
+    "button": "Labot sludinājumu"
   }
 }
