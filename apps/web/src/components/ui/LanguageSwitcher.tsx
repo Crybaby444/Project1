@@ -6,6 +6,13 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Suspense, type ReactNode, useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import { Link, usePathname } from '@/i18n/navigation';
 
+/*
+ * Language links are never prefetched. next-intl already skips it for the other languages; the link
+ * to the current one (`/en` on an English page, which redirects to `/`) would otherwise be prefetched,
+ * and when that prefetch is still on its way as the visitor picks Russian, its redirect resolves under
+ * the new `ru` cookie, so "English" afterwards leads back to /ru.
+ */
+
 /** The current page with its query, so a language switch keeps `?token=` of an email link, `?next=`… */
 function useHere(): string {
   const pathname = usePathname();
@@ -53,6 +60,7 @@ function LanguagePills({ href }: { href: string }) {
               <Link
                 href={href}
                 locale={locale}
+                prefetch={false}
                 hrefLang={locale}
                 lang={locale}
                 aria-current={active ? 'true' : undefined}
@@ -129,6 +137,7 @@ function LanguageMenuButton({ href, className }: { href: string; className: stri
                 <Link
                   href={href}
                   locale={locale}
+                  prefetch={false}
                   hrefLang={locale}
                   lang={locale}
                   aria-current={active ? 'true' : undefined}
