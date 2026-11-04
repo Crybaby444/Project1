@@ -28,6 +28,13 @@ describe('@yoyo/domain entry point', () => {
         'overlaps',
         'period',
         'validateRentalPeriod',
+        // pricing and settings
+        'PRICING_LIMITS',
+        'WEEKLY_DISCOUNT_FROM_DAYS',
+        'quote',
+        'validateOffer',
+        'validatePricing',
+        'DEFAULT_BOOKING_SETTINGS',
       ].sort(),
     );
   });

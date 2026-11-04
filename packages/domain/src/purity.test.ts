@@ -76,7 +76,7 @@ describe('purity check', () => {
 describe('production code', () => {
   it('is all scanned', () => {
     expect(productionFiles()).toEqual(
-      expect.arrayContaining(['dates.ts', 'errors.ts', 'index.ts', 'money.ts']),
+      expect.arrayContaining(['dates.ts', 'errors.ts', 'index.ts', 'money.ts', 'pricing.ts', 'settings.ts']),
     );
   });
 
