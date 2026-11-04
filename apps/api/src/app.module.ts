@@ -3,6 +3,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ZodSerializerInterceptor } from 'nestjs-zod';
 import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
+import { CategoriesModule } from './categories/categories.module';
 import { ClockModule } from './clock/clock';
 import { OriginGuard } from './common/origin.guard';
 import { RateLimiterModule } from './common/rate-limiter';
@@ -29,6 +30,7 @@ class EnvModule {}
     AuthModule,
     MeModule,
     AdminModule,
+    CategoriesModule,
   ],
   controllers: [HealthController],
   providers: [

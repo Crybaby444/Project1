@@ -1138,6 +1138,27 @@
           "admin"
         ]
       }
+    },
+    "/api/v1/categories": {
+      "get": {
+        "operationId": "CategoriesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Active categories as a tree, with their attributes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoriesResponseDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "categories"
+        ]
+      }
     }
   },
   "info": {
@@ -1724,6 +1745,177 @@
         "required": [
           "items",
           "total"
+        ],
+        "additionalProperties": false
+      },
+      "CategoryNode_Output": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "sticker": {
+            "type": "string",
+            "enum": [
+              "blue",
+              "mint",
+              "lavender",
+              "ember",
+              "sun",
+              "violet"
+            ]
+          },
+          "icon": {
+            "type": "string"
+          },
+          "names": {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "string"
+              },
+              "lv": {
+                "type": "string"
+              },
+              "ru": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "en",
+              "lv",
+              "ru"
+            ],
+            "additionalProperties": false
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "TEXT",
+                    "NUMBER",
+                    "BOOLEAN",
+                    "SELECT"
+                  ]
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "unit": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "labels": {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "lv": {
+                      "type": "string"
+                    },
+                    "ru": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en",
+                    "lv",
+                    "ru"
+                  ],
+                  "additionalProperties": false
+                },
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "labels": {
+                        "type": "object",
+                        "properties": {
+                          "en": {
+                            "type": "string"
+                          },
+                          "lv": {
+                            "type": "string"
+                          },
+                          "ru": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "en",
+                          "lv",
+                          "ru"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "labels"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "nullable": true
+                }
+              },
+              "required": [
+                "key",
+                "type",
+                "required",
+                "unit",
+                "labels",
+                "options"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryNode_Output"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "sticker",
+          "icon",
+          "names",
+          "attributes",
+          "children"
+        ],
+        "additionalProperties": false
+      },
+      "CategoriesResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryNode_Output"
+            }
+          }
+        },
+        "required": [
+          "categories"
         ],
         "additionalProperties": false
       }

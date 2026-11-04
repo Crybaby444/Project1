@@ -126,3 +126,63 @@ model PhoneCode {
 
   @@index([userId])
 }
+
+/// Sticker colours of DESIGN.md (STICKER_COLORS in @yoyo/shared).
+enum Sticker {
+  blue
+  mint
+  lavender
+  ember
+  sun
+  violet
+}
+
+enum AttributeType {
+  TEXT
+  NUMBER
+  BOOLEAN
+  SELECT
+}
+
+/// The category tree. Reference data from src/categories/catalog-data.ts, kept in sync on every start
+/// (ensureCategories); a category that leaves the catalog is deactivated, never deleted.
+model Category {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  parentId  String?
+  sortOrder Int      @default(0)
+  sticker   Sticker
+  /// Icon name the site maps to a drawing.
+  icon      String
+  /// { en, lv, ru }
+  names     Json
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  parent     Category?           @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children   Category[]          @relation("CategoryTree")
+  attributes CategoryAttribute[]
+
+  @@index([parentId])
+}
+
+/// A field the listing builder asks for in a category (spec §4.8).
+model CategoryAttribute {
+  id         String        @id @default(cuid())
+  categoryId String
+  key        String
+  type       AttributeType
+  required   Boolean       @default(false)
+  /// Unit symbol for numbers (`W`, `m`, `kg`).
+  unit       String?
+  /// { en, lv, ru }
+  labels     Json
+  /// SELECT only: [{ value, labels: { en, lv, ru } }]
+  options    Json?
+  sortOrder  Int           @default(0)
+
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, key])
+}

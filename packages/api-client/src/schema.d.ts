@@ -292,6 +292,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CategoriesController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -429,6 +445,42 @@ export interface components {
                 deletedAt: string | null;
             }[];
             total: number;
+        };
+        CategoryNode_Output: {
+            id: string;
+            slug: string;
+            /** @enum {string} */
+            sticker: "blue" | "mint" | "lavender" | "ember" | "sun" | "violet";
+            icon: string;
+            names: {
+                en: string;
+                lv: string;
+                ru: string;
+            };
+            attributes: {
+                key: string;
+                /** @enum {string} */
+                type: "TEXT" | "NUMBER" | "BOOLEAN" | "SELECT";
+                required: boolean;
+                unit: string | null;
+                labels: {
+                    en: string;
+                    lv: string;
+                    ru: string;
+                };
+                options: {
+                    value: string;
+                    labels: {
+                        en: string;
+                        lv: string;
+                        ru: string;
+                    };
+                }[] | null;
+            }[];
+            children: components["schemas"]["CategoryNode_Output"][];
+        };
+        CategoriesResponseDto_Output: {
+            categories: components["schemas"]["CategoryNode_Output"][];
         };
     };
     responses: never;
@@ -1416,6 +1468,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    CategoriesController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Active categories as a tree, with their attributes */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoriesResponseDto_Output"];
                 };
             };
         };
