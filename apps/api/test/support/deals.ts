@@ -2,7 +2,7 @@ import request from 'supertest';
 import { AuthService } from '../../src/auth/auth.service';
 import { addDays, localDateIn } from '@yoyo/domain';
 import { randomUUID } from 'node:crypto';
-import type { Client } from './listings';
+import { seedListing, type Client } from './listings';
 import type { TestApp } from './test-app';
 
 export const CARDS = {
@@ -77,4 +77,26 @@ export async function step(client: Client, bookingId: string, event: Record<stri
   const res = await act(client, bookingId, event);
   if (res.status !== 200) throw new Error(`${String(event['type'])}: ${res.status} ${JSON.stringify(res.body)}`);
   return res.body.booking!;
+}
+
+/** A paid deal (3 days from tomorrow, by card) between `owner` and `renter` on a new listing. */
+export async function paidDeal(t: TestApp, owner: Client, renter: Client, overrides: Record<string, unknown> = {}): Promise<string> {
+  const listing = await seedListing(t, owner.user, { status: 'PUBLISHED', ...overrides });
+  const booking = await requestBooking(t, renter, listing.id, 1, 3);
+  await step(owner, booking.id, { type: 'ACCEPT' });
+  await step(renter, booking.id, { type: 'SIGN' });
+  await step(owner, booking.id, { type: 'SIGN' });
+  const token = await cardToken(renter);
+  await step(renter, booking.id, { type: 'PAY', method: 'CARD', cardToken: token });
+  return booking.id;
+}
+
+/** A deal the owner got back and has not inspected yet (RETURNED). */
+export async function returnedDeal(t: TestApp, owner: Client, renter: Client): Promise<string> {
+  const id = await paidDeal(t, owner, renter);
+  await step(owner, id, { type: 'MARK_HANDED_OVER' });
+  await step(renter, id, { type: 'CONFIRM_RECEIVED' });
+  await step(renter, id, { type: 'MARK_RETURNED' });
+  await step(owner, id, { type: 'CONFIRM_RETURNED' });
+  return id;
 }

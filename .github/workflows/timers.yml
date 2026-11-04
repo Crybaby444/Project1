@@ -1,0 +1,40 @@
+# Fires due deal deadlines (requests that expire, 48-hour inspections, damage replies…) every 10 minutes.
+# The API on Render's free tier sleeps when idle and keeps no timers in memory: deadlines live in the
+# database and POST /api/v1/internal/timers/run fires the due ones. This call also wakes the server.
+#
+# Set up once (README, «Сделки и кошелёк»): repository Settings → Secrets and variables → Actions →
+#   secret TIMERS_SECRET = the API's TIMERS_SECRET (Render generates it; copy it from the dashboard),
+#   secret API_URL       = https://yoyo-api.onrender.com
+name: Run due timers
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: run-due-timers
+  cancel-in-progress: false
+
+jobs:
+  run:
+    name: POST /internal/timers/run
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Call the API
+        env:
+          API_URL: ${{ secrets.API_URL }}
+          TIMERS_SECRET: ${{ secrets.TIMERS_SECRET }}
+        run: |
+          if [ -z "$API_URL" ] || [ -z "$TIMERS_SECRET" ]; then
+            echo "::warning::API_URL or TIMERS_SECRET is not set; deadlines only fire when the API starts."
+            exit 0
+          fi
+          # A sleeping free server takes up to a minute to wake: retry, then fail loudly.
+          curl -fsS --retry 5 --retry-delay 15 --retry-all-errors --max-time 90 \
+            -X POST "$API_URL/api/v1/internal/timers/run" \
+            -H "Authorization: Bearer $TIMERS_SECRET"
+          echo

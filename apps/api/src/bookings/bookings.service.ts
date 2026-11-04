@@ -60,9 +60,11 @@ function assertOwnerActive(row: { owner: { blockedAt: Date | null; deletedAt: Da
 }
 
 /** A decision saved: what changed and what is left for after the commit. */
-interface Saved {
+export interface Saved {
   next: BookingSnapshot;
   after: AfterCommit;
+  /** False when the domain changed nothing (signing twice, a timer not due): nothing was written. */
+  changed: boolean;
 }
 
 /** The viewer's side of a deal, or null when it is not theirs (administrators see every deal). */
@@ -276,7 +278,7 @@ export class BookingsService {
   ): Promise<Saved> {
     const before = toSnapshot(row);
     const { next, effects } = decide(before, actor, event, ctx);
-    if (next === before) return { next, after: nothingAfter() };
+    if (next === before) return { next, after: nothingAfter(), changed: false };
     const updated = await tx.booking.updateMany({
       where: { id: row.id, version: row.version },
       data: { ...snapshotData(next), version: { increment: 1 } },
@@ -296,7 +298,7 @@ export class BookingsService {
         createdAt: ctx.now,
       },
     });
-    return { next, after: done.after };
+    return { next, after: done.after, changed: true };
   }
 
   /** The deal as `user` sees it; 404 when it is not theirs. */
