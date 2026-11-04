@@ -194,12 +194,17 @@ export const BookingEventInputSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('DECLINE'), reason: reason.optional() }),
   z.object({ type: z.literal('WITHDRAW') }),
   z.object({ type: z.literal('SIGN') }),
-  z.object({ type: z.literal('PAY'), method: z.literal('WALLET') }),
-  z.object({
-    type: z.literal('PAY'),
-    method: z.literal('CARD'),
-    cardToken: z.string().min(10).max(1000).regex(/^tok_[A-Za-z0-9_.-]+$/, 'Not a card token'),
-  }),
+  /** From the wallet, or by card with a token from POST /payments/card-tokens. */
+  z
+    .object({
+      type: z.literal('PAY'),
+      method: z.enum(PAYMENT_METHODS),
+      cardToken: z.string().min(10).max(1000).regex(/^tok_[A-Za-z0-9_.-]+$/, 'Not a card token').optional(),
+    })
+    .refine((pay) => (pay.method === 'CARD') === (pay.cardToken !== undefined), {
+      path: ['cardToken'],
+      message: 'A card payment needs a card token; a wallet payment takes none',
+    }),
   z.object({ type: z.literal('CANCEL'), reason }),
   z.object({ type: z.literal('MARK_HANDED_OVER') }),
   z.object({ type: z.literal('CONFIRM_RECEIVED') }),

@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
+  BookingActionRequestSchema,
   BookingRequestSchema,
   BookingResponseSchema,
   BookingsPageSchema,
@@ -21,6 +22,7 @@ import { RATE_LIMITS } from '../common/rate-limits';
 import { Idempotent } from '../idempotency/idempotent.decorator';
 import { BookingsService } from './bookings.service';
 
+class BookingActionRequestDto extends createZodDto(BookingActionRequestSchema) {}
 class BookingRequestDto extends createZodDto(BookingRequestSchema) {}
 class BookingResponseDto extends createZodDto(BookingResponseSchema) {}
 class BookingsPageDto extends createZodDto(BookingsPageSchema) {}
@@ -45,6 +47,15 @@ export class BookingsController {
   async create(@CurrentUser() user: PublicUser, @Body() body: BookingRequestDto): Promise<BookingResponse> {
     this.limiter.hit(RATE_LIMITS.bookingRequest(user.id));
     return { booking: await this.bookings.create(user, body) };
+  }
+
+  @Post(':id/events')
+  @HttpCode(200)
+  @Idempotent({ required: true })
+  @ZodResponse({ status: 200, type: BookingResponseDto, description: 'The step was taken; the deal as it is now' })
+  @ApiErrors(400, 401, 402, 403, 404, 409)
+  async act(@CurrentUser() user: PublicUser, @Param('id') id: string, @Body() body: BookingActionRequestDto): Promise<BookingResponse> {
+    return { booking: await this.bookings.act(id, user, body.version, body.event) };
   }
 
   @Get(':id')

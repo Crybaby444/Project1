@@ -1,3 +1,5 @@
+import request from 'supertest';
+import { AuthService } from '../../src/auth/auth.service';
 import { addDays, localDateIn } from '@yoyo/domain';
 import { randomUUID } from 'node:crypto';
 import type { Client } from './listings';
@@ -45,4 +47,34 @@ export async function requestBooking(
   const res = await renter.post('/bookings').send({ listingId, start: day(t, from), end: day(t, to), ...extra });
   if (res.status !== 201) throw new Error(`booking request: ${res.status} ${JSON.stringify(res.body)}`);
   return res.body.booking;
+}
+
+/**
+ * A fresh session for the same user. Moving the test clock past 15 minutes ends access tokens, so
+ * tests that wait for deadlines sign the sides in again.
+ */
+export async function again(t: TestApp, client: Client): Promise<Client> {
+  const { accessToken } = await t.app.get(AuthService).startSession(client.user, {});
+  const call = (method: 'get' | 'post' | 'patch' | 'put' | 'delete') => (path: string) =>
+    request(t.server)[method](`/api/v1${path}`).set('Authorization', `Bearer ${accessToken}`);
+  return { ...client, token: accessToken, get: call('get'), post: call('post'), patch: call('patch'), put: call('put'), delete: call('delete') };
+}
+
+export interface ActResult {
+  status: number;
+  body: { booking?: Record<string, unknown> & { version: number; status: string }; error?: { code: string; details?: Record<string, unknown> } };
+}
+
+/** Sends one step of a deal with the booking's current version and a fresh Idempotency-Key. */
+export async function act(client: Client, bookingId: string, event: Record<string, unknown>, version?: number): Promise<ActResult> {
+  const current = version ?? (await client.get(`/bookings/${bookingId}`)).body.booking?.version;
+  const res = await client.post(`/bookings/${bookingId}/events`).set('Idempotency-Key', newKey()).send({ version: current ?? 0, event });
+  return { status: res.status, body: res.body };
+}
+
+/** Like `act`, but fails the test unless the step succeeds; returns the booking. */
+export async function step(client: Client, bookingId: string, event: Record<string, unknown>) {
+  const res = await act(client, bookingId, event);
+  if (res.status !== 200) throw new Error(`${String(event['type'])}: ${res.status} ${JSON.stringify(res.body)}`);
+  return res.body.booking!;
 }

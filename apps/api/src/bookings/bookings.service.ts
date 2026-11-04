@@ -4,15 +4,20 @@ import {
   availableActions,
   cents,
   createRequest,
+  decide,
+  DomainError,
   daysIn,
   localDate,
   period,
   quote,
   type Actor,
+  type BookingEvent,
+  type BookingSettings,
   type BookingSnapshot,
   type DecideContext,
+  type TimerKind,
 } from '@yoyo/domain';
-import { BOOKINGS_PAGE_SIZE, type BookingRequest, type BookingStatus, type BookingView, type BookingsPage, type PublicUser, type QuoteResponse } from '@yoyo/shared';
+import { BOOKINGS_PAGE_SIZE, type BookingEventInput, type BookingRequest, type BookingStatus, type BookingView, type BookingsPage, type PublicUser, type QuoteResponse } from '@yoyo/shared';
 import { CLOCK, type Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
 import type { Prisma } from '../generated/prisma/client';
@@ -22,12 +27,35 @@ import { PrismaService } from '../prisma/prisma.service';
 import { BookingRulesService } from './booking-rules.service';
 import { BOOKING_INCLUDE, serializeBooking, type BookingWithParties } from './booking.serializer';
 import { dateOf, snapshotData, toSnapshot } from './booking.store';
-import { EffectsExecutor, type AfterCommit } from './effects.executor';
+import { EffectsExecutor, nothingAfter, type AfterCommit } from './effects.executor';
 import { blockedPeriods, bookableListing, pricingOf } from './listing-access';
 
 export const bookingNotFound = () => new AppError('NOT_FOUND', 404, 'Booking not found');
 
 const offerUnavailable = () => new AppError('OFFER_UNAVAILABLE', 409);
+
+/** 409 INVALID_STATUS with the version the client should reload (as for listings). */
+export const staleBooking = (currentVersion: number) =>
+  new AppError('INVALID_STATUS', 409, 'The deal changed in the meantime', undefined, { currentVersion });
+
+/** What is kept of an event in the deal's journal: never a card token. */
+function journalData(event: BookingEvent): Prisma.InputJsonObject {
+  const { type: _type, ...data } = event as BookingEvent & { cardToken?: string };
+  delete (data as { cardToken?: string }).cardToken;
+  return data as Prisma.InputJsonObject;
+}
+
+/** The domain's event for a side's input (the card token is not part of it). */
+export function toDomainEvent(input: BookingEventInput): BookingEvent {
+  if (input.type === 'PAY') return { type: 'PAY', method: input.method };
+  return input as BookingEvent;
+}
+
+/** A decision saved: what changed and what is left for after the commit. */
+interface Saved {
+  next: BookingSnapshot;
+  after: AfterCommit;
+}
 
 /** The viewer's side of a deal, or null when it is not theirs (administrators see every deal). */
 export function actorFor(row: { renterId: string; ownerId: string }, user: Pick<PublicUser, 'id' | 'role'>): Actor | null {
@@ -117,7 +145,8 @@ export class BookingsService {
           ...snapshotData(next),
         },
       });
-      const done = await this.effects.run(tx, null, next, effects);
+      const row = await tx.booking.findUniqueOrThrow({ where: { id: next.id }, include: BOOKING_INCLUDE });
+      const done = await this.effects.run(tx, { row, settings, now }, next, effects);
       await tx.bookingEvent.create({
         data: {
           bookingId: next.id,
@@ -134,6 +163,95 @@ export class BookingsService {
     });
     await this.afterCommit(after);
     return this.view(id, renter);
+  }
+
+  /**
+   * One step of a side (plan 8, Task 7), in one transaction: the row is locked, the client's `version`
+   * must be the current one, the domain decides, and the answer is saved with its effects. When a
+   * deadline passed first, its TIMEOUT is saved instead and the step answers 409 DEADLINE_PASSED.
+   */
+  async act(id: string, user: PublicUser, version: number, input: BookingEventInput): Promise<BookingView> {
+    const now = this.clock.now();
+    const settings = await this.rules.settings();
+    const event = toDomainEvent(input);
+    const outcome = await this.prisma.$transaction(async (tx) => {
+      const row = await this.lockedRow(tx, id);
+      const actor = row.renterId === user.id || row.ownerId === user.id ? actorFor(row, user) : null;
+      if (actor === null) throw bookingNotFound();
+      if (version !== row.version) throw staleBooking(row.version);
+      const ctx = await this.context(tx, row, event, now, settings);
+      try {
+        return { overdue: null, saved: await this.decideAndSave(tx, row, actor, event, ctx) };
+      } catch (error) {
+        const timer = error instanceof DomainError ? (error.details?.['overdueTimer'] as TimerKind | undefined) : undefined;
+        if (timer === undefined) throw error;
+        const saved = await this.decideAndSave(tx, row, { kind: 'SYSTEM' }, { type: 'TIMEOUT', timer }, ctx);
+        return { overdue: timer, saved };
+      }
+    });
+    await this.afterCommit(outcome.saved.after);
+    if (outcome.overdue !== null) {
+      throw new AppError('DEADLINE_PASSED', 409, undefined, undefined, { timer: outcome.overdue, status: outcome.saved.next.status });
+    }
+    return this.view(id, user);
+  }
+
+  /** Locks the booking row for the rest of the transaction and loads it with its listing and parties. */
+  async lockedRow(tx: Prisma.TransactionClient, id: string): Promise<BookingWithParties> {
+    const [locked] = await tx.$queryRaw<{ id: string }[]>`SELECT id FROM "Booking" WHERE id = ${id} FOR UPDATE`;
+    if (!locked) throw bookingNotFound();
+    return tx.booking.findUniqueOrThrow({ where: { id }, include: BOOKING_INCLUDE });
+  }
+
+  /** What the domain needs to decide `event`: the days others hold (ACCEPT) and the wallet (PAY). */
+  async context(
+    tx: Prisma.TransactionClient,
+    row: BookingWithParties,
+    event: BookingEvent,
+    now: Date,
+    settings: BookingSettings,
+  ): Promise<DecideContext> {
+    return {
+      now,
+      settings,
+      ...(event.type === 'ACCEPT' && { blocked: await blockedPeriods(tx, row.listingId, row.id) }),
+    };
+  }
+
+  /**
+   * Asks the domain and saves its answer: the snapshot with `version + 1`, the effects, and a journal
+   * entry. A decision that changes nothing (signing twice, a timer not due) saves nothing.
+   */
+  async decideAndSave(
+    tx: Prisma.TransactionClient,
+    row: BookingWithParties,
+    actor: Actor,
+    event: BookingEvent,
+    ctx: DecideContext,
+  ): Promise<Saved> {
+    const before = toSnapshot(row);
+    const { next, effects } = decide(before, actor, event, ctx);
+    if (next === before) return { next, after: nothingAfter() };
+    const updated = await tx.booking.updateMany({
+      where: { id: row.id, version: row.version },
+      data: { ...snapshotData(next), version: { increment: 1 } },
+    });
+    if (updated.count !== 1) throw staleBooking(row.version + 1);
+    const done = await this.effects.run(tx, { row, settings: ctx.settings, now: ctx.now }, next, effects);
+    await tx.bookingEvent.create({
+      data: {
+        bookingId: row.id,
+        type: event.type,
+        actorKind: actor.kind,
+        actorId: actor.kind === 'SYSTEM' ? null : actor.userId,
+        fromStatus: before.status,
+        toStatus: next.status,
+        data: journalData(event),
+        messages: done.messages,
+        createdAt: ctx.now,
+      },
+    });
+    return { next, after: done.after };
   }
 
   /** The deal as `user` sees it; 404 when it is not theirs. */
