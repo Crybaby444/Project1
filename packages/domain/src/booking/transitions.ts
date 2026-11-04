@@ -193,6 +193,9 @@ const refundEverything = (s: BookingSnapshot) =>
   ledger(bookingRefund({ bookingId: s.id, renterId: s.renterId, quote: s.quote, method: paidWith(s) }));
 
 // ---- steps shared by a party's event and a timer -------------------------------------------------
+// When a timer acts, the side that stayed silent did not see it happen, so it is told as well.
+
+const byTimer = (actor: Actor): boolean => actor.kind === 'SYSTEM';
 
 function handoverConfirmed(
   s: BookingSnapshot,
@@ -202,7 +205,12 @@ function handoverConfirmed(
 ): Change {
   return {
     patch: actor.kind === 'RENTER' ? { renterReceivedAt: ctx.now } : {},
-    effects: [...releaseRent(s), notify('OWNER', 'RECEIVED'), message('RECEIVED')],
+    effects: [
+      ...releaseRent(s),
+      notify('OWNER', 'RECEIVED'),
+      ...(byTimer(actor) ? [notify('RENTER', 'RECEIVED')] : []),
+      message('RECEIVED'),
+    ],
   };
 }
 
@@ -215,23 +223,35 @@ function returnConfirmed(
   return {
     patch: actor.kind === 'OWNER' ? { ownerReceivedBackAt: ctx.now } : {},
     schedule: { timer: 'INSPECTION', at: hoursAfter(ctx.now, ctx.settings.inspectionHours) },
-    effects: [RELEASE_DATES, notify('RENTER', 'RECEIVED_BACK'), message('RECEIVED_BACK')],
+    effects: [
+      RELEASE_DATES,
+      notify('RENTER', 'RECEIVED_BACK'),
+      // The owner's inspection window starts now, so the owner has to know.
+      ...(byTimer(actor) ? [notify('OWNER', 'RECEIVED_BACK')] : []),
+      message('RECEIVED_BACK'),
+    ],
   };
 }
 
-function allFine(s: BookingSnapshot): Change {
+function allFine(s: BookingSnapshot, actor: Actor): Change {
   return {
     patch: { outcome: 'DEPOSIT_REFUNDED' },
-    effects: [...refundDeposit(s), notify('RENTER', 'ALL_FINE'), message('ALL_FINE')],
+    effects: [
+      ...refundDeposit(s),
+      notify('RENTER', 'ALL_FINE'),
+      ...(byTimer(actor) ? [notify('OWNER', 'ALL_FINE')] : []),
+      message('ALL_FINE'),
+    ],
   };
 }
 
-function damageDisputed(_s: BookingSnapshot, _actor: Actor, event: BookingEvent, ctx: DecideContext): Change {
+function damageDisputed(_s: BookingSnapshot, actor: Actor, event: BookingEvent, ctx: DecideContext): Change {
   const note = event.type === 'REJECT_DAMAGE' ? { note: text(event.note, 'note') } : {};
   return {
     patch: { dispute: { reason: 'DAMAGE', openedAt: ctx.now, ...note } },
     effects: [
       notify('ADMINS', 'DISPUTE_OPENED'),
+      ...(byTimer(actor) ? [notify('RENTER', 'DISPUTE_OPENED')] : []),
       notify('OWNER', 'DISPUTE_OPENED'),
       message('DISPUTE_OPENED'),
     ],

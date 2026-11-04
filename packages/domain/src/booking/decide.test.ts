@@ -257,7 +257,12 @@ const TABLE: readonly Row[] = [
     event: { type: 'TIMEOUT', timer: 'HANDOVER_CONFIRM' },
     when: (s) => at(s, 'HANDOVER_CONFIRM'),
     status: 'ACTIVE',
-    effects: ['LEDGER RENT_RELEASE', 'NOTIFY OWNER RECEIVED', 'SYSTEM_MESSAGE RECEIVED'],
+    effects: [
+      'LEDGER RENT_RELEASE',
+      'NOTIFY OWNER RECEIVED',
+      'NOTIFY RENTER RECEIVED',
+      'SYSTEM_MESSAGE RECEIVED',
+    ],
   },
   {
     name: 'PAID → REPORT_NOT_RECEIVED by the renter → DISPUTED (NOT_HANDED_OVER)',
@@ -376,6 +381,8 @@ const TABLE: readonly Row[] = [
       'SCHEDULE INSPECTION',
       'RELEASE_DATES',
       'NOTIFY RENTER RECEIVED_BACK',
+      // The owner's inspection window has started without the owner doing anything.
+      'NOTIFY OWNER RECEIVED_BACK',
       'SYSTEM_MESSAGE RECEIVED_BACK',
     ],
   },
@@ -427,7 +434,12 @@ const TABLE: readonly Row[] = [
     when: (s) => at(s, 'INSPECTION'),
     status: 'COMPLETED',
     outcome: 'DEPOSIT_REFUNDED',
-    effects: ['LEDGER DEPOSIT_REFUND', 'NOTIFY RENTER ALL_FINE', 'SYSTEM_MESSAGE ALL_FINE'],
+    effects: [
+      'LEDGER DEPOSIT_REFUND',
+      'NOTIFY RENTER ALL_FINE',
+      'NOTIFY OWNER ALL_FINE',
+      'SYSTEM_MESSAGE ALL_FINE',
+    ],
   },
   {
     name: 'RETURNED → REPORT_DAMAGE by the owner → DAMAGE_CLAIMED',
@@ -476,7 +488,12 @@ const TABLE: readonly Row[] = [
     event: { type: 'TIMEOUT', timer: 'DAMAGE_REPLY' },
     when: (s) => at(s, 'DAMAGE_REPLY'),
     status: 'DISPUTED',
-    effects: ['NOTIFY ADMINS DISPUTE_OPENED', 'NOTIFY OWNER DISPUTE_OPENED', 'SYSTEM_MESSAGE DISPUTE_OPENED'],
+    effects: [
+      'NOTIFY ADMINS DISPUTE_OPENED',
+      'NOTIFY RENTER DISPUTE_OPENED',
+      'NOTIFY OWNER DISPUTE_OPENED',
+      'SYSTEM_MESSAGE DISPUTE_OPENED',
+    ],
   },
   {
     name: 'DISPUTED (DAMAGE) → RESOLVE REFUND_DEPOSIT → COMPLETED, deposit refunded',

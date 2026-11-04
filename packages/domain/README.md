@@ -138,18 +138,18 @@ stateDiagram-v2
 | ACCEPTED | CANCEL{reason} (любая сторона) | — | CANCELLED | CANCEL_TIMER; RELEASE_DATES; NOTIFY другой стороне; SYSTEM_MESSAGE CANCELLED |
 | ACCEPTED | TIMEOUT PAYMENT_EXPIRY | таймер взведён, срок наступил | EXPIRED | RELEASE_DATES; NOTIFY RENTER и OWNER; SYSTEM_MESSAGE EXPIRED |
 | PAID | MARK_HANDED_OVER (владелец) | ещё не отмечено (`ALREADY_HANDED_OVER`); сегодня не раньше `period.start − 1 день` (`TOO_EARLY`): вечер накануне можно | PAID | CANCEL_TIMER HANDOVER_DEADLINE; SCHEDULE HANDOVER_CONFIRM `now + handoverConfirmHours`; NOTIFY RENTER; SYSTEM_MESSAGE HANDED_OVER |
-| PAID | CONFIRM_RECEIVED (арендатор, в любой момент) или TIMEOUT HANDOVER_CONFIRM | — | ACTIVE | CANCEL_TIMER взведённого таймера передачи (HANDOVER_DEADLINE или HANDOVER_CONFIRM); LEDGER rentRelease; NOTIFY OWNER; SYSTEM_MESSAGE RECEIVED |
+| PAID | CONFIRM_RECEIVED (арендатор, в любой момент) или TIMEOUT HANDOVER_CONFIRM | — | ACTIVE | CANCEL_TIMER взведённого таймера передачи (HANDOVER_DEADLINE или HANDOVER_CONFIRM); LEDGER rentRelease; NOTIFY OWNER, по таймеру ещё NOTIFY RENTER; SYSTEM_MESSAGE RECEIVED |
 | PAID | REPORT_NOT_RECEIVED{note} (арендатор) | владелец отметил «Передал» **или** сегодня не раньше `period.start` (владелец не пришёл), иначе `NOT_HANDED_OVER_YET` | DISPUTED (NOT_HANDED_OVER) | CANCEL_TIMER взведённого таймера; NOTIFY ADMINS и OWNER; SYSTEM_MESSAGE DISPUTE_OPENED |
 | PAID | TIMEOUT HANDOVER_DEADLINE | никто ничего не отметил (иначе таймер уже снят) | DISPUTED (NOT_HANDED_OVER) | NOTIFY ADMINS, RENTER и OWNER; SYSTEM_MESSAGE DISPUTE_OPENED |
 | PAID | CANCEL{reason} (владелец) | владелец **ещё не** отметил «Передал» (`ALREADY_HANDED_OVER`) | CANCELLED (REFUNDED_ALL) | CANCEL_TIMER HANDOVER_DEADLINE; LEDGER bookingRefund; RELEASE_DATES; NOTIFY RENTER; SYSTEM_MESSAGE CANCELLED |
 | PAID | CANCEL{reason} (арендатор) | «Передал» не отмечено **и** сегодня раньше `period.start` (`RENTAL_STARTED`); с первого дня — только CONFIRM_RECEIVED или REPORT_NOT_RECEIVED | CANCELLED (REFUNDED_ALL) | CANCEL_TIMER HANDOVER_DEADLINE; LEDGER bookingRefund; RELEASE_DATES; NOTIFY OWNER; SYSTEM_MESSAGE CANCELLED |
 | ACTIVE | MARK_RETURNED (арендатор) | ещё не отмечено | ACTIVE | SCHEDULE RETURN_CONFIRM `now + returnConfirmHours`; NOTIFY OWNER; SYSTEM_MESSAGE RETURNED |
-| ACTIVE | CONFIRM_RETURNED (владелец) или TIMEOUT RETURN_CONFIRM | — | RETURNED | CANCEL_TIMER RETURN_CONFIRM, если взведён; SCHEDULE INSPECTION `now + inspectionHours`; RELEASE_DATES; NOTIFY RENTER; SYSTEM_MESSAGE RECEIVED_BACK |
+| ACTIVE | CONFIRM_RETURNED (владелец) или TIMEOUT RETURN_CONFIRM | — | RETURNED | CANCEL_TIMER RETURN_CONFIRM, если взведён; SCHEDULE INSPECTION `now + inspectionHours`; RELEASE_DATES; NOTIFY RENTER, по таймеру ещё NOTIFY OWNER (окно проверки началось); SYSTEM_MESSAGE RECEIVED_BACK |
 | ACTIVE | REPORT_NOT_RETURNED{note} (владелец) | арендатор отметил «Вернул» **или** сегодня позже `period.end` | DISPUTED (NOT_RETURNED) | CANCEL_TIMER RETURN_CONFIRM, если взведён; NOTIFY ADMINS и RENTER; SYSTEM_MESSAGE DISPUTE_OPENED |
-| RETURNED | ALL_FINE (владелец) или TIMEOUT INSPECTION | — | COMPLETED (DEPOSIT_REFUNDED) | CANCEL_TIMER INSPECTION; LEDGER depositRefund; NOTIFY RENTER; SYSTEM_MESSAGE ALL_FINE |
+| RETURNED | ALL_FINE (владелец) или TIMEOUT INSPECTION | — | COMPLETED (DEPOSIT_REFUNDED) | CANCEL_TIMER INSPECTION; LEDGER depositRefund; NOTIFY RENTER, по таймеру ещё NOTIFY OWNER; SYSTEM_MESSAGE ALL_FINE |
 | RETURNED | REPORT_DAMAGE{description 10–2000 символов, photoIds 1–8} (владелец) | — | DAMAGE_CLAIMED | CANCEL_TIMER INSPECTION; SCHEDULE DAMAGE_REPLY `now + damageReplyHours`; NOTIFY RENTER; SYSTEM_MESSAGE DAMAGE_REPORTED |
 | DAMAGE_CLAIMED | ACCEPT_DAMAGE (арендатор) | — | COMPLETED (DEPOSIT_TO_OWNER) | CANCEL_TIMER DAMAGE_REPLY; LEDGER depositToOwner; NOTIFY OWNER; SYSTEM_MESSAGE DAMAGE_ACCEPTED |
-| DAMAGE_CLAIMED | REJECT_DAMAGE{note} (арендатор) или TIMEOUT DAMAGE_REPLY | — | DISPUTED (DAMAGE) | CANCEL_TIMER DAMAGE_REPLY; NOTIFY ADMINS и OWNER; SYSTEM_MESSAGE DISPUTE_OPENED |
+| DAMAGE_CLAIMED | REJECT_DAMAGE{note} (арендатор) или TIMEOUT DAMAGE_REPLY | — | DISPUTED (DAMAGE) | CANCEL_TIMER DAMAGE_REPLY; NOTIFY ADMINS и OWNER, по таймеру ещё NOTIFY RENTER; SYSTEM_MESSAGE DISPUTE_OPENED |
 | DISPUTED (DAMAGE, NOT_RETURNED) | RESOLVE{REFUND_DEPOSIT или DEPOSIT_TO_OWNER, comment} (админ) | — | COMPLETED (DEPOSIT_REFUNDED или DEPOSIT_TO_OWNER) | LEDGER depositRefund или depositToOwner; RELEASE_DATES, если NOT_RETURNED; NOTIFY RENTER и OWNER; SYSTEM_MESSAGE DISPUTE_RESOLVED |
 | DISPUTED (NOT_HANDED_OVER) | RESOLVE{REFUND_ALL, comment} (админ) | — | CANCELLED (by ADMIN, REFUNDED_ALL) | LEDGER bookingRefund; RELEASE_DATES; NOTIFY RENTER и OWNER; SYSTEM_MESSAGE DISPUTE_RESOLVED |
 | DISPUTED (NOT_HANDED_OVER) | RESOLVE{CONFIRM_HANDOVER, comment} (админ) | — | ACTIVE | LEDGER rentRelease; NOTIFY RENTER и OWNER; SYSTEM_MESSAGE DISPUTE_RESOLVED |
@@ -166,6 +166,7 @@ stateDiagram-v2
 - **Залог 0.** Переходы те же, проводок с залогом нет.
 - **Тексты.** Причины, заметки и комментарий админа — от 1 до 2000 символов, не пустые. Описание повреждения — от 10 до 2000 символов, фото — от 1 до 8 разных.
 - **Неизменяемость.** `next` — новый объект, `snapshot` не меняется. `updatedAt = now`; при переходе в COMPLETED заполняется `completedAt`.
+- **Таймер сообщает молчавшей стороне.** Когда действует таймер, а не сторона, уведомление получает и та сторона, которая ничего не нажимала: она не видела, что произошло.
 - **Порядок эффектов:** сначала CANCEL_TIMER, затем SCHEDULE, затем остальные эффекты строки в порядке таблицы.
 
 ### Что делает API с эффектами (план 8)
