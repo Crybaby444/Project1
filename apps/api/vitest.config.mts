@@ -16,6 +16,8 @@ export default defineConfig({
       NODE_ENV: 'test',
       DATABASE_URL: testDatabaseUrl,
       WEB_ORIGIN: 'http://localhost:3000',
+      // Test-only key; production gets a generated one from Render (render.yaml).
+      JWT_SECRET: 'test-only-jwt-secret-0123456789abcdef',
     },
   },
 });

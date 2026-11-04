@@ -16,6 +16,8 @@ export const EnvSchema = z.object({
    * X-Forwarded-For hops, so `req.ip` is the real client (Render: its load balancer + the Vercel proxy = 2).
    */
   TRUST_PROXY_HOPS: z.coerce.number().int().min(0).default(0),
+  /** HS256 key for access tokens and other signed values. Render generates it (render.yaml). */
+  JWT_SECRET: z.string().min(32),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

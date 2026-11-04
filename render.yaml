@@ -18,3 +18,6 @@ services:
         sync: false
       - key: WEB_ORIGIN
         sync: false
+      # Signs access tokens. Render generates a random 256-bit value once; never set it by hand.
+      - key: JWT_SECRET
+        generateValue: true
