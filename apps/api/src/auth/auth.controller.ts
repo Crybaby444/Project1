@@ -1,6 +1,12 @@
-import { Body, Controller, HttpCode, Inject, Post, Req, Res, UseGuards } from '@nestjs/common';
-import { ApiAcceptedResponse, ApiBody, ApiNoContentResponse, ApiTags } from '@nestjs/swagger';
-import { RefreshRequestSchema, type PublicUser, type RefreshResponse, type UserResponse } from '@yoyo/shared';
+import { Body, Controller, Get, HttpCode, Inject, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { ApiAcceptedResponse, ApiBody, ApiFoundResponse, ApiNoContentResponse, ApiTags } from '@nestjs/swagger';
+import {
+  RefreshRequestSchema,
+  type ProvidersResponse,
+  type PublicUser,
+  type RefreshResponse,
+  type UserResponse,
+} from '@yoyo/shared';
 import type { Request, Response } from 'express';
 import { ZodResponse } from 'nestjs-zod';
 import { AppError } from '../common/app-error';
@@ -13,7 +19,10 @@ import { ENV, type Env } from '../config/env';
 import {
   EmailTokenDto,
   ForgotPasswordDto,
+  GoogleCallbackQueryDto,
+  GoogleStartQueryDto,
   LoginDto,
+  ProvidersResponseDto,
   RefreshDto,
   RefreshResponseDto,
   RegisterDto,
@@ -21,26 +30,85 @@ import {
   UserResponseDto,
 } from './auth.dto';
 import { AuthGuard } from './auth.guard';
-import { AuthService } from './auth.service';
+import { AuthService, localeFromPath } from './auth.service';
 import { clearAuthCookies, REFRESH_COOKIE, setAuthCookies } from './cookies';
+import {
+  GoogleOAuthService,
+  OAUTH_COOKIE,
+  OAUTH_COOKIE_PATH,
+  OAUTH_STATE_TTL_SECONDS,
+  safeReturnTo,
+} from './google-oauth.service';
 import { CurrentUser } from './current-user.decorator';
 import { toPublicUser } from './public-user';
 
-function refreshCookie(req: Request): string | undefined {
-  return (req.cookies as Record<string, string | undefined> | undefined)?.[REFRESH_COOKIE] || undefined;
+function readCookie(req: Request, name: string): string | undefined {
+  return (req.cookies as Record<string, string | undefined> | undefined)?.[name] || undefined;
 }
+
+const refreshCookie = (req: Request) => readCookie(req, REFRESH_COOKIE);
+const googleDisabled = () => new AppError('AUTH_PROVIDER_DISABLED', 404, 'Sign-in with Google is not available');
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly auth: AuthService,
+    private readonly google: GoogleOAuthService,
     private readonly limiter: RateLimiter,
-    @Inject(ENV) private readonly env: Pick<Env, 'NODE_ENV'>,
+    @Inject(ENV) private readonly env: Pick<Env, 'NODE_ENV' | 'WEB_ORIGIN'>,
   ) {}
 
   private get secureCookies(): boolean {
     return this.env.NODE_ENV === 'production';
+  }
+
+  @Get('providers')
+  @ZodResponse({ status: 200, type: ProvidersResponseDto, description: 'Sign-in methods this deployment offers' })
+  providers(): ProvidersResponse {
+    return { google: this.google.enabled };
+  }
+
+  @Get('google')
+  @ApiFoundResponse({ description: 'Redirect to Google’s consent screen' })
+  @ApiErrors(400, 404)
+  async googleStart(@Query() query: GoogleStartQueryDto, @Res() res: Response): Promise<void> {
+    if (!this.google.enabled) throw googleDisabled();
+    const { url, cookie } = await this.google.start(safeReturnTo(query.returnTo));
+    res.cookie(OAUTH_COOKIE, cookie, {
+      httpOnly: true,
+      sameSite: 'lax', // sent on Google's top-level redirect back to us
+      secure: this.secureCookies,
+      path: OAUTH_COOKIE_PATH,
+      maxAge: OAUTH_STATE_TTL_SECONDS * 1000,
+    });
+    res.redirect(302, url);
+  }
+
+  /** Google sends the browser back here (through the site's /api proxy) with `code` and `state`. */
+  @Get('google/callback')
+  @ApiFoundResponse({ description: 'Signed in (session cookies); redirect to the page the user started from' })
+  @ApiErrors(400, 401, 403, 404)
+  async googleCallback(
+    @Query() query: GoogleCallbackQueryDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
+    if (!this.google.enabled) throw googleDisabled();
+    // One attempt, one use: the cookie goes whatever happens next.
+    res.cookie(OAUTH_COOKIE, '', { httpOnly: true, sameSite: 'lax', secure: this.secureCookies, path: OAUTH_COOKIE_PATH, maxAge: 0 });
+    const attempt = await this.google.readAttempt(readCookie(req, OAUTH_COOKIE), query.state);
+    const back = `${this.env.WEB_ORIGIN}${attempt.returnTo}`;
+    if (query.error) {
+      res.redirect(302, back); // cancelled on Google's screen: back where the user started, still signed out
+      return;
+    }
+    if (!query.code) throw new AppError('VALIDATION_FAILED', 400, 'Google sent no code', { code: 'Missing' });
+
+    const identity = await this.google.identify(query.code, attempt);
+    const user = await this.auth.signInWithGoogle(identity, localeFromPath(attempt.returnTo));
+    setAuthCookies(res, await this.auth.startSession(user, sessionMeta(req)), this.secureCookies);
+    res.redirect(302, back);
   }
 
   @Post('register')

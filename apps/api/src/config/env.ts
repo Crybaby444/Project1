@@ -31,6 +31,13 @@ const EnvObject = z.object({
   SMTP_URL: z.preprocess(blankAsUnset, z.url({ protocol: /^smtps?$/ }).optional()),
   /** Sender of every email. With Gmail SMTP it must be the Gmail address (or one of its aliases). */
   MAIL_FROM: z.preprocess(blankAsUnset, z.string().min(3).default('Yoyo <no-reply@yoyo.local>')),
+  /** Google sign-in is on only when both the client id and secret are set (Google Cloud Console). */
+  GOOGLE_CLIENT_ID: z.preprocess(blankAsUnset, z.string().optional()),
+  GOOGLE_CLIENT_SECRET: z.preprocess(blankAsUnset, z.string().optional()),
+  /** Google's OAuth endpoints; tests point them at a local fake. */
+  GOOGLE_AUTH_URL: z.url().default('https://accounts.google.com/o/oauth2/v2/auth'),
+  GOOGLE_TOKEN_URL: z.url().default('https://oauth2.googleapis.com/token'),
+  GOOGLE_JWKS_URL: z.url().default('https://www.googleapis.com/oauth2/v3/certs'),
 });
 
 export const EnvSchema = EnvObject.transform((env) => ({

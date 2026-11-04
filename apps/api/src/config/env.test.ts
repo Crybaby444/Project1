@@ -78,6 +78,19 @@ describe('loadEnv', () => {
     expect(loadEnv({ ...valid, MAIL_FROM: 'Yoyo <me@gmail.com>' }).MAIL_FROM).toBe('Yoyo <me@gmail.com>');
   });
 
+  it('leaves Google sign-in unconfigured by default and points at Google’s real endpoints', () => {
+    expect(loadEnv({ ...valid, GOOGLE_CLIENT_ID: '', GOOGLE_CLIENT_SECRET: ' ' })).toMatchObject({
+      GOOGLE_CLIENT_ID: undefined,
+      GOOGLE_CLIENT_SECRET: undefined,
+      GOOGLE_AUTH_URL: 'https://accounts.google.com/o/oauth2/v2/auth',
+      GOOGLE_TOKEN_URL: 'https://oauth2.googleapis.com/token',
+      GOOGLE_JWKS_URL: 'https://www.googleapis.com/oauth2/v3/certs',
+    });
+    expect(loadEnv({ ...valid, GOOGLE_CLIENT_ID: 'id.apps.googleusercontent.com' }).GOOGLE_CLIENT_ID).toBe(
+      'id.apps.googleusercontent.com',
+    );
+  });
+
   it('rejects a negative or fractional TRUST_PROXY_HOPS', () => {
     expect(() => loadEnv({ ...valid, TRUST_PROXY_HOPS: '-1' })).toThrow(/TRUST_PROXY_HOPS/);
     expect(() => loadEnv({ ...valid, TRUST_PROXY_HOPS: '1.5' })).toThrow(/TRUST_PROXY_HOPS/);

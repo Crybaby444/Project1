@@ -77,3 +77,20 @@ export const RefreshResponseSchema = z.object({
 });
 
 export type RefreshResponse = z.infer<typeof RefreshResponseSchema>;
+
+/** Which sign-in methods this deployment offers. */
+export const ProvidersResponseSchema = z.object({ google: z.boolean() });
+
+export type ProvidersResponse = z.infer<typeof ProvidersResponseSchema>;
+
+export const GoogleStartQuerySchema = z.object({
+  /** Where to land on the site afterwards: a path on the site only (anything else becomes `/`). */
+  returnTo: z.string().max(2048).optional(),
+});
+
+/** What Google appends to the callback URL. */
+export const GoogleCallbackQuerySchema = z.object({
+  code: z.string().max(2048).optional(),
+  state: z.string().max(256).optional(),
+  error: z.string().max(256).optional(),
+});

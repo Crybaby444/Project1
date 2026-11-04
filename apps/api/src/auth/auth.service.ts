@@ -1,6 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import { Inject, Injectable } from '@nestjs/common';
-import { DEFAULT_LOCALE, isLocale, type LoginRequest, type RegisterRequest } from '@yoyo/shared';
+import { DEFAULT_LOCALE, isLocale, type Locale, type LoginRequest, type RegisterRequest } from '@yoyo/shared';
 import { CLOCK, type Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
 import { ENV, type Env } from '../config/env';
@@ -9,6 +9,7 @@ import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { AccessTokenService } from './access-token.service';
 import type { SessionTokens } from './cookies';
+import type { GoogleIdentity } from './google-oauth.service';
 import { PasswordService } from './password.service';
 import { hashToken, RefreshTokenService, type SessionMeta } from './refresh-token.service';
 
@@ -26,6 +27,14 @@ const invalidLink = () =>
 
 function isUniqueViolation(error: unknown): boolean {
   return error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002';
+}
+
+const GOOGLE = 'google';
+
+/** The site language of a path: `/lv/…` → lv, `/ru` → ru, anything else → en. */
+export function localeFromPath(path: string): Locale {
+  const first = path.split(/[/?#]/)[1] ?? '';
+  return isLocale(first) ? first : DEFAULT_LOCALE;
 }
 
 /** `https://site` + `/lv` (no prefix for English) + path + `?token=…`, matching the site's URL scheme. */
@@ -119,6 +128,60 @@ export class AuthService {
 
   logoutEverywhere(userId: string): Promise<void> {
     return this.refreshTokens.revokeAll(userId);
+  }
+
+  /**
+   * The Yoyo user behind a Google identity: the linked one; else the account with that email, now
+   * linked; else a new confirmed account without a password. Blocked accounts get 403.
+   */
+  async signInWithGoogle(identity: GoogleIdentity, locale: Locale): Promise<User> {
+    let user: User;
+    try {
+      user = await this.resolveGoogleUser(identity, locale);
+    } catch (error) {
+      // A parallel callback for the same person created the link or the account first: use theirs.
+      if (!isUniqueViolation(error)) throw error;
+      user = await this.resolveGoogleUser(identity, locale);
+    }
+    if (user.deletedAt !== null) throw unauthenticated();
+    if (user.blockedAt !== null) throw new AppError('AUTH_BLOCKED', 403);
+    return user;
+  }
+
+  private async resolveGoogleUser(identity: GoogleIdentity, locale: Locale): Promise<User> {
+    const now = this.clock.now();
+    const link = await this.prisma.oAuthAccount.findUnique({
+      where: { provider_providerAccountId: { provider: GOOGLE, providerAccountId: identity.sub } },
+      include: { user: true },
+    });
+    if (link) return link.user;
+
+    const existing = await this.prisma.user.findUnique({ where: { email: identity.email } });
+    if (existing) {
+      const unconfirmed = existing.emailVerifiedAt === null;
+      const user = await this.prisma.$transaction(async (tx) => {
+        await tx.oAuthAccount.create({
+          data: { userId: existing.id, provider: GOOGLE, providerAccountId: identity.sub, createdAt: now },
+        });
+        if (!unconfirmed) return existing;
+        // Whoever registered this email never proved the mailbox; Google just did. Their password goes.
+        return tx.user.update({ where: { id: existing.id }, data: { emailVerifiedAt: now, passwordHash: null } });
+      });
+      if (unconfirmed) await this.refreshTokens.revokeAll(existing.id);
+      return user;
+    }
+
+    const name = identity.name?.trim().slice(0, 60) || identity.email.split('@')[0]!.slice(0, 60);
+    return this.prisma.user.create({
+      data: {
+        email: identity.email,
+        name,
+        locale,
+        emailVerifiedAt: now,
+        createdAt: now,
+        oauthAccounts: { create: { provider: GOOGLE, providerAccountId: identity.sub, createdAt: now } },
+      },
+    });
   }
 
   /** Emails a reset link if the account exists. Callers answer 202 either way (no account enumeration). */

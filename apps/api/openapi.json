@@ -32,6 +32,153 @@
         ]
       }
     },
+    "/api/v1/auth/providers": {
+      "get": {
+        "operationId": "AuthController_providers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Sign-in methods this deployment offers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProvidersResponseDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/google": {
+      "get": {
+        "operationId": "AuthController_googleStart",
+        "parameters": [
+          {
+            "name": "returnTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 2048,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to Google’s consent screen"
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/google/callback": {
+      "get": {
+        "operationId": "AuthController_googleCallback",
+        "parameters": [
+          {
+            "name": "code",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 2048,
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 256,
+              "type": "string"
+            }
+          },
+          {
+            "name": "error",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 256,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Signed in (session cookies); redirect to the page the user started from"
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
     "/api/v1/auth/register": {
       "post": {
         "operationId": "AuthController_register",
@@ -612,6 +759,64 @@
           "version"
         ]
       },
+      "ProvidersResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "google": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "google"
+        ],
+        "additionalProperties": false
+      },
+      "ApiErrorDto_Output": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "VALIDATION_FAILED",
+                  "AUTH_INVALID_CREDENTIALS",
+                  "AUTH_EMAIL_TAKEN",
+                  "AUTH_UNAUTHENTICATED",
+                  "AUTH_FORBIDDEN",
+                  "AUTH_BLOCKED",
+                  "AUTH_PROVIDER_DISABLED",
+                  "TOKEN_EXPIRED",
+                  "TOKEN_USED",
+                  "RATE_LIMITED",
+                  "ORIGIN_FORBIDDEN",
+                  "NOT_FOUND",
+                  "INTERNAL"
+                ]
+              },
+              "message": {
+                "type": "string"
+              },
+              "fields": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "additionalProperties": false
+      },
       "RegisterDto": {
         "type": "object",
         "properties": {
@@ -730,52 +935,6 @@
         },
         "required": [
           "user"
-        ],
-        "additionalProperties": false
-      },
-      "ApiErrorDto_Output": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "object",
-            "properties": {
-              "code": {
-                "type": "string",
-                "enum": [
-                  "VALIDATION_FAILED",
-                  "AUTH_INVALID_CREDENTIALS",
-                  "AUTH_EMAIL_TAKEN",
-                  "AUTH_UNAUTHENTICATED",
-                  "AUTH_FORBIDDEN",
-                  "AUTH_BLOCKED",
-                  "AUTH_PROVIDER_DISABLED",
-                  "TOKEN_EXPIRED",
-                  "TOKEN_USED",
-                  "RATE_LIMITED",
-                  "ORIGIN_FORBIDDEN",
-                  "NOT_FOUND",
-                  "INTERNAL"
-                ]
-              },
-              "message": {
-                "type": "string"
-              },
-              "fields": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "string"
-                }
-              }
-            },
-            "required": [
-              "code",
-              "message"
-            ],
-            "additionalProperties": false
-          }
-        },
-        "required": [
-          "error"
         ],
         "additionalProperties": false
       },
