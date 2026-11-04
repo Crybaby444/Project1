@@ -17,7 +17,7 @@ vi.mock('@/i18n/navigation', async (importOriginal) => ({
 async function renderMenu() {
   const { client, calls } = fakeApi({ ...meRoute(testUser()), 'POST /api/v1/auth/logout': { status: 204 } });
   renderWithSession(<UserMenu user={testUser()} />, { client });
-  return { calls, button: screen.getByRole('button', { name: en.header.account }) };
+  return { calls, button: screen.getByRole('button', { name: new RegExp(`^${en.header.account}`) }) };
 }
 
 describe('UserMenu', () => {

@@ -26,7 +26,7 @@ test.describe('sign-up', () => {
 
     await expect(page).toHaveURL(/\/styleguide$/);
     await expect(page.getByText(en.banner.verifyEmail.title)).toBeVisible();
-    await expect(page.getByRole('button', { name: en.header.account })).toHaveText('AB');
+    await expect(page.getByRole('button', { name: new RegExp(`^${en.header.account}`) })).toHaveText(/, AB$/);
   });
 });
 
@@ -40,7 +40,7 @@ test.describe('sign-in', () => {
       await signInWithForm(page, email, password, en.auth.login.submit);
 
       await expect(page).toHaveURL(`${baseURL}/`);
-      await expect(page.getByRole('button', { name: en.header.account })).toBeVisible();
+      await expect(page.getByRole('button', { name: new RegExp(`^${en.header.account}`) })).toBeVisible();
     });
   }
 
@@ -52,7 +52,7 @@ test.describe('sign-in', () => {
     await signInWithForm(page, email, password, 'Pieteikties');
 
     await expect(page).toHaveURL(/\/lv\/styleguide$/);
-    await expect(page.getByRole('button', { name: 'Konta izvēlne' })).toBeVisible();
+    await expect(page.getByRole('button', { name: /^Konta izvēlne/ })).toBeVisible();
   });
 
   test('a wrong password and an unknown email give the same answer', async ({ page, context }) => {
@@ -82,7 +82,7 @@ test.describe('sign-in', () => {
     await registerByApi(page.request);
     await page.goto('/');
 
-    await page.getByRole('button', { name: en.header.account }).click();
+    await page.getByRole('button', { name: new RegExp(`^${en.header.account}`) }).click();
     await page.getByRole('menuitem', { name: en.header.signOut }).click();
 
     await expect(page.getByRole('link', { name: en.header.signIn })).toBeVisible();
@@ -156,13 +156,13 @@ test.describe('forgotten password', () => {
     await page.getByRole('button', { name: en.auth.reset.submit }).click();
 
     await expect(page.getByRole('status').filter({ hasText: en.auth.reset.done })).toBeVisible();
-    await expect(page.getByRole('button', { name: en.header.account })).toBeVisible();
+    await expect(page.getByRole('button', { name: new RegExp(`^${en.header.account}`) })).toBeVisible();
 
     await context.clearCookies();
     await page.goto('/login');
     await signInWithForm(page, email, oldPassword, en.auth.login.submit);
     await expect(formError(page)).toHaveText(en.errors.AUTH_INVALID_CREDENTIALS);
     await signInWithForm(page, email, newPassword, en.auth.login.submit);
-    await expect(page.getByRole('button', { name: en.header.account })).toBeVisible();
+    await expect(page.getByRole('button', { name: new RegExp(`^${en.header.account}`) })).toBeVisible();
   });
 });

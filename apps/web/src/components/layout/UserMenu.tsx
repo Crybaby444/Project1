@@ -110,7 +110,6 @@ export function UserMenu({ user }: { user: PublicUser }) {
       <button
         ref={buttonRef}
         type="button"
-        aria-label={t('account')}
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
@@ -119,7 +118,9 @@ export function UserMenu({ user }: { user: PublicUser }) {
         style={{ backgroundColor: colour, color: textOn(colour) }}
         className="border-ink rounded-pill ease-yoyo inline-grid size-10 place-items-center border text-[13px] font-bold tracking-[0.03em] [filter:drop-shadow(0_0_0.6px_var(--sticker-edge))] transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.94]"
       >
-        <span aria-hidden="true">{initials(user.name)}</span>
+        {/* The name says what the button is and still contains the visible initials (WCAG 2.5.3). */}
+        <span className="sr-only">{t('account')}, </span>
+        {initials(user.name)}
       </button>
 
       {open && (

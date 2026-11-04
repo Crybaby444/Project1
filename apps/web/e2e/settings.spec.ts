@@ -23,8 +23,8 @@ test.describe('profile', () => {
     await page.getByRole('button', { name: en.settings.profile.save }).click();
     await expect(page.getByRole('status').filter({ hasText: en.settings.profile.saved })).toBeVisible();
 
-    await expect(page.getByRole('button', { name: en.header.account })).toHaveText('JO');
-    await page.getByRole('button', { name: en.header.account }).click();
+    await expect(page.getByRole('button', { name: new RegExp(`^${en.header.account}`) })).toHaveText(/, JO$/);
+    await page.getByRole('button', { name: new RegExp(`^${en.header.account}`) }).click();
     await expect(page.getByRole('menu').locator('..').getByText('Jānis Ozols')).toBeVisible();
     await page.reload();
     await expect(page.getByLabel(en.settings.profile.name)).toHaveValue('Jānis Ozols');

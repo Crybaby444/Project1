@@ -24,14 +24,14 @@ describe('SiteHeader', () => {
 
     expect(await screen.findByRole('link', { name: en.header.signIn })).toHaveAttribute('href', '/login');
     expect(screen.getByRole('link', { name: en.header.signUp })).toHaveAttribute('href', '/register');
-    expect(screen.queryByRole('button', { name: en.header.account })).toBeNull();
+    expect(screen.queryByRole('button', { name: new RegExp(`^${en.header.account}`) })).toBeNull();
   });
 
   it('shows a signed-in user their initials instead', async () => {
     const { client } = fakeApi(meRoute(testUser({ name: 'Anna Bērziņa' })));
     renderWithSession(<SiteHeader />, { client });
 
-    const avatar = await screen.findByRole('button', { name: en.header.account });
+    const avatar = await screen.findByRole('button', { name: new RegExp(`^${en.header.account}`) });
     expect(avatar).toHaveTextContent('AB');
     expect(screen.queryByRole('link', { name: en.header.signIn })).toBeNull();
   });

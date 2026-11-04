@@ -42,7 +42,7 @@ function Banner() {
     <div className="border-ink bg-surface border-b">
       <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2.5 sm:px-8">
         <MailIcon />
-        <p className="min-w-0 flex-1 text-sm font-bold">{t('title')}</p>
+        <p className="min-w-48 flex-1 text-sm font-bold">{t('title')}</p>
         <div className="flex flex-wrap items-center gap-3">
           {retryInSeconds > 0 && (
             <p className="text-sm" aria-live="polite">
