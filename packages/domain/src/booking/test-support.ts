@@ -10,6 +10,7 @@ import { DEFAULT_BOOKING_SETTINGS } from '../settings';
 import { decide } from './decide';
 import { createRequest } from './request';
 import type { RequestInput } from './request';
+import { TIMER_KINDS } from './types';
 import type {
   Actor,
   BookingEvent,
@@ -107,6 +108,32 @@ export const SAMPLE = {
   photoIds: ['photo-1'],
   comment: 'Photos before and after show the scratch',
 } as const;
+
+/** One valid event of every type: both payment methods, every admin decision, every timer. */
+export const SAMPLE_EVENTS: readonly BookingEvent[] = [
+  { type: 'ACCEPT' },
+  { type: 'DECLINE', reason: SAMPLE.reason },
+  { type: 'WITHDRAW' },
+  { type: 'SIGN' },
+  { type: 'PAY', method: 'CARD' },
+  { type: 'PAY', method: 'WALLET' },
+  { type: 'CANCEL', reason: SAMPLE.reason },
+  { type: 'MARK_HANDED_OVER' },
+  { type: 'CONFIRM_RECEIVED' },
+  { type: 'REPORT_NOT_RECEIVED', note: SAMPLE.note },
+  { type: 'MARK_RETURNED' },
+  { type: 'CONFIRM_RETURNED' },
+  { type: 'REPORT_NOT_RETURNED', note: SAMPLE.note },
+  { type: 'ALL_FINE' },
+  { type: 'REPORT_DAMAGE', description: SAMPLE.description, photoIds: SAMPLE.photoIds },
+  { type: 'ACCEPT_DAMAGE' },
+  { type: 'REJECT_DAMAGE', note: SAMPLE.note },
+  { type: 'RESOLVE', decision: 'REFUND_DEPOSIT', comment: SAMPLE.comment },
+  { type: 'RESOLVE', decision: 'DEPOSIT_TO_OWNER', comment: SAMPLE.comment },
+  { type: 'RESOLVE', decision: 'REFUND_ALL', comment: SAMPLE.comment },
+  { type: 'RESOLVE', decision: 'CONFIRM_HANDOVER', comment: SAMPLE.comment },
+  ...TIMER_KINDS.map((timer): BookingEvent => ({ type: 'TIMEOUT', timer })),
+];
 
 /** A snapshot in `status`, reached through the real transitions at `c.now`. */
 export function given(

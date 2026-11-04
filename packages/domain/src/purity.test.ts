@@ -77,6 +77,7 @@ describe('production code', () => {
   it('is all scanned', () => {
     expect(productionFiles()).toEqual(
       expect.arrayContaining([
+        'booking/actions.ts',
         'booking/decide.ts',
         'booking/request.ts',
         'booking/transitions.ts',
@@ -87,6 +88,7 @@ describe('production code', () => {
         'ledger.ts',
         'money.ts',
         'pricing.ts',
+        'reviews.ts',
         'settings.ts',
       ]),
     );

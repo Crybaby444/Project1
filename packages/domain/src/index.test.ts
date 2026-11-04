@@ -53,6 +53,9 @@ describe('@yoyo/domain entry point', () => {
         'createRequest',
         'decide',
         'isTerminal',
+        'availableActions',
+        // reviews
+        'canReview',
       ].sort(),
     );
   });

@@ -11,6 +11,7 @@ import {
   OWNER_ID,
   RENTER_ID,
   SAMPLE,
+  SAMPLE_EVENTS,
   admin,
   at,
   ctx,
@@ -23,7 +24,7 @@ import {
   stranger,
   system,
 } from './test-support';
-import { BOOKING_STATUSES, TIMER_KINDS } from './types';
+import { BOOKING_STATUSES } from './types';
 import type {
   Actor,
   ActorKind,
@@ -947,31 +948,6 @@ const ALLOWED: Record<BookingStatus, Partial<Record<ActorKind, readonly BookingE
   CANCELLED: {},
 };
 
-const EVENTS: readonly BookingEvent[] = [
-  { type: 'ACCEPT' },
-  { type: 'DECLINE', reason: SAMPLE.reason },
-  { type: 'WITHDRAW' },
-  { type: 'SIGN' },
-  { type: 'PAY', method: 'CARD' },
-  { type: 'PAY', method: 'WALLET' },
-  { type: 'CANCEL', reason: SAMPLE.reason },
-  { type: 'MARK_HANDED_OVER' },
-  { type: 'CONFIRM_RECEIVED' },
-  { type: 'REPORT_NOT_RECEIVED', note: SAMPLE.note },
-  { type: 'MARK_RETURNED' },
-  { type: 'CONFIRM_RETURNED' },
-  { type: 'REPORT_NOT_RETURNED', note: SAMPLE.note },
-  { type: 'ALL_FINE' },
-  { type: 'REPORT_DAMAGE', description: SAMPLE.description, photoIds: SAMPLE.photoIds },
-  { type: 'ACCEPT_DAMAGE' },
-  { type: 'REJECT_DAMAGE', note: SAMPLE.note },
-  resolve('REFUND_DEPOSIT'),
-  resolve('DEPOSIT_TO_OWNER'),
-  resolve('REFUND_ALL'),
-  resolve('CONFIRM_HANDOVER'),
-  ...TIMER_KINDS.map((timer): BookingEvent => ({ type: 'TIMEOUT', timer })),
-];
-
 const SNAPSHOTS: ReadonlyArray<readonly [string, () => BookingSnapshot]> = [
   ...BOOKING_STATUSES.filter((status) => status !== 'DISPUTED').map(
     (status) => [status, () => given(status)] as const,
@@ -994,7 +970,7 @@ describe('everything the table does not list is refused', () => {
     const s = build();
     const unexpected: string[] = [];
     for (const actor of [renter, owner, admin, system]) {
-      for (const event of EVENTS) {
+      for (const event of SAMPLE_EVENTS) {
         if (event.type !== 'TIMEOUT' && (ALLOWED[s.status][actor.kind] ?? []).includes(event.type)) continue;
         const label = `${actor.kind} ${event.type}${event.type === 'TIMEOUT' ? ` ${event.timer}` : ''}`;
         // Nothing is due at ctx.now, so the system's timers are stale: no change, no error.
