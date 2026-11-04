@@ -42,7 +42,11 @@ describe('ForgotPasswordForm', () => {
       { 'POST /api/v1/auth/forgot-password': apiError(429, 'RATE_LIMITED', {}, { 'Retry-After': '120' }) },
       'anna@mail.lv',
     );
-    expect(await screen.findByText(en.errors.retryIn.replace('{seconds}', '120'))).toBeVisible();
+    expect(
+      await screen.findByText(en.errors.retryIn.replace('{seconds}', '120'), {
+        selector: '[aria-hidden="true"]',
+      }),
+    ).toBeVisible();
     expect(screen.queryByRole('heading', { name: en.auth.forgot.sent.title })).toBeNull();
     expect(screen.getByRole('button', { name: en.auth.forgot.submit })).toBeDisabled();
   });

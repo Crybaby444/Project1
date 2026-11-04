@@ -55,10 +55,14 @@ describe('VerifyEmailBanner', () => {
 
     const button = screen.getByRole('button', { name: en.banner.verifyEmail.resend });
     expect(button).toBeDisabled();
-    expect(screen.getByText(en.errors.retryIn.replace('{seconds}', '30'))).toBeVisible();
+    expect(
+      screen.getByText(en.errors.retryIn.replace('{seconds}', '30'), { selector: '[aria-hidden="true"]' }),
+    ).toBeVisible();
 
     await act(() => vi.advanceTimersByTimeAsync(10_000));
-    expect(screen.getByText(en.errors.retryIn.replace('{seconds}', '20'))).toBeVisible();
+    expect(
+      screen.getByText(en.errors.retryIn.replace('{seconds}', '20'), { selector: '[aria-hidden="true"]' }),
+    ).toBeVisible();
 
     await act(() => vi.advanceTimersByTimeAsync(20_000));
     expect(button).toBeEnabled();

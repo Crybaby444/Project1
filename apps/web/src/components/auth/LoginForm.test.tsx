@@ -74,7 +74,11 @@ describe('LoginForm', () => {
     fireEvent.change(password(), { target: { value: 'correct horse' } });
     fireEvent.click(submit());
 
-    expect(await screen.findByText(en.errors.retryIn.replace('{seconds}', '30'))).toBeVisible();
+    expect(
+      await screen.findByText(en.errors.retryIn.replace('{seconds}', '30'), {
+        selector: '[aria-hidden="true"]',
+      }),
+    ).toBeVisible();
     expect(submit()).toBeDisabled();
 
     await act(() => vi.advanceTimersByTimeAsync(30_000));

@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { RetryAfterNotice } from '@/components/auth/RetryAfterNotice';
 import { useResendVerification } from '@/components/auth/use-resend-verification';
 import { Button } from '@/components/ui/Button';
 import { useSession } from '@/lib/session/SessionProvider';
@@ -35,7 +36,6 @@ export function VerifyEmailBanner() {
 
 function Banner() {
   const t = useTranslations('banner.verifyEmail');
-  const tErrors = useTranslations('errors');
   const { resend, busy, retryInSeconds } = useResendVerification();
 
   return (
@@ -44,11 +44,7 @@ function Banner() {
         <MailIcon />
         <p className="min-w-48 flex-1 text-sm font-bold">{t('title')}</p>
         <div className="flex flex-wrap items-center gap-3">
-          {retryInSeconds > 0 && (
-            <p className="text-sm" aria-live="polite">
-              {tErrors('retryIn', { seconds: retryInSeconds })}
-            </p>
-          )}
+          <RetryAfterNotice seconds={retryInSeconds} inline />
           <Button variant="ghost" onClick={resend} loading={busy} disabled={retryInSeconds > 0}>
             {t('resend')}
           </Button>
