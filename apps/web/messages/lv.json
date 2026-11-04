@@ -103,5 +103,13 @@
     "body": "Mūsu pusē kaut kas salūza. Mēģiniet vēlreiz, un, ja tas atkārtojas, atgriezieties pēc minūtes.",
     "retry": "Mēģināt vēlreiz",
     "back": "Uz sākumlapu"
+  },
+  "listingRules": {
+    "ID_AT_PICKUP": "Saņemot uzrādīt personu apliecinošu dokumentu",
+    "RETURN_CLEAN": "Atdot tīru",
+    "NO_SMOKING": "Nesmēķēt lietas tuvumā",
+    "PICKUP_ONLY": "Tikai saņemšana uz vietas, bez piegādes",
+    "PETS_OK": "Drīkst lietot mājdzīvnieku tuvumā",
+    "CARE_INSTRUCTIONS": "Ievērot kopšanas norādījumus"
   }
 }

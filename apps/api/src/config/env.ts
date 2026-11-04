@@ -67,6 +67,29 @@ const EnvObject = z.object({
    */
   ADMIN_EMAIL: z.preprocess(blankAsUnset, EmailSchema.optional()),
   ADMIN_PASSWORD: z.preprocess(blankAsUnset, PasswordSchema.optional()),
+  /**
+   * Where listing photos go: `local` (a folder on this server; the default outside production, never
+   * allowed in it: hosting disks are wiped on deploy) or `cloudinary` (needs CLOUDINARY_URL). Without
+   * a working storage the API still starts and photo uploads answer 503 STORAGE_DISABLED.
+   */
+  STORAGE: z.preprocess(blankAsUnset, z.enum(['local', 'cloudinary']).optional()),
+  /** `cloudinary://<api_key>:<api_secret>@<cloud_name>` (Cloudinary console → API Keys). */
+  CLOUDINARY_URL: z.preprocess(
+    blankAsUnset,
+    z
+      .string()
+      .regex(/^cloudinary:\/\/[^:@/\s]+:[^:@/\s]+@[^:@/\s]+$/, 'must look like cloudinary://<api_key>:<api_secret>@<cloud_name>')
+      .optional(),
+  ),
+  /** Cloudinary's upload API; tests point it at a local fake. */
+  CLOUDINARY_API_URL: z.url().default('https://api.cloudinary.com'),
+  /**
+   * The OpenStreetMap geocoder. The public one allows 1 request a second and needs an identifying
+   * User-Agent (both are kept); tests point it at a local fake.
+   */
+  NOMINATIM_URL: z.url().default('https://nominatim.openstreetmap.org'),
+  /** Folder of the local storage, relative to the API's working directory. */
+  UPLOADS_DIR: z.preprocess(blankAsUnset, z.string().default('.uploads')),
 });
 
 export const EnvSchema = EnvObject.superRefine((env, ctx) => {
@@ -84,12 +107,20 @@ export const EnvSchema = EnvObject.superRefine((env, ctx) => {
       message: '"mailbox" only simulates SMS by email and is not allowed in production',
     });
   }
+  if (env.NODE_ENV === 'production' && env.STORAGE === 'local') {
+    ctx.addIssue({
+      code: 'custom',
+      path: ['STORAGE'],
+      message: '"local" keeps photos on this server\'s disk, which hosting wipes on deploy; use "cloudinary" in production',
+    });
+  }
 }).transform((env) => {
   const production = env.NODE_ENV === 'production';
   return {
     ...env,
     SMTP_URL: env.SMTP_URL ?? (production ? undefined : LOCAL_SMTP_URL),
     SMS_PROVIDER: env.SMS_PROVIDER ?? (production ? undefined : ('mailbox' as const)),
+    STORAGE: env.STORAGE ?? (production ? undefined : ('local' as const)),
   };
 });
 

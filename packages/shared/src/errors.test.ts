@@ -18,6 +18,13 @@ describe('ERROR_CODES', () => {
         'ORIGIN_FORBIDDEN',
         'NOT_FOUND',
         'INTERNAL',
+        'INVALID_STATUS',
+        'UNSUPPORTED_MEDIA',
+        'PAYLOAD_TOO_LARGE',
+        'PHOTO_LIMIT',
+        'STORAGE_DISABLED',
+        'LISTING_INCOMPLETE',
+        'GEO_UNAVAILABLE',
       ].sort(),
     );
   });
@@ -39,6 +46,11 @@ describe('ApiErrorBodySchema', () => {
         error: { code: 'VALIDATION_FAILED', message: 'Check the fields', fields: { email: 'Invalid email' } },
       }).success,
     ).toBe(true);
+  });
+
+  it('may carry machine-readable details, such as the current version of a listing', () => {
+    const body = { error: { code: 'INVALID_STATUS', message: 'Changed elsewhere', details: { currentVersion: 4 } } };
+    expect(ApiErrorBodySchema.parse(body)).toEqual(body);
   });
 
   it('rejects unknown codes and non-string field messages', () => {

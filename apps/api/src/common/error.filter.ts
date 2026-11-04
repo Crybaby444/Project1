@@ -32,13 +32,20 @@ function codeForStatus(status: number): ErrorCode {
   if (status === HttpStatus.UNAUTHORIZED) return 'AUTH_UNAUTHENTICATED';
   if (status === HttpStatus.FORBIDDEN) return 'AUTH_FORBIDDEN';
   if (status === HttpStatus.TOO_MANY_REQUESTS) return 'RATE_LIMITED';
+  if (status === HttpStatus.PAYLOAD_TOO_LARGE) return 'PAYLOAD_TOO_LARGE';
+  if (status === HttpStatus.UNSUPPORTED_MEDIA_TYPE) return 'UNSUPPORTED_MEDIA';
   if (status >= 500) return 'INTERNAL';
   return 'VALIDATION_FAILED';
 }
 
 function toErrorResponse(exception: unknown): ErrorResponse {
   if (exception instanceof AppError) {
-    const error = { code: exception.code, message: exception.message, ...(exception.fields && { fields: exception.fields }) };
+    const error = {
+      code: exception.code,
+      message: exception.message,
+      ...(exception.fields && { fields: exception.fields }),
+      ...(exception.details && { details: exception.details }),
+    };
     return {
       status: exception.status,
       body: { error },
@@ -75,7 +82,8 @@ export class ErrorFilter implements ExceptionFilter {
     const res = host.switchToHttp().getResponse<Response>();
     const { status, body, retryAfterSeconds } = toErrorResponse(exception);
 
-    if (status >= 500) {
+    // An AppError with a 5xx status (photo storage off, say) is an expected state, logged where it arises.
+    if (status >= 500 && !(exception instanceof AppError)) {
       this.logger.error(exception instanceof Error ? (exception.stack ?? exception.message) : String(exception));
     }
     if (res.headersSent) return;

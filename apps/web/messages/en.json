@@ -103,5 +103,13 @@
     "body": "Something broke on our side. Try again, and if it keeps happening, come back in a minute.",
     "retry": "Try again",
     "back": "Back to home"
+  },
+  "listingRules": {
+    "ID_AT_PICKUP": "Show an ID at pickup",
+    "RETURN_CLEAN": "Return it clean",
+    "NO_SMOKING": "No smoking near the item",
+    "PICKUP_ONLY": "Pickup only, no delivery",
+    "PETS_OK": "Fine to use around pets",
+    "CARE_INSTRUCTIONS": "Follow the care instructions"
   }
 }

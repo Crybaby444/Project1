@@ -7,6 +7,7 @@ import { RefreshTokenService, type SessionMeta } from '../auth/refresh-token.ser
 import { CLOCK, type Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
 import type { User } from '../generated/prisma/client';
+import { ListingsService } from '../listings/listings.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 const invalidCredentials = () => new AppError('AUTH_INVALID_CREDENTIALS', 401, 'Wrong password');
@@ -18,6 +19,7 @@ export class MeService {
     private readonly passwords: PasswordService,
     private readonly refreshTokens: RefreshTokenService,
     private readonly auth: AuthService,
+    private readonly listings: ListingsService,
     @Inject(CLOCK) private readonly clock: Clock,
   ) {}
 
@@ -48,7 +50,8 @@ export class MeService {
   /**
    * Soft delete: the row stays (for records that point at it later), everything personal goes (incl.
    * the block reason and the sessions with their IP addresses and user agents), the email is freed for
-   * a new account, and the Google link is removed so it cannot sign back in.
+   * a new account, and the Google link is removed so it cannot sign back in. Listings never published
+   * are deleted with their photo files; the others are archived without their exact point.
    */
   async deleteAccount(userId: string, password: string | undefined): Promise<void> {
     const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId } });
@@ -56,8 +59,8 @@ export class MeService {
       throw invalidCredentials();
     }
     const now = this.clock.now();
-    await this.prisma.$transaction([
-      this.prisma.user.update({
+    const photoKeys = await this.prisma.$transaction(async (tx) => {
+      await tx.user.update({
         where: { id: userId },
         data: {
           email: `deleted+${userId}@yoyo.invalid`,
@@ -72,12 +75,15 @@ export class MeService {
           blockedReason: null,
           deletedAt: now,
         },
-      }),
-      this.prisma.oAuthAccount.deleteMany({ where: { userId } }),
-      this.prisma.emailToken.deleteMany({ where: { userId } }),
-      this.prisma.phoneCode.deleteMany({ where: { userId } }),
+      });
+      await tx.oAuthAccount.deleteMany({ where: { userId } });
+      await tx.emailToken.deleteMany({ where: { userId } });
+      await tx.phoneCode.deleteMany({ where: { userId } });
       // Ends every session and drops what sessions record about devices (IP address, user agent).
-      this.prisma.refreshToken.deleteMany({ where: { userId } }),
-    ]);
+      await tx.refreshToken.deleteMany({ where: { userId } });
+      // Listings leave the catalog and the review queue; the exact point (often a home address) goes.
+      return this.listings.removeAllOf(userId, tx);
+    });
+    await this.listings.forgetFiles(photoKeys);
   }
 }

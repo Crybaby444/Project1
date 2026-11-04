@@ -19,6 +19,8 @@ export interface TestAppOptions {
   controllers?: Type<unknown>[];
   /** Replaces the fake mailbox, e.g. with a provider that fails. */
   mailProvider?: MailProvider;
+  /** Further providers to replace, e.g. how the geocoder waits. */
+  providers?: { provide: unknown; useValue: unknown }[];
 }
 
 export interface TestApp {
@@ -39,10 +41,12 @@ export async function createTestApp(options: TestAppOptions = {}): Promise<TestA
   const env = loadEnv({ ...process.env, ...options.env });
   const clock = new FakeClock();
   const mail = new FakeMailProvider();
-  const moduleRef = await Test.createTestingModule({
+  let builder = Test.createTestingModule({
     imports: [AppModule],
     controllers: options.controllers ?? [],
-  })
+  });
+  for (const { provide, useValue } of options.providers ?? []) builder = builder.overrideProvider(provide).useValue(useValue);
+  const moduleRef = await builder
     .overrideProvider(ENV)
     .useValue(env)
     .overrideProvider(CLOCK)
