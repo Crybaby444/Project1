@@ -38,7 +38,11 @@ test.describe('a saved theme', () => {
 });
 
 test.describe('with motion allowed', () => {
-  test('the circular switch runs without errors and lands on the new theme', async ({ page, context, baseURL }) => {
+  test('the circular switch runs without errors and lands on the new theme', async ({
+    page,
+    context,
+    baseURL,
+  }) => {
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));
     page.on('console', (message) => message.type() === 'error' && errors.push(message.text()));

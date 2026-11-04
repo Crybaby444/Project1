@@ -13,6 +13,7 @@ export function toPublicUser(user: User): PublicUser {
     theme: user.theme as PublicUser['theme'],
     role: user.role,
     emailVerified: user.emailVerifiedAt !== null,
+    hasPassword: user.passwordHash !== null,
     phone: user.phone,
     phoneVerified: user.phoneVerifiedAt !== null,
     createdAt: user.createdAt.toISOString(),

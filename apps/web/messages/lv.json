@@ -11,13 +11,15 @@
     "label": "Valoda",
     "en": "English",
     "lv": "Latviešu",
-    "ru": "Русский"
+    "ru": "Русский",
+    "current": "Valoda: {name}"
   },
   "theme": {
     "toggle": "Pārslēgt tēmu",
     "light": "Gaišā",
     "dark": "Tumšā",
-    "system": "Kā sistēmā"
+    "system": "Kā sistēmā",
+    "label": "Tēma"
   },
   "notFound": {
     "title": "Šī lapa aizripoja",
@@ -103,6 +105,207 @@
     "body": "Mūsu pusē kaut kas salūza. Mēģiniet vēlreiz, un, ja tas atkārtojas, atgriezieties pēc minūtes.",
     "retry": "Mēģināt vēlreiz",
     "back": "Uz sākumlapu"
+  },
+  "session": {
+    "loading": "Pārbaudām, vai esat pieteicies…"
+  },
+  "header": {
+    "signIn": "Pieteikties",
+    "signUp": "Reģistrēties",
+    "account": "Konta izvēlne",
+    "settings": "Iestatījumi",
+    "signOut": "Iziet",
+    "signedOut": "Sesija ir beigta."
+  },
+  "banner": {
+    "verifyEmail": {
+      "title": "Lūdzu, apstipriniet e-pastu: mēs jums nosūtījām saiti.",
+      "resend": "Sūtīt vēstuli vēlreiz",
+      "sent": "Vēstule nosūtīta. Pārbaudiet iesūtni."
+    }
+  },
+  "errors": {
+    "VALIDATION_FAILED": "Dažus laukus vajag pārbaudīt vēlreiz.",
+    "AUTH_INVALID_CREDENTIALS": "Nepareizs e-pasts vai parole.",
+    "AUTH_EMAIL_TAKEN": "Konts ar šo e-pastu jau pastāv. Varbūt pieteikties?",
+    "AUTH_UNAUTHENTICATED": "Sesija ir beigusies. Piesakieties vēlreiz.",
+    "AUTH_FORBIDDEN": "Jums tam nav piekļuves.",
+    "AUTH_BLOCKED": "Šis konts ir bloķēts.",
+    "AUTH_PROVIDER_DISABLED": "Šis pieteikšanās veids pašlaik nav pieejams.",
+    "TOKEN_EXPIRED": "Šīs saites derīgums ir beidzies.",
+    "TOKEN_USED": "Šī saite jau ir izmantota.",
+    "RATE_LIMITED": "Pārāk daudz mēģinājumu. Pamēģiniet nedaudz vēlāk.",
+    "OAUTH_CANCELLED": "Pieteikšanās ar Google tika atcelta. Mēģiniet vēlreiz vai piesakieties ar e-pastu.",
+    "OAUTH_STATE_INVALID": "Pieteikšanās ar Google ilga pārāk ilgi vai tika sākta citā cilnē. Sāciet no jauna.",
+    "OAUTH_FAILED": "Pieteikšanās ar Google neizdevās. Mēģiniet vēlreiz vai piesakieties ar e-pastu.",
+    "ORIGIN_FORBIDDEN": "Pieprasījums nāca no negaidītas lapas. Pārlādējiet to un mēģiniet vēlreiz.",
+    "NOT_FOUND": "To neizdevās atrast.",
+    "INTERNAL": "Pie mums kaut kas salūza. Mēģiniet vēlreiz pēc minūtes.",
+    "INVALID_STATUS": "Sludinājums pa to laiku ir mainījies vai pašlaik to nevar izdarīt. Pārlādējiet lapu un mēģiniet vēlreiz.",
+    "UNSUPPORTED_MEDIA": "Šo failu nevar izmantot kā fotoattēlu. Augšupielādējiet JPEG, PNG vai WebP.",
+    "PAYLOAD_TOO_LARGE": "Fotoattēls ir pārāk liels. Augšupielādējiet mazāku par 10 MB.",
+    "PHOTO_LIMIT": "Sludinājumā var būt līdz 8 fotoattēliem. Izdzēsiet kādu, lai pievienotu citu.",
+    "STORAGE_DISABLED": "Fotoattēlus pašlaik nevar augšupielādēt. Mēģiniet vēlāk.",
+    "LISTING_INCOMPLETE": "Sludinājums vēl nav pabeigts. Aizpildiet atzīmētos laukus.",
+    "GEO_UNAVAILABLE": "Adrešu meklēšana pašlaik nedarbojas. Mēģiniet vēlreiz pēc minūtes.",
+    "NETWORK": "Nevaram sazināties ar Yoyo. Pārbaudiet savienojumu un mēģiniet vēlreiz.",
+    "fieldInvalid": "Pārbaudiet šo lauku.",
+    "retryIn": "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc {seconds} s."
+  },
+  "validation": {
+    "required": "Aizpildiet šo lauku.",
+    "tooShort": "Vismaz {min} rakstzīmes.",
+    "tooLong": "Ne vairāk kā {max} rakstzīmes.",
+    "email": "Ievadiet e-pasta adresi, piemēram, vards@example.com.",
+    "passwordMismatch": "Paroles nesakrīt.",
+    "invalid": "Pārbaudiet šo lauku."
+  },
+  "auth": {
+    "fields": {
+      "name": "Vārds",
+      "email": "E-pasts",
+      "password": "Parole",
+      "newPassword": "Jaunā parole",
+      "repeatPassword": "Atkārtojiet jauno paroli",
+      "currentPassword": "Pašreizējā parole"
+    },
+    "password": {
+      "show": "Rādīt paroli"
+    },
+    "strength": {
+      "label": "Paroles drošība",
+      "weak": "vāja",
+      "fair": "pieņemama",
+      "strong": "laba"
+    },
+    "or": "vai",
+    "google": "Turpināt ar Google",
+    "login": {
+      "title": "Pieteikties",
+      "subtitle": "Prieks jūs atkal redzēt Yoyo.",
+      "submit": "Pieteikties",
+      "forgot": "Aizmirsāt paroli?",
+      "noAccount": "Vēl nav konta?",
+      "register": "Reģistrēties"
+    },
+    "register": {
+      "title": "Reģistrēties",
+      "subtitle": "Nomājiet vajadzīgo no cilvēkiem tuvumā un iznomājiet to, ko lietojat reti.",
+      "nameHint": "To redzēs cilvēki, ar kuriem nomāsieties.",
+      "passwordHint": "Vismaz 8 rakstzīmes. Labi der daži vārdi pēc kārtas.",
+      "submit": "Izveidot kontu",
+      "haveAccount": "Jau ir konts?",
+      "signIn": "Pieteikties"
+    },
+    "verify": {
+      "title": "E-pasta apstiprināšana",
+      "checking": "Pārbaudām saiti…",
+      "continue": "Turpināt",
+      "resend": "Sūtīt jaunu vēstuli",
+      "signIn": "Pieteikties",
+      "retry": "Mēģināt vēlreiz",
+      "done": {
+        "title": "E-pasts apstiprināts",
+        "body": "Paldies! Jūsu Yoyo konts ir gatavs."
+      },
+      "used": {
+        "title": "Šī saite jau ir izmantota",
+        "body": "Katra apstiprinājuma saite darbojas vienu reizi. Ja e-pastu jau apstiprinājāt, viss ir kārtībā."
+      },
+      "expired": {
+        "title": "Šī saite ir novecojusi",
+        "body": "Apstiprinājuma saites darbojas 24 stundas. Palūdziet jaunu un izmantojiet to drīz."
+      },
+      "invalid": {
+        "title": "Šī saite nedarbojas",
+        "body": "Iespējams, tā ir nogriezta. Atveriet to no vēstules vēlreiz vai palūdziet jaunu."
+      }
+    },
+    "forgot": {
+      "title": "Aizmirsāt paroli?",
+      "subtitle": "Ievadiet e-pastu, un mēs nosūtīsim saiti jaunas paroles izvēlei.",
+      "submit": "Sūtīt saiti",
+      "back": "Atpakaļ uz pieteikšanos",
+      "sent": {
+        "title": "Pārbaudiet e-pastu",
+        "body": "Ja adresei {email} ir Yoyo konts, saite jaunas paroles izvēlei jau ceļā. Tā darbojas 1 stundu. Nav atnākusi? Ieskatieties surogātpasta mapē."
+      }
+    },
+    "reset": {
+      "title": "Jauna parole",
+      "subtitle": "Izvēlieties jaunu paroli savam Yoyo kontam. Visās citās ierīcēs sesijas tiks beigtas.",
+      "submit": "Saglabāt paroli",
+      "done": "Parole nomainīta. Jūs esat pieteikušies.",
+      "requestNew": "Palūgt jaunu saiti",
+      "signIn": "Pieteikties",
+      "changed": {
+        "title": "Parole nomainīta",
+        "body": "Piesakieties ar jauno paroli."
+      },
+      "used": {
+        "title": "Šī saite jau ir izmantota",
+        "body": "Katra paroles maiņas saite darbojas vienu reizi. Palūdziet jaunu, ja paroli joprojām vajag nomainīt."
+      },
+      "expired": {
+        "title": "Šī saite ir novecojusi",
+        "body": "Paroles maiņas saites darbojas 1 stundu. Palūdziet jaunu un izmantojiet to drīz."
+      },
+      "invalid": {
+        "title": "Šī saite nedarbojas",
+        "body": "Iespējams, tā ir nogriezta. Atveriet to no vēstules vēlreiz vai palūdziet jaunu."
+      }
+    }
+  },
+  "settings": {
+    "title": "Iestatījumi",
+    "tabs": {
+      "profile": "Profils",
+      "security": "Drošība"
+    },
+    "profile": {
+      "title": "Profils",
+      "intro": "Ko redz cilvēki, ar kuriem nomājaties, un kā Yoyo ar jums sazinās.",
+      "name": "Vārds",
+      "city": "Pilsēta",
+      "cityHint": "Palīdz cilvēkiem tuvumā atrast jūsu lietas.",
+      "about": "Par jums",
+      "aboutHint": "Daži vārdi par sevi un to, ko iznomājat.",
+      "language": "Valoda",
+      "languageHint": "Vietnei un vēstulēm, ko jums sūtām.",
+      "save": "Saglabāt izmaiņas",
+      "saved": "Saglabāts.",
+      "appearance": "Izskats"
+    },
+    "security": {
+      "title": "Drošība",
+      "password": {
+        "title": "Parole",
+        "submit": "Mainīt paroli",
+        "changed": "Parole nomainīta. Citās ierīcēs sesijas ir beigtas.",
+        "wrongCurrent": "Šī nav jūsu pašreizējā parole.",
+        "google": "Jūs piesakāties ar Google, tāpēc kontam nav paroles, ko mainīt. To sargā jūsu Google konts."
+      },
+      "logoutAll": {
+        "title": "Iziet visās ierīcēs?",
+        "body": "Visas ierīces, kurās ir atvērts jūsu konts, arī šī, tiks izrakstītas uzreiz.",
+        "open": "Iziet visās ierīcēs",
+        "submit": "Iziet visās ierīcēs",
+        "done": "Visās ierīcēs sesijas ir beigtas.",
+        "intro": "Pazaudējāt tālruni vai pieteicāties svešā datorā? Beidziet visas sesijas uzreiz."
+      },
+      "delete": {
+        "title": "Dzēst kontu?",
+        "intro": "Dzēšot kontu, tiek izdzēsts jūsu profils un visas sesijas tiek beigtas. To nevar atsaukt.",
+        "open": "Dzēst kontu",
+        "body": "Profils tiks izdzēsts uz visiem laikiem, un visās ierīcēs sesijas tiks beigtas. To nevar atsaukt.",
+        "word": "DZĒST",
+        "confirmLabel": "Ierakstiet {word}, lai apstiprinātu",
+        "passwordLabel": "Jūsu parole",
+        "submit": "Dzēst neatgriezeniski",
+        "done": "Jūsu konts ir izdzēsts."
+      },
+      "cancel": "Atcelt"
+    }
   },
   "listingRules": {
     "ID_AT_PICKUP": "Saņemot uzrādīt personu apliecinošu dokumentu",

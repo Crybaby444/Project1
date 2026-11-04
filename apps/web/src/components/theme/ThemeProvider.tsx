@@ -71,7 +71,11 @@ export function ThemeProvider({
   }, [preference]);
 
   const setPreference = useCallback((next: ThemePreference, origin?: Point) => {
-    document.cookie = `${THEME_COOKIE}=${next}; path=/; max-age=${ONE_YEAR_S}; samesite=lax`;
+    // "System" is no choice at all: drop the cookie, so the server and the head script follow the OS.
+    document.cookie =
+      next === 'system'
+        ? `${THEME_COOKIE}=; path=/; max-age=0; samesite=lax`
+        : `${THEME_COOKIE}=${next}; path=/; max-age=${ONE_YEAR_S}; samesite=lax`;
     const nextTheme = resolveTheme(next, window.matchMedia(DARK_QUERY).matches);
     const animate = shouldAnimateThemeChange(
       window.matchMedia('(prefers-reduced-motion: reduce)').matches,

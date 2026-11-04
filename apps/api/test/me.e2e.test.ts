@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { AccessTokenService } from '../src/auth/access-token.service';
+import { AuthService } from '../src/auth/auth.service';
 import { RefreshTokenService } from '../src/auth/refresh-token.service';
 import { existsSync } from 'node:fs';
 import type { LocalStorageProvider } from '../src/media/local-storage.provider';
@@ -45,6 +46,20 @@ describe('my account', () => {
 
   afterAll(async () => {
     await t.close();
+  });
+
+  describe('GET /me', () => {
+    it('says whether the account has a password (Google-only accounts have none)', async () => {
+      const withPassword = await signedIn();
+      expect((await withPassword.agent.get('/api/v1/me')).body.user.hasPassword).toBe(true);
+
+      const googleOnly = await seedUser(t, { password: null, emailVerified: true });
+      const agent = request.agent(t.server);
+      const session = await t.app.get(AuthService).startSession(googleOnly.user, { ip: '127.0.0.1', userAgent: 'test' });
+      const res = await agent.get('/api/v1/me').set('Authorization', `Bearer ${session.accessToken}`);
+      expect(res.status).toBe(200);
+      expect(res.body.user.hasPassword).toBe(false);
+    });
   });
 
   describe('PATCH /me', () => {

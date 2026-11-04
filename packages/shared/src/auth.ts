@@ -100,6 +100,8 @@ export const PublicUserSchema = z.object({
   theme: z.enum(THEME_PREFERENCES),
   role: z.enum(ROLES),
   emailVerified: z.boolean(),
+  /** False for accounts that only sign in with Google: no password to change or to confirm a deletion with. */
+  hasPassword: z.boolean(),
   /** The confirmed phone number (E.164), or null. */
   phone: z.string().nullable(),
   phoneVerified: z.boolean(),

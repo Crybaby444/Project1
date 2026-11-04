@@ -44,6 +44,18 @@ describe('sessions: login, refresh, logout and the auth guard', () => {
       expect(JSON.stringify(res.body)).not.toContain(cookieValue(res.headers['set-cookie'], 'yoyo_at')!);
     });
 
+    it('tells the site’s scripts that a session exists with a readable hint cookie that carries no secret', async () => {
+      const { email, password } = await seedUser(t);
+
+      const res = await login({ email, password });
+
+      const hint = cookieLine(res.headers['set-cookie'], 'yoyo_session');
+      expect(hint).toMatch(/^yoyo_session=1;/);
+      expect(hint).toMatch(/Max-Age=2592000;.*Path=\/;/);
+      expect(hint).toMatch(/SameSite=Lax/);
+      expect(hint).not.toMatch(/HttpOnly/);
+    });
+
     it('answers a wrong password and an unknown email with the same 401 and body', async () => {
       const { email } = await seedUser(t);
 
@@ -220,6 +232,7 @@ describe('sessions: login, refresh, logout and the auth guard', () => {
       expect(res.status).toBe(204);
       expect(cookieLine(res.headers['set-cookie'], 'yoyo_at')).toMatch(/Max-Age=0;.*Path=\//);
       expect(cookieLine(res.headers['set-cookie'], 'yoyo_rt')).toMatch(/Max-Age=0;.*Path=\/api\/v1\/auth/);
+      expect(cookieLine(res.headers['set-cookie'], 'yoyo_session')).toMatch(/Max-Age=0;.*Path=\//);
       expect((await request(t.server).post('/api/v1/auth/refresh').send({ refreshToken })).status).toBe(401);
     });
 

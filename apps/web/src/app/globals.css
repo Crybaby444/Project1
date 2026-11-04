@@ -28,6 +28,8 @@
   --animate-sticker-wobble: sticker-wobble 450ms var(--ease-yoyo);
   --animate-sticker-spin: sticker-spin 450ms var(--ease-yoyo);
   --animate-marquee: marquee 30s linear infinite;
+  --animate-toast-in: toast-in 250ms var(--ease-yoyo);
+  --animate-pop-in: pop-in 150ms var(--ease-yoyo);
 
   @keyframes sticker-wobble {
     25% {
@@ -47,6 +49,21 @@
     }
     to {
       transform: rotate(360deg) scale(1);
+    }
+  }
+
+  @keyframes toast-in {
+    from {
+      transform: translateY(12px);
+      opacity: 0;
+    }
+  }
+
+  /* Menus and dialogs: a small scale-up from where they open. */
+  @keyframes pop-in {
+    from {
+      transform: scale(0.96);
+      opacity: 0;
     }
   }
 

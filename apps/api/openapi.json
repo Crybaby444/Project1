@@ -131,37 +131,7 @@
         ],
         "responses": {
           "302": {
-            "description": "Signed in (session cookies); redirect to the page the user started from"
-          },
-          "400": {
-            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorDto_Output"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not signed in or wrong credentials",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorDto_Output"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorDto_Output"
-                }
-              }
-            }
+            "description": "Signed in (session cookies) and sent to the page the user started from; or, if the sign-in failed, sent to the site’s /login?oauthError=OAUTH_CANCELLED|OAUTH_STATE_INVALID|OAUTH_FAILED|AUTH_BLOCKED"
           },
           "404": {
             "description": "Not found or not available",
@@ -2700,6 +2670,9 @@
                   "TOKEN_EXPIRED",
                   "TOKEN_USED",
                   "RATE_LIMITED",
+                  "OAUTH_CANCELLED",
+                  "OAUTH_STATE_INVALID",
+                  "OAUTH_FAILED",
                   "ORIGIN_FORBIDDEN",
                   "NOT_FOUND",
                   "INTERNAL",
@@ -2822,6 +2795,9 @@
               "emailVerified": {
                 "type": "boolean"
               },
+              "hasPassword": {
+                "type": "boolean"
+              },
               "phone": {
                 "type": [
                   "string",
@@ -2847,6 +2823,7 @@
               "theme",
               "role",
               "emailVerified",
+              "hasPassword",
               "phone",
               "phoneVerified",
               "createdAt"
@@ -2982,6 +2959,9 @@
               "emailVerified": {
                 "type": "boolean"
               },
+              "hasPassword": {
+                "type": "boolean"
+              },
               "phone": {
                 "type": [
                   "string",
@@ -3007,6 +2987,7 @@
               "theme",
               "role",
               "emailVerified",
+              "hasPassword",
               "phone",
               "phoneVerified",
               "createdAt"
@@ -4080,6 +4061,9 @@
                 "emailVerified": {
                   "type": "boolean"
                 },
+                "hasPassword": {
+                  "type": "boolean"
+                },
                 "phone": {
                   "type": [
                     "string",
@@ -4117,6 +4101,7 @@
                 "theme",
                 "role",
                 "emailVerified",
+                "hasPassword",
                 "phone",
                 "phoneVerified",
                 "createdAt",
