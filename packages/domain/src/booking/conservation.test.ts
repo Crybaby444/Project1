@@ -35,6 +35,11 @@ const MINUTE_MS = 60_000;
 const START = new Date('2026-11-04T00:00:00Z');
 const MAX_STEPS = 300;
 const RUNS = 1000;
+/**
+ * Locally the property takes about 0.4 s; on a busy CI runner (turbo runs every package at once) it
+ * took 5.4 s, past vitest's default 5 s. fc.assert is synchronous, so this is a budget, not a cut-off.
+ */
+const BUDGET_MS = 60_000;
 
 const EXITS: ReadonlySet<BookingEventType> = new Set(['DECLINE', 'WITHDRAW', 'CANCEL']);
 const WEIGHT = { exit: 1, action: 6, timer: 1, wait: 1 } as const;
@@ -126,167 +131,173 @@ const scenario = fc.record({
 });
 
 describe('money conservation (Review Focus 1)', () => {
-  it(`keeps every cent accounted for on any path to the end (${RUNS} random bookings)`, () => {
-    const reached = new Set<string>();
+  it(
+    `keeps every cent accounted for on any path to the end (${RUNS} random bookings)`,
+    { timeout: BUDGET_MS },
+    () => {
+      const reached = new Set<string>();
 
-    fc.assert(
-      fc.property(scenario, fc.gen(), (sc, g) => {
-        const settings = { ...DEFAULT_BOOKING_SETTINGS, servicePercent: sc.servicePercent };
-        let now = new Date(START.getTime() + sc.hoursAfterStart * HOUR_MS);
-        const start = addDays(localDateIn(now, 'Europe/Riga'), sc.startsInDays);
-        const created = createRequest(
-          {
-            id: 'booking-1',
-            listingId: 'listing-1',
-            renterId: RENTER_ID,
-            ownerId: OWNER_ID,
-            period: period(start, addDays(start, sc.days - 1)),
-            timeZone: 'Europe/Riga',
-            pricing: {
-              dailyCents: cents(sc.dailyCents),
-              weeklyDiscountPercent: sc.weeklyDiscountPercent,
-              depositCents: cents(sc.depositCents),
-              minDays: 1,
-              maxDays: 30,
+      fc.assert(
+        fc.property(scenario, fc.gen(), (sc, g) => {
+          const settings = { ...DEFAULT_BOOKING_SETTINGS, servicePercent: sc.servicePercent };
+          let now = new Date(START.getTime() + sc.hoursAfterStart * HOUR_MS);
+          const start = addDays(localDateIn(now, 'Europe/Riga'), sc.startsInDays);
+          const created = createRequest(
+            {
+              id: 'booking-1',
+              listingId: 'listing-1',
+              renterId: RENTER_ID,
+              ownerId: OWNER_ID,
+              period: period(start, addDays(start, sc.days - 1)),
+              timeZone: 'Europe/Riga',
+              pricing: {
+                dailyCents: cents(sc.dailyCents),
+                weeklyDiscountPercent: sc.weeklyDiscountPercent,
+                depositCents: cents(sc.depositCents),
+                minDays: 1,
+                maxDays: 30,
+              },
+              blocked: [],
             },
+            { now, settings },
+          );
+          let s = created.next;
+          let method = sc.method;
+          const { totalCents, rentCents, serviceFeeCents, depositCents } = s.quote;
+
+          let balances = new Map<AccountId, number>();
+          const balance = (account: AccountId) => balances.get(account) ?? 0;
+          const walletStart = Math.floor((totalCents * sc.walletPercentOfTotal) / 100);
+          if (walletStart > 0) balances = applyOperation(balances, topUp(RENTER_ID, cents(walletStart)));
+          const context = (): DecideContext => ({
+            now,
+            settings,
             blocked: [],
-          },
-          { now, settings },
-        );
-        let s = created.next;
-        let method = sc.method;
-        const { totalCents, rentCents, serviceFeeCents, depositCents } = s.quote;
+            walletAvailableCents: cents(balance(`wallet:${RENTER_ID}`)),
+          });
 
-        let balances = new Map<AccountId, number>();
-        const balance = (account: AccountId) => balances.get(account) ?? 0;
-        const walletStart = Math.floor((totalCents * sc.walletPercentOfTotal) / 100);
-        if (walletStart > 0) balances = applyOperation(balances, topUp(RENTER_ID, cents(walletStart)));
-        const context = (): DecideContext => ({
-          now,
-          settings,
-          blocked: [],
-          walletAvailableCents: cents(balance(`wallet:${RENTER_ID}`)),
-        });
+          let reserved = 0;
+          let released = 0;
+          let payments = 0;
+          const carryOut = (effects: readonly Effect[]) => {
+            for (const effect of effects) {
+              if (effect.kind === 'LEDGER') {
+                const op = effect.operation;
+                assertBalanced(op);
+                expect(
+                  op.postings.reduce((sum, posting) => sum + posting.amount, 0),
+                  `${op.kind} sums to zero`,
+                ).toBe(0);
+                balances = applyOperation(balances, op); // throws if a wallet, escrow or deposit would go below zero
+                if (op.kind === 'BOOKING_PAYMENT') payments += 1;
+              }
+              if (effect.kind === 'RESERVE_DATES') {
+                expect(reserved, 'dates reserved only while free').toBe(released);
+                reserved += 1;
+              }
+              if (effect.kind === 'RELEASE_DATES') {
+                released += 1;
+                expect(released, 'dates released only once reserved').toBe(reserved);
+              }
+            }
+            for (const [account, amount] of balances) {
+              if (account.startsWith('wallet:')) expect(amount, account).toBeGreaterThanOrEqual(0);
+            }
+          };
+          carryOut(created.effects);
 
-        let reserved = 0;
-        let released = 0;
-        let payments = 0;
-        const carryOut = (effects: readonly Effect[]) => {
-          for (const effect of effects) {
-            if (effect.kind === 'LEDGER') {
-              const op = effect.operation;
-              assertBalanced(op);
-              expect(
-                op.postings.reduce((sum, posting) => sum + posting.amount, 0),
-                `${op.kind} sums to zero`,
-              ).toBe(0);
-              balances = applyOperation(balances, op); // throws if a wallet, escrow or deposit would go below zero
-              if (op.kind === 'BOOKING_PAYMENT') payments += 1;
+          for (let steps = 0; !isTerminal(s.status); steps += 1) {
+            expect(steps, 'the booking reaches an end').toBeLessThan(MAX_STEPS);
+            const choice = pick(
+              [
+                ...[renter, owner, admin].flatMap((actor) =>
+                  availableActions(s, actor, context()).map((type): Choice => ({ kind: 'act', actor, type })),
+                ),
+                ...(Object.keys(s.timers) as TimerKind[]).map((timer): Choice => ({ kind: 'timer', timer })),
+                { kind: 'wait' },
+              ],
+              g,
+            );
+
+            let decision: Decision;
+            if (choice.kind === 'wait') {
+              now = new Date(now.getTime() + g(fc.integer, { min: 1, max: 24 }) * HOUR_MS);
+              continue;
+            } else if (choice.kind === 'timer') {
+              const due = s.timers[choice.timer];
+              if (due === undefined) throw new Error(`${choice.timer} is not armed`);
+              const late = g(fc.integer, { min: 0, max: 180 }) * MINUTE_MS;
+              now = new Date(Math.max(now.getTime(), due.getTime()) + late);
+              decision = decide(s, system, { type: 'TIMEOUT', timer: choice.timer }, context());
+            } else {
+              const event = eventFor(choice.type, s, method, g);
+              try {
+                decision = decide(s, choice.actor, event, context());
+              } catch (error) {
+                // The one refusal of a listed action: a wallet that cannot cover the total. Like a real
+                // renter, the next attempt pays by card.
+                expect(error).toBeInstanceOf(DomainError);
+                expect([event.type, (error as DomainError).code]).toEqual(['PAY', 'INSUFFICIENT_FUNDS']);
+                method = 'CARD';
+                continue;
+              }
             }
-            if (effect.kind === 'RESERVE_DATES') {
-              expect(reserved, 'dates reserved only while free').toBe(released);
-              reserved += 1;
-            }
-            if (effect.kind === 'RELEASE_DATES') {
-              released += 1;
-              expect(released, 'dates released only once reserved').toBe(reserved);
-            }
+            expect(decision.next, 'a listed action or a due timer changes the booking').not.toBe(s);
+            carryOut(decision.effects);
+            expect(Object.keys(decision.next.timers).length, 'at most one armed timer').toBeLessThanOrEqual(
+              1,
+            );
+            s = decision.next;
           }
-          for (const [account, amount] of balances) {
-            if (account.startsWith('wallet:')) expect(amount, account).toBeGreaterThanOrEqual(0);
-          }
-        };
-        carryOut(created.effects);
 
-        for (let steps = 0; !isTerminal(s.status); steps += 1) {
-          expect(steps, 'the booking reaches an end').toBeLessThan(MAX_STEPS);
-          const choice = pick(
-            [
-              ...[renter, owner, admin].flatMap((actor) =>
-                availableActions(s, actor, context()).map((type): Choice => ({ kind: 'act', actor, type })),
-              ),
-              ...(Object.keys(s.timers) as TimerKind[]).map((timer): Choice => ({ kind: 'timer', timer })),
-              { kind: 'wait' },
-            ],
-            g,
+          expect(s.timers, 'no timer left at the end').toEqual({});
+          expect(balance(`escrow:${s.id}`), 'escrow at the end').toBe(0);
+          expect(balance(`deposit:${s.id}`), 'deposit at the end').toBe(0);
+          expect(
+            [...balances.values()].reduce((sum, amount) => sum + amount, 0),
+            'all balances together',
+          ).toBe(0);
+          expect(released, 'reserved dates released at the end').toBe(reserved);
+
+          const paid = s.paymentMethod !== undefined;
+          expect(payments, 'payments made').toBe(paid ? 1 : 0);
+          const refunded = s.outcome === 'REFUNDED_ALL' || (s.status === 'CANCELLED' && paid);
+          expect(balance('platform:revenue'), 'Yoyo keeps the fee of a paid, unrefunded booking only').toBe(
+            paid && !refunded ? serviceFeeCents : 0,
+          );
+          const ownerEarned =
+            s.status === 'COMPLETED' ? rentCents + (s.outcome === 'DEPOSIT_TO_OWNER' ? depositCents : 0) : 0;
+          expect(balance(`wallet:${OWNER_ID}`), 'the owner earns the rent and an accepted deposit').toBe(
+            ownerEarned,
           );
 
-          let decision: Decision;
-          if (choice.kind === 'wait') {
-            now = new Date(now.getTime() + g(fc.integer, { min: 1, max: 24 }) * HOUR_MS);
-            continue;
-          } else if (choice.kind === 'timer') {
-            const due = s.timers[choice.timer];
-            if (due === undefined) throw new Error(`${choice.timer} is not armed`);
-            const late = g(fc.integer, { min: 0, max: 180 }) * MINUTE_MS;
-            now = new Date(Math.max(now.getTime(), due.getTime()) + late);
-            decision = decide(s, system, { type: 'TIMEOUT', timer: choice.timer }, context());
-          } else {
-            const event = eventFor(choice.type, s, method, g);
-            try {
-              decision = decide(s, choice.actor, event, context());
-            } catch (error) {
-              // The one refusal of a listed action: a wallet that cannot cover the total. Like a real
-              // renter, the next attempt pays by card.
-              expect(error).toBeInstanceOf(DomainError);
-              expect([event.type, (error as DomainError).code]).toEqual(['PAY', 'INSUFFICIENT_FUNDS']);
-              method = 'CARD';
-              continue;
-            }
-          }
-          expect(decision.next, 'a listed action or a due timer changes the booking').not.toBe(s);
-          carryOut(decision.effects);
-          expect(Object.keys(decision.next.timers).length, 'at most one armed timer').toBeLessThanOrEqual(1);
-          s = decision.next;
-        }
+          for (const ending of endingsOf(s)) reached.add(ending);
+        }),
+        // Shrinking a 300-step walk takes minutes (fc.assert is synchronous): report the first failure as
+        // found; its seed and path replay it.
+        { numRuns: RUNS, endOnFailure: true },
+      );
 
-        expect(s.timers, 'no timer left at the end').toEqual({});
-        expect(balance(`escrow:${s.id}`), 'escrow at the end').toBe(0);
-        expect(balance(`deposit:${s.id}`), 'deposit at the end').toBe(0);
-        expect(
-          [...balances.values()].reduce((sum, amount) => sum + amount, 0),
-          'all balances together',
-        ).toBe(0);
-        expect(released, 'reserved dates released at the end').toBe(reserved);
-
-        const paid = s.paymentMethod !== undefined;
-        expect(payments, 'payments made').toBe(paid ? 1 : 0);
-        const refunded = s.outcome === 'REFUNDED_ALL' || (s.status === 'CANCELLED' && paid);
-        expect(balance('platform:revenue'), 'Yoyo keeps the fee of a paid, unrefunded booking only').toBe(
-          paid && !refunded ? serviceFeeCents : 0,
-        );
-        const ownerEarned =
-          s.status === 'COMPLETED' ? rentCents + (s.outcome === 'DEPOSIT_TO_OWNER' ? depositCents : 0) : 0;
-        expect(balance(`wallet:${OWNER_ID}`), 'the owner earns the rent and an accepted deposit').toBe(
-          ownerEarned,
-        );
-
-        for (const ending of endingsOf(s)) reached.add(ending);
-      }),
-      // Shrinking a 300-step walk takes minutes (fc.assert is synchronous): report the first failure as
-      // found; its seed and path replay it.
-      { numRuns: RUNS, endOnFailure: true },
-    );
-
-    // The walks really went everywhere: otherwise the checks above would pass without being tested.
-    expect([...reached].sort()).toEqual(
-      expect.arrayContaining([
-        'COMPLETED DEPOSIT_REFUNDED paid',
-        'COMPLETED DEPOSIT_TO_OWNER paid',
-        'CANCELLED REFUNDED_ALL paid',
-        'CANCELLED - unpaid',
-        'DECLINED - unpaid',
-        'EXPIRED - unpaid',
-        'cancelled by ADMIN',
-        'cancelled by OWNER',
-        'cancelled by RENTER',
-        'dispute DAMAGE',
-        'dispute NOT_RETURNED',
-        'dispute NOT_HANDED_OVER',
-        'paid by CARD',
-        'paid by WALLET',
-        'completed without deposit',
-      ]),
-    );
-  });
+      // The walks really went everywhere: otherwise the checks above would pass without being tested.
+      expect([...reached].sort()).toEqual(
+        expect.arrayContaining([
+          'COMPLETED DEPOSIT_REFUNDED paid',
+          'COMPLETED DEPOSIT_TO_OWNER paid',
+          'CANCELLED REFUNDED_ALL paid',
+          'CANCELLED - unpaid',
+          'DECLINED - unpaid',
+          'EXPIRED - unpaid',
+          'cancelled by ADMIN',
+          'cancelled by OWNER',
+          'cancelled by RENTER',
+          'dispute DAMAGE',
+          'dispute NOT_RETURNED',
+          'dispute NOT_HANDED_OVER',
+          'paid by CARD',
+          'paid by WALLET',
+          'completed without deposit',
+        ]),
+      );
+    },
+  );
 });
