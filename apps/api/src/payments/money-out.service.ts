@@ -24,6 +24,33 @@ export class MoneyOutService {
     @Inject(CLOCK) private readonly clock: Clock,
   ) {}
 
+  /**
+   * Gives back a card charge that nothing in Yoyo took (the deal changed meanwhile, the top-up could not
+   * be recorded). The charge is written down first, fully refunded, with its refund job, and then sent:
+   * if the provider fails, the job stays PENDING and the timers job retries it, so the money is never
+   * lost, and the caller still answers with its own error. Never throws for the provider's failure.
+   */
+  async giveBack(
+    charge: { ref: string; amountCents: number; brand: string; last4: string },
+    owner: { userId: string; bookingId?: string; purpose: 'BOOKING' | 'TOP_UP' },
+  ): Promise<void> {
+    const payment = await this.prisma.payment.create({
+      data: {
+        userId: owner.userId,
+        bookingId: owner.bookingId ?? null,
+        purpose: owner.purpose,
+        amountCents: charge.amountCents,
+        refundedCents: charge.amountCents,
+        providerRef: charge.ref,
+        brand: charge.brand,
+        last4: charge.last4,
+        refunds: { create: { amountCents: charge.amountCents, createdAt: this.clock.now() } },
+      },
+      include: { refunds: true },
+    });
+    await this.processRefund(payment.refunds[0]!.id);
+  }
+
   /** Sends every PENDING job (oldest first, at most `limit`); returns how many were tried. */
   async processPending(limit = 50): Promise<number> {
     const [refunds, payouts] = await Promise.all([

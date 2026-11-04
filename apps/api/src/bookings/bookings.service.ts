@@ -274,20 +274,11 @@ export class BookingsService {
       });
     } catch (error) {
       // The card was charged but the deal did not take the payment: give the money back at once.
-      if (charge)
-        await this.payments.refund({
-          paymentRef: charge.ref,
-          amountCents: charge.amountCents,
-          idempotencyKey: `undo:${charge.ref}`,
-        });
+      if (charge) await this.moneyOut.giveBack(charge, { userId: user.id, bookingId: id, purpose: 'BOOKING' });
       throw error;
     }
     if (charge && outcome.overdue !== null) {
-      await this.payments.refund({
-        paymentRef: charge.ref,
-        amountCents: charge.amountCents,
-        idempotencyKey: `undo:${charge.ref}`,
-      });
+      await this.moneyOut.giveBack(charge, { userId: user.id, bookingId: id, purpose: 'BOOKING' });
     }
     await this.afterCommit(outcome.saved.after);
     if (outcome.overdue !== null) {

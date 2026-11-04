@@ -159,7 +159,12 @@ describe('paying and the deposit rule', () => {
       renter.post(`/bookings/${id}/events`).set('Idempotency-Key', newKey()).send({ version: 3, event: { type: 'PAY', method: 'CARD', cardToken: token } });
     const results = await Promise.all([pay(t1), pay(t2)]);
     expect(results.map((r) => r.status).sort()).toEqual([200, 409]);
-    expect(await t.prisma.payment.count()).toBe(1);
+    // The charge the deal took, and the other one, written down as fully given back.
+    const payments = await t.prisma.payment.findMany({ include: { refunds: true }, orderBy: { refundedCents: 'asc' } });
+    expect(payments).toMatchObject([
+      { amountCents: 14_950, refundedCents: 0, refunds: [] },
+      { amountCents: 14_950, refundedCents: 14_950, refunds: [{ amountCents: 14_950, status: 'DONE' }] },
+    ]);
     expect(await balance('external:card')).toBe(-14_950);
     await cleanBooks();
   });

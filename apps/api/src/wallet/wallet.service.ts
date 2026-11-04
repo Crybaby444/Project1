@@ -66,7 +66,7 @@ export class WalletService {
         payment: { id: payment.id, amountCents, brand: payment.brand, last4: payment.last4 },
       };
     } catch (error) {
-      await this.provider.refund({ paymentRef: charge.ref, amountCents, idempotencyKey: `undo:${charge.ref}` });
+      await this.moneyOut.giveBack({ ref: charge.ref, amountCents, brand: charge.brand, last4: charge.last4 }, { userId, purpose: 'TOP_UP' });
       throw error;
     }
   }
