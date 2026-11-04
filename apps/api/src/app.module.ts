@@ -15,6 +15,7 @@ import { ListingsModule } from './listings/listings.module';
 import { MediaModule } from './media/media.module';
 import { MeModule } from './me/me.module';
 import { ModerationModule } from './moderation/moderation.module';
+import { PaymentsModule } from './payments/payments.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { SettingsModule } from './settings/settings.module';
 
@@ -31,6 +32,7 @@ class EnvModule {}
     ClockModule,
     PrismaModule,
     LedgerModule,
+    PaymentsModule,
     RateLimiterModule,
     SettingsModule,
     AuthModule,

@@ -88,6 +88,12 @@ const EnvObject = z.object({
    * User-Agent (both are kept); tests point it at a local fake.
    */
   NOMINATIM_URL: z.url().default('https://nominatim.openstreetmap.org'),
+  /**
+   * Who moves money in and out of Yoyo: `fake` (the default and today the only one) is the test card
+   * provider of spec §0 — it looks and behaves like a card form, but no real money moves. A real
+   * provider (Stripe Connect) is another value and class behind the PaymentProvider interface.
+   */
+  PAYMENTS: z.preprocess(blankAsUnset, z.enum(['fake']).default('fake')),
   /** Folder of the local storage, relative to the API's working directory. */
   UPLOADS_DIR: z.preprocess(blankAsUnset, z.string().default('.uploads')),
 });
