@@ -90,3 +90,16 @@ export async function approveByAdmin(adminRequest: APIRequestContext, listingId:
   });
   expect(res.status(), await res.text()).toBe(200);
 }
+
+/** A 1×1 transparent PNG. */
+const BLANK_TILE = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+  'base64',
+);
+
+/** Map tiles come from OpenStreetMap's servers; e2e answers them locally so no test depends on them. */
+export async function serveBlankMapTiles(page: Page) {
+  await page.route(/tile\.openstreetmap\.org/, (route) =>
+    route.fulfill({ status: 200, contentType: 'image/png', body: BLANK_TILE }),
+  );
+}

@@ -21,6 +21,7 @@ import { StepSection } from './StepSection';
 import { AttributesStep } from './steps/AttributesStep';
 import { BasicsStep } from './steps/BasicsStep';
 import { PhotosStep } from './steps/PhotosStep';
+import { PlaceStep } from './steps/PlaceStep';
 import { PriceStep } from './steps/PriceStep';
 import { RulesStep } from './steps/RulesStep';
 
@@ -30,6 +31,7 @@ const STEP_CONTENT: Partial<Record<BuilderStep, () => ReactNode>> = {
   basics: () => <BasicsStep />,
   attributes: () => <AttributesStep />,
   price: () => <PriceStep />,
+  place: () => <PlaceStep />,
   rules: () => <RulesStep />,
 };
 

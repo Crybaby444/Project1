@@ -37,7 +37,8 @@ createServer((req, res) => {
   }
   if (url.pathname === '/reverse') {
     const lng = Number(url.searchParams.get('lon'));
-    return reply(200, lng < 24 ? JURMALA : RIGA);
+    // West of the Riga result (a click left of the pin in the e2e map) answers Jūrmala.
+    return reply(200, lng < 24.1 ? JURMALA : RIGA);
   }
   reply(404, {});
 }).listen(port, '127.0.0.1');

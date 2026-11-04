@@ -1,13 +1,14 @@
 import { expect, test, type Page } from '@playwright/test';
 import en from '../messages/en.json' with { type: 'json' };
 import { asOwnVisitor, registerByApi } from './support/accounts';
-import { fixture } from './support/listings';
+import { fixture, serveBlankMapTiles } from './support/listings';
 
 const b = en.builder;
 const p = b.photos;
 
-test.beforeEach(async ({ context }) => {
+test.beforeEach(async ({ context, page }) => {
   await asOwnVisitor(context);
+  await serveBlankMapTiles(page);
 });
 
 /** Picks files with the step's own file input (the "Choose photos" button is its label). */
@@ -95,5 +96,47 @@ test.describe('photos', () => {
     await page.reload();
     await page.getByRole('link', { name: /Basics/ }).click();
     await expect(page.getByLabel(b.basics.title)).toHaveValue('Camping tent for four');
+  });
+});
+
+test.describe('where and when', () => {
+  test('address search sets the point and the district, the map moves it, days are marked with the keyboard', async ({
+    page,
+  }) => {
+    await registerByApi(page.request);
+    await page.goto('/listings/new?step=place');
+
+    await page.getByRole('combobox', { name: b.place.search }).fill('Brīvības iela 1');
+    await page.getByRole('option', { name: /Brīvības iela 1/ }).click();
+    await expect(page.getByLabel(b.place.city)).toHaveValue('Rīga');
+    await expect(page.getByLabel(b.place.district)).toHaveValue('Centrs');
+    await expect(page).toHaveURL(/\/listings\/[^/]+\/edit\?step=place$/);
+    await expect(page.locator('.leaflet-container')).toContainText('OpenStreetMap');
+
+    // A click on the map moves the point; its district comes from the API's reverse search.
+    const map = page.getByRole('region', { name: b.place.map });
+    const box = (await map.boundingBox())!;
+    await page.mouse.click(box.x + 40, box.y + box.height / 2);
+    await expect(page.getByLabel(b.place.district)).toHaveValue('Majori');
+
+    const grid = page.getByRole('grid').first();
+    const datesSaved = page.waitForResponse(
+      (r) => r.url().endsWith('/unavailability') && r.request().method() === 'PUT',
+    );
+    await grid.locator('button[tabindex="0"]').focus();
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('Enter');
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('Shift+Enter');
+    await expect(page.getByRole('list', { name: b.calendar.list }).getByRole('listitem')).toHaveCount(1);
+
+    expect((await datesSaved).status()).toBe(200);
+    await expect(page.getByText(b.save.saved)).toBeVisible();
+    await page.reload();
+    await expect(page.getByLabel(b.place.district)).toHaveValue('Majori');
+    await expect(page.getByRole('list', { name: b.calendar.list }).getByRole('listitem')).toHaveCount(1);
+    // The exact point is never part of the preview.
+    const html = await page.getByRole('figure', { name: b.preview.label }).innerHTML();
+    expect(html).not.toMatch(/56[.,]9|23[.,]7|24[.,]1/);
   });
 });

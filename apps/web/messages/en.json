@@ -506,6 +506,36 @@
       "customLabel": "Rule {number}",
       "add": "Add a rule",
       "remove": "Remove rule {number}"
+    },
+    "place": {
+      "search": "Find the address",
+      "searchHint": "Street and city, like “Brīvības iela 1, Rīga”.",
+      "searching": "Searching…",
+      "noResults": "Nothing found. Try another spelling, or put the point on the map.",
+      "results": "{count, plural, one {# place found} other {# places found}}",
+      "map": "Map of the pick-up point",
+      "mapHelp": "Click the map or drag the pin to set the pick-up point.",
+      "center": "Put the point in the middle of the map",
+      "pin": "Pick-up point",
+      "privacy": "Only you see the exact point. Renters see the city and district.",
+      "city": "City",
+      "district": "District",
+      "placeHint": "Shown on your listing. Filled in from the point; you can change it.",
+      "pointSet": "Point set: {place}",
+      "pointSetNoName": "Point set on the map."
+    },
+    "calendar": {
+      "title": "Days it is not available",
+      "hint": "Pick the days you need the item yourself. Click a day, or click one and Shift+click another for a period.",
+      "keys": "Arrow keys move between days, Page Up and Page Down change the month, Enter marks or clears a day, Shift+Enter marks the period from the last day you marked.",
+      "previous": "Previous month",
+      "next": "Next month",
+      "unavailable": "not available",
+      "past": "past",
+      "none": "Available every day.",
+      "list": "Not available",
+      "remove": "Make {period} available again",
+      "saved": "Dates saved"
     }
   }
 }

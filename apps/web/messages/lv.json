@@ -506,6 +506,36 @@
       "customLabel": "{number}. noteikums",
       "add": "Pievienot noteikumu",
       "remove": "Noņemt {number}. noteikumu"
+    },
+    "place": {
+      "search": "Atrast adresi",
+      "searchHint": "Iela un pilsēta, piemēram, “Brīvības iela 1, Rīga”.",
+      "searching": "Meklē…",
+      "noResults": "Nekas netika atrasts. Pamēģini citādi vai atzīmē punktu kartē.",
+      "results": "{count, plural, zero {Atrastas # vietas} one {Atrasta # vieta} other {Atrastas # vietas}}",
+      "map": "Saņemšanas punkta karte",
+      "mapHelp": "Noklikšķini kartē vai pavelc piespraudi, lai iestatītu saņemšanas punktu.",
+      "center": "Likt punktu kartes vidū",
+      "pin": "Saņemšanas punkts",
+      "privacy": "Precīzo punktu redzi tikai tu. Īrnieki redz pilsētu un rajonu.",
+      "city": "Pilsēta",
+      "district": "Rajons",
+      "placeHint": "Redzams sludinājumā. Aizpildās no punkta; vari to mainīt.",
+      "pointSet": "Punkts iestatīts: {place}",
+      "pointSetNoName": "Punkts iestatīts kartē."
+    },
+    "calendar": {
+      "title": "Dienas, kad lieta nav pieejama",
+      "hint": "Atzīmē dienas, kad lieta vajadzīga tev pašam. Noklikšķini uz dienas vai uz vienas un ar Shift uz citas, lai atzīmētu periodu.",
+      "keys": "Bultiņas pārvieto pa dienām, Page Up un Page Down maina mēnesi, Enter atzīmē vai notīra dienu, Shift+Enter atzīmē periodu no pēdējās atzīmētās dienas.",
+      "previous": "Iepriekšējais mēnesis",
+      "next": "Nākamais mēnesis",
+      "unavailable": "nav pieejama",
+      "past": "pagājusi",
+      "none": "Pieejama katru dienu.",
+      "list": "Nav pieejama",
+      "remove": "Padarīt {period} atkal pieejamu",
+      "saved": "Datumi saglabāti"
     }
   }
 }

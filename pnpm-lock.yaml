@@ -320,6 +320,9 @@ importers:
       '@yoyo/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      leaflet:
+        specifier: 1.9.4
+        version: 1.9.4
       next:
         specifier: 16.4.3
         version: 16.4.3(@babel/core@7.29.7(supports-color@10.2.2))(@playwright/test@1.62.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -360,6 +363,9 @@ importers:
       '@testing-library/user-event':
         specifier: 14.6.8
         version: 14.6.8(@testing-library/dom@10.4.2)
+      '@types/leaflet':
+        specifier: 1.9.22
+        version: 1.9.22
       '@types/react':
         specifier: 19.3.0
         version: 19.3.0
@@ -2458,6 +2464,9 @@ packages:
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
 
+  '@types/leaflet@1.9.22':
+    resolution: {integrity: sha512-h3lhECYEKDasG7LFHu+GiHqAvsgLuQvlJvVZzJDGONo3sEL+wUOqSFLnwkZlK0qVxnxbuGFW8iBlJNYs5wgndA==}
+
   '@types/lodash@4.17.27':
     resolution: {integrity: sha512-VenMRv/eKNrspX9v3H4dbmjsrnCOYdYBG3kxXKk3dG6X+urBGcj2Prww3xw1U5K4FV/mE4h5GbWd0szEKf+9ew==}
 
@@ -4244,6 +4253,9 @@ packages:
 
   leac@0.7.0:
     resolution: {integrity: sha512-qMrZeyEekgdRQ9o6a4NAB2EQZrv827GJdn1vnapwSJ90hWRB4TzUSunvacPkxQ2TnNqHNI1/zSt0hlo0crG8Jw==}
+
+  leaflet@1.9.4:
+    resolution: {integrity: sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==}
 
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
@@ -7692,6 +7704,10 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
+  '@types/leaflet@1.9.22':
+    dependencies:
+      '@types/geojson': 7946.0.16
+
   '@types/lodash@4.17.27': {}
 
   '@types/methods@1.1.4': {}
@@ -9864,6 +9880,8 @@ snapshots:
       language-subtag-registry: 0.3.23
 
   leac@0.7.0: {}
+
+  leaflet@1.9.4: {}
 
   levn@0.4.1:
     dependencies:
