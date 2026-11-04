@@ -31,6 +31,7 @@ describe('useListingDraft', () => {
     act(() => draft().change({ title: 'Dr' }));
     act(() => draft().change({ title: 'Drill' }));
     act(() => draft().change({ dailyCents: 500 }));
+    expect(draft().state).toBe('saving'); // never "saved" over changes not sent yet
 
     await waitFor(() => expect(draft().state).toBe('saved'));
     expect(patches()).toHaveLength(1);

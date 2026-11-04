@@ -10,6 +10,8 @@ type DialogProps = {
   onClose(): void;
   title: string;
   children: ReactNode;
+  /** A wider dialog, for photos (the crop tool, a gallery). */
+  wide?: boolean;
 };
 
 /**
@@ -20,7 +22,7 @@ export function Dialog(props: DialogProps) {
   return props.open ? <OpenDialog {...props} /> : null;
 }
 
-function OpenDialog({ onClose, title, children }: DialogProps) {
+function OpenDialog({ onClose, title, children, wide = false }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
 
@@ -59,7 +61,7 @@ function OpenDialog({ onClose, title, children }: DialogProps) {
         onClose();
       }}
       onKeyDown={onKeyDown}
-      className="border-ink bg-surface text-ink animate-pop-in rounded-card-xl m-auto w-[calc(100%-2rem)] max-w-md border p-6 backdrop:bg-black/60 sm:p-8"
+      className={`border-ink bg-surface text-ink animate-pop-in rounded-card-xl m-auto w-[calc(100%-2rem)] border p-6 backdrop:bg-black/60 sm:p-8 ${wide ? 'max-w-2xl' : 'max-w-md'}`}
     >
       <h2 id={titleId} className="mb-3 text-2xl leading-tight font-bold">
         {title}

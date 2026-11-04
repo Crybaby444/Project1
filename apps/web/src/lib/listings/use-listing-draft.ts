@@ -213,6 +213,8 @@ export function useListingDraft({
         const left = Object.entries(errors).filter(([key]) => !touched.includes(fieldOf(key)));
         return left.length === Object.keys(errors).length ? errors : Object.fromEntries(left);
       });
+      // Waiting to be sent counts as saving: "All changes saved" must never show over unsent changes.
+      setState('saving');
       clearTimeout(ref.timer);
       ref.timer = setTimeout(() => void save(), delayMs);
     },
