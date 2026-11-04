@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { Inject, Injectable } from '@nestjs/common';
 import { cents, topUp, withdraw, type OperationKind } from '@yoyo/domain';
 import { WALLET_LIMITS, type PayoutResponse, type TopUpResponse, type WalletSummary, type WalletTransactionsResponse } from '@yoyo/shared';
@@ -38,15 +39,16 @@ export class WalletService {
   }
 
   /**
-   * Takes `amountCents` from the card into the wallet. The card is charged first (the provider remembers
-   * `idempotencyKey`); if recording it then fails, the charge is given back at once.
+   * Takes `amountCents` from the card into the wallet. The card is charged first; if recording it then
+   * fails, the charge is given back at once. Each attempt has its own provider key, so a retry never
+   * reuses a charge that was given back; the client's Idempotency-Key keeps double clicks to one attempt.
    */
-  async topUp(userId: string, amountCents: number, cardToken: string, idempotencyKey: string): Promise<TopUpResponse> {
+  async topUp(userId: string, amountCents: number, cardToken: string): Promise<TopUpResponse> {
     if ((await this.ledger.balance(walletAccount(userId))) + amountCents > WALLET_LIMITS.balance) throw overLimit();
     const charge = await this.provider.charge({
       token: cardToken,
       amountCents,
-      idempotencyKey: `top-up:${userId}:${idempotencyKey}`,
+      idempotencyKey: `top-up:${userId}:${randomUUID()}`,
       description: 'Yoyo wallet top-up',
     });
     if (charge.status === 'DECLINED') throw charge.declineCode === 'invalid_token' ? unknownCard() : declined(charge.declineCode);

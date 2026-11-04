@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
   PayoutRequestSchema,
@@ -14,14 +14,12 @@ import {
   type WalletSummary,
   type WalletTransactionsResponse,
 } from '@yoyo/shared';
-import type { Request } from 'express';
 import { createZodDto, ZodResponse } from 'nestjs-zod';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { ApiErrors } from '../common/api-errors';
 import { RateLimiter } from '../common/rate-limiter';
 import { RATE_LIMITS } from '../common/rate-limits';
-import { IDEMPOTENCY_HEADER } from '../idempotency/idempotency.interceptor';
 import { Idempotent } from '../idempotency/idempotent.decorator';
 import { WalletService } from './wallet.service';
 
@@ -60,9 +58,9 @@ export class WalletController {
   @Idempotent({ required: true })
   @ZodResponse({ status: 201, type: TopUpResponseDto, description: 'The card was charged and the wallet topped up' })
   @ApiErrors(400, 401, 402, 403, 409, 429)
-  topUp(@CurrentUser() user: PublicUser, @Body() body: TopUpRequestDto, @Req() req: Request): Promise<TopUpResponse> {
+  topUp(@CurrentUser() user: PublicUser, @Body() body: TopUpRequestDto): Promise<TopUpResponse> {
     this.limiter.hit(RATE_LIMITS.walletMove(user.id, 'top-up'));
-    return this.wallet.topUp(user.id, body.amountCents, body.cardToken, req.get(IDEMPOTENCY_HEADER)!);
+    return this.wallet.topUp(user.id, body.amountCents, body.cardToken);
   }
 
   @Post('payouts')

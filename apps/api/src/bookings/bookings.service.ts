@@ -21,13 +21,17 @@ import { BOOKINGS_PAGE_SIZE, type BookingEventInput, type BookingRequest, type B
 import { CLOCK, type Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
 import type { Prisma } from '../generated/prisma/client';
+import { LedgerService, walletAccount } from '../ledger/ledger.service';
 import type { UrlFor } from '../listings/listing.serializer';
+import { MoneyOutService } from '../payments/money-out.service';
+import { PAYMENT_PROVIDER, type PaymentProvider } from '../payments/payment.provider';
+import { declined, unknownCard } from '../wallet/wallet.service';
 import { STORAGE_PROVIDER, type StorageProvider } from '../media/storage.provider';
 import { PrismaService } from '../prisma/prisma.service';
 import { BookingRulesService } from './booking-rules.service';
 import { BOOKING_INCLUDE, serializeBooking, type BookingWithParties } from './booking.serializer';
 import { dateOf, snapshotData, toSnapshot } from './booking.store';
-import { EffectsExecutor, nothingAfter, type AfterCommit } from './effects.executor';
+import { EffectsExecutor, nothingAfter, type AfterCommit, type EffectContext } from './effects.executor';
 import { blockedPeriods, bookableListing, pricingOf } from './listing-access';
 
 export const bookingNotFound = () => new AppError('NOT_FOUND', 404, 'Booking not found');
@@ -49,6 +53,11 @@ function journalData(event: BookingEvent): Prisma.InputJsonObject {
 export function toDomainEvent(input: BookingEventInput): BookingEvent {
   if (input.type === 'PAY') return { type: 'PAY', method: input.method };
   return input as BookingEvent;
+}
+
+/** Nobody pays a deal whose owner was blocked or left (review of PR #3). */
+function assertOwnerActive(row: { owner: { blockedAt: Date | null; deletedAt: Date | null } }): void {
+  if (row.owner.blockedAt !== null || row.owner.deletedAt !== null) throw new AppError('LISTING_UNAVAILABLE', 409, 'The owner cannot take bookings now');
 }
 
 /** A decision saved: what changed and what is left for after the commit. */
@@ -75,6 +84,9 @@ export class BookingsService {
     private readonly prisma: PrismaService,
     private readonly rules: BookingRulesService,
     private readonly effects: EffectsExecutor,
+    private readonly ledger: LedgerService,
+    private readonly moneyOut: MoneyOutService,
+    @Inject(PAYMENT_PROVIDER) private readonly payments: PaymentProvider,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider,
   ) {}
@@ -174,26 +186,56 @@ export class BookingsService {
     const now = this.clock.now();
     const settings = await this.rules.settings();
     const event = toDomainEvent(input);
-    const outcome = await this.prisma.$transaction(async (tx) => {
-      const row = await this.lockedRow(tx, id);
-      const actor = row.renterId === user.id || row.ownerId === user.id ? actorFor(row, user) : null;
-      if (actor === null) throw bookingNotFound();
-      if (version !== row.version) throw staleBooking(row.version);
-      const ctx = await this.context(tx, row, event, now, settings);
-      try {
-        return { overdue: null, saved: await this.decideAndSave(tx, row, actor, event, ctx) };
-      } catch (error) {
-        const timer = error instanceof DomainError ? (error.details?.['overdueTimer'] as TimerKind | undefined) : undefined;
-        if (timer === undefined) throw error;
-        const saved = await this.decideAndSave(tx, row, { kind: 'SYSTEM' }, { type: 'TIMEOUT', timer }, ctx);
-        return { overdue: timer, saved };
-      }
-    });
+    const charge = input.type === 'PAY' && input.cardToken !== undefined ? await this.chargeCard(id, user, version, input.cardToken, now, settings) : undefined;
+    let outcome;
+    try {
+      outcome = await this.prisma.$transaction(async (tx) => {
+        const row = await this.lockedRow(tx, id);
+        const actor = row.renterId === user.id || row.ownerId === user.id ? actorFor(row, user) : null;
+        if (actor === null) throw bookingNotFound();
+        if (version !== row.version) throw staleBooking(row.version);
+        if (event.type === 'PAY') assertOwnerActive(row);
+        const ctx: EffectContext & DecideContext = { ...(await this.context(tx, row, event, now, settings)), row, ...(charge && { charge }) };
+        try {
+          return { overdue: null, saved: await this.decideAndSave(tx, row, actor, event, ctx) };
+        } catch (error) {
+          const timer = error instanceof DomainError ? (error.details?.['overdueTimer'] as TimerKind | undefined) : undefined;
+          if (timer === undefined) throw error;
+          const saved = await this.decideAndSave(tx, row, { kind: 'SYSTEM' }, { type: 'TIMEOUT', timer }, ctx);
+          return { overdue: timer, saved };
+        }
+      });
+    } catch (error) {
+      // The card was charged but the deal did not take the payment: give the money back at once.
+      if (charge) await this.payments.refund({ paymentRef: charge.ref, amountCents: charge.amountCents, idempotencyKey: `undo:${charge.ref}` });
+      throw error;
+    }
+    if (charge && outcome.overdue !== null) {
+      await this.payments.refund({ paymentRef: charge.ref, amountCents: charge.amountCents, idempotencyKey: `undo:${charge.ref}` });
+    }
     await this.afterCommit(outcome.saved.after);
     if (outcome.overdue !== null) {
       throw new AppError('DEADLINE_PASSED', 409, undefined, undefined, { timer: outcome.overdue, status: outcome.saved.next.status });
     }
     return this.view(id, user);
+  }
+
+  /**
+   * Charges the renter's card for a PAY, before the transaction (a provider call never runs under a row
+   * lock). The deal is checked first by asking the domain without saving, so a deal that cannot be paid
+   * is never charged. Every attempt has its own provider key: a charge given back after a failed attempt
+   * is never reused by a retry. The client's Idempotency-Key keeps double clicks to one attempt.
+   */
+  private async chargeCard(id: string, user: PublicUser, version: number, cardToken: string, now: Date, settings: BookingSettings) {
+    const row = await this.prisma.booking.findUnique({ where: { id }, include: BOOKING_INCLUDE });
+    if (!row || row.renterId !== user.id) throw bookingNotFound();
+    if (version !== row.version) throw staleBooking(row.version);
+    assertOwnerActive(row);
+    decide(toSnapshot(row), { kind: 'RENTER', userId: user.id }, { type: 'PAY', method: 'CARD' }, { now, settings });
+    const amountCents = row.totalCents;
+    const result = await this.payments.charge({ token: cardToken, amountCents, idempotencyKey: `booking:${id}:${randomUUID()}`, description: `Yoyo booking ${id}` });
+    if (result.status === 'DECLINED') throw result.declineCode === 'invalid_token' ? unknownCard() : declined(result.declineCode);
+    return { ref: result.ref, brand: result.brand, last4: result.last4, amountCents };
   }
 
   /** Locks the booking row for the rest of the transaction and loads it with its listing and parties. */
@@ -211,10 +253,13 @@ export class BookingsService {
     now: Date,
     settings: BookingSettings,
   ): Promise<DecideContext> {
+    const wallet = event.type === 'PAY' && event.method === 'WALLET' ? walletAccount(row.renterId) : null;
     return {
       now,
       settings,
       ...(event.type === 'ACCEPT' && { blocked: await blockedPeriods(tx, row.listingId, row.id) }),
+      // Locked until the payment is saved: two payments from one wallet queue, never spend it twice.
+      ...(wallet && { walletAvailableCents: cents((await this.ledger.lock([wallet], tx)).get(wallet) ?? 0) }),
     };
   }
 
@@ -227,7 +272,7 @@ export class BookingsService {
     row: BookingWithParties,
     actor: Actor,
     event: BookingEvent,
-    ctx: DecideContext,
+    ctx: DecideContext & Partial<Pick<EffectContext, 'charge'>>,
   ): Promise<Saved> {
     const before = toSnapshot(row);
     const { next, effects } = decide(before, actor, event, ctx);
@@ -237,7 +282,7 @@ export class BookingsService {
       data: { ...snapshotData(next), version: { increment: 1 } },
     });
     if (updated.count !== 1) throw staleBooking(row.version + 1);
-    const done = await this.effects.run(tx, { row, settings: ctx.settings, now: ctx.now }, next, effects);
+    const done = await this.effects.run(tx, { row, settings: ctx.settings, now: ctx.now, ...(ctx.charge && { charge: ctx.charge }) }, next, effects);
     await tx.bookingEvent.create({
       data: {
         bookingId: row.id,
@@ -292,9 +337,9 @@ export class BookingsService {
     return serializeBooking(row, s, role, availableActions(s, actor, ctx), this.urlFor);
   }
 
-  /** Work a committed decision left: emails (Task 13), money sent out (Task 8). */
+  /** Work a committed decision left: money back to cards, emails (Task 13). */
   async afterCommit(after: AfterCommit): Promise<void> {
-    void after;
+    for (const refund of after.refunds) await this.moneyOut.processRefund(refund);
   }
 
   /** The snapshot of a stored deal. */

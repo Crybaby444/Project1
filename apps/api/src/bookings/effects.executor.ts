@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import type { BookingSettings, BookingSnapshot, BookingTemplate, Effect, Recipient } from '@yoyo/domain';
 import { AppError } from '../common/app-error';
 import type { Prisma } from '../generated/prisma/client';
+import { LedgerService } from '../ledger/ledger.service';
 import type { BookingWithParties } from './booking.serializer';
 
 /** A deal email to send once the transaction has committed. */
@@ -26,6 +27,8 @@ export interface EffectContext {
   row: BookingWithParties;
   settings: BookingSettings;
   now: Date;
+  /** The card charge that pays this booking (PAY by card), recorded with its ledger operation. */
+  charge?: { ref: string; brand: string; last4: string };
 }
 
 /** True for PostgreSQL's 23P01: the reservation overlaps another one of the same listing. */
@@ -83,6 +86,8 @@ export type ContractTerms = ReturnType<typeof contractTerms>;
  */
 @Injectable()
 export class EffectsExecutor {
+  constructor(private readonly ledger: LedgerService) {}
+
   async run(
     tx: Prisma.TransactionClient,
     ctx: EffectContext,
@@ -114,14 +119,43 @@ export class EffectsExecutor {
           await tx.contract.create({ data: { bookingId: next.id, terms, termsHash, createdAt: ctx.now } });
           break;
         }
+        case 'LEDGER': {
+          await this.ledger.post(effect.operation, tx);
+          const card = effect.operation.postings.find((posting) => posting.account === 'external:card');
+          if (card === undefined) break;
+          if (effect.operation.kind === 'BOOKING_PAYMENT') {
+            if (!ctx.charge) throw new Error(`card payment of booking ${next.id} without a charge`);
+            await tx.payment.create({
+              data: {
+                userId: next.renterId,
+                bookingId: next.id,
+                purpose: 'BOOKING',
+                amountCents: -card.amount,
+                providerRef: ctx.charge.ref,
+                brand: ctx.charge.brand,
+                last4: ctx.charge.last4,
+                createdAt: ctx.now,
+              },
+            });
+          } else if (card.amount > 0) {
+            // Money goes back the way it came (spec §0): a refund of the booking's card payment.
+            const payment = await tx.payment.findFirstOrThrow({ where: { bookingId: next.id, purpose: 'BOOKING' } });
+            await tx.payment.update({ where: { id: payment.id }, data: { refundedCents: { increment: card.amount } } });
+            const refund = await tx.paymentRefund.create({ data: { paymentId: payment.id, amountCents: card.amount, createdAt: ctx.now } });
+            after.refunds.push(refund.id);
+          }
+          break;
+        }
         case 'SYSTEM_MESSAGE':
           messages.push(effect.template);
           break;
         case 'NOTIFY':
           after.notices.push({ bookingId: next.id, to: effect.to, template: effect.template });
           break;
-        default:
-          throw new Error(`effect ${effect.kind} of booking ${next.id} is not supported yet`);
+        default: {
+          const unknown: never = effect;
+          throw new Error(`unknown effect ${JSON.stringify(unknown)} of booking ${next.id}`);
+        }
       }
     }
     return { messages, after };
