@@ -2455,7 +2455,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -2943,6 +2943,15 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
             /** @description Too many attempts (RATE_LIMITED); see Retry-After */
             429: {
                 headers: {
@@ -3404,7 +3413,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -3475,7 +3484,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -3542,7 +3551,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -3600,7 +3609,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -3658,7 +3667,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -3729,7 +3738,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -3873,7 +3882,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -3980,7 +3989,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -4037,7 +4046,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -4190,7 +4199,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -4261,7 +4270,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -4540,6 +4549,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
+            /** @description The card was declined (PAYMENT_DECLINED, details.declineCode) */
             402: {
                 headers: {
                     [name: string]: unknown;
@@ -4557,7 +4567,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -4629,7 +4639,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -4823,7 +4833,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -4931,7 +4941,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -4996,6 +5006,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
+            /** @description The card was declined (PAYMENT_DECLINED, details.declineCode) */
             402: {
                 headers: {
                     [name: string]: unknown;
@@ -5022,7 +5033,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -5239,7 +5250,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -5355,7 +5366,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -5413,7 +5424,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -5471,7 +5482,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -5645,7 +5656,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;

@@ -13,6 +13,7 @@ import {
 } from '@yoyo/shared';
 import type { LedgerEntry, LedgerOperation, Prisma } from '../generated/prisma/client';
 import { BookingPhotosService } from '../bookings/booking-photos.service';
+import { BookingRulesService } from '../bookings/booking-rules.service';
 import { BOOKING_INCLUDE } from '../bookings/booking.serializer';
 import { bookingNotFound } from '../bookings/booking-errors';
 import { BookingsService } from '../bookings/bookings.service';
@@ -38,6 +39,7 @@ export class AdminDealsService {
     private readonly bookings: BookingsService,
     private readonly photos: BookingPhotosService,
     private readonly ledger: LedgerService,
+    private readonly rules: BookingRulesService,
   ) {}
 
   async list(admin: PublicUser, query: { status?: BookingStatus; disputed?: 'true' | 'false'; page?: number }): Promise<AdminBookingsResponse> {
@@ -55,8 +57,9 @@ export class AdminDealsService {
       }),
       this.prisma.booking.count({ where }),
     ]);
+    const settings = await this.rules.settings();
     const items = [];
-    for (const row of rows) items.push(await this.bookings.serialize(row, { kind: 'ADMIN', userId: admin.id }));
+    for (const row of rows) items.push(await this.bookings.serialize(row, { kind: 'ADMIN', userId: admin.id }, settings));
     return { items, total };
   }
 

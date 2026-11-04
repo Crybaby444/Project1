@@ -461,17 +461,18 @@ export class BookingsService {
       }),
       this.prisma.booking.count({ where }),
     ]);
+    const settings = await this.rules.settings();
     const items: BookingView[] = [];
-    for (const row of rows) items.push(await this.serialize(row, actorFor(row, user)!));
+    for (const row of rows) items.push(await this.serialize(row, actorFor(row, user)!, settings));
     return { items, total };
   }
 
   /** The view with the actions `actor` may take now (ACCEPT needs the days other deals hold). */
-  async serialize(row: BookingWithParties, actor: Actor): Promise<BookingView> {
+  async serialize(row: BookingWithParties, actor: Actor, settings?: BookingSettings): Promise<BookingView> {
     const s = toSnapshot(row);
     const ctx: DecideContext = {
       now: this.clock.now(),
-      settings: await this.rules.settings(),
+      settings: settings ?? (await this.rules.settings()),
       ...(s.status === 'REQUESTED' &&
         actor.kind === 'OWNER' && { blocked: await blockedPeriods(this.prisma, row.listingId, row.id) }),
     };
