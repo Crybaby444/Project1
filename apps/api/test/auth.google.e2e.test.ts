@@ -78,7 +78,7 @@ describe('sign in with Google', () => {
     const user = await t.prisma.user.findUniqueOrThrow({ where: { email: 'anna@gmail.com' } });
     expect(user).toMatchObject({ name: 'Anna Bērziņa', locale: 'lv', passwordHash: null });
     expect(user.emailVerifiedAt).not.toBeNull();
-    expect((await agent.get('/api/v1/me')).body.user.email).toBe('anna@gmail.com');
+    expect((await agent.get('/api/v1/me')).body.user).toMatchObject({ email: 'anna@gmail.com', hasPassword: false });
   });
 
   it('signs the same Google account into the same user next time', async () => {
@@ -113,21 +113,37 @@ describe('sign in with Google', () => {
     expect((await squatter.post('/api/v1/auth/refresh')).status).toBe(401);
   });
 
-  it('refuses a Google account whose email Google has not verified', async () => {
+  /** A failed callback goes back to the sign-in page with a code the page can explain, never to a JSON body. */
+  function expectLoginWithError(res: request.Response, code: string, path = '/login', next?: string) {
+    expect(res.status).toBe(302);
+    const target = new URL(res.headers['location'] as string);
+    expect(`${target.origin}${target.pathname}`).toBe(`${SITE}${path}`);
+    expect(Object.fromEntries(target.searchParams)).toEqual({ oauthError: code, ...(next && { next }) });
+    expect(res.headers['content-type'] ?? '').not.toMatch(/json/);
+    expect(cookieLine(res.headers['set-cookie'], 'yoyo_at')).toBeUndefined();
+  }
+
+  it('refuses a Google account whose email Google has not verified, back on the sign-in page', async () => {
     const { callback } = await signIn({ ...anna, email_verified: false });
-    expect(callback.status).toBe(401);
+    expectLoginWithError(callback, 'OAUTH_FAILED');
     expect(await t.prisma.user.count()).toBe(0);
   });
 
-  it('refuses a blocked user', async () => {
+  it('refuses a blocked user, back on the sign-in page in their language', async () => {
     const { user } = await seedUser(t, { email: 'anna@gmail.com', emailVerified: true });
     await t.prisma.user.update({ where: { id: user.id }, data: { blockedAt: t.clock.now() } });
-    const { callback } = await signIn(anna);
-    expect(callback.status).toBe(403);
-    expect(callback.body.error.code).toBe('AUTH_BLOCKED');
+    const { callback } = await signIn(anna, '/lv/settings');
+    expectLoginWithError(callback, 'AUTH_BLOCKED', '/lv/login', '/settings');
   });
 
-  it('answers 400 when the state does not match or the state cookie is missing or stale', async () => {
+  it('sends the browser to the sign-in page when Google sends no code', async () => {
+    const agent = request.agent(t.server);
+    const start = await agent.get('/api/v1/auth/google?returnTo=/ru').expect(302);
+    const state = new URL(start.headers['location'] as string).searchParams.get('state');
+    expectLoginWithError(await agent.get(`/api/v1/auth/google/callback?state=${state}`), 'OAUTH_FAILED', '/ru/login');
+  });
+
+  it('answers OAUTH_STATE_INVALID on the sign-in page when the state does not match or the state cookie is missing or stale', async () => {
     google.signInAs(anna);
     const agent = request.agent(t.server);
     const start = await agent.get('/api/v1/auth/google');
@@ -136,17 +152,15 @@ describe('sign in with Google', () => {
 
     const forged = new URLSearchParams(back.search);
     forged.set('state', 'forged-state');
-    expect((await agent.get(`${back.pathname}?${forged}`)).status).toBe(400);
-    expect((await request(t.server).get(`${back.pathname}${back.search}`)).status).toBe(400); // no cookie
+    expectLoginWithError(await agent.get(`${back.pathname}?${forged}`), 'OAUTH_STATE_INVALID');
+    expectLoginWithError(await request(t.server).get(`${back.pathname}${back.search}`), 'OAUTH_STATE_INVALID'); // no cookie
 
     const late = request.agent(t.server);
     const lateStart = await late.get('/api/v1/auth/google');
     const lateConsent = await fetch(lateStart.headers['location'] as string, { redirect: 'manual' });
     const lateBack = new URL(lateConsent.headers.get('location')!);
     t.clock.advance(10 * MINUTE + 1);
-    const res = await late.get(`${lateBack.pathname}${lateBack.search}`);
-    expect(res.status).toBe(400);
-    expect(res.body.error.code).toBe('VALIDATION_FAILED');
+    expectLoginWithError(await late.get(`${lateBack.pathname}${lateBack.search}`), 'OAUTH_STATE_INVALID');
     expect(await t.prisma.user.count()).toBe(0);
   });
 
@@ -158,16 +172,29 @@ describe('sign in with Google', () => {
     },
   );
 
-  it('brings a user who cancelled on Google back where they started, signed out', async () => {
+  it('brings a user who cancelled on Google back to the sign-in page, signed out, keeping where they were going', async () => {
     const agent = request.agent(t.server);
-    const start = await agent.get('/api/v1/auth/google?returnTo=/ru').expect(302);
+    const start = await agent.get('/api/v1/auth/google?returnTo=%2Flv%2Fitems%3Fpage%3D2').expect(302);
     const state = new URL(start.headers['location'] as string).searchParams.get('state');
 
     const res = await agent.get(`/api/v1/auth/google/callback?error=access_denied&state=${state}`);
 
-    expect(res.status).toBe(302);
-    expect(res.headers['location']).toBe(`${SITE}/ru`);
-    expect(cookieLine(res.headers['set-cookie'], 'yoyo_at')).toBeUndefined();
+    expectLoginWithError(res, 'OAUTH_CANCELLED', '/lv/login', '/items?page=2');
+  });
+
+  it('answers OAUTH_FAILED on the sign-in page when Google cannot be reached', async () => {
+    const agent = request.agent(t.server);
+    google.signInAs(anna);
+    const start = await agent.get('/api/v1/auth/google?returnTo=/').expect(302);
+    const consent = await fetch(start.headers['location'] as string, { redirect: 'manual' });
+    const back = new URL(consent.headers.get('location')!);
+    google.dropTokenRequests(true);
+
+    try {
+      expectLoginWithError(await agent.get(`${back.pathname}${back.search}`), 'OAUTH_FAILED');
+    } finally {
+      google.dropTokenRequests(false);
+    }
   });
 });
 

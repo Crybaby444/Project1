@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import type { MouseEvent } from 'react';
 import { IconButton } from '@/components/ui/IconButton';
-import { useTheme } from './ThemeProvider';
+import { useThemeChoice } from './use-theme-choice';
 
 const ICON =
   'col-start-1 row-start-1 size-5 transition-[transform,opacity] duration-[450ms] ease-yoyo';
@@ -11,12 +11,12 @@ const ICON =
 /** Circular light/dark switch; the new theme grows out of the button as a circle. */
 export function ThemeToggle({ className = '' }: { className?: string }) {
   const t = useTranslations('theme');
-  const { resolved, setPreference } = useTheme();
+  const { resolved, choose } = useThemeChoice();
   const dark = resolved === 'dark';
 
   function onClick(event: MouseEvent<HTMLButtonElement>) {
     const rect = event.currentTarget.getBoundingClientRect();
-    setPreference(dark ? 'light' : 'dark', { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
+    choose(dark ? 'light' : 'dark', { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
   }
 
   return (

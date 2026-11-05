@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 import { LogoMark } from '@/components/ui/LogoMark';
 import { Wordmark } from '@/components/ui/Wordmark';
+import { displayFit } from '@/lib/display-fit';
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -9,14 +9,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const t = await getTranslations('home');
 
   return (
-    <main className="mx-auto flex min-h-dvh max-w-[1440px] flex-col items-center justify-center gap-8 px-4 py-16 text-center">
+    <main className="@container mx-auto flex w-full flex-1 max-w-[1440px] flex-col items-center justify-center gap-8 px-4 py-16 text-center">
       <LogoMark size={56} />
-      <h1 className="text-[clamp(5rem,20vw,12.5rem)]">
+      <h1 style={displayFit('YOYO', { min: '3rem', max: '12.5rem' })} className="text-display-fit">
         <Wordmark />
       </h1>
       <p className="max-w-[24ch] text-2xl leading-tight font-bold text-balance">{t('tagline')}</p>
       <p className="max-w-[46ch] text-base leading-relaxed text-balance">{t('lead')}</p>
-      <LanguageSwitcher />
     </main>
   );
 }

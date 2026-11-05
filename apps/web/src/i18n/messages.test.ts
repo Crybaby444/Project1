@@ -1,4 +1,4 @@
-import { LOCALES, RULE_PRESETS, type Locale } from '@yoyo/shared';
+import { ERROR_CODES, LOCALES, RULE_PRESETS, type Locale } from '@yoyo/shared';
 import { describe, expect, it } from 'vitest';
 import en from '../../messages/en.json';
 import lv from '../../messages/lv.json';
@@ -42,5 +42,13 @@ describe('interface messages', () => {
 
   it.each(LOCALES)('%s names each language in that language itself', (locale) => {
     expect(messages[locale]['language']).toMatchObject({ en: 'English', lv: 'Latviešu', ru: 'Русский' });
+  });
+});
+
+describe('API error texts', () => {
+  it.each(['en', 'lv', 'ru'] as const)('%s has a text for every error code the API can answer with', (locale) => {
+    const errors = messages[locale]['errors'] as Record<string, string>;
+    const missing = [...ERROR_CODES, 'NETWORK'].filter((code) => !errors[code]?.trim());
+    expect(missing).toEqual([]);
   });
 });

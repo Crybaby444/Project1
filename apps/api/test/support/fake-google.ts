@@ -25,6 +25,8 @@ export interface FakeGoogle {
   jwksUrl: string;
   /** The account the next person who passes the consent screen signs in as. */
   signInAs(identity: GoogleIdentity): void;
+  /** While true, the token endpoint drops the connection (Google unreachable). */
+  dropTokenRequests(drop: boolean): void;
   close(): Promise<void>;
 }
 
@@ -45,10 +47,15 @@ export async function startFakeGoogle(now: () => Date): Promise<FakeGoogle> {
   const clientSecret = 'fake-google-client-secret';
   const codes = new Map<string, IssuedCode>();
   let identity: GoogleIdentity | undefined;
+  let dropTokens = false;
 
   const server: Server = createServer((req, res) => {
     void (async () => {
       const url = new URL(req.url ?? '/', 'http://fake-google');
+      if (dropTokens && url.pathname === '/token') {
+        req.socket.destroy();
+        return;
+      }
       if (req.method === 'GET' && url.pathname === '/authorize') {
         const p = url.searchParams;
         if (p.get('client_id') !== clientId || p.get('response_type') !== 'code' || p.get('code_challenge_method') !== 'S256' || !identity) {
@@ -122,6 +129,9 @@ export async function startFakeGoogle(now: () => Date): Promise<FakeGoogle> {
     jwksUrl: `${base}/jwks`,
     signInAs: (next) => {
       identity = next;
+    },
+    dropTokenRequests: (drop) => {
+      dropTokens = drop;
     },
     close: () => new Promise((resolve) => server.close(() => resolve())),
   };

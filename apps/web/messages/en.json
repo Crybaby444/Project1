@@ -11,13 +11,15 @@
     "label": "Language",
     "en": "English",
     "lv": "Latviešu",
-    "ru": "Русский"
+    "ru": "Русский",
+    "current": "Language: {name}"
   },
   "theme": {
     "toggle": "Switch theme",
     "light": "Light",
     "dark": "Dark",
-    "system": "System"
+    "system": "System",
+    "label": "Theme"
   },
   "notFound": {
     "title": "This page rolled away",
@@ -103,6 +105,220 @@
     "body": "Something broke on our side. Try again, and if it keeps happening, come back in a minute.",
     "retry": "Try again",
     "back": "Back to home"
+  },
+  "session": {
+    "loading": "Checking that you are signed in…"
+  },
+  "header": {
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "account": "Account menu",
+    "settings": "Settings",
+    "signOut": "Sign out",
+    "signedOut": "You are signed out."
+  },
+  "banner": {
+    "verifyEmail": {
+      "title": "Please confirm your email: we sent you a link.",
+      "resend": "Send the email again",
+      "sent": "Email sent. Check your inbox."
+    }
+  },
+  "errors": {
+    "VALIDATION_FAILED": "Some fields need another look.",
+    "AUTH_INVALID_CREDENTIALS": "Wrong email or password.",
+    "AUTH_EMAIL_TAKEN": "An account with this email already exists. Sign in instead?",
+    "AUTH_UNAUTHENTICATED": "Your session has ended. Sign in again.",
+    "AUTH_FORBIDDEN": "You do not have access to this.",
+    "AUTH_BLOCKED": "This account is blocked.",
+    "AUTH_PROVIDER_DISABLED": "This way of signing in is not available right now.",
+    "TOKEN_EXPIRED": "This link has expired.",
+    "TOKEN_USED": "This link has already been used.",
+    "RATE_LIMITED": "Too many attempts. Try again a little later.",
+    "OAUTH_CANCELLED": "Google sign-in was cancelled. Try again, or sign in with your email.",
+    "OAUTH_STATE_INVALID": "This Google sign-in took too long or was started in another tab. Start it again.",
+    "OAUTH_FAILED": "Google sign-in did not work. Try again, or sign in with your email.",
+    "ORIGIN_FORBIDDEN": "This request came from an unexpected page. Reload it and try again.",
+    "NOT_FOUND": "We could not find that.",
+    "INTERNAL": "Something broke on our side. Try again in a minute.",
+    "INVALID_STATUS": "This changed in the meantime or cannot do that right now. Reload the page and try again.",
+    "UNSUPPORTED_MEDIA": "This file is not a photo we can use. Upload a JPEG, PNG or WebP.",
+    "PAYLOAD_TOO_LARGE": "This photo is too big. Upload one under 10 MB.",
+    "PHOTO_LIMIT": "A listing can have up to 8 photos. Remove one to add another.",
+    "STORAGE_DISABLED": "Photos cannot be uploaded right now. Try again later.",
+    "LISTING_INCOMPLETE": "The listing is not finished yet. Fill in the marked fields.",
+    "GEO_UNAVAILABLE": "Address search is not working right now. Try again in a minute.",
+    "DATES_UNAVAILABLE": "Some of these days are already taken. Pick other dates.",
+    "CANNOT_RENT_OWN": "This is your own item, so you cannot rent it.",
+    "LISTING_UNAVAILABLE": "This item cannot be booked right now.",
+    "INSUFFICIENT_FUNDS": "There is not enough money in your wallet. Top it up or pay by card.",
+    "PAYMENT_DECLINED": "The card was declined. Try another card or pay from your wallet.",
+    "CONTRACT_NOT_SIGNED": "Both of you sign the rental contract before paying.",
+    "ACTION_NOT_ALLOWED": "This step is not possible in the deal right now. Reload the page to see what you can do.",
+    "DEADLINE_PASSED": "The time for this step ran out and the deal moved on. Reload the page to see where it stands.",
+    "IDEMPOTENCY_KEY_REQUIRED": "Something went wrong sending this. Reload the page and try again.",
+    "IDEMPOTENCY_KEY_REUSED": "Something went wrong sending this. Reload the page and try again.",
+    "IDEMPOTENCY_IN_PROGRESS": "We are still working on this. Wait a moment and reload the page.",
+    "OFFER_UNAVAILABLE": "This price offer is no longer open.",
+    "WALLET_LIMIT": "That is over the wallet limit. Choose a smaller amount.",
+    "NETWORK": "We cannot reach Yoyo. Check your connection and try again.",
+    "fieldInvalid": "Check this field.",
+    "retryIn": "Too many attempts. Try again in {seconds} s."
+  },
+  "validation": {
+    "required": "Fill in this field.",
+    "tooShort": "At least {min, plural, one {# character} other {# characters}}.",
+    "tooLong": "At most {max, plural, one {# character} other {# characters}}.",
+    "email": "Enter an email address like name@example.com.",
+    "passwordMismatch": "The passwords do not match.",
+    "invalid": "Check this field."
+  },
+  "auth": {
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "newPassword": "New password",
+      "repeatPassword": "Repeat the new password",
+      "currentPassword": "Current password"
+    },
+    "password": {
+      "show": "Show password"
+    },
+    "strength": {
+      "label": "Password strength",
+      "weak": "weak",
+      "fair": "okay",
+      "strong": "strong"
+    },
+    "or": "or",
+    "google": "Continue with Google",
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Welcome back to Yoyo.",
+      "submit": "Sign in",
+      "forgot": "Forgot your password?",
+      "noAccount": "No account yet?",
+      "register": "Sign up"
+    },
+    "register": {
+      "title": "Sign up",
+      "subtitle": "Rent what you need from people nearby, and lend what you rarely use.",
+      "nameHint": "People you rent with will see it.",
+      "passwordHint": "At least 8 characters. A few words in a row work well.",
+      "submit": "Create account",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in"
+    },
+    "verify": {
+      "title": "Email confirmation",
+      "checking": "Checking your link…",
+      "continue": "Continue",
+      "resend": "Send a new email",
+      "signIn": "Sign in",
+      "retry": "Try again",
+      "done": {
+        "title": "Email confirmed",
+        "body": "Thank you! Your Yoyo account is ready."
+      },
+      "used": {
+        "title": "This link has already been used",
+        "body": "Each confirmation link works once. If you have already confirmed your email, everything is fine."
+      },
+      "expired": {
+        "title": "This link is too old",
+        "body": "Confirmation links work for 24 hours. Ask for a new one and use it soon."
+      },
+      "invalid": {
+        "title": "This link does not work",
+        "body": "It may be cut short. Open it from the email once more, or ask for a new one."
+      }
+    },
+    "forgot": {
+      "title": "Forgot your password?",
+      "subtitle": "Enter your email and we will send you a link to choose a new password.",
+      "submit": "Send the link",
+      "back": "Back to sign in",
+      "sent": {
+        "title": "Check your email",
+        "body": "If there is a Yoyo account for {email}, a link to choose a new password is on its way. It works for 1 hour. Not there? Look in the spam folder."
+      }
+    },
+    "reset": {
+      "title": "New password",
+      "subtitle": "Choose a new password for your Yoyo account. You will be signed out everywhere else.",
+      "submit": "Save the password",
+      "done": "Password changed. You are signed in.",
+      "requestNew": "Ask for a new link",
+      "signIn": "Sign in",
+      "changed": {
+        "title": "Password changed",
+        "body": "Sign in with your new password."
+      },
+      "used": {
+        "title": "This link has already been used",
+        "body": "Each reset link works once. Ask for a new one if you still need to change the password."
+      },
+      "expired": {
+        "title": "This link is too old",
+        "body": "Reset links work for 1 hour. Ask for a new one and use it soon."
+      },
+      "invalid": {
+        "title": "This link does not work",
+        "body": "It may be cut short. Open it from the email once more, or ask for a new one."
+      }
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "tabs": {
+      "profile": "Profile",
+      "security": "Security"
+    },
+    "profile": {
+      "title": "Profile",
+      "intro": "What people you rent with see, and how Yoyo talks to you.",
+      "name": "Name",
+      "city": "City",
+      "cityHint": "Helps people nearby find your things.",
+      "about": "About you",
+      "aboutHint": "A few words about yourself and what you lend.",
+      "language": "Language",
+      "languageHint": "For the site and for the emails we send you.",
+      "save": "Save changes",
+      "saved": "Saved.",
+      "appearance": "Appearance"
+    },
+    "security": {
+      "title": "Security",
+      "password": {
+        "title": "Password",
+        "submit": "Change password",
+        "changed": "Password changed. Your other devices are signed out.",
+        "wrongCurrent": "This is not your current password.",
+        "google": "You sign in with Google, so your account has no password to change. Your Google account keeps it safe."
+      },
+      "logoutAll": {
+        "title": "Sign out everywhere?",
+        "body": "Every device signed in to your account, this one included, is signed out at once.",
+        "open": "Sign out everywhere",
+        "submit": "Sign out everywhere",
+        "done": "You are signed out on every device.",
+        "intro": "Lost a phone, or signed in on someone else’s computer? End every session at once."
+      },
+      "delete": {
+        "title": "Delete your account?",
+        "intro": "Deleting your account removes your profile and signs you out everywhere. This cannot be undone.",
+        "open": "Delete account",
+        "body": "Your profile goes for good and you are signed out everywhere. This cannot be undone.",
+        "word": "DELETE",
+        "confirmLabel": "Type {word} to confirm",
+        "passwordLabel": "Your password",
+        "submit": "Delete for good",
+        "done": "Your account has been deleted."
+      },
+      "cancel": "Cancel"
+    }
   },
   "listingRules": {
     "ID_AT_PICKUP": "Show an ID at pickup",

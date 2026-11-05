@@ -15,7 +15,10 @@ test.describe('accounts through the site’s /api proxy', () => {
     const cookies = await context.cookies(); // all paths: yoyo_rt only travels to /api/v1/auth
     const access = cookies.find((cookie) => cookie.name === 'yoyo_at');
     expect(access).toMatchObject({ domain: 'localhost', path: '/', httpOnly: true, sameSite: 'Lax' });
-    expect(cookies.find((cookie) => cookie.name === 'yoyo_rt')).toMatchObject({ path: '/api/v1/auth', httpOnly: true });
+    expect(cookies.find((cookie) => cookie.name === 'yoyo_rt')).toMatchObject({
+      path: '/api/v1/auth',
+      httpOnly: true,
+    });
 
     const me = await page.request.get('/api/v1/me');
     expect(me.status()).toBe(200);
@@ -31,12 +34,16 @@ test.describe('accounts through the site’s /api proxy', () => {
     });
     expect(fromPage).toEqual({ me: 200, refresh: 200, cache: 'no-store' });
 
-    const logout = await page.evaluate(async () => (await fetch('/api/v1/auth/logout', { method: 'POST' })).status);
+    const logout = await page.evaluate(
+      async () => (await fetch('/api/v1/auth/logout', { method: 'POST' })).status,
+    );
     expect(logout).toBe(204);
     expect((await page.request.get('/api/v1/me')).status()).toBe(401);
   });
 
-  test('the site proxy adds the proxy secret, so the API trusts the forwarded client address', async ({ request }) => {
+  test('the site proxy adds the proxy secret, so the API trusts the forwarded client address', async ({
+    request,
+  }) => {
     // With the secret the API reads the visitor from X-Forwarded-For (2 hops); without it, it would use
     // the next hop, which is the same for both "visitors" here. The per-address login limit
     // (30 a minute across all emails) shows which address the API used.
