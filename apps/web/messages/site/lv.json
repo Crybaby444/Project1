@@ -162,5 +162,88 @@
       "lead": "Izlieciet to dažās minūtēs vai izveidojiet kontu un nomājiet savu pirmo lietu jau šajā nedēļas nogalē.",
       "faq": "Lasīt jautājumus un atbildes"
     }
+  },
+  "howItWorks": {
+    "title": "Kā tas strādā",
+    "lead": "Noma Yoyo notiek dažos skaidros soļos, un abas puses vienmēr redz, kurā solī ir darījums un kas notiks tālāk.",
+    "renter": {
+      "heading": "Ja jūs nomājat",
+      "steps": {
+        "find": {
+          "title": "Atrodiet lietu",
+          "body": "Meklējiet pēc tā, kas vajadzīgs, un vietas. Katrā sludinājumā redzama cena dienā, depozīts, īpašnieka noteikumi un brīvās dienas."
+        },
+        "request": {
+          "title": "Nosūtiet pieprasījumu",
+          "body": "Izvēlieties veselas dienas un nosūtiet pieprasījumu, ja vēlaties, ar ziņu. Īpašniekam ir {requestHours} stundas, lai to apstiprinātu; pēc tam pieprasījums beidzas un nekas netiek iekasēts."
+        },
+        "contract": {
+          "title": "Parakstiet līgumu",
+          "body": "Yoyo sagatavo nomas līgumu ar abu pušu vārdiem, lietu, datumiem, cenu, depozītu un noteikumiem. Jūs abi to parakstāt pirms jebkāda maksājuma."
+        },
+        "pay": {
+          "title": "Samaksājiet nomu un depozītu",
+          "body": "Jūs maksājat nomu un {fee}% servisa maksu. Depozīts nomas laikā tiek iesaldēts, nevis nodots īpašniekam."
+        },
+        "handover": {
+          "title": "Satiecieties un paņemiet",
+          "body": "Laiku un vietu norunājiet sarakstē. Kad paņemat lietu, jūs abi atzīmējat nodošanu."
+        },
+        "return": {
+          "title": "Atdodiet atpakaļ",
+          "body": "Atdodiet lietu līdz pēdējai dienai, un jūs abi atzīmējat atgriešanu. Kad īpašnieks apstiprina, ka viss kārtībā, viss depozīts atgriežas pie jums."
+        }
+      }
+    },
+    "owner": {
+      "heading": "Ja jūs izīrējat",
+      "steps": {
+        "list": {
+          "title": "Izveidojiet sludinājumu",
+          "body": "Pievienojiet foto, nosaukumu, kategoriju, cenu dienā, ja vēlaties, atlaidi no 7 dienām, depozītu un savus noteikumus. Publiski redzams tikai rajons, nekad jūsu adrese."
+        },
+        "review": {
+          "title": "Pagaidiet pārbaudi",
+          "body": "Katru jaunu sludinājumu izskata cilvēks. Ja kaut kas jālabo, jūs uzzināsiet iemeslu un varēsiet to izlabot."
+        },
+        "accept": {
+          "title": "Atbildiet uz pieprasījumiem",
+          "body": "Jūs redzat, kas jautā un uz kurām dienām. Apstipriniet {requestHours} stundu laikā vai atsakiet."
+        },
+        "handover": {
+          "title": "Nododiet lietu",
+          "body": "Satiecieties ar nomnieku, nofotografējiet lietas stāvokli un atzīmējiet nodošanu. Nomas maksa ir jūsu, tiklīdz nodošana ir apstiprināta."
+        },
+        "check": {
+          "title": "Pārbaudiet, kad tā ir atpakaļ",
+          "body": "Jums ir {checkHours} stundas, lai nospiestu “Viss kārtībā” vai ziņotu par bojājumu ar aprakstu un foto. Ja neko nedarāt, lieta tiek uzskatīta par kārtībā esošu."
+        }
+      }
+    },
+    "deposit": {
+      "heading": "Depozīta noteikums",
+      "lead": "Depozītam ir viens noteikums, visiem vienāds:",
+      "fine": "Viss kārtībā: viss depozīts atgriežas pie nomnieka.",
+      "agreed": "Ir bojājums, un nomnieks piekrīt: viss depozīts pāriet īpašniekam.",
+      "disputed": "Ir bojājums, bet nomnieks nepiekrīt: mūsu komanda izskata foto no nodošanas un atgriešanas, saraksti un darījuma vēsturi un izlemj, kurš saņem depozītu.",
+      "timeouts": "Lai neviens depozīts neiestrēgtu: ja īpašnieks {checkHours} stundu laikā lietu nepārbauda, tā tiek uzskatīta par kārtībā esošu, bet, ja nomnieks {checkHours} stundu laikā neatbild uz ziņojumu par bojājumu, lietu pārņem mūsu komanda.",
+      "notReturned": "Ja lieta pēc pēdējās dienas netiek atdota, īpašnieks var atvērt strīdu, un tālāk to risina mūsu komanda."
+    },
+    "cancel": {
+      "heading": "Ja pārdomājat",
+      "body": "Jebkura puse var atcelt darījumu, kamēr lieta nav nodota. Ja jau samaksāts, nomnieks saņem atpakaļ nomu, maksu un depozītu. Pēc nodošanas atcelt vairs nevar: lietu atdod, un darījums noslēdzas kā parasti."
+    },
+    "reviews": {
+      "heading": "Atsauksmes",
+      "body": "Kad darījums noslēgts, abām pusēm ir {reviewDays} dienas, lai novērtētu viena otru ar 1–5 zvaigznēm un uzrakstītu dažus vārdus. Nomnieks novērtē arī lietu. Atsauksmes var atstāt tikai par īstiem darījumiem."
+    },
+    "today": {
+      "heading": "Kur Yoyo ir šodien",
+      "body": "Mēs atveram Yoyo pakāpeniski, tāpēc daži no šiem soļiem vietnē parādīsies vēlāk nekā citi. Kamēr tiešsaistes maksājumi nedarbojas, caur Yoyo nauda neplūst, un darījuma ekrānā tas vienmēr būs skaidri pateikts."
+    },
+    "cta": {
+      "title": "Kad būsiet gatavi",
+      "faq": "Lasīt BUJ"
+    }
   }
 }

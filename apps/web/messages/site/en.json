@@ -162,5 +162,88 @@
       "lead": "List it in a few minutes, or create an account and rent your first thing this weekend.",
       "faq": "Read the FAQ"
     }
+  },
+  "howItWorks": {
+    "title": "How it works",
+    "lead": "Renting on Yoyo takes a few clear steps, and both sides always see which step a deal is at and what comes next.",
+    "renter": {
+      "heading": "Renting an item",
+      "steps": {
+        "find": {
+          "title": "Find the item",
+          "body": "Search by what you need and where. Each listing shows the price per day, the deposit, the owner's rules and the days it is free."
+        },
+        "request": {
+          "title": "Send a request",
+          "body": "Pick whole days and send a request, with a message if you like. The owner has {requestHours} hours to accept; after that the request expires and nothing is charged."
+        },
+        "contract": {
+          "title": "Sign the contract",
+          "body": "Yoyo prepares a rental contract with both names, the item, the dates, the price, the deposit and the rules. You both sign it before any payment."
+        },
+        "pay": {
+          "title": "Pay the rent and the deposit",
+          "body": "You pay the rent plus a {fee}% service fee. The deposit is frozen for the rental, not handed to the owner."
+        },
+        "handover": {
+          "title": "Meet and take it",
+          "body": "Agree on a time and place in the chat. When you take the item, you both mark the handover."
+        },
+        "return": {
+          "title": "Bring it back",
+          "body": "Return it by the last day and you both mark the return. Once the owner confirms all is well, the whole deposit comes back to you."
+        }
+      }
+    },
+    "owner": {
+      "heading": "Lending an item",
+      "steps": {
+        "list": {
+          "title": "Create a listing",
+          "body": "Add photos, a title, the category, a price per day, an optional discount from 7 days, a deposit and your rules. Only the district is shown publicly, never your address."
+        },
+        "review": {
+          "title": "Wait for the check",
+          "body": "A person reviews every new listing. If something needs fixing, you get the reason and can correct it."
+        },
+        "accept": {
+          "title": "Answer requests",
+          "body": "You see who is asking and for which days. Accept within {requestHours} hours, or decline."
+        },
+        "handover": {
+          "title": "Hand it over",
+          "body": "Meet the renter, photograph the item's condition and mark the handover. The rent is yours once the handover is confirmed."
+        },
+        "check": {
+          "title": "Check it when it is back",
+          "body": "You have {checkHours} hours to press “All good” or report damage with a description and photos. If you do nothing, the item counts as fine."
+        }
+      }
+    },
+    "deposit": {
+      "heading": "The deposit rule",
+      "lead": "The deposit follows one rule, the same for everyone:",
+      "fine": "All good: the whole deposit goes back to the renter.",
+      "agreed": "Damage, and the renter agrees: the whole deposit goes to the owner.",
+      "disputed": "Damage, and the renter disagrees: our team looks at the photos from the handover and the return, the chat and the history of the deal, and decides who gets the deposit.",
+      "timeouts": "So that no deposit gets stuck: if the owner does not check the item within {checkHours} hours, it counts as fine, and if the renter does not answer a damage report within {checkHours} hours, our team takes it over.",
+      "notReturned": "If an item is not returned after the last day, the owner can open a dispute and our team takes it from there."
+    },
+    "cancel": {
+      "heading": "Changing your mind",
+      "body": "Either side can cancel a deal until the item is handed over. If it was already paid, the renter gets back the rent, the fee and the deposit. After the handover there is no cancelling: the item is returned and the deal closes as usual."
+    },
+    "reviews": {
+      "heading": "Reviews",
+      "body": "When a deal closes, both sides have {reviewDays} days to rate each other from 1 to 5 stars and write a few words. The renter also rates the item. Only real deals can be reviewed."
+    },
+    "today": {
+      "heading": "Where Yoyo is today",
+      "body": "We are opening Yoyo step by step, so some of these steps arrive on the site later than others. Until online payment is live, no money moves through Yoyo, and the deal screen will always say so plainly."
+    },
+    "cta": {
+      "title": "Ready when you are",
+      "faq": "Read the FAQ"
+    }
   }
 }
