@@ -357,5 +357,11 @@
         }
       }
     }
+  },
+  "legal": {
+    "summary": "Īsumā",
+    "contents": "Saturs",
+    "effective": "Spēkā no {date}",
+    "note": "Šis kopsavilkums palīdz orientēties; spēkā ir pilnais teksts zemāk."
   }
 }

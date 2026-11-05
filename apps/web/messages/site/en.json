@@ -357,5 +357,11 @@
         }
       }
     }
+  },
+  "legal": {
+    "summary": "In short",
+    "contents": "Contents",
+    "effective": "In effect from {date}",
+    "note": "This summary helps you find your way; the full text below is what applies."
   }
 }

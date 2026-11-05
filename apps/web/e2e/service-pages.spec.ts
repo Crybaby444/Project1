@@ -2,6 +2,9 @@ import { expect, test } from '@playwright/test';
 import en from '../messages/site/en.json' with { type: 'json' };
 import lv from '../messages/site/lv.json' with { type: 'json' };
 import ru from '../messages/site/ru.json' with { type: 'json' };
+import { COOKIES_POLICY } from '../src/content/legal/cookies';
+import { PRIVACY_POLICY } from '../src/content/legal/privacy';
+import { TERMS } from '../src/content/legal/terms';
 
 const LANGUAGES = [
   { locale: 'en', prefix: '', m: en },
@@ -71,3 +74,28 @@ test('the landing page answers four common questions and leads to the rest', asy
   await expect(faq.locator('details')).toHaveCount(4);
   await expect(faq.getByRole('link', { name: en.landing.faq.all })).toHaveAttribute('href', '/faq');
 });
+
+for (const { locale, prefix } of LANGUAGES) {
+  for (const [path, doc] of [
+    ['/terms', TERMS[locale]],
+    ['/privacy', PRIVACY_POLICY[locale]],
+    ['/cookies', COOKIES_POLICY[locale]],
+  ] as const) {
+    test(`${prefix}${path}: the whole document with its contents`, async ({ page }) => {
+      const response = await page.goto(`${prefix}${path}`);
+      expect(response?.status()).toBe(200);
+      await expect(page.getByRole('heading', { level: 1, name: doc.title })).toBeVisible();
+      const contents = page.getByRole('navigation', { name: LANGUAGES.find((l) => l.locale === locale)!.m.legal.contents });
+      await expect(contents.getByRole('link')).toHaveCount(doc.sections.length);
+      for (const section of doc.sections) {
+        await expect(page.locator(`h2#${section.id}`)).toHaveText(section.heading);
+      }
+      await expect(page.locator('main')).not.toContainText('{operator}');
+      // A section link moves to that section.
+      const last = doc.sections.at(-1)!;
+      await contents.getByRole('link', { name: last.heading }).click();
+      await expect(page).toHaveURL(new RegExp(`#${last.id}$`));
+      await expect(page.locator(`h2#${last.id}`)).toBeInViewport();
+    });
+  }
+}

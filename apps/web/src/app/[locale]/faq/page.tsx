@@ -28,7 +28,7 @@ export default async function FaqPage({ params }: Params) {
       <PageBanner
         title={t('title')}
         lead={t('lead')}
-        stickers={[{ kind: 'star', size: 112, top: '-12%', right: '4%', rotate: 14 }]}
+        stickers={[{ kind: 'star', size: 112, top: '-12%', right: '4%', rotate: 14, className: 'max-sm:hidden' }]}
       />
       <div className="bg-band overflow-x-clip">
         <div className="reveal mx-auto grid max-w-[1440px] gap-10 px-4 py-16 sm:px-8 sm:py-24 lg:grid-cols-[1fr_2.2fr]">
