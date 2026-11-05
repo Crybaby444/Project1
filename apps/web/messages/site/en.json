@@ -1,0 +1,28 @@
+{
+  "pages": {
+    "home": {
+      "title": "Yoyo — rent things from people nearby",
+      "description": "Borrow what you need for a day or a week from people near you, and earn from the things you rarely use. Clear rules, a contract before paying and a protected deposit."
+    },
+    "howItWorks": {
+      "title": "How renting works",
+      "description": "Step by step for both sides: how to rent an item on Yoyo, how to lend yours, and what happens to the deposit."
+    },
+    "faq": {
+      "title": "Questions and answers",
+      "description": "Short, honest answers about renting and lending on Yoyo: money, the deposit, safety, your account and your data."
+    },
+    "terms": {
+      "title": "Terms of service",
+      "description": "The rules for using Yoyo: accounts, listings, deals, the deposit, fees, reviews and what happens when something goes wrong."
+    },
+    "privacy": {
+      "title": "Privacy policy",
+      "description": "What personal data Yoyo keeps, why, for how long, who helps us process it, and how to see, change or delete it."
+    },
+    "cookies": {
+      "title": "Cookies",
+      "description": "Yoyo uses only the cookies the site needs to work: no advertising, no tracking. Here is the full list."
+    }
+  }
+}

@@ -3,9 +3,14 @@ import { describe, expect, it } from 'vitest';
 import en from '../../messages/en.json';
 import lv from '../../messages/lv.json';
 import ru from '../../messages/ru.json';
+import siteEn from '../../messages/site/en.json';
+import siteLv from '../../messages/site/lv.json';
+import siteRu from '../../messages/site/ru.json';
 
 type Tree = { [key: string]: string | Tree };
 const messages: Record<Locale, Tree> = { en, lv, ru };
+/** Texts of the landing and service pages, kept apart so other branches' message edits never collide. */
+const site: Record<Locale, Tree> = { en: siteEn, lv: siteLv, ru: siteRu };
 
 /** Every leaf key as a dotted path, sorted. */
 function flatKeys(tree: Tree, prefix = ''): string[] {
@@ -42,6 +47,21 @@ describe('interface messages', () => {
 
   it.each(LOCALES)('%s names each language in that language itself', (locale) => {
     expect(messages[locale]['language']).toMatchObject({ en: 'English', lv: 'Latviešu', ru: 'Русский' });
+  });
+});
+
+describe('site page messages', () => {
+  it.each(['lv', 'ru'] as const)('%s has exactly the same keys as English', (locale) => {
+    expect(flatKeys(site[locale])).toEqual(flatKeys(site.en));
+  });
+
+  it.each(LOCALES)('%s has no empty strings', (locale) => {
+    expect(emptyValues(site[locale])).toEqual([]);
+  });
+
+  it('uses namespaces of its own, so merging never overwrites an interface text', () => {
+    const shared = Object.keys(site.en).filter((namespace) => namespace in messages.en);
+    expect(shared).toEqual([]);
   });
 });
 

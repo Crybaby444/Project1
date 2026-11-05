@@ -1,0 +1,28 @@
+{
+  "pages": {
+    "home": {
+      "title": "Yoyo — nomā lietas no cilvēkiem tuvumā",
+      "description": "Aizņemies vajadzīgo uz dienu vai nedēļu no cilvēkiem netālu un nopelni ar lietām, kuras reti lieto. Skaidri noteikumi, līgums pirms maksājuma un aizsargāts depozīts."
+    },
+    "howItWorks": {
+      "title": "Kā notiek noma",
+      "description": "Soli pa solim abām pusēm: kā Yoyo nomāt lietu, kā izīrēt savējo un kas notiek ar depozītu."
+    },
+    "faq": {
+      "title": "Jautājumi un atbildes",
+      "description": "Īsas un godīgas atbildes par nomu Yoyo: nauda, depozīts, drošība, konts un tavi dati."
+    },
+    "terms": {
+      "title": "Lietošanas noteikumi",
+      "description": "Yoyo lietošanas noteikumi: konti, sludinājumi, darījumi, depozīts, maksas, atsauksmes un kas notiek, ja kaut kas noiet greizi."
+    },
+    "privacy": {
+      "title": "Privātuma politika",
+      "description": "Kādus personas datus Yoyo glabā, kāpēc, cik ilgi, kas palīdz tos apstrādāt un kā tos apskatīt, labot vai dzēst."
+    },
+    "cookies": {
+      "title": "Sīkdatnes",
+      "description": "Yoyo izmanto tikai tās sīkdatnes, bez kurām vietne nedarbojas: ne reklāmu, ne izsekošanu. Šeit ir pilns saraksts."
+    }
+  }
+}
