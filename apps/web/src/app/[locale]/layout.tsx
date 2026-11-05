@@ -7,6 +7,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import { themeInitScript } from '@/components/theme/theme-script';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
+import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SyncThemeWithProfile } from '@/components/theme/use-theme-choice';
 import { ToastProvider } from '@/components/ui/Toast';
@@ -51,6 +52,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
                   <SyncThemeWithProfile />
                   <SiteHeader />
                   <div className="flex flex-1 flex-col *:w-full">{children}</div>
+                  <SiteFooter />
                 </ToastProvider>
               </ThemeProvider>
             </SessionProvider>

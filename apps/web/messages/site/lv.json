@@ -24,5 +24,23 @@
       "title": "Sīkdatnes",
       "description": "Yoyo izmanto tikai tās sīkdatnes, bez kurām vietne nedarbojas: ne reklāmu, ne izsekošanu. Šeit ir pilns saraksts."
     }
+  },
+  "footer": {
+    "tagline": "Paņem, izmanto, atdod. Lietas atgriežas kā jojo.",
+    "pagesLabel": "Vietnes lapas",
+    "service": "Yoyo",
+    "documents": "Dokumenti",
+    "links": {
+      "howItWorks": "Kā tas strādā",
+      "faq": "Jautājumi un atbildes",
+      "terms": "Lietošanas noteikumi",
+      "privacy": "Privātuma politika",
+      "cookies": "Sīkdatnes"
+    },
+    "contact": "Raksti mums",
+    "contactLead": "Jautājumi, idejas vai problēma ar darījumu: mēs izlasām katru vēstuli.",
+    "settings": "Tavi iestatījumi",
+    "languageLabel": "Vietnes valoda",
+    "copyright": "© {year} Yoyo. Noma starp cilvēkiem Baltijā."
   }
 }

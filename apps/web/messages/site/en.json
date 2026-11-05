@@ -24,5 +24,23 @@
       "title": "Cookies",
       "description": "Yoyo uses only the cookies the site needs to work: no advertising, no tracking. Here is the full list."
     }
+  },
+  "footer": {
+    "tagline": "Rent it, use it, bring it back. Things come home like a yo-yo.",
+    "pagesLabel": "Site pages",
+    "service": "Yoyo",
+    "documents": "Documents",
+    "links": {
+      "howItWorks": "How it works",
+      "faq": "Questions and answers",
+      "terms": "Terms of service",
+      "privacy": "Privacy policy",
+      "cookies": "Cookies"
+    },
+    "contact": "Write to us",
+    "contactLead": "Questions, ideas or a problem with a deal: we read every message.",
+    "settings": "Your settings",
+    "languageLabel": "Site language",
+    "copyright": "© {year} Yoyo. Rentals between people in the Baltics."
   }
 }
