@@ -33,6 +33,25 @@ describe('MailService', () => {
     const HOUR = 3_600_000;
     const anna = { email: 'anna@b.lv', name: 'Anna', locale: 'en' };
 
+    it('keeps a fifth of the budget for account emails, so deal emails can never use it all up', async () => {
+      const fake = new FakeMailProvider();
+      const mail = new MailService(fake, new FakeClock(new Date('2026-11-04T10:00:00.000Z')), { MAIL_DAILY_LIMIT: 10 });
+      vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
+      const deal = {
+        template: 'REQUESTED',
+        role: 'owner' as const,
+        values: () => ({ title: 'Drill', start: '1', end: '2', total: '1', rent: '1', deposit: '1', other: 'Anna', price: '1' }),
+        summary: () => ({ item: 'Drill', dates: '1 – 2', total: '1' }),
+        link: 'https://yoyo.test/bookings/b',
+        button: 'button' as const,
+      };
+      for (let i = 0; i < 10; i++) await mail.sendDealEvent(anna, deal);
+      await mail.sendListingApproved(anna, { title: 'Drill', link: 'https://yoyo.test/items/l' });
+      expect(fake.sent).toHaveLength(8);
+      for (let i = 0; i < 3; i++) await mail.sendVerifyEmail(anna, 'https://yoyo.test/verify-email?token=T');
+      expect(fake.sent.map((m) => m.template)).toEqual([...Array<string>(8).fill('deal-event'), 'verify-email', 'verify-email']);
+    });
+
     it('skips mail over the budget without failing, logs the error at most once an hour, and refills over 24 hours', async () => {
       const fake = new FakeMailProvider();
       const clock = new FakeClock(new Date('2026-11-04T10:00:00.000Z'));

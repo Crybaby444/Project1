@@ -70,7 +70,7 @@ export class MeController {
   @HttpCode(204)
   @ApiBody({ type: DeleteAccountDto, required: false })
   @ApiNoContentResponse({ description: 'Account deleted; every session ended; cookies cleared' })
-  @ApiErrors(400, 401, 403, 429)
+  @ApiErrors(400, 401, 403, 409, 429)
   async delete(@CurrentUser() user: PublicUser, @Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<void> {
     const body = parseOptionalBody(DeleteAccountRequestSchema, req.body);
     this.limiter.hit(RATE_LIMITS.passwordCheck(user.id));

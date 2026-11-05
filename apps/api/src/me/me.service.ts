@@ -6,7 +6,7 @@ import { PasswordService } from '../auth/password.service';
 import { RefreshTokenService, type SessionMeta } from '../auth/refresh-token.service';
 import { CLOCK, type Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
-import type { User } from '../generated/prisma/client';
+import type { Prisma, User } from '../generated/prisma/client';
 import { ListingsService } from '../listings/listings.service';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -60,6 +60,7 @@ export class MeService {
     }
     const now = this.clock.now();
     const photoKeys = await this.prisma.$transaction(async (tx) => {
+      await assertNothingHeld(tx, userId);
       await tx.user.update({
         where: { id: userId },
         data: {
@@ -85,5 +86,29 @@ export class MeService {
       return this.listings.removeAllOf(userId, tx);
     });
     await this.listings.forgetFiles(photoKeys);
+  }
+}
+
+/** Deals that still move money or an item: everything but the four endings. */
+const OPEN_STATUSES = ['REQUESTED', 'ACCEPTED', 'PAID', 'ACTIVE', 'RETURNED', 'DAMAGE_CLAIMED', 'DISPUTED'] as const;
+
+/**
+ * An account cannot go while Yoyo still holds something of it (plan 8 review): an open deal on either
+ * side (the other side's money and item depend on it), or money in the wallet (a deleted account can
+ * never pay it out). 409 ACTION_NOT_ALLOWED with `details.why`.
+ */
+async function assertNothingHeld(tx: Prisma.TransactionClient, userId: string): Promise<void> {
+  const openDeals = await tx.booking.count({
+    where: { OR: [{ renterId: userId }, { ownerId: userId }], status: { in: [...OPEN_STATUSES] } },
+  });
+  if (openDeals > 0) {
+    throw new AppError('ACTION_NOT_ALLOWED', 409, 'Finish or cancel your open deals first', undefined, { why: 'OPEN_DEALS', openDeals });
+  }
+  const wallet = await tx.ledgerAccount.findUnique({ where: { id: `wallet:${userId}` } });
+  if (wallet && wallet.balance > 0) {
+    throw new AppError('ACTION_NOT_ALLOWED', 409, 'Pay out the money in your wallet first', undefined, {
+      why: 'WALLET_NOT_EMPTY',
+      walletCents: wallet.balance,
+    });
   }
 }

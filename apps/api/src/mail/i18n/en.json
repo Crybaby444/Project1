@@ -44,5 +44,206 @@
     "body": "Our moderators could not publish “{title}” yet. Here is why:",
     "next": "Fix it and send it for review again; it only takes a moment.",
     "button": "Edit the listing"
+  },
+  "deal": {
+    "common": {
+      "button": "Open the deal",
+      "offerButton": "See the item",
+      "item": "Item",
+      "dates": "Dates",
+      "total": "Total"
+    },
+    "REQUESTED": {
+      "owner": {
+        "subject": "New request for “{title}”",
+        "preview": "{other} wants to rent it from {start} to {end}.",
+        "heading": "You have a new booking request",
+        "body": "{other} would like to rent “{title}” from {start} to {end}. You would get {rent}. Accept or decline within 24 hours, or the request expires."
+      }
+    },
+    "ACCEPTED": {
+      "renter": {
+        "subject": "Your request for “{title}” was accepted",
+        "preview": "Sign the contract and pay to confirm the booking.",
+        "heading": "Your booking is accepted",
+        "body": "{other} accepted your request for “{title}” from {start} to {end}. Sign the rental contract and pay {total} (deposit {deposit} included) to confirm it."
+      }
+    },
+    "DECLINED": {
+      "renter": {
+        "subject": "Your request for “{title}” was declined",
+        "preview": "The days are free for other items.",
+        "heading": "Your request was declined",
+        "body": "{other} cannot rent out “{title}” from {start} to {end}. Nothing was charged. Have a look at similar items nearby."
+      }
+    },
+    "CANCELLED": {
+      "renter": {
+        "subject": "The booking of “{title}” is cancelled",
+        "preview": "Anything you paid goes back the way you paid.",
+        "heading": "The booking is cancelled",
+        "body": "The booking of “{title}” from {start} to {end} was cancelled. If you had paid, all of it, the fee included, goes back the way you paid."
+      },
+      "owner": {
+        "subject": "The booking of “{title}” is cancelled",
+        "preview": "The days are free again.",
+        "heading": "The booking is cancelled",
+        "body": "The booking of “{title}” from {start} to {end} with {other} was cancelled. The days are free again in your calendar."
+      }
+    },
+    "EXPIRED": {
+      "renter": {
+        "subject": "Your booking of “{title}” expired",
+        "preview": "The time to answer or pay ran out.",
+        "heading": "The booking expired",
+        "body": "The booking of “{title}” from {start} to {end} expired: the time to answer or to pay ran out. Nothing was charged."
+      },
+      "owner": {
+        "subject": "The booking of “{title}” expired",
+        "preview": "The days are free again.",
+        "heading": "The booking expired",
+        "body": "The booking of “{title}” from {start} to {end} with {other} expired: the time to answer or to pay ran out. The days are free again."
+      }
+    },
+    "PAID": {
+      "owner": {
+        "subject": "“{title}” is paid: meet {other}",
+        "preview": "The rent is held by Yoyo until the handover.",
+        "heading": "The booking is paid",
+        "body": "{other} paid for “{title}” from {start} to {end}. Yoyo holds the rent, {rent}, until the handover. Agree on a place and time in the chat and mark the handover in Yoyo when you meet."
+      }
+    },
+    "HANDED_OVER": {
+      "renter": {
+        "subject": "Did you get “{title}”?",
+        "preview": "Confirm you received it, or tell us if you did not.",
+        "heading": "Confirm the handover",
+        "body": "{other} marked “{title}” as handed over. Confirm that you got it, or report it if you did not. If you do nothing for 48 hours, the handover counts as confirmed."
+      }
+    },
+    "RECEIVED": {
+      "owner": {
+        "subject": "Handover confirmed: {rent} is in your wallet",
+        "preview": "The rental of “{title}” has started.",
+        "heading": "The rental has started",
+        "body": "The handover of “{title}” is confirmed and the rent, {rent}, is in your Yoyo wallet. The item comes back by {end}."
+      },
+      "renter": {
+        "subject": "The rental of “{title}” has started",
+        "preview": "Return it by {end}.",
+        "heading": "The rental has started",
+        "body": "The handover of “{title}” is confirmed. Enjoy it, and return it by {end}. Mark the return in Yoyo when you give it back."
+      }
+    },
+    "RETURNED": {
+      "owner": {
+        "subject": "{other} returned “{title}”",
+        "preview": "Confirm you got it back.",
+        "heading": "Did you get the item back?",
+        "body": "{other} marked “{title}” as returned. Confirm that you got it back, or report it if you did not. If you do nothing for 48 hours, the return counts as confirmed."
+      }
+    },
+    "RECEIVED_BACK": {
+      "renter": {
+        "subject": "“{title}” is back with the owner",
+        "preview": "The owner now checks it; then the deposit comes back.",
+        "heading": "The item is back",
+        "body": "The return of “{title}” is confirmed. The owner has 48 hours to check it; if all is fine, your deposit of {deposit} comes back the way you paid."
+      },
+      "owner": {
+        "subject": "Check “{title}” within 48 hours",
+        "preview": "Report any damage now, or the deposit goes back.",
+        "heading": "Check the item",
+        "body": "The return of “{title}” is confirmed. Check it within 48 hours: if it is damaged, report it with photos; otherwise the deposit of {deposit} goes back to {other}."
+      }
+    },
+    "ALL_FINE": {
+      "renter": {
+        "subject": "Your deposit for “{title}” is on its way back",
+        "preview": "The deal is complete.",
+        "heading": "The deal is complete",
+        "body": "All is fine with “{title}”. Your deposit of {deposit} goes back the way you paid. Thank you for renting with Yoyo, and leave {other} a review."
+      },
+      "owner": {
+        "subject": "The deal for “{title}” is complete",
+        "preview": "The deposit went back to the renter.",
+        "heading": "The deal is complete",
+        "body": "The deal for “{title}” with {other} is complete and the deposit of {deposit} went back to them. Leave {other} a review."
+      }
+    },
+    "DAMAGE_REPORTED": {
+      "renter": {
+        "subject": "The owner reports damage to “{title}”",
+        "preview": "Agree or disagree within 48 hours.",
+        "heading": "Damage reported",
+        "body": "{other} reports damage to “{title}” and asks for the deposit of {deposit}. Look at the photos and agree or disagree within 48 hours; if you do not answer, a Yoyo administrator decides."
+      }
+    },
+    "DAMAGE_ACCEPTED": {
+      "owner": {
+        "subject": "The deposit for “{title}” is yours",
+        "preview": "The renter agreed with the damage claim.",
+        "heading": "The deposit is yours",
+        "body": "{other} agreed with your damage claim for “{title}”. The deposit of {deposit} is in your Yoyo wallet."
+      }
+    },
+    "DISPUTE_OPENED": {
+      "admins": {
+        "subject": "Dispute to decide: “{title}”",
+        "preview": "A deal is waiting for an administrator.",
+        "heading": "A dispute needs a decision",
+        "body": "The deal for “{title}” ({start} – {end}) went to a dispute. Look at the deal history, photos and chat and decide."
+      },
+      "owner": {
+        "subject": "A dispute about “{title}” was opened",
+        "preview": "A Yoyo administrator will decide.",
+        "heading": "A dispute was opened",
+        "body": "The deal for “{title}” with {other} went to a dispute. A Yoyo administrator will look at the history, photos and chat and decide. The money stays with Yoyo until then."
+      },
+      "renter": {
+        "subject": "A dispute about “{title}” was opened",
+        "preview": "A Yoyo administrator will decide.",
+        "heading": "A dispute was opened",
+        "body": "The deal for “{title}” with {other} went to a dispute. A Yoyo administrator will look at the history, photos and chat and decide. The money stays with Yoyo until then."
+      }
+    },
+    "DISPUTE_RESOLVED": {
+      "renter": {
+        "subject": "The dispute about “{title}” is decided",
+        "preview": "See the decision and where the money went.",
+        "heading": "The dispute is decided",
+        "body": "A Yoyo administrator decided the dispute about “{title}”. Open the deal to see the decision and where the money went."
+      },
+      "owner": {
+        "subject": "The dispute about “{title}” is decided",
+        "preview": "See the decision and where the money went.",
+        "heading": "The dispute is decided",
+        "body": "A Yoyo administrator decided the dispute about “{title}”. Open the deal to see the decision and where the money went."
+      }
+    },
+    "OFFER_MADE": {
+      "owner": {
+        "subject": "{other} offers {price} a day for “{title}”",
+        "preview": "Accept or decline within 24 hours.",
+        "heading": "A new price offer",
+        "body": "{other} would rent “{title}” from {start} to {end} for {price} a day. Accept or decline within 24 hours."
+      }
+    },
+    "OFFER_ACCEPTED": {
+      "renter": {
+        "subject": "Your offer for “{title}” was accepted",
+        "preview": "Book now at {price} a day.",
+        "heading": "Your offer was accepted",
+        "body": "{other} accepted {price} a day for “{title}” from {start} to {end}. Send the booking request with this offer before the first day."
+      }
+    },
+    "OFFER_DECLINED": {
+      "renter": {
+        "subject": "Your offer for “{title}” was declined",
+        "preview": "You can still book at the listed price.",
+        "heading": "Your offer was declined",
+        "body": "{other} declined {price} a day for “{title}”. You can still book it at the listed price."
+      }
+    }
   }
 }

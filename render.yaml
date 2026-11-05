@@ -54,3 +54,10 @@ services:
       - key: CLOUDINARY_URL
         sync: false
       # No SMS_PROVIDER: production has no real SMS service yet, so phone confirmation stays off.
+      # Payments are simulated by the test card provider (spec §0); no real money moves.
+      - key: PAYMENTS
+        value: fake
+      # Protects POST /api/v1/internal/timers/run. Render generates it once; copy it into the repository's
+      # Actions secret TIMERS_SECRET (README, «Сделки и кошелёк» → «Сроки»).
+      - key: TIMERS_SECRET
+        generateValue: true

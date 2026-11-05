@@ -56,4 +56,15 @@ export const RATE_LIMITS = {
   resendVerification: (userId: string): RateRule[] => [
     { key: `resend-verification:user:${userId}`, limit: 1, windowMs: MINUTE },
   ],
+  /** 20 card tokens an hour per user (the payment form makes one per payment). */
+  cardToken: (userId: string): RateRule[] => [{ key: `card-token:user:${userId}`, limit: 20, windowMs: HOUR }],
+  /** 10 top-ups and 10 payouts an hour per user. */
+  walletMove: (userId: string, kind: 'top-up' | 'payout'): RateRule[] => [{ key: `wallet-${kind}:user:${userId}`, limit: 10, windowMs: HOUR }],
+  /** 20 booking requests an hour and 30 a day per renter (each one emails an owner). */
+  bookingRequest: (userId: string): RateRule[] => [
+    { key: `booking-request:user:${userId}`, limit: 20, windowMs: HOUR },
+    { key: `booking-request:user-day:${userId}`, limit: 30, windowMs: 24 * HOUR },
+  ],
+  /** 20 price offers a day per renter. */
+  offer: (userId: string): RateRule[] => [{ key: `offer:user:${userId}`, limit: 20, windowMs: 24 * HOUR }],
 };
