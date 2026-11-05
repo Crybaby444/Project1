@@ -136,7 +136,7 @@
       },
       "moderation": {
         "title": "Every listing checked",
-        "body": "A person reviews each listing before it appears on the site. You can report a listing, a message or a user at any time."
+        "body": "A person reviews each listing before it appears on the site. If something looks wrong, write to us and we will look into it."
       },
       "reviews": {
         "title": "Reviews from real deals only",
@@ -244,6 +244,118 @@
     "cta": {
       "title": "Ready when you are",
       "faq": "Read the FAQ"
+    }
+  },
+  "faq": {
+    "title": "Questions and answers",
+    "lead": "Short, honest answers. If yours is not here, write to us.",
+    "askUs": "Still wondering? Write to <mail>{email}</mail>.",
+    "groups": {
+      "renting": {
+        "title": "Renting",
+        "items": {
+          "who": {
+            "q": "Who can rent on Yoyo?",
+            "a": "Anyone aged 18 or over with a confirmed email address. One account works both ways: you can rent and lend from the same profile."
+          },
+          "days": {
+            "q": "Can I rent something for a few hours?",
+            "a": "No, rentals count in whole days. You pick the first and the last day, and both count."
+          },
+          "meet": {
+            "q": "How do I get the item?",
+            "a": "You meet the owner in person, at a time and place you agree on in the chat. Yoyo does not deliver. Only the owner's district is public; the exact spot is up to the two of you."
+          },
+          "longer": {
+            "q": "What if I need it for longer?",
+            "a": "Ask the owner in the chat before the last day. Extra days are a new request, so the calendar stays right for everyone."
+          }
+        }
+      },
+      "lending": {
+        "title": "Lending",
+        "items": {
+          "what": {
+            "q": "What can I lend?",
+            "a": "Things you own, or are allowed to rent out, that are safe and legal to use. Weapons, illegal, stolen or counterfeit goods, hazardous substances and animals are not allowed. The full list is in the terms of service."
+          },
+          "price": {
+            "q": "How do I choose the price and the deposit?",
+            "a": "You set both. A fair price per day is usually a small part of what the item costs new. The deposit should cover a repair or a replacement if something goes wrong."
+          },
+          "hidden": {
+            "q": "Why is my listing not visible yet?",
+            "a": "A person checks every new listing before it appears. If something needs changing, you get the reason and can fix it."
+          },
+          "decline": {
+            "q": "Do I have to accept every request?",
+            "a": "No. You decide who rents your things. A request you do not answer within 24 hours simply expires."
+          }
+        }
+      },
+      "money": {
+        "title": "Money and the deposit",
+        "items": {
+          "cost": {
+            "q": "How much does Yoyo cost?",
+            "a": "Creating an account and listing items is free. When online payments are live, the renter pays a 10% service fee on top of the rent. Owners pay no fee."
+          },
+          "payNow": {
+            "q": "Can I already pay through Yoyo?",
+            "a": "Not yet. We are opening Yoyo step by step, and online payment comes together with bookings. Until then no money moves through Yoyo, and we never ask you for card details."
+          },
+          "deposit": {
+            "q": "What happens to the deposit?",
+            "a": "It is frozen for the rental and not paid to the owner. If all is well, it comes back to the renter in full. If there is damage and the renter agrees, it goes to the owner; if not, our team decides."
+          },
+          "paid": {
+            "q": "When does the owner get paid?",
+            "a": "As soon as both sides confirm the handover. The service fee goes to Yoyo at the same moment."
+          }
+        }
+      },
+      "safety": {
+        "title": "Safety and disputes",
+        "items": {
+          "broken": {
+            "q": "What if the item breaks?",
+            "a": "Tell the owner straight away in the chat. When it is back, the owner can report damage with photos, and the deposit rule decides what happens. If you disagree, our team looks at the photos, the chat and the deal history and decides."
+          },
+          "notReturned": {
+            "q": "What if the item is not returned?",
+            "a": "After the last day the owner can open a dispute. Our team looks at the deal and decides about the deposit. In the case of theft, also contact the police."
+          },
+          "report": {
+            "q": "How do I report a listing or a person?",
+            "a": "Write to admin@yoyo.rent with a link and a few words about what happened. We read every message. Report buttons on listings, messages and profiles are on the way."
+          },
+          "insurance": {
+            "q": "Is my item insured?",
+            "a": "No, Yoyo does not offer insurance. The deposit is the protection, so set it high enough to cover a repair or a replacement."
+          }
+        }
+      },
+      "account": {
+        "title": "Account and data",
+        "items": {
+          "delete": {
+            "q": "How do I delete my account?",
+            "a": "Open Settings, then Security, then Delete account. Your name, email, phone, sessions and unpublished listings are removed at once; published listings are taken down. The privacy policy has the details."
+          },
+          "data": {
+            "q": "What do you do with my data?",
+            "a": "Only what the service needs to work. No advertising, no tracking, no selling of data. The privacy policy lists what we keep, why and for how long."
+          },
+          "language": {
+            "q": "Can I use Yoyo in Latvian or Russian?",
+            "a": "Yes. The whole site works in English, Latvian and Russian; switch at the top or the bottom of any page. Emails come in the language of your account."
+          },
+          "contact": {
+            "q": "How do I contact you?",
+            "a": "Write to admin@yoyo.rent. A real person reads every message."
+          }
+        }
+      }
     }
   }
 }

@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Categories } from '@/components/landing/Categories';
+import { FaqTeaser } from '@/components/landing/FaqTeaser';
 import { FinalCta } from '@/components/landing/FinalCta';
 import { Hero } from '@/components/landing/Hero';
 import { HowRenting } from '@/components/landing/HowRenting';
@@ -22,6 +23,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <HowRenting />
       <Safety />
       <Categories />
+      <FaqTeaser />
       <FinalCta />
     </main>
   );

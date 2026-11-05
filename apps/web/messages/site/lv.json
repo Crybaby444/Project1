@@ -136,7 +136,7 @@
       },
       "moderation": {
         "title": "Katrs sludinājums pārbaudīts",
-        "body": "Cilvēks izskata katru sludinājumu, pirms tas parādās vietnē. Ziņot par sludinājumu, ziņu vai lietotāju var jebkurā brīdī."
+        "body": "Cilvēks izskata katru sludinājumu, pirms tas parādās vietnē. Ja kaut kas šķiet aizdomīgs, rakstiet mums, un mēs to izskatīsim."
       },
       "reviews": {
         "title": "Atsauksmes tikai no īstiem darījumiem",
@@ -244,6 +244,118 @@
     "cta": {
       "title": "Kad būsiet gatavi",
       "faq": "Lasīt BUJ"
+    }
+  },
+  "faq": {
+    "title": "Jautājumi un atbildes",
+    "lead": "Īsas un godīgas atbildes. Ja jūsu jautājuma šeit nav, rakstiet mums.",
+    "askUs": "Vēl kaut kas nav skaidrs? Rakstiet uz <mail>{email}</mail>.",
+    "groups": {
+      "renting": {
+        "title": "Noma",
+        "items": {
+          "who": {
+            "q": "Kas var nomāt Yoyo?",
+            "a": "Ikviens, kam ir vismaz 18 gadi un apstiprināta e-pasta adrese. Viens konts der abiem virzieniem: no viena profila var gan nomāt, gan izīrēt."
+          },
+          "days": {
+            "q": "Vai var nomāt uz dažām stundām?",
+            "a": "Nē, noma tiek skaitīta veselās dienās. Jūs izvēlaties pirmo un pēdējo dienu, un abas tiek ieskaitītas."
+          },
+          "meet": {
+            "q": "Kā es saņemu lietu?",
+            "a": "Jūs satiekaties ar īpašnieku klātienē, laikā un vietā, ko norunājat sarakstē. Yoyo lietas nepiegādā. Publiski redzams tikai īpašnieka rajons; precīzo vietu norunājat jūs abi."
+          },
+          "longer": {
+            "q": "Ko darīt, ja lieta vajadzīga ilgāk?",
+            "a": "Pajautājiet īpašniekam sarakstē pirms pēdējās dienas. Papildu dienas ir jauns pieprasījums, lai kalendārs visiem būtu pareizs."
+          }
+        }
+      },
+      "lending": {
+        "title": "Izīrēšana",
+        "items": {
+          "what": {
+            "q": "Ko es varu izīrēt?",
+            "a": "Lietas, kas pieder jums vai kuras jums ir tiesības izīrēt un kuras ir droši un likumīgi lietot. Ieroči, nelegālas, zagtas vai viltotas preces, bīstamas vielas un dzīvnieki nav atļauti. Pilns saraksts ir lietošanas noteikumos."
+          },
+          "price": {
+            "q": "Kā izvēlēties cenu un depozītu?",
+            "a": "Abus nosakāt jūs. Godīga cena dienā parasti ir neliela daļa no jaunas lietas cenas. Depozītam jāsedz remonts vai aizstāšana, ja kaut kas noiet greizi."
+          },
+          "hidden": {
+            "q": "Kāpēc mans sludinājums vēl nav redzams?",
+            "a": "Katru jaunu sludinājumu pirms publicēšanas pārbauda cilvēks. Ja kaut kas jāmaina, jūs uzzināsiet iemeslu un varēsiet to izlabot."
+          },
+          "decline": {
+            "q": "Vai man jāpieņem katrs pieprasījums?",
+            "a": "Nē. Jūs paši izlemjat, kam izīrēt savas lietas. Pieprasījums, uz kuru neatbildat 24 stundu laikā, vienkārši beidzas."
+          }
+        }
+      },
+      "money": {
+        "title": "Nauda un depozīts",
+        "items": {
+          "cost": {
+            "q": "Cik maksā Yoyo?",
+            "a": "Konta izveide un sludinājumi ir bez maksas. Kad darbosies tiešsaistes maksājumi, nomnieks papildus nomai maksās 10% servisa maksu. Īpašnieki nemaksā neko."
+          },
+          "payNow": {
+            "q": "Vai jau tagad var maksāt caur Yoyo?",
+            "a": "Vēl nē. Mēs atveram Yoyo pakāpeniski, un tiešsaistes maksājumi parādīsies kopā ar rezervācijām. Līdz tam caur Yoyo nauda neplūst, un mēs nekad neprasām jūsu kartes datus."
+          },
+          "deposit": {
+            "q": "Kas notiek ar depozītu?",
+            "a": "Nomas laikā tas ir iesaldēts un netiek izmaksāts īpašniekam. Ja viss kārtībā, tas pilnībā atgriežas pie nomnieka. Ja ir bojājums un nomnieks piekrīt, tas pāriet īpašniekam; ja nepiekrīt, lemj mūsu komanda."
+          },
+          "paid": {
+            "q": "Kad īpašnieks saņem naudu?",
+            "a": "Tiklīdz abas puses apstiprina nodošanu. Servisa maksa tajā pašā brīdī pāriet Yoyo."
+          }
+        }
+      },
+      "safety": {
+        "title": "Drošība un strīdi",
+        "items": {
+          "broken": {
+            "q": "Ko darīt, ja lieta salūst?",
+            "a": "Uzreiz pastāstiet īpašniekam sarakstē. Kad lieta ir atpakaļ, īpašnieks var ziņot par bojājumu ar foto, un tālāko nosaka depozīta noteikums. Ja nepiekrītat, mūsu komanda izskata foto, saraksti un darījuma vēsturi un pieņem lēmumu."
+          },
+          "notReturned": {
+            "q": "Ko darīt, ja lieta netiek atdota?",
+            "a": "Pēc pēdējās dienas īpašnieks var atvērt strīdu. Mūsu komanda izskata darījumu un lemj par depozītu. Zādzības gadījumā vērsieties arī policijā."
+          },
+          "report": {
+            "q": "Kā ziņot par sludinājumu vai cilvēku?",
+            "a": "Rakstiet uz admin@yoyo.rent, pievienojiet saiti un dažos vārdos aprakstiet, kas noticis. Mēs izlasām katru vēstuli. Ziņošanas pogas pie sludinājumiem, ziņām un profiliem drīz būs."
+          },
+          "insurance": {
+            "q": "Vai mana lieta ir apdrošināta?",
+            "a": "Nē, Yoyo apdrošināšanu nepiedāvā. Aizsardzība ir depozīts, tāpēc nosakiet to pietiekami lielu, lai segtu remontu vai aizstāšanu."
+          }
+        }
+      },
+      "account": {
+        "title": "Konts un dati",
+        "items": {
+          "delete": {
+            "q": "Kā izdzēst savu kontu?",
+            "a": "Atveriet Iestatījumi, tad Drošība, tad Dzēst kontu. Jūsu vārds, e-pasts, tālrunis, sesijas un nepublicētie sludinājumi tiek dzēsti uzreiz, publicētie sludinājumi tiek noņemti. Sīkāk to apraksta privātuma politika."
+          },
+          "data": {
+            "q": "Ko jūs darāt ar maniem datiem?",
+            "a": "Tikai to, kas vajadzīgs pakalpojuma darbībai. Nekādas reklāmas, izsekošanas vai datu pārdošanas. Privātuma politikā ir uzskaitīts, ko mēs glabājam, kāpēc un cik ilgi."
+          },
+          "language": {
+            "q": "Vai Yoyo var lietot latviski vai krieviski?",
+            "a": "Jā. Visa vietne darbojas angļu, latviešu un krievu valodā; valodu var pārslēgt jebkuras lapas augšā vai apakšā. E-pasti pienāk jūsu konta valodā."
+          },
+          "contact": {
+            "q": "Kā ar jums sazināties?",
+            "a": "Rakstiet uz admin@yoyo.rent. Katru vēstuli izlasa īsts cilvēks."
+          }
+        }
+      }
     }
   }
 }
