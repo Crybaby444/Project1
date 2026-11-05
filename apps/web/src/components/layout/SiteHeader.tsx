@@ -40,7 +40,7 @@ export function SiteHeader() {
               <>
                 <Link
                   href="/listings/new"
-                  className="group border-cta bg-cta text-cta-fg rounded-pill ease-yoyo inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center gap-1.5 border px-2.5 text-[13px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] sm:px-4"
+                  className="group border-cta bg-cta text-cta-fg rounded-pill ease-yoyo inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center gap-1.5 border px-2.5 text-[13px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96] sm:px-4"
                 >
                   <svg
                     viewBox="0 0 24 24"

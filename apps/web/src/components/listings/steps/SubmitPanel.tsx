@@ -88,7 +88,7 @@ export function SubmitPanel() {
                     setAttempted(true);
                     goTo(step);
                   }}
-                  className="bg-sticker-sun rounded-pill ease-yoyo inline-flex min-h-10 items-center border border-black px-4 text-sm font-bold text-black transition-transform duration-150 hover:-translate-y-0.5 hover:-rotate-1 active:scale-[0.97]"
+                  className="bg-sticker-sun rounded-pill ease-yoyo inline-flex min-h-10 items-center border border-black px-4 text-sm font-bold text-black transition-transform duration-150 hover:-translate-y-0.5 hover:-rotate-1 active:scale-[0.96]"
                 >
                   {t('leftStep', { step: tSteps(step), count: byStep.get(step)! })}
                 </a>

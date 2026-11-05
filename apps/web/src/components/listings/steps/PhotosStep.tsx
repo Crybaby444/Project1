@@ -219,7 +219,7 @@ export function PhotosStep() {
           />
           <label
             htmlFor={inputId}
-            className="border-cta bg-cta text-cta-fg rounded-pill ease-yoyo peer-focus-visible:outline-ink inline-flex min-h-12 cursor-pointer items-center gap-2 border px-6 text-[15px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 select-none peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3 peer-disabled:cursor-default peer-disabled:opacity-55 hover:-translate-y-0.5 active:scale-[0.97]"
+            className="border-cta bg-cta text-cta-fg rounded-pill ease-yoyo peer-focus-visible:outline-ink inline-flex min-h-12 cursor-pointer items-center gap-2 border px-6 text-[15px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 select-none peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3 peer-disabled:cursor-default peer-disabled:opacity-55 hover:-translate-y-0.5 active:scale-[0.96]"
           >
             {t('choose')}
           </label>
