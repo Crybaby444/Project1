@@ -66,15 +66,22 @@ async function recordTransitions(page: Page) {
           });
         })
         .catch(() => {});
-      transition.finished
-        .catch(() => {})
-        .finally(() => {
-          done = true;
-          run.elapsed = performance.now() - started;
-        });
+      // Stops on the very hop the transition ends, before the page's own clean-up lets the test go on
+      // (else a scroll Playwright makes for its next click could land in this recording).
+      const end = () => {
+        done = true;
+        run.elapsed = performance.now() - started;
+      };
+      transition.finished.then(end, end);
       return transition;
     }) as typeof document.startViewTransition;
   });
+}
+
+/** Waits until the last transition is over and its recording closed. */
+async function transitionEnded(page: Page) {
+  await expect(page.locator('html')).not.toHaveAttribute('data-language-switch');
+  await page.waitForFunction(() => (window as unknown as { __vt: Recorded[] }).__vt.at(-1)?.elapsed != null);
 }
 
 const recorded = (page: Page) => page.evaluate(() => (window as unknown as { __vt: Recorded[] }).__vt);
@@ -128,10 +135,10 @@ test('at the top of a page: the header stays still while the language changes', 
 
   await switchTo(page, 'Language', 'Русский');
   await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
-  await expect(page.locator('html')).not.toHaveAttribute('data-language-switch');
+  await transitionEnded(page);
   await switchTo(page, 'Язык', 'Latviešu');
   await expect(page.locator('html')).toHaveAttribute('lang', 'lv');
-  await expect(page.locator('html')).not.toHaveAttribute('data-language-switch');
+  await transitionEnded(page);
 
   const runs = await recorded(page);
   expect(runs).toHaveLength(2);
@@ -157,7 +164,7 @@ test('at the bottom of a long page, to a shorter one: same scroll for both captu
   await page.keyboard.press('Home');
   await page.keyboard.press('Enter');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  await expect(page.locator('html')).not.toHaveAttribute('data-language-switch');
+  await transitionEnded(page);
 
   const [run] = await recorded(page);
   expectStill(run!);
