@@ -55,6 +55,8 @@ describe('LegalDocument', () => {
     const external = screen.getByRole('link', { name: 'www.dvi.gov.lv' });
     expect(external).toHaveAttribute('href', 'https://www.dvi.gov.lv');
     expect(external).toHaveAttribute('rel', 'noopener noreferrer');
+    // Opens in the same tab, like every other link: no surprise new window.
+    expect(external).not.toHaveAttribute('target');
   });
 
   it('renders lists and tables with proper column headers', () => {

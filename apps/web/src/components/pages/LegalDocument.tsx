@@ -11,7 +11,7 @@ const LINK_CLASS = 'font-bold underline underline-offset-4';
 
 /**
  * Text with `[label](target)` links: a site path becomes a link in the page language, `mailto:` and
- * `https:` stay as they are (other sites open with rel=noopener). No HTML is ever injected.
+ * `https:` stay as they are (other sites get rel=noopener, same tab). No HTML is ever injected.
  */
 function Inline({ text }: { text: string }) {
   const parts: ReactNode[] = [];
@@ -32,7 +32,7 @@ function Inline({ text }: { text: string }) {
           key={match.index}
           href={target}
           className={LINK_CLASS}
-          {...(external ? { rel: 'noopener noreferrer', target: '_blank' } : {})}
+          {...(external ? { rel: 'noopener noreferrer' } : {})}
         >
           {label}
         </a>,

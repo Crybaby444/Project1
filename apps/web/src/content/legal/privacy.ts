@@ -91,8 +91,17 @@ const en: LegalDoc = {
       ],
     },
     {
+      id: 'required',
+      heading: '4. Do you have to give us data?',
+      blocks: [
+        {
+          p: 'To create an account we need your name, an email address and a password (or your Google sign-in); without them we cannot open an account. To list an item we need its photos, description, prices and place. Everything else, such as your city and the “about” text, is up to you.',
+        },
+      ],
+    },
+    {
       id: 'retention',
-      heading: '4. How long we keep it',
+      heading: '5. How long we keep it',
       blocks: [
         {
           table: {
@@ -119,7 +128,7 @@ const en: LegalDoc = {
     },
     {
       id: 'delete',
-      heading: '5. Deleting your account',
+      heading: '6. Deleting your account',
       blocks: [
         { p: 'Open Settings → Security → Delete account. When you confirm:' },
         {
@@ -137,7 +146,7 @@ const en: LegalDoc = {
     },
     {
       id: 'processors',
-      heading: '6. Who helps us',
+      heading: '7. Who helps us',
       blocks: [
         { p: 'These providers run parts of Yoyo for us. They process data only on our instructions, under data processing terms:' },
         {
@@ -161,7 +170,7 @@ const en: LegalDoc = {
     },
     {
       id: 'transfers',
-      heading: '7. Data outside the EU',
+      heading: '8. Data outside the EU',
       blocks: [
         {
           p: 'Some of the providers above are based outside the European Economic Area. Such transfers rely on the EU–US Data Privacy Framework for certified companies, on an adequacy decision of the European Commission (for example, for Israel and the United Kingdom), or on the Commission’s standard contractual clauses. You can ask us for details.',
@@ -170,7 +179,7 @@ const en: LegalDoc = {
     },
     {
       id: 'rights',
-      heading: '8. Your rights',
+      heading: '9. Your rights',
       blocks: [
         {
           list: [
@@ -192,12 +201,12 @@ const en: LegalDoc = {
     },
     {
       id: 'cookies',
-      heading: '9. Cookies',
+      heading: '10. Cookies',
       blocks: [{ p: 'We use only the cookies the site needs to work. The [cookie policy](/cookies) lists every one of them.' }],
     },
     {
       id: 'children',
-      heading: '10. Children',
+      heading: '11. Children',
       blocks: [
         {
           p: 'Yoyo is for people aged 18 and over. We do not knowingly keep data about children; if you think a child has an account, tell us and we will delete it.',
@@ -206,7 +215,7 @@ const en: LegalDoc = {
     },
     {
       id: 'security',
-      heading: '11. Security',
+      heading: '12. Security',
       blocks: [
         {
           p: 'Connections are encrypted (HTTPS). Passwords are stored only as Argon2 hashes, sign-in tokens are short-lived and kept in cookies that scripts cannot read, photos are stripped of location data, and only the people who run Yoyo can reach the database. If a breach puts your data at risk, we will tell you and the supervisory authority as the law requires.',
@@ -215,7 +224,7 @@ const en: LegalDoc = {
     },
     {
       id: 'changes',
-      heading: '12. Changes',
+      heading: '13. Changes',
       blocks: [
         {
           p: 'We update this policy when the service changes. The date at the top shows the current version; important changes are announced by email.',
@@ -310,8 +319,17 @@ const lv: LegalDoc = {
       ],
     },
     {
+      id: 'required',
+      heading: '4. Vai jums dati jāsniedz?',
+      blocks: [
+        {
+          p: 'Lai izveidotu kontu, mums vajadzīgs jūsu vārds, e-pasta adrese un parole (vai pieteikšanās ar Google); bez tiem kontu atvērt nevaram. Lai izliktu lietu, vajadzīgi tās foto, apraksts, cenas un vieta. Viss pārējais, piemēram, pilsēta un teksts “par mani”, ir pēc jūsu izvēles.',
+        },
+      ],
+    },
+    {
       id: 'retention',
-      heading: '4. Cik ilgi mēs tos glabājam',
+      heading: '5. Cik ilgi mēs tos glabājam',
       blocks: [
         {
           table: {
@@ -338,7 +356,7 @@ const lv: LegalDoc = {
     },
     {
       id: 'delete',
-      heading: '5. Konta dzēšana',
+      heading: '6. Konta dzēšana',
       blocks: [
         { p: 'Atveriet Iestatījumi → Drošība → Dzēst kontu. Kad apstiprināt:' },
         {
@@ -356,7 +374,7 @@ const lv: LegalDoc = {
     },
     {
       id: 'processors',
-      heading: '6. Kas mums palīdz',
+      heading: '7. Kas mums palīdz',
       blocks: [
         { p: 'Šie pakalpojumu sniedzēji mūsu uzdevumā darbina Yoyo daļas. Viņi apstrādā datus tikai pēc mūsu norādījumiem saskaņā ar datu apstrādes noteikumiem:' },
         {
@@ -380,7 +398,7 @@ const lv: LegalDoc = {
     },
     {
       id: 'transfers',
-      heading: '7. Dati ārpus ES',
+      heading: '8. Dati ārpus ES',
       blocks: [
         {
           p: 'Daži no minētajiem pakalpojumu sniedzējiem atrodas ārpus Eiropas Ekonomikas zonas. Šādas nosūtīšanas pamatā ir ES–ASV datu privātuma regulējums sertificētiem uzņēmumiem, Eiropas Komisijas lēmums par aizsardzības līmeņa pietiekamību (piemēram, Izraēlai un Apvienotajai Karalistei) vai Komisijas standarta līguma klauzulas. Sīkāku informāciju varat pieprasīt mums.',
@@ -389,7 +407,7 @@ const lv: LegalDoc = {
     },
     {
       id: 'rights',
-      heading: '8. Jūsu tiesības',
+      heading: '9. Jūsu tiesības',
       blocks: [
         {
           list: [
@@ -411,12 +429,12 @@ const lv: LegalDoc = {
     },
     {
       id: 'cookies',
-      heading: '9. Sīkdatnes',
+      heading: '10. Sīkdatnes',
       blocks: [{ p: 'Mēs izmantojam tikai tās sīkdatnes, bez kurām vietne nedarbojas. Tās visas uzskaitītas [sīkdatņu politikā](/cookies).' }],
     },
     {
       id: 'children',
-      heading: '10. Bērni',
+      heading: '11. Bērni',
       blocks: [
         {
           p: 'Yoyo ir paredzēts cilvēkiem no 18 gadu vecuma. Mēs apzināti neglabājam datus par bērniem; ja domājat, ka bērnam ir konts, pasakiet mums, un mēs to izdzēsīsim.',
@@ -425,7 +443,7 @@ const lv: LegalDoc = {
     },
     {
       id: 'security',
-      heading: '11. Drošība',
+      heading: '12. Drošība',
       blocks: [
         {
           p: 'Savienojumi ir šifrēti (HTTPS). Paroles tiek glabātas tikai kā Argon2 jaucējvērtības, pieteikšanās marķieri ir īslaicīgi un glabājas sīkdatnēs, kuras skripti nevar nolasīt, no foto tiek noņemti atrašanās vietas dati, un datubāzei var piekļūt tikai tie, kas uztur Yoyo. Ja datu noplūde apdraud jūsu datus, mēs, kā to prasa likums, informēsim jūs un uzraudzības iestādi.',
@@ -434,7 +452,7 @@ const lv: LegalDoc = {
     },
     {
       id: 'changes',
-      heading: '12. Izmaiņas',
+      heading: '13. Izmaiņas',
       blocks: [
         {
           p: 'Mēs atjaunojam šo politiku, kad mainās pakalpojums. Datums lapas augšā rāda pašreizējo versiju; par būtiskām izmaiņām paziņojam pa e-pastu.',
@@ -529,8 +547,17 @@ const ru: LegalDoc = {
       ],
     },
     {
+      id: 'required',
+      heading: '4. Обязательно ли давать нам данные?',
+      blocks: [
+        {
+          p: 'Чтобы создать аккаунт, нам нужны ваше имя, адрес почты и пароль (или вход через Google); без них открыть аккаунт нельзя. Чтобы выставить вещь, нужны её фото, описание, цены и место. Всё остальное, например город и текст «о себе», — по вашему желанию.',
+        },
+      ],
+    },
+    {
       id: 'retention',
-      heading: '4. Сколько мы их храним',
+      heading: '5. Сколько мы их храним',
       blocks: [
         {
           table: {
@@ -557,7 +584,7 @@ const ru: LegalDoc = {
     },
     {
       id: 'delete',
-      heading: '5. Удаление аккаунта',
+      heading: '6. Удаление аккаунта',
       blocks: [
         { p: 'Откройте Настройки → Безопасность → Удалить аккаунт. Когда вы подтвердите:' },
         {
@@ -575,7 +602,7 @@ const ru: LegalDoc = {
     },
     {
       id: 'processors',
-      heading: '6. Кто нам помогает',
+      heading: '7. Кто нам помогает',
       blocks: [
         { p: 'Эти провайдеры по нашему поручению обеспечивают работу частей Yoyo. Они обрабатывают данные только по нашим указаниям и на условиях договора об обработке данных:' },
         {
@@ -599,7 +626,7 @@ const ru: LegalDoc = {
     },
     {
       id: 'transfers',
-      heading: '7. Данные за пределами ЕС',
+      heading: '8. Данные за пределами ЕС',
       blocks: [
         {
           p: 'Некоторые из этих провайдеров находятся за пределами Европейской экономической зоны. Такая передача опирается на EU–US Data Privacy Framework для сертифицированных компаний, на решение Европейской комиссии о достаточном уровне защиты (например, для Израиля и Великобритании) или на стандартные договорные условия Комиссии. Подробности можно запросить у нас.',
@@ -608,7 +635,7 @@ const ru: LegalDoc = {
     },
     {
       id: 'rights',
-      heading: '8. Ваши права',
+      heading: '9. Ваши права',
       blocks: [
         {
           list: [
@@ -630,12 +657,12 @@ const ru: LegalDoc = {
     },
     {
       id: 'cookies',
-      heading: '9. Файлы cookie',
+      heading: '10. Файлы cookie',
       blocks: [{ p: 'Мы используем только cookie, без которых сайт не работает. Все они перечислены в [политике cookie](/cookies).' }],
     },
     {
       id: 'children',
-      heading: '10. Дети',
+      heading: '11. Дети',
       blocks: [
         {
           p: 'Yoyo предназначен для людей от 18 лет. Мы сознательно не храним данные детей; если вы думаете, что у ребёнка есть аккаунт, сообщите нам, и мы его удалим.',
@@ -644,7 +671,7 @@ const ru: LegalDoc = {
     },
     {
       id: 'security',
-      heading: '11. Безопасность',
+      heading: '12. Безопасность',
       blocks: [
         {
           p: 'Соединения зашифрованы (HTTPS). Пароли хранятся только в виде хешей Argon2, токены входа живут недолго и хранятся в cookie, недоступных скриптам, из фото удаляются данные о местоположении, а доступ к базе данных есть только у тех, кто ведёт Yoyo. Если утечка поставит ваши данные под угрозу, мы, как требует закон, сообщим вам и надзорному органу.',
@@ -653,7 +680,7 @@ const ru: LegalDoc = {
     },
     {
       id: 'changes',
-      heading: '12. Изменения',
+      heading: '13. Изменения',
       blocks: [
         {
           p: 'Мы обновляем эту политику, когда меняется сервис. Дата вверху показывает текущую версию; о важных изменениях мы сообщаем письмом.',

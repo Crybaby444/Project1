@@ -55,6 +55,12 @@ describe('privacy policy', () => {
     }
   });
 
+  it.each(LOCALES)('%s says which data is needed for an account and what happens without it (GDPR Art. 13(2)(e))', (locale) => {
+    const ids = PRIVACY_POLICY[locale].sections.map((section) => section.id);
+    expect(ids).toContain('required');
+    expect(ids.indexOf('required')).toBe(ids.indexOf('purposes') + 1);
+  });
+
   it.each(LOCALES)('%s says how to complain and how to delete the account', (locale: Locale) => {
     const text = allText(PRIVACY_POLICY[locale]);
     expect(text).toContain('dvi.gov.lv');
