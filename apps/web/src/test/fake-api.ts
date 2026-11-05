@@ -4,7 +4,8 @@ import type { PublicUser } from '@yoyo/shared';
 export type FakeReply = { status: number; body?: unknown; headers?: Record<string, string> };
 /** `'POST /api/v1/auth/login'` → a reply, or a function of the request body. */
 export type FakeRoutes = Record<string, FakeReply | ((body: unknown) => FakeReply | Promise<FakeReply>)>;
-export type FakeCall = { method: string; path: string; body: unknown };
+/** `query` is the search part of the URL without `?` (`status=ARCHIVED`), empty when there is none. */
+export type FakeCall = { method: string; path: string; query: string; body: unknown };
 
 /**
  * A typed API client backed by a table of canned answers. Unknown routes answer 404.
@@ -14,10 +15,11 @@ export function fakeApi(routes: FakeRoutes): { client: ApiClient; calls: FakeCal
   const calls: FakeCall[] = [];
   const fetch = (async (input: RequestInfo | URL) => {
     const request = input as Request;
-    const path = new URL(request.url).pathname;
+    const url = new URL(request.url);
+    const path = url.pathname;
     const text = await request.text();
     const body: unknown = text ? JSON.parse(text) : undefined;
-    calls.push({ method: request.method, path, body });
+    calls.push({ method: request.method, path, query: url.search.slice(1), body });
     const route = routes[`${request.method} ${path}`];
     const reply = typeof route === 'function' ? await route(body) : route;
     if (!reply) return json({ status: 404, body: { error: { code: 'NOT_FOUND', message: 'Not found' } } });

@@ -14,9 +14,9 @@ vi.mock('@/i18n/navigation', async (importOriginal) => ({
   useRouter: () => ({ replace: vi.fn(), push, refresh: vi.fn() }),
 }));
 
-async function renderMenu() {
-  const { client, calls } = fakeApi({ ...meRoute(testUser()), 'POST /api/v1/auth/logout': { status: 204 } });
-  renderWithSession(<UserMenu user={testUser()} />, { client });
+async function renderMenu(person = testUser()) {
+  const { client, calls } = fakeApi({ ...meRoute(person), 'POST /api/v1/auth/logout': { status: 204 } });
+  renderWithSession(<UserMenu user={person} />, { client });
   return { calls, button: screen.getByRole('button', { name: new RegExp(`^${en.header.account}`) }) };
 }
 
@@ -33,15 +33,19 @@ describe('UserMenu', () => {
     const menu = screen.getByRole('menu');
     expect(button).toHaveAttribute('aria-expanded', 'true');
     const items = within(menu).getAllByRole('menuitem');
-    expect(items.map((i) => i.textContent)).toEqual([en.header.settings, en.header.signOut]);
+    expect(items.map((i) => i.textContent)).toEqual([
+      en.header.myListings,
+      en.header.settings,
+      en.header.signOut,
+    ]);
     expect(items[0]).toHaveFocus();
 
     await user.keyboard('{ArrowDown}');
     expect(items[1]).toHaveFocus();
+    await user.keyboard('{End}');
+    expect(items[2]).toHaveFocus();
     await user.keyboard('{ArrowDown}');
     expect(items[0]).toHaveFocus(); // wraps around
-    await user.keyboard('{End}');
-    expect(items[1]).toHaveFocus();
 
     await user.keyboard('{Escape}');
     expect(screen.queryByRole('menu')).toBeNull();
@@ -62,6 +66,27 @@ describe('UserMenu', () => {
     const { button } = await renderMenu();
     await user.click(button);
     expect(screen.getByRole('menuitem', { name: en.header.settings })).toHaveAttribute('href', '/settings');
+  });
+
+  it('links to my listings, and to moderation for an administrator only', async () => {
+    const user = userEvent.setup();
+    const { button } = await renderMenu();
+    await user.click(button);
+    expect(screen.getByRole('menuitem', { name: en.header.myListings })).toHaveAttribute(
+      'href',
+      '/dashboard/lending',
+    );
+    expect(screen.queryByRole('menuitem', { name: en.header.moderation })).toBeNull();
+  });
+
+  it('offers moderation to an administrator', async () => {
+    const user = userEvent.setup();
+    const { button } = await renderMenu(testUser({ role: 'ADMIN' }));
+    await user.click(button);
+    expect(screen.getByRole('menuitem', { name: en.header.moderation })).toHaveAttribute(
+      'href',
+      '/admin/listings',
+    );
   });
 
   it('signs out', async () => {
