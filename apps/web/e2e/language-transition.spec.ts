@@ -17,6 +17,8 @@ type Recorded = {
   captures: ({ at: 'old' | 'new'; x: number; y: number } & Box)[];
   frames: ({ y: number } & Box)[];
   animations: { pseudo: string; end: number; transform: boolean }[] | null;
+  /** Delay + duration of each part, as the CSS sets them (every engine computes these the same). */
+  timing: Record<string, number>;
   /** How long the transition played on the screen, from `ready` (both pages captured) to its end. */
   elapsed: number | null;
 };
@@ -33,7 +35,7 @@ async function recordTransitions(page: Page) {
       return { top: r.top, left: r.left, width: r.width, height: r.height };
     };
     document.startViewTransition = ((update: () => Promise<void>) => {
-      const run: Recorded = { captures: [], frames: [], animations: null, elapsed: null };
+      const run: Recorded = { captures: [], frames: [], animations: null, timing: {}, elapsed: null };
       w.__vt.push(run);
       // The browser captures the old page on the next frame, as it is now.
       run.captures.push({ at: 'old', x: scrollX, y: scrollY, ...header() });
@@ -53,6 +55,19 @@ async function recordTransitions(page: Page) {
           started = performance.now();
           // From here on the transition is on the screen (before, the browser shows the old page frozen).
           requestAnimationFrame(tick);
+          const ms = (value: string) =>
+            Math.max(
+              ...value
+                .split(',')
+                .map((v) => (v.trim().endsWith('ms') ? parseFloat(v) : parseFloat(v) * 1000)),
+            );
+          for (const part of ['old', 'new']) {
+            for (const name of ['root', 'site-header']) {
+              const pseudo = `::view-transition-${part}(${name})`;
+              const style = getComputedStyle(document.documentElement, pseudo);
+              run.timing[pseudo] = ms(style.animationDelay) + ms(style.animationDuration);
+            }
+          }
           const pseudo = document
             .getAnimations()
             .filter((a) =>
@@ -126,9 +141,16 @@ function expectStill(run: Recorded) {
     expect(end).toBeGreaterThanOrEqual(400);
     expect(end).toBeLessThanOrEqual(500);
   }
+  // What the CSS plays, whatever the machine: the longest part ends at 400–500 ms.
+  const longest = Math.max(...Object.values(run.timing));
+  expect(longest).toBeGreaterThanOrEqual(400);
+  expect(longest).toBeLessThanOrEqual(500);
+  expect(run.timing['::view-transition-old(site-header)']).toBe(
+    run.timing['::view-transition-new(site-header)'],
+  );
   expect(run.elapsed).not.toBeNull();
-  // 440 ms of CSS; the margin is for slow CI machines, not for a longer animation.
-  expect(run.elapsed!).toBeLessThan(1000);
+  // It ends: on a slow machine late, but never left running (switch-language.ts skips it after 1.5 s).
+  expect(run.elapsed!).toBeLessThan(2500);
 }
 
 test('at the top of a page: the header stays still while the language changes', async ({ page }) => {

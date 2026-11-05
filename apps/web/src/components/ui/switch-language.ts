@@ -15,6 +15,13 @@ export const shouldAnimateLanguageChange = shouldAnimateThemeChange;
 /** Longest wait for the new page before the switch stops waiting (the browser's own limit is ~4 s). */
 const NEW_PAGE_TIMEOUT_MS = 3000;
 
+/**
+ * How long after the new page is captured the transition may still run (the animation is 440 ms).
+ * A browser that never ends it would leave the page frozen behind the old picture and refuse clicks,
+ * as WebKit once did on CI at 1280 px; past this, the transition is skipped and the page is live.
+ */
+const SETTLE_TIMEOUT_MS = 1500;
+
 /** Longest wait for the fonts of the new language (Cyrillic, Latin Extended) once the page is there. */
 const FONTS_TIMEOUT_MS = 500;
 
@@ -151,9 +158,17 @@ export async function switchLanguage({
     // attributes it did not render: set it again before the browser captures the new page.
     if (current === owner) root.dataset['languageSwitch'] = '';
   });
+  let watchdog: ReturnType<typeof setTimeout> | undefined;
+  void transition.updateCallbackDone.then(
+    () => {
+      watchdog = setTimeout(() => transition.skipTransition(), SETTLE_TIMEOUT_MS);
+    },
+    () => {},
+  );
   void transition.finished
     .catch(() => {})
     .finally(() => {
+      clearTimeout(watchdog);
       if (current !== owner) return;
       current = null;
       delete root.dataset['languageSwitch'];

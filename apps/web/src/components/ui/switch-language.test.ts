@@ -216,6 +216,37 @@ describe('switchLanguage', () => {
     Reflect.deleteProperty(document, 'fonts');
   });
 
+  it('never leaves the page frozen: a transition that does not end is skipped', async () => {
+    vi.useFakeTimers();
+    const { start, started } = fakeViewTransitions();
+    const skip = vi.fn(() => started[0]!.finish());
+    const switching = switchLanguage({ locale: 'lv', navigate: navigateTo('lv'), animate: true });
+    await vi.advanceTimersByTimeAsync(20); // the new page is there
+    await switching;
+    (start.mock.results[0]!.value as { skipTransition: () => void }).skipTransition = skip;
+
+    // The animation is 440 ms: well past that, a browser that never ended it gets it ended.
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(skip).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(skip).toHaveBeenCalledTimes(1);
+    await vi.waitFor(() => expect(root.dataset['languageSwitch']).toBeUndefined());
+  });
+
+  it('does not skip a transition that ended on time', async () => {
+    vi.useFakeTimers();
+    const { start, started } = fakeViewTransitions();
+    const switching = switchLanguage({ locale: 'ru', navigate: navigateTo('ru'), animate: true });
+    await vi.advanceTimersByTimeAsync(20);
+    await switching;
+    const transition = start.mock.results[0]!.value as { skipTransition: () => void };
+    const skip = vi.fn();
+    transition.skipTransition = skip;
+    started[0]!.finish();
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(skip).not.toHaveBeenCalled();
+  });
+
   it('still switches when the browser skips the transition', async () => {
     Object.defineProperty(document, 'startViewTransition', {
       configurable: true,
