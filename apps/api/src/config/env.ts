@@ -88,6 +88,19 @@ const EnvObject = z.object({
    * User-Agent (both are kept); tests point it at a local fake.
    */
   NOMINATIM_URL: z.url().default('https://nominatim.openstreetmap.org'),
+  /**
+   * Who moves money in and out of Yoyo: `fake` (the default and today the only one) is the test card
+   * provider of spec §0 — it looks and behaves like a card form, but no real money moves. A real
+   * provider (Stripe Connect) is another value and class behind the PaymentProvider interface.
+   */
+  PAYMENTS: z.preprocess(blankAsUnset, z.enum(['fake']).default('fake')),
+  /**
+   * Protects POST /internal/timers/run, which the scheduled GitHub workflow calls every 10 minutes to
+   * fire due deal deadlines on a server that sleeps. At least 32 characters; the same value as the
+   * repository's Actions secret TIMERS_SECRET. Unset: the route does not exist (deadlines still fire
+   * at every start).
+   */
+  TIMERS_SECRET: z.preprocess(blankAsUnset, z.string().min(32).optional()),
   /** Folder of the local storage, relative to the API's working directory. */
   UPLOADS_DIR: z.preprocess(blankAsUnset, z.string().default('.uploads')),
 });

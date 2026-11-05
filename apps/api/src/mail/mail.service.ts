@@ -4,11 +4,13 @@ import { ENV, type Env } from '../config/env';
 import { createElement, type ReactElement } from 'react';
 import { render } from 'react-email';
 import { MAIL_PROVIDER, maskEmail, type MailProvider, type MailTemplate } from './mail.provider';
+import { DealEvent } from './templates/DealEvent';
+import type { DealRole } from './templates/deal-texts';
 import { ListingApproved } from './templates/ListingApproved';
 import { ListingRejected } from './templates/ListingRejected';
 import { PhoneCode } from './templates/PhoneCode';
 import { ResetPassword } from './templates/ResetPassword';
-import { textsFor, type MailTexts } from './templates/texts';
+import { fill as fillTexts, textsFor, type MailTexts } from './templates/texts';
 import { VerifyEmail } from './templates/VerifyEmail';
 
 export interface MailRecipient {
@@ -16,6 +18,12 @@ export interface MailRecipient {
   name: string;
   locale: string;
 }
+
+/** Emails a person is waiting for right now (a link, a code); notifications must leave room for them. */
+const ACCOUNT_TEMPLATES: ReadonlySet<MailTemplate> = new Set(['verify-email', 'reset-password', 'phone-code']);
+
+/** Share of the daily budget only account emails may use (plan 8 review: deals must not mute sign-ups). */
+const ACCOUNT_RESERVE = 0.2;
 
 /** How long shutdown waits for mail that is still being sent. */
 const SHUTDOWN_GRACE_MS = 10_000;
@@ -73,6 +81,42 @@ export class MailService implements OnApplicationShutdown {
     );
   }
 
+  /**
+   * A step of a deal or a price offer (plan 8): `deal.<template>.<role>` filled with `values`, a short
+   * summary of the deal and a button to `link`. Unknown template and role pairs are a bug (logged).
+   */
+  sendDealEvent(
+    user: MailRecipient,
+    mail: {
+      template: string;
+      role: DealRole;
+      values: (locale: string) => Record<string, string>;
+      summary: (locale: string) => { item: string; dates: string; total: string | null };
+      link: string;
+      button: 'button' | 'offerButton';
+    },
+  ): Promise<void> {
+    const textsOf = (t: MailTexts) => {
+      const texts = (t.deal as unknown as Record<string, Record<string, { subject: string; preview: string; heading: string; body: string }>>)[mail.template]?.[
+        mail.role
+      ];
+      if (!texts) throw new Error(`no texts for deal email ${mail.template}/${mail.role}`);
+      return texts;
+    };
+    return this.deliver('deal-event', user, (t) => fillTexts(textsOf(t).subject, mail.values(textsFor(user.locale).locale)), (t, lang) =>
+      createElement(DealEvent, {
+        t,
+        lang,
+        name: user.name,
+        texts: textsOf(t),
+        values: mail.values(lang),
+        summary: mail.summary(lang),
+        button: t.deal.common[mail.button],
+        link: mail.link,
+      }),
+    );
+  }
+
   /** Resolves when every mail handed over so far has been sent or has failed. */
   async idle(): Promise<void> {
     while (this.inFlight.size > 0) await Promise.all([...this.inFlight]);
@@ -116,12 +160,17 @@ export class MailService implements OnApplicationShutdown {
 
   /**
    * Counts one mail against the global 24-hour budget (MAIL_DAILY_LIMIT, sliding window on the Clock).
-   * Over it, the mail is skipped and an error is logged at most once an hour.
+   * Notifications (deals, listings) stop at four fifths of it; the last fifth is kept for account emails
+   * (confirmation links, password resets, phone codes). Over it, the mail is skipped and an error is
+   * logged at most once an hour.
    */
   private withinBudget(template: MailTemplate): boolean {
     const now = this.clock.now().getTime();
     while (this.sentAt.length > 0 && this.sentAt[0]! <= now - DAY) this.sentAt.shift();
-    if (this.sentAt.length < this.env.MAIL_DAILY_LIMIT) {
+    const limit = ACCOUNT_TEMPLATES.has(template)
+      ? this.env.MAIL_DAILY_LIMIT
+      : this.env.MAIL_DAILY_LIMIT - Math.ceil(this.env.MAIL_DAILY_LIMIT * ACCOUNT_RESERVE);
+    if (this.sentAt.length < limit) {
       this.sentAt.push(now);
       return true;
     }

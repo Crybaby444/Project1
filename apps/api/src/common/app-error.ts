@@ -24,6 +24,19 @@ const DEFAULT_MESSAGES: Record<ErrorCode, string> = {
   STORAGE_DISABLED: 'Photo uploads are not available right now',
   LISTING_INCOMPLETE: 'The listing is not complete yet',
   GEO_UNAVAILABLE: 'Address search is not available right now',
+  DATES_UNAVAILABLE: 'Some of these days are not available',
+  CANNOT_RENT_OWN: 'You cannot rent your own item',
+  LISTING_UNAVAILABLE: 'This item cannot be booked right now',
+  INSUFFICIENT_FUNDS: 'Not enough money in the wallet',
+  PAYMENT_DECLINED: 'The card was declined',
+  CONTRACT_NOT_SIGNED: 'Both sides sign the contract before paying',
+  ACTION_NOT_ALLOWED: 'This step is not possible in the deal right now',
+  DEADLINE_PASSED: 'A deadline of this deal has passed',
+  IDEMPOTENCY_KEY_REQUIRED: 'Send an Idempotency-Key header with this request',
+  IDEMPOTENCY_KEY_REUSED: 'This Idempotency-Key was used for another request',
+  IDEMPOTENCY_IN_PROGRESS: 'The same request is still being handled',
+  OFFER_UNAVAILABLE: 'This price offer is not open',
+  WALLET_LIMIT: 'Over the wallet limit',
 };
 
 /** An expected failure with a stable code; ErrorFilter turns it into the uniform error body. */

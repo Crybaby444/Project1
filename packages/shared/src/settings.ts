@@ -5,6 +5,14 @@
 export const SETTING_DEFAULTS = {
   /** An unanswered booking request expires after this many hours. */
   'booking.requestTtlHours': 24,
+  /** An accepted booking that is not paid expires after this many hours (or at the end of its first day). */
+  'booking.paymentTtlHours': 24,
+  /** After the owner marks "handed over", the renter has this long to object. */
+  'booking.handoverConfirmHours': 48,
+  /** After the renter marks "returned", the owner has this long to object. */
+  'booking.returnConfirmHours': 48,
+  /** How many days ahead a rental may start. */
+  'booking.maxAdvanceDays': 365,
   /** If the owner does not inspect the returned item in time, it counts as "all fine". */
   'booking.inspectionHours': 48,
   /** If the renter does not answer a damage claim in time, the dispute goes to an admin. */

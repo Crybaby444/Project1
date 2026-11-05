@@ -38,6 +38,32 @@ export const ERROR_CODES = [
   'LISTING_INCOMPLETE',
   /** Address search is unavailable right now (Nominatim down, or its queue is full). */
   'GEO_UNAVAILABLE',
+  /** Some of the days are taken by another booking or closed by the owner (`details.conflict`). */
+  'DATES_UNAVAILABLE',
+  /** Nobody rents their own item. */
+  'CANNOT_RENT_OWN',
+  /** The listing cannot be booked now: not published, or its owner is blocked or gone. */
+  'LISTING_UNAVAILABLE',
+  /** The wallet does not hold enough (`details.shortfallCents`). */
+  'INSUFFICIENT_FUNDS',
+  /** The card was declined (`details.declineCode`: card_declined, insufficient_funds, expired_card…). */
+  'PAYMENT_DECLINED',
+  /** Both sides sign the contract before the renter pays. */
+  'CONTRACT_NOT_SIGNED',
+  /** The deal's rules do not allow this step now (`details.why`); `actions` of the booking say what is. */
+  'ACTION_NOT_ALLOWED',
+  /** A deadline of the deal passed first; the deal moved on (`details.status`). Reload it. */
+  'DEADLINE_PASSED',
+  /** This request moves money: send an Idempotency-Key header. */
+  'IDEMPOTENCY_KEY_REQUIRED',
+  /** This Idempotency-Key was already used for a different request. */
+  'IDEMPOTENCY_KEY_REUSED',
+  /** A request with this Idempotency-Key is still being handled; retry in a moment. */
+  'IDEMPOTENCY_IN_PROGRESS',
+  /** The price offer is not open (answered, expired, used, or for other days). */
+  'OFFER_UNAVAILABLE',
+  /** Over a wallet limit (top-up amount or balance). */
+  'WALLET_LIMIT',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];

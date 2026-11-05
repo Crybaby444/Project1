@@ -21,6 +21,10 @@ describe('DEFAULT_BOOKING_SETTINGS', () => {
   it('agrees with the runtime settings the API stores (SETTING_DEFAULTS) wherever both have a value', () => {
     const counterpart: ReadonlyArray<readonly [keyof typeof SETTING_DEFAULTS, keyof BookingSettings]> = [
       ['booking.requestTtlHours', 'requestTtlHours'],
+      ['booking.paymentTtlHours', 'paymentTtlHours'],
+      ['booking.handoverConfirmHours', 'handoverConfirmHours'],
+      ['booking.returnConfirmHours', 'returnConfirmHours'],
+      ['booking.maxAdvanceDays', 'maxAdvanceDays'],
       ['booking.inspectionHours', 'inspectionHours'],
       ['booking.damageReplyHours', 'damageReplyHours'],
       ['review.windowDays', 'reviewWindowDays'],
