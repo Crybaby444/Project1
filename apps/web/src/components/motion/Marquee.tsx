@@ -53,6 +53,11 @@ const PILL_TONES = ['bg-sticker-blue', 'bg-sticker-mint', 'bg-sticker-lavender',
 type MarqueeProps = {
   /** Each row is a list of short words; rows run in opposite directions. */
   rows: string[][];
+  /**
+   * The words repeat what the page already says (category names above their cards): hide the rows
+   * from assistive tech. The pause button stays reachable either way.
+   */
+  decorative?: boolean;
   className?: string;
 };
 
@@ -61,31 +66,33 @@ type MarqueeProps = {
  * running in opposite directions. One button pauses every row (WCAG 2.2.2), which also matters on
  * touch screens where there is no hover.
  */
-export function Marquee({ rows, className = '' }: MarqueeProps) {
+export function Marquee({ rows, decorative = false, className = '' }: MarqueeProps) {
   const t = useTranslations('marquee');
   const [paused, setPaused] = useState(false);
 
   return (
-    <div data-marquee="" className={`group/marquee relative flex flex-col gap-3 ${className}`}>
-      {rows.map((words, row) => (
-        <MarqueeRow key={row} reverse={row % 2 === 1} seconds={26 + row * 6} paused={paused}>
-          {words.map((word, index) => {
-            const filled = (index + row) % 2 === 0;
-            return (
-              <span
-                key={`${index}-${word}`}
-                className={`font-display border-ink rounded-pill inline-flex min-h-12 items-center border px-5 text-[clamp(1.25rem,5vw,3rem)] leading-none font-black whitespace-nowrap uppercase sm:min-h-16 sm:px-7 ${
-                  filled
-                    ? `${PILL_TONES[(index + row) % PILL_TONES.length]} text-black`
-                    : 'text-ink bg-transparent'
-                }`}
-              >
-                {word}
-              </span>
-            );
-          })}
-        </MarqueeRow>
-      ))}
+    <div data-marquee="" className={`group/marquee relative ${className}`}>
+      <div aria-hidden={decorative || undefined} className="flex flex-col gap-3">
+        {rows.map((words, row) => (
+          <MarqueeRow key={row} reverse={row % 2 === 1} seconds={26 + row * 6} paused={paused}>
+            {words.map((word, index) => {
+              const filled = (index + row) % 2 === 0;
+              return (
+                <span
+                  key={`${index}-${word}`}
+                  className={`font-display border-ink rounded-pill inline-flex min-h-12 items-center border px-5 text-[clamp(1.25rem,5vw,3rem)] leading-none font-black whitespace-nowrap uppercase sm:min-h-16 sm:px-7 ${
+                    filled
+                      ? `${PILL_TONES[(index + row) % PILL_TONES.length]} text-black`
+                      : 'text-ink bg-transparent'
+                  }`}
+                >
+                  {word}
+                </span>
+              );
+            })}
+          </MarqueeRow>
+        ))}
+      </div>
       <button
         type="button"
         onClick={() => setPaused((value) => !value)}

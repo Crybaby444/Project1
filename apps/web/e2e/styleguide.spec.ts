@@ -31,10 +31,6 @@ for (const theme of ['light', 'dark'] as const) {
 
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 
-      // The Motion section's statement starts pale and fills to ink as it scrolls past (WordFill).
-      // Check contrast as a reader meets it: scrolled through, with every scroll effect settled.
-      await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
-      await page.waitForTimeout(500);
       const { violations } = await new AxeBuilder({ page }).analyze();
       const serious = violations
         .filter((v) => v.impact === 'serious' || v.impact === 'critical')

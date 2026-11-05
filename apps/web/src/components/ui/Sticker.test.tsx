@@ -34,4 +34,14 @@ describe('Sticker', () => {
     await userEvent.click(sticker);
     expect(sticker).not.toHaveAttribute('data-spinning');
   });
+
+  it.each(['shield', 'tag', 'key', 'heart'] as const)('draws the %s sticker for the landing page', (kind) => {
+    const { container } = render(<Sticker kind={kind} />);
+    expect(container.querySelector('svg')?.children.length).toBeGreaterThan(0);
+  });
+
+  it('takes a CSS size, so a cluster can scale it with the screen', () => {
+    const { container } = render(<Sticker kind="coin" size="clamp(48px, 12vw, 96px)" />);
+    expect((container.firstChild as HTMLElement).style.width).toBe('clamp(48px, 12vw, 96px)');
+  });
 });

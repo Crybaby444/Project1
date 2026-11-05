@@ -41,9 +41,8 @@ export function AuthCard({ title, subtitle, children, footer, focusTitle = false
           <header className="@container flex flex-col gap-2">
             <h1
               ref={titleRef}
-              aria-label={title}
               tabIndex={focusTitle ? -1 : undefined}
-              style={displayFit(title, { max: '2.75rem', split: true })}
+              style={displayFit(title, { max: '2.75rem' })}
               className="font-display text-display-fit leading-[0.85] font-black uppercase focus:outline-none"
             >
               <LetterRise text={title} stagger={18} />

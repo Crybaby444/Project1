@@ -12,6 +12,10 @@
   --sticker-sun: #ffd731;
   --sticker-violet: #5c4ade;
 
+  /* The ribbon's underside and highlight strokes (DESIGN.md Project adaptations §6): flat, no gradient. */
+  --ribbon-shade: #2a78d6;
+  --ribbon-light: #a9d2ff;
+
   /* Motion durations: 150–450 ms (the curve is --ease-yoyo below). */
   --dur-fast: 150ms;
   --dur-base: 250ms;
@@ -23,6 +27,8 @@
    * Dark: a low tint of the dark canvas, so white text does. Flat colours, never gradients.
    */
   --tone-canvas: var(--canvas);
+  --tone-surface: var(--surface);
+  --tone-band: var(--band);
   --tone-blue: light-dark(color-mix(in srgb, var(--sticker-blue) 45%, #fff), color-mix(in srgb, var(--sticker-blue) 24%, #0d0e16));
   --tone-mint: light-dark(color-mix(in srgb, var(--sticker-mint) 45%, #fff), color-mix(in srgb, var(--sticker-mint) 18%, #0d0e16));
   --tone-lavender: light-dark(var(--sticker-lavender), color-mix(in srgb, var(--sticker-lavender) 16%, #0d0e16));

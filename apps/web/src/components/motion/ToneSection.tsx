@@ -3,8 +3,11 @@
 import { useEffect, useRef, useState, type CSSProperties, type ElementType, type ReactNode } from 'react';
 import { useReducedMotion, useScrollFallback } from './hooks';
 
-/** Page tones: the canvas or a sticker colour softened for a full-page background (tokens.css). */
-export type Tone = 'canvas' | 'blue' | 'mint' | 'lavender' | 'sun' | 'ember' | 'violet';
+/**
+ * Page tones (tokens.css): the three paper bands (canvas, surface, band) or a sticker colour softened
+ * for a full-page background.
+ */
+export type Tone = 'canvas' | 'surface' | 'band' | 'blue' | 'mint' | 'lavender' | 'sun' | 'ember' | 'violet';
 
 type ToneSectionProps = {
   tone: Tone;

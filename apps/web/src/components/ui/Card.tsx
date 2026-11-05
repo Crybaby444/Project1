@@ -8,10 +8,20 @@ type CardProps = HTMLAttributes<HTMLDivElement> & {
   children: ReactNode;
   /** Tilts toward a mouse pointer (at most 4°, like peeling a sticker) and lifts on hover. */
   interactive?: boolean;
+  /** Background and text classes; paper white by default, a sticker colour for accent cards. */
+  fill?: string;
 };
 
 /** Paper card: 20px radius, 1px ink outline, never a shadow (DESIGN.md). */
-export function Card({ children, interactive = false, className = '', onPointerMove, onPointerLeave, ...rest }: CardProps) {
+export function Card({
+  children,
+  interactive = false,
+  fill = 'bg-surface text-ink',
+  className = '',
+  onPointerMove,
+  onPointerLeave,
+  ...rest
+}: CardProps) {
   function handleMove(event: PointerEvent<HTMLDivElement>) {
     onPointerMove?.(event);
     // A mouse only: on touch the pointer moves while scrolling, and a tilting card would feel loose.
@@ -38,7 +48,7 @@ export function Card({ children, interactive = false, className = '', onPointerM
       {...rest}
       onPointerMove={handleMove}
       onPointerLeave={handleLeave}
-      className={`rounded-card border border-ink bg-surface text-ink ${motion} ${className}`}
+      className={`rounded-card border border-ink ${fill} ${motion} ${className}`}
     >
       {children}
     </div>

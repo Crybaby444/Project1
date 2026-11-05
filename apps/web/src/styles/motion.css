@@ -65,7 +65,9 @@
 /* ── 2. Word-by-word fill ─────────────────────────────────────────────────────────────────── */
 
 [data-word-fill] {
-  --word-min: 0.18;
+  /* Pale, not hidden: at half opacity the words still pass WCAG AA for large text (3:1) on every
+     tone in both themes, so WordFill is for large bold statements (≥ 18.7px bold) only. */
+  --word-min: 0.5;
   view-timeline: --words block;
 }
 
@@ -117,8 +119,9 @@
   view-timeline: --parallax block;
 }
 
-[data-parallax][data-armed] > [data-parallax-layer] {
-  transform: translate3d(0, var(--parallax-y, 0px), 0);
+/* Layers drift with `translate`, so their own `rotate` and `transform` (wobble, bob) still apply. */
+[data-parallax][data-armed] [data-parallax-layer] {
+  translate: 0 calc(var(--speed, 0) * var(--parallax-range) * (1 - 2 * var(--parallax-p, 0.5)));
 }
 
 @supports (animation-timeline: view()) {
@@ -130,15 +133,26 @@
 
 @keyframes parallax {
   from {
-    transform: translate3d(0, calc(var(--speed, 0) * var(--parallax-range)), 0);
+    translate: 0 calc(var(--speed, 0) * var(--parallax-range));
   }
   to {
-    transform: translate3d(0, calc(var(--speed, 0) * var(--parallax-range) * -1), 0);
+    translate: 0 calc(var(--speed, 0) * var(--parallax-range) * -1);
   }
 }
 
-[data-bob][data-in-view] {
+[data-bob][data-in-view],
+[data-parallax][data-in-view] [data-bob] {
   animation: sticker-bob 3.8s ease-in-out var(--bob-delay, 0ms) infinite;
+}
+
+/* A sticker that both drifts and floats runs both animations: scroll-linked drift, timed bob. */
+@supports (animation-timeline: view()) {
+  [data-parallax][data-in-view] [data-parallax-layer][data-bob] {
+    animation:
+      parallax linear both,
+      sticker-bob 3.8s ease-in-out var(--bob-delay, 0ms) infinite;
+    animation-timeline: --parallax, auto;
+  }
 }
 
 @keyframes sticker-bob {
@@ -228,16 +242,30 @@
 
 /* ── 7. Hero letters ─────────────────────────────────────────────────────────────────────── */
 
-[data-letter] {
+/* Words are the boxes that move; letters stay inline text that only fades (see LetterRise.tsx). */
+[data-rise-word] {
   display: inline-block;
-  animation: letter-rise var(--dur-slow) var(--ease-yoyo) both;
+  /* Never wider than the line: an overlong word (an unexpected translation) still hyphenates or
+     breaks inside its own box, as the plain heading would. */
+  max-width: 100%;
+  animation: word-rise var(--dur-slow) var(--ease-yoyo) both;
   animation-delay: calc(var(--i) * var(--stagger, 28ms));
 }
 
-@keyframes letter-rise {
+[data-letter] {
+  animation: letter-in var(--dur-slow) var(--ease-yoyo) both;
+  animation-delay: calc(var(--i) * var(--stagger, 28ms));
+}
+
+@keyframes word-rise {
+  from {
+    transform: translateY(0.4em);
+  }
+}
+
+@keyframes letter-in {
   from {
     opacity: 0;
-    transform: translateY(0.5em);
   }
 }
 
@@ -274,29 +302,11 @@
   }
 }
 
-/* ── 8. Page transitions (PageTransition.tsx) ─────────────────────────────────────────────── */
-
-::view-transition-old(.page-out) {
-  animation: page-out var(--dur-fast) var(--ease-yoyo) both;
-}
-
-::view-transition-new(.page-in) {
-  animation: page-in var(--dur-base) var(--ease-yoyo) 100ms both;
-}
-
-@keyframes page-out {
-  to {
-    opacity: 0;
-    transform: scale(0.985);
-  }
-}
-
-@keyframes page-in {
-  from {
-    opacity: 0;
-    transform: scale(1.015);
-  }
-}
+/* ── 8. Page and language transitions ─────────────────────────────────────────────────────
+ * TransitionLink (switch-page.ts) and the language switch (switch-language.ts) run one View
+ * Transition each; their cross-fade with a slight scale is in globals.css (`html[data-page-switch]`,
+ * `html[data-language-switch]`).
+ */
 
 /* ── 9. Micro-interactions ──────────────────────────────────────────────────────────────────
  * Buttons, pills and icon buttons carry their own Tailwind classes (hover lift, `active:scale-[0.96]`),
@@ -324,10 +334,14 @@
 
   [data-stack-item] > *,
   [data-tilt],
-  [data-tilt-face],
-  [data-parallax-layer] {
+  [data-tilt-face] {
     rotate: none !important;
     transform: none !important;
+  }
+
+  /* Layers keep their hand-placed rotation; only the drift goes. */
+  [data-parallax-layer] {
+    translate: none !important;
   }
 
   [data-reveal] {

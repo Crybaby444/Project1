@@ -21,6 +21,9 @@ export function splitWords(text: string): { word: string; space: string }[] {
  * Russian words wrap exactly as in plain text. The CSS scroll timeline drives it where supported;
  * elsewhere the scroll progress is written to `--wf-p` each frame while the text is on screen.
  * With reduced motion the text is plain ink.
+ *
+ * Use it for large bold statements only (at least 18.7px bold): the pale state is half opacity,
+ * which keeps WCAG AA contrast for large text on every page tone, so nothing is ever unreadable.
  */
 export function WordFill({ text, as: Tag = 'p', className = '' }: WordFillProps) {
   const ref = useRef<HTMLElement>(null);

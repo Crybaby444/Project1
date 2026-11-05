@@ -1,8 +1,8 @@
-import type { CSSProperties } from 'react';
+import { LetterRise } from '@/components/motion/LetterRise';
 
 type WordmarkProps = {
   className?: string;
-  /** The hero version: the letters rise in one after another on load (motion.css, `[data-letter]`). */
+  /** The hero version: the word rises in and its letters appear one after another on load. */
   animated?: boolean;
 };
 
@@ -14,13 +14,7 @@ export function Wordmark({ className = '', animated = false }: WordmarkProps) {
       aria-label="Yoyo"
       className={`font-display leading-[0.8] font-black tracking-normal uppercase ${className}`}
     >
-      {animated
-        ? Array.from('YOYO', (letter, index) => (
-            <span key={index} data-letter="" style={{ '--i': index, '--stagger': '70ms' } as CSSProperties}>
-              {letter}
-            </span>
-          ))
-        : 'YOYO'}
+      {animated ? <LetterRise text="YOYO" stagger={70} /> : 'YOYO'}
     </span>
   );
 }

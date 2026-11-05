@@ -104,7 +104,7 @@ test.describe('motion on', () => {
         .locator('[data-letter]')
         .first()
         .evaluate((el) => getComputedStyle(el).animationName),
-    ).toBe('letter-rise');
+    ).toBe('letter-in');
 
     await page.goto('/login');
     await expect(page.getByRole('heading', { level: 1, name: en.auth.login.title })).toBeVisible();
@@ -112,25 +112,43 @@ test.describe('motion on', () => {
     expect(errors).toEqual([]);
   });
 
-  test('a page change runs as a view transition and lands on the new page', async ({ page }) => {
+  test('the landing: sections morph the page colour, the statement fills, steps pin, stickers drift', async ({
+    page,
+  }) => {
     const errors = watchErrors(page);
-    await page.addInitScript(() => {
-      const w = window as unknown as { transitions: number };
-      w.transitions = 0;
-      const start = document.startViewTransition?.bind(document);
-      if (!start) return;
-      document.startViewTransition = ((update: ViewTransitionUpdateCallback) => {
-        w.transitions += 1;
-        return start(update);
-      }) as typeof document.startViewTransition;
-    });
+    await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto('/');
-    await page.getByRole('link', { name: en.header.signIn }).first().click();
-    await expect(page.getByRole('heading', { level: 1, name: en.auth.login.title })).toBeVisible();
+
+    // Hero stickers drift with the scroll (the translate changes) and float.
+    const sticker = page.locator('#hero-title ~ [data-parallax] [data-sticker-slot]').first();
+    const before = await sticker.evaluate((el) => getComputedStyle(el).translate);
+    await page.evaluate(() => window.scrollTo(0, 300));
+    await expect.poll(() => sticker.evaluate((el) => getComputedStyle(el).translate)).not.toBe(before);
+    expect(await sticker.evaluate((el) => getComputedStyle(el).animationName)).toContain('sticker-bob');
+
+    // "What is Yoyo" brings its blue tone in over the page.
+    await page.evaluate(() => document.getElementById('what')!.scrollIntoView({ block: 'start' }));
+    const layer = page.locator('#what > [data-tone-layer]');
+    await expect
+      .poll(async () => Number(await layer.evaluate((el) => getComputedStyle(el).opacity)))
+      .toBeGreaterThan(0.9);
+    await expect(page.locator('#what [data-word-fill]')).toHaveCount(1);
+
+    // The how-it-works steps are pinned cards.
     expect(
-      await page.evaluate(() => (window as unknown as { transitions: number }).transitions),
-    ).toBeGreaterThan(0);
+      await page
+        .locator('#how [data-stack-item]')
+        .first()
+        .evaluate((el) => getComputedStyle(el).position),
+    ).toBe('sticky');
     expect(errors).toEqual([]);
+  });
+
+  test('the auth title is in the page once, so a field with the same name stays unique', async ({ page }) => {
+    await page.goto('/reset-password?token=abc');
+    await expect(page.getByRole('heading', { level: 1, name: en.auth.reset.title })).toBeVisible();
+    expect(await page.locator('h1').evaluate((el) => el.textContent)).toBe(en.auth.reset.title);
+    await expect(page.getByLabel(en.auth.fields.newPassword, { exact: true })).toHaveCount(1);
   });
 });
 
@@ -167,13 +185,40 @@ test.describe('reduced motion', () => {
     expect(await track.evaluate((el) => getComputedStyle(el).animationName)).toBe('none');
     await expect(page.locator('[data-marquee-copy]').first()).toBeHidden();
 
-    // Parallax layers and tilt cards do not move.
+    // Parallax layers do not drift.
     expect(
       await page
         .locator('[data-parallax-layer]')
         .first()
-        .evaluate((el) => getComputedStyle(el).transform),
+        .evaluate((el) => getComputedStyle(el).translate),
     ).toBe('none');
+    expect(errors).toEqual([]);
+  });
+
+  test('the landing is still: flat colour bands, plain steps, no drift', async ({ page }) => {
+    const errors = watchErrors(page);
+    await page.goto('/');
+    const what = page.locator('#what');
+    expect(await what.locator('> [data-tone-layer]').evaluate((el) => getComputedStyle(el).display)).toBe(
+      'none',
+    );
+    expect(await what.evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe('rgba(0, 0, 0, 0)');
+    expect(
+      await page
+        .locator('#how [data-stack-item]')
+        .first()
+        .evaluate((el) => getComputedStyle(el).position),
+    ).toBe('static');
+    const words = await page
+      .locator('#what [data-word]')
+      .evaluateAll((list) => list.map((word) => Number(getComputedStyle(word).opacity)));
+    expect(Math.min(...words)).toBe(1);
+    expect(
+      await page
+        .locator('[data-sticker-slot]')
+        .first()
+        .evaluate((el) => [getComputedStyle(el).translate, getComputedStyle(el).animationName]),
+    ).toEqual(['none', 'none']);
     expect(errors).toEqual([]);
   });
 

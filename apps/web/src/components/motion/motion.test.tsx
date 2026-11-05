@@ -8,7 +8,8 @@ import { CountUp, easeOutCubic } from './CountUp';
 import { coverProgress, useInView } from './hooks';
 import { LetterRise } from './LetterRise';
 import { Marquee } from './Marquee';
-import { parallaxOffset, Parallax, Bob } from './Parallax';
+import { driftStyle } from './drift';
+import { Bob, Parallax, ParallaxScope } from './Parallax';
 import { Reveal } from './Reveal';
 import { StickyStack } from './StickyStack';
 import { Tilt, tiltToward } from './Tilt';
@@ -127,13 +128,6 @@ describe('scroll maths', () => {
     expect(coverProgress({ top: 5000, height: 200 }, 800)).toBe(0);
   });
 
-  it('drifts a parallax layer symmetrically around the middle of the screen', () => {
-    expect(parallaxOffset(0, 0.5)).toBe(60);
-    expect(parallaxOffset(0.5, 0.5)).toBe(0);
-    expect(parallaxOffset(1, 0.5)).toBe(-60);
-    expect(parallaxOffset(1, -0.25)).toBe(30);
-  });
-
   it('eases the counter out and clamps the time', () => {
     expect(easeOutCubic(0)).toBe(0);
     expect(easeOutCubic(1)).toBe(1);
@@ -208,18 +202,24 @@ describe('CountUp', () => {
 });
 
 describe('LetterRise', () => {
-  it('keeps the plain text and splits it into numbered letters, words kept whole', () => {
-    render(
-      <h1 aria-label="Pieteikties šeit">
+  it('puts the text in the page once, unlabelled, with words as the only boxes', () => {
+    const { container } = render(
+      <h1>
         <LetterRise text="Pieteikties šeit" />
       </h1>,
     );
     const heading = screen.getByRole('heading', { name: 'Pieteikties šeit' });
+    // One copy of the text, no hidden duplicate and no aria-label for label queries to trip over.
     expect(heading.textContent).toBe('Pieteikties šeit');
+    expect(container.querySelector('[aria-label], [aria-hidden], .sr-only')).toBeNull();
+    expect(screen.queryByLabelText('Pieteikties šeit')).toBeNull();
+
+    const words = heading.querySelectorAll<HTMLElement>('[data-rise-word]');
+    expect([...words].map((word) => word.textContent)).toEqual(['Pieteikties', 'šeit']);
+    expect(words[1]!.style.getPropertyValue('--i')).toBe('11');
     const letters = heading.querySelectorAll<HTMLElement>('[data-letter]');
     expect(letters).toHaveLength('Pieteiktiesšeit'.length);
     expect(letters[12]!.style.getPropertyValue('--i')).toBe('12');
-    expect(letters[0]!.parentElement).toHaveClass('whitespace-nowrap');
   });
 });
 
@@ -262,13 +262,28 @@ describe('Parallax and Bob', () => {
   it('only arms the scroll fallback when motion is welcome', () => {
     withoutScrollTimelines();
     const { container, unmount } = render(<Parallax speed={0.4}>sticker</Parallax>);
-    const layer = container.querySelector<HTMLElement>('[data-parallax]')!;
-    expect(layer).toHaveAttribute('data-armed');
+    expect(container.querySelector('[data-parallax]')).toHaveAttribute('data-armed');
+    const layer = container.querySelector<HTMLElement>('[data-parallax-layer]')!;
     expect(layer.style.getPropertyValue('--speed')).toBe('0.4');
     unmount();
     stubMatchMedia(true);
     const reduced = render(<Parallax>sticker</Parallax>);
     expect(reduced.container.querySelector('[data-parallax]')).not.toHaveAttribute('data-armed');
+  });
+
+  it('lets one scope drive many layers at their own speeds, and marks itself in view for bobbing', () => {
+    const { container } = render(
+      <ParallaxScope>
+        <span data-parallax-layer="" style={driftStyle(0.5)} />
+        <span data-parallax-layer="" data-bob="" style={driftStyle(-0.25)} />
+      </ParallaxScope>,
+    );
+    const scope = container.querySelector('[data-parallax]')!;
+    const layers = [...container.querySelectorAll<HTMLElement>('[data-parallax-layer]')];
+    expect(layers.map((layer) => layer.style.getPropertyValue('--speed'))).toEqual(['0.5', '-0.25']);
+    expect(scope).not.toHaveAttribute('data-in-view');
+    act(() => intersect(scope, true));
+    expect(scope).toHaveAttribute('data-in-view');
   });
 
   it('bobs only while on screen', () => {

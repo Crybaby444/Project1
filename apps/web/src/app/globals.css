@@ -143,29 +143,35 @@
 }
 
 /*
- * Language switch (components/ui/switch-language.ts), 350 ms in all: the same soft cross-fade with a
- * slight scale as a page change (motion.css, `.page-in` / `.page-out`), over the canvas colour so
- * nothing flashes white. The header has its own name only during this switch (the theme reveal
- * still covers the whole page), so it stays put and only its words cross-fade.
+ * Language switch (components/ui/switch-language.ts) and moving between pages with TransitionLink
+ * (components/motion/switch-page.ts), 350 ms in all: a soft cross-fade with a slight scale, over the
+ * canvas colour so nothing flashes white. The header has its own name only during a switch (the
+ * theme reveal still covers the whole page), so it stays put and only its words cross-fade.
  */
-html[data-language-switch] [data-site-header] {
+html[data-language-switch] [data-site-header],
+html[data-page-switch] [data-site-header] {
   view-transition-name: site-header;
 }
 
-html[data-language-switch]::view-transition {
+html[data-language-switch]::view-transition,
+html[data-page-switch]::view-transition {
   background-color: var(--canvas);
 }
 
-html[data-language-switch]::view-transition-old(root) {
+html[data-language-switch]::view-transition-old(root),
+html[data-page-switch]::view-transition-old(root) {
   animation: language-out var(--dur-fast) var(--ease-yoyo) both;
 }
 
-html[data-language-switch]::view-transition-new(root) {
+html[data-language-switch]::view-transition-new(root),
+html[data-page-switch]::view-transition-new(root) {
   animation: language-in var(--dur-base) var(--ease-yoyo) 100ms both;
 }
 
 html[data-language-switch]::view-transition-old(site-header),
-html[data-language-switch]::view-transition-new(site-header) {
+html[data-language-switch]::view-transition-new(site-header),
+html[data-page-switch]::view-transition-old(site-header),
+html[data-page-switch]::view-transition-new(site-header) {
   animation-duration: var(--dur-base);
 }
 
@@ -180,6 +186,34 @@ html[data-language-switch]::view-transition-new(site-header) {
   from {
     opacity: 0;
     transform: scale(1.015);
+  }
+}
+
+/*
+ * Sections settle into place as they scroll into view (scroll-driven, no JavaScript): they rise a
+ * little and straighten, like a sticker being pressed down. Only transform moves; the text is fully
+ * visible at every moment, so nothing is ever hidden until scrolled, and a section already on screen
+ * at load is already in place. Browsers without view timelines, print and reduced motion show it still.
+ */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 75%;
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    transform: translateY(48px) rotate(var(--reveal-tilt, -1deg));
+  }
+}
+
+@media print {
+  .reveal {
+    animation: none;
   }
 }
 
