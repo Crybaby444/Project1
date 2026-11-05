@@ -105,7 +105,8 @@ export function LegalDocument({ doc, effective }: { doc: LegalDoc; effective: st
   const locale = useLocale() as Locale;
   const operator = describeOperator(locale);
   const fill = (text: string) => text.replaceAll('{operator}', operator);
-  const date = format.dateTime(new Date(`${effective}T12:00:00Z`), { dateStyle: 'long' });
+  // A calendar date: formatted in UTC, so the server's or the browser's zone never moves the day.
+  const date = format.dateTime(new Date(`${effective}T12:00:00Z`), { dateStyle: 'long', timeZone: 'UTC' });
 
   return (
     <main className="flex flex-1 flex-col">

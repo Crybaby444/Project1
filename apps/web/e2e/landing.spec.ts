@@ -47,12 +47,16 @@ test('a guest is offered an account; the secondary action leads to how it works'
   await expect(hero.getByRole('link', { name: en.landing.ctaHowItWorks })).toHaveAttribute('href', '/how-it-works');
 });
 
-test('a signed-in person is not offered to sign up again', async ({ page, context }) => {
+test('a signed-in person is offered to list an item instead of signing up again', async ({ page, context }) => {
   await asOwnVisitor(context);
   await registerByApi(page.request);
   await page.goto('/');
   await expect(page.getByRole('button', { name: /^Account menu/ })).toBeVisible();
   await expect(page.getByRole('link', { name: en.landing.ctaSignUp })).toHaveCount(0);
+  await expect(page.locator('section').first().getByRole('link', { name: en.landing.ctaListItem })).toHaveAttribute(
+    'href',
+    '/listings/new',
+  );
   await expect(page.locator('section').first().getByRole('link', { name: en.landing.ctaHowItWorks })).toBeVisible();
 });
 
