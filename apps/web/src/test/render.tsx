@@ -10,8 +10,16 @@ import { SessionProvider } from '@/lib/session/SessionProvider';
 import en from '../../messages/en.json';
 import lv from '../../messages/lv.json';
 import ru from '../../messages/ru.json';
+import siteEn from '../../messages/site/en.json';
+import siteLv from '../../messages/site/lv.json';
+import siteRu from '../../messages/site/ru.json';
 
-const messages = { en, lv, ru } as const;
+// The same merge as i18n/request.ts: interface texts plus the landing and service page texts.
+const messages = {
+  en: { ...en, ...siteEn },
+  lv: { ...lv, ...siteLv },
+  ru: { ...ru, ...siteRu },
+} as const;
 type TestLocale = keyof typeof messages;
 
 /** Renders a component the way the app does: inside next-intl with real messages. */

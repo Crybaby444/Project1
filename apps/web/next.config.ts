@@ -11,6 +11,14 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  experimental: {
+    // The whole stylesheet is ~11 KB compressed: inline it, so the first paint does not wait for a
+    // render-blocking request (Lighthouse mobile: home median 88 → 91).
+    inlineCss: true,
+    // Listing photos go through the /api proxy (src/proxy.ts), which buffers request bodies up to this
+    // size. The API's own limit is 10 MB a photo; leave room for the multipart envelope around it.
+    proxyClientMaxBodySize: '11mb',
+  },
   // The site and the API share one origin: src/proxy.ts proxies /api/* to the API (with PROXY_SECRET).
   // Old addresses (LEGACY_HOSTS) move permanently to the site's own domain (SITE_ORIGIN). Both are
   // server-only and read at build time; unset (previews, local) means no redirects.

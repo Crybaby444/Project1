@@ -24,6 +24,7 @@ describe('SiteHeader', () => {
 
     expect(await screen.findByRole('link', { name: en.header.signIn })).toHaveAttribute('href', '/login');
     expect(screen.getByRole('link', { name: en.header.signUp })).toHaveAttribute('href', '/register');
+    expect(screen.queryByRole('link', { name: en.header.lendItem })).toBeNull();
     expect(screen.queryByRole('button', { name: new RegExp(`^${en.header.account}`) })).toBeNull();
   });
 
@@ -34,6 +35,7 @@ describe('SiteHeader', () => {
     const avatar = await screen.findByRole('button', { name: new RegExp(`^${en.header.account}`) });
     expect(avatar).toHaveTextContent('AB');
     expect(screen.queryByRole('link', { name: en.header.signIn })).toBeNull();
+    expect(screen.getByRole('link', { name: en.header.lendItem })).toHaveAttribute('href', '/listings/new');
   });
 
   it('keeps the language and theme controls for everyone', async () => {

@@ -35,7 +35,7 @@ const ITEM =
 
 /**
  * The signed-in person's round avatar, opening a menu (WAI-ARIA menu button): who is signed in,
- * Settings and Sign out. Arrow keys, Home and End move between items; Esc closes it and returns
+ * My listings, Moderation (administrators only), Settings and Sign out. Arrow keys, Home and End move between items; Esc closes it and returns
  * focus to the button; Tab or a click elsewhere closes it.
  */
 export function UserMenu({ user }: { user: PublicUser }) {
@@ -130,6 +130,30 @@ export function UserMenu({ user }: { user: PublicUser }) {
             <p className="truncate text-sm">{user.email}</p>
           </div>
           <ul ref={menuRef} id={menuId} role="menu" aria-label={t('account')} onKeyDown={onMenuKeyDown}>
+            <li role="none">
+              <Link
+                href="/dashboard/lending"
+                role="menuitem"
+                tabIndex={-1}
+                onClick={() => close({ refocus: false })}
+                className={ITEM}
+              >
+                {t('myListings')}
+              </Link>
+            </li>
+            {user.role === 'ADMIN' && (
+              <li role="none">
+                <Link
+                  href="/admin/listings"
+                  role="menuitem"
+                  tabIndex={-1}
+                  onClick={() => close({ refocus: false })}
+                  className={ITEM}
+                >
+                  {t('moderation')}
+                </Link>
+              </li>
+            )}
             <li role="none">
               <Link
                 href="/settings"

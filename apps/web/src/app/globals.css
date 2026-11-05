@@ -49,6 +49,7 @@
   --animate-marquee: marquee 30s linear infinite;
   --animate-toast-in: toast-in 250ms var(--ease-yoyo);
   --animate-pop-in: pop-in 150ms var(--ease-yoyo);
+  --animate-step-in: step-in 250ms var(--ease-yoyo);
 
   @keyframes sticker-wobble {
     25% {
@@ -82,6 +83,14 @@
   @keyframes pop-in {
     from {
       transform: scale(0.96);
+      opacity: 0;
+    }
+  }
+
+  /* A builder step slides in from the side it comes from. */
+  @keyframes step-in {
+    from {
+      transform: translateX(var(--step-from, 16px));
       opacity: 0;
     }
   }
@@ -126,44 +135,55 @@
 }
 
 /*
- * Language switch (components/ui/switch-language.ts), 440 ms in all. Deliberately geometry-free, so
- * Safari and Chrome play it the same: nothing is moved, scaled or resized (the groups do not animate,
- * so the snapshots keep the size they were captured at), only opacity and a soft focus change.
- *   - the header has its own name only during this switch and stays perfectly still: its words
- *     cross-fade (plus-lighter, so what is the same in both languages never flickers);
- *   - the page goes out of focus and fades (0–180 ms), the new language comes into focus (140–440 ms).
+ * Language switch (components/ui/switch-language.ts) and moving between pages (components/motion/
+ * switch-page.ts), 440 ms in all. Deliberately geometry-free, so Safari and Chrome play it the same:
+ * nothing is moved, scaled or resized (the groups do not animate, so the snapshots keep the size they
+ * were captured at), only opacity and a soft focus change.
+ *   - the header has its own name only during a switch and stays perfectly still: its words
+ *     cross-fade (plus-lighter, so what is the same on both pages never flickers);
+ *   - the page goes out of focus and fades (0–180 ms), the new one comes into focus (140–440 ms).
  */
-html[data-language-switch] [data-site-header] {
+html[data-language-switch] [data-site-header],
+html[data-page-switch] [data-site-header] {
   view-transition-name: site-header;
 }
 
-html[data-language-switch]::view-transition {
+html[data-language-switch]::view-transition,
+html[data-page-switch]::view-transition {
   background-color: var(--canvas);
 }
 
 html[data-language-switch]::view-transition-group(root),
-html[data-language-switch]::view-transition-group(site-header) {
+html[data-language-switch]::view-transition-group(site-header),
+html[data-page-switch]::view-transition-group(root),
+html[data-page-switch]::view-transition-group(site-header) {
   animation: none;
 }
 
-html[data-language-switch]::view-transition-old(root) {
+html[data-language-switch]::view-transition-old(root),
+html[data-page-switch]::view-transition-old(root) {
   animation: language-out 180ms var(--ease-yoyo) both;
 }
 
-html[data-language-switch]::view-transition-new(root) {
+html[data-language-switch]::view-transition-new(root),
+html[data-page-switch]::view-transition-new(root) {
   animation: language-in 300ms var(--ease-yoyo) 140ms both;
 }
 
 html[data-language-switch]::view-transition-old(site-header),
-html[data-language-switch]::view-transition-new(site-header) {
+html[data-language-switch]::view-transition-new(site-header),
+html[data-page-switch]::view-transition-old(site-header),
+html[data-page-switch]::view-transition-new(site-header) {
   mix-blend-mode: plus-lighter;
 }
 
-html[data-language-switch]::view-transition-old(site-header) {
+html[data-language-switch]::view-transition-old(site-header),
+html[data-page-switch]::view-transition-old(site-header) {
   animation: language-header-out 200ms linear 120ms both;
 }
 
-html[data-language-switch]::view-transition-new(site-header) {
+html[data-language-switch]::view-transition-new(site-header),
+html[data-page-switch]::view-transition-new(site-header) {
   animation: language-header-in 200ms linear 120ms both;
 }
 
@@ -193,6 +213,34 @@ html[data-language-switch]::view-transition-new(site-header) {
   }
 }
 
+/*
+ * Sections settle into place as they scroll into view (scroll-driven, no JavaScript): they rise a
+ * little and straighten, like a sticker being pressed down. Only transform moves; the text is fully
+ * visible at every moment, so nothing is ever hidden until scrolled, and a section already on screen
+ * at load is already in place. Browsers without view timelines, print and reduced motion show it still.
+ */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 75%;
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    transform: translateY(48px) rotate(var(--reveal-tilt, -1deg));
+  }
+}
+
+@media print {
+  .reveal {
+    animation: none;
+  }
+}
+
 /* All motion is disabled for people who ask for less of it (DESIGN.md §1). */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -210,3 +258,13 @@ html[data-language-switch]::view-transition-new(site-header) {
     animation: none !important;
   }
 }
+
+/* Leaflet's own controls in the sticker style: a 1px outline, never a shadow (DESIGN.md). */
+.leaflet-bar,
+.leaflet-touch .leaflet-bar {
+  box-shadow: none !important;
+  border: 1px solid #000 !important;
+  border-radius: 9999px !important;
+  overflow: hidden;
+}
+

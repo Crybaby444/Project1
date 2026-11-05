@@ -13,7 +13,13 @@ const LEAVING_MS = 10_000;
  * only travels to /api/v1/auth, so the server cannot renew a session while rendering a page.
  * A visitor goes to /login and comes back here afterwards; someone who just signed out goes home.
  */
-export function RequireSession({ children }: { children: ReactNode }) {
+export function RequireSession({
+  children,
+  className = '',
+}: {
+  children: ReactNode;
+  /** Around the skeleton. */ className?: string;
+}) {
   const { status, endedAt } = useSession();
   const pathname = usePathname();
   const router = useRouter();
@@ -28,7 +34,12 @@ export function RequireSession({ children }: { children: ReactNode }) {
   if (status === 'authenticated') return children;
 
   return (
-    <div data-testid="session-skeleton" aria-busy="true" aria-live="polite" className="flex flex-col gap-4">
+    <div
+      data-testid="session-skeleton"
+      aria-busy="true"
+      aria-live="polite"
+      className={`flex flex-col gap-4 ${className}`}
+    >
       <span className="sr-only">{t('loading')}</span>
       <div aria-hidden="true" className="rounded-pill bg-mist h-8 w-48 animate-pulse" />
       <div

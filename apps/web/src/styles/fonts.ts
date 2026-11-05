@@ -6,15 +6,21 @@ import { Onest, Unbounded } from 'next/font/google';
  * Swap in licensed Lateral / Aeonik Pro here later; components only use the
  * `font-display` / `font-body` utilities, which read these variables.
  */
+/*
+ * Only the Latin files are preloaded (`subsets` picks what next/font preloads): they draw the YOYO wordmark and English pages,
+ * so the hero never swaps fonts and shifts. Latin Extended (Latvian) and Cyrillic (Russian) are still
+ * served, fetched only by pages whose text needs them (unicode-range). Preloading every subset of both
+ * faces meant ~280 KB ahead of the first paint on every visit (Lighthouse mobile, plan 12).
+ */
 export const displayFont = Unbounded({
-  subsets: ['latin', 'latin-ext', 'cyrillic'],
+  subsets: ['latin'], // preloaded; latin-ext and cyrillic are still served (see above)
   weight: ['800', '900'],
   variable: '--font-display-face',
   display: 'swap',
 });
 
 export const bodyFont = Onest({
-  subsets: ['latin', 'latin-ext', 'cyrillic'],
+  subsets: ['latin'], // preloaded; latin-ext and cyrillic are still served (see above)
   weight: ['500', '700'],
   variable: '--font-body-face',
   display: 'swap',

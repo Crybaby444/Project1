@@ -7,12 +7,14 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import { themeInitScript } from '@/components/theme/theme-script';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
+import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SyncThemeWithProfile } from '@/components/theme/use-theme-choice';
 import { ToastProvider } from '@/components/ui/Toast';
 import { routing } from '@/i18n/routing';
 import { QueryProvider } from '@/lib/session/QueryProvider';
 import { SessionProvider } from '@/lib/session/SessionProvider';
+import { SITE_URL } from '@/lib/site';
 import { fontVariables } from '@/styles/fonts';
 import '../globals.css';
 
@@ -25,7 +27,8 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: LocaleParams): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'meta' });
-  return { title: t('title'), description: t('description') };
+  // Relative URLs in page metadata (Open Graph images, alternates) resolve against the live site.
+  return { metadataBase: new URL(SITE_URL), title: t('title'), description: t('description') };
 }
 
 export default async function LocaleLayout({ children, params }: LocaleParams & { children: ReactNode }) {
@@ -51,6 +54,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
                   <SyncThemeWithProfile />
                   <SiteHeader />
                   <div className="flex flex-1 flex-col *:w-full">{children}</div>
+                  <SiteFooter />
                 </ToastProvider>
               </ThemeProvider>
             </SessionProvider>
