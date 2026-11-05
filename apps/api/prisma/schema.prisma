@@ -66,6 +66,7 @@ model User {
   offersReceived   Offer[]        @relation("OfferOwner")
   payments         Payment[]
   payouts          Payout[]
+  favorites        Favorite[]
 }
 
 /// One refresh token of a session. Rotation chains tokens of the same family; reuse revokes the family.
@@ -255,9 +256,12 @@ model Listing {
   unavailability Unavailability[]
   bookings       Booking[]
   offers         Offer[]
+  favoritedBy    Favorite[]
 
   @@index([ownerId])
   @@index([status, categoryId])
+  /// The catalog's default order. Trigram indexes on yoyo_fold(title…) live in migration `catalog` only.
+  @@index([status, publishedAt(sort: Desc), id(sort: Desc)], map: "Listing_catalog_idx")
 }
 
 /// A photo of a listing; the file lives in the storage provider under `storageKey` (random, never the
@@ -287,6 +291,21 @@ model Unavailability {
 
   listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
 
+  @@index([listingId])
+}
+
+/// An item someone keeps an eye on (spec §4.2 "Favourites"). Adding twice is one row; it goes with
+/// the user or the listing.
+model Favorite {
+  userId    String
+  listingId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@id([userId, listingId])
+  @@index([userId, createdAt])
   @@index([listingId])
 }
 
