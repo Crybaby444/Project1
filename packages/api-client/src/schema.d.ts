@@ -20,6 +20,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/payments/card-tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["PaymentsController_tokenize"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/providers": {
         parameters: {
             query?: never;
@@ -564,6 +580,358 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/wallet": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["WalletController_summary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/wallet/transactions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["WalletController_history"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/wallet/top-ups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["WalletController_topUp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/wallet/payouts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["WalletController_payout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/bookings/{id}/contract.pdf": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["BookingsController_contract"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/bookings/{id}/photos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["BookingsController_listPhotos"];
+        put?: never;
+        post: operations["BookingsController_upload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/bookings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["BookingsController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/bookings/{id}/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["BookingsController_act"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/bookings/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["BookingsController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/bookings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MyBookingsController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/listings/{id}/quote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListingQuoteController_quote"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/listings/{id}/offers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["OffersController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/offers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["OffersController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/offers/{id}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["OffersController_accept"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/offers/{id}/decline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["OffersController_decline"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/offers/{id}/withdraw": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["OffersController_withdraw"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/bookings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminDealsController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/bookings/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminDealsController_detail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/bookings/{id}/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminDealsController_resolve"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/ledger/operations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminDealsController_operations"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/ledger/accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminDealsController_accounts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/ledger/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminDealsController_summary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -575,14 +943,25 @@ export interface components {
             db: "up" | "down";
             version: string;
         };
-        ProvidersResponseDto_Output: {
-            google: boolean;
-            phone: boolean;
+        CardInputDto: {
+            number: string;
+            expMonth: number;
+            expYear: number;
+            cvc: string;
+            holder: string;
+        };
+        CardTokenDto_Output: {
+            token: string;
+            /** @enum {string} */
+            brand: "visa" | "mastercard" | "amex";
+            last4: string;
+            expMonth: number;
+            expYear: number;
         };
         ApiErrorDto_Output: {
             error: {
                 /** @enum {string} */
-                code: "VALIDATION_FAILED" | "AUTH_INVALID_CREDENTIALS" | "AUTH_EMAIL_TAKEN" | "AUTH_UNAUTHENTICATED" | "AUTH_FORBIDDEN" | "AUTH_BLOCKED" | "AUTH_PROVIDER_DISABLED" | "TOKEN_EXPIRED" | "TOKEN_USED" | "RATE_LIMITED" | "OAUTH_CANCELLED" | "OAUTH_STATE_INVALID" | "OAUTH_FAILED" | "ORIGIN_FORBIDDEN" | "NOT_FOUND" | "INTERNAL" | "INVALID_STATUS" | "UNSUPPORTED_MEDIA" | "PAYLOAD_TOO_LARGE" | "PHOTO_LIMIT" | "STORAGE_DISABLED" | "LISTING_INCOMPLETE" | "GEO_UNAVAILABLE";
+                code: "VALIDATION_FAILED" | "AUTH_INVALID_CREDENTIALS" | "AUTH_EMAIL_TAKEN" | "AUTH_UNAUTHENTICATED" | "AUTH_FORBIDDEN" | "AUTH_BLOCKED" | "AUTH_PROVIDER_DISABLED" | "TOKEN_EXPIRED" | "TOKEN_USED" | "RATE_LIMITED" | "OAUTH_CANCELLED" | "OAUTH_STATE_INVALID" | "OAUTH_FAILED" | "ORIGIN_FORBIDDEN" | "NOT_FOUND" | "INTERNAL" | "INVALID_STATUS" | "UNSUPPORTED_MEDIA" | "PAYLOAD_TOO_LARGE" | "PHOTO_LIMIT" | "STORAGE_DISABLED" | "LISTING_INCOMPLETE" | "GEO_UNAVAILABLE" | "DATES_UNAVAILABLE" | "CANNOT_RENT_OWN" | "LISTING_UNAVAILABLE" | "INSUFFICIENT_FUNDS" | "PAYMENT_DECLINED" | "CONTRACT_NOT_SIGNED" | "ACTION_NOT_ALLOWED" | "DEADLINE_PASSED" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_IN_PROGRESS" | "OFFER_UNAVAILABLE" | "WALLET_LIMIT";
                 message: string;
                 fields?: {
                     [key: string]: string;
@@ -591,6 +970,10 @@ export interface components {
                     [key: string]: unknown;
                 };
             };
+        };
+        ProvidersResponseDto_Output: {
+            google: boolean;
+            phone: boolean;
         };
         RegisterDto: {
             email: string;
@@ -1070,6 +1453,757 @@ export interface components {
             district: string[];
             attribution: string;
         };
+        WalletSummaryDto_Output: {
+            balanceCents: number;
+            heldCents: number;
+        };
+        WalletTransactionsResponseDto_Output: {
+            items: {
+                id: string;
+                /** @enum {string} */
+                kind: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND";
+                amountCents: number;
+                bookingId: string | null;
+                /** Format: date-time */
+                createdAt: string;
+            }[];
+            total: number;
+        };
+        TopUpRequestDto: {
+            amountCents: number;
+            cardToken: string;
+        };
+        TopUpResponseDto_Output: {
+            balanceCents: number;
+            payment: {
+                id: string;
+                amountCents: number;
+                brand: string;
+                last4: string;
+            };
+        };
+        PayoutRequestDto: {
+            amountCents: number;
+            cardToken: string;
+        };
+        PayoutResponseDto_Output: {
+            balanceCents: number;
+            payout: {
+                id: string;
+                amountCents: number;
+                brand: string;
+                last4: string;
+                /** @enum {string} */
+                status: "PENDING" | "DONE" | "FAILED";
+            };
+        };
+        BookingPhotoResponseDto_Output: {
+            photo: {
+                id: string;
+                /** @enum {string} */
+                kind: "HANDOVER" | "RETURN" | "DAMAGE";
+                uploaderId: string;
+                width: number;
+                height: number;
+                urls: {
+                    thumb: string;
+                    card: string;
+                    full: string;
+                };
+                /** Format: date-time */
+                createdAt: string;
+            };
+        };
+        BookingPhotosResponseDto_Output: {
+            items: {
+                id: string;
+                /** @enum {string} */
+                kind: "HANDOVER" | "RETURN" | "DAMAGE";
+                uploaderId: string;
+                width: number;
+                height: number;
+                urls: {
+                    thumb: string;
+                    card: string;
+                    full: string;
+                };
+                /** Format: date-time */
+                createdAt: string;
+            }[];
+        };
+        BookingRequestDto: {
+            listingId: string;
+            start: string;
+            end: string;
+            offerId?: string;
+            message?: string;
+        };
+        BookingResponseDto_Output: {
+            booking: {
+                id: string;
+                /** @enum {string} */
+                status: "REQUESTED" | "ACCEPTED" | "PAID" | "ACTIVE" | "RETURNED" | "DAMAGE_CLAIMED" | "DISPUTED" | "COMPLETED" | "DECLINED" | "EXPIRED" | "CANCELLED";
+                /** @enum {string} */
+                viewerRole: "RENTER" | "OWNER" | "ADMIN";
+                listing: {
+                    id: string;
+                    title: string;
+                    coverUrl: string | null;
+                    city: string | null;
+                    district: string | null;
+                };
+                renter: {
+                    id: string;
+                    name: string;
+                };
+                owner: {
+                    id: string;
+                    name: string;
+                };
+                period: {
+                    start: string;
+                    end: string;
+                };
+                timeZone: string;
+                message: string | null;
+                quote: {
+                    days: number;
+                    dailyCents: number;
+                    baseCents: number;
+                    discountPercent: number;
+                    discountCents: number;
+                    rentCents: number;
+                    serviceFeeCents: number;
+                    depositCents: number;
+                    totalCents: number;
+                    ownerPayoutCents: number;
+                    /** @enum {string} */
+                    priceSource: "LISTED" | "AGREED";
+                };
+                /** Format: date-time */
+                renterSignedAt: string | null;
+                /** Format: date-time */
+                ownerSignedAt: string | null;
+                /** @enum {string|null} */
+                paymentMethod: "WALLET" | "CARD" | null;
+                /** Format: date-time */
+                ownerHandedOverAt: string | null;
+                /** Format: date-time */
+                renterReceivedAt: string | null;
+                /** Format: date-time */
+                renterReturnedAt: string | null;
+                /** Format: date-time */
+                ownerReceivedBackAt: string | null;
+                declineReason: string | null;
+                damage: {
+                    description: string;
+                    photoIds: string[];
+                    /** Format: date-time */
+                    claimedAt: string;
+                } | null;
+                dispute: {
+                    /** @enum {string} */
+                    reason: "DAMAGE" | "NOT_RETURNED" | "NOT_HANDED_OVER";
+                    /** Format: date-time */
+                    openedAt: string;
+                    note: string | null;
+                    resolution: {
+                        /** @enum {string} */
+                        decision: "REFUND_DEPOSIT" | "DEPOSIT_TO_OWNER" | "REFUND_ALL" | "CONFIRM_HANDOVER";
+                        comment: string;
+                        /** Format: date-time */
+                        at: string;
+                    } | null;
+                } | null;
+                cancellation: {
+                    /** @enum {string} */
+                    by: "RENTER" | "OWNER" | "ADMIN";
+                    reason: string | null;
+                    /** Format: date-time */
+                    at: string;
+                } | null;
+                /** @enum {string|null} */
+                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | null;
+                deadline: {
+                    /** @enum {string} */
+                    timer: "REQUEST_EXPIRY" | "PAYMENT_EXPIRY" | "HANDOVER_DEADLINE" | "HANDOVER_CONFIRM" | "RETURN_CONFIRM" | "INSPECTION" | "DAMAGE_REPLY";
+                    /** Format: date-time */
+                    dueAt: string;
+                } | null;
+                actions: ("ACCEPT" | "DECLINE" | "WITHDRAW" | "SIGN" | "PAY" | "CANCEL" | "MARK_HANDED_OVER" | "CONFIRM_RECEIVED" | "REPORT_NOT_RECEIVED" | "MARK_RETURNED" | "CONFIRM_RETURNED" | "REPORT_NOT_RETURNED" | "ALL_FINE" | "REPORT_DAMAGE" | "ACCEPT_DAMAGE" | "REJECT_DAMAGE" | "RESOLVE")[];
+                hasContract: boolean;
+                version: number;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+                /** Format: date-time */
+                completedAt: string | null;
+            };
+        };
+        BookingActionRequestDto: {
+            version: number;
+            event: {
+                /** @enum {string} */
+                type: "ACCEPT";
+            } | {
+                /** @enum {string} */
+                type: "DECLINE";
+                reason?: string;
+            } | {
+                /** @enum {string} */
+                type: "WITHDRAW";
+            } | {
+                /** @enum {string} */
+                type: "SIGN";
+            } | {
+                /** @enum {string} */
+                type: "PAY";
+                /** @enum {string} */
+                method: "WALLET" | "CARD";
+                cardToken?: string;
+            } | {
+                /** @enum {string} */
+                type: "CANCEL";
+                reason: string;
+            } | {
+                /** @enum {string} */
+                type: "MARK_HANDED_OVER";
+            } | {
+                /** @enum {string} */
+                type: "CONFIRM_RECEIVED";
+            } | {
+                /** @enum {string} */
+                type: "REPORT_NOT_RECEIVED";
+                note: string;
+            } | {
+                /** @enum {string} */
+                type: "MARK_RETURNED";
+            } | {
+                /** @enum {string} */
+                type: "CONFIRM_RETURNED";
+            } | {
+                /** @enum {string} */
+                type: "REPORT_NOT_RETURNED";
+                note: string;
+            } | {
+                /** @enum {string} */
+                type: "ALL_FINE";
+            } | {
+                /** @enum {string} */
+                type: "REPORT_DAMAGE";
+                description: string;
+                photoIds: string[];
+            } | {
+                /** @enum {string} */
+                type: "ACCEPT_DAMAGE";
+            } | {
+                /** @enum {string} */
+                type: "REJECT_DAMAGE";
+                note: string;
+            };
+        };
+        BookingsPageDto_Output: {
+            items: {
+                id: string;
+                /** @enum {string} */
+                status: "REQUESTED" | "ACCEPTED" | "PAID" | "ACTIVE" | "RETURNED" | "DAMAGE_CLAIMED" | "DISPUTED" | "COMPLETED" | "DECLINED" | "EXPIRED" | "CANCELLED";
+                /** @enum {string} */
+                viewerRole: "RENTER" | "OWNER" | "ADMIN";
+                listing: {
+                    id: string;
+                    title: string;
+                    coverUrl: string | null;
+                    city: string | null;
+                    district: string | null;
+                };
+                renter: {
+                    id: string;
+                    name: string;
+                };
+                owner: {
+                    id: string;
+                    name: string;
+                };
+                period: {
+                    start: string;
+                    end: string;
+                };
+                timeZone: string;
+                message: string | null;
+                quote: {
+                    days: number;
+                    dailyCents: number;
+                    baseCents: number;
+                    discountPercent: number;
+                    discountCents: number;
+                    rentCents: number;
+                    serviceFeeCents: number;
+                    depositCents: number;
+                    totalCents: number;
+                    ownerPayoutCents: number;
+                    /** @enum {string} */
+                    priceSource: "LISTED" | "AGREED";
+                };
+                /** Format: date-time */
+                renterSignedAt: string | null;
+                /** Format: date-time */
+                ownerSignedAt: string | null;
+                /** @enum {string|null} */
+                paymentMethod: "WALLET" | "CARD" | null;
+                /** Format: date-time */
+                ownerHandedOverAt: string | null;
+                /** Format: date-time */
+                renterReceivedAt: string | null;
+                /** Format: date-time */
+                renterReturnedAt: string | null;
+                /** Format: date-time */
+                ownerReceivedBackAt: string | null;
+                declineReason: string | null;
+                damage: {
+                    description: string;
+                    photoIds: string[];
+                    /** Format: date-time */
+                    claimedAt: string;
+                } | null;
+                dispute: {
+                    /** @enum {string} */
+                    reason: "DAMAGE" | "NOT_RETURNED" | "NOT_HANDED_OVER";
+                    /** Format: date-time */
+                    openedAt: string;
+                    note: string | null;
+                    resolution: {
+                        /** @enum {string} */
+                        decision: "REFUND_DEPOSIT" | "DEPOSIT_TO_OWNER" | "REFUND_ALL" | "CONFIRM_HANDOVER";
+                        comment: string;
+                        /** Format: date-time */
+                        at: string;
+                    } | null;
+                } | null;
+                cancellation: {
+                    /** @enum {string} */
+                    by: "RENTER" | "OWNER" | "ADMIN";
+                    reason: string | null;
+                    /** Format: date-time */
+                    at: string;
+                } | null;
+                /** @enum {string|null} */
+                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | null;
+                deadline: {
+                    /** @enum {string} */
+                    timer: "REQUEST_EXPIRY" | "PAYMENT_EXPIRY" | "HANDOVER_DEADLINE" | "HANDOVER_CONFIRM" | "RETURN_CONFIRM" | "INSPECTION" | "DAMAGE_REPLY";
+                    /** Format: date-time */
+                    dueAt: string;
+                } | null;
+                actions: ("ACCEPT" | "DECLINE" | "WITHDRAW" | "SIGN" | "PAY" | "CANCEL" | "MARK_HANDED_OVER" | "CONFIRM_RECEIVED" | "REPORT_NOT_RECEIVED" | "MARK_RETURNED" | "CONFIRM_RETURNED" | "REPORT_NOT_RETURNED" | "ALL_FINE" | "REPORT_DAMAGE" | "ACCEPT_DAMAGE" | "REJECT_DAMAGE" | "RESOLVE")[];
+                hasContract: boolean;
+                version: number;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+                /** Format: date-time */
+                completedAt: string | null;
+            }[];
+            total: number;
+        };
+        QuoteResponseDto_Output: {
+            quote: {
+                days: number;
+                dailyCents: number;
+                baseCents: number;
+                discountPercent: number;
+                discountCents: number;
+                rentCents: number;
+                serviceFeeCents: number;
+                depositCents: number;
+                totalCents: number;
+                ownerPayoutCents: number;
+                /** @enum {string} */
+                priceSource: "LISTED" | "AGREED";
+            };
+            blocked: {
+                start: string;
+                end: string;
+            }[];
+        };
+        OfferRequestDto: {
+            start: string;
+            end: string;
+            dailyCents: number;
+        };
+        OfferResponseDto_Output: {
+            offer: {
+                id: string;
+                listing: {
+                    id: string;
+                    title: string;
+                };
+                renter: {
+                    id: string;
+                    name: string;
+                };
+                owner: {
+                    id: string;
+                    name: string;
+                };
+                start: string;
+                end: string;
+                dailyCents: number;
+                listedDailyCents: number;
+                /** @enum {string} */
+                status: "PENDING" | "ACCEPTED" | "DECLINED" | "WITHDRAWN" | "EXPIRED" | "USED";
+                /** Format: date-time */
+                expiresAt: string;
+                /** Format: date-time */
+                answeredAt: string | null;
+                /** Format: date-time */
+                createdAt: string;
+            };
+        };
+        OffersResponseDto_Output: {
+            items: {
+                id: string;
+                listing: {
+                    id: string;
+                    title: string;
+                };
+                renter: {
+                    id: string;
+                    name: string;
+                };
+                owner: {
+                    id: string;
+                    name: string;
+                };
+                start: string;
+                end: string;
+                dailyCents: number;
+                listedDailyCents: number;
+                /** @enum {string} */
+                status: "PENDING" | "ACCEPTED" | "DECLINED" | "WITHDRAWN" | "EXPIRED" | "USED";
+                /** Format: date-time */
+                expiresAt: string;
+                /** Format: date-time */
+                answeredAt: string | null;
+                /** Format: date-time */
+                createdAt: string;
+            }[];
+        };
+        AdminBookingsResponseDto_Output: {
+            items: {
+                id: string;
+                /** @enum {string} */
+                status: "REQUESTED" | "ACCEPTED" | "PAID" | "ACTIVE" | "RETURNED" | "DAMAGE_CLAIMED" | "DISPUTED" | "COMPLETED" | "DECLINED" | "EXPIRED" | "CANCELLED";
+                /** @enum {string} */
+                viewerRole: "RENTER" | "OWNER" | "ADMIN";
+                listing: {
+                    id: string;
+                    title: string;
+                    coverUrl: string | null;
+                    city: string | null;
+                    district: string | null;
+                };
+                renter: {
+                    id: string;
+                    name: string;
+                };
+                owner: {
+                    id: string;
+                    name: string;
+                };
+                period: {
+                    start: string;
+                    end: string;
+                };
+                timeZone: string;
+                message: string | null;
+                quote: {
+                    days: number;
+                    dailyCents: number;
+                    baseCents: number;
+                    discountPercent: number;
+                    discountCents: number;
+                    rentCents: number;
+                    serviceFeeCents: number;
+                    depositCents: number;
+                    totalCents: number;
+                    ownerPayoutCents: number;
+                    /** @enum {string} */
+                    priceSource: "LISTED" | "AGREED";
+                };
+                /** Format: date-time */
+                renterSignedAt: string | null;
+                /** Format: date-time */
+                ownerSignedAt: string | null;
+                /** @enum {string|null} */
+                paymentMethod: "WALLET" | "CARD" | null;
+                /** Format: date-time */
+                ownerHandedOverAt: string | null;
+                /** Format: date-time */
+                renterReceivedAt: string | null;
+                /** Format: date-time */
+                renterReturnedAt: string | null;
+                /** Format: date-time */
+                ownerReceivedBackAt: string | null;
+                declineReason: string | null;
+                damage: {
+                    description: string;
+                    photoIds: string[];
+                    /** Format: date-time */
+                    claimedAt: string;
+                } | null;
+                dispute: {
+                    /** @enum {string} */
+                    reason: "DAMAGE" | "NOT_RETURNED" | "NOT_HANDED_OVER";
+                    /** Format: date-time */
+                    openedAt: string;
+                    note: string | null;
+                    resolution: {
+                        /** @enum {string} */
+                        decision: "REFUND_DEPOSIT" | "DEPOSIT_TO_OWNER" | "REFUND_ALL" | "CONFIRM_HANDOVER";
+                        comment: string;
+                        /** Format: date-time */
+                        at: string;
+                    } | null;
+                } | null;
+                cancellation: {
+                    /** @enum {string} */
+                    by: "RENTER" | "OWNER" | "ADMIN";
+                    reason: string | null;
+                    /** Format: date-time */
+                    at: string;
+                } | null;
+                /** @enum {string|null} */
+                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | null;
+                deadline: {
+                    /** @enum {string} */
+                    timer: "REQUEST_EXPIRY" | "PAYMENT_EXPIRY" | "HANDOVER_DEADLINE" | "HANDOVER_CONFIRM" | "RETURN_CONFIRM" | "INSPECTION" | "DAMAGE_REPLY";
+                    /** Format: date-time */
+                    dueAt: string;
+                } | null;
+                actions: ("ACCEPT" | "DECLINE" | "WITHDRAW" | "SIGN" | "PAY" | "CANCEL" | "MARK_HANDED_OVER" | "CONFIRM_RECEIVED" | "REPORT_NOT_RECEIVED" | "MARK_RETURNED" | "CONFIRM_RETURNED" | "REPORT_NOT_RETURNED" | "ALL_FINE" | "REPORT_DAMAGE" | "ACCEPT_DAMAGE" | "REJECT_DAMAGE" | "RESOLVE")[];
+                hasContract: boolean;
+                version: number;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+                /** Format: date-time */
+                completedAt: string | null;
+            }[];
+            total: number;
+        };
+        AdminBookingDetailDto_Output: {
+            booking: {
+                id: string;
+                /** @enum {string} */
+                status: "REQUESTED" | "ACCEPTED" | "PAID" | "ACTIVE" | "RETURNED" | "DAMAGE_CLAIMED" | "DISPUTED" | "COMPLETED" | "DECLINED" | "EXPIRED" | "CANCELLED";
+                /** @enum {string} */
+                viewerRole: "RENTER" | "OWNER" | "ADMIN";
+                listing: {
+                    id: string;
+                    title: string;
+                    coverUrl: string | null;
+                    city: string | null;
+                    district: string | null;
+                };
+                renter: {
+                    id: string;
+                    name: string;
+                };
+                owner: {
+                    id: string;
+                    name: string;
+                };
+                period: {
+                    start: string;
+                    end: string;
+                };
+                timeZone: string;
+                message: string | null;
+                quote: {
+                    days: number;
+                    dailyCents: number;
+                    baseCents: number;
+                    discountPercent: number;
+                    discountCents: number;
+                    rentCents: number;
+                    serviceFeeCents: number;
+                    depositCents: number;
+                    totalCents: number;
+                    ownerPayoutCents: number;
+                    /** @enum {string} */
+                    priceSource: "LISTED" | "AGREED";
+                };
+                /** Format: date-time */
+                renterSignedAt: string | null;
+                /** Format: date-time */
+                ownerSignedAt: string | null;
+                /** @enum {string|null} */
+                paymentMethod: "WALLET" | "CARD" | null;
+                /** Format: date-time */
+                ownerHandedOverAt: string | null;
+                /** Format: date-time */
+                renterReceivedAt: string | null;
+                /** Format: date-time */
+                renterReturnedAt: string | null;
+                /** Format: date-time */
+                ownerReceivedBackAt: string | null;
+                declineReason: string | null;
+                damage: {
+                    description: string;
+                    photoIds: string[];
+                    /** Format: date-time */
+                    claimedAt: string;
+                } | null;
+                dispute: {
+                    /** @enum {string} */
+                    reason: "DAMAGE" | "NOT_RETURNED" | "NOT_HANDED_OVER";
+                    /** Format: date-time */
+                    openedAt: string;
+                    note: string | null;
+                    resolution: {
+                        /** @enum {string} */
+                        decision: "REFUND_DEPOSIT" | "DEPOSIT_TO_OWNER" | "REFUND_ALL" | "CONFIRM_HANDOVER";
+                        comment: string;
+                        /** Format: date-time */
+                        at: string;
+                    } | null;
+                } | null;
+                cancellation: {
+                    /** @enum {string} */
+                    by: "RENTER" | "OWNER" | "ADMIN";
+                    reason: string | null;
+                    /** Format: date-time */
+                    at: string;
+                } | null;
+                /** @enum {string|null} */
+                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | null;
+                deadline: {
+                    /** @enum {string} */
+                    timer: "REQUEST_EXPIRY" | "PAYMENT_EXPIRY" | "HANDOVER_DEADLINE" | "HANDOVER_CONFIRM" | "RETURN_CONFIRM" | "INSPECTION" | "DAMAGE_REPLY";
+                    /** Format: date-time */
+                    dueAt: string;
+                } | null;
+                actions: ("ACCEPT" | "DECLINE" | "WITHDRAW" | "SIGN" | "PAY" | "CANCEL" | "MARK_HANDED_OVER" | "CONFIRM_RECEIVED" | "REPORT_NOT_RECEIVED" | "MARK_RETURNED" | "CONFIRM_RETURNED" | "REPORT_NOT_RETURNED" | "ALL_FINE" | "REPORT_DAMAGE" | "ACCEPT_DAMAGE" | "REJECT_DAMAGE" | "RESOLVE")[];
+                hasContract: boolean;
+                version: number;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+                /** Format: date-time */
+                completedAt: string | null;
+            };
+            events: {
+                id: string;
+                type: string;
+                actorKind: string;
+                actorId: string | null;
+                /** @enum {string|null} */
+                fromStatus: "REQUESTED" | "ACCEPTED" | "PAID" | "ACTIVE" | "RETURNED" | "DAMAGE_CLAIMED" | "DISPUTED" | "COMPLETED" | "DECLINED" | "EXPIRED" | "CANCELLED" | null;
+                /** @enum {string} */
+                toStatus: "REQUESTED" | "ACCEPTED" | "PAID" | "ACTIVE" | "RETURNED" | "DAMAGE_CLAIMED" | "DISPUTED" | "COMPLETED" | "DECLINED" | "EXPIRED" | "CANCELLED";
+                data: {
+                    [key: string]: unknown;
+                };
+                messages: string[];
+                /** Format: date-time */
+                createdAt: string;
+            }[];
+            operations: {
+                id: string;
+                /** @enum {string} */
+                kind: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND";
+                bookingId: string | null;
+                userId: string | null;
+                /** Format: date-time */
+                createdAt: string;
+                postings: {
+                    account: string;
+                    amount: number;
+                }[];
+            }[];
+            photos: {
+                id: string;
+                /** @enum {string} */
+                kind: "HANDOVER" | "RETURN" | "DAMAGE";
+                uploaderId: string;
+                width: number;
+                height: number;
+                urls: {
+                    thumb: string;
+                    card: string;
+                    full: string;
+                };
+                /** Format: date-time */
+                createdAt: string;
+            }[];
+            payments: {
+                id: string;
+                amountCents: number;
+                refundedCents: number;
+                brand: string;
+                last4: string;
+                /** Format: date-time */
+                createdAt: string;
+                refunds: {
+                    id: string;
+                    amountCents: number;
+                    /** @enum {string} */
+                    status: "PENDING" | "DONE" | "FAILED";
+                    /** Format: date-time */
+                    createdAt: string;
+                }[];
+            }[];
+        };
+        ResolveRequestDto: {
+            version: number;
+            /** @enum {string} */
+            decision: "REFUND_DEPOSIT" | "DEPOSIT_TO_OWNER" | "REFUND_ALL" | "CONFIRM_HANDOVER";
+            comment: string;
+        };
+        AdminLedgerResponseDto_Output: {
+            items: {
+                id: string;
+                /** @enum {string} */
+                kind: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND";
+                bookingId: string | null;
+                userId: string | null;
+                /** Format: date-time */
+                createdAt: string;
+                postings: {
+                    account: string;
+                    amount: number;
+                }[];
+            }[];
+            total: number;
+        };
+        AdminAccountsResponseDto_Output: {
+            items: {
+                id: string;
+                balance: number;
+            }[];
+            total: number;
+        };
+        LedgerSummaryDto_Output: {
+            revenueCents: number;
+            escrowCents: number;
+            depositsCents: number;
+            walletsCents: number;
+            externalCents: number;
+            audit: {
+                sumOfAll: number;
+                mismatched: {
+                    account: string;
+                    cached: number;
+                    fromEntries: number;
+                }[];
+                unbalancedOperations: string[];
+                negative: string[];
+            };
+        };
     };
     responses: never;
     parameters: never;
@@ -1104,6 +2238,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HealthResponseDto"];
+                };
+            };
+        };
+    };
+    PaymentsController_tokenize: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CardInputDto"];
+            };
+        };
+        responses: {
+            /** @description A card token */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CardTokenDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
         };
@@ -1237,7 +2431,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -1725,6 +2919,15 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
             /** @description Too many attempts (RATE_LIMITED); see Retry-After */
             429: {
                 headers: {
@@ -2186,7 +3389,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -2257,7 +3460,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -2324,7 +3527,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -2382,7 +3585,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -2440,7 +3643,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -2511,7 +3714,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -2655,7 +3858,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -2762,7 +3965,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -2819,7 +4022,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -2972,7 +4175,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -3043,7 +4246,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
-            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, or INVALID_STATUS with details.currentVersion) */
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -3182,6 +4385,1395 @@ export interface operations {
             };
             /** @description A service behind the API is unavailable (STORAGE_DISABLED, GEO_UNAVAILABLE) */
             503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    WalletController_summary: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The balance, and what open deals hold */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WalletSummaryDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    WalletController_history: {
+        parameters: {
+            query?: {
+                page?: number;
+                kind?: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Wallet movements, newest first, 20 a page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WalletTransactionsResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    WalletController_topUp: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description A new random key (8–100 of A–Z a–z 0–9 - _) per user action; resend the same one when retrying. A repeat gets the first answer with `Idempotent-Replayed: true`. */
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TopUpRequestDto"];
+            };
+        };
+        responses: {
+            /** @description The card was charged and the wallet topped up */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TopUpResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description The card was declined (PAYMENT_DECLINED, details.declineCode) */
+            402: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    WalletController_payout: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description A new random key (8–100 of A–Z a–z 0–9 - _) per user action; resend the same one when retrying. A repeat gets the first answer with `Idempotent-Replayed: true`. */
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PayoutRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Taken from the wallet and sent to the card (status DONE, or PENDING while the provider is slow) */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PayoutResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    BookingsController_contract: {
+        parameters: {
+            query?: {
+                lang?: "en" | "lv" | "ru";
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The contract as a PDF */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": string;
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    BookingsController_listPhotos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Handover, return and damage photos, oldest first */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingPhotosResponseDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    BookingsController_upload: {
+        parameters: {
+            query: {
+                kind: "HANDOVER" | "RETURN" | "DAMAGE";
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Stored, cleaned of metadata */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingPhotoResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description File too large (PAYLOAD_TOO_LARGE) */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not a JPEG, PNG or WebP image (UNSUPPORTED_MEDIA) */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description A service behind the API is unavailable (STORAGE_DISABLED, GEO_UNAVAILABLE) */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    BookingsController_create: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description A new random key (8–100 of A–Z a–z 0–9 - _) per user action; resend the same one when retrying. A repeat gets the first answer with `Idempotent-Replayed: true`. */
+                "Idempotency-Key"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BookingRequestDto"];
+            };
+        };
+        responses: {
+            /** @description The request, waiting for the owner (REQUESTED) */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    BookingsController_act: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description A new random key (8–100 of A–Z a–z 0–9 - _) per user action; resend the same one when retrying. A repeat gets the first answer with `Idempotent-Replayed: true`. */
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BookingActionRequestDto"];
+            };
+        };
+        responses: {
+            /** @description The step was taken; the deal as it is now */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description The card was declined (PAYMENT_DECLINED, details.declineCode) */
+            402: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    BookingsController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The deal, with what the viewer can do now */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingResponseDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    MyBookingsController_list: {
+        parameters: {
+            query: {
+                role: "renter" | "owner";
+                status?: "REQUESTED" | "ACCEPTED" | "PAID" | "ACTIVE" | "RETURNED" | "DAMAGE_CLAIMED" | "DISPUTED" | "COMPLETED" | "DECLINED" | "EXPIRED" | "CANCELLED";
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description My deals as renter or owner, last changed first, 20 a page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingsPageDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ListingQuoteController_quote: {
+        parameters: {
+            query: {
+                start: string;
+                end: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Rent, fee, deposit and total for these days, and the days already taken */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuoteResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    OffersController_create: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description A new random key (8–100 of A–Z a–z 0–9 - _) per user action; resend the same one when retrying. A repeat gets the first answer with `Idempotent-Replayed: true`. */
+                "Idempotency-Key"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OfferRequestDto"];
+            };
+        };
+        responses: {
+            /** @description The offer, waiting for the owner (24 hours at most) */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OfferResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    OffersController_list: {
+        parameters: {
+            query: {
+                role: "renter" | "owner";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Offers I made (renter) or got (owner), newest first */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OffersResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    OffersController_accept: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Accepted: the renter can book these days at this price */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OfferResponseDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    OffersController_decline: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Declined */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OfferResponseDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    OffersController_withdraw: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Withdrawn by the renter */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OfferResponseDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminDealsController_list: {
+        parameters: {
+            query?: {
+                status?: "REQUESTED" | "ACCEPTED" | "PAID" | "ACTIVE" | "RETURNED" | "DAMAGE_CLAIMED" | "DISPUTED" | "COMPLETED" | "DECLINED" | "EXPIRED" | "CANCELLED";
+                disputed?: "true" | "false";
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deals, 50 a page; `disputed=true` for the dispute queue */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminBookingsResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminDealsController_detail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A deal with its journal, ledger operations, card payments and photos */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminBookingDetailDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminDealsController_resolve: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description A new random key (8–100 of A–Z a–z 0–9 - _) per user action; resend the same one when retrying. A repeat gets the first answer with `Idempotent-Replayed: true`. */
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResolveRequestDto"];
+            };
+        };
+        responses: {
+            /** @description The dispute is decided; both sides are told */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminDealsController_operations: {
+        parameters: {
+            query?: {
+                bookingId?: string;
+                account?: string;
+                kind?: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND";
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Ledger operations with their postings, newest first */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminLedgerResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminDealsController_accounts: {
+        parameters: {
+            query?: {
+                prefix?: string;
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Account balances */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminAccountsResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminDealsController_summary: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Totals by kind of account and a check of the whole journal */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LedgerSummaryDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };

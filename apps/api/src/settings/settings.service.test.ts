@@ -1,3 +1,4 @@
+import { SETTING_DEFAULTS } from '@yoyo/shared';
 import 'reflect-metadata';
 import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 import { runSeed } from '../../prisma/seed';
@@ -33,7 +34,7 @@ describe('runSeed', () => {
   it('creates every default exactly once, even when run twice', async () => {
     await runSeed(prisma);
     await runSeed(prisma);
-    expect(await prisma.setting.count()).toBe(5);
+    expect(await prisma.setting.count()).toBe(Object.keys(SETTING_DEFAULTS).length);
     const row = await prisma.setting.findUnique({ where: { key: 'review.windowDays' } });
     expect(row?.value).toBe(14);
   });

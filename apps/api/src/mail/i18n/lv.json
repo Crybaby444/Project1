@@ -44,5 +44,206 @@
     "body": "Moderatori vēl nevarēja publicēt “{title}”. Lūk, kāpēc:",
     "next": "Izlabo to un nosūti pārbaudei vēlreiz — tas aizņems tikai mirkli.",
     "button": "Labot sludinājumu"
+  },
+  "deal": {
+    "common": {
+      "button": "Atvērt darījumu",
+      "offerButton": "Apskatīt lietu",
+      "item": "Lieta",
+      "dates": "Datumi",
+      "total": "Kopā"
+    },
+    "REQUESTED": {
+      "owner": {
+        "subject": "Jauns pieprasījums: “{title}”",
+        "preview": "{other} vēlas to nomāt no {start} līdz {end}.",
+        "heading": "Jums ir jauns nomas pieprasījums",
+        "body": "{other} vēlas nomāt “{title}” no {start} līdz {end}. Jūs saņemtu {rent}. Pieņemiet vai noraidiet 24 stundu laikā, citādi pieprasījums beigsies."
+      }
+    },
+    "ACCEPTED": {
+      "renter": {
+        "subject": "Jūsu pieprasījums “{title}” ir pieņemts",
+        "preview": "Parakstiet līgumu un samaksājiet, lai apstiprinātu nomu.",
+        "heading": "Noma ir pieņemta",
+        "body": "{other} pieņēma jūsu pieprasījumu “{title}” no {start} līdz {end}. Parakstiet nomas līgumu un samaksājiet {total} (ieskaitot drošības naudu {deposit}), lai to apstiprinātu."
+      }
+    },
+    "DECLINED": {
+      "renter": {
+        "subject": "Jūsu pieprasījums “{title}” ir noraidīts",
+        "preview": "Apskatiet līdzīgas lietas tuvumā.",
+        "heading": "Pieprasījums noraidīts",
+        "body": "{other} nevar iznomāt “{title}” no {start} līdz {end}. Nauda netika iekasēta. Apskatiet līdzīgas lietas tuvumā."
+      }
+    },
+    "CANCELLED": {
+      "renter": {
+        "subject": "Noma “{title}” ir atcelta",
+        "preview": "Samaksātais atgriežas tādā pašā veidā, kā maksājāt.",
+        "heading": "Noma ir atcelta",
+        "body": "Noma “{title}” no {start} līdz {end} ir atcelta. Ja jau samaksājāt, viss, arī servisa maksa, atgriežas tādā pašā veidā, kā maksājāt."
+      },
+      "owner": {
+        "subject": "Noma “{title}” ir atcelta",
+        "preview": "Dienas atkal ir brīvas.",
+        "heading": "Noma ir atcelta",
+        "body": "Noma “{title}” no {start} līdz {end} ar {other} ir atcelta. Dienas jūsu kalendārā atkal ir brīvas."
+      }
+    },
+    "EXPIRED": {
+      "renter": {
+        "subject": "Noma “{title}” ir beigusies",
+        "preview": "Laiks atbildei vai samaksai beidzās.",
+        "heading": "Noma beidzās",
+        "body": "Noma “{title}” no {start} līdz {end} beidzās: laiks atbildei vai samaksai ir pagājis. Nauda netika iekasēta."
+      },
+      "owner": {
+        "subject": "Noma “{title}” ir beigusies",
+        "preview": "Dienas atkal ir brīvas.",
+        "heading": "Noma beidzās",
+        "body": "Noma “{title}” no {start} līdz {end} ar {other} beidzās: laiks atbildei vai samaksai ir pagājis. Dienas atkal ir brīvas."
+      }
+    },
+    "PAID": {
+      "owner": {
+        "subject": "“{title}” ir apmaksāta: satieciet {other}",
+        "preview": "Yoyo glabā nomas maksu līdz nodošanai.",
+        "heading": "Noma ir apmaksāta",
+        "body": "{other} samaksāja par “{title}” no {start} līdz {end}. Yoyo glabā nomas maksu {rent} līdz nodošanai. Vienojieties par vietu un laiku čatā un, satiekoties, atzīmējiet nodošanu Yoyo."
+      }
+    },
+    "HANDED_OVER": {
+      "renter": {
+        "subject": "Vai saņēmāt “{title}”?",
+        "preview": "Apstipriniet saņemšanu vai paziņojiet, ja nesaņēmāt.",
+        "heading": "Apstipriniet nodošanu",
+        "body": "{other} atzīmēja, ka “{title}” ir nodota. Apstipriniet, ka to saņēmāt, vai paziņojiet, ja nesaņēmāt. Ja 48 stundu laikā neko nedarīsiet, nodošana tiks uzskatīta par apstiprinātu."
+      }
+    },
+    "RECEIVED": {
+      "owner": {
+        "subject": "Nodošana apstiprināta: {rent} ir jūsu makā",
+        "preview": "“{title}” noma ir sākusies.",
+        "heading": "Noma ir sākusies",
+        "body": "“{title}” nodošana ir apstiprināta, un nomas maksa {rent} ir jūsu Yoyo makā. Lietai jāatgriežas līdz {end}."
+      },
+      "renter": {
+        "subject": "“{title}” noma ir sākusies",
+        "preview": "Atdodiet to līdz {end}.",
+        "heading": "Noma ir sākusies",
+        "body": "“{title}” nodošana ir apstiprināta. Lietojiet ar prieku un atdodiet līdz {end}. Atdodot atzīmējiet to Yoyo."
+      }
+    },
+    "RETURNED": {
+      "owner": {
+        "subject": "{other} atdeva “{title}”",
+        "preview": "Apstipriniet, ka to saņēmāt atpakaļ.",
+        "heading": "Vai saņēmāt lietu atpakaļ?",
+        "body": "{other} atzīmēja, ka “{title}” ir atdota. Apstipriniet, ka saņēmāt to atpakaļ, vai paziņojiet, ja nesaņēmāt. Ja 48 stundu laikā neko nedarīsiet, atdošana tiks uzskatīta par apstiprinātu."
+      }
+    },
+    "RECEIVED_BACK": {
+      "renter": {
+        "subject": "“{title}” ir atpakaļ pie īpašnieka",
+        "preview": "Īpašnieks to pārbauda, tad drošības nauda atgriežas.",
+        "heading": "Lieta ir atdota",
+        "body": "“{title}” atdošana ir apstiprināta. Īpašniekam ir 48 stundas to pārbaudīt; ja viss kārtībā, jūsu drošības nauda {deposit} atgriezīsies tādā pašā veidā, kā maksājāt."
+      },
+      "owner": {
+        "subject": "Pārbaudiet “{title}” 48 stundu laikā",
+        "preview": "Ziņojiet par bojājumiem tagad, citādi drošības nauda tiks atgriezta.",
+        "heading": "Pārbaudiet lietu",
+        "body": "“{title}” atdošana ir apstiprināta. Pārbaudiet to 48 stundu laikā: ja tā ir bojāta, ziņojiet ar fotoattēliem; citādi drošības nauda {deposit} atgriezīsies pie {other}."
+      }
+    },
+    "ALL_FINE": {
+      "renter": {
+        "subject": "Jūsu drošības nauda par “{title}” atgriežas",
+        "preview": "Darījums ir pabeigts.",
+        "heading": "Darījums ir pabeigts",
+        "body": "Ar “{title}” viss kārtībā. Jūsu drošības nauda {deposit} atgriežas tādā pašā veidā, kā maksājāt. Paldies, ka nomājāt ar Yoyo, un atstājiet atsauksmi par {other}."
+      },
+      "owner": {
+        "subject": "Darījums par “{title}” ir pabeigts",
+        "preview": "Drošības nauda atgriezta nomniekam.",
+        "heading": "Darījums ir pabeigts",
+        "body": "Darījums par “{title}” ar {other} ir pabeigts, un drošības nauda {deposit} ir atgriezta. Atstājiet atsauksmi par {other}."
+      }
+    },
+    "DAMAGE_REPORTED": {
+      "renter": {
+        "subject": "Īpašnieks ziņo par “{title}” bojājumu",
+        "preview": "Piekrītiet vai nepiekrītiet 48 stundu laikā.",
+        "heading": "Ziņots par bojājumu",
+        "body": "{other} ziņo par “{title}” bojājumu un lūdz drošības naudu {deposit}. Apskatiet fotoattēlus un 48 stundu laikā piekrītiet vai nepiekrītiet; ja neatbildēsiet, lēmumu pieņems Yoyo administrators."
+      }
+    },
+    "DAMAGE_ACCEPTED": {
+      "owner": {
+        "subject": "Drošības nauda par “{title}” ir jūsu",
+        "preview": "Nomnieks piekrita bojājuma pieteikumam.",
+        "heading": "Drošības nauda ir jūsu",
+        "body": "{other} piekrita jūsu bojājuma pieteikumam par “{title}”. Drošības nauda {deposit} ir jūsu Yoyo makā."
+      }
+    },
+    "DISPUTE_OPENED": {
+      "admins": {
+        "subject": "Jāizlemj strīds: “{title}”",
+        "preview": "Darījums gaida administratoru.",
+        "heading": "Strīdam vajadzīgs lēmums",
+        "body": "Darījums par “{title}” ({start} – {end}) ir nonācis strīdā. Apskatiet darījuma vēsturi, fotoattēlus un saraksti un pieņemiet lēmumu."
+      },
+      "owner": {
+        "subject": "Sākts strīds par “{title}”",
+        "preview": "Lēmumu pieņems Yoyo administrators.",
+        "heading": "Sākts strīds",
+        "body": "Darījums par “{title}” ar {other} ir nonācis strīdā. Yoyo administrators izskatīs vēsturi, fotoattēlus un saraksti un pieņems lēmumu. Līdz tam nauda paliek Yoyo."
+      },
+      "renter": {
+        "subject": "Sākts strīds par “{title}”",
+        "preview": "Lēmumu pieņems Yoyo administrators.",
+        "heading": "Sākts strīds",
+        "body": "Darījums par “{title}” ar {other} ir nonācis strīdā. Yoyo administrators izskatīs vēsturi, fotoattēlus un saraksti un pieņems lēmumu. Līdz tam nauda paliek Yoyo."
+      }
+    },
+    "DISPUTE_RESOLVED": {
+      "renter": {
+        "subject": "Strīds par “{title}” ir izlemts",
+        "preview": "Apskatiet lēmumu un to, kur nonāca nauda.",
+        "heading": "Strīds ir izlemts",
+        "body": "Yoyo administrators izlēma strīdu par “{title}”. Atveriet darījumu, lai redzētu lēmumu un to, kur nonāca nauda."
+      },
+      "owner": {
+        "subject": "Strīds par “{title}” ir izlemts",
+        "preview": "Apskatiet lēmumu un to, kur nonāca nauda.",
+        "heading": "Strīds ir izlemts",
+        "body": "Yoyo administrators izlēma strīdu par “{title}”. Atveriet darījumu, lai redzētu lēmumu un to, kur nonāca nauda."
+      }
+    },
+    "OFFER_MADE": {
+      "owner": {
+        "subject": "{other} piedāvā {price} dienā par “{title}”",
+        "preview": "Pieņemiet vai noraidiet 24 stundu laikā.",
+        "heading": "Jauns cenas piedāvājums",
+        "body": "{other} vēlētos nomāt “{title}” no {start} līdz {end} par {price} dienā. Pieņemiet vai noraidiet 24 stundu laikā."
+      }
+    },
+    "OFFER_ACCEPTED": {
+      "renter": {
+        "subject": "Jūsu piedāvājums par “{title}” ir pieņemts",
+        "preview": "Rezervējiet tagad par {price} dienā.",
+        "heading": "Piedāvājums pieņemts",
+        "body": "{other} pieņēma {price} dienā par “{title}” no {start} līdz {end}. Nosūtiet nomas pieprasījumu ar šo piedāvājumu līdz pirmajai dienai."
+      }
+    },
+    "OFFER_DECLINED": {
+      "renter": {
+        "subject": "Jūsu piedāvājums par “{title}” ir noraidīts",
+        "preview": "Joprojām varat nomāt par sludinājuma cenu.",
+        "heading": "Piedāvājums noraidīts",
+        "body": "{other} noraidīja {price} dienā par “{title}”. Joprojām varat to nomāt par sludinājuma cenu."
+      }
+    }
   }
 }

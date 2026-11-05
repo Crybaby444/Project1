@@ -3,6 +3,7 @@ import type { ApiErrorBody, ErrorCode } from '@yoyo/shared';
 import type { Response } from 'express';
 import { ZodValidationException } from 'nestjs-zod';
 import { AppError, RateLimitedError } from './app-error';
+import { DomainError, fromDomainError } from './domain-errors';
 
 interface ErrorResponse {
   status: number;
@@ -77,8 +78,13 @@ function toErrorResponse(exception: unknown): ErrorResponse {
 export class ErrorFilter implements ExceptionFilter {
   private readonly logger = new Logger('ErrorFilter');
 
-  catch(exception: unknown, host: ArgumentsHost): void {
-    if (host.getType() !== 'http') throw exception;
+  catch(original: unknown, host: ArgumentsHost): void {
+    if (host.getType() !== 'http') throw original;
+    // A refusal of the business rules (@yoyo/domain) answers like any AppError; a broken invariant is a 500.
+    const exception = original instanceof DomainError ? fromDomainError(original) : original;
+    if (original instanceof DomainError && exception instanceof AppError && exception.status >= 500) {
+      this.logger.error(`domain invariant broken: ${original.message}\n${original.stack ?? ''}`);
+    }
     const res = host.switchToHttp().getResponse<Response>();
     const { status, body, retryAfterSeconds } = toErrorResponse(exception);
 
