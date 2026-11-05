@@ -1,5 +1,6 @@
 'use client';
 
+import { displayFit } from '@/lib/display-fit';
 import type { PublicUser } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
@@ -25,8 +26,12 @@ function RoleGate({ role, children }: { role: PublicUser['role']; children: Reac
   const t = useTranslations('noAccess');
   if (user?.role === role) return children;
   return (
-    <section className="flex flex-col items-start gap-5 py-6">
-      <p aria-hidden="true" className="font-display text-[clamp(4rem,16vw,8rem)] leading-[0.8] font-black">
+    <section className="@container flex flex-col items-start gap-5 py-6">
+      <p
+        aria-hidden="true"
+        style={displayFit('403', { min: '3rem', max: '8rem' })}
+        className="font-display text-display-fit leading-[0.8] font-black"
+      >
         403
       </p>
       <h1 className="text-3xl font-bold">{t('title')}</h1>

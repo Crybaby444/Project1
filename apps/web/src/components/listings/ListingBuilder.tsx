@@ -1,5 +1,6 @@
 'use client';
 
+import { displayFit } from '@/lib/display-fit';
 import { useQueryClient } from '@tanstack/react-query';
 import { STICKER_COLORS, type OwnerListing } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
@@ -132,8 +133,11 @@ function BuilderLayout({
   return (
     <main className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-8 sm:px-8 sm:py-12">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="flex flex-col gap-2">
-          <h1 className="font-display text-[clamp(2.25rem,8vw,3.5rem)] leading-[0.85] font-black uppercase">
+        <div className="@container flex min-w-0 flex-1 flex-col gap-2">
+          <h1
+            style={displayFit(isNew ? t('titleNew') : t('titleEdit'), { max: '3.5rem' })}
+            className="font-display text-display-fit leading-[0.85] font-black uppercase"
+          >
             {isNew ? t('titleNew') : t('titleEdit')}
           </h1>
           <p className="leading-relaxed">{t('intro')}</p>

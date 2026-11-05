@@ -107,6 +107,26 @@ describe('useListingDraft', () => {
     expect(draft().listing?.version).toBe(7);
   });
 
+  it('sends what is still waiting when the builder goes away', async () => {
+    const { client, calls } = fakeApi({ ...meRoute(testUser()), ...echoListing(ownerListing()) });
+    let draft: ListingDraft | null = null;
+    function Harness() {
+      draft = useListingDraft({
+        initial: ownerListing(),
+        client: useApiClient(),
+        category: () => undefined,
+        delayMs: 10_000,
+      });
+      return null;
+    }
+    const { unmount } = renderWithSession(<Harness />, { client });
+    act(() => draft!.change({ title: 'Last words' }));
+    unmount();
+    await waitFor(() =>
+      expect(calls.find((c) => c.method === 'PATCH')?.body).toMatchObject({ title: 'Last words' }),
+    );
+  });
+
   it('never edits an archived listing', async () => {
     const { draft, patches } = setup(ownerListing({ status: 'ARCHIVED' }), echoListing(ownerListing()));
     expect(draft().state).toBe('readonly');

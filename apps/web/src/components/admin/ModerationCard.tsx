@@ -9,9 +9,9 @@ import { Dialog } from '@/components/ui/Dialog';
 import { findPath, localized } from '@/lib/listings/categories';
 import { formatEuros } from '@/lib/listings/money';
 
-function Row({ term, children }: { term: string; children: ReactNode }) {
+function Row({ term, children, wide = false }: { term: string; children: ReactNode; wide?: boolean }) {
   return (
-    <div className="flex flex-col gap-0.5">
+    <div className={`flex flex-col gap-0.5 ${wide ? 'sm:col-span-2' : ''}`}>
       <dt className="text-[13px] font-bold tracking-[0.03em] uppercase">{term}</dt>
       <dd className="[overflow-wrap:anywhere]">{children}</dd>
     </div>
@@ -105,27 +105,23 @@ export function ModerationCard({
           )}
         </Row>
         <Row term={t('condition')}>{listing.condition ? tCondition(listing.condition) : t('none')}</Row>
-        <div className="sm:col-span-2">
-          <Row term={t('description')}>
-            <span className="whitespace-pre-line">{listing.description}</span>
-          </Row>
-        </div>
+        <Row term={t('description')} wide>
+          <span className="whitespace-pre-line">{listing.description}</span>
+        </Row>
         {Object.keys(listing.attributes).length > 0 && (
-          <div className="sm:col-span-2">
-            <Row term={t('details')}>
-              <dl className="mt-1 grid gap-x-6 gap-y-2 sm:grid-cols-2">
-                {Object.entries(listing.attributes).map(([key, raw]) => {
-                  const def = leaf?.attributes.find((attribute) => attribute.key === key);
-                  return (
-                    <div key={key} className="flex flex-col">
-                      <dt className="text-sm">{def ? localized(def.labels, locale) : key}</dt>
-                      <dd className="font-bold">{value(key, raw)}</dd>
-                    </div>
-                  );
-                })}
-              </dl>
-            </Row>
-          </div>
+          <Row term={t('details')} wide>
+            <dl className="mt-1 grid gap-x-6 gap-y-2 sm:grid-cols-2">
+              {Object.entries(listing.attributes).map(([key, raw]) => {
+                const def = leaf?.attributes.find((attribute) => attribute.key === key);
+                return (
+                  <div key={key} className="flex flex-col">
+                    <dt className="text-sm">{def ? localized(def.labels, locale) : key}</dt>
+                    <dd className="font-bold">{value(key, raw)}</dd>
+                  </div>
+                );
+              })}
+            </dl>
+          </Row>
         )}
         <Row term={t('price')}>
           <span className="flex flex-col">

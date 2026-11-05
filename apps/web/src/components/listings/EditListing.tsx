@@ -1,5 +1,6 @@
 'use client';
 
+import { displayFit } from '@/lib/display-fit';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { useErrorText } from '@/lib/forms/error-text';
@@ -35,8 +36,11 @@ export function EditListing({ id, initialStep }: { id: string; initialStep: Buil
   if (query.isError) {
     const notFound = query.error instanceof ApiError && query.error.status === 404;
     return (
-      <main className="mx-auto flex w-full max-w-3xl flex-col items-start gap-5 px-4 py-14">
-        <h1 className="font-display text-[clamp(2.25rem,8vw,3.25rem)] leading-[0.85] font-black uppercase">
+      <main className="@container mx-auto flex w-full max-w-3xl flex-col items-start gap-5 px-4 py-14">
+        <h1
+          style={displayFit(notFound ? t('notFound.title') : t('loadFailed'), { max: '3.25rem' })}
+          className="font-display text-display-fit leading-[0.85] font-black uppercase"
+        >
           {notFound ? t('notFound.title') : t('loadFailed')}
         </h1>
         <p className="leading-relaxed">{notFound ? t('notFound.body') : errorText(query.error)}</p>

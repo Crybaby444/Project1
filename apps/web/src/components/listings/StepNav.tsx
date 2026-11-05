@@ -42,7 +42,7 @@ export function StepNav({ current, onSelect }: { current: BuilderStep; onSelect(
                   event.preventDefault();
                   onSelect(step);
                 }}
-                className={`rounded-pill ease-yoyo group flex min-h-11 items-center gap-2.5 border py-1.5 pr-4 pl-1.5 text-sm font-bold whitespace-nowrap transition-[transform,background-color,color] duration-250 hover:-translate-y-0.5 active:scale-[0.97] lg:hover:translate-x-1 lg:hover:translate-y-0 ${
+                className={`rounded-pill ease-yoyo group relative flex min-h-11 items-center gap-2.5 border py-1.5 pr-4 pl-1.5 text-sm font-bold whitespace-nowrap transition-[transform,background-color,color] duration-250 hover:-translate-y-0.5 active:scale-[0.97] lg:hover:translate-x-1 lg:hover:translate-y-0 ${
                   isCurrent ? 'border-cta bg-cta text-cta-fg' : 'border-ink bg-surface text-ink hover:bg-mist'
                 }`}
               >

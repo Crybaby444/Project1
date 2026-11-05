@@ -18,8 +18,8 @@ export function StatusBanner() {
   const router = useRouter();
   const { draft, goTo } = useBuilder();
   const listing = draft.listing;
-  if (!listing) return null;
-  const { status } = listing;
+  // A new listing shows the draft banner from the start, so nothing jumps when its first change creates it.
+  const status = listing?.status ?? 'DRAFT';
 
   async function perform(action: ListingAction) {
     await draft.withListing(async (current) => {
@@ -39,9 +39,11 @@ export function StatusBanner() {
     if (action === 'delete') router.push('/dashboard/lending');
   }
 
-  const tone = status === 'REJECTED' ? 'bg-surface border-ink' : 'bg-surface border-ink';
   return (
-    <section aria-label={tStatus(status)} className={`rounded-card flex flex-col gap-3 border p-5 ${tone}`}>
+    <section
+      aria-label={tStatus(status)}
+      className="border-ink bg-surface rounded-card flex flex-col gap-3 border p-5"
+    >
       <div className="flex flex-wrap items-center gap-3">
         <ListingStatusBadge status={status} />
         {status !== 'REJECTED' && <p className="max-w-[80ch] text-sm leading-relaxed">{t(status)}</p>}
@@ -50,7 +52,7 @@ export function StatusBanner() {
         <div className="flex flex-col gap-2">
           <p className="text-sm">{t('REJECTED')}</p>
           <blockquote className="border-sticker-ember border-l-4 py-1 pl-4 text-base font-bold [overflow-wrap:anywhere]">
-            {listing.rejectionReason}
+            {listing?.rejectionReason}
           </blockquote>
           <p className="text-sm">
             {t('REJECTED_next')}{' '}
@@ -67,7 +69,11 @@ export function StatusBanner() {
           </p>
         </div>
       )}
-      <ListingActions listing={listing} perform={perform} />
+      {listing ? (
+        <ListingActions listing={listing} perform={perform} />
+      ) : (
+        <div aria-hidden="true" className="min-h-10" />
+      )}
     </section>
   );
 }

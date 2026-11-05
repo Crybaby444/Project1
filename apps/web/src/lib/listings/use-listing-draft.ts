@@ -273,7 +273,10 @@ export function useListingDraft({
     return () => {
       document.removeEventListener('visibilitychange', onHide);
       window.removeEventListener('beforeunload', onBeforeUnload);
-      clearTimeout(ref.timer);
+      // Leaving the builder inside the page (another step's link, the language switch, the header)
+      // sends what is still waiting rather than dropping it.
+      if (ref.dirty.size > 0 && !ref.stopped) void flush();
+      else clearTimeout(ref.timer);
     };
   }, [flush]);
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { displayFit } from '@/lib/display-fit';
 import { useQueryClient } from '@tanstack/react-query';
 import { LISTING_STATUSES, type ListingStatus } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
@@ -50,8 +51,11 @@ export function MyListings({ initialStatus }: { initialStatus: MyListingsFilter 
   return (
     <main className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-10 sm:px-8 sm:py-14">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="flex flex-col gap-2">
-          <h1 className="font-display text-[clamp(2.25rem,8vw,3.5rem)] leading-[0.85] font-black uppercase">
+        <div className="@container flex min-w-0 flex-1 flex-col gap-2">
+          <h1
+            style={displayFit(t('title'), { max: '3.5rem' })}
+            className="font-display text-display-fit leading-[0.85] font-black uppercase"
+          >
             {t('title')}
           </h1>
           <p className="leading-relaxed">{t('intro')}</p>

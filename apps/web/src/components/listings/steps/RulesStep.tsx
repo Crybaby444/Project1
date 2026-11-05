@@ -43,7 +43,7 @@ export function RulesStep() {
             return (
               <label
                 key={preset}
-                className={`rounded-pill ease-yoyo has-focus-visible:outline-ink inline-flex min-h-10 cursor-pointer items-center gap-2 border px-4 text-sm font-bold transition-[transform,background-color,color] duration-250 select-none hover:-translate-y-0.5 active:scale-[0.95] has-focus-visible:outline-2 has-focus-visible:outline-offset-3 ${
+                className={`rounded-pill ease-yoyo has-focus-visible:outline-ink inline-flex min-h-10 cursor-pointer items-center gap-2 border px-4 py-2 text-left text-sm leading-snug font-bold transition-[transform,background-color,color] duration-250 select-none hover:-translate-y-0.5 active:scale-[0.95] has-focus-visible:outline-2 has-focus-visible:outline-offset-3 ${
                   index % 2 ? 'hover:rotate-2' : 'hover:-rotate-2'
                 } ${on ? 'border-cta bg-cta text-cta-fg' : 'border-ink bg-surface text-ink'}`}
               >
@@ -53,7 +53,7 @@ export function RulesStep() {
                   onChange={() => togglePreset(preset)}
                   className="sr-only"
                 />
-                <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4">
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4 shrink-0">
                   {on ? (
                     <path
                       d="m5 12.5 4.5 4.5L19 7.5"
@@ -116,7 +116,7 @@ export function RulesStep() {
                 }
                 className="mt-7 shrink-0"
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4">
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4 shrink-0">
                   <path
                     d="m7 7 10 10M17 7 7 17"
                     fill="none"

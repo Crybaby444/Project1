@@ -1,5 +1,6 @@
 'use client';
 
+import { displayFit } from '@/lib/display-fit';
 import { useQueryClient } from '@tanstack/react-query';
 import { ADMIN_LISTINGS_PAGE_SIZE, type AdminListing } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
@@ -70,8 +71,11 @@ export function ModerationQueue({ page }: { page: number }) {
 
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-10 sm:px-8 sm:py-14">
-      <header className="flex flex-col gap-2">
-        <h1 className="font-display text-[clamp(2.25rem,8vw,3.5rem)] leading-[0.85] font-black uppercase">
+      <header className="@container flex flex-col gap-2">
+        <h1
+          style={displayFit(t('title'), { max: '3.5rem' })}
+          className="font-display text-display-fit leading-[0.85] font-black uppercase"
+        >
           {t('title')}
         </h1>
         <p className="leading-relaxed">{t('intro')}</p>
