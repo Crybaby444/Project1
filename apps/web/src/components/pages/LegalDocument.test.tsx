@@ -63,4 +63,11 @@ describe('LegalDocument', () => {
     expect(screen.getAllByRole('columnheader').map((cell) => cell.textContent)).toEqual(['Nosaukums', 'Cik ilgi']);
     expect(screen.getByRole('columnheader', { name: 'Nosaukums' })).toHaveAttribute('scope', 'col');
   });
+
+  it('lets keyboard users scroll a wide table on a phone: its box is a named, focusable region', () => {
+    renderDoc();
+    const region = screen.getByRole('region', { name: 'Nosaukums, Cik ilgi' });
+    expect(region).toHaveAttribute('tabindex', '0');
+    expect(within(region).getByRole('table')).toBeInTheDocument();
+  });
 });

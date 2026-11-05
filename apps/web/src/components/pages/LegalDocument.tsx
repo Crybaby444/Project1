@@ -64,8 +64,14 @@ function BlockView({ block, fill }: { block: Block; fill: (text: string) => stri
     );
   }
   return (
-    // Wide tables scroll inside their own box on a phone, never the page.
-    <div className="border-ink rounded-card overflow-x-auto border">
+    // Wide tables scroll inside their own box on a phone, never the page; the box takes the keyboard
+    // focus (and has a name), so it can be scrolled without a mouse.
+    <div
+      role="region"
+      aria-label={block.table.head.join(', ')}
+      tabIndex={0}
+      className="border-ink rounded-card overflow-x-auto border"
+    >
       <table className="w-full min-w-[34rem] border-collapse text-left text-[15px] leading-relaxed">
         <thead className="bg-mist">
           <tr>
