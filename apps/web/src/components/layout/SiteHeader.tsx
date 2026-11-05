@@ -14,7 +14,8 @@ import { VerifyEmailBanner } from './VerifyEmailBanner';
 /**
  * The bar on every page: the wordmark home on the left; language, theme and the account on the right.
  * One row at any width: below 1024px the language pills fold into one button, and below 640px a
- * visitor sees only "Sign in" (the sign-in page links to sign-up).
+ * visitor sees only "Sign in" (the sign-in page links to sign-up). Below 640px the row is also a
+ * little tighter, so the longest "Sign in" (Latvian "Pieteikties") still fits a 320px phone.
  */
 export function SiteHeader() {
   const t = useTranslations('header');
@@ -22,14 +23,14 @@ export function SiteHeader() {
 
   return (
     <>
-      <header className="border-ink bg-surface border-b">
-        <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-3 px-4 sm:px-8">
+      <header data-site-header className="border-ink bg-surface border-b">
+        <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-2 px-4 sm:gap-3 sm:px-8">
           <Link href="/" className="rounded-pill inline-flex shrink-0 items-center gap-2">
             <LogoMark size={36} className="hidden sm:block" />
-            <Wordmark className="text-[28px]" />
+            <Wordmark className="text-[24px] sm:text-[28px]" />
           </Link>
 
-          <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
+          <div className="flex min-w-0 items-center gap-1 sm:gap-2">
             <div className="hidden lg:block">
               <LanguageSwitcher />
             </div>
@@ -63,7 +64,7 @@ export function SiteHeader() {
               </>
             ) : status === 'anonymous' ? (
               <>
-                <Button variant="ghost" href="/login" className="shrink-0">
+                <Button variant="ghost" href="/login" className="shrink-0 max-sm:px-3 max-sm:text-[12px]">
                   {t('signIn')}
                 </Button>
                 <div className="hidden shrink-0 sm:block">

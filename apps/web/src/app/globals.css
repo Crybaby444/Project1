@@ -23,6 +23,25 @@
   --font-body: var(--font-body-face), ui-sans-serif, system-ui, sans-serif;
 }
 
+/*
+ * Big display titles sized from their container, not the viewport: the longest word (--fit-chars,
+ * set by displayFit()) fits the width of the nearest @container on one line, up to --fit-max (the
+ * DESIGN.md size on wide screens) and down to --fit-min. --fit-em is the width of one uppercase
+ * letter of the display face, in em, for the widest title word measured (Unbounded "WORK", 1.02),
+ * plus a little room. A word that still does not fit
+ * (an unexpected translation) is hyphenated in the page language or, failing that, broken.
+ */
+@utility text-display-fit {
+  font-size: clamp(
+    var(--fit-min, 1rem),
+    calc(100cqi / (var(--fit-chars, 10) * var(--fit-em, 1.04))),
+    var(--fit-max, 2.75rem)
+  );
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
 /* Brand motion (DESIGN.md "Project adaptations" §1): stickers react only to the pointer; the marquee loops. */
 @theme {
   --animate-sticker-wobble: sticker-wobble 450ms var(--ease-yoyo);
@@ -113,6 +132,66 @@
   mix-blend-mode: normal;
 }
 
+/*
+ * Language switch (components/ui/switch-language.ts), 450 ms in all: the old page blurs and fades,
+ * a pastel paper sheet with an ink edge wipes across underneath, then the new language fades in.
+ * The header has its own name only during this switch (the theme reveal still covers the whole
+ * page), so it stays put and only its words cross-fade.
+ */
+html[data-language-switch] [data-site-header] {
+  view-transition-name: site-header;
+}
+
+html[data-language-switch]::view-transition {
+  background-color: var(--canvas);
+  background-image: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--sticker-lavender) 70%, var(--canvas)) 0 50%,
+    var(--ink) 50% calc(50% + 1px),
+    transparent calc(50% + 1px)
+  );
+  background-repeat: no-repeat;
+  background-size: 200% 100%;
+  animation: language-sheet 300ms var(--ease-yoyo) both;
+}
+
+html[data-language-switch]::view-transition-old(root) {
+  animation: language-out 220ms var(--ease-yoyo) both;
+}
+
+html[data-language-switch]::view-transition-new(root) {
+  animation: language-in 250ms var(--ease-yoyo) 200ms both;
+}
+
+html[data-language-switch]::view-transition-old(site-header),
+html[data-language-switch]::view-transition-new(site-header) {
+  animation-duration: var(--dur-base);
+}
+
+@keyframes language-sheet {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+@keyframes language-out {
+  to {
+    opacity: 0;
+    filter: blur(6px);
+    transform: scale(0.985);
+  }
+}
+
+@keyframes language-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
 /* All motion is disabled for people who ask for less of it (DESIGN.md §1). */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -123,6 +202,7 @@
     scroll-behavior: auto !important;
   }
 
+  ::view-transition,
   ::view-transition-group(*),
   ::view-transition-old(*),
   ::view-transition-new(*) {
