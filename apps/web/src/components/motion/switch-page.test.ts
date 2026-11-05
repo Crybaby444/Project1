@@ -98,4 +98,15 @@ describe('switchPage', () => {
     finishes[1]!();
     await vi.waitFor(() => expect(root.dataset['pageSwitch']).toBeUndefined());
   });
+
+  it('does not hold the old page when the link redirects somewhere else', async () => {
+    fakeViewTransitions();
+    window.history.replaceState(null, '', '/faq');
+    // The router lands on "/" instead of "/register" (a signed-in visitor is sent home).
+    const navigate = navigateTo('/');
+    const started = Date.now();
+    await switchPage({ pathname: '/register', navigate, animate: true });
+    expect(window.location.pathname).toBe('/');
+    expect(Date.now() - started).toBeLessThan(500);
+  });
 });

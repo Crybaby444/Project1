@@ -17,9 +17,11 @@ function currentPath(): string {
 
 /**
  * Resolves once the address is `pathname`: the router has committed the new page (it updates the
- * history entry in the same commit). Gives up after `timeoutMs`.
+ * history entry in the same commit). With `from`, any address other than `from` also counts: the link
+ * was redirected (a signed-in visitor sent from /register to /), and the new page is there all the same.
+ * Gives up after `timeoutMs`.
  */
-export function whenPathIs(pathname: string, timeoutMs = NEW_PAGE_TIMEOUT_MS): Promise<void> {
+export function whenPathIs(pathname: string, timeoutMs = NEW_PAGE_TIMEOUT_MS, from?: string): Promise<void> {
   const target = decodeURI(pathname);
   return new Promise((resolve) => {
     let poll: ReturnType<typeof setTimeout> | undefined;
@@ -30,7 +32,8 @@ export function whenPathIs(pathname: string, timeoutMs = NEW_PAGE_TIMEOUT_MS): P
     };
     const limit = setTimeout(done, timeoutMs);
     const check = () => {
-      if (currentPath() === target) done();
+      const now = currentPath();
+      if (now === target || (from !== undefined && now !== from)) done();
       else poll = setTimeout(check, POLL_MS);
     };
     check();
@@ -60,12 +63,13 @@ export async function switchPage({ pathname, navigate, animate }: SwitchPageOpti
   }
 
   const root = document.documentElement;
+  const from = currentPath();
   const owner = {};
   current = owner;
   root.dataset['pageSwitch'] = '';
   const transition = document.startViewTransition(async () => {
     navigate();
-    await whenPathIs(pathname);
+    await whenPathIs(pathname, NEW_PAGE_TIMEOUT_MS, from);
     // The new page may come with a fresh <html> (another language layout): mark it again.
     if (current === owner) root.dataset['pageSwitch'] = '';
   });
