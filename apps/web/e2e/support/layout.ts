@@ -2,9 +2,22 @@ import type { Page } from '@playwright/test';
 
 type Overflow = { what: string; scrollWidth: number; clientWidth: number };
 
+/**
+ * Waits for the web fonts, so text is measured at its final width. Returns a plain value (WebKit never
+ * settled an evaluate that handed back the FontFaceSet itself) and gives up after a few seconds.
+ */
+export async function fontsReady(page: Page): Promise<void> {
+  await page.evaluate(() =>
+    Promise.race([
+      document.fonts.ready.then(() => true),
+      new Promise<boolean>((resolve) => setTimeout(() => resolve(false), 3000)),
+    ]),
+  );
+}
+
 /** Every horizontal overflow on the page: the page itself, any h1, any display-face text. */
 export async function overflows(page: Page): Promise<Overflow[]> {
-  await page.evaluate(() => document.fonts.ready);
+  await fontsReady(page);
   return page.evaluate(() => {
     const found: { what: string; scrollWidth: number; clientWidth: number }[] = [];
     const root = document.documentElement;

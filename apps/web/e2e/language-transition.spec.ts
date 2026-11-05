@@ -1,4 +1,5 @@
 import { devices, expect, test, type Page } from '@playwright/test';
+import { fontsReady } from './support/layout';
 
 /**
  * The language switch must look deliberate on an iPhone (WebKit project in playwright.config.ts) and
@@ -16,6 +17,7 @@ type Recorded = {
   captures: ({ at: 'old' | 'new'; x: number; y: number } & Box)[];
   frames: ({ y: number } & Box)[];
   animations: { pseudo: string; end: number; transform: boolean }[] | null;
+  /** How long the transition played on the screen, from `ready` (both pages captured) to its end. */
   elapsed: number | null;
 };
 
@@ -35,7 +37,7 @@ async function recordTransitions(page: Page) {
       w.__vt.push(run);
       // The browser captures the old page on the next frame, as it is now.
       run.captures.push({ at: 'old', x: scrollX, y: scrollY, ...header() });
-      const started = performance.now();
+      let started: number | null = null;
       const transition = original(async () => {
         await update();
         run.captures.push({ at: 'new', x: scrollX, y: scrollY, ...header() });
@@ -48,6 +50,7 @@ async function recordTransitions(page: Page) {
       };
       transition.ready
         .then(() => {
+          started = performance.now();
           // From here on the transition is on the screen (before, the browser shows the old page frozen).
           requestAnimationFrame(tick);
           const pseudo = document
@@ -70,7 +73,7 @@ async function recordTransitions(page: Page) {
       // (else a scroll Playwright makes for its next click could land in this recording).
       const end = () => {
         done = true;
-        run.elapsed = performance.now() - started;
+        run.elapsed = started === null ? 0 : performance.now() - started;
       };
       transition.finished.then(end, end);
       return transition;
@@ -124,13 +127,14 @@ function expectStill(run: Recorded) {
     expect(end).toBeLessThanOrEqual(500);
   }
   expect(run.elapsed).not.toBeNull();
-  expect(run.elapsed!).toBeLessThan(1500);
+  // 440 ms of CSS; the margin is for slow CI machines, not for a longer animation.
+  expect(run.elapsed!).toBeLessThan(1000);
 }
 
 test('at the top of a page: the header stays still while the language changes', async ({ page }) => {
   await recordTransitions(page);
   await page.goto('/login');
-  await page.evaluate(() => document.fonts.ready);
+  await fontsReady(page);
   expect(await page.evaluate(() => typeof document.startViewTransition)).toBe('function');
 
   await switchTo(page, 'Language', 'Русский');
@@ -151,7 +155,7 @@ test('at the bottom of a long page, to a shorter one: same scroll for both captu
   await recordTransitions(page);
   // The style guide is taller in Russian than in English at 390 px.
   await page.goto('/ru/styleguide');
-  await page.evaluate(() => document.fonts.ready);
+  await fontsReady(page);
   await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
   const bottom = await page.evaluate(() => scrollY);
   expect(bottom).toBeGreaterThan(400);
