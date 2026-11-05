@@ -3,14 +3,14 @@
 import { useState, type AnimationEvent, type ReactNode } from 'react';
 import { prefersReducedMotion } from '@/lib/motion';
 
-export type StickerKind = 'coin' | 'check' | 'bolt' | 'star' | 'yoyo';
+export type StickerKind = 'coin' | 'check' | 'bolt' | 'star' | 'yoyo' | 'shield' | 'tag' | 'key' | 'heart';
 
 type StickerProps = {
   kind: StickerKind;
   /** Gives the sticker a meaning for assistive tech; without it the sticker is decorative. */
   label?: string;
-  /** Rendered size in px. */
-  size?: number;
+  /** Rendered size: px, or any CSS length (e.g. `100%` inside a sized slot). */
+  size?: number | string;
   className?: string;
 };
 
@@ -51,6 +51,34 @@ const ART: Record<StickerKind, ReactNode> = {
       <circle cx="40" cy="46" r="30" fill="var(--sticker-blue)" {...OUTLINE} />
       <circle cx="40" cy="46" r="11" fill="#fff" {...OUTLINE} />
     </>
+  ),
+  shield: (
+    <>
+      <path d="M40 6l28 10v22c0 18-12 30-28 36C24 68 12 56 12 38V16z" fill="var(--sticker-violet)" {...OUTLINE} strokeLinejoin="round" />
+      <path d="M28 40l8 8 16-17" fill="none" stroke="#fff" strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" />
+    </>
+  ),
+  tag: (
+    <>
+      <path d="M8 40L38 10h32v32L40 72z" fill="var(--sticker-sun)" {...OUTLINE} strokeLinejoin="round" />
+      <circle cx="57" cy="23" r="6" fill="#fff" {...OUTLINE} />
+      <path d="M30 46l10-10M36 52l10-10" {...OUTLINE} strokeWidth={4} strokeLinecap="round" />
+    </>
+  ),
+  key: (
+    <>
+      <path d="M40 34h32v12h-6v8h-8v-8H40z" fill="var(--sticker-lavender)" {...OUTLINE} strokeLinejoin="round" />
+      <circle cx="26" cy="40" r="17" fill="var(--sticker-lavender)" {...OUTLINE} />
+      <circle cx="22" cy="40" r="6" fill="#fff" {...OUTLINE} />
+    </>
+  ),
+  heart: (
+    <path
+      d="M40 70C10 50 6 32 14 22c8-10 22-8 26 4 4-12 18-14 26-4 8 10 4 28-26 48z"
+      fill="var(--sticker-ember)"
+      {...OUTLINE}
+      strokeLinejoin="round"
+    />
   ),
 };
 

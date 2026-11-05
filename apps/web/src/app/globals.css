@@ -124,16 +124,19 @@
 }
 
 /*
- * Language switch (components/ui/switch-language.ts), 450 ms in all: the old page blurs and fades,
+ * Language switch (components/ui/switch-language.ts) and moving between pages (components/motion/
+ * switch-page.ts), 450 ms in all: the old page blurs and fades,
  * a pastel paper sheet with an ink edge wipes across underneath, then the new language fades in.
  * The header has its own name only during this switch (the theme reveal still covers the whole
  * page), so it stays put and only its words cross-fade.
  */
-html[data-language-switch] [data-site-header] {
+html[data-language-switch] [data-site-header],
+html[data-page-switch] [data-site-header] {
   view-transition-name: site-header;
 }
 
-html[data-language-switch]::view-transition {
+html[data-language-switch]::view-transition,
+html[data-page-switch]::view-transition {
   background-color: var(--canvas);
   background-image: linear-gradient(
     90deg,
@@ -146,16 +149,20 @@ html[data-language-switch]::view-transition {
   animation: language-sheet 300ms var(--ease-yoyo) both;
 }
 
-html[data-language-switch]::view-transition-old(root) {
+html[data-language-switch]::view-transition-old(root),
+html[data-page-switch]::view-transition-old(root) {
   animation: language-out 220ms var(--ease-yoyo) both;
 }
 
-html[data-language-switch]::view-transition-new(root) {
+html[data-language-switch]::view-transition-new(root),
+html[data-page-switch]::view-transition-new(root) {
   animation: language-in 250ms var(--ease-yoyo) 200ms both;
 }
 
 html[data-language-switch]::view-transition-old(site-header),
-html[data-language-switch]::view-transition-new(site-header) {
+html[data-language-switch]::view-transition-new(site-header),
+html[data-page-switch]::view-transition-old(site-header),
+html[data-page-switch]::view-transition-new(site-header) {
   animation-duration: var(--dur-base);
 }
 
@@ -180,6 +187,34 @@ html[data-language-switch]::view-transition-new(site-header) {
   from {
     opacity: 0;
     transform: translateY(8px);
+  }
+}
+
+/*
+ * Sections settle into place as they scroll into view (scroll-driven, no JavaScript): they rise a
+ * little and straighten, like a sticker being pressed down. Only transform moves; the text is fully
+ * visible at every moment, so nothing is ever hidden until scrolled, and a section already on screen
+ * at load is already in place. Browsers without view timelines, print and reduced motion show it still.
+ */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 75%;
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    transform: translateY(48px) rotate(var(--reveal-tilt, -1deg));
+  }
+}
+
+@media print {
+  .reveal {
+    animation: none;
   }
 }
 

@@ -12,6 +12,10 @@
   --sticker-sun: #ffd731;
   --sticker-violet: #5c4ade;
 
+  /* The ribbon's underside and highlight strokes (DESIGN.md Project adaptations §6): flat, no gradient. */
+  --ribbon-shade: #2a78d6;
+  --ribbon-light: #a9d2ff;
+
   /* Motion durations: 150–450 ms (the curve is --ease-yoyo below). */
   --dur-fast: 150ms;
   --dur-base: 250ms;
