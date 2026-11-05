@@ -49,6 +49,7 @@
   --animate-marquee: marquee 30s linear infinite;
   --animate-toast-in: toast-in 250ms var(--ease-yoyo);
   --animate-pop-in: pop-in 150ms var(--ease-yoyo);
+  --animate-step-in: step-in 250ms var(--ease-yoyo);
 
   @keyframes sticker-wobble {
     25% {
@@ -82,6 +83,14 @@
   @keyframes pop-in {
     from {
       transform: scale(0.96);
+      opacity: 0;
+    }
+  }
+
+  /* A builder step slides in from the side it comes from. */
+  @keyframes step-in {
+    from {
+      transform: translateX(var(--step-from, 16px));
       opacity: 0;
     }
   }
@@ -235,3 +244,13 @@ html[data-page-switch]::view-transition-new(site-header) {
     animation: none !important;
   }
 }
+
+/* Leaflet's own controls in the sticker style: a 1px outline, never a shadow (DESIGN.md). */
+.leaflet-bar,
+.leaflet-touch .leaflet-bar {
+  box-shadow: none !important;
+  border: 1px solid #000 !important;
+  border-radius: 9999px !important;
+  overflow: hidden;
+}
+

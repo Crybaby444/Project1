@@ -14,6 +14,8 @@ export class ApiError extends Error {
     message: string = code,
     readonly fields?: Record<string, string>,
     readonly retryAfterSeconds?: number,
+    /** Machine-readable facts: `currentVersion` of a stale listing edit, `steps` of LISTING_INCOMPLETE. */
+    readonly details?: Record<string, unknown>,
   ) {
     super(message);
     this.name = 'ApiError';
@@ -35,8 +37,8 @@ export function toApiError(response: Response, body: unknown): ApiError {
   const parsed = ApiErrorBodySchema.safeParse(body);
   if (!parsed.success)
     return new ApiError('INTERNAL', response.status, `Unexpected ${response.status} answer`);
-  const { code, message, fields } = parsed.data.error;
-  return new ApiError(code, response.status, message, fields, retryAfter(response));
+  const { code, message, fields, details } = parsed.data.error;
+  return new ApiError(code, response.status, message, fields, retryAfter(response), details);
 }
 
 /**

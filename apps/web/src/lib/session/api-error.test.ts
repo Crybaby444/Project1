@@ -32,6 +32,18 @@ describe('toApiError', () => {
     expect(error.retryAfterSeconds).toBeUndefined();
   });
 
+  it('keeps the details the screens act on (the current version, the builder steps)', () => {
+    const error = toApiError(response(400), {
+      error: {
+        code: 'LISTING_INCOMPLETE',
+        message: 'x',
+        fields: { photos: 'Add one' },
+        details: { steps: ['photos'] },
+      },
+    });
+    expect(error.details).toEqual({ steps: ['photos'] });
+  });
+
   it('falls back to INTERNAL for a body that is not an API error (an HTML 502 from a proxy)', () => {
     expect(toApiError(response(502), '<html>Bad gateway</html>')).toMatchObject({
       code: 'INTERNAL',

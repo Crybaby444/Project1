@@ -213,7 +213,9 @@ describe('concurrent money of one wallet', () => {
       expect({ round, pay: pay.status, cancel: cancel.status }).toEqual({ round, pay: 200, cancel: 200 });
     }
     await cleanBooks();
-  });
+    // Ten full booking rounds (top-up, two requests, accept, sign, pay, cancel) take 5–9 s on a CI
+    // runner: more than Vitest's 5 s default, though every round finishes. A deadlock would still hang.
+  }, 60_000);
 });
 
 /** Ids of damage photos on the booking (uploaded through the API from Task 9 on). */

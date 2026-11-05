@@ -3,6 +3,7 @@ import en from '../messages/en.json' with { type: 'json' };
 import lv from '../messages/lv.json' with { type: 'json' };
 import ru from '../messages/ru.json' with { type: 'json' };
 import { asOwnVisitor, PASSWORD, registerByApi, uniqueEmail } from './support/accounts';
+import { readyListingByApi, serveBlankMapTiles, signInAsAdmin } from './support/listings';
 import { overflows } from './support/layout';
 import { latestTo, linkFrom } from './support/mailpit';
 
@@ -78,6 +79,37 @@ for (const { locale, prefix, m } of LOCALES) {
 
         await page.goto(`${prefix}/verify-email?token=not-a-real-token`);
         await fits(page, 'verify email with a bad token', m.auth.verify.invalid.title);
+      });
+
+      test('listing screens fit: every builder step, my items, moderation', async ({
+        page,
+        browser,
+        baseURL,
+      }) => {
+        await serveBlankMapTiles(page);
+        await registerByApi(page.request, { locale });
+        await page.goto(`${prefix}/listings/new`);
+        await fits(page, 'new listing', m.builder.titleNew);
+
+        const listing = await readyListingByApi(page.request);
+        for (const step of ['photos', 'basics', 'attributes', 'price', 'place', 'rules'] as const) {
+          await page.goto(`${prefix}/listings/${listing.id}/edit?step=${step}`);
+          await expect(page.getByRole('heading', { level: 2, name: m.builder.steps[step] })).toBeVisible();
+          await fits(page, `builder: ${step}`, m.builder.titleEdit);
+        }
+        await page.goto(`${prefix}/dashboard/lending`);
+        await fits(page, 'my items', m.myListings.title);
+        await page.goto(`${prefix}/admin/listings`);
+        await fits(page, 'moderation: no access', m.noAccess.title);
+
+        const admin = await browser.newContext({ baseURL, viewport: { width, height: 800 } });
+        await asOwnVisitor(admin);
+        const adminPage = await admin.newPage();
+        await signInAsAdmin(adminPage);
+        await adminPage.goto(`${prefix}/admin/listings`);
+        await expect(adminPage.getByRole('heading', { level: 1, name: m.moderation.title })).toBeVisible();
+        expect.soft(await overflows(adminPage), `moderation overflows at ${width}px (${locale})`).toEqual([]);
+        await admin.close();
       });
 
       test('screens reached from real emails, and the settings, fit', async ({ page, context }) => {
