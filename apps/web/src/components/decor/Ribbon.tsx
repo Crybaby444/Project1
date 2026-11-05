@@ -11,9 +11,9 @@ const SHAPES: Record<RibbonVariant, Shape> = {
   // A long string that crosses the hero and ties one loop, like a yo-yo thrown out and coming back.
   hero: {
     width: 1200,
-    height: 420,
-    stroke: 58,
-    path: 'M-60 300C140 380 260 160 460 230S700 380 800 250C860 170 980 150 990 230C1000 300 900 320 880 250C860 170 1000 80 1260 120',
+    height: 300,
+    stroke: 54,
+    path: 'M-60 210C140 270 260 110 460 160S700 260 800 170C860 110 980 90 990 160C1000 220 900 240 880 180C860 110 1000 50 1260 80',
   },
   // A short piece with one loop, beside a section title.
   loop: {

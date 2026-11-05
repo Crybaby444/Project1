@@ -21,10 +21,11 @@ export type SitePage = (typeof PAGES)[number];
 export const CONTACT_EMAIL = 'admin@yoyo.rent';
 
 /**
- * Where "List an item" leads. The listing builder (/listings/new) comes with the listings screens;
- * until that is on the site, a visitor starts by creating an account.
+ * Where "List an item" leads a signed-in person: the listing builder. It comes with the listings
+ * screens (plan 6b); until that is on the site this is null and the button is not shown (no dead
+ * links). Guests are always offered "Create an account" first.
  */
-export const LIST_ITEM_HREF = '/register';
+export const LIST_ITEM_HREF: string | null = null;
 
 /** Facts of the service the pages quote; one place, so the texts never disagree with each other. */
 export const SERVICE_FACTS = {

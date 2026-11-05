@@ -10,6 +10,8 @@ export type PlacedSticker = {
   bottom?: string | number;
   /** Degrees; hand-placed stickers are never straight. */
   rotate: number;
+  /** Extra classes, e.g. `max-sm:hidden` for a sticker that would cover the type on a phone. */
+  className?: string;
 };
 
 type StickerClusterProps = {
@@ -24,12 +26,12 @@ type StickerClusterProps = {
  */
 export function StickerCluster({ items, className = '' }: StickerClusterProps) {
   return (
-    <div aria-hidden="true" className={`pointer-events-none absolute inset-0 ${className}`}>
-      {items.map(({ kind, size, rotate, top, left, right, bottom }, index) => (
+    <div aria-hidden="true" className={`pointer-events-none absolute inset-0 z-20 ${className}`}>
+      {items.map(({ kind, size, rotate, top, left, right, bottom, className: slotClass = '' }, index) => (
         <span
           key={`${kind}-${index}`}
           data-sticker-slot
-          className="pointer-events-auto absolute"
+          className={`pointer-events-auto absolute ${slotClass}`}
           style={{
             top,
             left,
