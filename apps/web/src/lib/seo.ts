@@ -14,7 +14,8 @@ export function localizedPath(locale: Locale, path: string): string {
 
 /** Canonical address of this page in this language, and the same page in every language. */
 export function alternates(path: string, locale: Locale, siteUrl: string = SITE_URL) {
-  const url = (code: Locale) => `${siteUrl}${localizedPath(code, path)}`;
+  // The English home page is the bare origin, as Next.js writes it (no trailing slash).
+  const url = (code: Locale) => `${siteUrl}${localizedPath(code, path).replace(/^\/$/, '')}`;
   const languages = Object.fromEntries(LOCALES.map((code) => [code, url(code)])) as Record<Locale, string>;
   return {
     canonical: url(locale),
@@ -28,13 +29,22 @@ type PageMetadataInput = {
   title: string;
   description: string;
   siteUrl?: string;
+  /** Adds “ · Yoyo” to the tab title; off for a title that already names the brand. */
+  brand?: boolean;
 };
 
 /** Everything a public page tells search engines and link previews. */
-export function pageMetadata({ locale, path, title, description, siteUrl = SITE_URL }: PageMetadataInput): Metadata {
+export function pageMetadata({
+  locale,
+  path,
+  title,
+  description,
+  siteUrl = SITE_URL,
+  brand = true,
+}: PageMetadataInput): Metadata {
   const links = alternates(path, locale, siteUrl);
   return {
-    title,
+    title: brand ? `${title} · Yoyo` : title,
     description,
     alternates: links,
     openGraph: {
