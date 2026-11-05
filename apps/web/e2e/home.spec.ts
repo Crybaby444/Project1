@@ -25,10 +25,12 @@ test.describe('home page in three languages', () => {
 
   test('the language switcher moves between locales', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('link', { name: 'Русский' }).click();
+    await page.getByRole('button', { name: /^Language: English/ }).click();
+    await page.getByRole('menuitemradio', { name: 'Русский' }).click();
     await expect(page).toHaveURL(/\/ru$/);
     await expect(page.getByText(ru.home.tagline)).toBeVisible();
-    await page.getByRole('link', { name: 'English' }).click();
+    await page.getByRole('button', { name: /^Язык: Русский/ }).click();
+    await page.getByRole('menuitemradio', { name: 'English' }).click();
     await expect(page.getByText(en.home.tagline)).toBeVisible();
   });
 });
