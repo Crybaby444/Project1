@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   experimental: {
+    // The whole stylesheet is ~11 KB compressed: inline it, so the first paint does not wait for a
+    // render-blocking request (Lighthouse mobile: home median 88 → 91).
+    inlineCss: true,
     // Listing photos go through the /api proxy (src/proxy.ts), which buffers request bodies up to this
     // size. The API's own limit is 10 MB a photo; leave room for the multipart envelope around it.
     proxyClientMaxBodySize: '11mb',

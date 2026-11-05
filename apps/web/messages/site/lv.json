@@ -1,0 +1,367 @@
+{
+  "pages": {
+    "home": {
+      "title": "Yoyo — nomā lietas no cilvēkiem tuvumā",
+      "description": "Aizņemies vajadzīgo uz dienu vai nedēļu no cilvēkiem netālu un nopelni ar lietām, kuras reti lieto. Skaidri noteikumi, līgums pirms maksājuma un aizsargāts depozīts."
+    },
+    "howItWorks": {
+      "title": "Kā notiek noma",
+      "description": "Soli pa solim abām pusēm: kā Yoyo nomāt lietu, kā izīrēt savējo un kas notiek ar depozītu."
+    },
+    "faq": {
+      "title": "Jautājumi un atbildes",
+      "description": "Īsas un godīgas atbildes par nomu Yoyo: nauda, depozīts, drošība, konts un tavi dati."
+    },
+    "terms": {
+      "title": "Lietošanas noteikumi",
+      "description": "Yoyo lietošanas noteikumi: konti, sludinājumi, darījumi, depozīts, maksas, atsauksmes un kas notiek, ja kaut kas noiet greizi."
+    },
+    "privacy": {
+      "title": "Privātuma politika",
+      "description": "Kādus personas datus Yoyo glabā, kāpēc, cik ilgi, kas palīdz tos apstrādāt un kā tos apskatīt, labot vai dzēst."
+    },
+    "cookies": {
+      "title": "Sīkdatnes",
+      "description": "Yoyo izmanto tikai tās sīkdatnes, bez kurām vietne nedarbojas: ne reklāmu, ne izsekošanu. Šeit ir pilns saraksts."
+    }
+  },
+  "footer": {
+    "tagline": "Paņem, izmanto, atdod. Lietas atgriežas kā jojo.",
+    "pagesLabel": "Vietnes lapas",
+    "service": "Yoyo",
+    "documents": "Dokumenti",
+    "links": {
+      "howItWorks": "Kā tas strādā",
+      "faq": "Jautājumi un atbildes",
+      "terms": "Lietošanas noteikumi",
+      "privacy": "Privātuma politika",
+      "cookies": "Sīkdatnes"
+    },
+    "contact": "Rakstiet mums",
+    "contactLead": "Jautājumi, idejas vai problēma ar darījumu: mēs izlasām katru vēstuli.",
+    "settings": "Jūsu iestatījumi",
+    "languageLabel": "Vietnes valoda",
+    "copyright": "© {year} Yoyo. Noma starp cilvēkiem Baltijā."
+  },
+  "landing": {
+    "kicker": "Noma starp cilvēkiem · Baltija",
+    "ctaSignUp": "Izveidot kontu",
+    "ctaListItem": "Izīrēt lietu",
+    "ctaHowItWorks": "Kā tas strādā",
+    "marquee": {
+      "one": "Nomā no cilvēkiem tuvumā",
+      "two": "Depozīts ar skaidriem noteikumiem",
+      "three": "Līgums pirms maksājuma",
+      "four": "Katru sludinājumu pārbauda cilvēks",
+      "five": "Atsauksmes tikai no īstiem darījumiem"
+    },
+    "what": {
+      "eyebrow": "Kas ir Yoyo",
+      "title": "Nomā. Izīrē. Atkārto.",
+      "lead": "Yoyo ir vieta, kur cilvēki iznomā lietas viens otram. Urbis, kas vajadzīgs reizi gadā, telts vienai nedēļas nogalei, spēļu konsole ballītei: kādam tuvumā tas jau ir un krāj putekļus plauktā.",
+      "rent": {
+        "title": "Nomājiet, nevis pērciet",
+        "body": "Maksājiet tikai par dienām, kad lietu izmantojat. Nav kur glabāt, nav jāslauka putekļi, nav jānožēlo pirkums."
+      },
+      "lend": {
+        "title": "Nopelniet ar savu plauktu",
+        "body": "Izlieciet lietas, ko lietojat reti, nosakiet cenu un depozītu un paši izvēlieties, kam tās uzticēt."
+      },
+      "back": {
+        "title": "Tas atgriežas",
+        "body": "Katra noma beidzas ar to, ka lieta atkal ir mājās. Tieši par to ir mūsu nosaukums."
+      }
+    },
+    "how": {
+      "eyebrow": "Kā tas strādā",
+      "title": "Kā notiek noma",
+      "renter": "Ja jūs nomājat",
+      "owner": "Ja jūs izīrējat",
+      "renterSteps": {
+        "find": {
+          "title": "Atrodiet",
+          "body": "Sameklējiet vajadzīgo un atzīmējiet dienas kalendārā."
+        },
+        "ask": {
+          "title": "Pajautājiet īpašniekam",
+          "body": "Nosūtiet pieprasījumu. Īpašniekam ir 24 stundas, lai to apstiprinātu."
+        },
+        "sign": {
+          "title": "Parakstiet, tad maksājiet",
+          "body": "Jūs abi parakstāt īsu nomas līgumu, un tad jūs samaksājat nomu un depozītu."
+        },
+        "meet": {
+          "title": "Satiecieties un lietojiet",
+          "body": "Saņemiet lietu klātienē, abi atzīmējiet nodošanu, un uz norunātajām dienām tā ir jūsu."
+        },
+        "return": {
+          "title": "Atdodiet atpakaļ",
+          "body": "Kad īpašnieks apstiprina, ka viss kārtībā, viss depozīts atgriežas pie jums."
+        }
+      },
+      "ownerSteps": {
+        "list": {
+          "title": "Izlieciet sludinājumu",
+          "body": "Foto, godīga cena dienā, depozīts un jūsu noteikumi. Katru sludinājumu pārbaudām pirms publicēšanas."
+        },
+        "choose": {
+          "title": "Izvēlieties nomnieku",
+          "body": "Pieprasījumi nonāk pie jums, un jūs apstiprināt tos, kas der."
+        },
+        "handover": {
+          "title": "Nododiet lietu",
+          "body": "Satiecieties, nofotografējiet lietas stāvokli un atzīmējiet nodošanu."
+        },
+        "paid": {
+          "title": "Saņemiet samaksu",
+          "body": "Nomas maksa ir jūsu, tiklīdz nodošana ir apstiprināta."
+        },
+        "check": {
+          "title": "Pārbaudiet un noslēdziet",
+          "body": "Kad lieta ir atpakaļ, pārbaudiet to 48 stundu laikā: viss kārtībā vai ir bojājumi."
+        }
+      },
+      "more": "Viss sīkāk"
+    },
+    "safety": {
+      "eyebrow": "Drošība",
+      "title": "Uzticība iebūvēta",
+      "deposit": {
+        "title": "Depozīts ar vienu skaidru noteikumu",
+        "body": "Nomas laikā depozīts ir iesaldēts. Viss kārtībā: tas pilnībā atgriežas pie nomnieka. Ja nomnieks atzīst bojājumu, depozīts pāriet īpašniekam. Ja nepiekrīt, mūsu komanda izskata foto un saraksti un pieņem lēmumu."
+      },
+      "contract": {
+        "title": "Līgums pirms naudas",
+        "body": "Datumi, cena, depozīts un noteikumi tiek ierakstīti nomas līgumā, ko abas puses paraksta pirms maksājuma."
+      },
+      "moderation": {
+        "title": "Katrs sludinājums pārbaudīts",
+        "body": "Cilvēks izskata katru sludinājumu, pirms tas parādās vietnē. Ja kaut kas šķiet aizdomīgs, rakstiet mums, un mēs to izskatīsim."
+      },
+      "reviews": {
+        "title": "Atsauksmes tikai no īstiem darījumiem",
+        "body": "Atsauksmi var atstāt tikai tie, kas tiešām nomājuši viens no otra, 14 dienu laikā pēc darījuma."
+      }
+    },
+    "categories": {
+      "eyebrow": "Kategorijas",
+      "title": "Ko var nomāt",
+      "lead": "Šīs ir Yoyo kategorijas šodien. Vienu no tām jūs izvēlēsieties, kad liksiet savu sludinājumu.",
+      "count": "{count, plural, zero {# apakškategoriju} one {# apakškategorija} other {# apakškategorijas}}",
+      "loading": "Ielādējam kategorijas…",
+      "error": "Kategorijas šobrīd neizdevās ielādēt. Iespējams, serveris vēl mostas.",
+      "retry": "Mēģināt vēlreiz"
+    },
+    "faq": {
+      "eyebrow": "BUJ",
+      "title": "Labi jautājumi",
+      "all": "Visi jautājumi un atbildes"
+    },
+    "final": {
+      "title": "Kaut kas stāv plauktā?",
+      "lead": "Izlieciet to dažās minūtēs vai izveidojiet kontu un nomājiet savu pirmo lietu jau šajā nedēļas nogalē.",
+      "faq": "Lasīt jautājumus un atbildes"
+    }
+  },
+  "howItWorks": {
+    "title": "Kā tas strādā",
+    "lead": "Noma Yoyo notiek dažos skaidros soļos, un abas puses vienmēr redz, kurā solī ir darījums un kas notiks tālāk.",
+    "renter": {
+      "heading": "Ja jūs nomājat",
+      "steps": {
+        "find": {
+          "title": "Atrodiet lietu",
+          "body": "Meklējiet pēc tā, kas vajadzīgs, un vietas. Katrā sludinājumā redzama cena dienā, depozīts, īpašnieka noteikumi un brīvās dienas."
+        },
+        "request": {
+          "title": "Nosūtiet pieprasījumu",
+          "body": "Izvēlieties veselas dienas un nosūtiet pieprasījumu, ja vēlaties, ar ziņu. Īpašniekam ir {requestHours} stundas, lai to apstiprinātu; pēc tam pieprasījums beidzas un nekas netiek iekasēts."
+        },
+        "contract": {
+          "title": "Parakstiet līgumu",
+          "body": "Yoyo sagatavo nomas līgumu ar abu pušu vārdiem, lietu, datumiem, cenu, depozītu un noteikumiem. Jūs abi to parakstāt pirms jebkāda maksājuma."
+        },
+        "pay": {
+          "title": "Samaksājiet nomu un depozītu",
+          "body": "Jūs maksājat nomu un {fee}% servisa maksu. Depozīts nomas laikā tiek iesaldēts, nevis nodots īpašniekam."
+        },
+        "handover": {
+          "title": "Satiecieties un paņemiet",
+          "body": "Laiku un vietu norunājiet sarakstē. Kad paņemat lietu, jūs abi atzīmējat nodošanu."
+        },
+        "return": {
+          "title": "Atdodiet atpakaļ",
+          "body": "Atdodiet lietu līdz pēdējai dienai, un jūs abi atzīmējat atgriešanu. Kad īpašnieks apstiprina, ka viss kārtībā, viss depozīts atgriežas pie jums."
+        }
+      }
+    },
+    "owner": {
+      "heading": "Ja jūs izīrējat",
+      "steps": {
+        "list": {
+          "title": "Izveidojiet sludinājumu",
+          "body": "Pievienojiet foto, nosaukumu, kategoriju, cenu dienā, ja vēlaties, atlaidi no 7 dienām, depozītu un savus noteikumus. Publiski redzams tikai rajons, nekad jūsu adrese."
+        },
+        "review": {
+          "title": "Pagaidiet pārbaudi",
+          "body": "Katru jaunu sludinājumu izskata cilvēks. Ja kaut kas jālabo, jūs uzzināsiet iemeslu un varēsiet to izlabot."
+        },
+        "accept": {
+          "title": "Atbildiet uz pieprasījumiem",
+          "body": "Jūs redzat, kas jautā un uz kurām dienām. Apstipriniet {requestHours} stundu laikā vai atsakiet."
+        },
+        "handover": {
+          "title": "Nododiet lietu",
+          "body": "Satiecieties ar nomnieku, nofotografējiet lietas stāvokli un atzīmējiet nodošanu. Nomas maksa ir jūsu, tiklīdz nodošana ir apstiprināta."
+        },
+        "check": {
+          "title": "Pārbaudiet, kad tā ir atpakaļ",
+          "body": "Jums ir {checkHours} stundas, lai nospiestu “Viss kārtībā” vai ziņotu par bojājumu ar aprakstu un foto. Ja neko nedarāt, lieta tiek uzskatīta par kārtībā esošu."
+        }
+      }
+    },
+    "deposit": {
+      "heading": "Depozīta noteikums",
+      "lead": "Depozītam ir viens noteikums, visiem vienāds:",
+      "fine": "Viss kārtībā: viss depozīts atgriežas pie nomnieka.",
+      "agreed": "Ir bojājums, un nomnieks piekrīt: viss depozīts pāriet īpašniekam.",
+      "disputed": "Ir bojājums, bet nomnieks nepiekrīt: mūsu komanda izskata foto no nodošanas un atgriešanas, saraksti un darījuma vēsturi un izlemj, kurš saņem depozītu.",
+      "timeouts": "Lai neviens depozīts neiestrēgtu: ja īpašnieks {checkHours} stundu laikā lietu nepārbauda, tā tiek uzskatīta par kārtībā esošu, bet, ja nomnieks {checkHours} stundu laikā neatbild uz ziņojumu par bojājumu, lietu pārņem mūsu komanda.",
+      "notReturned": "Ja lieta pēc pēdējās dienas netiek atdota, īpašnieks var atvērt strīdu, un tālāk to risina mūsu komanda."
+    },
+    "cancel": {
+      "heading": "Ja pārdomājat",
+      "body": "Jebkura puse var atcelt darījumu, kamēr lieta nav nodota. Ja jau samaksāts, nomnieks saņem atpakaļ nomu, maksu un depozītu. Pēc nodošanas atcelt vairs nevar: lietu atdod, un darījums noslēdzas kā parasti."
+    },
+    "reviews": {
+      "heading": "Atsauksmes",
+      "body": "Kad darījums noslēgts, abām pusēm ir {reviewDays} dienas, lai novērtētu viena otru ar 1–5 zvaigznēm un uzrakstītu dažus vārdus. Nomnieks novērtē arī lietu. Atsauksmes var atstāt tikai par īstiem darījumiem."
+    },
+    "today": {
+      "heading": "Kur Yoyo ir šodien",
+      "body": "Mēs atveram Yoyo pakāpeniski, tāpēc daži no šiem soļiem vietnē parādīsies vēlāk nekā citi. Kamēr tiešsaistes maksājumi nedarbojas, caur Yoyo nauda neplūst, un darījuma ekrānā tas vienmēr būs skaidri pateikts."
+    },
+    "cta": {
+      "title": "Kad būsiet gatavi",
+      "faq": "Lasīt BUJ"
+    }
+  },
+  "faq": {
+    "title": "Jautājumi un atbildes",
+    "lead": "Īsas un godīgas atbildes. Ja jūsu jautājuma šeit nav, rakstiet mums.",
+    "askUs": "Vēl kaut kas nav skaidrs? Rakstiet uz <mail>{email}</mail>.",
+    "groups": {
+      "renting": {
+        "title": "Noma",
+        "items": {
+          "who": {
+            "q": "Kas var nomāt Yoyo?",
+            "a": "Ikviens, kam ir vismaz 18 gadi un apstiprināta e-pasta adrese. Viens konts der abiem virzieniem: no viena profila var gan nomāt, gan izīrēt."
+          },
+          "days": {
+            "q": "Vai var nomāt uz dažām stundām?",
+            "a": "Nē, noma tiek skaitīta veselās dienās. Jūs izvēlaties pirmo un pēdējo dienu, un abas tiek ieskaitītas."
+          },
+          "meet": {
+            "q": "Kā es saņemu lietu?",
+            "a": "Jūs satiekaties ar īpašnieku klātienē, laikā un vietā, ko norunājat sarakstē. Yoyo lietas nepiegādā. Publiski redzams tikai īpašnieka rajons; precīzo vietu norunājat jūs abi."
+          },
+          "longer": {
+            "q": "Ko darīt, ja lieta vajadzīga ilgāk?",
+            "a": "Pajautājiet īpašniekam sarakstē pirms pēdējās dienas. Papildu dienas ir jauns pieprasījums, lai kalendārs visiem būtu pareizs."
+          }
+        }
+      },
+      "lending": {
+        "title": "Izīrēšana",
+        "items": {
+          "what": {
+            "q": "Ko es varu izīrēt?",
+            "a": "Lietas, kas pieder jums vai kuras jums ir tiesības izīrēt un kuras ir droši un likumīgi lietot. Ieroči, nelegālas, zagtas vai viltotas preces, bīstamas vielas un dzīvnieki nav atļauti. Pilns saraksts ir lietošanas noteikumos."
+          },
+          "price": {
+            "q": "Kā izvēlēties cenu un depozītu?",
+            "a": "Abus nosakāt jūs. Godīga cena dienā parasti ir neliela daļa no jaunas lietas cenas. Depozītam jāsedz remonts vai aizstāšana, ja kaut kas noiet greizi."
+          },
+          "hidden": {
+            "q": "Kāpēc mans sludinājums vēl nav redzams?",
+            "a": "Katru jaunu sludinājumu pirms publicēšanas pārbauda cilvēks. Ja kaut kas jāmaina, jūs uzzināsiet iemeslu un varēsiet to izlabot."
+          },
+          "decline": {
+            "q": "Vai man jāpieņem katrs pieprasījums?",
+            "a": "Nē. Jūs paši izlemjat, kam izīrēt savas lietas. Pieprasījums, uz kuru neatbildat 24 stundu laikā, vienkārši beidzas."
+          }
+        }
+      },
+      "money": {
+        "title": "Nauda un depozīts",
+        "items": {
+          "cost": {
+            "q": "Cik maksā Yoyo?",
+            "a": "Konta izveide un sludinājumi ir bez maksas. Kad darbosies tiešsaistes maksājumi, nomnieks papildus nomai maksās 10% servisa maksu. Īpašnieki nemaksā neko."
+          },
+          "payNow": {
+            "q": "Vai jau tagad var maksāt caur Yoyo?",
+            "a": "Vēl nē. Mēs atveram Yoyo pakāpeniski, un tiešsaistes maksājumi parādīsies kopā ar rezervācijām. Līdz tam caur Yoyo nauda neplūst, un mēs nekad neprasām jūsu kartes datus."
+          },
+          "deposit": {
+            "q": "Kas notiek ar depozītu?",
+            "a": "Nomas laikā tas ir iesaldēts un netiek izmaksāts īpašniekam. Ja viss kārtībā, tas pilnībā atgriežas pie nomnieka. Ja ir bojājums un nomnieks piekrīt, tas pāriet īpašniekam; ja nepiekrīt, lemj mūsu komanda."
+          },
+          "paid": {
+            "q": "Kad īpašnieks saņem naudu?",
+            "a": "Tiklīdz abas puses apstiprina nodošanu. Servisa maksa tajā pašā brīdī pāriet Yoyo."
+          }
+        }
+      },
+      "safety": {
+        "title": "Drošība un strīdi",
+        "items": {
+          "broken": {
+            "q": "Ko darīt, ja lieta salūst?",
+            "a": "Uzreiz pastāstiet īpašniekam sarakstē. Kad lieta ir atpakaļ, īpašnieks var ziņot par bojājumu ar foto, un tālāko nosaka depozīta noteikums. Ja nepiekrītat, mūsu komanda izskata foto, saraksti un darījuma vēsturi un pieņem lēmumu."
+          },
+          "notReturned": {
+            "q": "Ko darīt, ja lieta netiek atdota?",
+            "a": "Pēc pēdējās dienas īpašnieks var atvērt strīdu. Mūsu komanda izskata darījumu un lemj par depozītu. Zādzības gadījumā vērsieties arī policijā."
+          },
+          "report": {
+            "q": "Kā ziņot par sludinājumu vai cilvēku?",
+            "a": "Rakstiet uz admin@yoyo.rent, pievienojiet saiti un dažos vārdos aprakstiet, kas noticis. Mēs izlasām katru vēstuli. Ziņošanas pogas pie sludinājumiem, ziņām un profiliem drīz būs."
+          },
+          "insurance": {
+            "q": "Vai mana lieta ir apdrošināta?",
+            "a": "Nē, Yoyo apdrošināšanu nepiedāvā. Aizsardzība ir depozīts, tāpēc nosakiet to pietiekami lielu, lai segtu remontu vai aizstāšanu."
+          }
+        }
+      },
+      "account": {
+        "title": "Konts un dati",
+        "items": {
+          "delete": {
+            "q": "Kā izdzēst savu kontu?",
+            "a": "Atveriet Iestatījumi, tad Drošība, tad Dzēst kontu. Jūsu vārds, e-pasts, tālrunis, sesijas un nepublicētie sludinājumi tiek dzēsti uzreiz, publicētie sludinājumi tiek noņemti. Ja jums ir neslēgts darījums vai nauda Yoyo makā, vispirms pabeidziet darījumu vai izmaksājiet naudu. Sīkāk to apraksta privātuma politika."
+          },
+          "data": {
+            "q": "Ko jūs darāt ar maniem datiem?",
+            "a": "Tikai to, kas vajadzīgs pakalpojuma darbībai. Nekādas reklāmas, izsekošanas vai datu pārdošanas. Privātuma politikā ir uzskaitīts, ko mēs glabājam, kāpēc un cik ilgi."
+          },
+          "language": {
+            "q": "Vai Yoyo var lietot latviski vai krieviski?",
+            "a": "Jā. Visa vietne darbojas angļu, latviešu un krievu valodā; valodu var pārslēgt jebkuras lapas augšā vai apakšā. E-pasti pienāk jūsu konta valodā."
+          },
+          "contact": {
+            "q": "Kā ar jums sazināties?",
+            "a": "Rakstiet uz admin@yoyo.rent. Katru vēstuli izlasa īsts cilvēks."
+          }
+        }
+      }
+    }
+  },
+  "legal": {
+    "summary": "Īsumā",
+    "contents": "Saturs",
+    "effective": "Spēkā no {date}",
+    "note": "Šis kopsavilkums palīdz orientēties; spēkā ir pilnais teksts zemāk."
+  }
+}

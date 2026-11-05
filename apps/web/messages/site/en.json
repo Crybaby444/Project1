@@ -1,0 +1,367 @@
+{
+  "pages": {
+    "home": {
+      "title": "Yoyo — rent things from people nearby",
+      "description": "Borrow what you need for a day or a week from people near you, and earn from the things you rarely use. Clear rules, a contract before paying and a protected deposit."
+    },
+    "howItWorks": {
+      "title": "How renting works",
+      "description": "Step by step for both sides: how to rent an item on Yoyo, how to lend yours, and what happens to the deposit."
+    },
+    "faq": {
+      "title": "Questions and answers",
+      "description": "Short, honest answers about renting and lending on Yoyo: money, the deposit, safety, your account and your data."
+    },
+    "terms": {
+      "title": "Terms of service",
+      "description": "The rules for using Yoyo: accounts, listings, deals, the deposit, fees, reviews and what happens when something goes wrong."
+    },
+    "privacy": {
+      "title": "Privacy policy",
+      "description": "What personal data Yoyo keeps, why, for how long, who helps us process it, and how to see, change or delete it."
+    },
+    "cookies": {
+      "title": "Cookies",
+      "description": "Yoyo uses only the cookies the site needs to work: no advertising, no tracking. Here is the full list."
+    }
+  },
+  "footer": {
+    "tagline": "Rent it, use it, bring it back. Things come home like a yo-yo.",
+    "pagesLabel": "Site pages",
+    "service": "Yoyo",
+    "documents": "Documents",
+    "links": {
+      "howItWorks": "How it works",
+      "faq": "Questions and answers",
+      "terms": "Terms of service",
+      "privacy": "Privacy policy",
+      "cookies": "Cookies"
+    },
+    "contact": "Write to us",
+    "contactLead": "Questions, ideas or a problem with a deal: we read every message.",
+    "settings": "Your settings",
+    "languageLabel": "Site language",
+    "copyright": "© {year} Yoyo. Rentals between people in the Baltics."
+  },
+  "landing": {
+    "kicker": "Rentals between people · Baltics",
+    "ctaSignUp": "Create an account",
+    "ctaListItem": "List an item",
+    "ctaHowItWorks": "How it works",
+    "marquee": {
+      "one": "Rent from people nearby",
+      "two": "A deposit with clear rules",
+      "three": "A contract before you pay",
+      "four": "Every listing checked by a person",
+      "five": "Reviews from real deals only"
+    },
+    "what": {
+      "eyebrow": "What is Yoyo",
+      "title": "Rent. Lend. Repeat.",
+      "lead": "Yoyo is a marketplace where people rent things to each other. The drill you need once a year, a tent for one weekend, a console for a party night: someone nearby already has it, and it is gathering dust on a shelf.",
+      "rent": {
+        "title": "Rent instead of buying",
+        "body": "Pay only for the days you use it. Nothing to store, nothing to dust, no purchase to regret."
+      },
+      "lend": {
+        "title": "Earn from your shelf",
+        "body": "List the things you rarely use, set your price and deposit, and decide who you trust them to."
+      },
+      "back": {
+        "title": "It comes back",
+        "body": "Every rental ends with the item home again. That is the whole idea behind the name."
+      }
+    },
+    "how": {
+      "eyebrow": "How it works",
+      "title": "How a rental goes",
+      "renter": "When you rent",
+      "owner": "When you lend",
+      "renterSteps": {
+        "find": {
+          "title": "Find it",
+          "body": "Look for what you need and mark your days on the calendar."
+        },
+        "ask": {
+          "title": "Ask the owner",
+          "body": "Send a request. The owner has 24 hours to accept it."
+        },
+        "sign": {
+          "title": "Sign, then pay",
+          "body": "You both sign a short rental contract, then you pay the rent and the deposit."
+        },
+        "meet": {
+          "title": "Meet and use it",
+          "body": "Pick the item up in person, both mark the handover, and it is yours for those days."
+        },
+        "return": {
+          "title": "Bring it back",
+          "body": "Once the owner confirms all is well, the whole deposit comes back to you."
+        }
+      },
+      "ownerSteps": {
+        "list": {
+          "title": "List it",
+          "body": "Photos, a fair price per day, a deposit and your rules. We check every listing before it goes live."
+        },
+        "choose": {
+          "title": "Choose who rents",
+          "body": "Requests come to you, and you accept the ones that suit you."
+        },
+        "handover": {
+          "title": "Hand it over",
+          "body": "Meet up, photograph the item's condition and mark the handover."
+        },
+        "paid": {
+          "title": "Get paid",
+          "body": "The rent is yours as soon as the handover is confirmed."
+        },
+        "check": {
+          "title": "Check and close",
+          "body": "When it is back, check it within 48 hours: all good, or report damage."
+        }
+      },
+      "more": "The full walkthrough"
+    },
+    "safety": {
+      "eyebrow": "Safety",
+      "title": "Trust, built in",
+      "deposit": {
+        "title": "A deposit with one clear rule",
+        "body": "The deposit is frozen during the rental. All fine: it goes back to the renter in full. Damage the renter accepts: it goes to the owner. If they disagree, our team looks at the photos and the chat and decides."
+      },
+      "contract": {
+        "title": "A contract before any money",
+        "body": "Dates, price, deposit and rules go into a rental contract that both sides sign before anyone pays."
+      },
+      "moderation": {
+        "title": "Every listing checked",
+        "body": "A person reviews each listing before it appears on the site. If something looks wrong, write to us and we will look into it."
+      },
+      "reviews": {
+        "title": "Reviews from real deals only",
+        "body": "Only people who actually rented from each other can leave a review, within 14 days of the deal."
+      }
+    },
+    "categories": {
+      "eyebrow": "Categories",
+      "title": "What you can rent",
+      "lead": "These are the categories on Yoyo today. You pick one of them when you list an item.",
+      "count": "{count, plural, one {# subcategory} other {# subcategories}}",
+      "loading": "Loading the categories…",
+      "error": "We couldn't load the categories just now. The server may still be waking up.",
+      "retry": "Try again"
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Good questions",
+      "all": "All questions and answers"
+    },
+    "final": {
+      "title": "Got something on a shelf?",
+      "lead": "List it in a few minutes, or create an account and rent your first thing this weekend.",
+      "faq": "Read the FAQ"
+    }
+  },
+  "howItWorks": {
+    "title": "How it works",
+    "lead": "Renting on Yoyo takes a few clear steps, and both sides always see which step a deal is at and what comes next.",
+    "renter": {
+      "heading": "Renting an item",
+      "steps": {
+        "find": {
+          "title": "Find the item",
+          "body": "Search by what you need and where. Each listing shows the price per day, the deposit, the owner's rules and the days it is free."
+        },
+        "request": {
+          "title": "Send a request",
+          "body": "Pick whole days and send a request, with a message if you like. The owner has {requestHours} hours to accept; after that the request expires and nothing is charged."
+        },
+        "contract": {
+          "title": "Sign the contract",
+          "body": "Yoyo prepares a rental contract with both names, the item, the dates, the price, the deposit and the rules. You both sign it before any payment."
+        },
+        "pay": {
+          "title": "Pay the rent and the deposit",
+          "body": "You pay the rent plus a {fee}% service fee. The deposit is frozen for the rental, not handed to the owner."
+        },
+        "handover": {
+          "title": "Meet and take it",
+          "body": "Agree on a time and place in the chat. When you take the item, you both mark the handover."
+        },
+        "return": {
+          "title": "Bring it back",
+          "body": "Return it by the last day and you both mark the return. Once the owner confirms all is well, the whole deposit comes back to you."
+        }
+      }
+    },
+    "owner": {
+      "heading": "Lending an item",
+      "steps": {
+        "list": {
+          "title": "Create a listing",
+          "body": "Add photos, a title, the category, a price per day, an optional discount from 7 days, a deposit and your rules. Only the district is shown publicly, never your address."
+        },
+        "review": {
+          "title": "Wait for the check",
+          "body": "A person reviews every new listing. If something needs fixing, you get the reason and can correct it."
+        },
+        "accept": {
+          "title": "Answer requests",
+          "body": "You see who is asking and for which days. Accept within {requestHours} hours, or decline."
+        },
+        "handover": {
+          "title": "Hand it over",
+          "body": "Meet the renter, photograph the item's condition and mark the handover. The rent is yours once the handover is confirmed."
+        },
+        "check": {
+          "title": "Check it when it is back",
+          "body": "You have {checkHours} hours to press “All good” or report damage with a description and photos. If you do nothing, the item counts as fine."
+        }
+      }
+    },
+    "deposit": {
+      "heading": "The deposit rule",
+      "lead": "The deposit follows one rule, the same for everyone:",
+      "fine": "All good: the whole deposit goes back to the renter.",
+      "agreed": "Damage, and the renter agrees: the whole deposit goes to the owner.",
+      "disputed": "Damage, and the renter disagrees: our team looks at the photos from the handover and the return, the chat and the history of the deal, and decides who gets the deposit.",
+      "timeouts": "So that no deposit gets stuck: if the owner does not check the item within {checkHours} hours, it counts as fine, and if the renter does not answer a damage report within {checkHours} hours, our team takes it over.",
+      "notReturned": "If an item is not returned after the last day, the owner can open a dispute and our team takes it from there."
+    },
+    "cancel": {
+      "heading": "Changing your mind",
+      "body": "Either side can cancel a deal until the item is handed over. If it was already paid, the renter gets back the rent, the fee and the deposit. After the handover there is no cancelling: the item is returned and the deal closes as usual."
+    },
+    "reviews": {
+      "heading": "Reviews",
+      "body": "When a deal closes, both sides have {reviewDays} days to rate each other from 1 to 5 stars and write a few words. The renter also rates the item. Only real deals can be reviewed."
+    },
+    "today": {
+      "heading": "Where Yoyo is today",
+      "body": "We are opening Yoyo step by step, so some of these steps arrive on the site later than others. Until online payment is live, no money moves through Yoyo, and the deal screen will always say so plainly."
+    },
+    "cta": {
+      "title": "Ready when you are",
+      "faq": "Read the FAQ"
+    }
+  },
+  "faq": {
+    "title": "Questions and answers",
+    "lead": "Short, honest answers. If yours is not here, write to us.",
+    "askUs": "Still wondering? Write to <mail>{email}</mail>.",
+    "groups": {
+      "renting": {
+        "title": "Renting",
+        "items": {
+          "who": {
+            "q": "Who can rent on Yoyo?",
+            "a": "Anyone aged 18 or over with a confirmed email address. One account works both ways: you can rent and lend from the same profile."
+          },
+          "days": {
+            "q": "Can I rent something for a few hours?",
+            "a": "No, rentals count in whole days. You pick the first and the last day, and both count."
+          },
+          "meet": {
+            "q": "How do I get the item?",
+            "a": "You meet the owner in person, at a time and place you agree on in the chat. Yoyo does not deliver. Only the owner's district is public; the exact spot is up to the two of you."
+          },
+          "longer": {
+            "q": "What if I need it for longer?",
+            "a": "Ask the owner in the chat before the last day. Extra days are a new request, so the calendar stays right for everyone."
+          }
+        }
+      },
+      "lending": {
+        "title": "Lending",
+        "items": {
+          "what": {
+            "q": "What can I lend?",
+            "a": "Things you own, or are allowed to rent out, that are safe and legal to use. Weapons, illegal, stolen or counterfeit goods, hazardous substances and animals are not allowed. The full list is in the terms of service."
+          },
+          "price": {
+            "q": "How do I choose the price and the deposit?",
+            "a": "You set both. A fair price per day is usually a small part of what the item costs new. The deposit should cover a repair or a replacement if something goes wrong."
+          },
+          "hidden": {
+            "q": "Why is my listing not visible yet?",
+            "a": "A person checks every new listing before it appears. If something needs changing, you get the reason and can fix it."
+          },
+          "decline": {
+            "q": "Do I have to accept every request?",
+            "a": "No. You decide who rents your things. A request you do not answer within 24 hours simply expires."
+          }
+        }
+      },
+      "money": {
+        "title": "Money and the deposit",
+        "items": {
+          "cost": {
+            "q": "How much does Yoyo cost?",
+            "a": "Creating an account and listing items is free. When online payments are live, the renter pays a 10% service fee on top of the rent. Owners pay no fee."
+          },
+          "payNow": {
+            "q": "Can I already pay through Yoyo?",
+            "a": "Not yet. We are opening Yoyo step by step, and online payment comes together with bookings. Until then no money moves through Yoyo, and we never ask you for card details."
+          },
+          "deposit": {
+            "q": "What happens to the deposit?",
+            "a": "It is frozen for the rental and not paid to the owner. If all is well, it comes back to the renter in full. If there is damage and the renter agrees, it goes to the owner; if not, our team decides."
+          },
+          "paid": {
+            "q": "When does the owner get paid?",
+            "a": "As soon as both sides confirm the handover. The service fee goes to Yoyo at the same moment."
+          }
+        }
+      },
+      "safety": {
+        "title": "Safety and disputes",
+        "items": {
+          "broken": {
+            "q": "What if the item breaks?",
+            "a": "Tell the owner straight away in the chat. When it is back, the owner can report damage with photos, and the deposit rule decides what happens. If you disagree, our team looks at the photos, the chat and the deal history and decides."
+          },
+          "notReturned": {
+            "q": "What if the item is not returned?",
+            "a": "After the last day the owner can open a dispute. Our team looks at the deal and decides about the deposit. In the case of theft, also contact the police."
+          },
+          "report": {
+            "q": "How do I report a listing or a person?",
+            "a": "Write to admin@yoyo.rent with a link and a few words about what happened. We read every message. Report buttons on listings, messages and profiles are on the way."
+          },
+          "insurance": {
+            "q": "Is my item insured?",
+            "a": "No, Yoyo does not offer insurance. The deposit is the protection, so set it high enough to cover a repair or a replacement."
+          }
+        }
+      },
+      "account": {
+        "title": "Account and data",
+        "items": {
+          "delete": {
+            "q": "How do I delete my account?",
+            "a": "Open Settings, then Security, then Delete account. Your name, email, phone, sessions and unpublished listings are removed at once; published listings are taken down. If you have an open deal or money in your Yoyo wallet, finish the deal or pay the money out first. The privacy policy has the details."
+          },
+          "data": {
+            "q": "What do you do with my data?",
+            "a": "Only what the service needs to work. No advertising, no tracking, no selling of data. The privacy policy lists what we keep, why and for how long."
+          },
+          "language": {
+            "q": "Can I use Yoyo in Latvian or Russian?",
+            "a": "Yes. The whole site works in English, Latvian and Russian; switch at the top or the bottom of any page. Emails come in the language of your account."
+          },
+          "contact": {
+            "q": "How do I contact you?",
+            "a": "Write to admin@yoyo.rent. A real person reads every message."
+          }
+        }
+      }
+    }
+  },
+  "legal": {
+    "summary": "In short",
+    "contents": "Contents",
+    "effective": "In effect from {date}",
+    "note": "This summary helps you find your way; the full text below is what applies."
+  }
+}
