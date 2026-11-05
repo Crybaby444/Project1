@@ -32,8 +32,10 @@ export function useListing(id: string | null) {
     queryFn: async () =>
       (await unwrap(client.GET('/api/v1/listings/{id}', { params: { path: { id: id! } } }))).listing,
     enabled: id !== null,
-    // The builder owns the listing while it is open; a refetch would race its autosave.
+    // The builder owns the listing while it is open; a refetch would race its autosave. Once it is
+    // closed the copy is dropped, so the next visit starts from the stored listing and its version.
     staleTime: Infinity,
+    gcTime: 0,
     refetchOnWindowFocus: false,
   });
 }

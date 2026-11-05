@@ -31,7 +31,16 @@ const riga = {
   lng: 24.105186,
 };
 
+function renderPlaceWithCalls() {
+  return renderPlaceInner().calls;
+}
+
 function renderPlace() {
+  const { calls } = renderPlaceInner();
+  return () => calls.filter((c) => c.method === 'PATCH').map((c) => c.body as Record<string, unknown>);
+}
+
+function renderPlaceInner() {
   const listing = ownerListing();
   const { client, calls } = fakeApi({
     ...meRoute(testUser()),
@@ -48,7 +57,7 @@ function renderPlace() {
     }),
   });
   renderWithSession(<ListingBuilder initial={listing} initialStep="place" />, { client });
-  return () => calls.filter((c) => c.method === 'PATCH').map((c) => c.body as Record<string, unknown>);
+  return { calls };
 }
 
 describe('PlaceStep', () => {
@@ -92,6 +101,20 @@ describe('PlaceStep', () => {
       {
         timeout: 3000,
       },
+    );
+  });
+
+  it('sends a date change still waiting when the person moves to another step', async () => {
+    const user = userEvent.setup();
+    const calls = renderPlaceWithCalls();
+    await user.click(
+      screen
+        .getAllByRole('button', { name: /, 20\d\d$/ })
+        .find((day) => day.getAttribute('aria-disabled') !== 'true')!,
+    );
+    await user.click(screen.getByRole('link', { name: /Price/ }));
+    await waitFor(() =>
+      expect(calls.some((c) => c.method === 'PUT' && c.path.endsWith('/unavailability'))).toBe(true),
     );
   });
 

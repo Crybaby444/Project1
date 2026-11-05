@@ -10,7 +10,7 @@ import { Dialog } from '@/components/ui/Dialog';
 import { useErrorText } from '@/lib/forms/error-text';
 import { findPath, localized } from '@/lib/listings/categories';
 import { BUILDER_STEPS, type BuilderStep } from '@/lib/listings/listing-checks';
-import { listingKeys, useCategories } from '@/lib/listings/queries';
+import { useCategories } from '@/lib/listings/queries';
 import { useListingDraft } from '@/lib/listings/use-listing-draft';
 import { useApiClient } from '@/lib/session/SessionProvider';
 import { BuilderProvider, useBuilder } from './BuilderContext';
@@ -78,7 +78,6 @@ export function ListingBuilder({
     client,
     category: (categoryId) => findPath(categories, categoryId).at(-1),
     onCreated: (listing) => {
-      queryClient.setQueryData(listingKeys.one(listing.id), listing);
       void queryClient.invalidateQueries({ queryKey: ['listings', 'mine'] });
       rewriteUrl({
         pathname: window.location.pathname.replace(/\/listings\/new\/?$/, `/listings/${listing.id}/edit`),

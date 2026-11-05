@@ -47,7 +47,15 @@ export function PlaceStep() {
   const datesTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const today = todayIn(listing?.timeZone ?? 'Europe/Riga');
 
-  useEffect(() => () => clearTimeout(datesTimer.current), []);
+  /** The date save still waiting, so leaving the step sends it at once instead of dropping it. */
+  const pendingSave = useRef<(() => Promise<void>) | null>(null);
+  useEffect(
+    () => () => {
+      clearTimeout(datesTimer.current);
+      void pendingSave.current?.();
+    },
+    [],
+  );
 
   function setPlace(place: GeoPlace) {
     placeTyped.current = false;
@@ -88,7 +96,8 @@ export function PlaceStep() {
   function changeDates(next: DatePeriod[]) {
     setPeriods(next);
     clearTimeout(datesTimer.current);
-    datesTimer.current = setTimeout(async () => {
+    const save = async () => {
+      pendingSave.current = null;
       try {
         await draft.withListing(async (current) => {
           const saved = await unwrap(
@@ -104,7 +113,9 @@ export function PlaceStep() {
         setPeriods(draft.listing?.unavailability ?? []);
         toast.show(errorText(error));
       }
-    }, SAVE_DATES_AFTER_MS);
+    };
+    pendingSave.current = save;
+    datesTimer.current = setTimeout(() => void save(), SAVE_DATES_AFTER_MS);
   }
 
   return (
