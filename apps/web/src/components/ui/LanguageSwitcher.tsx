@@ -24,11 +24,8 @@ import { shouldAnimateLanguageChange, switchLanguage } from './switch-language';
  * the new `ru` cookie, so "English" afterwards leads back to /ru.
  */
 
-/**
- * Which control gets the focus after a switch: the pill of the new language, or the menu button. The
- * pills in the footer have their own target, so a switch made there keeps the focus there.
- */
-type FocusTarget = 'current-pill' | 'menu-button' | 'footer-pill';
+/** Which control gets the focus after a switch: the pill of the new language, or the menu button. */
+type FocusTarget = 'current-pill' | 'menu-button';
 
 /**
  * Click handler for a language link: a plain click switches through the router inside the language
@@ -102,33 +99,18 @@ function Here({ children }: { children(href: string): ReactNode }) {
   );
 }
 
-type LanguageSwitcherProps = {
-  /** Name of the navigation; a second switcher on the page (the footer) needs a name of its own. */
-  label?: string;
-  /** Where the focus goes after a switch made with these pills. */
-  focusTarget?: Extract<FocusTarget, 'current-pill' | 'footer-pill'>;
-};
-
 /** Pill switcher between EN / LV / RU that keeps the current page (and its query). */
-export function LanguageSwitcher({ label, focusTarget = 'current-pill' }: LanguageSwitcherProps = {}) {
-  return <Here>{(href) => <LanguagePills href={href} label={label} focusTarget={focusTarget} />}</Here>;
+export function LanguageSwitcher() {
+  return <Here>{(href) => <LanguagePills href={href} />}</Here>;
 }
 
-function LanguagePills({
-  href,
-  label,
-  focusTarget,
-}: {
-  href: string;
-  label: string | undefined;
-  focusTarget: Extract<FocusTarget, 'current-pill' | 'footer-pill'>;
-}) {
+function LanguagePills({ href }: { href: string }) {
   const t = useTranslations('language');
   const current = useLocale();
-  const switchTo = useSwitchTo(href, focusTarget);
+  const switchTo = useSwitchTo(href, 'current-pill');
 
   return (
-    <nav aria-label={label ?? t('label')}>
+    <nav aria-label={t('label')}>
       <ul className="flex flex-wrap justify-center gap-1 rounded-pill border border-ink bg-surface p-1">
         {LOCALES.map((locale) => {
           const active = locale === current;
@@ -141,7 +123,7 @@ function LanguagePills({
                 hrefLang={locale}
                 lang={locale}
                 aria-current={active ? 'true' : undefined}
-                data-language-focus={active ? focusTarget : undefined}
+                data-language-focus={active ? 'current-pill' : undefined}
                 onClick={(event) => switchTo(event, locale)}
                 className={`inline-flex min-h-10 items-center rounded-pill px-4 text-[13px] font-bold tracking-[0.03em] uppercase transition-[background-color,color,transform] duration-200 ease-yoyo active:scale-[0.97] ${
                   active ? 'bg-cta text-cta-fg' : 'hover:-translate-y-px hover:bg-mist'

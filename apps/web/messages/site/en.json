@@ -340,7 +340,7 @@
         "items": {
           "delete": {
             "q": "How do I delete my account?",
-            "a": "Open Settings, then Security, then Delete account. Your name, email, phone, sessions and unpublished listings are removed at once; published listings are taken down. The privacy policy has the details."
+            "a": "Open Settings, then Security, then Delete account. Your name, email, phone, sessions and unpublished listings are removed at once; published listings are taken down. If you have an open deal or money in your Yoyo wallet, finish the deal or pay the money out first. The privacy policy has the details."
           },
           "data": {
             "q": "What do you do with my data?",

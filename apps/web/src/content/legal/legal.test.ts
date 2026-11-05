@@ -61,6 +61,16 @@ describe('privacy policy', () => {
     expect(ids.indexOf('required')).toBe(ids.indexOf('purposes') + 1);
   });
 
+  it.each([
+    ['en', /open deal.*wallet/s],
+    ['lv', /darījum.*mak/s],
+    ['ru', /сделк.*кошел/s],
+  ] as const)('%s says an open deal or a wallet balance must be settled before deleting (API: 409)', (locale, pattern) => {
+    const section = PRIVACY_POLICY[locale].sections.find((s) => s.id === 'delete')!;
+    const text = section.blocks.map((b) => ('p' in b ? b.p : '')).join(' ');
+    expect(text).toMatch(pattern);
+  });
+
   it.each(LOCALES)('%s says how to complain and how to delete the account', (locale: Locale) => {
     const text = allText(PRIVACY_POLICY[locale]);
     expect(text).toContain('dvi.gov.lv');

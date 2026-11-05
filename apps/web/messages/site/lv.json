@@ -340,7 +340,7 @@
         "items": {
           "delete": {
             "q": "Kā izdzēst savu kontu?",
-            "a": "Atveriet Iestatījumi, tad Drošība, tad Dzēst kontu. Jūsu vārds, e-pasts, tālrunis, sesijas un nepublicētie sludinājumi tiek dzēsti uzreiz, publicētie sludinājumi tiek noņemti. Sīkāk to apraksta privātuma politika."
+            "a": "Atveriet Iestatījumi, tad Drošība, tad Dzēst kontu. Jūsu vārds, e-pasts, tālrunis, sesijas un nepublicētie sludinājumi tiek dzēsti uzreiz, publicētie sludinājumi tiek noņemti. Ja jums ir neslēgts darījums vai nauda Yoyo makā, vispirms pabeidziet darījumu vai izmaksājiet naudu. Sīkāk to apraksta privātuma politika."
           },
           "data": {
             "q": "Ko jūs darāt ar maniem datiem?",

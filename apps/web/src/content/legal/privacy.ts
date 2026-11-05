@@ -142,6 +142,9 @@ const en: LegalDoc = {
         {
           p: 'If you cannot sign in, write to [admin@yoyo.rent](mailto:admin@yoyo.rent) from the address of the account and we will delete it for you.',
         },
+        {
+          p: 'If you have an open deal or money in your Yoyo wallet, finish the deal or pay the money out first: until then the account cannot be deleted, so that nobody’s deposit or payment is left without an owner.',
+        },
       ],
     },
     {
@@ -370,6 +373,9 @@ const lv: LegalDoc = {
         {
           p: 'Ja nevarat pieteikties, rakstiet uz [admin@yoyo.rent](mailto:admin@yoyo.rent) no konta e-pasta adreses, un mēs to izdzēsīsim jūsu vietā.',
         },
+        {
+          p: 'Ja jums ir neslēgts darījums vai nauda Yoyo makā, vispirms pabeidziet darījumu vai izmaksājiet naudu: līdz tam kontu dzēst nevar, lai neviena depozīts vai maksājums nepaliktu bez saņēmēja.',
+        },
       ],
     },
     {
@@ -597,6 +603,9 @@ const ru: LegalDoc = {
         },
         {
           p: 'Если вы не можете войти, напишите на [admin@yoyo.rent](mailto:admin@yoyo.rent) с адреса аккаунта, и мы удалим его за вас.',
+        },
+        {
+          p: 'Если у вас есть незакрытая сделка или деньги в кошельке Yoyo, сначала завершите сделку или выведите деньги: до этого аккаунт удалить нельзя, чтобы ничей залог или платёж не остался без получателя.',
         },
       ],
     },
