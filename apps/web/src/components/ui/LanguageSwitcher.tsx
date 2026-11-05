@@ -2,6 +2,7 @@
 
 import { LOCALES } from '@yoyo/shared';
 import { useSearchParams } from 'next/navigation';
+import { flushSync } from 'react-dom';
 import { useLocale, useTranslations } from 'next-intl';
 import {
   Suspense,
@@ -36,18 +37,8 @@ import { shouldAnimateLanguageChange, switchLanguage } from './switch-language';
 function useSwitchTo(href: string) {
   const router = useRouter();
   const current = useLocale();
-  return (event: MouseEvent<HTMLAnchorElement>, locale: string): boolean => {
-    if (
-      event.defaultPrevented ||
-      event.button !== 0 ||
-      event.metaKey ||
-      event.ctrlKey ||
-      event.shiftKey ||
-      event.altKey
-    ) {
-      return false;
-    }
-    if (locale === current) return false;
+  return (event: MouseEvent<HTMLAnchorElement>, locale: string) => {
+    if (event.defaultPrevented || !isPlainClick(event) || locale === current) return;
     event.preventDefault();
     void switchLanguage({
       locale,
@@ -58,12 +49,17 @@ function useSwitchTo(href: string) {
       ),
       afterSwitch: () => {
         if (document.activeElement && document.activeElement !== document.body) return;
-        document.querySelector<HTMLElement>('[data-language-focus="menu-button"]')?.focus();
+        document
+          .querySelector<HTMLElement>('[data-language-focus="menu-button"]')
+          ?.focus({ preventScroll: true });
       },
     });
-    return true;
   };
 }
+
+/** A click that follows the link here: not one asking for a new tab or window. */
+const isPlainClick = (event: MouseEvent) =>
+  event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
 
 /** The current page with its query, so a language switch keeps `?token=` of an email link, `?next=`… */
 function useHere(): string {
@@ -163,7 +159,7 @@ function LanguageMenu({ href, className }: { href: string; className: string }) 
   const closeMenu = useCallback(
     ({ refocus, instant = false }: { refocus: boolean; instant?: boolean }) => {
       setOpen(false);
-      if (refocus) buttonRef.current?.focus();
+      if (refocus) buttonRef.current?.focus({ preventScroll: true });
       if (instant) {
         animation.current?.cancel();
         animation.current = null;
@@ -205,7 +201,7 @@ function LanguageMenu({ href, className }: { href: string; className: string }) 
         : focusOn.current === 'last'
           ? list.length - 1
           : list.findIndex((item) => item.getAttribute('aria-checked') === 'true');
-    list[Math.max(0, index)]?.focus();
+    list[Math.max(0, index)]?.focus({ preventScroll: true });
     animate('in');
   }, [open, placement, animate]);
 
@@ -233,7 +229,7 @@ function LanguageMenu({ href, className }: { href: string; className: string }) 
     const index = list.indexOf(document.activeElement as HTMLElement);
     const move = (to: number) => {
       event.preventDefault();
-      list[(to + list.length) % list.length]?.focus();
+      list[(to + list.length) % list.length]?.focus({ preventScroll: true });
     };
     if (event.key === 'ArrowDown') move(index + 1);
     else if (event.key === 'ArrowUp') move(index - 1);
@@ -271,7 +267,7 @@ function LanguageMenu({ href, className }: { href: string; className: string }) 
       typed.current = { text, at: now };
       if (found) {
         event.preventDefault();
-        found.focus();
+        found.focus({ preventScroll: true });
       }
     }
   }
@@ -287,7 +283,7 @@ function LanguageMenu({ href, className }: { href: string; className: string }) 
         data-language-focus="menu-button"
         onClick={() => (open ? closeMenu({ refocus: false }) : openMenu('current'))}
         onKeyDown={onButtonKeyDown}
-        className="group border-ink bg-surface text-ink rounded-pill ease-yoyo aria-expanded:bg-mist inline-flex h-10 min-w-10 items-center justify-center gap-1.5 border px-2.5 text-[12px] font-bold tracking-[0.06em] uppercase transition-[transform,background-color] duration-150 select-none hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.94] sm:pr-2 sm:pl-1.5"
+        className="group border-ink bg-surface text-ink rounded-pill ease-yoyo aria-expanded:bg-mist inline-flex h-10 min-w-10 items-center justify-center gap-1.5 border px-2.5 text-[12px] font-bold tracking-[0.06em] uppercase transition-transform duration-150 select-none hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.94] sm:pr-2 sm:pl-1.5"
       >
         <LanguageSticker />
         {/* The name says the language in full and still contains the visible code (WCAG 2.5.3). */}
@@ -341,10 +337,11 @@ function LanguageMenu({ href, className }: { href: string; className: string }) 
               aria-checked={checked}
               tabIndex={-1}
               onClick={(event) => {
-                if (switchTo(event, locale) || checked) {
-                  if (checked) event.preventDefault();
-                  closeMenu({ refocus: true, instant: true });
-                }
+                if (!isPlainClick(event)) return; // a new tab or window: the menu stays
+                if (checked) event.preventDefault();
+                // Closed before the switch starts, so the page the transition captures has no menu.
+                flushSync(() => closeMenu({ refocus: true, instant: true }));
+                switchTo(event, locale);
               }}
               className={`rounded-pill ease-yoyo hover:bg-mist focus-visible:bg-mist flex min-h-10 items-center gap-3 px-3 text-[14px] font-bold outline-offset-0 transition-[background-color,transform] duration-150 select-none active:scale-[0.98]`}
             >

@@ -1,9 +1,12 @@
 import { shouldAnimateThemeChange } from '@/components/theme/switch-theme';
 
 /**
- * The language switch plays like the page refreshing for a moment (DESIGN.md sticker style): the old
- * page blurs and fades, a pastel sheet wipes across, the new language fades in; the header stays put.
- * The animation itself is CSS (globals.css, `html[data-language-switch]`), 450 ms in all.
+ * The language switch is a quiet cross-fade (globals.css, `html[data-language-switch]`, 440 ms in
+ * all): the header stays perfectly still and only its words change, the page fades out softly and
+ * the new language settles in. Nothing moves, scales or stretches, so it looks the same in Safari
+ * and Chrome. What could still jump is kept out of sight here: both pages are captured at the same
+ * scroll position with the fonts of the new language loaded, and the page height only shrinks once
+ * that part is off the screen.
  */
 
 /** Same rule as the theme switch: only when motion is welcome and the browser has View Transitions. */
@@ -11,6 +14,68 @@ export const shouldAnimateLanguageChange = shouldAnimateThemeChange;
 
 /** Longest wait for the new page before the switch stops waiting (the browser's own limit is ~4 s). */
 const NEW_PAGE_TIMEOUT_MS = 3000;
+
+/** Longest wait for the fonts of the new language (Cyrillic, Latin Extended) once the page is there. */
+const FONTS_TIMEOUT_MS = 500;
+
+function whenFontsReady(timeoutMs = FONTS_TIMEOUT_MS): Promise<void> {
+  const ready = typeof document !== 'undefined' ? document.fonts?.ready : undefined;
+  if (!ready) return Promise.resolve();
+  return new Promise((resolve) => {
+    const timer = setTimeout(resolve, timeoutMs);
+    void ready.then(() => {
+      clearTimeout(timer);
+      resolve();
+    });
+  });
+}
+
+/**
+ * Keeps the page at least as tall as it is now while the language changes, so a shorter page in the
+ * new language cannot clamp the scroll position (which would capture the new page somewhere else).
+ */
+let heightLock: { apply(): void; release(): void; settle(): void } | null = null;
+
+function lockPageHeight(): void {
+  heightLock?.release();
+  const root = document.documentElement;
+  const previous = root.style.minHeight;
+  const locked = `${root.scrollHeight}px`;
+  root.style.minHeight = locked;
+  const onScroll = () => {
+    if (fits()) stop();
+  };
+  /**
+   * Whether the page can take its own height without moving what is on the screen: measured on the
+   * body, since taking the lock off just to measure would already clamp the scroll position.
+   */
+  function fits(): boolean {
+    const natural = document.body.getBoundingClientRect().bottom + window.scrollY;
+    if (window.scrollY + window.innerHeight > Math.ceil(natural)) return false;
+    root.style.minHeight = previous;
+    return true;
+  }
+  function stop() {
+    window.removeEventListener('scroll', onScroll);
+    if (heightLock === lock) heightLock = null;
+  }
+  const lock: NonNullable<typeof heightLock> = {
+    /** Sets it again: React drops the inline style of <html> when it mounts the new layout. */
+    apply: () => {
+      root.style.minHeight = locked;
+    },
+    release: () => {
+      root.style.minHeight = previous;
+      stop();
+    },
+    /** After the switch: shrink now if that is out of sight, else once the visitor scrolls up. */
+    settle: () => {
+      if (fits()) stop();
+      else window.addEventListener('scroll', onScroll, { passive: true });
+    },
+  };
+  heightLock = lock;
+}
 
 /**
  * Resolves once `<html lang>` is `locale`: the router has rendered the page in the new language
@@ -71,9 +136,17 @@ export async function switchLanguage({
   const owner = {};
   current = owner;
   root.dataset['languageSwitch'] = '';
+  const x = window.scrollX;
+  const y = window.scrollY;
+  lockPageHeight();
   const transition = document.startViewTransition(async () => {
     navigate();
     await whenLanguageIs(locale);
+    heightLock?.apply();
+    await whenFontsReady();
+    // The new page is captured where the old one was (the router keeps the scroll, but a remount
+    // or a shorter page may still have moved it).
+    if (window.scrollX !== x || window.scrollY !== y) window.scrollTo(x, y);
     // React mounts the layout afresh for the new language and, taking over <html>, drops the
     // attributes it did not render: set it again before the browser captures the new page.
     if (current === owner) root.dataset['languageSwitch'] = '';
@@ -84,6 +157,7 @@ export async function switchLanguage({
       if (current !== owner) return;
       current = null;
       delete root.dataset['languageSwitch'];
+      heightLock?.settle();
     });
   try {
     await transition.updateCallbackDone;

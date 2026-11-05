@@ -19,7 +19,15 @@ export default defineConfig({
     baseURL: webUrl,
     trace: 'retain-on-failure',
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    // The language switch is checked on an iPhone too (WebKit), where it once looked crooked.
+    {
+      name: 'webkit-iphone',
+      use: { ...devices['iPhone 15'] },
+      testMatch: /language-(switch|transition)\.spec\.ts$/,
+    },
+  ],
   // e2e runs against the production build (`turbo run e2e` builds first). Never reuse a running
   // server: a stale one would silently test an old build (a busy port fails loudly instead).
   webServer: [
@@ -27,7 +35,10 @@ export default defineConfig({
       // The real API (built dist), so the styleguide can show live health.
       command: 'pnpm --filter @yoyo/api start:prod',
       url: 'http://localhost:4000/api/v1/health',
-      env: { ...process.env, PROXY_SECRET: E2E_PROXY_SECRET, TRUST_PROXY_HOPS: '2' } as Record<string, string>,
+      env: { ...process.env, PROXY_SECRET: E2E_PROXY_SECRET, TRUST_PROXY_HOPS: '2' } as Record<
+        string,
+        string
+      >,
       reuseExistingServer: false,
       timeout: 120_000,
     },

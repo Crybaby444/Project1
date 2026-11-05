@@ -229,6 +229,28 @@ describe('choosing a language', () => {
     expect(push).not.toHaveBeenCalled();
   });
 
+  it('moves the focus without scrolling the page (the header may be half out of sight)', async () => {
+    // The focus calls this component makes (not the ones user-event makes to click).
+    const ours: (FocusOptions | undefined)[] = [];
+    const focus = HTMLElement.prototype.focus;
+    const spy = vi.spyOn(HTMLElement.prototype, 'focus').mockImplementation(function (
+      this: HTMLElement,
+      options,
+    ) {
+      if (new Error().stack?.includes('LanguageSwitcher.tsx')) ours.push(options);
+      focus.call(this, options);
+    });
+    const user = userEvent.setup();
+    renderWithIntl(<LanguageSwitcher />);
+    await user.click(pill());
+    await user.keyboard('{ArrowDown}l{Escape}');
+    await user.click(pill());
+    await user.click(screen.getByRole('menuitemradio', { name: 'Русский' }));
+    expect(ours.length).toBeGreaterThanOrEqual(5);
+    for (const options of ours) expect(options).toEqual({ preventScroll: true });
+    spy.mockRestore();
+  });
+
   it('gives the focus back to the pill once the new language is there', async () => {
     const user = userEvent.setup();
     renderWithIntl(<LanguageSwitcher />);

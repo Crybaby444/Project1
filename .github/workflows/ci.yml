@@ -94,8 +94,8 @@ jobs:
       - name: Deploy wizard works end to end
         run: bash scripts/tests/setup-deploy.test.sh
 
-      - name: Install Playwright Chromium
-        run: pnpm --filter @yoyo/web exec playwright install --with-deps chromium
+      - name: Install Playwright Chromium and WebKit
+        run: pnpm --filter @yoyo/web exec playwright install --with-deps chromium webkit
 
       - name: End-to-end tests
         run: pnpm --filter @yoyo/web e2e
