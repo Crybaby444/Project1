@@ -21,7 +21,7 @@ function renderReset(token: string | null, routes: FakeRoutes) {
 
 async function fill(password: string, repeat: string) {
   const user = userEvent.setup();
-  await user.type(screen.getByLabelText(en.auth.fields.newPassword, { exact: true }), password);
+  await user.type(screen.getByLabelText(en.auth.fields.newPassword, { exact: true, selector: 'input' }), password);
   await user.type(screen.getByLabelText(en.auth.fields.repeatPassword), repeat);
   await user.click(screen.getByRole('button', { name: en.auth.reset.submit }));
 }
@@ -79,7 +79,7 @@ describe('ResetPasswordForm', () => {
   it('shows a link without a token as broken right away', () => {
     renderReset(null, {});
     expect(screen.getByRole('heading', { name: en.auth.reset.invalid.title })).toBeVisible();
-    expect(screen.queryByLabelText(en.auth.fields.newPassword, { exact: true })).toBeNull();
+    expect(screen.queryByLabelText(en.auth.fields.newPassword, { exact: true, selector: 'input' })).toBeNull();
   });
 
   it('still says the password changed when signing in afterwards fails, and forgets the old session', async () => {

@@ -1,9 +1,8 @@
 import { shouldAnimateThemeChange } from '@/components/theme/switch-theme';
 
 /**
- * The language switch plays like the page refreshing for a moment (DESIGN.md sticker style): the old
- * page blurs and fades, a pastel sheet wipes across, the new language fades in; the header stays put.
- * The animation itself is CSS (globals.css, `html[data-language-switch]`), 450 ms in all.
+ * The language switch is a soft cross-fade with a slight scale, like a page change; the header stays
+ * put. The animation itself is CSS (globals.css, `html[data-language-switch]`), 350 ms in all.
  */
 
 /** Same rule as the theme switch: only when motion is welcome and the browser has View Transitions. */

@@ -10,16 +10,16 @@ function placeCard(card: HTMLElement): void {
 }
 
 describe('Card', () => {
-  it('tilts toward the pointer by at most 5 degrees, and settles when the pointer leaves', () => {
+  it('tilts toward the pointer by at most 4 degrees, and settles when the pointer leaves', () => {
     render(<Card interactive>Drill</Card>);
     const card = screen.getByText('Drill');
     placeCard(card);
 
-    fireEvent.pointerMove(card, { clientX: 200, clientY: 0 }); // top-right corner
-    expect(card.style.getPropertyValue('--ry')).toBe('5deg');
-    expect(card.style.getPropertyValue('--rx')).toBe('5deg');
+    fireEvent.pointerMove(card, { clientX: 200, clientY: 0, pointerType: 'mouse' }); // top-right corner
+    expect(card.style.getPropertyValue('--ry')).toBe('4deg');
+    expect(card.style.getPropertyValue('--rx')).toBe('4deg');
 
-    fireEvent.pointerMove(card, { clientX: 100, clientY: 50 }); // centre
+    fireEvent.pointerMove(card, { clientX: 100, clientY: 50, pointerType: 'mouse' }); // centre
     expect(card.style.getPropertyValue('--ry')).toBe('0deg');
 
     fireEvent.pointerLeave(card);
@@ -27,12 +27,20 @@ describe('Card', () => {
     expect(card.style.getPropertyValue('--ry')).toBe('0deg');
   });
 
+  it('does not tilt for touch, where the pointer moves while scrolling', () => {
+    render(<Card interactive>Kayak</Card>);
+    const card = screen.getByText('Kayak');
+    placeCard(card);
+    fireEvent.pointerMove(card, { clientX: 200, clientY: 0, pointerType: 'touch' });
+    expect(card.style.getPropertyValue('--ry')).toBe('');
+  });
+
   it('stays still for people who prefer reduced motion', () => {
     stubMatchMedia(true);
     render(<Card interactive>Tent</Card>);
     const card = screen.getByText('Tent');
     placeCard(card);
-    fireEvent.pointerMove(card, { clientX: 200, clientY: 0 });
+    fireEvent.pointerMove(card, { clientX: 200, clientY: 0, pointerType: 'mouse' });
     expect(card.style.getPropertyValue('--ry')).toBe('');
   });
 
@@ -40,7 +48,7 @@ describe('Card', () => {
     render(<Card>Static</Card>);
     const card = screen.getByText('Static');
     placeCard(card);
-    fireEvent.pointerMove(card, { clientX: 200, clientY: 0 });
+    fireEvent.pointerMove(card, { clientX: 200, clientY: 0, pointerType: 'mouse' });
     expect(card.style.getPropertyValue('--ry')).toBe('');
   });
 });

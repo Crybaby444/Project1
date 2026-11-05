@@ -7,6 +7,7 @@ import { LogoMark } from '@/components/ui/LogoMark';
 import { Marquee } from '@/components/ui/Marquee';
 import { Wordmark } from '@/components/ui/Wordmark';
 import { displayFit } from '@/lib/display-fit';
+import { MotionDemos } from './MotionDemos';
 import { Section, StyleguideDemos } from './StyleguideDemos';
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
@@ -120,6 +121,8 @@ export default async function StyleguidePage({ params }: { params: Promise<{ loc
       </Section>
 
       <StyleguideDemos />
+
+      <MotionDemos />
 
       <Section title={t('marquee')}>
         <div className="-mx-4 sm:-mx-8">

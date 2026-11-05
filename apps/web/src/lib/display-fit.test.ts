@@ -35,4 +35,9 @@ describe('displayFit', () => {
       '--fit-max': '10rem',
     });
   });
+
+  it('allows wider letters for a title drawn letter by letter (no kerning between boxes)', () => {
+    expect(displayFit('YOYO', { max: '12.5rem', split: true })).toMatchObject({ '--fit-em': 1.1 });
+    expect(displayFit('YOYO', { max: '12.5rem' })).not.toHaveProperty('--fit-em');
+  });
 });

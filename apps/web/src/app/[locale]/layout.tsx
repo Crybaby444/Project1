@@ -8,6 +8,7 @@ import type { ReactNode } from 'react';
 import { themeInitScript } from '@/components/theme/theme-script';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { SiteHeader } from '@/components/layout/SiteHeader';
+import { PageTransition } from '@/components/motion/PageTransition';
 import { SyncThemeWithProfile } from '@/components/theme/use-theme-choice';
 import { ToastProvider } from '@/components/ui/Toast';
 import { routing } from '@/i18n/routing';
@@ -42,7 +43,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="bg-canvas text-ink flex min-h-dvh flex-col">
+      <body className="text-ink flex min-h-dvh flex-col">
         <NextIntlClientProvider>
           <QueryProvider>
             <SessionProvider>
@@ -50,7 +51,9 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
                 <ToastProvider>
                   <SyncThemeWithProfile />
                   <SiteHeader />
-                  <div className="flex flex-1 flex-col *:w-full">{children}</div>
+                  <PageTransition>
+                    <div className="flex flex-1 flex-col *:w-full">{children}</div>
+                  </PageTransition>
                 </ToastProvider>
               </ThemeProvider>
             </SessionProvider>

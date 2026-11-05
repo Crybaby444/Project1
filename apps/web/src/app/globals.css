@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import '../styles/tokens.css';
+@import '../styles/motion.css';
 
 /* Map DESIGN.md tokens to Tailwind utilities: bg-canvas, text-ink, border-ink, rounded-pill, font-display… */
 @theme inline {
@@ -42,7 +43,7 @@
   overflow-wrap: break-word;
 }
 
-/* Brand motion (DESIGN.md "Project adaptations" §1): stickers react only to the pointer; the marquee loops. */
+/* Brand motion (DESIGN.md "Project adaptations" §1); the scroll and load motion system is styles/motion.css. */
 @theme {
   --animate-sticker-wobble: sticker-wobble 450ms var(--ease-yoyo);
   --animate-sticker-spin: sticker-spin 450ms var(--ease-yoyo);
@@ -50,6 +51,7 @@
   --animate-toast-in: toast-in 250ms var(--ease-yoyo);
   --animate-pop-in: pop-in 150ms var(--ease-yoyo);
   --animate-step-in: step-in 250ms var(--ease-yoyo);
+  --animate-card-rise: card-rise 450ms var(--ease-yoyo) both;
 
   @keyframes sticker-wobble {
     25% {
@@ -95,6 +97,14 @@
     }
   }
 
+  /* A screen's main card arriving on load (auth): up from a little below, settling. */
+  @keyframes card-rise {
+    from {
+      transform: translateY(16px) scale(0.98);
+      opacity: 0;
+    }
+  }
+
   @keyframes marquee {
     to {
       transform: translateX(-50%);
@@ -133,10 +143,10 @@
 }
 
 /*
- * Language switch (components/ui/switch-language.ts), 450 ms in all: the old page blurs and fades,
- * a pastel paper sheet with an ink edge wipes across underneath, then the new language fades in.
- * The header has its own name only during this switch (the theme reveal still covers the whole
- * page), so it stays put and only its words cross-fade.
+ * Language switch (components/ui/switch-language.ts), 350 ms in all: the same soft cross-fade with a
+ * slight scale as a page change (motion.css, `.page-in` / `.page-out`), over the canvas colour so
+ * nothing flashes white. The header has its own name only during this switch (the theme reveal
+ * still covers the whole page), so it stays put and only its words cross-fade.
  */
 html[data-language-switch] [data-site-header] {
   view-transition-name: site-header;
@@ -144,23 +154,14 @@ html[data-language-switch] [data-site-header] {
 
 html[data-language-switch]::view-transition {
   background-color: var(--canvas);
-  background-image: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--sticker-lavender) 70%, var(--canvas)) 0 50%,
-    var(--ink) 50% calc(50% + 1px),
-    transparent calc(50% + 1px)
-  );
-  background-repeat: no-repeat;
-  background-size: 200% 100%;
-  animation: language-sheet 300ms var(--ease-yoyo) both;
 }
 
 html[data-language-switch]::view-transition-old(root) {
-  animation: language-out 220ms var(--ease-yoyo) both;
+  animation: language-out var(--dur-fast) var(--ease-yoyo) both;
 }
 
 html[data-language-switch]::view-transition-new(root) {
-  animation: language-in 250ms var(--ease-yoyo) 200ms both;
+  animation: language-in var(--dur-base) var(--ease-yoyo) 100ms both;
 }
 
 html[data-language-switch]::view-transition-old(site-header),
@@ -168,19 +169,9 @@ html[data-language-switch]::view-transition-new(site-header) {
   animation-duration: var(--dur-base);
 }
 
-@keyframes language-sheet {
-  from {
-    background-position: 100% 0;
-  }
-  to {
-    background-position: 0 0;
-  }
-}
-
 @keyframes language-out {
   to {
     opacity: 0;
-    filter: blur(6px);
     transform: scale(0.985);
   }
 }
@@ -188,7 +179,7 @@ html[data-language-switch]::view-transition-new(site-header) {
 @keyframes language-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: scale(1.015);
   }
 }
 

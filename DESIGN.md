@@ -416,7 +416,16 @@ The marquee strip scrolls horizontally on a continuous loop. The 3D ribbons are 
 
 The reference above is the base design system. The rules below extend it and, where they conflict, take precedence. Agreed with the project owner on 2026-11-03.
 
-1. **Motion: still collage at rest, alive under the cursor.** Decorations (ribbons, stickers) never animate on their own: no idle float or bob loops. Every interactive element responds to hover, focus and press. Buttons lift slightly, cards tilt like a sticker being peeled, stickers wobble on hover and spin on click, the favourite heart pops, and the theme switch uses a circular reveal. The marquee is the only continuous motion and pauses on hover. Durations are 150–450 ms with easing `cubic-bezier(.2,.8,.2,1)`. All motion is disabled under `prefers-reduced-motion`.
+1. **Motion: a collage that comes alive as you scroll.** Revised with the project owner on 2026-11-05; supersedes the "still at rest" rule of 2026-11-03. The primitives live in `apps/web/src/components/motion/`, the CSS in `apps/web/src/styles/motion.css`, and the plan in `docs/superpowers/plans/2026-11-05-yoyo-motion.md`.
+   - **Scroll:** the page background morphs between soft sticker tones section by section, big statements fill from pale to ink word by word, "how it works" cards pin and stack, and stickers and large rounded shapes drift at their own speeds (parallax, lighter on touch screens).
+   - **Load:** hero and title letters rise in with a stagger, the auth card rises in, and hero stickers bob gently. Bobbing and the marquee are the only loops, and they run only while on screen.
+   - **Pointer:** every pill and button lifts on hover and presses to `scale(.96)`. Bento cards tilt toward a mouse (at most 4°, never on touch) and lift off a hard ink shadow (`0 4px 0`, drawn as a layer under the card, so it is a transform). Their sticker icon bounces, pill stickers wobble like a spring, stickers spin on click, the favourite heart pops, and the theme switch uses a circular reveal.
+   - **Marquee:** rows of big uppercase words in pills, alternately outlined and sticker-filled, run in opposite directions. They pause on hover and focus, and one button pauses all of them.
+   - **Transitions:** page changes and the language switch are a soft cross-fade with a slight scale (View Transitions). The header stays put.
+   - **Counters:** numbers tick up the first time they are seen.
+   - **Rules:** only `transform` and `opacity` animate (no layout shift). Scroll effects use CSS scroll-driven animations, with an IntersectionObserver or frame-loop fallback. Single motions last 150–450 ms with easing `cubic-bezier(.2,.8,.2,1)`. Scroll-linked effects follow the scroll, a count lasts up to ~1 s, and a bob loop takes ~4 s.
+   - **Reduced motion:** under `prefers-reduced-motion` everything is still and fully readable. Section tones become flat bands, the marquee wraps into a still block, words are ink, and cards are an ordinary list.
+   - **Exception:** the hard tilt shadow is the one exception to the "no box-shadows" rule, and it appears only while a card is lifted.
 2. **Dark theme is required alongside light.** The default follows the OS, and users can switch at any time.
    | Light | Dark |
    |-------|------|
