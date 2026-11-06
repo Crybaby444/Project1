@@ -39,7 +39,7 @@
         "docs/hitexis/W01-research.md#17-quality-gate-w01"
       ],
       "blockers": [],
-      "reason": "Passed with limits: no Keyword Planner/Trends volumes (MISSING). Owner decision pending on brand conflict yoyo rent vs Babyzen YOYO stroller rental."
+      "reason": "Passed with limits: Keyword Planner ranges only (no CPC/Trends). Brand kept (owner 2026-11-06)."
     },
     {
       "id": "W02",
@@ -81,5 +81,5 @@
     "version": null,
     "owner": "Zogal"
   },
-  "next_action": "Owner: brand-conflict decision (W01 §16). Claude: W02 language architecture; urgent W08 item: Search Console + sitemap (site not indexed)."
+  "next_action": "W02 language architecture (question: LV as primary indexable for Latvia vs EN default). Urgent W08: Search Console + sitemap."
 }
