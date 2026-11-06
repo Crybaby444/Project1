@@ -8,7 +8,7 @@
 - **Заменяет** таблицу slugs в W03 §D. LV-названия и slugs — на вычитку владельцу.
 
 Slug: ASCII, LV без диакритики, RU — транслитерация; связки «un», «и», «and» убраны.
-Итого: 12 корневых категорий, 90 подкатегорий.
+Итого: 13 корневых категорий, 91 подкатегорий.
 
 
 ## Electronics · Elektronika · Электроника
@@ -184,3 +184,17 @@ Slug: ASCII, LV без диакритики, RU — транслитерация
 | bike-carriers | Bike carriers | Velosipēdu turētāji | velosipedu-turetaji | Велокрепления | velokrepleniya | 1a: Velosipēdu turētāji |
 | dashcams-gps | Dashcams & GPS | Videoreģistratori un GPS | videoregistratori-gps | Видеорегистраторы и GPS | videoregistratory-gps | 1a: GPS, video, audio |
 | battery-chargers | Battery chargers | Akumulatoru lādētāji | akumulatoru-ladetaji | Зарядные устройства | zaryadnye-ustroystva | 1a: Akumulatori un uzlādes ierīces |
+
+## Other · Citi · Другое
+
+Корень: `/c/other` · `/lv/c/citi` · `/ru/c/drugoe`
+
+Для вещей, которым нет места в каталоге. Без подкатегорий и без характеристик, кроме общих (состояние, «в комплекте»). Правила:
+- Страница индексируется только при ≥ 3 активных объявлениях (как и остальные, W03 §G).
+- Администратор видит отдельную очередь «Другое» и может перенести объявление в подходящую категорию. Владелец получает уведомление.
+- Если в «Другом» накапливается ≥ 10 похожих объявлений, это сигнал создать новую подкатегорию.
+
+| EN slug | EN | LV | LV slug | RU | RU slug | Основание |
+| --- | --- | --- | --- | --- | --- | --- |
+| other | Other | Citi | citi | Другое | drugoe | Решение владельца 2026-11-06 |
+
