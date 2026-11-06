@@ -2,11 +2,13 @@ import { Inject, Injectable, Logger, type OnApplicationShutdown } from '@nestjs/
 import { CLOCK, type Clock } from '../clock/clock';
 import { ENV, type Env } from '../config/env';
 import { createElement, type ReactElement } from 'react';
+import type { Locale, LocalizedText } from '@yoyo/shared';
 import { render } from 'react-email';
 import { MAIL_PROVIDER, maskEmail, type MailProvider, type MailTemplate } from './mail.provider';
 import { DealEvent } from './templates/DealEvent';
 import type { DealRole } from './templates/deal-texts';
 import { ListingApproved } from './templates/ListingApproved';
+import { ListingMoved } from './templates/ListingMoved';
 import { ListingRejected } from './templates/ListingRejected';
 import { PhoneCode } from './templates/PhoneCode';
 import { ResetPassword } from './templates/ResetPassword';
@@ -71,6 +73,13 @@ export class MailService implements OnApplicationShutdown {
   sendListingApproved(user: MailRecipient, listing: { title: string; link: string }): Promise<void> {
     return this.deliver('listing-approved', user, (t) => t.listingApproved.subject, (t, lang) =>
       createElement(ListingApproved, { t, lang, name: user.name, ...listing }),
+    );
+  }
+
+  /** An administrator moved the listing to `category` (its name in the owner's language comes per text). */
+  sendListingMoved(user: MailRecipient, listing: { title: string; category: LocalizedText; link: string }): Promise<void> {
+    return this.deliver('listing-moved', user, (t) => t.listingMoved.subject, (t, lang) =>
+      createElement(ListingMoved, { t, lang, name: user.name, title: listing.title, category: listing.category[lang as Locale] ?? listing.category.en, link: listing.link }),
     );
   }
 

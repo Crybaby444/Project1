@@ -70,7 +70,7 @@ describe('catalog search', () => {
       bike = await live({
         title: 'Velosipēds pilsētai',
         description: 'Ērts pilsētas velosipēds ar grozu un gaismām, labā stāvoklī.',
-        categoryId: await categoryId(t, 'bikes'),
+        categoryId: await categoryId(t, 'cycling'),
         attributes: {},
       });
     });

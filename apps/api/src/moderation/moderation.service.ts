@@ -1,9 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ADMIN_LISTINGS_PAGE_SIZE, DEFAULT_LOCALE, isLocale, type AdminListing, type ListingStatus, type PublicUser } from '@yoyo/shared';
+import { ADMIN_LISTINGS_PAGE_SIZE, DEFAULT_LOCALE, isLocale, listingSlug, type AdminListing, type ListingStatus, type LocalizedText, type PublicUser } from '@yoyo/shared';
+import { CategoriesService } from '../categories/categories.service';
+import { keepKnownAttributes } from '../categories/ensure-categories';
 import { CLOCK, type Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
 import { ENV, type Env } from '../config/env';
-import type { Listing, User } from '../generated/prisma/client';
+import type { Listing, Prisma, User } from '../generated/prisma/client';
 import { nextStatus } from '../listings/listing-status';
 import { serializeListing, type ListingWithRelations } from '../listings/listing.serializer';
 import { invalidStatus, ListingsService } from '../listings/listings.service';
@@ -23,14 +25,22 @@ export class ModerationService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly listings: ListingsService,
+    private readonly categories: CategoriesService,
     private readonly mail: MailService,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(ENV) private readonly env: Pick<Env, 'WEB_ORIGIN'>,
   ) {}
 
-  /** Listings in `status` (the review queue by default), the longest waiting first. */
-  async queue(status: ListingStatus = 'PENDING_REVIEW', page = 1): Promise<{ items: AdminListing[]; total: number }> {
-    const where = { status };
+  /**
+   * Listings in `status` (the review queue by default), the longest waiting first. With `category` (a
+   * category key, such as `other`), the listings filed there, in any status but draft and archived
+   * unless `status` names one: the «Other» queue, whose listings moderation moves to better categories.
+   */
+  async queue(status?: ListingStatus, page = 1, category?: string): Promise<{ items: AdminListing[]; total: number }> {
+    const where: Prisma.ListingWhereInput =
+      category === undefined
+        ? { status: status ?? 'PENDING_REVIEW' }
+        : { category: { slug: category }, status: status ?? { in: ['PENDING_REVIEW', 'PUBLISHED', 'HIDDEN', 'REJECTED'] } };
     const [rows, total] = await Promise.all([
       this.prisma.listing.findMany({
         where,
@@ -72,11 +82,48 @@ export class ModerationService {
     return this.toAdmin(fresh, fresh.owner);
   }
 
+  /**
+   * Files a listing under another category (owner's decision 2026-11-06: mostly out of «Other»). Its
+   * status stays (moving is not the owner's change, so nothing goes back to review); attribute values
+   * the new category does not know are dropped; the owner is emailed in their language. Only an active
+   * category without subcategories takes it; not one's own listing; `version` is the one looked at.
+   */
+  async moveCategory(id: string, admin: PublicUser, categoryId: string, version: number): Promise<AdminListing> {
+    const listing = await this.prisma.listing.findUnique({ where: { id }, include: { owner: true } });
+    if (!listing) throw new AppError('NOT_FOUND', 404, 'Listing not found');
+    if (listing.ownerId === admin.id) throw new AppError('AUTH_FORBIDDEN', 403, 'Another administrator handles your own listings');
+    if (listing.status === 'ARCHIVED') throw invalidStatus(listing.status);
+    if (version !== listing.version) throw this.listings.stale(listing.version);
+    const target = await this.categories.forListing(categoryId);
+    if (!target || !target.leaf) throw new AppError('VALIDATION_FAILED', 400, undefined, { categoryId: 'Choose a category without subcategories' });
+    if (target.id === listing.categoryId) throw new AppError('VALIDATION_FAILED', 400, undefined, { categoryId: 'Already in this category' });
+
+    const moved = await this.prisma.listing.updateMany({
+      where: { id, version },
+      data: { categoryId: target.id, attributes: keepKnownAttributes(listing.attributes, target.attributes), version: { increment: 1 } },
+    });
+    if (moved.count === 0) throw this.listings.stale(listing.version + 1);
+    const category = await this.prisma.category.findUniqueOrThrow({ where: { id: target.id }, select: { names: true } });
+    if (listing.owner.deletedAt === null) {
+      void this.mail.sendListingMoved(listing.owner, {
+        title: listing.title ?? '',
+        category: category.names as LocalizedText,
+        link: sitePath(this.env.WEB_ORIGIN, listing.owner.locale, `/listings/${listing.id}/edit?step=attributes`),
+      });
+    }
+    const fresh = await this.prisma.listing.findUniqueOrThrow({ where: { id }, include: { photos: true, unavailability: true, owner: true } });
+    return this.toAdmin(fresh, fresh.owner);
+  }
+
   private notify(listing: Listing, owner: User, decision: Decision): void {
     if (owner.deletedAt !== null) return;
     const title = listing.title ?? '';
     if (decision.action === 'approve') {
-      void this.mail.sendListingApproved(owner, { title, link: sitePath(this.env.WEB_ORIGIN, owner.locale, `/items/${listing.id}`) });
+      // The item's own address: in the language it is written in (its canonical page, plan 7).
+      void this.mail.sendListingApproved(owner, {
+        title,
+        link: sitePath(this.env.WEB_ORIGIN, listing.contentLocale, `/listings/${listing.id}-${listingSlug(listing.title)}`),
+      });
     } else {
       void this.mail.sendListingRejected(owner, {
         title,

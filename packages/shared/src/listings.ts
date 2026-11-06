@@ -283,9 +283,13 @@ export type MyListingsResponse = z.infer<typeof MyListingsResponseSchema>;
 
 export const ADMIN_LISTINGS_PAGE_SIZE = 20;
 
-/** The moderation queue: PENDING_REVIEW by default, oldest first. */
+/**
+ * The moderation queue: PENDING_REVIEW by default, oldest first. With `category` (a category key, such
+ * as `other`), the listings filed there: every status but drafts and archived ones unless `status` says.
+ */
 export const AdminListingsQuerySchema = z.object({
   status: z.enum(LISTING_STATUSES).optional(),
+  category: z.string().max(80).regex(/^[a-z0-9-]+$/).optional(),
   /** 1-based page of ADMIN_LISTINGS_PAGE_SIZE listings. */
   page: z.coerce.number().int().min(1).max(100_000).optional(),
 });
@@ -317,3 +321,14 @@ export const RejectListingRequestSchema = z.object({
   /** The version the administrator reviewed (see ApproveListingRequestSchema). */
   version: z.number().int().min(0),
 });
+
+/**
+ * An administrator files a listing under a better category (mostly from «Other»). `version` is the one
+ * looked at, as for decisions; the owner is told by email.
+ */
+export const MoveListingCategoryRequestSchema = z.object({
+  categoryId: z.string().min(1).max(64),
+  version: z.number().int().min(0),
+});
+
+export type MoveListingCategoryRequest = z.infer<typeof MoveListingCategoryRequestSchema>;

@@ -245,5 +245,13 @@
         "body": "{other} declined {price} a day for “{title}”. You can still book it at the listed price."
       }
     }
+  },
+  "listingMoved": {
+    "subject": "Your listing moved to another category",
+    "preview": "It is now easier to find.",
+    "heading": "We moved your listing",
+    "body": "We moved “{title}” to the category “{category}”, where people look for things like it. Everything else stayed the same.",
+    "attributes": "Check the details of the new category: some fields may need filling in.",
+    "button": "Open the listing"
   }
 }

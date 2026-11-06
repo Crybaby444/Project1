@@ -5,7 +5,8 @@ import { localizedSlugs } from './slugify';
 describe('localizedSlugs', () => {
   it('gives every catalog category the W03 address on each language, unique per language', () => {
     const slugs = localizedSlugs(CATALOG);
-    expect(slugs.size).toBe(90);
+    expect(slugs.size).toBe(103);
+    expect(slugs.get('other')).toEqual({ en: 'other', lv: 'citi', ru: 'drugoe' });
     expect(slugs.get('ladders-scaffolding')).toEqual({ en: 'ladders-scaffolding', lv: 'kapnes-sastatnes', ru: 'lestnitsy-lesa' });
     expect(slugs.get('tools')).toEqual({ en: 'tools', lv: 'instrumenti', ru: 'instrumenty' });
     expect(slugs.get('strollers')).toEqual({ en: 'strollers', lv: 'bernu-rati', ru: 'detskie-kolyaski' });

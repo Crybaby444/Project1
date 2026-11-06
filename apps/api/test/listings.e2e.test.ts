@@ -232,7 +232,7 @@ describe('listings', () => {
 
     it('clears the attributes of the old category when the category changes', async () => {
       const listing = await seedListing(t, anna.user);
-      const bikes = await categoryId(t, 'bikes');
+      const bikes = await categoryId(t, 'cycling');
       const res = await anna.patch(`/listings/${listing.id}`).send({ version: listing.version, categoryId: bikes }).expect(200);
       expect(res.body.listing).toMatchObject({ categoryId: bikes, attributes: {} });
     });

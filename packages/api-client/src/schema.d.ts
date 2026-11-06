@@ -516,6 +516,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/listings/{id}/category": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ModerationController_moveCategory"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/listings/{id}/approve": {
         parameters: {
             query?: never;
@@ -1557,7 +1573,8 @@ export interface components {
             }[];
             total: number;
         };
-        ApproveListingDto: {
+        MoveListingCategoryDto: {
+            categoryId: string;
             version: number;
         };
         AdminListingResponseDto_Output: {
@@ -1624,6 +1641,9 @@ export interface components {
                     email: string;
                 };
             };
+        };
+        ApproveListingDto: {
+            version: number;
         };
         RejectListingDto: {
             reason: string;
@@ -4514,6 +4534,7 @@ export interface operations {
         parameters: {
             query?: {
                 status?: "DRAFT" | "PENDING_REVIEW" | "PUBLISHED" | "REJECTED" | "HIDDEN" | "ARCHIVED";
+                category?: string;
                 page?: number;
             };
             header?: never;
@@ -4522,7 +4543,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Listings in a status (review queue by default), oldest first, 20 a page */
+            /** @description Listings in a status (review queue by default) or a category («Other»), oldest first, 20 a page */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -4551,6 +4572,77 @@ export interface operations {
             };
             /** @description Not allowed (blocked account, wrong role or foreign Origin) */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ModerationController_moveCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MoveListingCategoryDto"];
+            };
+        };
+        responses: {
+            /** @description Filed under another category; the status stays and the owner gets an email */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminListingResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };

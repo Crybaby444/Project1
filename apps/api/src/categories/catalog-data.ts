@@ -77,7 +77,7 @@ const watts = () => number('watts', POWER_W, 'W');
 
 /**
  * The category tree with the attributes the listing builder asks for (spec §4.3, §4.8): the
- * owner-approved C02 tree, draft 3 (12 roots, 78 subcategories). It is reference data: ensureCategories writes it
+ * owner-approved C02 tree, final for plan 7 (13 roots: 12 with 90 subcategories, and «Other», which takes listings itself). It is reference data: ensureCategories writes it
  * to the database on every start. `slug` and attribute keys are stable identifiers (listings store
  * values by key); names and labels may change freely. Categories of the earlier tree move their
  * listings by LEGACY_CATEGORIES below.
@@ -833,21 +833,23 @@ export const CATALOG: CatalogCategory[] = [
     names: l('Sports', 'Sports', 'Спорт'),
     children: [
       {
-        slug: 'bikes',
-        slugs: l('bikes', 'velosipedi', 'velosipedy'),
+        slug: 'cycling',
+        slugs: l('cycling', 'ritenbrauksana', 'velosport'),
         sticker: 'blue',
         icon: 'bike',
-        names: l('Bikes', 'Velosipēdi', 'Велосипеды'),
+        names: l('Cycling: bikes, child seats, trailers', 'Riteņbraukšana', 'Велоспорт'),
         attributes: [
           select('type', TYPE, [
             opt('city', 'City bike', 'Pilsētas velosipēds', 'Городской велосипед'),
             opt('mountain', 'Mountain bike', 'Kalnu velosipēds', 'Горный велосипед'),
-            opt('road', 'Road bike', 'Šosejas velosipēds', 'Шоссейный велосипед'),
+            opt('road', 'Road or gravel bike', 'Šosejas vai grants velosipēds', 'Шоссейный или гравийный велосипед'),
             opt('electric', 'E-bike', 'Elektrovelosipēds', 'Электровелосипед'),
             opt('kids', 'Kids bike', 'Bērnu velosipēds', 'Детский велосипед'),
+            opt('child-seat', 'Child seat', 'Bērnu sēdeklītis', 'Детское кресло'),
+            opt('trailer', 'Bike trailer', 'Velosipēda piekabe', 'Велоприцеп'),
             OTHER,
           ]),
-          text('frameSize', l('Frame size', 'Rāmja izmērs', 'Размер рамы')),
+          text('frameSize', l('Frame or wheel size', 'Rāmja vai riteņa izmērs', 'Размер рамы или колёс')),
           yesNo('helmet', HELMET),
         ],
       },
@@ -865,6 +867,229 @@ export const CATALOG: CatalogCategory[] = [
         ],
       },
       {
+        slug: 'skates-skateboards',
+        slugs: l('skates-skateboards', 'skritulslidas-skeitbordi', 'roliki-skeytbordy'),
+        sticker: 'blue',
+        icon: 'skateboard',
+        names: l('Inline skates & skateboards', 'Skrituļslidas un skeitbordi', 'Ролики и скейтборды'),
+        attributes: [
+          select('type', TYPE, [
+            opt('inline-skates', 'Inline skates', 'Skrituļslidas', 'Роликовые коньки'),
+            opt('skateboard', 'Skateboard', 'Skeitbords', 'Скейтборд'),
+            opt('longboard', 'Longboard', 'Longbords', 'Лонгборд'),
+            OTHER,
+          ]),
+          size(),
+          yesNo('protection', l('Pads and helmet included', 'Aizsargi un ķivere komplektā', 'Защита и шлем в комплекте')),
+        ],
+      },
+      {
+        slug: 'cross-country-skiing',
+        slugs: l('cross-country-skiing', 'distancu-sleposana', 'begovye-lyzhi'),
+        sticker: 'blue',
+        icon: 'snowflake',
+        names: l('Cross-country skiing', 'Distanču slēpošana', 'Беговые лыжи'),
+        attributes: [
+          select('style', l('Style', 'Stils', 'Стиль'), [
+            opt('classic', 'Classic', 'Klasiskais', 'Классика'),
+            opt('skate', 'Skate', 'Slidsolis', 'Конёк'),
+          ]),
+          number('length', l('Ski length', 'Slēpju garums', 'Длина лыж'), 'cm', true),
+          text('bootSize', l('Boot size', 'Zābaku izmērs', 'Размер ботинок')),
+          yesNo('poles', l('Poles included', 'Nūjas komplektā', 'Палки в комплекте')),
+        ],
+      },
+      {
+        slug: 'downhill-skiing',
+        slugs: l('downhill-skiing', 'kalnu-sleposana', 'gornye-lyzhi'),
+        sticker: 'blue',
+        icon: 'mountain-snow',
+        names: l('Downhill skiing', 'Kalnu slēpošana', 'Горные лыжи'),
+        attributes: [
+          number('length', l('Ski length', 'Slēpju garums', 'Длина лыж'), 'cm', true),
+          text('bootSize', l('Boot size', 'Zābaku izmērs', 'Размер ботинок')),
+          select('level', l('Level', 'Līmenis', 'Уровень'), [opt('beginner', 'Beginner', 'Iesācējiem', 'Для новичков'), opt('intermediate', 'Intermediate', 'Vidējs', 'Средний'), opt('advanced', 'Advanced', 'Pieredzējušiem', 'Для опытных')], false),
+          yesNo('helmet', HELMET),
+        ],
+      },
+      {
+        slug: 'snowboarding',
+        slugs: l('snowboarding', 'snovbords', 'snoubord'),
+        sticker: 'blue',
+        icon: 'snowboard',
+        names: l('Snowboarding', 'Snovbords', 'Сноуборд'),
+        attributes: [
+          number('length', l('Board length', 'Dēļa garums', 'Длина доски'), 'cm', true),
+          text('bootSize', l('Boot size', 'Zābaku izmērs', 'Размер ботинок')),
+          select('level', l('Level', 'Līmenis', 'Уровень'), [opt('beginner', 'Beginner', 'Iesācējiem', 'Для новичков'), opt('intermediate', 'Intermediate', 'Vidējs', 'Средний'), opt('advanced', 'Advanced', 'Pieredzējušiem', 'Для опытных')], false),
+          yesNo('helmet', HELMET),
+        ],
+      },
+      {
+        slug: 'ice-skating',
+        slugs: l('ice-skating', 'slidosana', 'konki'),
+        sticker: 'blue',
+        icon: 'skate',
+        names: l('Ice skating', 'Slidošana', 'Коньки'),
+        attributes: [
+          select('type', TYPE, [
+            opt('figure', 'Figure skates', 'Daiļslidošanas slidas', 'Фигурные коньки'),
+            opt('hockey', 'Hockey skates', 'Hokeja slidas', 'Хоккейные коньки'),
+            opt('touring', 'Nordic touring skates', 'Tūrisma slidas', 'Туристические коньки'),
+          ]),
+          size(true),
+        ],
+      },
+      {
+        slug: 'snowshoes-sleds',
+        slugs: l('snowshoes-sleds', 'sniega-kurpes-ragavas', 'snegostupy-sanki'),
+        sticker: 'blue',
+        icon: 'sled',
+        names: l('Snowshoes & sleds', 'Sniega kurpes un ragavas', 'Снегоступы и санки'),
+        attributes: [
+          select('type', TYPE, [
+            opt('snowshoes', 'Snowshoes', 'Sniega kurpes', 'Снегоступы'),
+            opt('sled', 'Sled', 'Ragavas', 'Санки'),
+            opt('snow-tube', 'Snow tube', 'Sniega bumbulis', 'Тюбинг'),
+          ]),
+          size(),
+        ],
+      },
+      {
+        slug: 'sup',
+        slugs: l('sup', 'sup-deli', 'sup-doski'),
+        sticker: 'blue',
+        icon: 'waves',
+        names: l('SUP boards', 'SUP dēļi', 'SUP-доски'),
+        attributes: [
+          select('type', TYPE, [
+            opt('inflatable', 'Inflatable', 'Piepūšams', 'Надувная'),
+            opt('hard', 'Hard board', 'Ciets dēlis', 'Жёсткая'),
+          ]),
+          number('length', l('Board length', 'Dēļa garums', 'Длина доски'), 'cm'),
+          number('maxLoad', l('Maximum load', 'Maksimālā slodze', 'Максимальная нагрузка'), 'kg'),
+          yesNo('paddle', l('Paddle and pump included', 'Airis un sūknis komplektā', 'Весло и насос в комплекте')),
+        ],
+      },
+      {
+        slug: 'kayaks-canoes',
+        slugs: l('kayaks-canoes', 'kajaki-kanoe', 'kayaki-kanoe'),
+        sticker: 'blue',
+        icon: 'sailboat',
+        names: l('Kayaks & canoes', 'Kajaki un kanoe', 'Каяки и каноэ'),
+        attributes: [
+          select('type', TYPE, [
+            opt('kayak', 'Kayak', 'Kajaks', 'Каяк'),
+            opt('canoe', 'Canoe', 'Kanoe', 'Каноэ'),
+            opt('inflatable-kayak', 'Inflatable kayak', 'Piepūšamais kajaks', 'Надувной каяк'),
+          ]),
+          number('seats', l('Seats', 'Sēdvietas', 'Мест'), undefined, true),
+          yesNo('paddles', l('Paddles and vests included', 'Airi un vestes komplektā', 'Вёсла и жилеты в комплекте')),
+        ],
+      },
+      {
+        slug: 'diving',
+        slugs: l('diving', 'nirsana', 'dayving-snorkling'),
+        sticker: 'blue',
+        icon: 'fish',
+        names: l('Diving & snorkelling', 'Niršana', 'Дайвинг и снорклинг'),
+        attributes: [
+          select('type', TYPE, [
+            opt('snorkel-set', 'Snorkelling set', 'Snorkelēšanas komplekts', 'Набор для снорклинга'),
+            opt('wetsuit', 'Wetsuit', 'Hidrotērps', 'Гидрокостюм'),
+            opt('fins', 'Fins', 'Pleznas', 'Ласты'),
+            opt('dive-computer', 'Dive computer', 'Niršanas dators', 'Компьютер для дайвинга'),
+            OTHER,
+          ]),
+          size(),
+        ],
+      },
+      {
+        slug: 'kite-windsurf',
+        slugs: l('kite-windsurf', 'puka-veja-serfosana', 'kayt-vindserfing'),
+        sticker: 'blue',
+        icon: 'wind',
+        names: l('Kitesurf & windsurf', 'Pūķa un vēja sērfošana', 'Кайт- и виндсёрфинг'),
+        attributes: [
+          select('type', TYPE, [
+            opt('kite', 'Kite', 'Pūķis', 'Кайт'),
+            opt('kiteboard', 'Kiteboard', 'Pūķa dēlis', 'Кайтборд'),
+            opt('windsurf-board', 'Windsurf board', 'Vindsērfa dēlis', 'Доска для виндсёрфинга'),
+            opt('sail', 'Sail', 'Bura', 'Парус'),
+            OTHER,
+          ]),
+          text('size', l('Size (m² or cm)', 'Izmērs (m² vai cm)', 'Размер (м² или см)')),
+          select('level', l('Level', 'Līmenis', 'Уровень'), [opt('beginner', 'Beginner', 'Iesācējiem', 'Для новичков'), opt('intermediate', 'Intermediate', 'Vidējs', 'Средний'), opt('advanced', 'Advanced', 'Pieredzējušiem', 'Для опытных')], false),
+        ],
+      },
+      {
+        slug: 'tennis-padel',
+        slugs: l('tennis-padel', 'teniss-padels', 'tennis-padel'),
+        sticker: 'blue',
+        icon: 'tennis',
+        names: l('Tennis & padel', 'Teniss un padels', 'Теннис и падел'),
+        attributes: [
+          select('type', TYPE, [
+            opt('tennis', 'Tennis racket', 'Tenisa rakete', 'Теннисная ракетка'),
+            opt('padel', 'Padel racket', 'Padela rakete', 'Ракетка для падела'),
+            opt('ball-machine', 'Ball machine', 'Bumbu mašīna', 'Теннисная пушка'),
+          ]),
+          number('pieces', l('Rackets in the set', 'Raketes komplektā', 'Ракеток в комплекте')),
+          included(),
+        ],
+      },
+      {
+        slug: 'table-tennis-badminton',
+        slugs: l('table-tennis-badminton', 'galda-teniss-badmintons', 'nastolnyy-tennis-badminton'),
+        sticker: 'blue',
+        icon: 'ping-pong',
+        names: l('Table tennis & badminton', 'Galda teniss un badmintons', 'Настольный теннис и бадминтон'),
+        attributes: [
+          select('type', TYPE, [
+            opt('table', 'Table tennis table', 'Galda tenisa galds', 'Теннисный стол'),
+            opt('table-tennis-set', 'Table tennis bats and balls', 'Galda tenisa raketes un bumbiņas', 'Ракетки и мячи для настольного тенниса'),
+            opt('badminton-set', 'Badminton set', 'Badmintona komplekts', 'Набор для бадминтона'),
+          ]),
+          yesNo('outdoor', l('For outdoors', 'Āra lietošanai', 'Уличный')),
+          included(),
+        ],
+      },
+      {
+        slug: 'team-sports',
+        slugs: l('team-sports', 'komandu-sporta-veidi', 'komandnye-vidy-sporta'),
+        sticker: 'blue',
+        icon: 'trophy',
+        names: l('Team sports: football, basketball, volleyball, floorball', 'Komandu sporta veidi', 'Командные виды спорта'),
+        attributes: [
+          select('type', TYPE, [
+            opt('football', 'Football', 'Futbols', 'Футбол'),
+            opt('basketball', 'Basketball', 'Basketbols', 'Баскетбол'),
+            opt('volleyball', 'Volleyball', 'Volejbols', 'Волейбол'),
+            opt('floorball', 'Floorball', 'Florbols', 'Флорбол'),
+            OTHER,
+          ]),
+          text('kind', l('What gear (goals, net, balls…)', 'Kāds inventārs (vārti, tīkls, bumbas…)', 'Какой инвентарь (ворота, сетка, мячи…)'), true),
+          included(),
+        ],
+      },
+      {
+        slug: 'golf',
+        slugs: l('golf', 'golfs', 'golf'),
+        sticker: 'blue',
+        icon: 'flag',
+        names: l('Golf', 'Golfs', 'Гольф'),
+        attributes: [
+          select('type', TYPE, [
+            opt('club-set', 'Club set', 'Nūju komplekts', 'Набор клюшек'),
+            opt('trolley', 'Trolley', 'Ratiņi', 'Тележка'),
+            opt('rangefinder', 'Rangefinder', 'Tālmērs', 'Дальномер'),
+            OTHER,
+          ]),
+          select('hand', l('Hand', 'Roka', 'Рука'), [opt('right', 'Right-handed', 'Labrocis', 'Правша'), opt('left', 'Left-handed', 'Kreilis', 'Левша')], false),
+          included(),
+        ],
+      },
+      {
         slug: 'fitness',
         slugs: l('fitness', 'trenazieri-fitness', 'trenazhery-fitnes'),
         sticker: 'blue',
@@ -876,58 +1101,20 @@ export const CATALOG: CatalogCategory[] = [
         ],
       },
       {
-        slug: 'winter-sports',
-        slugs: l('winter-sports', 'ziemas-sports', 'zimniy-sport'),
+        slug: 'boxing-martial-arts',
+        slugs: l('boxing-martial-arts', 'bokss-cinas-sporti', 'boks-edinoborstva'),
         sticker: 'blue',
-        icon: 'snowflake',
-        names: l('Winter sports', 'Ziemas sports', 'Зимний спорт'),
+        icon: 'swords',
+        names: l('Boxing & martial arts', 'Bokss un cīņas sporti', 'Бокс и единоборства'),
         attributes: [
           select('type', TYPE, [
-            opt('skis', 'Skis', 'Slēpes', 'Лыжи'),
-            opt('snowboard', 'Snowboard', 'Snovbords', 'Сноуборд'),
-            opt('boots', 'Boots', 'Zābaki', 'Ботинки'),
-            opt('skates', 'Skates', 'Slidas', 'Коньки'),
-            opt('sledge', 'Sledge', 'Ragavas', 'Санки'),
-            OTHER,
-          ]),
-          size(true),
-          yesNo('helmet', HELMET),
-        ],
-      },
-      {
-        slug: 'water-sports',
-        slugs: l('water-sports', 'udens-sports', 'vodnyy-sport'),
-        sticker: 'blue',
-        icon: 'waves',
-        names: l('Water sports', 'Ūdens sports', 'Водный спорт'),
-        attributes: [
-          select('type', TYPE, [
-            opt('sup', 'SUP board', 'SUP dēlis', 'SUP-доска'),
-            opt('kayak', 'Kayak', 'Kajaks', 'Каяк'),
-            opt('wetsuit', 'Wetsuit', 'Hidrotērps', 'Гидрокостюм'),
-            opt('snorkel', 'Snorkelling set', 'Snorkelēšanas komplekts', 'Набор для снорклинга'),
+            opt('punching-bag', 'Punching bag', 'Boksa maiss', 'Боксёрская груша'),
+            opt('gloves', 'Gloves', 'Cimdi', 'Перчатки'),
+            opt('mats', 'Mats', 'Paklāji', 'Маты'),
+            opt('protection', 'Protective gear', 'Aizsargi', 'Защита'),
             OTHER,
           ]),
           size(),
-          yesNo('paddle', l('Paddle included', 'Airis komplektā', 'Весло в комплекте')),
-        ],
-      },
-      {
-        slug: 'sports-games',
-        slugs: l('sports-games', 'sporta-speles', 'sportivnye-igry'),
-        sticker: 'blue',
-        icon: 'trophy',
-        names: l('Sports games', 'Sporta spēles', 'Спортивные игры'),
-        attributes: [
-          select('type', TYPE, [
-            opt('table-tennis', 'Table tennis', 'Galda teniss', 'Настольный теннис'),
-            opt('volleyball', 'Volleyball', 'Volejbols', 'Волейбол'),
-            opt('basketball', 'Basketball', 'Basketbols', 'Баскетбол'),
-            opt('football', 'Football', 'Futbols', 'Футбол'),
-            opt('badminton', 'Badminton', 'Badmintons', 'Бадминтон'),
-            OTHER,
-          ]),
-          included(),
         ],
       },
     ],
@@ -1357,6 +1544,17 @@ export const CATALOG: CatalogCategory[] = [
       },
     ],
   },
+  {
+    slug: 'other',
+    slugs: l('other', 'citi', 'drugoe'),
+    sticker: 'lavender',
+    icon: 'shapes',
+    names: l('Other', 'Citi', 'Другое'),
+    // A root without subcategories takes listings itself: things the tree has no place for yet. Only the
+    // common "in the box" (the condition is a field of every listing). Moderation has its own queue for
+    // it and moves listings to a better category (owner's decision 2026-11-06).
+    attributes: [included()],
+  },
 ];
 
 /**
@@ -1372,7 +1570,12 @@ export const LEGACY_CATEGORIES: Readonly<Record<string, string>> = {
   'hand-tools': 'hand-tool-sets',
   'garden-tools': 'lawn-mowers-trimmers',
   'sports-outdoors': 'sports',
-  'bikes-scooters': 'bikes',
+  'bikes-scooters': 'cycling',
+  'winter-sports': 'downhill-skiing',
+  'water-sports': 'sup',
+  // Keys of earlier C02 drafts (never live), mapped all the same.
+  'sports-games': 'team-sports',
+  bikes: 'cycling',
   camping: 'tents',
   'home-cleaning': 'vacuum-cleaners',
   furniture: 'tables-chairs',
@@ -1384,5 +1587,8 @@ export const LEGACY_CATEGORIES: Readonly<Record<string, string>> = {
   'car-tools': 'battery-chargers',
 };
 
+/** The root that takes listings without a subcategory; moderation has its own queue for it. */
+export const OTHER_CATEGORY = 'other';
+
 /** Bumped whenever LEGACY_CATEGORIES changes: the moves run once per version. */
-export const CATALOG_VERSION = 'c02';
+export const CATALOG_VERSION = 'c02-final';

@@ -5,7 +5,7 @@ import lv from '../src/mail/i18n/lv.json';
 import ru from '../src/mail/i18n/ru.json';
 import { SmtpMailProvider } from '../src/mail/smtp-mail.provider';
 import { resetAccounts } from './support/db';
-import { resetListings, seedListing, signedInClient, type Client } from './support/listings';
+import { categoryId, resetListings, seedListing, signedInClient, type Client } from './support/listings';
 import { mailbox } from './support/mailbox';
 import { createTestApp, type TestApp } from './support/test-app';
 
@@ -72,7 +72,7 @@ describe('listing moderation', () => {
 
   describe('POST /admin/listings/:id/approve', () => {
     it('publishes the listing and emails the owner in their language with a link to it', async () => {
-      const listing = await seedListing(t, anna.user, { status: 'PENDING_REVIEW' });
+      const listing = await seedListing(t, anna.user, { status: 'PENDING_REVIEW', contentLocale: 'lv' });
 
       const res = await admin.post(`/admin/listings/${listing.id}/approve`).send({ version: listing.version }).expect(200);
 
@@ -86,7 +86,8 @@ describe('listing moderation', () => {
       const mail = await mailbox.latestTo(anna.email);
       expect(mail.subject).toBe(lv.listingApproved.subject);
       expect(mail.text).toContain(listing.title!);
-      expect(mail.html).toContain(`${t.env.WEB_ORIGIN}/lv/items/${listing.id}`);
+      // The item's own page: in the language it is written in, with its slug (plan 7).
+      expect(mail.html).toContain(`${t.env.WEB_ORIGIN}/lv/listings/${listing.id}-bosch-cordless-drill`);
     });
 
     it('refuses a listing that is not in review with 409, and a missing one with 404', async () => {
@@ -166,6 +167,56 @@ describe('listing moderation', () => {
       const mail = await mailbox.latestTo(carl.email);
       expect(mail.subject).toBe(en.listingRejected.subject);
       expect(mail.html).toContain(`${t.env.WEB_ORIGIN}/listings/${listing.id}/edit`);
+    });
+  });
+
+  describe('the «Other» queue and moving a listing to another category', () => {
+    it('lists what is filed under «Other», in every live status, and nothing else', async () => {
+      const other = await categoryId(t, 'other');
+      const waiting = await seedListing(t, anna.user, { status: 'PENDING_REVIEW', categoryId: other, attributes: { included: 'Case' } });
+      const live = await seedListing(t, anna.user, { status: 'PUBLISHED', categoryId: other, attributes: {} });
+      await seedListing(t, anna.user, { status: 'DRAFT', categoryId: other, attributes: {} });
+      await seedListing(t, anna.user, { status: 'PENDING_REVIEW' });
+
+      const res = await admin.get('/admin/listings?category=other').expect(200);
+      expect(res.body.items.map((item: { id: string }) => item.id).sort()).toEqual([waiting.id, live.id].sort());
+      expect(res.body.total).toBe(2);
+      expect((await admin.get('/admin/listings?category=other&status=PUBLISHED').expect(200)).body.items).toHaveLength(1);
+      await anna.get('/admin/listings?category=other').expect(403);
+    });
+
+    it('a listing in «Other» can go to review and be published like any other', async () => {
+      const draft = await seedListing(t, anna.user, { status: 'DRAFT', categoryId: await categoryId(t, 'other'), attributes: { included: 'Charger' } });
+      await anna.post(`/listings/${draft.id}/submit`).expect(200);
+    });
+
+    it('moves a listing, keeps its status, drops attribute values the new category does not know, and emails the owner', async () => {
+      const listing = await seedListing(t, anna.user, { status: 'PUBLISHED', categoryId: await categoryId(t, 'other'), attributes: { included: 'Two batteries' } });
+      const drills = await categoryId(t, 'drills-drivers');
+
+      const res = await admin.post(`/admin/listings/${listing.id}/category`).send({ categoryId: drills, version: listing.version }).expect(200);
+
+      expect(res.body.listing).toMatchObject({ status: 'PUBLISHED', categoryId: drills, attributes: { included: 'Two batteries' }, version: listing.version + 1 });
+      await t.mailSent();
+      const mail = await mailbox.latestTo(anna.email);
+      expect(mail.subject).toBe(lv.listingMoved.subject);
+      expect(mail.text).toContain('Urbjmašīnas un skrūvgrieži');
+      expect(mail.html).toContain(`${t.env.WEB_ORIGIN}/lv/listings/${listing.id}/edit?step=attributes`);
+    });
+
+    it('refuses a category with subcategories, the same category, a stale version, an archived or own listing', async () => {
+      const other = await categoryId(t, 'other');
+      const listing = await seedListing(t, anna.user, { status: 'PUBLISHED', categoryId: other, attributes: {} });
+      const move = (categoryId: string, version = listing.version, id = listing.id) => admin.post(`/admin/listings/${id}/category`).send({ categoryId, version });
+
+      expect((await move(await categoryId(t, 'tools')).expect(400)).body.error.fields).toHaveProperty('categoryId');
+      expect((await move(other).expect(400)).body.error.fields).toHaveProperty('categoryId');
+      expect((await move(await categoryId(t, 'saws'), listing.version + 5).expect(409)).body.error.code).toBe('INVALID_STATUS');
+      const archived = await seedListing(t, anna.user, { status: 'ARCHIVED', categoryId: other, attributes: {} });
+      await move(await categoryId(t, 'saws'), archived.version, archived.id).expect(409);
+      const own = await seedListing(t, admin.user, { status: 'PUBLISHED', categoryId: other, attributes: {} });
+      await move(await categoryId(t, 'saws'), own.version, own.id).expect(403);
+      await anna.post(`/admin/listings/${listing.id}/category`).send({ categoryId: await categoryId(t, 'saws'), version: listing.version }).expect(403);
     });
   });
 });

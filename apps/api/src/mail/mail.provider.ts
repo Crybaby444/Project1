@@ -3,7 +3,7 @@ import type { Env } from '../config/env';
 import { SmtpMailProvider } from './smtp-mail.provider';
 
 /** Names of the transactional emails, used for logs (never the content). */
-export type MailTemplate = 'verify-email' | 'reset-password' | 'phone-code' | 'listing-approved' | 'listing-rejected' | 'deal-event';
+export type MailTemplate = 'verify-email' | 'reset-password' | 'phone-code' | 'listing-approved' | 'listing-rejected' | 'listing-moved' | 'deal-event';
 
 export interface MailMessage {
   template: MailTemplate;

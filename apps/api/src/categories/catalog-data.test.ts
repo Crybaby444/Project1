@@ -1,6 +1,6 @@
 import { LOCALES, STICKERS } from '@yoyo/shared';
 import { describe, expect, it } from 'vitest';
-import { CATALOG, LEGACY_CATEGORIES, type CatalogCategory } from './catalog-data';
+import { CATALOG, LEGACY_CATEGORIES, OTHER_CATEGORY, type CatalogCategory } from './catalog-data';
 
 function all(categories: CatalogCategory[]): CatalogCategory[] {
   return categories.flatMap((category) => [category, ...all(category.children ?? [])]);
@@ -13,7 +13,7 @@ function expectAllLanguages(text: Record<string, string>, where: string): void {
 }
 
 describe('CATALOG', () => {
-  it('has the twelve roots of the owner-approved tree C02 (draft 3), each with its sticker, and 78 subcategories', () => {
+  it('has the thirteen roots of the owner-approved tree C02, each with its sticker, and 90 subcategories', () => {
     expect(CATALOG.map((category) => [category.slug, category.sticker])).toEqual([
       ['electronics', 'blue'],
       ['photo-video', 'violet'],
@@ -27,8 +27,9 @@ describe('CATALOG', () => {
       ['events-party', 'ember'],
       ['music', 'lavender'],
       ['car-travel', 'sun'],
+      ['other', 'lavender'],
     ]);
-    expect(CATALOG.flatMap((root) => root.children ?? [])).toHaveLength(78);
+    expect(CATALOG.flatMap((root) => root.children ?? [])).toHaveLength(90);
     for (const root of CATALOG) for (const child of root.children ?? []) expect(child.sticker, child.slug).toBe(root.sticker);
   });
 
@@ -70,8 +71,16 @@ describe('CATALOG', () => {
     }
   });
 
-  it('gives every subcategory 2–5 attributes and keeps attributes off the top level', () => {
+  it('gives every subcategory 2–5 attributes and keeps attributes off the top level, except «Other»', () => {
     for (const top of CATALOG) {
+      if (top.slug === OTHER_CATEGORY) {
+        // A root that takes listings itself: no subcategories, only the common "in the box".
+        expect(top.children ?? []).toEqual([]);
+        expect(top.attributes?.map((a) => a.key)).toEqual(['included']);
+        expect(top.slugs).toEqual({ en: 'other', lv: 'citi', ru: 'drugoe' });
+        expect(top.names).toEqual({ en: 'Other', lv: 'Citi', ru: 'Другое' });
+        continue;
+      }
       expect(top.attributes ?? [], top.slug).toEqual([]);
       expect(top.children?.length, top.slug).toBeGreaterThan(0);
       for (const leaf of top.children ?? []) {
@@ -115,7 +124,7 @@ describe('CATALOG', () => {
       ['included', 'TEXT', null],
     ]);
     expect(leaf('drills-drivers').attributes![0]!.options!.map((o) => o.value)).toEqual(['mains', 'battery']);
-    expect(leaf('bikes').attributes!.map((a) => [a.key, a.type])).toEqual([
+    expect(leaf('cycling').attributes!.map((a) => [a.key, a.type])).toEqual([
       ['type', 'SELECT'],
       ['frameSize', 'TEXT'],
       ['helmet', 'BOOLEAN'],
