@@ -1,12 +1,13 @@
-# Yoyo — категории каталога (C02, черновик 2)
+# Yoyo — категории каталога (C02, черновик 3)
 
 - **Дата:** 2026-11-06
-- **Источник структуры:** каталог 1a.lv (LV/RU), собран владельцем-запросом 2026-11-06 через браузер; отобраны только вещи, которые имеет смысл сдавать в аренду. EN-названия написаны Claude (на 1a.lv нет английской версии).
+- **Источники структуры:** каталоги 1a.lv (LV/RU) и stokker.lv (LV/RU/EN, профессиональные инструменты и техника), собраны по просьбе владельца 2026-11-06 через браузер; отобраны только вещи, которые имеет смысл сдавать в аренду. EN-названия написаны Claude (на 1a.lv нет английской версии).
+- **Stokker — исключено:** автоподъёмники и шиномонтаж, масла, химия и аэрозоли, абразивы и расходники, сварочные материалы и дымоуловители, складские стеллажи, рабочая одежда, запчасти, тяжёлая сельхоз- и строительная техника (тракторы, экскаваторы — не P2P на старте).
 - **Исключено** (не для аренды): расходники и еда, косметика и гигиена (включая наушники, купальники), одежда и обувь, детские подгузники и бутылочки, телефоны и смарт-часы (личные данные), компьютерные комплектующие и ПО, стройматериалы, сантехника, шины, масла и автохимия, товары для животных, кухонная посуда, одноразовые праздничные товары, подарки, outlet.
 - **Заменяет** таблицу slugs в W03 §D. LV-названия и slugs — на вычитку владельцу.
 
 Slug: ASCII, LV без диакритики, RU — транслитерация; связки «un», «и», «and» убраны.
-Итого: 11 корневых категорий, 62 подкатегорий.
+Итого: 12 корневых категорий, 78 подкатегорий.
 
 
 ## Electronics · Elektronika · Электроника
@@ -50,8 +51,25 @@ Slug: ASCII, LV без диакритики, RU — транслитерация
 | routers-planers | Routers & planers | Frēzmašīnas un ēveles | frezmasinas-eveles | Фрезеры и рубанки | frezery-rubanki | 1a: Frēzmašīnas; Ēveles |
 | hand-tool-sets | Hand tool sets | Rokas instrumentu komplekti | rokas-instrumentu-komplekti | Наборы ручного инструмента | nabory-ruchnogo-instrumenta | 1a: Instrumentu komplekti |
 | measuring-tools | Measuring tools | Mērinstrumenti | merinstrumenti | Измерительный инструмент | izmeritelnyy-instrument | 1a: Mērinstrumenti |
-| ladders-scaffolding | Ladders & scaffolding | Kāpnes un sastatnes | kapnes-sastatnes | Лестницы и леса | lestnitsy-lesa | текущий каталог |
 | cleaning-machines | Cleaning machines | Tīrīšanas tehnika | tirisanas-tehnika | Уборочная техника | uborochnaya-tehnika | текущий каталог (паклāju tīrītāji, mazgājošie putekļsūcēji) |
+| compressors-pneumatic | Compressors & air tools | Kompresori un pneimatiskie instrumenti | kompresori-pneimatiskie-instrumenti | Компрессоры и пневмоинструмент | kompressory-pnevmoinstrument | Stokker |
+| welding | Welding machines | Metināšanas iekārtas | metinasanas-iekartas | Сварочное оборудование | svarochnoe-oborudovanie | Stokker |
+| bench-tools | Bench & mitre saws | Pusstacionārie darbgaldi | pusstacionarie-darbgaldi | Портативные станки | portativnye-stanki | Stokker: Pusstacionārie darbgaldi |
+| plumbing-tools | Plumbing & pipe tools | Santehnikas instrumenti | santehnikas-instrumenti | Инструменты для труб | instrumenty-dlya-trub | Stokker |
+| work-lights-cables | Work lights & extension cords | Darba gaismekļi un pagarinātāji | darba-gaismekli-pagarinataji | Рабочие светильники и удлинители | rabochie-svetilniki-udliniteli | Stokker: Gaismekļi, pagarinātāji |
+
+## Construction & renovation · Būvniecība un remonts · Стройка и ремонт
+
+Корень: `/c/construction` · `/lv/c/buvnieciba-remonts` · `/ru/c/stroyka-remont`
+
+| EN slug | EN | LV | LV slug | RU | RU slug | Основание |
+| --- | --- | --- | --- | --- | --- | --- |
+| plate-compactors | Plate compactors | Vibroblietes | vibroblietes | Виброплиты | vibroplity | Stokker: Vibroblietes |
+| concrete-tile-tools | Concrete mixers & tile cutters | Betona maisītāji un flīžu griezēji | betona-maisitaji-flizu-griezeji | Бетономешалки и плиткорезы | betonomeshalki-plitkorezy | Stokker: Celtniecības iekārtas |
+| generators | Generators | Strāvas ģeneratori | stravas-generatori | Генераторы | generatory | Stokker |
+| heaters-dehumidifiers | Heaters & dehumidifiers | Sildītāji un mitruma savācēji | silditaji-mitruma-savaceji | Обогреватели и осушители | obogrevateli-osushiteli | Stokker: Industriālie sildītāji un mitruma savācēji |
+| ladders-scaffolding | Ladders & scaffolding | Kāpnes un sastatnes | kapnes-sastatnes | Лестницы и леса | lestnitsy-lesa | текущий каталог + Stokker: Kāpnes un sastatnes |
+| pro-pressure-washers | Pro pressure washers | Profesionālie augstspiediena mazgātāji | profesionalie-augstspiediena-mazgataji | Профессиональные мойки | professionalnye-moyki | Stokker |
 
 ## Garden & yard · Dārzs un pagalms · Сад и двор
 
@@ -64,6 +82,12 @@ Slug: ASCII, LV без диакритики, RU — транслитерация
 | snow-blowers | Snow blowers | Sniega frēzes | sniega-frezes | Снегоуборщики | snegouborschiki | 1a: Sniega frēzes |
 | garden-furniture-canopies | Garden furniture & canopies | Dārza mēbeles un nojumes | darza-mebeles-nojumes | Садовая мебель и навесы | sadovaya-mebel-navesy | 1a: Dārza mēbeles; Dārza nojumes |
 | trampolines | Trampolines | Batuti | batuti | Батуты | batuty | 1a: Batuti |
+| robot-mowers | Robotic mowers | Mauriņa pļaušanas roboti | maurina-plausanas-roboti | Косилки-роботы | kosilki-roboty | Stokker |
+| lawn-tractors | Lawn tractors | Mauriņa traktori | maurina-traktori | Тракторные газонокосилки | traktornye-gazonokosilki | Stokker |
+| chainsaws | Chainsaws | Motorzāģi | motorzagi | Мотопилы | motopily | Stokker |
+| garden-power-tools | Trimmers & leaf blowers | Trimmeri un lapu pūtēji | trimmeri-lapu-puteji | Триммеры и воздуходувки | trimmery-vozduhoduvki | Stokker: Dārza tehnika un darbarīki |
+| log-splitters | Log splitters & forestry | Malkas skaldītāji un meža tehnika | malkas-skalditaji-meza-tehnika | Дровоколы и лесная техника | drovokoly-lesnaya-tehnika | Stokker: Meža tehnika |
+| sweepers | Sweepers & landscape machines | Slaucīšanas un komunālā tehnika | slaucisanas-komunala-tehnika | Подметальная и коммунальная техника | podmetalnaya-kommunalnaya-tehnika | Stokker: Komunālā tehnika |
 
 ## Home & kitchen · Māja un virtuve · Дом и кухня
 
