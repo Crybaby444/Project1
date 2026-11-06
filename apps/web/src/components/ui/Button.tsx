@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
-import { Link } from '@/i18n/navigation';
+import { TransitionLink } from '@/components/motion/TransitionLink';
 
 type Variant = 'primary' | 'ghost';
 type Size = 'md' | 'lg';
@@ -8,7 +8,7 @@ type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
   children: ReactNode;
   variant?: Variant;
   size?: Size;
-  /** Renders a locale-aware link styled as a button. */
+  /** Renders a locale-aware link styled as a button; it moves to the page with the page transition. */
   href?: string;
   /** Shows a spinner, marks the button busy and blocks clicks. */
   loading?: boolean;
@@ -17,7 +17,7 @@ type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
 const BASE =
   'inline-flex items-center justify-center gap-2 rounded-pill border font-bold tracking-[0.03em] uppercase select-none ' +
   'transition-[transform,background-color,color] duration-150 ease-yoyo ' +
-  'hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] ' +
+  'hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96] ' +
   'disabled:pointer-events-none disabled:opacity-55';
 
 const VARIANTS: Record<Variant, string> = {
@@ -55,9 +55,9 @@ export function Button({
 
   if (href !== undefined) {
     return (
-      <Link href={href} className={classes}>
+      <TransitionLink href={href} className={classes}>
         {children}
-      </Link>
+      </TransitionLink>
     );
   }
 

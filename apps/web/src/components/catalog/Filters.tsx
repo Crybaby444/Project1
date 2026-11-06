@@ -2,7 +2,7 @@
 
 import type { PlacesResponse } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
-import { useEffect, useId, useState } from 'react';
+import { useId, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Dialog } from '@/components/ui/Dialog';
 import { Field } from '@/components/ui/Field';
@@ -33,12 +33,16 @@ function FilterFields({ params, districts, today }: Omit<FiltersProps, 'total'>)
   const [priceError, setPriceError] = useState<string | undefined>();
   const [range, setRange] = useState<Range | null>(params.from && params.to ? { start: params.from, end: params.to } : null);
 
-  // The address changes from elsewhere too (a removed chip, Back): the fields follow it.
-  useEffect(() => {
+  // The address changes from elsewhere too (a removed chip, Back): the fields follow it, during the
+  // render (React's "adjusting state when a prop changes"), so there is no frame with stale values.
+  const fromAddress = [params.priceMin, params.priceMax, params.from, params.to].join('|');
+  const [seen, setSeen] = useState(fromAddress);
+  if (seen !== fromAddress) {
+    setSeen(fromAddress);
     setMin(params.priceMin?.toString() ?? '');
     setMax(params.priceMax?.toString() ?? '');
     setRange(params.from && params.to ? { start: params.from, end: params.to } : null);
-  }, [params.priceMin, params.priceMax, params.from, params.to]);
+  }
 
   function applyPrice() {
     const from = euros(min);

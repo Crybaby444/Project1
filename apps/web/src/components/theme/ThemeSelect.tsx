@@ -27,7 +27,7 @@ export function ThemeSelect() {
               onChange={() => choose(option)}
               className="peer sr-only"
             />
-            <span className="peer-checked:bg-cta peer-checked:text-cta-fg hover:bg-mist peer-checked:hover:bg-cta rounded-pill ease-yoyo peer-focus-visible:outline-ink flex min-h-10 cursor-pointer items-center justify-center px-4 text-[13px] font-bold tracking-[0.03em] uppercase transition-[background-color,color,transform] duration-200 select-none peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3 active:scale-[0.97]">
+            <span className="peer-checked:bg-cta peer-checked:text-cta-fg hover:bg-mist peer-checked:hover:bg-cta rounded-pill ease-yoyo peer-focus-visible:outline-ink flex min-h-10 cursor-pointer items-center justify-center px-4 text-[13px] font-bold tracking-[0.03em] uppercase transition-[background-color,color,transform] duration-200 select-none peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3 active:scale-[0.96]">
               {t(option)}
             </span>
           </label>

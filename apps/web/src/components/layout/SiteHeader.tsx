@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { Button } from '@/components/ui/Button';
-import { LanguageMenu, LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 import { LogoMark } from '@/components/ui/LogoMark';
 import { Wordmark } from '@/components/ui/Wordmark';
 import { Link } from '@/i18n/navigation';
@@ -13,7 +13,7 @@ import { VerifyEmailBanner } from './VerifyEmailBanner';
 
 /**
  * The bar on every page: the wordmark home on the left; language, theme and the account on the right.
- * One row at any width: below 1024px the language pills fold into one button, and below 640px a
+ * One row at any width: the language is one compact pill that opens a menu, and below 640px a
  * visitor sees only "Sign in" (the sign-in page links to sign-up). Below 640px the row is also a
  * little tighter, so the longest "Sign in" (Latvian "Pieteikties") still fits a 320px phone.
  */
@@ -31,16 +31,13 @@ export function SiteHeader() {
           </Link>
 
           <div className="flex min-w-0 items-center gap-1 sm:gap-2">
-            <div className="hidden lg:block">
-              <LanguageSwitcher />
-            </div>
-            <LanguageMenu className="shrink-0 lg:hidden" />
+            <LanguageSwitcher className="shrink-0" />
             <ThemeToggle className="shrink-0" />
             {status === 'authenticated' && user ? (
               <>
                 <Link
                   href="/listings/new"
-                  className="group border-cta bg-cta text-cta-fg rounded-pill ease-yoyo inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center gap-1.5 border px-2.5 text-[13px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] sm:px-4"
+                  className="group border-cta bg-cta text-cta-fg rounded-pill ease-yoyo inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center gap-1.5 border px-2.5 text-[13px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96] sm:px-4"
                 >
                   <svg
                     viewBox="0 0 24 24"

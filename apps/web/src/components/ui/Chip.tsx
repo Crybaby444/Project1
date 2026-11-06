@@ -42,7 +42,7 @@ export function Chip({
       type="button"
       aria-pressed={pressed}
       onClick={() => onPressedChange(!pressed)}
-      className={`inline-flex min-h-10 items-center gap-2 rounded-pill border px-4 text-sm font-bold transition-[transform,background-color,color] duration-250 ease-yoyo hover:-translate-y-0.5 ${hoverTilt} active:scale-[0.95] ${fill} ${className}`}
+      className={`inline-flex min-h-10 items-center gap-2 rounded-pill border px-4 text-sm font-bold transition-[transform,background-color,color] duration-250 ease-yoyo hover:-translate-y-0.5 ${hoverTilt} active:scale-[0.96] ${fill} ${className}`}
     >
       {icon}
       {children}

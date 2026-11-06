@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useRef, type ReactNode } from 'react';
+import { Bob } from '@/components/motion/Parallax';
+import { LetterRise } from '@/components/motion/LetterRise';
 import { Sticker } from '@/components/ui/Sticker';
 import { displayFit } from '@/lib/display-fit';
 
@@ -21,6 +23,7 @@ type AuthCardProps = {
 /**
  * The calm frame of the sign-in screens (DESIGN.md §7): canvas, one surface card with a 1px outline
  * and 40px corners, the display face only in the title, and a single small sticker as the accent.
+ * Motion: the card rises in on load, the title's letters follow, and the sticker floats gently.
  */
 export function AuthCard({ title, subtitle, children, footer, focusTitle = false }: AuthCardProps) {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -31,8 +34,13 @@ export function AuthCard({ title, subtitle, children, footer, focusTitle = false
   return (
     <main className="flex flex-1 justify-center px-4 py-10 sm:py-16">
       <div className="flex w-full max-w-[30rem] flex-col gap-6">
-        <section className="border-ink bg-surface rounded-card-xl relative flex flex-col gap-6 border p-6 sm:p-8">
-          <Sticker kind="yoyo" size={52} className="absolute -top-9 right-6 rotate-12" />
+        <section
+          data-card-rise=""
+          className="border-ink bg-surface rounded-card-xl relative flex flex-col gap-6 border p-6 sm:p-8"
+        >
+          <Bob className="absolute -top-9 right-6">
+            <Sticker kind="yoyo" size={52} className="rotate-12" />
+          </Bob>
           <header className="@container flex flex-col gap-2">
             <h1
               ref={titleRef}
@@ -40,7 +48,7 @@ export function AuthCard({ title, subtitle, children, footer, focusTitle = false
               style={displayFit(title, { max: '2.75rem' })}
               className="font-display text-display-fit leading-[0.85] font-black uppercase focus:outline-none"
             >
-              {title}
+              <LetterRise text={title} stagger={18} />
             </h1>
             {subtitle && <p className="text-base leading-relaxed">{subtitle}</p>}
           </header>

@@ -58,7 +58,7 @@ export function ChoicePills<T extends string>({
             <label
               key={choice.value}
               style={fill}
-              className={`rounded-pill ease-yoyo has-focus-visible:outline-ink relative inline-flex min-h-10 cursor-pointer items-center gap-2 border px-4 py-2 text-left text-sm leading-snug font-bold transition-[transform,background-color,color] duration-250 select-none hover:-translate-y-0.5 active:scale-[0.95] has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-disabled:cursor-default has-disabled:opacity-55 ${
+              className={`rounded-pill ease-yoyo has-focus-visible:outline-ink relative inline-flex min-h-10 cursor-pointer items-center gap-2 border px-4 py-2 text-left text-sm leading-snug font-bold transition-[transform,background-color,color] duration-250 select-none hover:-translate-y-0.5 active:scale-[0.96] has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-disabled:cursor-default has-disabled:opacity-55 ${
                 index % 2 === 0 ? 'hover:-rotate-2' : 'hover:rotate-2'
               } ${checked ? 'border-cta bg-cta text-cta-fg' : fill ? 'border-black' : 'border-ink bg-surface text-ink'}`}
             >

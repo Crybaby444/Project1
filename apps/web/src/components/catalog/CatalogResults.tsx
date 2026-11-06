@@ -26,7 +26,9 @@ const DATES_AHEAD = 365;
  */
 export function usableParams(params: CatalogParams, today: string): CatalogParams {
   if (params.from && (params.from < today || params.from > addDays(today, DATES_AHEAD))) {
-    const { from: _from, to: _to, ...rest } = params;
+    const rest = { ...params };
+    delete rest.from;
+    delete rest.to;
     return rest;
   }
   return params;
@@ -47,7 +49,7 @@ type Props = {
 };
 
 /** Search and category pages: one layout (W03 §B), the results drawn on the server. */
-export async function CatalogResults({ locale, params: raw, category, related, path, title, crumbs }: Props) {
+export async function CatalogResults({ params: raw, category, related, path, title, crumbs }: Props) {
   const t = await getTranslations('catalog');
   const today = todayIn('Europe/Riga');
   const params = usableParams(raw, today);

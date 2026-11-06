@@ -45,13 +45,16 @@ const transitions = (page: Page) =>
     () => (window as unknown as { __vt: { started: number; captured: { lang: string; h1: string }[] } }).__vt,
   );
 
-/** Opens the language menu (narrow header) or uses the pills (wide header) and picks `lang`. */
-async function choose(page: Page, from: Lang, to: Lang, narrow: boolean) {
-  const header = page.locator('[data-site-header]');
-  if (narrow) {
-    await header.getByRole('button', { name: new RegExp(`^${LANGUAGES[from].m.language.label}: `) }).click();
-  }
-  await header.getByRole('link', { name: LANGUAGES[to].name }).click();
+/** The language pill of the header in `lang`. */
+const languagePill = (page: Page, lang: Lang) =>
+  page
+    .locator('[data-site-header]')
+    .getByRole('button', { name: new RegExp(`^${LANGUAGES[lang].m.language.label}: `) });
+
+/** Opens the language menu and picks `to`. */
+async function choose(page: Page, from: Lang, to: Lang) {
+  await languagePill(page, from).click();
+  await page.locator('[data-site-header]').getByRole('menuitemradio', { name: LANGUAGES[to].name }).click();
 }
 
 async function expectPage(page: Page, lang: Lang, path: string) {
@@ -63,11 +66,8 @@ async function expectPage(page: Page, lang: Lang, path: string) {
   await expect(page.locator('html')).not.toHaveAttribute('data-language-switch');
 }
 
-for (const { width, narrow } of [
-  { width: 390, narrow: true },
-  { width: 1280, narrow: false },
-]) {
-  test.describe(`at ${width}px (${narrow ? 'language menu' : 'language pills'})`, () => {
+for (const width of [390, 1280]) {
+  test.describe(`at ${width}px`, () => {
     test.use({ viewport: { width, height: 800 } });
 
     test('en -> lv -> ru -> en, three rounds in a row: right texts and address, nothing sticks out', async ({
@@ -81,17 +81,11 @@ for (const { width, narrow } of [
       let from: Lang = 'en';
       for (let round = 0; round < 3; round += 1) {
         for (const to of ROUND) {
-          await choose(page, from, to, narrow);
+          await choose(page, from, to);
           await expectPage(page, to, path);
           expect(await overflows(page)).toEqual([]);
           // The keyboard focus is back on the switcher, not lost on the page.
-          await expect(
-            narrow
-              ? page
-                  .locator('[data-site-header]')
-                  .getByRole('button', { name: new RegExp(`^${LANGUAGES[to].m.language.label}: `) })
-              : page.locator('[data-site-header]').getByRole('link', { name: LANGUAGES[to].name }),
-          ).toBeFocused();
+          await expect(languagePill(page, to)).toBeFocused();
           from = to;
         }
       }
@@ -111,9 +105,9 @@ test('with reduced motion the language changes at once, without a transition', a
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await watchTransitions(page);
   await page.goto('/login');
-  await choose(page, 'en', 'lv', false);
+  await choose(page, 'en', 'lv');
   await expectPage(page, 'lv', '/login');
-  await choose(page, 'lv', 'en', false);
+  await choose(page, 'lv', 'en');
   await expectPage(page, 'en', '/login');
   expect((await transitions(page)).started).toBe(0);
 });
@@ -124,8 +118,8 @@ test('a browser without View Transitions switches at once and is never left half
   });
   await page.goto('/ru/login?next=%2Fsettings');
   expect(await page.evaluate(() => typeof document.startViewTransition)).toBe('undefined');
-  await choose(page, 'ru', 'lv', false);
+  await choose(page, 'ru', 'lv');
   await expectPage(page, 'lv', '/login?next=%2Fsettings');
-  await choose(page, 'lv', 'en', false);
+  await choose(page, 'lv', 'en');
   await expectPage(page, 'en', '/login?next=%2Fsettings');
 });

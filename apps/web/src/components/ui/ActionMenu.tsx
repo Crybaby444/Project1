@@ -79,7 +79,7 @@ export function ActionMenu({
             setOpen(true);
           }
         }}
-        className="border-ink bg-surface text-ink rounded-pill ease-yoyo inline-grid size-10 place-items-center border transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.94]"
+        className="border-ink bg-surface text-ink rounded-pill ease-yoyo inline-grid size-10 place-items-center border transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.96]"
       >
         {children}
       </button>

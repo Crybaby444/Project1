@@ -1,0 +1,392 @@
+/*
+ * Motion system (DESIGN.md "Project adaptations" §1), the CSS half of components/motion/.
+ *
+ * Rules every block here follows:
+ * - only `transform` and `opacity` animate, so nothing reflows (CLS 0) and the compositor does the work;
+ * - scroll-linked effects use CSS scroll-driven animations (`animation-timeline: view()`) where the
+ *   browser has them; the components add a small JavaScript fallback elsewhere (`data-armed`,
+ *   `data-shown`, `data-active`);
+ * - anything that loops runs only while it is on screen (`data-in-view`);
+ * - under `prefers-reduced-motion: reduce` everything is still and fully readable (end of the file,
+ *   plus the global rule in globals.css that stops every animation and transition).
+ */
+
+:root {
+  /* How far a speed-1 parallax layer drifts each way; lighter on touch screens. */
+  --parallax-range: 120px;
+}
+
+@media (pointer: coarse) {
+  :root {
+    --parallax-range: 48px;
+  }
+}
+
+/* ── 1. Section colour morph ─────────────────────────────────────────────────────────────── */
+
+[data-tone-section] {
+  position: relative;
+  view-timeline: --tone block;
+}
+
+/* One fixed, full-screen layer per section, behind the content; later sections paint over earlier ones. */
+[data-tone-layer] {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--tone-bg);
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease-yoyo);
+}
+
+[data-tone-layer][data-active] {
+  opacity: 1;
+}
+
+@supports (animation-timeline: view()) {
+  [data-tone-layer] {
+    transition: none;
+    animation: tone-in linear both;
+    animation-timeline: --tone;
+    animation-range: entry 30% entry 80%;
+  }
+}
+
+@keyframes tone-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ── 2. Word-by-word fill ─────────────────────────────────────────────────────────────────── */
+
+[data-word-fill] {
+  /* Pale, not hidden: at half opacity the words still pass WCAG AA for large text (3:1) on every
+     tone in both themes, so WordFill is for large bold statements (≥ 18.7px bold) only. */
+  --word-min: 0.5;
+  view-timeline: --words block;
+}
+
+/* Fallback: --wf-p (0…1) is written by WordFill; word i is ink once the progress passes it. */
+[data-word-fill][data-armed] [data-word] {
+  opacity: clamp(
+    var(--word-min),
+    calc(var(--word-min) + (var(--wf-p, 0) * (var(--n) + 1) - var(--i)) * (1 - var(--word-min))),
+    1
+  );
+  transition: opacity var(--dur-fast) linear;
+}
+
+@supports (animation-timeline: view()) {
+  [data-word-fill] [data-word] {
+    animation: word-fill linear both;
+    animation-timeline: --words;
+    animation-range: cover calc(12% + var(--i) / var(--n) * 36%) cover
+      calc(16% + (var(--i) + 1) / var(--n) * 36%);
+  }
+}
+
+@keyframes word-fill {
+  from {
+    opacity: var(--word-min);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ── 3. Sticky stacking cards ─────────────────────────────────────────────────────────────── */
+
+/* Pinned only where a card fits the screen with room to spare. */
+@media (min-height: 560px) {
+  [data-stack-item] {
+    position: sticky;
+    top: calc(var(--stack-top, 5.5rem) + var(--i) * var(--stack-step, 1.25rem));
+  }
+
+  [data-stack-item] > * {
+    rotate: var(--tip, 0deg);
+  }
+}
+
+/* ── 4. Parallax and floating stickers ────────────────────────────────────────────────────── */
+
+[data-parallax] {
+  view-timeline: --parallax block;
+}
+
+/* Layers drift with `translate`, so their own `rotate` and `transform` (wobble, bob) still apply. */
+[data-parallax][data-armed] [data-parallax-layer] {
+  translate: 0 calc(var(--speed, 0) * var(--parallax-range) * (1 - 2 * var(--parallax-p, 0.5)));
+}
+
+@supports (animation-timeline: view()) {
+  [data-parallax-layer] {
+    animation: parallax linear both;
+    animation-timeline: --parallax;
+  }
+}
+
+@keyframes parallax {
+  from {
+    translate: 0 calc(var(--speed, 0) * var(--parallax-range));
+  }
+  to {
+    translate: 0 calc(var(--speed, 0) * var(--parallax-range) * -1);
+  }
+}
+
+[data-bob][data-in-view],
+[data-parallax][data-in-view] [data-bob] {
+  animation: sticker-bob 3.8s ease-in-out var(--bob-delay, 0ms) infinite;
+}
+
+/* A sticker that both drifts and floats runs both animations: scroll-linked drift, timed bob. */
+@supports (animation-timeline: view()) {
+  [data-parallax][data-in-view] [data-parallax-layer][data-bob] {
+    animation:
+      parallax linear both,
+      sticker-bob 3.8s ease-in-out var(--bob-delay, 0ms) infinite;
+    animation-timeline: --parallax, auto;
+  }
+}
+
+@keyframes sticker-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(-2deg);
+  }
+}
+
+/* A springy wobble for pill stickers on hover: overshoots, then settles. */
+@media (hover: hover) {
+  [data-pill-sticker]:hover {
+    animation: pill-wobble 600ms var(--ease-yoyo);
+  }
+}
+
+@keyframes pill-wobble {
+  20% {
+    transform: rotate(-7deg) scale(1.06);
+  }
+  45% {
+    transform: rotate(5deg) scale(1.04);
+  }
+  70% {
+    transform: rotate(-2deg) scale(1.01);
+  }
+}
+
+/* ── 5. Marquee rows ──────────────────────────────────────────────────────────────────────── */
+
+[data-marquee-row-track] {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-seconds, 28s) linear infinite;
+  animation-play-state: paused;
+}
+
+[data-marquee-row-track][data-in-view] {
+  animation-play-state: running;
+}
+
+[data-marquee]:hover [data-marquee-row-track],
+[data-marquee]:focus-within [data-marquee-row-track],
+[data-marquee-row-track][data-paused] {
+  animation-play-state: paused;
+}
+
+/* ── 6. Bento cards: tilt, lift off a hard shadow, bouncing sticker ───────────────────────── */
+
+[data-tilt] {
+  transform: perspective(1600px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform var(--dur-slow) var(--ease-yoyo);
+}
+
+[data-tilt-face] {
+  transition: transform var(--dur-base) var(--ease-yoyo);
+}
+
+[data-tilt]:focus-within > [data-tilt-face] {
+  transform: translateY(-4px);
+}
+
+@media (hover: hover) {
+  [data-tilt]:hover > [data-tilt-face] {
+    transform: translateY(-4px);
+  }
+
+  [data-tilt]:hover [data-bounce] {
+    animation: sticker-bounce var(--dur-slow) var(--ease-yoyo);
+  }
+}
+
+@keyframes sticker-bounce {
+  30% {
+    transform: translateY(-10px) scale(1.08) rotate(-6deg);
+  }
+  60% {
+    transform: translateY(0) scale(0.96) rotate(3deg);
+  }
+  80% {
+    transform: translateY(-3px) scale(1.02);
+  }
+}
+
+/* ── 7. Hero letters ─────────────────────────────────────────────────────────────────────── */
+
+/* Words are the boxes that move; letters stay inline text that only fades (see LetterRise.tsx). */
+[data-rise-word] {
+  display: inline-block;
+  /* Never wider than the line: an overlong word (an unexpected translation) still hyphenates or
+     breaks inside its own box, as the plain heading would. */
+  max-width: 100%;
+  animation: word-rise var(--dur-slow) var(--ease-yoyo) both;
+  animation-delay: calc(var(--i) * var(--stagger, 28ms));
+}
+
+[data-letter] {
+  animation: letter-in var(--dur-slow) var(--ease-yoyo) both;
+  animation-delay: calc(var(--i) * var(--stagger, 28ms));
+}
+
+@keyframes word-rise {
+  from {
+    transform: translateY(0.4em);
+  }
+}
+
+@keyframes letter-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* A screen's main card arriving on load (auth): up from a little below, settling. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-card-rise] {
+    animation: card-rise var(--dur-slow) var(--ease-yoyo) both;
+  }
+}
+
+@keyframes card-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+}
+
+/*
+ * A language or page switch swaps the page inside a View Transition that must stay geometry-free
+ * (globals.css, `html[data-language-switch]`, `html[data-page-switch]`): nothing may move while the
+ * browser captures the new page and scrolls a focused field into view, or the header and the scroll
+ * position shift (WebKit). So the new page's load animations do not replay, and floating stickers
+ * hold still until the switch is over. A normal page load still plays them.
+ */
+html:is([data-language-switch], [data-page-switch])
+  :is([data-card-rise], [data-rise-word], [data-letter], [data-bob], [data-parallax-layer][data-bob]) {
+  animation: none !important;
+}
+
+/* ── Reveal on scroll (supporting technique for sections and cards) ────────────────────────── */
+
+@supports (animation-timeline: view()) {
+  [data-reveal] {
+    animation: reveal-rise linear both;
+    animation-timeline: view();
+    animation-range: entry calc(5% + var(--reveal-i, 0) * 6%) entry calc(70% + var(--reveal-i, 0) * 6%);
+  }
+}
+
+/* Fallback: hidden until the observer has seen it, but only when a script is there to do so. */
+@supports not (animation-timeline: view()) {
+  @media (scripting: enabled) {
+    [data-reveal]:not([data-shown]) {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+  }
+
+  [data-reveal] {
+    transition:
+      opacity var(--dur-slow) var(--ease-yoyo) calc(var(--reveal-i, 0) * 70ms),
+      transform var(--dur-slow) var(--ease-yoyo) calc(var(--reveal-i, 0) * 70ms);
+  }
+}
+
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+/* ── 8. Page and language transitions ─────────────────────────────────────────────────────
+ * TransitionLink (switch-page.ts) and the language switch (switch-language.ts) run one View
+ * Transition each; their focus cross-fade (opacity and blur, nothing moves) is in globals.css (`html[data-page-switch]`,
+ * `html[data-language-switch]`).
+ */
+
+/* ── 9. Micro-interactions ──────────────────────────────────────────────────────────────────
+ * Buttons, pills and icon buttons carry their own Tailwind classes (hover lift, `active:scale-[0.96]`),
+ * see components/ui; counters tick up through CountUp.tsx.
+ */
+
+/* ── Reduced motion: still, flat and fully readable ───────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-tone-layer] {
+    display: none;
+  }
+
+  [data-tone-section] {
+    background-color: var(--tone-bg);
+  }
+
+  [data-word-fill] [data-word] {
+    opacity: 1 !important;
+  }
+
+  [data-stack-item] {
+    position: static !important;
+  }
+
+  [data-stack-item] > *,
+  [data-tilt],
+  [data-tilt-face] {
+    rotate: none !important;
+    transform: none !important;
+  }
+
+  /* Layers keep their hand-placed rotation; only the drift goes. */
+  [data-parallax-layer] {
+    translate: none !important;
+  }
+
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* The rows wrap into a still block, and the duplicate that made the loop seamless goes away. */
+  [data-marquee-row-track] {
+    flex-wrap: wrap;
+    width: auto;
+  }
+
+  [data-marquee-set] {
+    flex-wrap: wrap;
+    row-gap: 0.75rem;
+  }
+
+  [data-marquee-copy] {
+    display: none !important;
+  }
+}
