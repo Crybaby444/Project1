@@ -60,7 +60,8 @@ export default async function proxy(request: NextRequest): Promise<NextResponse>
     });
   }
 
-  const origin = process.env.SITE_ORIGIN ? siteOrigin() : request.nextUrl.origin;
+  // Alternates name the live site, like canonical and the sitemaps (previews point there too, site.ts).
+  const origin = siteOrigin();
   const decision = await decidePage(pathname, search, origin, lookups);
   if (decision.action === 'redirect') return NextResponse.redirect(new URL(decision.location, request.url), 301);
   if (decision.action === 'gone') {

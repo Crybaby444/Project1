@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import { useHydrated } from '@/components/motion/hooks';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { useFavoriteIds, useToggleFavorite } from '@/lib/catalog/use-favorites';
 import { useSession } from '@/lib/session/SessionProvider';
@@ -22,6 +23,10 @@ export function HeartButton({ listingId, title, className = '' }: { listingId: s
   const pathname = usePathname();
   const [burst, setBurst] = useState(0);
   const pressed = ids.data?.has(listingId) ?? false;
+  const hydrated = useHydrated();
+  // The sparks are placed inside the button: it is `relative` unless the caller positions it itself
+  // (two position classes would fight, and the later one in the stylesheet wins).
+  const position = /(^|\s)(absolute|fixed|sticky)(\s|$)/.test(className) ? '' : 'relative';
 
   function onClick() {
     if (status !== 'authenticated') {
@@ -40,7 +45,10 @@ export function HeartButton({ listingId, title, className = '' }: { listingId: s
       aria-label={pressed ? t('remove', { title }) : t('add', { title })}
       title={pressed ? t('removeShort') : t('addShort')}
       onClick={onClick}
-      className={`group border-ink bg-surface text-ink ease-yoyo relative inline-grid size-11 shrink-0 place-items-center rounded-full border transition-transform duration-150 hover:-translate-y-0.5 hover:-rotate-6 active:scale-[0.9] ${className}`}
+      // Until the page is interactive and it is known who is signed in, a press would be lost or would
+      // send a signed-in person to sign in; tests and fast fingers wait instead.
+      disabled={!hydrated || status === 'loading'}
+      className={`group border-ink bg-surface text-ink ease-yoyo ${position} inline-grid size-11 shrink-0 place-items-center rounded-full border transition-transform duration-150 hover:-translate-y-0.5 hover:-rotate-6 active:scale-[0.9] ${className}`}
     >
       <svg
         key={burst}

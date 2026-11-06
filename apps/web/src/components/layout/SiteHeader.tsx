@@ -8,7 +8,8 @@ import { LogoMark } from '@/components/ui/LogoMark';
 import { Wordmark } from '@/components/ui/Wordmark';
 import { Link } from '@/i18n/navigation';
 import { useSession } from '@/lib/session/SessionProvider';
-import { CatalogMenu, type MenuRoot } from './CatalogMenu';
+import type { MenuRoot } from '@/lib/catalog/menu';
+import { CatalogMenu } from './CatalogMenu';
 import { UserMenu } from './UserMenu';
 import { VerifyEmailBanner } from './VerifyEmailBanner';
 
