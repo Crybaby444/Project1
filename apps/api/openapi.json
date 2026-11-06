@@ -7844,10 +7844,20 @@
                     "minimum": -9007199254740991,
                     "maximum": 9007199254740991
                   },
+                  "servicePercent": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
                   "serviceFeeCents": {
                     "type": "integer",
                     "minimum": -9007199254740991,
                     "maximum": 9007199254740991
+                  },
+                  "servicePromoUntil": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                    "nullable": true
                   },
                   "depositCents": {
                     "type": "integer",
@@ -7879,7 +7889,9 @@
                   "discountPercent",
                   "discountCents",
                   "rentCents",
+                  "servicePercent",
                   "serviceFeeCents",
+                  "servicePromoUntil",
                   "depositCents",
                   "totalCents",
                   "ownerPayoutCents",
@@ -8719,10 +8731,20 @@
                       "minimum": -9007199254740991,
                       "maximum": 9007199254740991
                     },
+                    "servicePercent": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
                     "serviceFeeCents": {
                       "type": "integer",
                       "minimum": -9007199254740991,
                       "maximum": 9007199254740991
+                    },
+                    "servicePromoUntil": {
+                      "type": "string",
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                      "nullable": true
                     },
                     "depositCents": {
                       "type": "integer",
@@ -8754,7 +8776,9 @@
                     "discountPercent",
                     "discountCents",
                     "rentCents",
+                    "servicePercent",
                     "serviceFeeCents",
+                    "servicePromoUntil",
                     "depositCents",
                     "totalCents",
                     "ownerPayoutCents",
@@ -9151,10 +9175,20 @@
                 "minimum": -9007199254740991,
                 "maximum": 9007199254740991
               },
+              "servicePercent": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
               "serviceFeeCents": {
                 "type": "integer",
                 "minimum": -9007199254740991,
                 "maximum": 9007199254740991
+              },
+              "servicePromoUntil": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                "nullable": true
               },
               "depositCents": {
                 "type": "integer",
@@ -9186,7 +9220,9 @@
               "discountPercent",
               "discountCents",
               "rentCents",
+              "servicePercent",
               "serviceFeeCents",
+              "servicePromoUntil",
               "depositCents",
               "totalCents",
               "ownerPayoutCents",
@@ -9313,6 +9349,16 @@
             "minimum": -9007199254740991,
             "maximum": 9007199254740991
           },
+          "servicePromoUntil": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "nullable": true
+          },
+          "regularServicePercent": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
           "maxAdvanceDays": {
             "type": "integer",
             "minimum": -9007199254740991,
@@ -9351,6 +9397,8 @@
           "listing",
           "pricing",
           "servicePercent",
+          "servicePromoUntil",
+          "regularServicePercent",
           "maxAdvanceDays",
           "timeZone",
           "today",
@@ -9798,10 +9846,20 @@
                       "minimum": -9007199254740991,
                       "maximum": 9007199254740991
                     },
+                    "servicePercent": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
                     "serviceFeeCents": {
                       "type": "integer",
                       "minimum": -9007199254740991,
                       "maximum": 9007199254740991
+                    },
+                    "servicePromoUntil": {
+                      "type": "string",
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                      "nullable": true
                     },
                     "depositCents": {
                       "type": "integer",
@@ -9833,7 +9891,9 @@
                     "discountPercent",
                     "discountCents",
                     "rentCents",
+                    "servicePercent",
                     "serviceFeeCents",
+                    "servicePromoUntil",
                     "depositCents",
                     "totalCents",
                     "ownerPayoutCents",
@@ -10306,10 +10366,20 @@
                     "minimum": -9007199254740991,
                     "maximum": 9007199254740991
                   },
+                  "servicePercent": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
                   "serviceFeeCents": {
                     "type": "integer",
                     "minimum": -9007199254740991,
                     "maximum": 9007199254740991
+                  },
+                  "servicePromoUntil": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                    "nullable": true
                   },
                   "depositCents": {
                     "type": "integer",
@@ -10341,7 +10411,9 @@
                   "discountPercent",
                   "discountCents",
                   "rentCents",
+                  "servicePercent",
                   "serviceFeeCents",
+                  "servicePromoUntil",
                   "depositCents",
                   "totalCents",
                   "ownerPayoutCents",

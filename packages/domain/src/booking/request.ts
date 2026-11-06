@@ -4,6 +4,7 @@ import { DomainError } from '../errors';
 import { requireId } from '../ids';
 import type { Cents } from '../money';
 import { quote, validateOffer } from '../pricing';
+import { serviceFeeAt } from '../settings';
 import type { ListingPricing } from '../pricing';
 import { checkContext, checkDate, ttl } from './transitions';
 import type { BookingSnapshot, DecideContext, Decision } from './types';
@@ -46,10 +47,13 @@ export function createRequest(input: RequestInput, ctx: DecideContext): Decision
   if (conflict !== null) throw new DomainError('DATES_UNAVAILABLE', { conflict });
   if (input.agreedDailyCents !== undefined) validateOffer(input.pricing, input.agreedDailyCents);
 
+  // The fee is decided now and frozen into the booking: a later change of settings never alters it.
+  const fee = serviceFeeAt(ctx.settings, ctx.now, input.timeZone);
   const priced = quote({
     pricing: input.pricing,
     days: daysIn(input.period),
-    servicePercent: ctx.settings.servicePercent,
+    servicePercent: fee.percent,
+    servicePromoUntil: fee.promoUntil,
     ...(input.agreedDailyCents === undefined ? {} : { agreedDailyCents: input.agreedDailyCents }),
   });
   const expiresAt = checkDate(ttl(ctx.now, ctx.settings.requestTtlHours, input), 'timers.REQUEST_EXPIRY');

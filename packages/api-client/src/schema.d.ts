@@ -1625,7 +1625,9 @@ export interface components {
                     discountPercent: number;
                     discountCents: number;
                     rentCents: number;
+                    servicePercent: number;
                     serviceFeeCents: number;
+                    servicePromoUntil: string | null;
                     depositCents: number;
                     totalCents: number;
                     ownerPayoutCents: number;
@@ -1803,7 +1805,9 @@ export interface components {
                     discountPercent: number;
                     discountCents: number;
                     rentCents: number;
+                    servicePercent: number;
                     serviceFeeCents: number;
+                    servicePromoUntil: string | null;
                     depositCents: number;
                     totalCents: number;
                     ownerPayoutCents: number;
@@ -1890,7 +1894,9 @@ export interface components {
                 discountPercent: number;
                 discountCents: number;
                 rentCents: number;
+                servicePercent: number;
                 serviceFeeCents: number;
+                servicePromoUntil: string | null;
                 depositCents: number;
                 totalCents: number;
                 ownerPayoutCents: number;
@@ -1920,6 +1926,8 @@ export interface components {
                 maxDays: number;
             };
             servicePercent: number;
+            servicePromoUntil: string | null;
+            regularServicePercent: number;
             maxAdvanceDays: number;
             timeZone: string;
             today: string;
@@ -2026,7 +2034,9 @@ export interface components {
                     discountPercent: number;
                     discountCents: number;
                     rentCents: number;
+                    servicePercent: number;
                     serviceFeeCents: number;
+                    servicePromoUntil: string | null;
                     depositCents: number;
                     totalCents: number;
                     ownerPayoutCents: number;
@@ -2130,7 +2140,9 @@ export interface components {
                     discountPercent: number;
                     discountCents: number;
                     rentCents: number;
+                    servicePercent: number;
                     serviceFeeCents: number;
+                    servicePromoUntil: string | null;
                     depositCents: number;
                     totalCents: number;
                     ownerPayoutCents: number;

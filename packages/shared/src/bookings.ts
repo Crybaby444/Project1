@@ -80,7 +80,11 @@ export const QuoteSchema = z.object({
   discountPercent: z.number().int(),
   discountCents: z.number().int(),
   rentCents: z.number().int(),
+  /** The fee percent applied; frozen into a booking when it is requested. */
+  servicePercent: z.number().int(),
   serviceFeeCents: z.number().int(),
+  /** The launch offer's last day when the percent came from it, otherwise null. */
+  servicePromoUntil: LocalDateSchema.nullable(),
   depositCents: z.number().int(),
   totalCents: z.number().int(),
   ownerPayoutCents: z.number().int(),
@@ -238,7 +242,12 @@ export const BookingTermsSchema = z.object({
     minDays: z.number().int(),
     maxDays: z.number().int(),
   }),
+  /** The fee percent a request sent now pays (the launch offer's while it lasts). */
   servicePercent: z.number().int(),
+  /** The launch offer's last day while it lasts, otherwise null. */
+  servicePromoUntil: LocalDateSchema.nullable(),
+  /** The fee after the launch offer. */
+  regularServicePercent: z.number().int(),
   /** The latest first day of a request, counted from `today`. */
   maxAdvanceDays: z.number().int(),
   timeZone: z.string(),

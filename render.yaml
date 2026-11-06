@@ -57,6 +57,15 @@ services:
       # Payments are simulated by the test card provider (spec §0); no real money moves.
       - key: PAYMENTS
         value: fake
+      # Service fee (owner decision of 2026-11-06): 0 % for the first 3 months after the public launch,
+      # then 10 %. Set FEE_PROMO_UNTIL to the offer's last day (YYYY-MM-DD) once the launch date is fixed;
+      # empty means no offer. Each booking keeps the fee it was requested with.
+      - key: FEE_PERCENT
+        value: '10'
+      - key: FEE_PROMO_PERCENT
+        value: '0'
+      - key: FEE_PROMO_UNTIL
+        sync: false
       # Protects POST /api/v1/internal/timers/run. Render generates it once; copy it into the repository's
       # Actions secret TIMERS_SECRET (README, «Сделки и кошелёк» → «Сроки»).
       - key: TIMERS_SECRET

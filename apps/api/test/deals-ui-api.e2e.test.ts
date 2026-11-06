@@ -127,7 +127,7 @@ describe('GET /me/bookings with a group, and the summary', () => {
 describe('GET /wallet', () => {
   it('shows the frozen deposit, the rent waiting for handover and what the owner earned', async () => {
     const listing = await published();
-    const paid = await paidDeal(listing.id);
+    const paid = (await paidDeal(listing.id)) as unknown as { id: string };
     // 3 days × 15 € = 45 €, fee 4,50 €, deposit 50 €.
     expect((await renter.get('/wallet').expect(200)).body).toEqual({
       balanceCents: 20_000 - 9_950,

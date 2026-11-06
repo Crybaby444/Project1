@@ -2,8 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { endOfDayIn, localDate, period } from '../dates';
 import { cents } from '../money';
 import { quote } from '../pricing';
+import { decide } from './decide';
 import { createRequest } from './request';
-import { HOUR_MS, NOW, OWNER_ID, RENTER_ID, ctx, pricing, requestInput } from './test-support';
+import { HOUR_MS, NOW, OWNER_ID, RENTER_ID, ctx, later, owner, pricing, renter, requestInput } from './test-support';
 import type { DecideContext } from './types';
 
 const code = (expected: string) => expect.objectContaining({ code: expected });
@@ -45,6 +46,39 @@ describe('createRequest', () => {
   it('prices the request with the service fee from the settings', () => {
     const settings = { ...ctx.settings, servicePercent: 12 };
     expect(createRequest(requestInput(), { ...ctx, settings }).next.quote.serviceFeeCents).toBe(540);
+  });
+
+  describe('the launch offer on the fee (owner decision of 2026-11-06)', () => {
+    // NOW is 4 November 2026, 12:00 in Riga. The offer's last day is the 5th, so it ends at 22:00 UTC that day.
+    const promo = { ...ctx.settings, servicePercent: 10, promoServicePercent: 0, promoServiceUntil: localDate('2026-11-05') };
+
+    it('prices a request in the window with the offer, and records it', () => {
+      const { quote: q } = createRequest(requestInput(), { ...ctx, settings: promo }).next;
+      expect(q).toMatchObject({ servicePercent: 0, serviceFeeCents: 0, servicePromoUntil: '2026-11-05', totalCents: q.rentCents + q.depositCents });
+    });
+
+    it('prices a request after the window with the regular fee', () => {
+      const after = { ...ctx, settings: promo, now: new Date('2026-11-05T22:00:00Z') };
+      const input = requestInput({ period: p('2026-11-07', '2026-11-09') });
+      expect(createRequest(input, after).next.quote).toMatchObject({ servicePercent: 10, serviceFeeCents: 450, servicePromoUntil: null });
+      const justBefore = { ...after, now: new Date('2026-11-05T21:59:59.999Z') };
+      expect(createRequest(input, justBefore).next.quote.servicePercent).toBe(0);
+    });
+
+    it('keeps the frozen fee through the deal, whatever the settings and the clock say later', () => {
+      const input = requestInput({ period: p('2026-11-10', '2026-11-12') });
+      const requested = createRequest(input, { ...ctx, settings: promo }).next;
+      // The administrator raises the fee and ends the offer; the deal is accepted, signed and paid after the window.
+      const raised = { ...promo, servicePercent: 25, promoServiceUntil: null };
+      const accepted = decide(requested, owner, { type: 'ACCEPT' }, { ...later(ctx, 20), settings: raised, blocked: [] }).next;
+      const afterWindow = { ...later(ctx, 40), settings: raised };
+      const signed = decide(decide(accepted, owner, { type: 'SIGN' }, afterWindow).next, renter, { type: 'SIGN' }, afterWindow).next;
+      const { next: paid, effects } = decide(signed, renter, { type: 'PAY', method: 'CARD' }, afterWindow);
+      expect(paid.quote).toEqual(requested.quote);
+      expect(effects).toContainEqual(
+        expect.objectContaining({ kind: 'LEDGER', operation: expect.objectContaining({ postings: expect.not.arrayContaining([expect.objectContaining({ account: 'platform:revenue' })]) }) }),
+      );
+    });
   });
 
   it('uses an agreed daily price, which must be below the listed one', () => {

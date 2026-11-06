@@ -47,6 +47,7 @@ async function booking(
       discountPercent: 0,
       discountCents: 0,
       rentCents: 4500,
+      servicePercent: 10,
       serviceFeeCents: 450,
       depositCents: 10000,
       totalCents: 14950,

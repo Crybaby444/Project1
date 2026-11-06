@@ -11,6 +11,7 @@ import {
   localDateIn,
   period,
   quote,
+  serviceFeeAt,
   type Actor,
   type BookingEvent,
   type BookingSettings,
@@ -139,6 +140,7 @@ export class BookingsService {
     const cover = [...listing.photos].sort((a, b) => a.position - b.position)[0];
     const pricing = pricingOf(listing);
     const blocked = await blockedPeriods(this.prisma, listingId);
+    const fee = serviceFeeAt(settings, this.clock.now(), listing.timeZone);
     return {
       listing: {
         id: listing.id,
@@ -150,7 +152,9 @@ export class BookingsService {
         ownerName: listing.owner.name,
       },
       pricing: { ...pricing },
-      servicePercent: settings.servicePercent,
+      servicePercent: fee.percent,
+      servicePromoUntil: fee.promoUntil,
+      regularServicePercent: settings.servicePercent,
       maxAdvanceDays: settings.maxAdvanceDays,
       timeZone: listing.timeZone,
       today: localDateIn(this.clock.now(), listing.timeZone),
@@ -167,10 +171,12 @@ export class BookingsService {
     });
     const settings = await this.rules.settings();
     const p = period(localDate(start), localDate(end));
+    const fee = serviceFeeAt(settings, this.clock.now(), listing.timeZone);
     const priced = quote({
       pricing: pricingOf(listing),
       days: daysIn(p),
-      servicePercent: settings.servicePercent,
+      servicePercent: fee.percent,
+      servicePromoUntil: fee.promoUntil,
     });
     const blocked = await blockedPeriods(this.prisma, listingId);
     return { quote: { ...priced }, blocked: blocked.map((b) => ({ start: b.start, end: b.end })) };

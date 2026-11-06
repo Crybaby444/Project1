@@ -15,6 +15,8 @@
 
 **Оплата остаётся имитацией** (решение владельца, 2026-11-06): провайдер `PAYMENTS=fake` за интерфейсом `PaymentProvider` из плана 8. Экран оплаты устроен как у настоящего провайдера (поле номера с маркой и пробелами, срок, CVC, имя, токен вместо номера), поэтому подключение Stripe позже меняет только способ получить токен — `tokenizeCard()` на сайте и класс провайдера в API.
 
+**Сбор на старте** (решение владельца, 2026-11-06): первые 3 месяца после публичного запуска сервисный сбор 0 %, затем 10 %. Это настройки, а не константы в коде: `FEE_PERCENT`, `FEE_PROMO_PERCENT` и `FEE_PROMO_UNTIL` в env, поверх них строки `fees.*` в таблице `Setting`. Дата запуска ещё не известна, поэтому по умолчанию акции нет. Сбор замораживается в каждой брони в момент запроса: смена настроек и конец акции не меняют уже запрошенные сделки. На экране строка сбора — «0 € · сбор 0 % до 5 февр. 2027» с наклейкой (Task 1b).
+
 **Architecture:**
 - **Только клиент**, как планы 5 и 6b: закрытые экраны под `RequireSession`, данные через TanStack Query и `@yoyo/api-client`. Страница брони вещи (`/items/[id]/book`) открыта всем: условия вещи публичные, отправка запроса просит войти и возвращает обратно (`?next=`).
 - **Правила — в ядре.** Сайт не решает, какие кнопки показать: это `booking.actions` из API (`availableActions` ядра). Цену в калькуляторе брони считает `quote()` из `@yoyo/domain` с ценами вещи и `servicePercent` из API; ответ `POST /bookings` — источник правды, и если он разошёлся с показанным, экран показывает итог API.
@@ -44,7 +46,7 @@ API — [план 8](./2026-11-05-yoyo-08-deals-api.md) (слит, PR #6), дв�
 - **Тексты сделок и кошелька — в своих файлах** `messages/deals/{en,lv,ru}.json` (как `messages/site/`), чтобы правки параллельной ветки каталога в `messages/*.json` не конфликтовали. Тест ключей проверяет и их.
 - **Деньги** — целые центы; на экране только `formatMoney` из `@yoyo/domain` (en `€1,234.50`, lv/ru `1 234,50 €`). Ввод суммы — `parseEuros` из плана 6b.
 - **Даты** — `LocalDate` сделки показываются по языку без сдвига пояса (`Intl.DateTimeFormat` с `timeZone: 'UTC'` для дня); моменты (`dueAt`, `createdAt`) — в поясе сделки (`booking.timeZone`).
-- **Статусы** (`DESIGN.md` §4): запрос — Sunburst; принята и оплачена с залогом — Lavender («залог заморожен» с PAID по RETURNED); активная — Electric Blue; спор и повреждение — Ember; завершена — Voltage Violet с белым текстом; отклонена, истекла, отменена — Soft Mist. Всегда иконка и текст.
+- **Статусы** (`DESIGN.md` §4): запрос и «ждёт оплаты» — Sunburst; оплачена и на проверке после возврата — Lavender (залог заморожен); в аренде — Electric Blue; повреждение и спор — Ember; завершена — Voltage Violet с белым текстом; отклонена, истекла, отменена — Soft Mist. Всегда иконка и текст.
 
 **Тестовый режим оплаты**
 - Над формой карты — заметная плашка «Тестовый режим: деньги не списываются» со списком тестовых номеров и кнопками «подставить». Плашка в DOM, не только цветом.
@@ -110,6 +112,24 @@ apps/web/e2e/{deals.spec.ts,deals-dispute.spec.ts,deals-a11y.spec.ts} + support/
 
 ---
 
+### Task 1b: Сбор на старте: настройки, заморозка в брони
+
+**Files:**
+- Modify: `packages/domain/src/{settings,pricing,booking/request}.ts` (+ tests), `packages/shared/src/{settings,bookings}.ts`, `apps/api/src/config/env.ts`, `apps/api/src/bookings/{booking-settings,booking-rules.service,booking.store,bookings.service,effects.executor}.ts`, `apps/api/prisma/schema.prisma` + миграция `booking_fee_frozen`, `render.yaml`, `apps/api/.env.example`, `packages/domain/README.md`.
+- Test: `packages/domain/src/{settings,pricing,booking/request}.test.ts`, `apps/api/src/bookings/booking-settings.test.ts`, `apps/api/test/fees.e2e.test.ts`.
+
+**Interfaces:**
+- `BookingSettings` + `promoServicePercent` (0) и `promoServiceUntil: LocalDate | null` (последний день акции в поясе вещи, по умолчанию `null`).
+- `serviceFeeAt(settings, now, timeZone) → { percent, promoUntil }`: процент акции, пока `now` раньше конца её последнего дня; с первой миллисекунды следующего дня — обычный.
+- `Quote` + `servicePercent` и `servicePromoUntil`; `createRequest` берёт сбор из `serviceFeeAt` и замораживает его в цене. В `Booking` колонки `servicePercent` (старые строки — из суммы сбора) и `servicePromoUntil`.
+- API: env `FEE_PERCENT` (10), `FEE_PROMO_PERCENT` (0), `FEE_PROMO_UNTIL` (пусто); строки `fees.servicePercent`, `fees.promoServicePercent`, `fees.promoServiceUntil` (пустая строка — без акции) их перекрывают. `GET /listings/:id/quote` и `booking-terms` считают по `serviceFeeAt`; условия брони отдают `servicePercent`, `servicePromoUntil`, `regularServicePercent`.
+
+- [ ] **Step 1: Write the failing tests:** окно акции (0 %), после окна (10 %), граница ровно в полночь по Риге (−1 мс — 0 %, 0 мс — 10 %), другой пояс; неверная дата в настройках отклоняется; env и строки `Setting` поверх env; бронь из окна акции, оплаченная после её конца и после повышения сбора, платит 0 % и Yoyo ничего не получает.
+- [ ] **Step 2–4:** RED → реализация → GREEN; OpenAPI и клиент.
+- [ ] **Step 5: Commit.** `feat: launch fee offer as settings, frozen into each booking at request time`.
+
+---
+
 ### Task 2: Основа сайта: ключи идемпотентности, данные, статусы, шкала, сроки
 
 **Files:**
@@ -140,7 +160,7 @@ apps/web/e2e/{deals.spec.ts,deals-dispute.spec.ts,deals-a11y.spec.ts} + support/
 
 **Interfaces:**
 - `DateRangePicker` — сетка месяца с навигацией стрелками (как календарь 6b), занятые дни зачёркнуты и `aria-disabled`, диапазон не может перескочить занятый день, `minDays`/`maxDays`/`maxAdvanceDays` подсвечиваются текстом.
-- `PriceSummary` — `quote()` ядра: дни × цена, недельная скидка, сбор, залог (с пометкой «вернётся»), итог; суммы с `CountUp`-шириной (без прыжков).
+- `PriceSummary` — `quote()` ядра: дни × цена, недельная скидка, сбор, залог (с пометкой «вернётся»), итог; суммы с `CountUp`-шириной (без прыжков). Во время акции строка сбора — «0 €» и наклейка «сбор 0 % до 5 февр. 2027» (`FeeLine`, общий с оплатой и сделкой).
 - `BookingPanel` — даты, сообщение владельцу (до 1000), «Отправить запрос» → `POST /bookings` с ключом → переход на `/bookings/:id`. Своя вещь — объяснение вместо кнопки; гость — «Войти, чтобы забронировать» с `?next=`.
 
 - [ ] **Step 1: Write the failing tests:** 8 дней по 15 € со скидкой 10 % → аренда 108,00 €, сбор 10,80 € (как в API); выбор через занятый день невозможен; отправка уходит с `Idempotency-Key` и ведёт на сделку; `DATES_UNAVAILABLE` показывает текст и снимает выбор.

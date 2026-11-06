@@ -95,6 +95,19 @@ const EnvObject = z.object({
    */
   PAYMENTS: z.preprocess(blankAsUnset, z.enum(['fake']).default('fake')),
   /**
+   * The service fee renters pay, in whole percent of the rent (owner's decision of 2026-11-06: 10 %).
+   * A `fees.servicePercent` row in the Setting table overrides it at runtime. Unset: 10.
+   */
+  FEE_PERCENT: z.preprocess(blankAsUnset, z.coerce.number().int().min(0).max(100).optional()),
+  /** The fee during the launch offer, in whole percent (0 for the first 3 months). Unset: 0. */
+  FEE_PROMO_PERCENT: z.preprocess(blankAsUnset, z.coerce.number().int().min(0).max(100).optional()),
+  /**
+   * The launch offer's last day, `YYYY-MM-DD` (in the item's time zone): requests sent before the end of
+   * that day pay FEE_PROMO_PERCENT, later ones FEE_PERCENT. Unset: no offer. A `fees.promoServiceUntil`
+   * row in the Setting table overrides it. Each booking keeps the fee it was requested with.
+   */
+  FEE_PROMO_UNTIL: z.preprocess(blankAsUnset, z.iso.date().optional()),
+  /**
    * Protects POST /internal/timers/run, which the scheduled GitHub workflow calls every 10 minutes to
    * fire due deal deadlines on a server that sleeps. At least 32 characters; the same value as the
    * repository's Actions secret TIMERS_SECRET. Unset: the route does not exist (deadlines still fire

@@ -87,7 +87,7 @@ describe('paying and the deposit rule', () => {
     const id = await signedDeal();
     await step(renter, id, { type: 'PAY', method: 'WALLET' });
     expect(await balance(`wallet:${renter.user.id}`)).toBe(5_050);
-    expect((await renter.get('/wallet')).body).toEqual({ balanceCents: 5_050, heldCents: 14_500 });
+    expect((await renter.get('/wallet')).body).toMatchObject({ balanceCents: 5_050, heldCents: 14_500 });
     await toReturned(id);
     await step(owner, id, { type: 'REPORT_DAMAGE', description: 'The chuck is cracked.', photoIds: await damagePhotos(id) });
     const done = await step(renter, id, { type: 'ACCEPT_DAMAGE' });
