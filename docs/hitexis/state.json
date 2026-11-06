@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "project_name": "Yoyo",
+  "mode": "existing",
+  "workstreams": [
+    "W",
+    "C",
+    "P",
+    "S",
+    "T",
+    "L",
+    "Q"
+  ],
+  "stages": [
+    {
+      "id": "P00",
+      "status": "passed",
+      "depends_on": [],
+      "deliverables": [
+        "docs/hitexis/P00-brief.md",
+        "docs/hitexis/HITEXIS_P00_Project_Master_Brief_YOYO_2026-11-06.docx (local, not in git)"
+      ],
+      "gate_evidence": [
+        "docs/hitexis/P00-brief.md#21-quality-gate"
+      ],
+      "blockers": [],
+      "reason": "Existing product: baseline recovered from spec, plans, live system and audits; A-questions answered by owner 2026-11-06."
+    },
+    {
+      "id": "W01",
+      "status": "passed",
+      "depends_on": [
+        "P00"
+      ],
+      "deliverables": [
+        "docs/hitexis/W01-research.md"
+      ],
+      "gate_evidence": [
+        "docs/hitexis/W01-research.md#17-quality-gate-w01"
+      ],
+      "blockers": [],
+      "reason": "Passed with limits: Keyword Planner ranges only (no CPC/Trends). Brand kept (owner 2026-11-06)."
+    },
+    {
+      "id": "W02",
+      "status": "passed",
+      "depends_on": [
+        "W01"
+      ],
+      "deliverables": [
+        "docs/hitexis/W02-language-architecture.md"
+      ],
+      "gate_evidence": [
+        "docs/hitexis/W02-language-architecture.md#quality-gate-w02"
+      ],
+      "blockers": [],
+      "reason": "EN default kept by owner 2026-11-06 for Baltic expansion; subdirectories; language-only locales."
+    },
+    {
+      "id": "W03",
+      "status": "pending",
+      "depends_on": [
+        "W02"
+      ],
+      "deliverables": [],
+      "gate_evidence": [],
+      "blockers": [],
+      "reason": "Sitemap and URLs shared with catalogue."
+    },
+    {
+      "id": "C01",
+      "status": "pending",
+      "depends_on": [
+        "P00"
+      ],
+      "deliverables": [],
+      "gate_evidence": [],
+      "blockers": [],
+      "reason": "P2P rental marketplace with deposit, fee and disputes."
+    }
+  ],
+  "approvals": [],
+  "release": {
+    "status": "not_planned",
+    "version": null,
+    "owner": "Zogal"
+  },
+  "next_action": "W03 sitemap & URL architecture with C02/C03. Dev follow-ups from W02 §M sent to plan 7 and lang-switch sessions. Owner: Search Console domain property."
+}
