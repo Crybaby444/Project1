@@ -5,6 +5,7 @@ import { findCategory, findPath, isLeaf, localized } from './categories';
 const node = (id: string, children: CategoryNode[] = []): CategoryNode => ({
   id,
   slug: id,
+  slugs: { en: id, lv: id, ru: id },
   sticker: 'blue',
   icon: 'x',
   names: { en: `${id} en`, lv: `${id} lv`, ru: `${id} ru` },

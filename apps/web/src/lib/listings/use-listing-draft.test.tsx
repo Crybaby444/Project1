@@ -1,4 +1,4 @@
-import { act, waitFor } from '@testing-library/react';
+import { act, cleanup, waitFor } from '@testing-library/react';
 import type { OwnerListing } from '@yoyo/shared';
 import { describe, expect, it, vi } from 'vitest';
 import { apiError, fakeApi, meRoute, testUser, type FakeRoutes } from '@/test/fake-api';
@@ -7,7 +7,7 @@ import { renderWithSession } from '@/test/render';
 import { useApiClient } from '@/lib/session/SessionProvider';
 import { useListingDraft, type ListingDraft } from './use-listing-draft';
 
-function setup(initial: OwnerListing | null, routes: FakeRoutes, onCreated = vi.fn()) {
+function setup(initial: OwnerListing | null, routes: FakeRoutes, onCreated = vi.fn(), locale: 'en' | 'lv' | 'ru' = 'en') {
   const { client, calls } = fakeApi({ ...meRoute(testUser()), ...routes });
   const draft: { current: ListingDraft | null } = { current: null };
   function Harness() {
@@ -17,6 +17,7 @@ function setup(initial: OwnerListing | null, routes: FakeRoutes, onCreated = vi.
       category: () => undefined,
       onCreated,
       delayMs: 20,
+      locale,
     });
     return null;
   }
@@ -52,11 +53,23 @@ describe('useListingDraft', () => {
     act(() => draft().change({ title: 'Tent' }));
 
     await waitFor(() => expect(onCreated).toHaveBeenCalledWith(created));
-    expect(calls.find((c) => c.method === 'POST')?.body).toEqual({ title: 'Tent' });
+    expect(calls.find((c) => c.method === 'POST')?.body).toEqual({ contentLocale: 'en', title: 'Tent' });
     act(() => draft().change({ title: 'Tent for 4' }));
     await waitFor(() =>
       expect(calls.some((c) => c.method === 'PATCH' && c.path === '/api/v1/listings/new-1')).toBe(true),
     );
+  });
+
+  it('a draft started on a Latvian page is written in Latvian unless the author picks another language', async () => {
+    const created = ownerListing({ id: 'new-1', contentLocale: 'lv' });
+    const first = setup(null, { 'POST /api/v1/listings': { status: 201, body: { listing: created } }, ...echoListing(created) }, vi.fn(), 'lv');
+    act(() => first.draft().change({ title: 'Telts' }));
+    await waitFor(() => expect(first.calls.find((c) => c.method === 'POST')?.body).toEqual({ contentLocale: 'lv', title: 'Telts' }));
+    cleanup();
+
+    const second = setup(null, { 'POST /api/v1/listings': { status: 201, body: { listing: created } }, ...echoListing(created) }, vi.fn(), 'lv');
+    act(() => second.draft().change({ contentLocale: 'ru' }));
+    await waitFor(() => expect(second.calls.find((c) => c.method === 'POST')?.body).toEqual({ contentLocale: 'ru' }));
   });
 
   it('stops on a stale version instead of overwriting the other tab', async () => {

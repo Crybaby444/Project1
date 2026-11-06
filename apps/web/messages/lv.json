@@ -414,7 +414,9 @@
       "category": "Kategorija",
       "subcategory": "Apakškategorija",
       "attributesReset": "Iepriekšējās kategorijas detaļas notīrītas.",
-      "loadingCategories": "Ielādē kategorijas…"
+      "loadingCategories": "Ielādē kategorijas…",
+      "contentLocale": "Sludinājuma valoda",
+      "contentLocaleHint": "Rakstiet nosaukumu un aprakstu šajā valodā. Meklētāji sludinājumu rādīs tajā."
     },
     "attributes": {
       "needCategory": "Vispirms izvēlies apakškategoriju: detaļas ir atkarīgas no tās.",

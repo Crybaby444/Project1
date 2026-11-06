@@ -414,7 +414,9 @@
       "category": "Category",
       "subcategory": "Subcategory",
       "attributesReset": "The details of the previous category were cleared.",
-      "loadingCategories": "Loading the categories…"
+      "loadingCategories": "Loading the categories…",
+      "contentLocale": "Language of the listing",
+      "contentLocaleHint": "Write the title and description in this language. Search engines show the listing in it."
     },
     "attributes": {
       "needCategory": "Choose a subcategory first: the details depend on it.",

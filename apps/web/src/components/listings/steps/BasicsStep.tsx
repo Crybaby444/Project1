@@ -1,6 +1,6 @@
 'use client';
 
-import { LISTING_CONDITIONS, LISTING_LIMITS, type ListingCondition } from '@yoyo/shared';
+import { LISTING_CONDITIONS, LISTING_LIMITS, LOCALES, type ListingCondition, type Locale } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
 import { useId } from 'react';
 import { ChoicePills } from '@/components/ui/ChoicePills';
@@ -15,6 +15,7 @@ export function BasicsStep() {
   const t = useTranslations('builder.basics');
   const tCount = useTranslations('builder');
   const tCondition = useTranslations('listingCondition');
+  const tLanguage = useTranslations('language');
   const { draft, errorFor, touch, readOnly, categories } = useBuilder();
   const { values } = draft;
   const ids = { title: useId(), description: useId() };
@@ -49,6 +50,16 @@ export function BasicsStep() {
         value={values.condition}
         onChange={(condition) => draft.change({ condition })}
         error={errorFor('condition')}
+        disabled={readOnly}
+      />
+
+      <ChoicePills<Locale>
+        legend={t('contentLocale')}
+        name="contentLocale"
+        choices={LOCALES.map((locale) => ({ value: locale, label: tLanguage(locale) }))}
+        value={values.contentLocale}
+        onChange={(contentLocale) => contentLocale && draft.change({ contentLocale })}
+        hint={t('contentLocaleHint')}
         disabled={readOnly}
       />
 

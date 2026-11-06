@@ -10,6 +10,7 @@ import {
   type ListingCondition,
   type ListingStep,
   type OwnerListing,
+  type Locale,
   type RulePreset,
 } from '@yoyo/shared';
 import { isLeaf } from './categories';
@@ -36,6 +37,8 @@ export type ListingValues = {
   lat: number | null;
   lng: number | null;
   rules: { preset: RulePreset[]; custom: string[] };
+  /** The language the texts are written in (the item page's canonical address and <html lang>). */
+  contentLocale: Locale;
 };
 
 /** A field error as a message key of `builder.check` and its values. */
@@ -56,7 +59,8 @@ export type CheckKey =
   | 'photos'
   | 'point';
 
-export function emptyValues(): ListingValues {
+/** A new draft: its texts are taken to be in the language of the page it is written on. */
+export function emptyValues(contentLocale: Locale = 'en'): ListingValues {
   return {
     categoryId: null,
     title: '',
@@ -73,6 +77,7 @@ export function emptyValues(): ListingValues {
     lat: null,
     lng: null,
     rules: { preset: [], custom: [] },
+    contentLocale,
   };
 }
 
@@ -93,6 +98,7 @@ export function valuesFromListing(listing: OwnerListing): ListingValues {
     lat: listing.lat,
     lng: listing.lng,
     rules: { preset: [...listing.rules.preset], custom: [...listing.rules.custom] },
+    contentLocale: listing.contentLocale,
   };
 }
 

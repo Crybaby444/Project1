@@ -2,7 +2,7 @@
 
 import { displayFit } from '@/lib/display-fit';
 import { useQueryClient } from '@tanstack/react-query';
-import { STICKER_COLORS, type OwnerListing } from '@yoyo/shared';
+import { STICKER_COLORS, type Locale, type OwnerListing } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useState, type ReactNode } from 'react';
 import { Button } from '@/components/ui/Button';
@@ -67,6 +67,7 @@ export function ListingBuilder({
   initialStep: BuilderStep;
 }) {
   const client = useApiClient();
+  const pageLocale = useLocale();
   const queryClient = useQueryClient();
   const categoriesQuery = useCategories();
   const categories = categoriesQuery.data ?? [];
@@ -76,6 +77,7 @@ export function ListingBuilder({
   const draft = useListingDraft({
     initial,
     client,
+    locale: pageLocale as Locale,
     category: (categoryId) => findPath(categories, categoryId).at(-1),
     onCreated: (listing) => {
       void queryClient.invalidateQueries({ queryKey: ['listings', 'mine'] });
