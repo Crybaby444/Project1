@@ -28,7 +28,7 @@
     },
     {
       "id": "W01",
-      "status": "in_progress",
+      "status": "passed",
       "depends_on": [
         "P00"
       ],
@@ -38,12 +38,8 @@
       "gate_evidence": [
         "docs/hitexis/W01-research.md#17-quality-gate-w01"
       ],
-      "blockers": [
-        "Latvian Google SERP for ~15 queries (owner)",
-        "Keyword Planner volumes EN/LV/RU (owner)",
-        "LV terminology check by native speaker"
-      ],
-      "reason": "Owner requires strong SEO and a home page that always explains the platform."
+      "blockers": [],
+      "reason": "Passed with limits: no Keyword Planner/Trends volumes (MISSING). Owner decision pending on brand conflict yoyo rent vs Babyzen YOYO stroller rental."
     },
     {
       "id": "W02",
@@ -85,5 +81,5 @@
     "version": null,
     "owner": "Zogal"
   },
-  "next_action": "Owner supplies Latvian SERP screenshots / Keyword Planner data; meanwhile W02 can start from W01 §13."
+  "next_action": "Owner: brand-conflict decision (W01 §16). Claude: W02 language architecture; urgent W08 item: Search Console + sitemap (site not indexed)."
 }

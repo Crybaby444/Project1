@@ -3,13 +3,13 @@
 - **Дата исследования:** 2026-11-06
 - **Вход:** [P00-brief.md](P00-brief.md) (passed 2026-11-06)
 - **Рынок / языки:** Латвия (Рига) × EN / LV / RU
-- **Статус:** **in progress** — см. Quality Gate (§17): не хватает латвийской выдачи Google и данных о спросе.
+- **Статус:** **passed с ограничениями** — см. Quality Gate (§17).
 
 Статусы: **CONFIRMED** (владелец / P00), **OBSERVED** (найдено в источнике на дату), **INFERRED / NEEDS CHECK**, **MISSING**.
 
 ## Ограничения исследования (читать первым)
 
-1. Поисковый инструмент Claude работает из США. Наблюдения §5 — это **не** латвийская выдача Google. Порядок сайтов и SERP features для Риги не установлены (**MISSING**).
+1. §5 собран через Google с `gl=lv` из браузера владельца в Риге 2026-11-06 (первые 8 результатов, без персонализации не гарантировано). Ранние наблюдения из США заменены.
 2. Нет доступа к Google Keyword Planner, Search Console, Trends. Объёмы запросов, CPC и сезонность — **not available**. Ни одна цифра спроса в отчёте не выдумана.
 3. AI-поиск (ChatGPT Search, Google AI Overviews, Copilot) вживую не тестировался. §11 содержит набор вопросов и требования, а не наблюдения цитирования.
 4. Конкуренты изучены по их публичным страницам; трафик и число объявлений неизвестны.
@@ -21,6 +21,9 @@
 - **Образец из соседней страны — Rentable.lt (Литва):** удержание платежа до подтверждения возврата (Stripe Connect), гарантия до 1 000 €, отзывы, проверенные объявления. Только литовский язык. **OBSERVED**.
 - **Язык категории:** в LV для вещей — **«noma»** (nomāt / iznomāt); «īre» — в основном жильё (OBSERVED, форум vgk.lv и закон; NEEDS CHECK у носителя). В RU — **«аренда»** и **«прокат»**. В EN — «rent» / «rental».
 - **Русскоязычная выдача по Риге слабая:** запросы «прокат палатки Рига» и «аренда проектора Рига» вернули российские, казахстанские и украинские сайты, а не рижские (OBSERVED из США; NEEDS CHECK из Риги). Это возможная SEO-возможность для RU-версии.
+- **Сайт yoyo.rent ещё не в индексе Google** (`site:yoyo.rent` — 0 результатов). Нужно подключить Search Console и отправить sitemap (W08).
+- **Конфликт бренда:** запрос «yoyo rent» в Латвии полностью занят прокатом детских колясок Babyzen YOYO (yoyorent.lv и др.). Брендовый поиск будет путаться — нужно решение владельца (§16).
+- **Nomat.lv забирает коммерческие запросы** отдельными страницами под конкретную вещь и срок («PS5 noma Rīgā uz 24 h»). Значит, индексируемые карточки объявлений — главный SEO-актив и для Yoyo.
 - **Риски:** холодный старт (нет объявлений — нечего индексировать), тонкие страницы категорий без вещей, коммодити-тексты.
 
 ## 2. Project & Market Scope
@@ -61,17 +64,28 @@
 
 Local/Maps, paid search и AI-cited слои — **MISSING** (нужна латвийская выдача и AI-тесты).
 
-## 5. SERP Findings (из США, не латвийская выдача)
+## 5. SERP Findings — Google Латвия (gl=lv), браузер владельца в Риге, 2026-11-06
 
-| Query | Lang | Observed result types | Вывод |
-| --- | --- | --- | --- |
-| noma Rīga lietas īre starp cilvēkiem platforma | LV | Статья о совместном пользовании, nomat.lv, нишевые прокаты, форум о «noma» vs «īre» | Смешанный intent; есть место для объясняющей страницы |
-| PS5 noma Rīgā | LV | Только магазины, продающие PS5; аренды нет | Предложения в выдаче нет — возможность (NEEDS CHECK из Риги) |
-| telts noma Rīga | LV | Outfish (страницы товаров для аренды), каталоги zl.lv, кемпинги | Выдача — страницы конкретных вещей; нужны индексируемые карточки |
-| аренда вещей Рига прокат | RU | getapro.lv, ksenukai.lv, arkadaserviss.lv, nedek.lv + российские сайты | Категорийные страницы прокатов |
-| прокат палатки / проектора Рига | RU | Только KZ/RU/UA сайты | Слабая RU-выдача по Риге — возможность |
-| rent camera / projector / tent Riga | EN | Каталоги zl.lv, профессиональный прокат камер, Outfish | Каталоги компаний и профессиональный прокат |
-| peer to peer rental Latvia | EN | nomat.lv, rentable.lt, gorendi, мировые P2P | Мало латвийских P2P |
+Метод: google.com/search с `gl=lv` и `hl` по языку запроса, первые 8 органических результатов. Блок «люди также спрашивают» не появился ни разу. AI Overview был у EN-запросов «rent PS5 / tools / things Riga», у LV и RU — нет. Источники в AI Overview не извлекались. **OBSERVED**.
+
+| Query | Lang | Top results (домен) | Доминирующий тип страницы | Вывод |
+| --- | --- | --- | --- | --- |
+| PS5 noma Rīgā | LV | zuvubi.lv ×2, **nomat.lv ×3**, gameplay.lv, vrroom.lv, pixelplay.lv, instagram (gamerent.lv); есть local pack | Лендинги «PS5 noma Rīgā» у нишевых прокатов; у Nomat — отдельные страницы под каждый вариант («на 6 ч за 50 €», «на 24 ч за 85 €») | Спрос есть, коммерческий. Nomat берёт выдачу страницами под конкретную вещь и срок |
+| instrumentu noma Rīgā | LV | ksenukai, arkadaserviss, isc, baumsrent, instrumentu-noma.lv, abcnoma, arsenalnoma, ctnoma | Страницы категорий прокатных компаний | Плотная конкуренция B2C-прокатов; P2P не видно |
+| lietu noma | LV | mobilaatputa, rentdeko, **lietovelreiz.lv**, facebook, **zerowastelatvija.lv**, nomavalmiera, dudu.lv | Смешанная: праздничный инвентарь + темы совместного пользования | Общий запрос неоднозначный; нужна объясняющая страница |
+| telts noma Rīgā | LV | sublevel, teltsuznomu, gandrs, iznomatelti, elegantsauto (палатка на крышу), teltispasakumiem | Почти всё про шатры для мероприятий | Слово «telts» в выдаче = шатёр для праздника, а не туристическая палатка (уточнить в W05) |
+| projektora noma Rīgā | LV | projektoru-noma.lv ×2, skanagaisma, sublevel ×2, rolling, datortehnikasnoma, ritmainstituts | Прокаты для мероприятий | Нишевые точные домены |
+| аренда вещей Рига | RU | galdu-noma, eventrent, **склады** (parcelsanas24, selfstorage, ambar, cargoriga), viss.lv, xsport | Смешанная: склады для хранения вещей + инвентарь | В RU «аренда вещей» читается как «хранение вещей». Не годится как основной термин |
+| прокат инструмента Рига | RU | ksenukai, arkadaserviss, abcnoma, baumsrent, abc.lv, getapro, viss.lv | Категории прокатов | Как LV-аналог; русские версии сайтов прокатов |
+| аренда PS5 Рига | RU | gameplay, **nomat ×2**, gamerent.lv (instagram, facebook), euronics Smart Rent, afk.lv, 1a.lv | Прокаты + магазины + аренда электроники у ритейлера | Euronics Smart Rent — ритейлер, сдающий электронику в аренду (NEEDS CHECK) |
+| аренда проектора Рига | RU | skanagaisma ×3, ktserviss ×2, sikumi, viss.lv, eventrent | Прокаты для мероприятий | — |
+| rent tools Riga | EN | tulz.lv, licgotus, viss.lv, allrent.lv, bruget, storent, baumsrent, statsrent; **AI Overview** | Прокаты | EN-выдача есть, местные сайты с EN-версиями |
+| rent PS5 Riga | EN | zuvubi, gameplay, **nomat ×2**, booking.com, lvplayersclub; **AI Overview** | Как LV | Nomat ранжируется LV-страницами и по EN-запросу |
+| rent things Riga | EN | eventmore, teltis.lv, tulz.lv, **tripadvisor (Gear Rentals)**, **rentaldirectory.eu**, viss.lv, **babonbo.com (детские вещи для туристов)**; **AI Overview** | Каталоги и агрегаторы | Туристы — отдельная EN-аудитория (детские коляски, снаряжение) |
+| site:yoyo.rent | — | **0 результатов** | — | **yoyo.rent пока не проиндексирован** |
+| yoyo rent | LV | **yoyorent.lv** (аренда детских колясок YOYO), ratunoma.lv, klnoma.lv, nomama.lv — все про коляски Babyzen YOYO | Брендовая выдача занята | **Конфликт бренда**: «yoyo rent» в Латвии = прокат колясок Babyzen YOYO; домен yoyorent.lv занят прокатом колясок |
+
+Агрегаторы-каталоги, которые встречаются в нескольких выдачах: **viss.lv**, zl.lv, rentaldirectory.eu, tripadvisor. Через них можно получить ссылки и упоминания.
 
 ## 6. Search Demand & Intent (кластеры)
 
@@ -177,7 +191,9 @@ MISSING: нужен Google Trends для Латвии. Гипотезы: лет�
 
 | Item | Status | Next action |
 | --- | --- | --- |
-| Латвийская выдача Google по ~15 ключевым запросам | MISSING | Владелец делает скриншоты из Риги (инкогнито), или подключаем Search Console после запуска |
+| Латвийская выдача Google | DONE 2026-11-06 (§5) | Повторить через 3 месяца |
+| Конфликт бренда «yoyo rent» с прокатом колясок | Risk, NEEDS CHECK | Владелец: оставить Yoyo и усиливать «Yoyo — lietu noma starp cilvēkiem», или менять имя до запуска; проверить товарные знаки |
+| yoyo.rent не в индексе | OBSERVED | Search Console + sitemap.xml (W08, срочно) |
 | Объёмы запросов EN/LV/RU | MISSING | Google Keyword Planner (бесплатно с аккаунтом Google Ads), владелец |
 | Сезонность | MISSING | Google Trends, Латвия |
 | AI-цитирование | MISSING | Тест в ChatGPT / Google по §11 (владелец или Claude через браузер) |
@@ -190,7 +206,7 @@ MISSING: нужен Google Trends для Латвии. Гипотезы: лет�
 | --- | --- |
 | Понятно, что предлагает бизнес и приоритеты | PASS |
 | Рынки и языки не смешаны | PASS (отдельно в §5, §6, §13) |
-| Конкуренты найдены независимо | PASS для direct и organic; Local/AI/Paid — **FAIL (MISSING)** |
+| Конкуренты найдены независимо | PASS: direct, organic, агрегаторы по латвийской выдаче; Local pack и AI-источники отмечены, но не разобраны; Paid — не наблюдался |
 | Запросы сгруппированы по intent | PASS (§6), но без латвийской выдачи |
 | Нет вымышленных volume, CPC, позиций, AI-цитирований | PASS |
 | Есть entity map и terminology evidence | PASS (§7–8) |
@@ -199,9 +215,9 @@ MISSING: нужен Google Trends для Латвии. Гипотезы: лет�
 | AI-раздел без псевдо-GEO | PASS |
 | Выводы с источником, датой и контекстом | PASS (§18) |
 | Приоритеты = value + intent + evidence | PASS (§15) |
-| Достаточно данных для W02/W03/W04 | **FAIL**: нужны латвийская выдача и объёмы спроса |
+| Достаточно данных для W02/W03/W04 | PASS для W02 и W03 (типы страниц и кластеры по выдаче); объёмы спроса нет — приоритеты по intent и выдаче, не по volume |
 
-**Итог:** W01 — **in progress**. Достаточно для W02 (языковая архитектура). Для W03 (sitemap и URL категорий) нужны недостающие данные из §16.
+**Итог:** W01 — **passed с ограничениями** (2026-11-06): объёмы Keyword Planner и Trends отсутствуют и отмечены как MISSING. Открытое решение владельца: конфликт бренда (§16). Следующий этап: **W02**.
 
 ## 18. Sources (доступ 2026-11-06)
 
