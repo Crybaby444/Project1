@@ -1,13 +1,14 @@
-# Yoyo — категории каталога (C02, черновик 3)
+# Yoyo — категории каталога (C02, черновик 4)
 
 - **Дата:** 2026-11-06
-- **Источники структуры:** каталоги 1a.lv (LV/RU) и stokker.lv (LV/RU/EN, профессиональные инструменты и техника), собраны по просьбе владельца 2026-11-06 через браузер; отобраны только вещи, которые имеет смысл сдавать в аренду. EN-названия написаны Claude (на 1a.lv нет английской версии).
+- **Источники структуры:** каталоги 1a.lv (LV/RU) и stokker.lv (LV/RU/EN, профессиональные инструменты и техника), собраны по просьбе владельца 2026-11-06 через браузер; раздел «Спорт» — по видам спорта (varuste.net LV/RU/EN, 1a.lv, sportland.lv); отобраны только вещи, которые имеет смысл сдавать в аренду. EN-названия написаны Claude (на 1a.lv нет английской версии).
 - **Stokker — исключено:** автоподъёмники и шиномонтаж, масла, химия и аэрозоли, абразивы и расходники, сварочные материалы и дымоуловители, складские стеллажи, рабочая одежда, запчасти, тяжёлая сельхоз- и строительная техника (тракторы, экскаваторы — не P2P на старте).
+- **Спорт — исключено:** спортивное питание, одежда, обувь, купальные шапочки и очки, коврики для йоги, перчатки и капы (гигиена), охотничье оружие.
 - **Исключено** (не для аренды): расходники и еда, косметика и гигиена (включая наушники, купальники), одежда и обувь, детские подгузники и бутылочки, телефоны и смарт-часы (личные данные), компьютерные комплектующие и ПО, стройматериалы, сантехника, шины, масла и автохимия, товары для животных, кухонная посуда, одноразовые праздничные товары, подарки, outlet.
 - **Заменяет** таблицу slugs в W03 §D. LV-названия и slugs — на вычитку владельцу.
 
 Slug: ASCII, LV без диакритики, RU — транслитерация; связки «un», «и», «and» убраны.
-Итого: 12 корневых категорий, 78 подкатегорий.
+Итого: 12 корневых категорий, 90 подкатегорий.
 
 
 ## Electronics · Elektronika · Электроника
@@ -105,12 +106,24 @@ Slug: ASCII, LV без диакритики, RU — транслитерация
 
 | EN slug | EN | LV | LV slug | RU | RU slug | Основание |
 | --- | --- | --- | --- | --- | --- | --- |
-| bikes | Bikes | Velosipēdi | velosipedi | Велосипеды | velosipedy | 1a: Velosipēdi |
-| e-scooters | E-scooters | Elektriskie skrejriteņi | elektriskie-skrejriteni | Электросамокаты | elektrosamokaty | 1a: Giroskūteri un elektriskie skrejriteņi |
-| fitness | Fitness equipment | Trenažieri un fitness | trenazieri-fitness | Тренажёры и фитнес | trenazhery-fitnes | 1a: Trenažieri |
-| winter-sports | Winter sports | Ziemas sports | ziemas-sports | Зимний спорт | zimniy-sport | 1a: Ziemas sports |
-| water-sports | Water sports | Ūdens sports | udens-sports | Водный спорт | vodnyy-sport | 1a: Ūdens sports (SUP, kajaki — без одежды) |
-| sports-games | Sports games | Sporta spēles | sporta-speles | Спортивные игры | sportivnye-igry | 1a: Galda teniss; Volejbols; Basketbols; Futbols |
+| cycling | Cycling: bikes, child seats, trailers | Riteņbraukšana | ritenbrauksana | Велоспорт | velosport | varuste: Riteņbraukšana; 1a: Velosipēdi; прокат велосипедов 10–100 |
+| e-scooters | E-scooters | Elektriskie skrejriteņi | elektriskie-skrejriteni | Электросамокаты | elektrosamokaty | 1a |
+| skates-skateboards | Inline skates & skateboards | Skrituļslidas un skeitbordi | skritulslidas-skeitbordi | Ролики и скейтборды | roliki-skeytbordy | Claude |
+| cross-country-skiing | Cross-country skiing | Distanču slēpošana | distancu-sleposana | Беговые лыжи | begovye-lyzhi | varuste |
+| downhill-skiing | Downhill skiing | Kalnu slēpošana | kalnu-sleposana | Горные лыжи | gornye-lyzhi | varuste |
+| snowboarding | Snowboarding | Snovbords | snovbords | Сноуборд | snoubord | Claude |
+| ice-skating | Ice skating | Slidošana | slidosana | Коньки | konki | varuste: Tūrisma slidošana |
+| snowshoes-sleds | Snowshoes & sleds | Sniega kurpes un ragavas | sniega-kurpes-ragavas | Снегоступы и санки | snegostupy-sanki | varuste: Sniega kurpošana |
+| sup | SUP boards | SUP dēļi | sup-deli | SUP-доски | sup-doski | varuste: SUP airēšana; sup dēļa noma 10–100 |
+| kayaks-canoes | Kayaks & canoes | Kajaki un kanoe | kajaki-kanoe | Каяки и каноэ | kayaki-kanoe | varuste: Airēšana |
+| diving | Diving & snorkelling | Niršana | nirsana | Дайвинг и снорклинг | dayving-snorkling | varuste: Niršana |
+| kite-windsurf | Kitesurf & windsurf | Pūķa un vēja sērfošana | puka-veja-serfosana | Кайт- и виндсёрфинг | kayt-vindserfing | varuste: Pūķa sērfošana |
+| tennis-padel | Tennis & padel | Teniss un padels | teniss-padels | Теннис и падел | tennis-padel | 1a: Teniss; sportland: padel |
+| table-tennis-badminton | Table tennis & badminton | Galda teniss un badmintons | galda-teniss-badmintons | Настольный теннис и бадминтон | nastolnyy-tennis-badminton | 1a: Galda teniss |
+| team-sports | Team sports: football, basketball, volleyball, floorball | Komandu sporta veidi | komandu-sporta-veidi | Командные виды спорта | komandnye-vidy-sporta | 1a: Futbols; Basketbols; Volejbols; Florbols |
+| golf | Golf | Golfs | golfs | Гольф | golf | Claude |
+| fitness | Fitness equipment | Trenažieri un fitness | trenazieri-fitness | Тренажёры и фитнес | trenazhery-fitnes | 1a: Trenažieri; varuste: Fitness |
+| boxing-martial-arts | Boxing & martial arts | Bokss un cīņas sporti | bokss-cinas-sporti | Бокс и единоборства | boks-edinoborstva | Claude |
 
 ## Camping & outdoors · Tūrisms un kempings · Туризм и кемпинг
 
