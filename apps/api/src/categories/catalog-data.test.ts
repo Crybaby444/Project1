@@ -1,6 +1,6 @@
 import { LOCALES, STICKERS } from '@yoyo/shared';
 import { describe, expect, it } from 'vitest';
-import { CATALOG, type CatalogCategory } from './catalog-data';
+import { CATALOG, LEGACY_CATEGORIES, type CatalogCategory } from './catalog-data';
 
 function all(categories: CatalogCategory[]): CatalogCategory[] {
   return categories.flatMap((category) => [category, ...all(category.children ?? [])]);
@@ -13,17 +13,48 @@ function expectAllLanguages(text: Record<string, string>, where: string): void {
 }
 
 describe('CATALOG', () => {
-  it('has the eight top-level categories of the plan, each with its sticker', () => {
+  it('has the eleven roots of the owner-approved tree C02, each with its sticker, and 62 subcategories', () => {
     expect(CATALOG.map((category) => [category.slug, category.sticker])).toEqual([
       ['electronics', 'blue'],
+      ['photo-video', 'violet'],
       ['tools', 'sun'],
-      ['sports-outdoors', 'mint'],
+      ['garden', 'mint'],
       ['home-kitchen', 'lavender'],
-      ['events-party', 'ember'],
+      ['sports', 'blue'],
+      ['camping', 'mint'],
       ['kids', 'violet'],
-      ['music', 'blue'],
+      ['events-party', 'ember'],
+      ['music', 'lavender'],
       ['car-travel', 'sun'],
     ]);
+    expect(CATALOG.flatMap((root) => root.children ?? [])).toHaveLength(62);
+    for (const root of CATALOG) for (const child of root.children ?? []) expect(child.sticker, child.slug).toBe(root.sticker);
+  });
+
+  it('uses the stable key as the English address', () => {
+    for (const category of all(CATALOG)) expect(category.slugs.en, category.slug).toBe(category.slug);
+  });
+
+  it('gives every category of the earlier tree a home: a leaf of the same key, or a move', () => {
+    const PLAN_6 = ['electronics', 'game-consoles', 'photo-video', 'audio', 'laptops-tablets', 'projectors', 'drones', 'tools',
+      'power-tools', 'hand-tools', 'garden-tools', 'measuring-tools', 'ladders-scaffolding', 'cleaning-machines', 'sports-outdoors',
+      'bikes-scooters', 'camping', 'winter-sports', 'water-sports', 'fitness', 'home-kitchen', 'kitchen-appliances', 'home-cleaning',
+      'furniture', 'events-party', 'party-equipment', 'sound-light', 'event-tents-furniture', 'costumes', 'kids',
+      'strollers-car-seats', 'toys-games', 'kids-furniture', 'music', 'instruments', 'dj-equipment', 'car-travel',
+      'roof-boxes-racks', 'travel-gear', 'car-tools'];
+    const roots = new Set(CATALOG.map((root) => root.slug));
+    const leaves = new Set(CATALOG.flatMap((root) => root.children ?? []).map((leaf) => leaf.slug));
+    for (const old of PLAN_6) {
+      if (LEGACY_CATEGORIES[old] !== undefined) {
+        const to = LEGACY_CATEGORIES[old]!;
+        expect(leaves.has(to) || roots.has(to), `${old} → ${to}`).toBe(true);
+      } else {
+        expect(leaves.has(old) || roots.has(old), `${old} has no home`).toBe(true);
+      }
+    }
+    // Listings sit on leaves: an old leaf that became a root must move.
+    expect(LEGACY_CATEGORIES['photo-video']).toBe('cameras');
+    expect(LEGACY_CATEGORIES['camping']).toBe('tents');
   });
 
   it('names every category, attribute and option in en, lv and ru', () => {
@@ -69,20 +100,21 @@ describe('CATALOG', () => {
     }
   });
 
-  it('asks for the examples of the plan: console model, power tool supply and wattage, bike type and helmet', () => {
+  it('asks for the examples of the plan: console model, drill supply and wattage, bike type and helmet', () => {
     const leaf = (slug: string) => all(CATALOG).find((category) => category.slug === slug)!;
     expect(leaf('game-consoles').attributes!.map((a) => [a.key, a.type])).toEqual([
       ['model', 'SELECT'],
       ['controllers', 'NUMBER'],
       ['games', 'TEXT'],
     ]);
-    expect(leaf('power-tools').attributes!.map((a) => [a.key, a.type, a.unit ?? null])).toEqual([
+    expect(leaf('drills-drivers').attributes!.map((a) => [a.key, a.type, a.unit ?? null])).toEqual([
       ['power', 'SELECT', null],
       ['watts', 'NUMBER', 'W'],
+      ['brand', 'TEXT', null],
       ['included', 'TEXT', null],
     ]);
-    expect(leaf('power-tools').attributes![0]!.options!.map((o) => o.value)).toEqual(['mains', 'battery']);
-    expect(leaf('bikes-scooters').attributes!.map((a) => [a.key, a.type])).toEqual([
+    expect(leaf('drills-drivers').attributes![0]!.options!.map((o) => o.value)).toEqual(['mains', 'battery']);
+    expect(leaf('bikes').attributes!.map((a) => [a.key, a.type])).toEqual([
       ['type', 'SELECT'],
       ['frameSize', 'TEXT'],
       ['helmet', 'BOOLEAN'],

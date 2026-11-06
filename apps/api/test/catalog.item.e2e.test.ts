@@ -119,7 +119,8 @@ describe('item page, profiles and the sitemap', () => {
     expect(res.body.users).toEqual([{ id: anna.user.id, updatedAt: expect.any(String) }]);
     const count = (slug: string) => res.body.categories.find((c: { slug: string }) => c.slug === slug);
     expect(count('tools')).toEqual({ slug: 'tools', slugs: { en: 'tools', lv: 'instrumenti', ru: 'instrumenty' }, count: 1 });
-    expect(count('power-tools').count).toBe(1);
+    expect(count('drills-drivers').count).toBe(1);
+    expect(count('garden')).toMatchObject({ slugs: { en: 'garden', lv: 'darzs-pagalms', ru: 'sad-dvor' }, count: 0 });
     expect(count('electronics').count).toBe(0);
   });
 });

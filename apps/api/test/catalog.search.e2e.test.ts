@@ -70,7 +70,7 @@ describe('catalog search', () => {
       bike = await live({
         title: 'Velosipēds pilsētai',
         description: 'Ērts pilsētas velosipēds ar grozu un gaismām, labā stāvoklī.',
-        categoryId: await categoryId(t, 'bikes-scooters'),
+        categoryId: await categoryId(t, 'bikes'),
         attributes: {},
       });
     });
@@ -84,8 +84,8 @@ describe('catalog search', () => {
     });
 
     it('finds items through the name of their category in any language', async () => {
-      expect(await ids({ q: 'Электроинструмент' })).toEqual([drill.id]);
-      expect(await ids({ q: 'elektroinstrumenti' })).toEqual([drill.id]);
+      expect(await ids({ q: 'шуруповерт' })).toEqual([drill.id]);
+      expect(await ids({ q: 'urbjmasinas' })).toEqual([drill.id]);
     });
 
     it('takes wildcards and quotes literally (Review Focus 2)', async () => {
@@ -166,7 +166,7 @@ describe('catalog search', () => {
   it('suggests categories and items, with a limit per address', async () => {
     const drill = await live({ title: 'Bosch cordless drill' });
     const res = await request(t.server).get('/api/v1/catalog/suggest').query({ q: 'elek', lang: 'lv' }).expect(200);
-    expect(res.body.categories.map((c: { slug: string }) => c.slug)).toEqual(expect.arrayContaining(['electronics', 'power-tools']));
+    expect(res.body.categories.map((c: { slug: string }) => c.slug)).toEqual(expect.arrayContaining(['electronics', 'e-scooters']));
     const items = await request(t.server).get('/api/v1/catalog/suggest').query({ q: 'dri' }).expect(200);
     expect(items.body.listings).toEqual([{ id: drill.id, title: 'Bosch cordless drill', cover: expect.any(Object) }]);
     await request(t.server).get('/api/v1/catalog/suggest').query({ q: 'd' }).expect(400);

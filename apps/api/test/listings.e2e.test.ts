@@ -51,7 +51,7 @@ describe('listings', () => {
     });
 
     it('cleans HTML out of the texts and checks attributes against the chosen category', async () => {
-      const powerTools = await categoryId(t, 'power-tools');
+      const powerTools = await categoryId(t, 'drills-drivers');
       const ok = await anna
         .post('/listings')
         .send({ title: '<b>Drill</b>', categoryId: powerTools, attributes: { power: 'battery', included: '<i>case</i>' } })
@@ -232,7 +232,7 @@ describe('listings', () => {
 
     it('clears the attributes of the old category when the category changes', async () => {
       const listing = await seedListing(t, anna.user);
-      const bikes = await categoryId(t, 'bikes-scooters');
+      const bikes = await categoryId(t, 'bikes');
       const res = await anna.patch(`/listings/${listing.id}`).send({ version: listing.version, categoryId: bikes }).expect(200);
       expect(res.body.listing).toMatchObject({ categoryId: bikes, attributes: {} });
     });

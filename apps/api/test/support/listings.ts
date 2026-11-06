@@ -40,11 +40,11 @@ export async function categoryId(t: TestApp, slug: string): Promise<string> {
   return (await t.prisma.category.findUniqueOrThrow({ where: { slug } })).id;
 }
 
-/** Everything a listing needs to go to review, in the power-tools category. */
+/** Everything a listing needs to go to review, in the drills-drivers category. */
 export async function completeListingData(t: TestApp): Promise<Prisma.ListingUncheckedCreateInput> {
   return {
     ownerId: '',
-    categoryId: await categoryId(t, 'power-tools'),
+    categoryId: await categoryId(t, 'drills-drivers'),
     title: 'Bosch cordless drill',
     description: 'A strong cordless drill for concrete and wood, with two batteries.',
     condition: 'GOOD',
