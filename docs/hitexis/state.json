@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "project_name": "Yoyo",
+  "mode": "existing",
+  "workstreams": ["W", "C", "P", "S", "T", "L", "Q"],
+  "stages": [
+    {"id": "P00", "status": "passed", "depends_on": [], "deliverables": ["docs/hitexis/P00-brief.md", "docs/hitexis/HITEXIS_P00_Project_Master_Brief_YOYO_2026-11-06.docx (local, not in git)"], "gate_evidence": ["docs/hitexis/P00-brief.md#21-quality-gate"], "blockers": [], "reason": "Existing product: baseline recovered from spec, plans, live system and audits; A-questions answered by owner 2026-11-06."},
+    {"id": "W01", "status": "pending", "depends_on": ["P00"], "deliverables": [], "gate_evidence": [], "blockers": [], "reason": "Owner requires strong SEO and a home page that always explains the platform."},
+    {"id": "W02", "status": "pending", "depends_on": ["W01"], "deliverables": [], "gate_evidence": [], "blockers": [], "reason": "EN/LV/RU on one market (Latvia)."},
+    {"id": "W03", "status": "pending", "depends_on": ["W02"], "deliverables": [], "gate_evidence": [], "blockers": [], "reason": "Sitemap and URLs shared with catalogue."},
+    {"id": "C01", "status": "pending", "depends_on": ["P00"], "deliverables": [], "gate_evidence": [], "blockers": [], "reason": "P2P rental marketplace with deposit, fee and disputes."}
+  ],
+  "approvals": [],
+  "release": {"status": "not_planned", "version": null, "owner": "Zogal"},
+  "next_action": "Run W01 (market, competitor, SEO and AI-search research for Riga, EN/LV/RU); B-questions in P00 §18 open in parallel."
+}
