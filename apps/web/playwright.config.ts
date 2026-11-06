@@ -57,6 +57,9 @@ export default defineConfig({
         ADMIN_EMAIL: E2E_ADMIN.email,
         ADMIN_PASSWORD: E2E_ADMIN.password,
         NOMINATIM_URL: `http://127.0.0.1:${FAKE_NOMINATIM_PORT}`,
+        // Mail goes to the local Mailpit: the production budget (90 a day, for the free SMTP plan) would
+        // run out within one full run now that every deal step sends an email.
+        MAIL_DAILY_LIMIT: '5000',
       } as Record<string, string>,
       reuseExistingServer: false,
       timeout: 120_000,
