@@ -52,7 +52,7 @@ describe('WalletView', () => {
     expect(screen.getByText('In deposits')).toBeVisible();
     expect(screen.getByText('Waiting for handover')).toBeVisible();
     expect(screen.getByText('Earned')).toBeVisible();
-    await screen.findByText('Rent received');
+    await waitFor(() => expect(document.querySelector('[data-ledger]')).not.toBeNull());
     const ledger = document.querySelector<HTMLElement>('[data-ledger]')!;
     expect(within(ledger).getByText('Rent received')).toBeVisible();
     expect(within(ledger).getByText('+€45.00')).toBeVisible();
@@ -62,7 +62,7 @@ describe('WalletView', () => {
   it('filters the history by kind', async () => {
     const user = userEvent.setup();
     const { calls } = setup();
-    await screen.findByText('Rent received');
+    await waitFor(() => expect(document.querySelector('[data-ledger]')).not.toBeNull());
     await user.click(screen.getByRole('button', { name: 'Deposit returned' }));
     await waitFor(() => expect(calls.some((c) => c.path === '/api/v1/wallet/transactions' && c.query.includes('kind=DEPOSIT_REFUND'))).toBe(true));
   });
