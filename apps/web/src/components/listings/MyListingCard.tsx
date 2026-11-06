@@ -4,6 +4,7 @@ import type { OwnerListingSummary } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { BookingLinkButton } from '@/components/deals/BookingLinkButton';
 import { formatEuros } from '@/lib/listings/money';
 import { ListingActions, type ListingAction } from './ListingActions';
 import { ListingStatusBadge } from './ListingStatusBadge';
@@ -66,6 +67,7 @@ export function MyListingCard({
               {archived ? t('view') : t('edit')}
             </Button>
           )}
+          {listing.status === 'PUBLISHED' && <BookingLinkButton listingId={listing.id} />}
           <ListingActions listing={listing} perform={perform} />
         </div>
       </article>
