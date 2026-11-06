@@ -25,8 +25,8 @@ function isPlainClick(event: MouseEvent<HTMLAnchorElement>): boolean {
 }
 
 /**
- * A link to another page of the site that moves there with a View Transition (a soft cross-fade with a
- * slight scale, the same as the language switch). Anything but a plain left click (new tab, new window, download), and
+ * A link to another page of the site that moves there with a View Transition (the old page fades out of
+ * focus and the new one comes in, the same as the language switch). Anything but a plain left click (new tab, new window, download), and
  * links to a part of the same page, behave exactly like a normal link.
  */
 export function TransitionLink({ href, onClick, ...rest }: TransitionLinkProps) {

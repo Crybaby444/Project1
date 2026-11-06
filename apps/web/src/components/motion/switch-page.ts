@@ -1,8 +1,8 @@
 import { shouldAnimateThemeChange } from '@/components/theme/switch-theme';
 
 /**
- * Moving between pages plays like the language switch (globals.css): a soft cross-fade with a slight
- * scale, and the header stays put. Same rule as
+ * Moving between pages plays like the language switch (globals.css): the old page goes out of focus
+ * and fades, the new one comes into focus, and the header stays perfectly still. Same rule as
  * the theme and language switches: only when motion is welcome and the browser has View Transitions.
  */
 export const shouldAnimatePageChange = shouldAnimateThemeChange;
