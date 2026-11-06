@@ -11855,6 +11855,26 @@
                 "slug": {
                   "type": "string"
                 },
+                "slugs": {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "lv": {
+                      "type": "string"
+                    },
+                    "ru": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en",
+                    "lv",
+                    "ru"
+                  ],
+                  "additionalProperties": false
+                },
                 "names": {
                   "type": "object",
                   "properties": {
@@ -11889,6 +11909,7 @@
               },
               "required": [
                 "slug",
+                "slugs",
                 "names",
                 "sticker"
               ],

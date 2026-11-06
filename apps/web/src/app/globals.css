@@ -50,6 +50,8 @@
   --animate-toast-in: toast-in 250ms var(--ease-yoyo);
   --animate-pop-in: pop-in 150ms var(--ease-yoyo);
   --animate-step-in: step-in 250ms var(--ease-yoyo);
+  --animate-heart-pop: heart-pop 450ms var(--ease-yoyo);
+  --animate-spark: spark 450ms var(--ease-yoyo);
 
   @keyframes sticker-wobble {
     25% {
@@ -92,6 +94,27 @@
     from {
       transform: translateX(var(--step-from, 16px));
       opacity: 0;
+    }
+  }
+
+  /* The favourite heart pops when it turns on, and six sticker-coloured sparks fly out. */
+  @keyframes heart-pop {
+    40% {
+      transform: scale(1.35) rotate(-8deg);
+    }
+    70% {
+      transform: scale(0.92);
+    }
+  }
+
+  @keyframes spark {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, -50%) rotate(var(--spark-angle)) translateY(0) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) rotate(var(--spark-angle)) translateY(-22px) scale(0.4);
     }
   }
 
@@ -219,3 +242,56 @@ html[data-language-switch]::view-transition-new(site-header) {
   overflow: hidden;
 }
 
+
+/* Catalog map pins: price stickers with a 1px outline that hop on hover (DESIGN.md: no shadows). */
+.yoyo-map-pin-wrap {
+  background: none;
+  border: none;
+}
+
+.yoyo-map-pin {
+  display: inline-block;
+  transform: translate(-50%, -50%);
+  padding: 4px 10px;
+  border: 1px solid #000;
+  border-radius: 9999px;
+  background: var(--sticker-sun);
+  color: #000;
+  font: 700 13px/1.2 var(--font-body);
+  white-space: nowrap;
+  transition: transform var(--dur-fast) var(--ease-yoyo);
+}
+
+.yoyo-map-pin--many {
+  background: var(--sticker-blue);
+}
+
+.leaflet-marker-icon:hover .yoyo-map-pin,
+.leaflet-marker-icon:focus-visible .yoyo-map-pin {
+  transform: translate(-50%, -60%) rotate(-4deg);
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  box-shadow: none !important;
+  border: 1px solid #000;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 20px;
+}
+
+.yoyo-map-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font: 500 14px/1.4 var(--font-body);
+}
+
+.yoyo-map-popup a {
+  font-weight: 700;
+  color: #000;
+}

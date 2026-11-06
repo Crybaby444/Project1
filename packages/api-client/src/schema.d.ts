@@ -2464,6 +2464,11 @@ export interface components {
         SuggestResponseDto_Output: {
             categories: {
                 slug: string;
+                slugs: {
+                    en: string;
+                    lv: string;
+                    ru: string;
+                };
                 names: {
                     en: string;
                     lv: string;

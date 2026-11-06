@@ -55,15 +55,21 @@ export const loadItem = cache(async (id: string): Promise<Loaded<ItemDetail>> =>
   return loaded.ok ? { ok: true, data: loaded.data.item } : loaded;
 });
 
-export const loadSearch = cache(
-  async (query: CatalogQuery): Promise<Loaded<CatalogPage>> =>
-    load(() => client().GET('/api/v1/catalog/listings', { params: { query: toApiSearch(query) as never } })),
+// React's cache compares arguments by identity, so the queries go in as their JSON.
+const searchByKey = cache(
+  async (key: string): Promise<Loaded<CatalogPage>> =>
+    load(() => client().GET('/api/v1/catalog/listings', { params: { query: toApiSearch(JSON.parse(key) as CatalogQuery) as never } })),
 );
 
-export const loadMap = cache(
-  async (query: CatalogQuery): Promise<Loaded<MapResponse>> =>
-    load(() => client().GET('/api/v1/catalog/map', { params: { query: toApiSearch(query) as never } })),
+const mapByKey = cache(
+  async (key: string): Promise<Loaded<MapResponse>> =>
+    load(() => client().GET('/api/v1/catalog/map', { params: { query: toApiSearch(JSON.parse(key) as CatalogQuery) as never } })),
 );
+
+/** One page of the catalog; the same query twice in one render is asked once. */
+export const loadSearch = (query: CatalogQuery) => searchByKey(JSON.stringify(query));
+
+export const loadMap = (query: CatalogQuery) => mapByKey(JSON.stringify(query));
 
 export const loadPlaces = cache(async (): Promise<Loaded<PlacesResponse>> => load(() => client().GET('/api/v1/catalog/places')));
 

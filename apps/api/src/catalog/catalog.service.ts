@@ -122,7 +122,7 @@ export class CatalogService {
       .filter((entry) => entry.rank >= 0)
       .sort((a, b) => a.rank - b.rank)
       .slice(0, 3)
-      .map(({ node }) => ({ slug: node.slug, names: node.names, sticker: node.sticker }));
+      .map(({ node }) => ({ slug: node.slug, slugs: node.slugs, names: node.names, sticker: node.sticker }));
     const rows = await this.prisma.$queryRaw<{ id: string }[]>`
       SELECT l."id" ${VISIBLE_FROM} WHERE ${CATALOG_VISIBLE_SQL} AND ${textMatchSql(q, [])}
       ORDER BY word_similarity(yoyo_fold(${q}), yoyo_fold(coalesce(l."title", ''))) DESC, l."publishedAt" DESC, l."id" DESC

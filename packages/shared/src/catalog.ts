@@ -159,7 +159,7 @@ export const SuggestQuerySchema = z.object({
 });
 
 export const SuggestResponseSchema = z.object({
-  categories: z.array(z.object({ slug: z.string(), names: LocalizedTextSchema, sticker: z.enum(STICKERS) })),
+  categories: z.array(z.object({ slug: z.string(), slugs: LocalizedTextSchema, names: LocalizedTextSchema, sticker: z.enum(STICKERS) })),
   listings: z.array(z.object({ id: z.string(), title: z.string(), cover: PhotoUrlsSchema.nullable() })),
 });
 
