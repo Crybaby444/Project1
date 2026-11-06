@@ -212,7 +212,8 @@
     "photosRequired": "Add at least one photo of the damage.",
     "submit": "Send",
     "keep": "Go back",
-    "confirmYes": "Yes, confirm"
+    "confirmYes": "Yes, confirm",
+    "required": "Write a few words."
   },
   "myDeals": {
     "title": "My deals",

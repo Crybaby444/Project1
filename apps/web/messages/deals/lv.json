@@ -212,7 +212,8 @@
     "photosRequired": "Pievieno vismaz vienu bojājuma foto.",
     "submit": "Nosūtīt",
     "keep": "Atpakaļ",
-    "confirmYes": "Jā, apstiprināt"
+    "confirmYes": "Jā, apstiprināt",
+    "required": "Uzraksti dažus vārdus."
   },
   "myDeals": {
     "title": "Mani darījumi",
