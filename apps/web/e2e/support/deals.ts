@@ -20,13 +20,33 @@ export async function person(browser: Browser, baseURL: string | undefined, name
   return { context, page };
 }
 
-/** The e2e administrator in a context of their own. */
+/**
+ * The administrator's signed-in session, made once per worker: sign-ins of one account are limited
+ * (20 an hour, 5 a minute), and the whole e2e run shares that budget.
+ */
+let adminSession: Promise<Awaited<ReturnType<BrowserContext['storageState']>>> | null = null;
+let adminSince = 0;
+/** Access tokens last 15 minutes and request contexts do not renew them: sign in again before that. */
+const ADMIN_SESSION_MS = 10 * 60_000;
+
+/** The e2e administrator in a context of their own (signed in once per worker, see above). */
 export async function administrator(browser: Browser, baseURL: string | undefined): Promise<APIRequestContext> {
-  const context = await browser.newContext({ baseURL });
+  if (Date.now() - adminSince > ADMIN_SESSION_MS) {
+    adminSession = null;
+    adminSince = Date.now();
+  }
+  adminSession ??= (async () => {
+    const context = await browser.newContext({ baseURL });
+    await asOwnVisitor(context);
+    const page = await context.newPage();
+    await signInAsAdmin(page);
+    const state = await context.storageState();
+    await context.close();
+    return state;
+  })();
+  const context = await browser.newContext({ baseURL, storageState: await adminSession });
   await asOwnVisitor(context);
-  const page = await context.newPage();
-  await signInAsAdmin(page);
-  return page.request;
+  return (await context.newPage()).request;
 }
 
 /** Lists a ready item as `owner` (15 € a day, 100 € deposit), approved, so it can be booked. */
