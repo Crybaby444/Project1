@@ -63,8 +63,8 @@ export function DealSummary({ booking }: { booking: BookingView }) {
             <dd className="font-bold tabular-nums">{money(q.ownerPayoutCents)}</dd>
           </div>
         )}
-        {booking.paymentMethod && <p className="text-sm">{t('paidBy', { method: t(booking.paymentMethod) })}</p>}
       </dl>
+      {booking.paymentMethod && <p className="text-sm">{t('paidBy', { method: t(booking.paymentMethod) })}</p>}
     </section>
   );
 }

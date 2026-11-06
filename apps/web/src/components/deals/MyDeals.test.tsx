@@ -32,11 +32,11 @@ function setup(routes: FakeRoutes = {}) {
 describe('MyDeals', () => {
   it('lists deals with their status, whose turn it is, and links to each', async () => {
     setup();
-    const link = await screen.findByRole('link', { name: 'Open the deal for PlayStation 5' });
+    const link = await screen.findByRole('link', { name: /PlayStation 5/ });
     expect(link).toHaveAttribute('href', '/bookings/b-wait');
     expect(within(link).getByText('Requested')).toBeVisible();
     expect(within(link).getByText('Your turn')).toBeVisible();
-    const other = screen.getByRole('link', { name: 'Open the deal for Drill' });
+    const other = screen.getByRole('link', { name: /Drill/ });
     expect(within(other).getByText('Deposit frozen')).toBeVisible();
     expect(within(other).queryByText('Your turn')).toBeNull();
   });
@@ -44,8 +44,8 @@ describe('MyDeals', () => {
   it('counts the waiting deals on the tab and switches roles with the arrow keys', async () => {
     const user = userEvent.setup();
     const { calls } = setup();
-    const renter = screen.getByRole('tab', { name: /I rent/ });
-    await waitFor(() => expect(renter).toHaveAccessibleName('I rent, 1 waits for you'));
+    const renter = screen.getByRole('tab', { name: 'I rent' });
+    await waitFor(() => expect(renter).toHaveAccessibleDescription('1 waits for you'));
     expect(renter).toHaveAttribute('aria-selected', 'true');
     renter.focus();
     await user.keyboard('{ArrowRight}');

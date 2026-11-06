@@ -36,8 +36,8 @@ test('owner lists, renter books, pays, handover, return, deposit released', asyn
   // The owner sees it waiting for them in My deals, opens it and accepts.
   const o = owner.page;
   await o.goto('/bookings?role=owner');
-  await expect(o.getByRole('tab', { name: /I lend, 1 waits for you/ })).toBeVisible();
-  await o.getByRole('link', { name: `Open the deal for ${title}` }).click();
+  await expect(o.getByRole('tab', { name: 'I lend' })).toHaveAccessibleDescription('1 waits for you');
+  await o.getByRole('link', { name: new RegExp(title) }).click();
   await expect(o).toHaveURL(new RegExp(`${dealUrl}$`));
   await expect(o.getByText('Could I pick it up after 18:00?')).toBeVisible();
   await takeStep(o, 'Accept', false);
@@ -95,7 +95,7 @@ test('owner lists, renter books, pays, handover, return, deposit released', asyn
 
   // Closed deals are in their group.
   await r.goto('/bookings?group=closed');
-  await expect(r.getByRole('link', { name: `Open the deal for ${title}` })).toBeVisible();
+  await expect(r.getByRole('link', { name: new RegExp(title) })).toBeVisible();
 });
 
 test('damage claimed with a photo, rejected by the renter, decided by Yoyo', async ({ browser, baseURL }) => {

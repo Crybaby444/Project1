@@ -233,7 +233,6 @@
       "renter": "No {name}",
       "owner": "Nomniekam {name}"
     },
-    "open": "Atvērt darījumu: {item}",
     "loadFailed": "Tavi darījumi neielādējās.",
     "retry": "Mēģināt vēlreiz",
     "more": "Rādīt vairāk",

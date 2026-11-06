@@ -35,7 +35,6 @@ export function DealCard({ booking, index }: { booking: BookingView; index: numb
     <Reveal as="li" index={index % 6}>
       <TransitionLink
         href={`/bookings/${booking.id}`}
-        aria-label={t('open', { item: booking.listing.title })}
         data-deal-card={booking.id}
         className="group border-ink bg-surface rounded-card ease-yoyo relative flex h-full gap-4 border p-4 transition-transform duration-250 hover:-translate-y-1 active:scale-[0.99] [&:hover_[data-deal-cover]]:-rotate-2"
       >
@@ -187,7 +186,7 @@ export function MyDeals({ initialRole, initialGroup }: { initialRole: DealRole; 
             aria-selected={role === r}
             aria-controls="deals-panel"
             tabIndex={role === r ? 0 : -1}
-            aria-label={waiting(r) > 0 ? `${t(r)}, ${t('badge', { count: waiting(r) })}` : undefined}
+            aria-describedby={waiting(r) > 0 ? `deals-badge-${r}` : undefined}
             onClick={() => remember(r, group)}
             onKeyDown={onTabKey}
             className={`rounded-pill ease-yoyo flex min-h-10 flex-1 items-center justify-center gap-2 px-4 text-sm font-bold transition-[background-color,color,transform] duration-250 active:scale-[0.96] ${
@@ -198,6 +197,11 @@ export function MyDeals({ initialRole, initialGroup }: { initialRole: DealRole; 
             {waiting(r) > 0 && (
               <span aria-hidden="true" className="rounded-pill bg-sticker-sun animate-pop-in inline-flex min-h-5 min-w-5 items-center justify-center border border-black px-1.5 text-[11px] text-black tabular-nums" data-badge={r}>
                 {waiting(r)}
+              </span>
+            )}
+            {waiting(r) > 0 && (
+              <span id={`deals-badge-${r}`} hidden>
+                {t('badge', { count: waiting(r) })}
               </span>
             )}
           </button>

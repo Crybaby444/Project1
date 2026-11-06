@@ -56,7 +56,17 @@ function Uploader({
 
   return (
     <div className="flex flex-col gap-1.5">
-      <input ref={input} id={id} type="file" accept="image/jpeg,image/png,image/webp" multiple className="sr-only" onChange={(e) => void onFiles(e)} />
+      <input
+        ref={input}
+        id={id}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        multiple
+        tabIndex={-1}
+        aria-label={label}
+        className="sr-only"
+        onChange={(e) => void onFiles(e)}
+      />
       <button
         type="button"
         onClick={() => input.current?.click()}

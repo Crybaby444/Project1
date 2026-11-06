@@ -233,7 +233,6 @@
       "renter": "From {name}",
       "owner": "To {name}"
     },
-    "open": "Open the deal for {item}",
     "loadFailed": "Your deals did not load.",
     "retry": "Try again",
     "more": "Show more",
