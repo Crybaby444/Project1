@@ -79,7 +79,7 @@ describe('switchPage', () => {
     expect(start).toHaveBeenCalledOnce();
     expect(navigate).toHaveBeenCalledOnce();
     expect(window.location.pathname).toBe('/faq');
-    // The paper-sheet styles apply during the transition and are removed after it.
+    // The transition styles apply during the transition and are removed after it.
     expect(root.dataset['pageSwitch']).toBe('');
     finishAll();
     await vi.waitFor(() => expect(root.dataset['pageSwitch']).toBeUndefined());

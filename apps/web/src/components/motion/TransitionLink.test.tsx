@@ -1,5 +1,8 @@
 import { fireEvent, screen } from '@testing-library/react';
-import { AppRouterContext, type AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import {
+  AppRouterContext,
+  type AppRouterInstance,
+} from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import type { ReactElement } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { stubMatchMedia } from '@/test/match-media';
@@ -14,14 +17,26 @@ const push = vi.hoisted(() =>
 
 /** Renders inside a stand-in for the app router, as on a real Next page. */
 function renderInApp(ui: ReactElement, locale: 'en' | 'lv' = 'en') {
-  const router = { push, replace: vi.fn(), refresh: vi.fn(), back: vi.fn(), forward: vi.fn(), prefetch: vi.fn() } as unknown as AppRouterInstance;
+  const router = {
+    push,
+    replace: vi.fn(),
+    refresh: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    prefetch: vi.fn(),
+  } as unknown as AppRouterInstance;
   return renderWithIntl(<AppRouterContext.Provider value={router}>{ui}</AppRouterContext.Provider>, locale);
 }
 
 function fakeViewTransitions() {
   const start = vi.fn((update: () => Promise<void> | void) => {
     const updateCallbackDone = Promise.resolve().then(update);
-    return { updateCallbackDone, ready: updateCallbackDone, finished: updateCallbackDone, skipTransition() {} };
+    return {
+      updateCallbackDone,
+      ready: updateCallbackDone,
+      finished: updateCallbackDone,
+      skipTransition() {},
+    };
   });
   Object.defineProperty(document, 'startViewTransition', { configurable: true, value: start });
   return start;

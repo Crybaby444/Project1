@@ -15,18 +15,27 @@ export async function FaqTeaser() {
   }));
 
   return (
-    <Section id="faq" tone="band">
+    <Section id="faq" tone="lavender">
       <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr]">
         <div className="flex flex-col items-start gap-8">
           <SectionTitle
             id="faq"
             eyebrow={t('eyebrow')}
             title={t('title')}
-            stickers={[{ kind: 'heart', size: 80, bottom: '-30%', right: '10%', rotate: -12, className: 'max-sm:hidden' }]}
+            stickers={[
+              {
+                kind: 'heart',
+                size: 80,
+                bottom: '-30%',
+                right: '10%',
+                rotate: -12,
+                className: 'max-sm:hidden',
+              },
+            ]}
           />
           <TransitionLink
             href="/faq"
-            className="rounded-pill inline-flex min-h-10 items-center gap-2 text-lg font-bold underline underline-offset-4 transition-transform duration-150 ease-yoyo hover:-translate-y-0.5"
+            className="rounded-pill ease-yoyo inline-flex min-h-10 items-center gap-2 text-lg font-bold underline underline-offset-4 transition-transform duration-150 hover:-translate-y-0.5"
           >
             {t('all')}
             <span aria-hidden="true">→</span>

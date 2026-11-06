@@ -27,6 +27,36 @@ async function setTheme(page: Page, theme: 'light' | 'dark') {
 const menuAnimations = (page: Page) =>
   menu(page).evaluate((el) => el.getAnimations().map((a) => Number(a.effect?.getTiming().duration)));
 
+type AnimationLog = { menuAnimations: number[] };
+
+/**
+ * Records the duration of every animation started on the menu from now on. Reading the running
+ * animations afterwards races them on a busy machine: the 180 ms close can be over (and the menu
+ * hidden) before the test looks.
+ */
+const recordMenuAnimations = (page: Page) =>
+  page.evaluate(() => {
+    const log = window as unknown as AnimationLog;
+    log.menuAnimations = [];
+    const original = Element.prototype.animate;
+    Element.prototype.animate = function (this: Element, ...args: Parameters<Element['animate']>) {
+      if (this.matches('[data-site-header] [role="menu"]')) {
+        const timing = args[1];
+        log.menuAnimations.push(Number(typeof timing === 'number' ? timing : timing?.duration));
+      }
+      return original.apply(this, args);
+    };
+  });
+
+/** The durations recorded since the last call. */
+const takeMenuAnimations = (page: Page) =>
+  page.evaluate(() => {
+    const log = window as unknown as AnimationLog;
+    const taken = log.menuAnimations;
+    log.menuAnimations = [];
+    return taken;
+  });
+
 test.describe('at 320px', () => {
   test.use({ viewport: { width: 320, height: 640 } });
 
@@ -74,17 +104,20 @@ test.describe('on a desktop', () => {
 
   test('the menu scales and fades in from the pill and out again', async ({ page }) => {
     await page.goto('/login');
+    await recordMenuAnimations(page);
     await pill(page).click();
-    const opening = await menuAnimations(page);
+    await expect(menu(page)).toBeVisible();
+    const opening = await takeMenuAnimations(page);
     expect(opening).toHaveLength(1);
     expect(opening[0]).toBeGreaterThanOrEqual(180);
     expect(opening[0]).toBeLessThanOrEqual(250);
     await page.mouse.click(1000, 600);
     await expect(pill(page)).toHaveAttribute('aria-expanded', 'false');
-    const closing = await menuAnimations(page);
+    await expect(menu(page)).toBeHidden();
+    const closing = await takeMenuAnimations(page);
+    expect(closing).toHaveLength(1);
     expect(closing[0]).toBeGreaterThanOrEqual(180);
     expect(closing[0]).toBeLessThanOrEqual(250);
-    await expect(menu(page)).toBeHidden();
   });
 
   test('with reduced motion it opens and closes at once', async ({ page }) => {

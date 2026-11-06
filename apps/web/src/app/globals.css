@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import '../styles/tokens.css';
+@import '../styles/motion.css';
 
 /* Map DESIGN.md tokens to Tailwind utilities: bg-canvas, text-ink, border-ink, rounded-pill, font-display… */
 @theme inline {
@@ -42,7 +43,7 @@
   overflow-wrap: break-word;
 }
 
-/* Brand motion (DESIGN.md "Project adaptations" §1): stickers react only to the pointer; the marquee loops. */
+/* Brand motion (DESIGN.md "Project adaptations" §1); the scroll and load motion system is styles/motion.css. */
 @theme {
   --animate-sticker-wobble: sticker-wobble 450ms var(--ease-yoyo);
   --animate-sticker-spin: sticker-spin 450ms var(--ease-yoyo);

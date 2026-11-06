@@ -210,8 +210,8 @@ export function UnavailabilityCalendar({ periods, today, onChange, readOnly }: P
                               past
                                 ? 'text-ink/60 cursor-default border-transparent'
                                 : off
-                                  ? 'bg-mist border-ink line-through decoration-2 hover:-translate-y-0.5 active:scale-[0.92]'
-                                  : 'border-ink/30 hover:border-ink hover:-translate-y-0.5 active:scale-[0.92]'
+                                  ? 'bg-mist border-ink line-through decoration-2 hover:-translate-y-0.5 active:scale-[0.96]'
+                                  : 'border-ink/30 hover:border-ink hover:-translate-y-0.5 active:scale-[0.96]'
                             } ${date === today ? 'outline-ink outline-1 outline-dashed' : ''}`}
                           >
                             {Number(date.slice(8, 10))}
@@ -245,7 +245,7 @@ export function UnavailabilityCalendar({ periods, today, onChange, readOnly }: P
                     type="button"
                     aria-label={t('remove', { period: describe(period) })}
                     onClick={() => onChange(periods.filter((other) => other !== period))}
-                    className="ease-yoyo hover:bg-surface grid size-8 place-items-center rounded-full transition-transform duration-150 active:scale-[0.9]"
+                    className="ease-yoyo hover:bg-surface grid size-8 place-items-center rounded-full transition-transform duration-150 active:scale-[0.96]"
                   >
                     <svg viewBox="0 0 24 24" aria-hidden="true" className="size-3.5">
                       <path

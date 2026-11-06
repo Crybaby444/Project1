@@ -49,7 +49,10 @@ describe('CategoriesRetry (the API did not answer in time)', () => {
       .fn()
       .mockRejectedValueOnce(new TypeError('still asleep'))
       .mockResolvedValueOnce(
-        new Response(JSON.stringify({ categories: TREE }), { status: 200, headers: { 'content-type': 'application/json' } }),
+        new Response(JSON.stringify({ categories: TREE }), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        }),
       );
     const user = userEvent.setup();
     renderWithIntl(<CategoriesRetry fetchImpl={fetchImpl} />);
@@ -70,7 +73,10 @@ describe('CategoriesRetry (the API did not answer in time)', () => {
     const user = userEvent.setup();
     renderWithIntl(<CategoriesRetry fetchImpl={fetchImpl} />, 'ru');
     await user.click(screen.getByRole('button', { name: siteRu.landing.categories.retry }));
-    expect(screen.getByRole('button', { name: siteRu.landing.categories.retry })).toHaveAttribute('aria-busy', 'true');
+    expect(screen.getByRole('button', { name: siteRu.landing.categories.retry })).toHaveAttribute(
+      'aria-busy',
+      'true',
+    );
     answer(new Response(JSON.stringify({ categories: TREE }), { status: 200 }));
     expect(await screen.findByRole('heading', { name: 'Музыка' })).toBeInTheDocument();
   });

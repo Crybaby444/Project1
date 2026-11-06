@@ -45,7 +45,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="bg-canvas text-ink flex min-h-dvh flex-col">
+      <body className="text-ink flex min-h-dvh flex-col">
         <NextIntlClientProvider>
           <QueryProvider>
             <SessionProvider>

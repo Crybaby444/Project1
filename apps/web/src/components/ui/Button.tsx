@@ -17,7 +17,7 @@ type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
 const BASE =
   'inline-flex items-center justify-center gap-2 rounded-pill border font-bold tracking-[0.03em] uppercase select-none ' +
   'transition-[transform,background-color,color] duration-150 ease-yoyo ' +
-  'hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] ' +
+  'hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96] ' +
   'disabled:pointer-events-none disabled:opacity-55';
 
 const VARIANTS: Record<Variant, string> = {

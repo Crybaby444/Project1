@@ -22,8 +22,13 @@ export async function FinalCta() {
           { kind: 'heart', size: 88, bottom: '-14%', right: '4%', rotate: 14, className: 'max-sm:hidden' },
         ]}
       />
-      <p className="relative z-10 max-w-[44ch] text-lg leading-relaxed text-balance sm:text-xl">{t('final.lead')}</p>
-      <CallToAction secondary={{ href: '/faq', label: t('final.faq') }} className="relative z-10 justify-center" />
+      <p className="relative z-10 max-w-[44ch] text-lg leading-relaxed text-balance sm:text-xl">
+        {t('final.lead')}
+      </p>
+      <CallToAction
+        secondary={{ href: '/faq', label: t('final.faq') }}
+        className="relative z-10 justify-center"
+      />
     </Section>
   );
 }

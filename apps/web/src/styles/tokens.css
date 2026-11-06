@@ -20,6 +20,21 @@
   --dur-fast: 150ms;
   --dur-base: 250ms;
   --dur-slow: 450ms;
+
+  /*
+   * Page tones for the scroll colour morph (components/motion/ToneSection): the sticker palette
+   * softened into full-page backgrounds. Light: mixed with white so ink text keeps AA contrast.
+   * Dark: a low tint of the dark canvas, so white text does. Flat colours, never gradients.
+   */
+  --tone-canvas: var(--canvas);
+  --tone-surface: var(--surface);
+  --tone-band: var(--band);
+  --tone-blue: light-dark(color-mix(in srgb, var(--sticker-blue) 45%, #fff), color-mix(in srgb, var(--sticker-blue) 24%, #0d0e16));
+  --tone-mint: light-dark(color-mix(in srgb, var(--sticker-mint) 45%, #fff), color-mix(in srgb, var(--sticker-mint) 18%, #0d0e16));
+  --tone-lavender: light-dark(var(--sticker-lavender), color-mix(in srgb, var(--sticker-lavender) 16%, #0d0e16));
+  --tone-sun: light-dark(color-mix(in srgb, var(--sticker-sun) 55%, #fff), color-mix(in srgb, var(--sticker-sun) 14%, #0d0e16));
+  --tone-ember: light-dark(color-mix(in srgb, var(--sticker-ember) 30%, #fff), color-mix(in srgb, var(--sticker-ember) 20%, #0d0e16));
+  --tone-violet: light-dark(color-mix(in srgb, var(--sticker-violet) 28%, #fff), color-mix(in srgb, var(--sticker-violet) 32%, #0d0e16));
 }
 
 /*

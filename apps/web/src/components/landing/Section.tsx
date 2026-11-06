@@ -1,15 +1,10 @@
 import type { ReactNode } from 'react';
 import type { PlacedSticker } from '@/components/decor/StickerCluster';
 import { StickerCluster } from '@/components/decor/StickerCluster';
+import { ToneSection, type Tone } from '@/components/motion/ToneSection';
 import { displayFit } from '@/lib/display-fit';
 
-export type Tone = 'canvas' | 'surface' | 'band';
-
-const TONE: Record<Tone, string> = {
-  canvas: 'bg-canvas',
-  surface: 'bg-surface',
-  band: 'bg-band',
-};
+export type { Tone };
 
 type SectionProps = {
   id: string;
@@ -20,14 +15,22 @@ type SectionProps = {
 
 /**
  * A full-bleed colour band of the landing page (DESIGN.md Section Background Panel): no borders or
- * shadows, the colour change is the divider. Its content settles in as it scrolls into view (`reveal`,
- * transform only); the band itself stays put so the colours never show a gap.
+ * shadows, the colour change is the divider. As the section scrolls up, the whole page background
+ * morphs into its tone (ToneSection; with reduced motion it is a flat band of that colour). Its
+ * content settles in as it scrolls into view (`reveal`, transform only).
  */
 export function Section({ id, tone, children, className = '' }: SectionProps) {
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className={`relative overflow-x-clip scroll-mt-4 ${TONE[tone]}`}>
-      <div className={`reveal relative mx-auto max-w-[1440px] px-4 py-20 sm:px-8 sm:py-28 ${className}`}>{children}</div>
-    </section>
+    <ToneSection
+      tone={tone}
+      id={id}
+      aria-labelledby={`${id}-title`}
+      className="relative scroll-mt-4 overflow-x-clip"
+    >
+      <div className={`reveal relative mx-auto max-w-[1440px] px-4 py-20 sm:px-8 sm:py-28 ${className}`}>
+        {children}
+      </div>
+    </ToneSection>
   );
 }
 
@@ -42,10 +45,19 @@ type SectionTitleProps = {
 };
 
 /** Eyebrow pill plus a crushed display title, with stickers pinned around it. */
-export function SectionTitle({ id, eyebrow, title, stickers = [], max = '9rem', align = 'start' }: SectionTitleProps) {
+export function SectionTitle({
+  id,
+  eyebrow,
+  title,
+  stickers = [],
+  max = '9rem',
+  align = 'start',
+}: SectionTitleProps) {
   const center = align === 'center';
   return (
-    <div className={`@container relative flex w-full flex-col gap-5 ${center ? 'items-center text-center' : 'items-start'}`}>
+    <div
+      className={`@container relative flex w-full flex-col gap-5 ${center ? 'items-center text-center' : 'items-start'}`}
+    >
       <p className="border-ink bg-surface text-ink rounded-pill border px-3 py-1.5 text-xs font-bold tracking-[0.032em] uppercase">
         {eyebrow}
       </p>

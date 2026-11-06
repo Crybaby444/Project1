@@ -27,7 +27,7 @@ export function ErrorView({ title, body, retryLabel, onRetry, backLink }: ErrorV
         <button
           type="button"
           onClick={onRetry}
-          className="inline-flex min-h-10 items-center rounded-pill border border-cta bg-cta px-5 text-[13px] font-bold tracking-[0.03em] text-cta-fg uppercase transition-transform duration-150 ease-yoyo hover:-translate-y-0.5 active:scale-[0.97]"
+          className="inline-flex min-h-10 items-center rounded-pill border border-cta bg-cta px-5 text-[13px] font-bold tracking-[0.03em] text-cta-fg uppercase transition-transform duration-150 ease-yoyo hover:-translate-y-0.5 active:scale-[0.96]"
         >
           {retryLabel}
         </button>
@@ -39,4 +39,4 @@ export function ErrorView({ title, body, retryLabel, onRetry, backLink }: ErrorV
 
 /** Ghost-button classes for a plain link (used where the locale-aware Link is unavailable). */
 export const GHOST_LINK_CLASSES =
-  'inline-flex min-h-10 items-center rounded-pill border border-ink bg-surface px-5 text-[13px] font-bold tracking-[0.03em] text-ink uppercase transition-transform duration-150 ease-yoyo hover:-translate-y-0.5 active:scale-[0.97]';
+  'inline-flex min-h-10 items-center rounded-pill border border-ink bg-surface px-5 text-[13px] font-bold tracking-[0.03em] text-ink uppercase transition-transform duration-150 ease-yoyo hover:-translate-y-0.5 active:scale-[0.96]';

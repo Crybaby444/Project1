@@ -206,7 +206,7 @@ export function PhotoGrid({ photos, disabled, onReorder, onRemove }: Props) {
                   aria-pressed={lifted && lift?.by === 'keyboard'}
                   onKeyDown={(event) => onHandleKeyDown(event, id)}
                   onBlur={() => onHandleBlur(id)}
-                  className="border-ink bg-surface text-ink rounded-pill ease-yoyo aria-pressed:bg-cta aria-pressed:text-cta-fg inline-grid size-10 cursor-grab place-items-center border transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.94] disabled:hidden"
+                  className="border-ink bg-surface text-ink rounded-pill ease-yoyo aria-pressed:bg-cta aria-pressed:text-cta-fg inline-grid size-10 cursor-grab place-items-center border transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.96] disabled:hidden"
                 >
                   <GripIcon />
                 </button>

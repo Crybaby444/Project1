@@ -2,7 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 import { loadCategories, type CategoriesResult } from '@/lib/categories';
 import { CategoriesRetry } from './CategoriesRetry';
-import { CategoryGrid } from './CategoryGrid';
+import { CategoryGrid, MARQUEE_BOX } from './CategoryGrid';
 import { Section, SectionTitle } from './Section';
 
 /** The list itself: real categories from the API, or the retry card when it did not answer in time. */
@@ -15,12 +15,23 @@ export async function CategoryList({ load = loadCategories }: { load?: () => Pro
 /** Same footprint as two rows of cards, so the page does not jump when the list streams in. */
 function CategoriesLoading({ label }: { label: string }) {
   return (
-    <div role="status" aria-busy="true" className="grid min-h-[30rem] gap-4 sm:grid-cols-2 lg:min-h-[19rem] lg:grid-cols-4">
-      <span className="sr-only">{label}</span>
-      {Array.from({ length: 8 }, (_, index) => (
-        <span key={index} aria-hidden="true" className="border-ink bg-mist rounded-card hidden h-36 border sm:block" />
-      ))}
-    </div>
+    <>
+      <div aria-hidden="true" className={MARQUEE_BOX} />
+      <div
+        role="status"
+        aria-busy="true"
+        className="grid min-h-[30rem] gap-4 sm:grid-cols-2 lg:min-h-[19rem] lg:grid-cols-4"
+      >
+        <span className="sr-only">{label}</span>
+        {Array.from({ length: 8 }, (_, index) => (
+          <span
+            key={index}
+            aria-hidden="true"
+            className="border-ink bg-mist rounded-card hidden h-36 border sm:block"
+          />
+        ))}
+      </div>
+    </>
   );
 }
 

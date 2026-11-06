@@ -23,7 +23,7 @@ export function SettingsTabs() {
               <Link
                 href={href}
                 aria-current={active ? 'page' : undefined}
-                className={`rounded-pill ease-yoyo flex min-h-10 items-center justify-center px-5 text-[13px] font-bold tracking-[0.03em] uppercase transition-[background-color,color,transform] duration-200 active:scale-[0.97] ${
+                className={`rounded-pill ease-yoyo flex min-h-10 items-center justify-center px-5 text-[13px] font-bold tracking-[0.03em] uppercase transition-[background-color,color,transform] duration-200 active:scale-[0.96] ${
                   active ? 'bg-cta text-cta-fg' : 'hover:bg-mist'
                 }`}
               >

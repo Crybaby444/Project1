@@ -108,7 +108,8 @@ test.describe('security', () => {
 test('the theme saved in the profile follows the person to another browser', async ({ page, browser }) => {
   const { email, password } = await registerByApi(page.request);
   await page.goto('/settings');
-  await page.getByText(en.theme.dark, { exact: true }).click();
+  // The footer has a theme picker too; this one is the settings page's.
+  await page.getByRole('main').getByText(en.theme.dark, { exact: true }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await expect
     .poll(async () => (await (await page.request.get('/api/v1/me')).json()).user.theme)

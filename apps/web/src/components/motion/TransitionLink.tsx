@@ -25,8 +25,8 @@ function isPlainClick(event: MouseEvent<HTMLAnchorElement>): boolean {
 }
 
 /**
- * A link to another page of the site that moves there with the paper-sheet View Transition (the same
- * one as the language switch). Anything but a plain left click (new tab, new window, download), and
+ * A link to another page of the site that moves there with a View Transition (the old page fades out of
+ * focus and the new one comes in, the same as the language switch). Anything but a plain left click (new tab, new window, download), and
  * links to a part of the same page, behave exactly like a normal link.
  */
 export function TransitionLink({ href, onClick, ...rest }: TransitionLinkProps) {
@@ -47,7 +47,10 @@ export function TransitionLink({ href, onClick, ...rest }: TransitionLinkProps) 
     void switchPage({
       pathname: target,
       navigate: () => router.push(localized),
-      animate: shouldAnimatePageChange(prefersReducedMotion(), typeof document.startViewTransition === 'function'),
+      animate: shouldAnimatePageChange(
+        prefersReducedMotion(),
+        typeof document.startViewTransition === 'function',
+      ),
     });
   }
 
