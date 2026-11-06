@@ -21,6 +21,8 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  // The database is shared with the browser tests in CI: leave the fee settings as they were.
+  await t.prisma.setting.deleteMany({ where: { key: { startsWith: 'fees.' } } });
   await t.close();
 });
 

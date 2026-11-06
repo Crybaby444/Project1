@@ -25,7 +25,10 @@ test('owner lists, renter books, pays, handover, return, deposit released', asyn
   await r.locator(`[data-date="${rigaDay(0)}"]`).click();
   await r.locator(`[data-date="${rigaDay(1)}"]`).click();
   await expect(r.locator('[data-range-status]')).toContainText('2 days');
-  await expect(r.locator('[data-total]')).toHaveText('€133.00'); // 30 + 3 fee + 100 deposit
+  // 30 € rent + the service fee in force (from the settings, 10 % unless a launch offer runs) + 100 € deposit.
+  const terms = (await (await r.request.get(`/api/v1/listings/${listingId}/booking-terms`)).json()) as { servicePercent: number };
+  const total = `€${(30 + Math.round(30 * terms.servicePercent) / 100 + 100).toFixed(2)}`;
+  await expect(r.locator('[data-total]')).toHaveText(total);
   await r.getByLabel('Message to the owner (optional)').fill('Could I pick it up after 18:00?');
   await r.getByRole('button', { name: 'Send request' }).click();
   await expect(r).toHaveURL(/\/bookings\/[^/]+$/);
@@ -58,10 +61,10 @@ test('owner lists, renter books, pays, handover, return, deposit released', asyn
   await expect(checkout.getByRole('heading', { name: 'Test mode' })).toBeVisible();
   await checkout.getByRole('radio', { name: /Card/ }).check();
   await checkout.getByRole('button', { name: /Use: 4000 0000 0000 0002/ }).click();
-  await checkout.getByRole('button', { name: 'Pay €133.00' }).click();
+  await checkout.getByRole('button', { name: `Pay ${total}` }).click();
   await expect(checkout.getByRole('alert')).toContainText('The bank declined this card');
   await checkout.getByRole('button', { name: /Use: 4242 4242 4242 4242/ }).click();
-  await checkout.getByRole('button', { name: 'Pay €133.00' }).click();
+  await checkout.getByRole('button', { name: `Pay ${total}` }).click();
   await expect(checkout).toHaveCount(0);
   await expect(r.locator('[data-deal][data-deal-status="PAID"]')).toBeVisible();
   await expect(r.locator('[data-deposit-state="frozen"]')).toBeVisible();
