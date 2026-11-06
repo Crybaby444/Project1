@@ -72,7 +72,7 @@ describe('validateAttributes', () => {
 
 describe('CategoryNodeSchema', () => {
   it('parses a nested tree', () => {
-    const leaf = { id: 'c2', slug: 'game-consoles', sticker: 'blue', icon: 'gamepad', names: labels('Consoles'), attributes: DEFS, children: [] };
+    const leaf = { id: 'c2', slug: 'game-consoles', sticker: 'blue', icon: 'gamepad', names: labels('Consoles'), slugs: labels('consoles'), attributes: DEFS, children: [] };
     const root = { ...leaf, id: 'c1', slug: 'electronics', attributes: [], children: [leaf] };
     expect(CategoryNodeSchema.parse(root).children[0]!.slug).toBe('game-consoles');
   });

@@ -43,6 +43,8 @@ export interface CategoryNode {
   sticker: StickerColor;
   icon: string;
   names: LocalizedText;
+  /** Its address on each language's site: `/c/<slugs.en>`, `/lv/c/<slugs.lv>`, `/ru/c/<slugs.ru>`. */
+  slugs: LocalizedText;
   attributes: AttributeDef[];
   children: CategoryNode[];
 }
@@ -54,6 +56,7 @@ export const CategoryNodeSchema: z.ZodType<CategoryNode> = z.object({
   sticker: z.enum(STICKERS),
   icon: z.string(),
   names: LocalizedTextSchema,
+  slugs: LocalizedTextSchema,
   attributes: z.array(AttributeDefSchema),
   get children() {
     return z.array(CategoryNodeSchema);

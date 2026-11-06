@@ -1,8 +1,7 @@
 import { z } from 'zod';
-import { LocalizedTextSchema } from './categories';
+import { LocalizedTextSchema, STICKERS } from './categories';
 import { DatePeriodSchema, LISTING_CONDITIONS, PhotoUrlsSchema, PublicListingSchema } from './listings';
 import { LOCALES } from './locale';
-import { STICKERS } from './categories';
 import { cleanText } from './text';
 
 /** Items on one page of the catalog. */
@@ -120,6 +119,7 @@ export const CatalogItemSchema = z.object({
   categoryId: z.string().nullable(),
   cover: PhotoUrlsSchema.nullable(),
   ownerId: z.string(),
+  contentLocale: z.enum(LOCALES),
   publishedAt: z.iso.datetime().nullable(),
 });
 
@@ -240,3 +240,16 @@ export type FavoriteItem = z.infer<typeof FavoriteItemSchema>;
 export const FavoritesResponseSchema = z.object({ items: z.array(FavoriteItemSchema) });
 
 export type FavoritesResponse = z.infer<typeof FavoritesResponseSchema>;
+
+/** Everything a sitemap lists: only what the catalog shows. */
+export const SitemapResponseSchema = z.object({
+  listings: z.array(z.object({ id: z.string(), contentLocale: z.enum(LOCALES), updatedAt: z.iso.datetime() })),
+  /** Owners with at least one item in the catalog. */
+  users: z.array(z.object({ id: z.string(), updatedAt: z.iso.datetime() })),
+  categories: z.array(z.object({ slug: z.string(), slugs: LocalizedTextSchema, count: z.number().int() })),
+});
+
+export type SitemapResponse = z.infer<typeof SitemapResponseSchema>;
+
+/** A category page is indexed only once it holds at least this many items (owner's SEO rule). */
+export const CATEGORY_INDEX_MIN_ITEMS = 3;

@@ -21,6 +21,12 @@ ALTER TABLE "Favorite" ADD CONSTRAINT "Favorite_userId_fkey" FOREIGN KEY ("userI
 -- AddForeignKey
 ALTER TABLE "Favorite" ADD CONSTRAINT "Favorite_listingId_fkey" FOREIGN KEY ("listingId") REFERENCES "Listing"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
+-- SEO (owner's decision 2026-11-06): the language a listing is written in, and per-language category slugs.
+ALTER TABLE "Listing" ADD COLUMN "contentLocale" TEXT NOT NULL DEFAULT 'en';
+-- Listings written before this release: the language their owner uses the site in is the best guess.
+UPDATE "Listing" l SET "contentLocale" = u."locale" FROM "User" u WHERE u."id" = l."ownerId" AND u."locale" IN ('en', 'lv', 'ru');
+ALTER TABLE "Category" ADD COLUMN "slugs" JSONB NOT NULL DEFAULT '{}';
+
 -- Typo-tolerant search (trigrams) that ignores case and diacritics: "velosipeds" finds "Velosipēds".
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 CREATE EXTENSION IF NOT EXISTS unaccent;

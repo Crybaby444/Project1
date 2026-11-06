@@ -16,7 +16,13 @@ export interface CatalogAttribute {
 }
 
 export interface CatalogCategory {
+  /** Stable key, and the English address: `/c/<slug>`. */
   slug: string;
+  /**
+   * Addresses on the Latvian and Russian sites (`/lv/c/<lv>`, `/ru/c/<ru>`), from the W03 sitemap
+   * (docs/hitexis/W03-sitemap-urls.md §D). Once indexed they do not change; a change needs a 301.
+   */
+  slugs: { lv: string; ru: string };
   sticker: StickerColor;
   icon: string;
   names: LocalizedText;
@@ -64,12 +70,14 @@ const watts = () => number('watts', POWER_W, 'W');
 export const CATALOG: CatalogCategory[] = [
   {
     slug: 'electronics',
+    slugs: { lv: 'elektronika', ru: 'elektronika' },
     sticker: 'blue',
     icon: 'monitor-smartphone',
     names: l('Electronics', 'Elektronika', 'Электроника'),
     children: [
       {
         slug: 'game-consoles',
+        slugs: { lv: 'spelu-konsoles', ru: 'igrovye-pristavki' },
         sticker: 'blue',
         icon: 'gamepad',
         names: l('Game consoles', 'Spēļu konsoles', 'Игровые приставки'),
@@ -91,6 +99,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'photo-video',
+        slugs: { lv: 'foto-video', ru: 'foto-video' },
         sticker: 'blue',
         icon: 'camera',
         names: l('Photo & video', 'Foto un video', 'Фото и видео'),
@@ -110,6 +119,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'audio',
+        slugs: { lv: 'audio', ru: 'audio' },
         sticker: 'blue',
         icon: 'headphones',
         names: l('Audio', 'Audio', 'Аудио'),
@@ -127,6 +137,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'laptops-tablets',
+        slugs: { lv: 'klepjdatori-plansetes', ru: 'noutbuki-planshety' },
         sticker: 'blue',
         icon: 'laptop',
         names: l('Laptops & tablets', 'Klēpjdatori un planšetes', 'Ноутбуки и планшеты'),
@@ -143,6 +154,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'projectors',
+        slugs: { lv: 'projektori', ru: 'proektory' },
         sticker: 'blue',
         icon: 'projector',
         names: l('Projectors', 'Projektori', 'Проекторы'),
@@ -158,6 +170,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'drones',
+        slugs: { lv: 'droni', ru: 'drony' },
         sticker: 'blue',
         icon: 'drone',
         names: l('Drones', 'Droni', 'Дроны'),
@@ -172,12 +185,14 @@ export const CATALOG: CatalogCategory[] = [
   },
   {
     slug: 'tools',
+    slugs: { lv: 'instrumenti', ru: 'instrumenty' },
     sticker: 'sun',
     icon: 'wrench',
     names: l('Tools', 'Instrumenti', 'Инструменты'),
     children: [
       {
         slug: 'power-tools',
+        slugs: { lv: 'elektroinstrumenti', ru: 'elektroinstrument' },
         sticker: 'sun',
         icon: 'drill',
         names: l('Power tools', 'Elektroinstrumenti', 'Электроинструмент'),
@@ -192,6 +207,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'hand-tools',
+        slugs: { lv: 'rokas-instrumenti', ru: 'ruchnoy-instrument' },
         sticker: 'sun',
         icon: 'hammer',
         names: l('Hand tools', 'Rokas instrumenti', 'Ручной инструмент'),
@@ -202,6 +218,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'garden-tools',
+        slugs: { lv: 'darza-tehnika', ru: 'sadovyy-instrument' },
         sticker: 'sun',
         icon: 'shovel',
         names: l('Garden tools', 'Dārza tehnika', 'Садовый инструмент'),
@@ -230,6 +247,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'measuring-tools',
+        slugs: { lv: 'merinstrumenti', ru: 'izmeritelnyy-instrument' },
         sticker: 'sun',
         icon: 'ruler',
         names: l('Measuring tools', 'Mērinstrumenti', 'Измерительный инструмент'),
@@ -246,6 +264,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'ladders-scaffolding',
+        slugs: { lv: 'kapnes-sastatnes', ru: 'lestnitsy-lesa' },
         sticker: 'sun',
         icon: 'ladder',
         names: l('Ladders & scaffolding', 'Kāpnes un sastatnes', 'Лестницы и леса'),
@@ -260,6 +279,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'cleaning-machines',
+        slugs: { lv: 'tirisanas-tehnika', ru: 'uborochnaya-tehnika' },
         sticker: 'sun',
         icon: 'spray-can',
         names: l('Cleaning machines', 'Tīrīšanas tehnika', 'Уборочная техника'),
@@ -279,12 +299,14 @@ export const CATALOG: CatalogCategory[] = [
   },
   {
     slug: 'sports-outdoors',
+    slugs: { lv: 'sports-daba', ru: 'sport-otdyh' },
     sticker: 'mint',
     icon: 'bike',
     names: l('Sports & outdoors', 'Sports un daba', 'Спорт и отдых'),
     children: [
       {
         slug: 'bikes-scooters',
+        slugs: { lv: 'velosipedi-skrejriteni', ru: 'velosipedy-samokaty' },
         sticker: 'mint',
         icon: 'bike',
         names: l('Bikes & scooters', 'Velosipēdi un skrejriteņi', 'Велосипеды и самокаты'),
@@ -304,6 +326,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'camping',
+        slugs: { lv: 'kempings', ru: 'kemping' },
         sticker: 'mint',
         icon: 'tent',
         names: l('Camping', 'Kempings', 'Кемпинг'),
@@ -322,6 +345,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'winter-sports',
+        slugs: { lv: 'ziemas-sports', ru: 'zimniy-sport' },
         sticker: 'mint',
         icon: 'snowflake',
         names: l('Winter sports', 'Ziemas sports', 'Зимний спорт'),
@@ -340,6 +364,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'water-sports',
+        slugs: { lv: 'udens-sports', ru: 'vodnyy-sport' },
         sticker: 'mint',
         icon: 'waves',
         names: l('Water sports', 'Ūdens sports', 'Водный спорт'),
@@ -357,6 +382,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'fitness',
+        slugs: { lv: 'fitness', ru: 'fitnes' },
         sticker: 'mint',
         icon: 'dumbbell',
         names: l('Fitness', 'Fitness', 'Фитнес'),
@@ -369,12 +395,14 @@ export const CATALOG: CatalogCategory[] = [
   },
   {
     slug: 'home-kitchen',
+    slugs: { lv: 'maja-virtuve', ru: 'dom-kuhnya' },
     sticker: 'lavender',
     icon: 'home',
     names: l('Home & kitchen', 'Māja un virtuve', 'Дом и кухня'),
     children: [
       {
         slug: 'kitchen-appliances',
+        slugs: { lv: 'virtuves-tehnika', ru: 'kuhonnaya-tehnika' },
         sticker: 'lavender',
         icon: 'chef-hat',
         names: l('Kitchen appliances', 'Virtuves tehnika', 'Кухонная техника'),
@@ -393,6 +421,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'home-cleaning',
+        slugs: { lv: 'majas-uzkopsana', ru: 'uborka-doma' },
         sticker: 'lavender',
         icon: 'sparkles',
         names: l('Cleaning', 'Uzkopšana', 'Уборка'),
@@ -408,6 +437,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'furniture',
+        slugs: { lv: 'mebeles', ru: 'mebel' },
         sticker: 'lavender',
         icon: 'sofa',
         names: l('Furniture', 'Mēbeles', 'Мебель'),
@@ -420,12 +450,14 @@ export const CATALOG: CatalogCategory[] = [
   },
   {
     slug: 'events-party',
+    slugs: { lv: 'pasakumi-svetki', ru: 'prazdniki-meropriyatiya' },
     sticker: 'ember',
     icon: 'party-popper',
     names: l('Events & party', 'Pasākumi un svinības', 'Праздники и мероприятия'),
     children: [
       {
         slug: 'party-equipment',
+        slugs: { lv: 'svetku-inventars', ru: 'inventar-dlya-prazdnika' },
         sticker: 'ember',
         icon: 'cake',
         names: l('Party equipment', 'Svētku inventārs', 'Оборудование для праздников'),
@@ -443,6 +475,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'sound-light',
+        slugs: { lv: 'skana-gaisma', ru: 'zvuk-svet' },
         sticker: 'ember',
         icon: 'speaker',
         names: l('Sound & light', 'Skaņa un gaisma', 'Звук и свет'),
@@ -461,6 +494,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'event-tents-furniture',
+        slugs: { lv: 'teltis-nojumes', ru: 'shatry-mebel' },
         sticker: 'ember',
         icon: 'armchair',
         names: l('Tents & event furniture', 'Teltis un pasākumu mēbeles', 'Шатры и мебель'),
@@ -477,6 +511,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'costumes',
+        slugs: { lv: 'kostimi', ru: 'kostyumy' },
         sticker: 'ember',
         icon: 'shirt',
         names: l('Costumes', 'Kostīmi', 'Костюмы'),
@@ -498,12 +533,14 @@ export const CATALOG: CatalogCategory[] = [
   },
   {
     slug: 'kids',
+    slugs: { lv: 'berniem', ru: 'detyam' },
     sticker: 'violet',
     icon: 'baby',
     names: l('Kids', 'Bērniem', 'Детям'),
     children: [
       {
         slug: 'strollers-car-seats',
+        slugs: { lv: 'rati-autokresli', ru: 'kolyaski-avtokresla' },
         sticker: 'violet',
         icon: 'baby',
         names: l('Strollers & car seats', 'Ratiņi un autosēdeklīši', 'Коляски и автокресла'),
@@ -519,6 +556,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'toys-games',
+        slugs: { lv: 'rotallietas-speles', ru: 'igrushki-igry' },
         sticker: 'violet',
         icon: 'blocks',
         names: l('Toys & games', 'Rotaļlietas un spēles', 'Игрушки и игры'),
@@ -530,6 +568,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'kids-furniture',
+        slugs: { lv: 'bernu-mebeles', ru: 'detskaya-mebel' },
         sticker: 'violet',
         icon: 'bed',
         names: l('Kids furniture', 'Bērnu mēbeles', 'Детская мебель'),
@@ -548,12 +587,14 @@ export const CATALOG: CatalogCategory[] = [
   },
   {
     slug: 'music',
+    slugs: { lv: 'muzika', ru: 'muzyka' },
     sticker: 'blue',
     icon: 'music',
     names: l('Music', 'Mūzika', 'Музыка'),
     children: [
       {
         slug: 'instruments',
+        slugs: { lv: 'muzikas-instrumenti', ru: 'muzykalnye-instrumenty' },
         sticker: 'blue',
         icon: 'guitar',
         names: l('Instruments', 'Instrumenti', 'Инструменты'),
@@ -573,6 +614,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'dj-equipment',
+        slugs: { lv: 'dj-aprikojums', ru: 'dj-oborudovanie' },
         sticker: 'blue',
         icon: 'disc',
         names: l('DJ equipment', 'DJ aprīkojums', 'DJ-оборудование'),
@@ -592,12 +634,14 @@ export const CATALOG: CatalogCategory[] = [
   },
   {
     slug: 'car-travel',
+    slugs: { lv: 'auto-celojumi', ru: 'avto-puteshestviya' },
     sticker: 'sun',
     icon: 'car',
     names: l('Car & travel', 'Auto un ceļojumi', 'Авто и путешествия'),
     children: [
       {
         slug: 'roof-boxes-racks',
+        slugs: { lv: 'jumta-kastes-bagaznieki', ru: 'avtoboksy-bagazhniki' },
         sticker: 'sun',
         icon: 'package',
         names: l('Roof boxes & racks', 'Jumta kastes un bagāžnieki', 'Боксы и багажники'),
@@ -614,6 +658,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'travel-gear',
+        slugs: { lv: 'celojumu-piederumi', ru: 'dorozhnoe-snaryazhenie' },
         sticker: 'sun',
         icon: 'luggage',
         names: l('Travel gear', 'Ceļojumu aprīkojums', 'Туристическое снаряжение'),
@@ -629,6 +674,7 @@ export const CATALOG: CatalogCategory[] = [
       },
       {
         slug: 'car-tools',
+        slugs: { lv: 'auto-instrumenti', ru: 'avtoinstrument' },
         sticker: 'sun',
         icon: 'car-front',
         names: l('Car tools', 'Auto instrumenti', 'Автоинструмент'),

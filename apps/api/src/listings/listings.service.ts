@@ -8,6 +8,7 @@ import {
   type ListingPatch,
   type ListingRules,
   type ListingStatus,
+  type Locale,
   type OwnerListing,
   type OwnerListingSummary,
   type PublicUser,
@@ -110,10 +111,14 @@ export class ListingsService {
   /** Where each photo size is served. */
   readonly urlFor: UrlFor = (key, variant) => this.storage.url(key, variant);
 
-  async create(ownerId: string, draft: ListingDraft): Promise<OwnerListing> {
+  /**
+   * A new draft. Its texts are taken to be in `authorLocale` (the language the author uses the site in)
+   * unless the draft names its own `contentLocale`.
+   */
+  async create(ownerId: string, draft: ListingDraft, authorLocale: Locale = 'en'): Promise<OwnerListing> {
     const { data } = await this.draftData(null, draft);
     const listing = await this.prisma.listing.create({
-      data: { ...(data as Prisma.ListingUncheckedCreateInput), ownerId, status: 'DRAFT' },
+      data: { contentLocale: authorLocale, ...(data as Prisma.ListingUncheckedCreateInput), ownerId, status: 'DRAFT' },
       include: WITH_RELATIONS,
     });
     return serializeListing(listing, 'owner', this.urlFor);

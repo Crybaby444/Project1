@@ -1,6 +1,7 @@
 import { isDeepStrictEqual } from 'node:util';
 import { Prisma, type CategoryAttribute, type PrismaClient } from '../generated/prisma/client';
 import { CATALOG, type CatalogCategory } from './catalog-data';
+import { localizedSlugs } from './slugify';
 
 /** Key of the Postgres advisory lock that lets one instance at a time sync the catalog. */
 const CATALOG_LOCK = 6_060_001;
@@ -15,6 +16,7 @@ interface ExistingCategory {
   sticker: string;
   icon: string;
   names: Prisma.JsonValue;
+  slugs: Prisma.JsonValue;
   active: boolean;
 }
 
@@ -58,6 +60,8 @@ async function syncAttributes(tx: Tx, categoryId: string, category: CatalogCateg
  * transaction-scoped advisory lock lets one sync at a time.
  */
 export async function ensureCategories(prisma: PrismaClient, catalog: CatalogCategory[] = CATALOG): Promise<void> {
+  // Checked before anything is written: two categories on one address is a bug in the data.
+  const slugsOf = localizedSlugs(catalog);
   await prisma.$transaction(
     async (tx) => {
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(${CATALOG_LOCK})`;
@@ -72,7 +76,8 @@ export async function ensureCategories(prisma: PrismaClient, catalog: CatalogCat
       const sync = async (categories: CatalogCategory[], parentId: string | null): Promise<void> => {
         for (const [sortOrder, category] of categories.entries()) {
           seen.add(category.slug);
-          const data = { parentId, sortOrder, sticker: category.sticker, icon: category.icon, names: category.names, active: true };
+          const slugs = slugsOf.get(category.slug)!;
+          const data = { parentId, sortOrder, sticker: category.sticker, icon: category.icon, names: category.names, slugs, active: true };
           const current = bySlug.get(category.slug);
           let id: string;
           if (!current) {
@@ -85,7 +90,8 @@ export async function ensureCategories(prisma: PrismaClient, catalog: CatalogCat
               current.sticker === category.sticker &&
               current.icon === category.icon &&
               current.active &&
-              isDeepStrictEqual(current.names, category.names);
+              isDeepStrictEqual(current.names, category.names) &&
+              isDeepStrictEqual(current.slugs, slugs);
             if (!same) await tx.category.update({ where: { id }, data });
           }
           await syncAttributes(tx, id, category, attributesOf.get(id) ?? []);

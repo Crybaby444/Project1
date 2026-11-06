@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { LOCALES } from './locale';
 import { cleanText } from './text';
 
 /** Lifecycle of a listing; only the transition table of the API (`nextStatus`) moves between them. */
@@ -97,6 +98,8 @@ const ListingDraftObject = z.object({
   lng: z.number().min(-180).max(180).transform(roundTo6).nullable().optional(),
   timeZone: z.string().max(64).refine(isTimeZone, 'Unknown time zone').optional(),
   rules: ListingRulesSchema.optional(),
+  /** The language the texts are written in; a new draft without it takes the author's language. */
+  contentLocale: z.enum(LOCALES).optional(),
 });
 
 /** The point is lat and lng together: both numbers, both null (cleared) or both left out. */
@@ -224,6 +227,8 @@ export const PublicListingSchema = z.object({
   city: z.string().nullable(),
   district: z.string().nullable(),
   timeZone: z.string(),
+  /** The language of the texts: the canonical address and <html lang> of the item page use it. */
+  contentLocale: z.enum(LOCALES),
   rules: z.object({ preset: z.array(z.enum(RULE_PRESETS)), custom: z.array(z.string()) }),
   photos: z.array(ListingPhotoSchema),
   unavailability: z.array(DatePeriodSchema),

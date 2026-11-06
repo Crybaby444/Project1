@@ -44,6 +44,7 @@ export class CategoriesService {
         sticker: row.sticker as StickerColor,
         icon: row.icon,
         names: row.names as LocalizedText,
+        slugs: row.slugs as LocalizedText,
         attributes: row.attributes.map(toAttributeDef),
         children: build(row.id),
       }));

@@ -165,6 +165,9 @@ model Category {
   icon      String
   /// { en, lv, ru }
   names     Json
+  /// The category's address on each language's site, { en, lv, ru } (`/c/tools`, `/lv/c/instrumenti`).
+  /// `slug` stays the stable key; these may change with the sitemap. Written by ensureCategories.
+  slugs     Json     @default("{}")
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -235,6 +238,9 @@ model Listing {
   lat                   Decimal?          @db.Decimal(9, 6)
   lng                   Decimal?          @db.Decimal(9, 6)
   timeZone              String            @default("Europe/Riga")
+  /// The language the owner wrote the texts in (en | lv | ru): the item's canonical address and its
+  /// <html lang> use it. A term, not content: changing it does not send the listing back to review.
+  contentLocale         String            @default("en")
   /// { preset: RulePreset[], custom: string[] }
   rules                 Json              @default("{\"preset\":[],\"custom\":[]}")
   /// Why moderation rejected it; shown to the owner.
