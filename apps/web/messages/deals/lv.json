@@ -348,7 +348,8 @@
       "processing_error": "Maksājumu pakalpojumam radās problēma. Mēģini vēlreiz pēc brīža.",
       "invalid_token": "Ievadi karti vēlreiz."
     },
-    "paid": "Apmaksāts. Drošības nauda iesaldēta, līdz lieta atgriezīsies."
+    "paid": "Apmaksāts. Drošības nauda iesaldēta, līdz lieta atgriezīsies.",
+    "cancel": "Ne tagad"
   },
   "wallet": {
     "title": "Maks",

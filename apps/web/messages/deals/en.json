@@ -348,7 +348,8 @@
       "processing_error": "The payment provider had a problem. Try again in a moment.",
       "invalid_token": "Enter the card again."
     },
-    "paid": "Paid. The deposit is frozen until the item comes back."
+    "paid": "Paid. The deposit is frozen until the item comes back.",
+    "cancel": "Not now"
   },
   "wallet": {
     "title": "Wallet",
