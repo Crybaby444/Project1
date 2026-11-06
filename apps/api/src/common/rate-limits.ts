@@ -65,6 +65,10 @@ export const RATE_LIMITS = {
     { key: `booking-request:user:${userId}`, limit: 20, windowMs: HOUR },
     { key: `booking-request:user-day:${userId}`, limit: 30, windowMs: 24 * HOUR },
   ],
+  /** 120 search suggestions a minute per address (a search box asks as people type). */
+  suggest: (ip: string): RateRule[] => [{ key: `suggest:ip:${ip}`, limit: 120, windowMs: MINUTE }],
+  /** 120 favourite changes a minute per user. */
+  favorite: (userId: string): RateRule[] => [{ key: `favorite:user:${userId}`, limit: 120, windowMs: MINUTE }],
   /** 20 price offers a day per renter. */
   offer: (userId: string): RateRule[] => [{ key: `offer:user:${userId}`, limit: 20, windowMs: 24 * HOUR }],
 };

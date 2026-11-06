@@ -14,7 +14,7 @@ const DESCRIPTIONS: Record<number, string> = {
   409: 'Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion)',
   413: 'File too large (PAYLOAD_TOO_LARGE)',
   415: 'Not a JPEG, PNG or WebP image (UNSUPPORTED_MEDIA)',
-  410: 'Link or code used up (TOKEN_USED) or expired (TOKEN_EXPIRED)',
+  410: 'Gone: link or code used up (TOKEN_USED) or expired (TOKEN_EXPIRED), or the item was removed (LISTING_GONE)',
   429: 'Too many attempts (RATE_LIMITED); see Retry-After',
   503: 'A service behind the API is unavailable (STORAGE_DISABLED, GEO_UNAVAILABLE)',
 };

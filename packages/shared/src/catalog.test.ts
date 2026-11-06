@@ -9,10 +9,10 @@ const fieldsOf = (input: Record<string, string>) => {
 };
 
 describe('CatalogQuerySchema', () => {
-  it('reads numbers and the condition list from query strings, page 1 by default', () => {
-    expect(parse({ priceMin: '500', condition: 'NEW,GOOD' }).data).toEqual({
+  it('reads numbers and the district slug from query strings, page 1 by default', () => {
+    expect(parse({ priceMin: '500', district: 'centrs' }).data).toEqual({
       priceMin: 500,
-      condition: ['NEW', 'GOOD'],
+      district: 'centrs',
       page: 1,
     });
   });
@@ -45,10 +45,10 @@ describe('CatalogQuerySchema', () => {
     expect(parse({ q: '   ' }).data?.q).toBeUndefined();
   });
 
-  it('knows only its own sorts and conditions', () => {
+  it('knows only its own sorts, and districts as slugs', () => {
     expect(fieldsOf({ sort: 'cheapest' })).toEqual(['sort']);
-    expect(fieldsOf({ condition: 'NEW,BROKEN' })).toEqual(['condition.1']);
     expect(parse({ sort: 'price_asc' }).data?.sort).toBe('price_asc');
+    expect(fieldsOf({ district: 'Centrs' })).toEqual(['district']);
   });
 
   it('caps the page', () => {

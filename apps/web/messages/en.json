@@ -166,7 +166,8 @@
     "WALLET_LIMIT": "That is over the wallet limit. Choose a smaller amount.",
     "NETWORK": "We cannot reach Yoyo. Check your connection and try again.",
     "fieldInvalid": "Check this field.",
-    "retryIn": "Too many attempts. Try again in {seconds} s."
+    "retryIn": "Too many attempts. Try again in {seconds} s.",
+    "LISTING_GONE": "This item has been removed and is no longer for rent."
   },
   "validation": {
     "required": "Fill in this field.",

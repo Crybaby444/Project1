@@ -166,7 +166,8 @@
     "WALLET_LIMIT": "Tas pārsniedz maka limitu. Izvēlieties mazāku summu.",
     "NETWORK": "Nevaram sazināties ar Yoyo. Pārbaudiet savienojumu un mēģiniet vēlreiz.",
     "fieldInvalid": "Pārbaudiet šo lauku.",
-    "retryIn": "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc {seconds} s."
+    "retryIn": "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc {seconds} s.",
+    "LISTING_GONE": "Šī lieta ir noņemta un vairs netiek izīrēta."
   },
   "validation": {
     "required": "Aizpildiet šo lauku.",

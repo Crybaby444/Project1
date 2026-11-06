@@ -66,19 +66,11 @@ export const CatalogQuerySchema = z
     /** Daily price range, in cents. */
     priceMin: Cents.optional(),
     priceMax: Cents.optional(),
-    depositMax: Cents.optional(),
-    /** One or more conditions, comma-separated: `NEW,LIKE_NEW`. */
-    condition: z
-      .string()
-      .max(100)
-      .transform((value) => value.split(',').filter(Boolean))
-      .pipe(z.array(z.enum(LISTING_CONDITIONS)).min(1).max(LISTING_CONDITIONS.length))
-      .optional(),
     /** Free on every day from `start` to `end`, both included. */
     start: Day.optional(),
     end: Day.optional(),
-    city: SearchText(CATALOG_LIMITS.place),
-    district: SearchText(CATALOG_LIMITS.place),
+    /** A district's slug (`slugify` of its name, as `GET /catalog/places` gives it). */
+    district: z.string().max(CATALOG_LIMITS.place).regex(/^[a-z0-9-]+$/).optional(),
     sort: z.enum(CATALOG_SORTS).optional(),
     page: z.coerce.number().int().min(1).max(CATALOG_LIMITS.page).default(1),
   })
@@ -173,15 +165,9 @@ export const SuggestResponseSchema = z.object({
 
 export type SuggestResponse = z.infer<typeof SuggestResponseSchema>;
 
-/** Cities and their districts that have items in the catalog, for the place filter. */
+/** Districts that have items in the catalog, for the place filter (W03: one city, districts as a filter). */
 export const PlacesResponseSchema = z.object({
-  cities: z.array(
-    z.object({
-      city: z.string(),
-      count: z.number().int(),
-      districts: z.array(z.object({ district: z.string(), count: z.number().int() })),
-    }),
-  ),
+  districts: z.array(z.object({ district: z.string(), slug: z.string(), count: z.number().int() })),
 });
 
 export type PlacesResponse = z.infer<typeof PlacesResponseSchema>;
@@ -205,7 +191,9 @@ export const OwnerSummarySchema = z.object({
 
 export type OwnerSummary = z.infer<typeof OwnerSummarySchema>;
 
-export const ItemDetailSchema = z.object({
+/** An item that can be rented now: the whole public listing, its owner and what the calculator needs. */
+export const AvailableItemSchema = z.object({
+  available: z.literal(true),
   listing: PublicListingSchema,
   owner: OwnerSummarySchema,
   /** Days nobody can book: other people's bookings and the days the owner closed, from today on. */
@@ -219,7 +207,40 @@ export const ItemDetailSchema = z.object({
   }),
 });
 
+/**
+ * An item that was public and is away for now (hidden by its owner, back in review, owner blocked):
+ * the page stays, `noindex`, with similar items (W03 §G). Nothing that could be out of date is sent.
+ */
+export const UnavailableItemSchema = z.object({
+  available: z.literal(false),
+  listing: z.object({
+    id: z.string(),
+    title: z.string(),
+    categoryId: z.string().nullable(),
+    contentLocale: z.enum(LOCALES),
+  }),
+});
+
+export const ItemDetailSchema = z.discriminatedUnion('available', [AvailableItemSchema, UnavailableItemSchema]);
+
 export type ItemDetail = z.infer<typeof ItemDetailSchema>;
+
+export const ItemResponseSchema = z.object({ item: ItemDetailSchema });
+
+export type ItemResponse = z.infer<typeof ItemResponseSchema>;
+export type AvailableItem = z.infer<typeof AvailableItemSchema>;
+
+/**
+ * Where an item's page lives: the site's proxy asks before every item page, to send a wrong slug to the
+ * right address (301) and answer 410 for a removed item.
+ */
+export const ItemAddressSchema = z.object({
+  slug: z.string(),
+  contentLocale: z.enum(LOCALES),
+  available: z.boolean(),
+});
+
+export type ItemAddress = z.infer<typeof ItemAddressSchema>;
 
 export const PublicProfileSchema = z.object({
   user: OwnerSummarySchema.extend({ about: z.string().nullable() }),

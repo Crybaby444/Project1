@@ -1,4 +1,5 @@
 import { cents, type ListingPricing, type Period } from '@yoyo/domain';
+import { isCatalogVisible } from '../catalog/visibility';
 import { AppError } from '../common/app-error';
 import type { Listing, ListingPhoto, Prisma, User } from '../generated/prisma/client';
 import { dayOf } from './booking.store';
@@ -15,7 +16,7 @@ const notFound = () => new AppError('NOT_FOUND', 404, 'Listing not found');
 export async function bookableListing(tx: Prisma.TransactionClient, listingId: string): Promise<BookableListing> {
   const listing = await tx.listing.findUnique({ where: { id: listingId }, include: { owner: true, photos: true } });
   if (!listing || listing.publishedAt === null) throw notFound();
-  if (listing.status !== 'PUBLISHED' || listing.owner.blockedAt !== null || listing.owner.deletedAt !== null || listing.dailyCents === null) {
+  if (!isCatalogVisible(listing)) {
     throw new AppError('LISTING_UNAVAILABLE', 409);
   }
   return listing;
