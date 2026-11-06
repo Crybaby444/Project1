@@ -43,9 +43,12 @@ describe('SiteHeader', () => {
     renderWithSession(<SiteHeader />, { client });
 
     expect(screen.getByRole('button', { name: en.theme.toggle })).toBeInTheDocument();
-    expect(screen.getAllByRole('link', { name: 'Latviešu' }).length).toBeGreaterThan(0);
-    expect(
-      screen.getByRole('button', { name: new RegExp(`^${en.language.label}: English,\\s*en$`) }),
-    ).toBeInTheDocument();
+    // One compact language pill at every width (no wide segmented control).
+    const languages = screen.getAllByRole('button', {
+      name: new RegExp(`^${en.language.label}: English,\\s*en$`),
+    });
+    expect(languages).toHaveLength(1);
+    expect(languages[0]).toHaveAttribute('aria-haspopup', 'menu');
+    expect(screen.queryByRole('navigation', { name: en.language.label })).toBeNull();
   });
 });

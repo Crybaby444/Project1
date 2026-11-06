@@ -48,7 +48,7 @@ function FooterLanguages({ label }: { label: string }) {
       animate: shouldAnimateLanguageChange(prefersReducedMotion(), typeof document.startViewTransition === 'function'),
       afterSwitch: () => {
         if (document.activeElement && document.activeElement !== document.body) return;
-        document.querySelector<HTMLElement>('[data-footer-language="current"]')?.focus();
+        document.querySelector<HTMLElement>('[data-footer-language="current"]')?.focus({ preventScroll: true });
       },
     });
   }

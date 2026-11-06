@@ -97,14 +97,87 @@ jobs:
       - name: Install Playwright Chromium
         run: pnpm --filter @yoyo/web exec playwright install --with-deps chromium
 
+      # WebKit runs in its own job (below), in an image that already has its system libraries.
       - name: End-to-end tests
-        run: pnpm --filter @yoyo/web e2e
+        run: pnpm --filter @yoyo/web e2e --project=chromium
 
       - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@v7
         with:
           name: playwright-report
+          path: |
+            apps/web/playwright-report
+            apps/web/test-results
+          retention-days: 7
+
+  webkit:
+    name: Language switch on an iPhone (WebKit e2e)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    # The Playwright image of the pinned @playwright/test version: WebKit and the system libraries it
+    # needs are already there (installing them with apt took the whole time budget of the main job).
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.1-noble
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: yoyo
+          POSTGRES_PASSWORD: yoyo
+          POSTGRES_DB: yoyo_test
+        options: >-
+          --health-cmd "pg_isready -U yoyo -d yoyo_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      mailpit:
+        image: axllent/mailpit:v1.33.0
+        options: >-
+          --health-cmd "/mailpit readyz"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      # Inside a container job the services are reached by their names.
+      DATABASE_URL: postgresql://yoyo:yoyo@postgres:5432/yoyo_test
+      WEB_ORIGIN: http://localhost:3000
+      JWT_SECRET: ci-only-jwt-secret-not-used-anywhere-else
+      SMTP_URL: smtp://mailpit:1025
+      NEXT_PUBLIC_API_URL: http://localhost:4000
+      NEXT_PUBLIC_SHOW_STYLEGUIDE: 'true'
+      NEXT_TELEMETRY_DISABLED: '1'
+      CI: 'true'
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Apply database migrations
+        run: pnpm --filter @yoyo/api exec prisma migrate deploy
+
+      - name: Build the API and the site
+        run: pnpm turbo run build --filter=@yoyo/api --filter=@yoyo/web
+
+      - name: End-to-end tests on an iPhone (WebKit)
+        run: pnpm --filter @yoyo/web e2e --project=webkit-iphone
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report-webkit
           path: |
             apps/web/playwright-report
             apps/web/test-results

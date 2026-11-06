@@ -177,7 +177,8 @@ test.describe('forgotten password', () => {
     const link = new URL(linkFrom(mail, '/reset-password'), 'http://site.test');
     await page.goto(`${link.pathname}${link.search}`);
 
-    await page.getByRole('banner').getByRole('link', { name: 'Latviešu' }).click();
+    await page.getByRole('banner').getByRole('button', { name: new RegExp(`^${en.language.label}: `) }).click();
+    await page.getByRole('banner').getByRole('menuitemradio', { name: 'Latviešu' }).click();
 
     await expect(page).toHaveURL(new RegExp(`/lv/reset-password\\?token=${link.searchParams.get('token')}$`));
     await expect(page.getByRole('heading', { level: 1, name: lv.auth.reset.title })).toBeVisible();

@@ -106,6 +106,8 @@
   html {
     background-color: var(--canvas);
     color: var(--ink);
+    /* The page never shifts sideways when its height changes (a scrollbar coming or going). */
+    scrollbar-gutter: stable;
   }
 
   body {
@@ -134,10 +136,12 @@
 
 /*
  * Language switch (components/ui/switch-language.ts) and moving between pages (components/motion/
- * switch-page.ts), 450 ms in all: the old page blurs and fades,
- * a pastel paper sheet with an ink edge wipes across underneath, then the new language fades in.
- * The header has its own name only during this switch (the theme reveal still covers the whole
- * page), so it stays put and only its words cross-fade.
+ * switch-page.ts), 440 ms in all. Deliberately geometry-free, so Safari and Chrome play it the same:
+ * nothing is moved, scaled or resized (the groups do not animate, so the snapshots keep the size they
+ * were captured at), only opacity and a soft focus change.
+ *   - the header has its own name only during a switch and stays perfectly still: its words
+ *     cross-fade (plus-lighter, so what is the same on both pages never flickers);
+ *   - the page goes out of focus and fades (0–180 ms), the new one comes into focus (140–440 ms).
  */
 html[data-language-switch] [data-site-header],
 html[data-page-switch] [data-site-header] {
@@ -147,55 +151,65 @@ html[data-page-switch] [data-site-header] {
 html[data-language-switch]::view-transition,
 html[data-page-switch]::view-transition {
   background-color: var(--canvas);
-  background-image: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--sticker-lavender) 70%, var(--canvas)) 0 50%,
-    var(--ink) 50% calc(50% + 1px),
-    transparent calc(50% + 1px)
-  );
-  background-repeat: no-repeat;
-  background-size: 200% 100%;
-  animation: language-sheet 300ms var(--ease-yoyo) both;
+}
+
+html[data-language-switch]::view-transition-group(root),
+html[data-language-switch]::view-transition-group(site-header),
+html[data-page-switch]::view-transition-group(root),
+html[data-page-switch]::view-transition-group(site-header) {
+  animation: none;
 }
 
 html[data-language-switch]::view-transition-old(root),
 html[data-page-switch]::view-transition-old(root) {
-  animation: language-out 220ms var(--ease-yoyo) both;
+  animation: language-out 180ms var(--ease-yoyo) both;
 }
 
 html[data-language-switch]::view-transition-new(root),
 html[data-page-switch]::view-transition-new(root) {
-  animation: language-in 250ms var(--ease-yoyo) 200ms both;
+  animation: language-in 300ms var(--ease-yoyo) 140ms both;
 }
 
 html[data-language-switch]::view-transition-old(site-header),
 html[data-language-switch]::view-transition-new(site-header),
 html[data-page-switch]::view-transition-old(site-header),
 html[data-page-switch]::view-transition-new(site-header) {
-  animation-duration: var(--dur-base);
+  mix-blend-mode: plus-lighter;
 }
 
-@keyframes language-sheet {
-  from {
-    background-position: 100% 0;
-  }
-  to {
-    background-position: 0 0;
-  }
+html[data-language-switch]::view-transition-old(site-header),
+html[data-page-switch]::view-transition-old(site-header) {
+  animation: language-header-out 200ms linear 120ms both;
+}
+
+html[data-language-switch]::view-transition-new(site-header),
+html[data-page-switch]::view-transition-new(site-header) {
+  animation: language-header-in 200ms linear 120ms both;
 }
 
 @keyframes language-out {
   to {
     opacity: 0;
-    filter: blur(6px);
-    transform: scale(0.985);
+    filter: blur(4px);
   }
 }
 
 @keyframes language-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    filter: blur(4px);
+  }
+}
+
+@keyframes language-header-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes language-header-in {
+  from {
+    opacity: 0;
   }
 }
 
