@@ -10,7 +10,7 @@
 - открыть карточку вещи: галерея с полноэкранным просмотром, характеристики, правила, район, календарь занятости, калькулятор суммы за выбранные дни, блок владельца, похожие вещи, «Запросить бронь»;
 - открыть публичный профиль владельца: имя, город, «на сайте с…», подтверждения, число сделок, рейтинг (пока «нет отзывов»), его вещи.
 
-Поисковики видят у каждой вещи один адрес — на языке, на котором она написана, а страницы категорий получают адреса на языке посетителя (`/c/tools`, `/lv/c/instrumenti`, `/ru/c/instrumenty`).
+Поисковики видят у каждой вещи один адрес — на языке, на котором она написана, а страницы категорий получают адреса на языке посетителя (`/c/tools`, `/lv/c/instrumenti`, `/ru/c/instrumenty`). Адреса и правила индексации — по карте сайта W03 (`docs/hitexis/W03-sitemap-urls.md`, §D, §G, §H, §J; ветка `docs/hitexis-w03`).
 
 Вошедший человек добавляет вещи в избранное сердечком (сразу, без ожидания ответа API) и видит их на `/dashboard/favorites`.
 
@@ -26,14 +26,20 @@
 - **Личное — в браузере.** Сердечки, «Запросить бронь» и избранное зависят от сессии, поэтому идут через TanStack Query по своему домену (`/api/v1/...`), как в планах 5 и 6b. Список id избранного (`GET /me/favorites/ids`) — один запрос на всю страницу; гость запросов не делает.
 - **Калькулятор — из ядра.** Карточка вещи получает с сервера цены, занятые дни, процент сбора и `maxAdvanceDays`; калькулятор считает сумму `quote` из `@yoyo/domain` и проверяет даты `validateRentalPeriod` и `firstConflict` прямо в браузере, без запроса на каждый клик. Окончательно цену и даты проверяет API при запросе брони (`POST /bookings`).
 - **Переходы.** `ViewTransition` из React 19.3 (`experimental.viewTransition` в `next.config.ts`): обложка карточки каталога и главное фото страницы вещи носят одно имя `listing-photo-<id>`, поэтому фото «перелетает» на своё место. При `prefers-reduced-motion` анимации выключены глобальным правилом из плана 1.
-- **SEO** (решение владельца от 2026-11-06, Task 10):
+- **Адреса (W03 §B, §D).** `/c` — все категории; `/c/{slug}` — категория или подкатегория (плоский путь, slug на языке страницы из таблицы W03 §D, EN = ключ `slug`); `/search?q=` — поиск по всему каталогу (`noindex, follow`); `/listings/{id}-{slug}` — вещь (slug из названия на языке объявления, ASCII, до 60 символов; неверный или пустой slug → 301 на правильный); `/u/{id}` — профиль. Конструктор остаётся на `/listings/new` и `/listings/{id}/edit`.
+- **Параметры (W03 §H)** — только `q`, `page`, `price_min`, `price_max` (целые евро), `from`, `to`, `district` (slug района), `sort` (`new`, `price_asc`, `price_desc`), `view=map`; прочие (`utm_*`, `gclid`…) не читаются и не попадают в canonical. Поэтому фильтров залога, состояния и города в этом плане нет (город один, страницы городов W03 не создаёт).
+- **Недоступная вещь (W03 §G):** удалена (`ARCHIVED`, владелец удалён) → `410`; никогда не публиковалась → `404`; временно скрыта (скрыта, на повторной модерации, владелец заблокирован) → `200`, `noindex` и «Вещь сейчас недоступна» с похожими вещами. Статус и slug решает proxy сайта одним лёгким запросом `GET /catalog/listings/:id/address`, потому что страница Next не умеет отвечать 301 и 410.
+- **Навигация (W03 §E):** хлебные крошки «Главная › Каталог › Категория › Подкатегория › Вещь» по иерархии категорий; в шапке «Каталог» — мега-меню с обычными ссылками `<a>` на 9 корневых категорий и 2–3 подкатегории каждой (на телефоне — аккордеон).
+- **SEO** (решение владельца от 2026-11-06 и W03 §G, §J, Task 10):
   - у объявления есть язык текста `contentLocale` (`en | lv | ru`): автор выбирает его в конструкторе, по умолчанию — язык сайта, на котором создан черновик;
   - страница вещи есть на всех трёх языках сайта, но `<link rel="canonical">` у каждой ведёт на адрес на `contentLocale`; `hreflang`-вариантов у страниц вещей нет; в sitemap — только канонические адреса вещей; `<html lang>` и JSON-LD `Product`/`Offer` — на `contentLocale` (интерфейсные блоки страницы помечены `lang` языка сайта);
   - публичный профиль — то же правило, канонический адрес английский, без `hreflang`;
   - страница категории — `noindex, follow`, пока в ней меньше 3 вещей в каталоге;
   - адрес каталога с фильтрами (`?priceMax`, `?start`…) канонически указывает на «голую» страницу категории (или `/catalog`);
   - у категории стабильный `id` и `slug` (ключ) плюс свой slug на каждом языке (`slugs: { en, lv, ru }`); страница категории — `/c/<slug языка>`, чужой slug перенаправляет (308) на свой. Сейчас slug строится из названия (латиница, русский транслитом); точный список придёт из карты сайта W03 и ляжет в `catalog-data.ts` без смены механизма.
-  - **`hreflang` пишет сама страница, а не middleware.** У next-intl включён заголовок `Link` с вариантами одного и того же пути на всех языках. Для вещей и профилей он запрещён, а у категорий пути на разных языках разные, поэтому `alternateLinks: false` в `routing.ts`, и варианты задаёт `generateMetadata` (`alternates.languages` и `x-default`) только там, где они верны: главная, каталог, категории.
+  - **`hreflang` — в HTTP-заголовке `Link` (W02 §F).** next-intl ставит его сам с тем же путём на всех языках. Proxy сайта убирает его у вещей и профилей и подменяет у категорий на варианты с их slug (дерево категорий кэшируется в proxy на 5 минут); у остальных страниц он остаётся как есть.
+  - адреса с фильтрами, сортировкой и картой — `noindex, follow`, canonical на категорию без параметров; `?page=N` — индексируется, canonical на себя с `page`; поиск — `noindex, follow`; пустой профиль (нет вещей) — `noindex`;
+  - `sitemap.xml` — индекс из `sitemap-pages.xml` (главная, `/c` × 3 языка), `sitemap-categories.xml` (только категории с ≥ 3 вещами, × 3 языка со своими slug) и `sitemap-listings.xml` (канонические адреса вещей); только `<loc>` и `<lastmod>`.
 - **Анимации.** Ветка `feat/motion` с общими примитивами в `apps/web/src/components/motion/` на момент плана не влита, поэтому анимации остаются локальными: CSS и токены `ease-yoyo`, `--dur-*` из `tokens.css`. Когда примитивы появятся, сердечко и раскрытие фильтров переводятся на них отдельным PR.
 
 **Tech Stack:**
@@ -47,7 +53,7 @@
 - §4.9 (состояния, темы, телефон, доступность);
 - §5 (поиск: полнотекстовый PostgreSQL и `pg_trgm`);
 - §6 (`Favorite`);
-- §7 (маршруты `/catalog` и `?view=map`, `/items/[id]`, `/users/[id]`, `/dashboard/favorites`);
+- §7 (маршруты `/catalog` и `?view=map`, `/listings/[id]` (`/listings/{id}-{slug}`), `/u/[id]`, `/dashboard/favorites`);
 - §8 (карточки наклоняются, фото приближается, сердечко лопается искрами, фильтры переключаются с откликом).
 
 API объявлений — [план 6](./2026-11-04-yoyo-06-listings-api.md), экраны — [план 6b](./2026-11-05-yoyo-06b-listings-ui.md), сделки — [план 8](./2026-11-05-yoyo-08-deals-api.md). Все слиты.
@@ -59,9 +65,9 @@ API объявлений — [план 6](./2026-11-04-yoyo-06-listings-api.md),
 - **Публичное — только публичное.** Ответы каталога, карточки и профиля строятся по полям поштучно, как `serializeListing(..., 'public')`: нет `lat`, `lng`, `rejectionReason`, `version`, почты и телефона владельца. Проверка — тестом сериализатора и e2e по сырому JSON.
 - **Невидимое не существует.** Черновик, скрытая, удалённая, отклонённая вещь и вещь заблокированного владельца отвечают `404 NOT_FOUND` в карточке и не попадают в поиск, подсказки, карту, профиль и чужое избранное. В своём избранном такая вещь показывается как «Больше недоступна» с кнопкой убрать.
 
-**Параметры каталога** (одна схема `CatalogQuerySchema` в `@yoyo/shared` для API и сайта)
-- `q` — до 100 символов после очистки; `category` — slug, включает подкатегории; `priceMin`, `priceMax` — центы в день; `depositMax` — центы; `condition` — несколько через запятую; `start`, `end` — `YYYY-MM-DD`, только вместе, `start` не раньше сегодня по Риге, не дальше `maxAdvanceDays`, не длиннее 365 дней; `city`, `district` — до 60 символов; `sort` — `new` (по умолчанию), `price_asc`, `price_desc`, `relevance` (по умолчанию при `q`); `page` — с 1, по 24 вещи.
-- Неверный параметр в API — `400 VALIDATION_FAILED` с `fields`. Сайт неверные параметры из адреса молча отбрасывает (старая или испорченная ссылка не должна давать ошибку), а `parseCatalogParams` / `catalogSearch` — единственные функции, которые читают и пишут URL.
+**Параметры каталога**
+- **API** (`CatalogQuerySchema` в `@yoyo/shared`): `q` — до 100 символов после очистки; `category` — ключ `slug`, включает подкатегории; `priceMin`, `priceMax` — центы в день; `start`, `end` — `YYYY-MM-DD`, только вместе, `start` не раньше сегодня по Риге, не дальше `maxAdvanceDays`, не длиннее 365 дней; `district` — slug района (`slugify`); `sort` — `new` (по умолчанию), `price_asc`, `price_desc`, `relevance` (по умолчанию при `q`); `page` — с 1, по 24 вещи. Неверный параметр — `400 VALIDATION_FAILED` с `fields`.
+- **Адрес сайта** — только параметры W03 §H (`q`, `page`, `price_min`, `price_max` в целых евро, `from`, `to`, `district`, `sort`, `view`); `parseCatalogParams` / `catalogSearch` — единственные функции, которые читают и пишут адрес и переводят его в запрос API. Неверные параметры молча отбрасываются (старая или испорченная ссылка не должна давать ошибку), неизвестные не читаются.
 
 **SEO**
 - Абсолютные адреса строятся от `SITE_ORIGIN` (как перенаправления плана 5), без него — от `http://localhost:3000` (`metadataBase`). Одна функция `seo.ts` считает canonical, `hreflang` и `robots` для каждого типа страницы, страницы её только вызывают.
@@ -97,7 +103,7 @@ API объявлений — [план 6](./2026-11-04-yoyo-06-listings-api.md),
 3. **Свободные даты.** Вещь с бронью на 10–12-е не находится для 11–13-го, находится для 13–15-го; закрытый владельцем день действует так же; отменённая бронь (`reserved IS NULL`) дни не держит; период короче `minDays` вещи её не находит. Тест в Task 2.
 4. **Калькулятор совпадает с API.** Сумма в калькуляторе для 7 дней со скидкой 10 % и сбором 10 % — ровно та, что даёт `GET /listings/:id/quote`; дни поперёк брони не дают «Запросить бронь». Тест в Task 7 и e2e Task 11.
 5. **Оптимистичное сердечко.** Нажатие сразу меняет вид; ошибка API возвращает прежний; два быстрых нажатия кончаются тем, что нажато последним; гость попадает на вход и после него возвращается на ту же страницу. Тест в Task 8.
-6. **SEO-вывод.** Страница вещи на `contentLocale = lv`, открытая по `/items/:id` и `/ru/items/:id`: canonical `…/lv/items/:id` в обоих случаях, нет `<link rel="alternate" hreflang>` и нет заголовка `Link` с `rel="alternate"`, `<html lang="lv">`, JSON-LD с тем же адресом. Категория с 2 вещами — `noindex, follow`, с 3 — без `noindex`; `?priceMax=…` — canonical на `/c/<slug>`; `/lv/c/tools` → 308 на `/lv/c/instrumenti`; sitemap содержит один адрес на вещь. Тест в Task 10 (модули и e2e).
+6. **SEO-вывод.** Страница вещи на `contentLocale = lv`, открытая по `/listings/:id-:slug` и `/ru/listings/:id-:slug`: canonical `…/lv/listings/:id-:slug` в обоих случаях, нет `<link rel="alternate" hreflang>` и нет заголовка `Link` с `rel="alternate"`, `<html lang="lv">`, JSON-LD с тем же адресом. Категория с 2 вещами — `noindex, follow`, с 3 — без `noindex`; `?priceMax=…` — canonical на `/c/<slug>`; `/lv/c/tools` → 308 на `/lv/c/instrumenti`; sitemap содержит один адрес на вещь. Тест в Task 10 (модули и e2e).
 7. **Комбобокс и календарь с клавиатуры, телефон, языки.** Весь путь «каталог → фильтр → вещь → калькулятор» проходится без мыши; на 320 и 390 px нет горизонтальной прокрутки на всех трёх языках; axe без serious и critical в обеих темах. Тест в Task 11.
 
 ---
@@ -133,7 +139,7 @@ apps/web/e2e/{catalog.spec.ts,catalog-a11y.spec.ts,seo.spec.ts} · fit-on-phones
 - Test: `packages/shared/src/catalog.test.ts`.
 
 **Interfaces:**
-- **`CatalogQuerySchema`** (Global Constraints) — `z.object` с `z.coerce` для чисел, `condition` из строки через запятую в массив, `superRefine`: `start` и `end` вместе, `end ≥ start`, `priceMin ≤ priceMax`, не больше 365 дней. Даты против «сегодня» проверяет API (нужен `Clock`).
+- **`CatalogQuerySchema`** (Global Constraints; после W03 без `depositMax`, `condition` и `city`, `district` — slug) — `z.object` с `z.coerce` для чисел, `condition` из строки через запятую в массив, `superRefine`: `start` и `end` вместе, `end ≥ start`, `priceMin ≤ priceMax`, не больше 365 дней. Даты против «сегодня» проверяет API (нужен `Clock`).
 - **`CatalogItem`**: `id, title, dailyCents, weeklyDiscountPercent, depositCents, condition, city, district, categoryId, cover: PhotoUrls | null, ownerId, publishedAt`.
 - **`CatalogPage`**: `{ items: CatalogItem[], total, page, pageSize: 24 }`.
 - **`MapPin`**: `{ lat, lng, count, items: { id, title, dailyCents, cover }[] }` — центр ячейки, до 5 вещей в подсказке метки; `MapResponse`: `{ pins: MapPin[], total, truncated }` (не больше 500 вещей).
@@ -170,7 +176,7 @@ parse({ sort: 'cheapest' }) → ошибка sort;   сам период дли�
 - **`GET /catalog/listings?…`** (публично) → `CatalogPage`. `catalog-query.ts` собирает `WHERE` и `ORDER BY` из разобранного запроса (`Prisma.Sql`), сервис делает два запроса: страница и `count(*)`. Порядок с `id` последним ключом, чтобы страницы не перемешивались.
 - **`GET /catalog/map?…`** — те же фильтры → `MapResponse`: группировка по ячейке 0,01° в SQL, точка не выходит из базы.
 - **`GET /catalog/suggest?q=&lang=`** — от 2 символов; категории по `yoyo_fold(names->>lang)` и по всем трём языкам, вещи по названию; `RATE_LIMITS.suggest(ip)` 120/мин.
-- **`GET /catalog/places`** → `{ cities: { city, districts: { district, count }[] }[] }` по видимым вещам, для выбора района.
+- **`GET /catalog/places`** → `{ districts: { district, slug, count }[] }` по видимым вещам, для выбора района; фильтр `district` — slug, сервис переводит его в названия районов с тем же `slugify`.
 - `CATALOG_VISIBLE` = `status = 'PUBLISHED' AND dailyCents IS NOT NULL AND owner не заблокирован и не удалён`; `bookableListing` пользуется тем же определением (одно место правды).
 - Ответы `Cache-Control: no-store` (как всё API): выдача меняется с каждой бронью.
 
@@ -201,7 +207,8 @@ parse({ sort: 'cheapest' }) → ошибка sort;   сам период дли�
 - Test: `apps/api/test/catalog.item.e2e.test.ts`, `apps/api/test/profiles.e2e.test.ts`.
 
 **Interfaces:**
-- **`GET /catalog/listings/:id`** → `ItemDetail`. `blocked` — `blockedPeriods()` плана 8 без прошедших; `booking.today` — сегодня в часовом поясе вещи по `Clock`; `servicePercent` и `maxAdvanceDays` из `BookingRulesService`. Невидимая вещь → 404.
+- **`GET /catalog/listings/:id/address`** → `{ slug, contentLocale }` (видимая и временно скрытая вещь) или `404 NOT_FOUND` (не публиковалась) / `410 LISTING_GONE` (удалена, владелец удалён) — для proxy сайта (W03 §G).
+- **`GET /catalog/listings/:id`** → `ItemDetail` с `available: true`, или для временно скрытой — `available: false` и только название, категория и язык (без цены, фото, дат и владельца). `blocked` — `blockedPeriods()` плана 8 без прошедших; `booking.today` — сегодня в часовом поясе вещи по `Clock`; `servicePercent` и `maxAdvanceDays` из `BookingRulesService`. Невидимая вещь → 404.
 - **`GET /users/:id`** → `PublicProfile`: вещи владельца из каталога, новые первыми, до 48. Заблокированный или удалённый — 404. `completedDeals` — сделки `COMPLETED`, где он владелец или арендатор; `memberSince` — месяц регистрации.
 
 - [ ] **Step 1: Write the failing tests**
@@ -280,8 +287,8 @@ parse({ sort: 'cheapest' }) → ошибка sort;   сам период дли�
 - Test: рядом с компонентами.
 
 **Interfaces:**
-- **`/catalog` и `/c/[slug]`** (сервер, один компонент): категория берётся из пути (slug языка страницы, Task 10), остальные фильтры — из адреса; выбор категории в фильтрах ведёт на `/c/<slug>` с сохранением остальных фильтров. Разбирает адрес, запрашивает `GET /catalog/listings` (или `/catalog/map` для `view=map`), категории и места; ошибка API — `ErrorView` с повтором. `generateMetadata`: заголовок по запросу и категории.
-- **`SearchBox`** — комбобокс (Global Constraints) поверх `GET /catalog/suggest`: 200 мс после ввода от 2 символов, `AbortController` отменяет прежний запрос, кэш ответов на сессию. Категория — переход с `category`, вещь — на `/items/:id`, Enter — поиск текста. Кнопка «Найти» и очистка.
+- **`/c`, `/c/[slug]` и `/search`** (сервер): `/c` — плитки корневых категорий с подкатегориями; `/c/[slug]` и `/search` — один компонент выдачи; категория берётся из пути (slug языка страницы, Task 10), остальные фильтры — из адреса (W03 §H); выбор категории в фильтрах ведёт на `/c/<slug>` с сохранением остальных фильтров. Разбирает адрес, запрашивает `GET /catalog/listings` (или `/catalog/map` для `view=map`), категории и места; ошибка API — `ErrorView` с повтором. `generateMetadata`: заголовок по запросу и категории.
+- **`SearchBox`** — комбобокс (Global Constraints) поверх `GET /catalog/suggest`: 200 мс после ввода от 2 символов, `AbortController` отменяет прежний запрос, кэш ответов на сессию. Категория — переход с `category`, вещь — на `/listings/:id-:slug`, Enter — поиск текста. Кнопка «Найти» и очистка.
 - **`Filters`** — на компьютере колонка слева, на телефоне кнопка «Фильтры (N)» открывает `FilterSheet` (диалог снизу, фокус заперт, «Показать N вещей»). Состав: категории (пилюли-наклейки верхнего уровня, затем подкатегории), `PriceRange` (два поля «от / до» в евро через `parseEuros`), максимальный залог, состояние (флажки-пилюли), даты (`RangeCalendar` в раскрывающемся блоке), город и район (`<select>` по `/catalog/places`). Изменение — `router.replace(catalogSearch(...), { scroll: false })` в `startTransition`; текстовые поля — по `blur` и Enter.
 - **`ActiveFilters`** — пилюли выбранного с крестиком и «Сбросить всё».
 - **`SortSelect`** — `<select>`; «Подходящие» есть только при `q`.
@@ -301,7 +308,7 @@ parse({ sort: 'cheapest' }) → ошибка sort;   сам период дли�
 // Filters.test.tsx: выбор категории → replace с category и без page; «от 5» «до 2» → ошибка поля, адрес не меняется;
 //   N выбранных фильтров на кнопке «Фильтры (N)»
 // ActiveFilters.test.tsx: крестик у цены убирает priceMin и priceMax; «Сбросить всё» оставляет только q
-// ListingCard.test.tsx: длинное латышское название переносится (класс), нет lat/lng в разметке, ссылка /items/:id
+// ListingCard.test.tsx: длинное латышское название переносится (класс), нет lat/lng в разметке, ссылка /listings/:id-:slug
 // EmptyResults.test.tsx: с датами — совет «уберите даты»
 // range.test.ts: выбор начала, затем конца; конец раньше начала — становится новым началом; диапазон через занятый день — нельзя
 ```
@@ -314,11 +321,11 @@ parse({ sort: 'cheapest' }) → ошибка sort;   сам период дли�
 ### Task 7: Страница вещи: галерея, календарь, калькулятор, владелец, похожие
 
 **Files:**
-- Create: `apps/web/src/app/[locale]/items/[id]/{page.tsx,not-found.tsx}`, `apps/web/src/components/item/*`, `apps/web/src/components/catalog/RangeCalendar.tsx`, `apps/web/src/lib/catalog/calculator.ts`.
+- Create: `apps/web/src/app/[locale]/listings/[id]/{page.tsx,not-found.tsx}`, `apps/web/src/components/item/*`, `apps/web/src/components/catalog/RangeCalendar.tsx`, `apps/web/src/lib/catalog/calculator.ts`.
 - Test: рядом.
 
 **Interfaces:**
-- **`/items/[id]`** (сервер): `GET /catalog/listings/:id` и `GET /catalog/listings?category=<её>&…` для похожих (4, без неё самой); 404 → «Вещь не найдена или больше не сдаётся» со ссылкой в каталог. `generateMetadata`: название, описание, обложка для Open Graph.
+- **`/listings/[id]` (`/listings/{id}-{slug}`)** (сервер): `GET /catalog/listings/:id` и `GET /catalog/listings?category=<её>&…` для похожих (4, без неё самой); 404 → «Вещь не найдена или больше не сдаётся» со ссылкой в каталог. `generateMetadata`: название, описание, обложка для Open Graph.
 - **`Gallery`** — главное фото 4:3 в `ViewTransition` с тем же именем, миниатюры-кнопки (`aria-current`), «Открыть на весь экран» → `GalleryDialog` (стрелки, Esc, счётчик «3 из 5», свайп на телефоне).
 - **`calculator.ts`** — `priceFor({ listing, booking, start, end }): { ok: true, quote } | { ok: false, reason }`: `validateRentalPeriod` (сегодня из ответа, `maxAdvanceDays`, `minDays`, `maxDays`), `firstConflict` по `blocked`, `quote` с `servicePercent` — всё из `@yoyo/domain`; причины — коды ядра (`PERIOD_TOO_SHORT`, `PERIOD_TOO_LONG`, `START_IN_PAST`, `TOO_FAR_AHEAD`, `DATES_UNAVAILABLE`).
 - **`RangeCalendar`** (общий с фильтром) — сетка плана 6b в режиме выбора периода: первый клик — начало, второй — конец; занятые дни зачёркнуты и выключены; период через занятый день не выбирается; наведение подсвечивает будущий период; два месяца на `md`, один на телефоне.
@@ -332,7 +339,7 @@ parse({ sort: 'cheapest' }) → ошибка sort;   сам период дли�
 //   2 дня при minDays 3 → PERIOD_TOO_SHORT; через занятый день → DATES_UNAVAILABLE; начало вчера → START_IN_PAST
 // RangeCalendar.test.tsx: занятый день aria-disabled и «занято» в имени; Enter на начале и на конце → onChange({start,end});
 //   PageDown — следующий месяц; конец раньше начала становится началом
-// BookingPanel.test.tsx: без дат — «Выберите даты»; с датами — разбивка и итог; гость нажимает «Запросить бронь» → /login?next=/items/:id
+// BookingPanel.test.tsx: без дат — «Выберите даты»; с датами — разбивка и итог; гость нажимает «Запросить бронь» → /login?next=/listings/:id-:slug
 //   ответ 409 DATES_UNAVAILABLE → текст у календаря
 // Gallery.test.tsx: миниатюра меняет главное фото; диалог: стрелка вправо — следующее, «2 из 3», Esc закрывает и возвращает фокус
 // OwnerCard.test.tsx: нет почты и телефона владельца в разметке, «Отзывов пока нет», ссылка /users/:id
@@ -376,7 +383,7 @@ parse({ sort: 'cheapest' }) → ошибка sort;   сам период дли�
 - Test: `ProfilePage.test.tsx`.
 
 **Interfaces:**
-- **`/users/[id]`** (сервер, `GET /users/:id`): шапка-карточка (большие инициалы на наклейке цвета по id, имя дисплейным шрифтом через `displayFit`, город, «на сайте с ноября 2026», подтверждения, «N сделок», рейтинг «Отзывов пока нет»), «О себе», вкладки «Вещи (N)» и «Отзывы» (`role="tablist"`, стрелки между вкладками; во второй — «Отзывов пока нет: они появятся после первых сделок»). 404 — «Профиль не найден».
+- **`/u/[id]`** (сервер, `GET /users/:id`): шапка-карточка (большие инициалы на наклейке цвета по id, имя дисплейным шрифтом через `displayFit`, город, «на сайте с ноября 2026», подтверждения, «N сделок», рейтинг «Отзывов пока нет»), «О себе», вкладки «Вещи (N)» и «Отзывы» (`role="tablist"`, стрелки между вкладками; во второй — «Отзывов пока нет: они появятся после первых сделок»). 404 — «Профиль не найден».
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -401,7 +408,7 @@ parse({ sort: 'cheapest' }) → ошибка sort;   сам период дли�
 - **`contentLocale`:** `ListingDraftSchema.contentLocale: z.enum(LOCALES).optional()`; `POST /listings` без него берёт `user.locale`; поле есть в `PublicListing`, `CatalogItem` и в sitemap.
 - **`slugify(text, locale)`** — латиница в нижнем регистре через дефис, диакритика снята (`Spēļu konsoles` → `spelu-konsoles`), кириллица — транслитерацией (`Инструменты` → `instrumenty`); `catalog-data` может задать свой slug поверх. `ensureCategories` пишет `slugs` и падает при старте, если на одном языке два одинаковых slug.
 - **`seo.ts`:** `itemSeo(detail, pageLocale)` → `{ canonical, htmlLang, jsonLd }`; `profileSeo(id)` → canonical на EN; `catalogSeo({ category, count, locale })` → canonical «голой» страницы, `languages` (slug каждого языка + `x-default`), `robots: { index: count >= 3, follow: true }` для категорий; `localizedPath(locale, path)`.
-- **`lang` страницы:** proxy сайта кладёт путь в заголовок `x-yoyo-path`; `layout.tsx` для `/items/:id` берёт `contentLocale` из того же (через `React.cache`) запроса, что и страница, и ставит его в `<html lang>`; шапка и интерфейсные блоки страницы вещи получают `lang` языка сайта.
+- **`lang` страницы:** proxy сайта кладёт путь в заголовок `x-yoyo-path`; `layout.tsx` для `/listings/:id-:slug` берёт `contentLocale` из того же (через `React.cache`) запроса, что и страница, и ставит его в `<html lang>`; шапка и интерфейсные блоки страницы вещи получают `lang` языка сайта.
 - **`GET /catalog/sitemap`** → `{ listings: { id, contentLocale, updatedAt }[], users: { id, updatedAt }[], categories: { slugs, count }[] }` — только видимое; `app/sitemap.ts`: главная и каталог на трёх языках, категории на трёх языках, вещи по одному адресу, профили владельцев с вещами — английский адрес. `robots.ts`: `Disallow: /api/`, ссылка на sitemap.
 
 - [ ] **Step 1: Write the failing tests**
@@ -410,8 +417,8 @@ parse({ sort: 'cheapest' }) → ошибка sort;   сам период дли�
 // slugify.test.ts: 'Spēļu konsoles','lv' → 'spelu-konsoles'; 'Инструменты','ru' → 'instrumenty'; 'Car & travel','en' → 'car-travel'
 // catalog-data.test.ts: у каждой категории три slug, на каждом языке все разные
 // listings e2e: POST без contentLocale у пользователя с locale 'lv' → 'lv'; PATCH contentLocale опубликованной — статус прежний
-// seo.test.ts: itemSeo(lv, страница ru) → canonical '/lv/items/x', htmlLang 'lv', jsonLd.offers.url тот же, нет languages;
-//   en → '/items/x'; profileSeo → '/users/u'; catalogSeo(категория, 2 вещи) → robots { index: false, follow: true };
+// seo.test.ts: itemSeo(lv, страница ru) → canonical '/lv/listings/x', htmlLang 'lv', jsonLd.offers.url тот же, нет languages;
+//   en → '/listings/x'; profileSeo → '/users/u'; catalogSeo(категория, 2 вещи) → robots { index: false, follow: true };
 //   3 вещи → index true; canonical без параметров; languages { en: '/c/tools', lv: '/lv/c/instrumenti', ru: '/ru/c/instrumenty', 'x-default': '/c/tools' }
 // category-slugs.test.ts: '/lv/c/tools' → redirect '/lv/c/instrumenti'; неизвестный slug → notFound
 // e2e seo.spec.ts: Review Focus 6 по живому HTML и заголовкам; sitemap.xml — по одному адресу на вещь
