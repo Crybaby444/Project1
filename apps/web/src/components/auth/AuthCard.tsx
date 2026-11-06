@@ -34,7 +34,10 @@ export function AuthCard({ title, subtitle, children, footer, focusTitle = false
   return (
     <main className="flex flex-1 justify-center px-4 py-10 sm:py-16">
       <div className="flex w-full max-w-[30rem] flex-col gap-6">
-        <section className="border-ink bg-surface rounded-card-xl motion-safe:animate-card-rise relative flex flex-col gap-6 border p-6 sm:p-8">
+        <section
+          data-card-rise=""
+          className="border-ink bg-surface rounded-card-xl relative flex flex-col gap-6 border p-6 sm:p-8"
+        >
           <Bob className="absolute -top-9 right-6">
             <Sticker kind="yoyo" size={52} className="rotate-12" />
           </Bob>

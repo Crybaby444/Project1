@@ -51,7 +51,6 @@
   --animate-toast-in: toast-in 250ms var(--ease-yoyo);
   --animate-pop-in: pop-in 150ms var(--ease-yoyo);
   --animate-step-in: step-in 250ms var(--ease-yoyo);
-  --animate-card-rise: card-rise 450ms var(--ease-yoyo) both;
 
   @keyframes sticker-wobble {
     25% {
@@ -93,14 +92,6 @@
   @keyframes step-in {
     from {
       transform: translateX(var(--step-from, 16px));
-      opacity: 0;
-    }
-  }
-
-  /* A screen's main card arriving on load (auth): up from a little below, settling. */
-  @keyframes card-rise {
-    from {
-      transform: translateY(16px) scale(0.98);
       opacity: 0;
     }
   }

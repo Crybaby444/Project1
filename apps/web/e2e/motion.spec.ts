@@ -144,6 +144,24 @@ test.describe('motion on', () => {
     expect(errors).toEqual([]);
   });
 
+  test('during a language or page switch nothing on the new page moves (the transition stays geometry-free)', async ({
+    page,
+  }) => {
+    await page.goto('/login');
+    const running = () =>
+      page
+        .locator('[data-card-rise], [data-rise-word], [data-letter], [data-bob]')
+        .evaluateAll((els) => els.map((el) => getComputedStyle(el).animationName));
+    // A normal load plays the card rise, the title and the floating sticker.
+    expect(await running()).toContain('card-rise');
+    expect(await running()).toContain('sticker-bob');
+    for (const attribute of ['data-language-switch', 'data-page-switch']) {
+      await page.evaluate((name) => document.documentElement.setAttribute(name, ''), attribute);
+      expect(new Set(await running())).toEqual(new Set(['none']));
+      await page.evaluate((name) => document.documentElement.removeAttribute(name), attribute);
+    }
+  });
+
   test('the auth title is in the page once, so a field with the same name stays unique', async ({ page }) => {
     await page.goto('/reset-password?token=abc');
     await expect(page.getByRole('heading', { level: 1, name: en.auth.reset.title })).toBeVisible();

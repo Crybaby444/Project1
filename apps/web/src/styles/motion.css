@@ -269,6 +269,32 @@
   }
 }
 
+/* A screen's main card arriving on load (auth): up from a little below, settling. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-card-rise] {
+    animation: card-rise var(--dur-slow) var(--ease-yoyo) both;
+  }
+}
+
+@keyframes card-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+}
+
+/*
+ * A language or page switch swaps the page inside a View Transition that must stay geometry-free
+ * (globals.css, `html[data-language-switch]`, `html[data-page-switch]`): nothing may move while the
+ * browser captures the new page and scrolls a focused field into view, or the header and the scroll
+ * position shift (WebKit). So the new page's load animations do not replay, and floating stickers
+ * hold still until the switch is over. A normal page load still plays them.
+ */
+html:is([data-language-switch], [data-page-switch])
+  :is([data-card-rise], [data-rise-word], [data-letter], [data-bob], [data-parallax-layer][data-bob]) {
+  animation: none !important;
+}
+
 /* ── Reveal on scroll (supporting technique for sections and cards) ────────────────────────── */
 
 @supports (animation-timeline: view()) {
