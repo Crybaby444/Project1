@@ -13,11 +13,12 @@ function expectAllLanguages(text: Record<string, string>, where: string): void {
 }
 
 describe('CATALOG', () => {
-  it('has the eleven roots of the owner-approved tree C02, each with its sticker, and 62 subcategories', () => {
+  it('has the twelve roots of the owner-approved tree C02 (draft 3), each with its sticker, and 78 subcategories', () => {
     expect(CATALOG.map((category) => [category.slug, category.sticker])).toEqual([
       ['electronics', 'blue'],
       ['photo-video', 'violet'],
       ['tools', 'sun'],
+      ['construction', 'ember'],
       ['garden', 'mint'],
       ['home-kitchen', 'lavender'],
       ['sports', 'blue'],
@@ -27,7 +28,7 @@ describe('CATALOG', () => {
       ['music', 'lavender'],
       ['car-travel', 'sun'],
     ]);
-    expect(CATALOG.flatMap((root) => root.children ?? [])).toHaveLength(62);
+    expect(CATALOG.flatMap((root) => root.children ?? [])).toHaveLength(78);
     for (const root of CATALOG) for (const child of root.children ?? []) expect(child.sticker, child.slug).toBe(root.sticker);
   });
 
