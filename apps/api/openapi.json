@@ -3494,6 +3494,66 @@
         ]
       }
     },
+    "/api/v1/bookings/{id}/history": {
+      "get": {
+        "operationId": "BookingsController_history",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The deal's steps so far, oldest first (who, from and to which status, when)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingHistoryResponseDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
     "/api/v1/bookings/{id}": {
       "get": {
         "operationId": "BookingsController_get",
@@ -3592,6 +3652,18 @@
             }
           },
           {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "open",
+                "closed"
+              ]
+            }
+          },
+          {
             "name": "page",
             "required": false,
             "in": "query",
@@ -3619,6 +3691,47 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/me/bookings/summary": {
+      "get": {
+        "operationId": "MyBookingsController_summary",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Open deals, and those waiting for my step, as renter and as owner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyBookingsSummaryDto_Output"
                 }
               }
             }
@@ -3703,6 +3816,56 @@
           },
           "404": {
             "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/listings/{id}/booking-terms": {
+      "get": {
+        "operationId": "ListingQuoteController_terms",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prices, limits and taken days of a bookable listing, to price days in the browser",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingTermsDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion)",
             "content": {
               "application/json": {
                 "schema": {
@@ -7112,11 +7275,29 @@
             "type": "integer",
             "minimum": -9007199254740991,
             "maximum": 9007199254740991
+          },
+          "depositsCents": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "incomingCents": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "earnedCents": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
           }
         },
         "required": [
           "balanceCents",
-          "heldCents"
+          "heldCents",
+          "depositsCents",
+          "incomingCents",
+          "earnedCents"
         ],
         "additionalProperties": false
       },
@@ -7154,6 +7335,12 @@
                     "null"
                   ]
                 },
+                "listingTitle": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
                 "createdAt": {
                   "type": "string",
                   "format": "date-time",
@@ -7165,6 +7352,7 @@
                 "kind",
                 "amountCents",
                 "bookingId",
+                "listingTitle",
                 "createdAt"
               ],
               "additionalProperties": false
@@ -8291,6 +8479,82 @@
           "event"
         ]
       },
+      "BookingHistoryResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "actor": {
+                  "type": "string",
+                  "enum": [
+                    "RENTER",
+                    "OWNER",
+                    "ADMIN",
+                    "SYSTEM"
+                  ]
+                },
+                "fromStatus": {
+                  "type": "string",
+                  "enum": [
+                    "REQUESTED",
+                    "ACCEPTED",
+                    "PAID",
+                    "ACTIVE",
+                    "RETURNED",
+                    "DAMAGE_CLAIMED",
+                    "DISPUTED",
+                    "COMPLETED",
+                    "DECLINED",
+                    "EXPIRED",
+                    "CANCELLED",
+                    null
+                  ],
+                  "nullable": true
+                },
+                "toStatus": {
+                  "type": "string",
+                  "enum": [
+                    "REQUESTED",
+                    "ACCEPTED",
+                    "PAID",
+                    "ACTIVE",
+                    "RETURNED",
+                    "DAMAGE_CLAIMED",
+                    "DISPUTED",
+                    "COMPLETED",
+                    "DECLINED",
+                    "EXPIRED",
+                    "CANCELLED"
+                  ]
+                },
+                "at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                }
+              },
+              "required": [
+                "type",
+                "actor",
+                "fromStatus",
+                "toStatus",
+                "at"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false
+      },
       "BookingsPageDto_Output": {
         "type": "object",
         "properties": {
@@ -8801,6 +9065,56 @@
         ],
         "additionalProperties": false
       },
+      "MyBookingsSummaryDto_Output": {
+        "type": "object",
+        "properties": {
+          "renter": {
+            "type": "object",
+            "properties": {
+              "open": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "needsAction": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "open",
+              "needsAction"
+            ],
+            "additionalProperties": false
+          },
+          "owner": {
+            "type": "object",
+            "properties": {
+              "open": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "needsAction": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "open",
+              "needsAction"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "renter",
+          "owner"
+        ],
+        "additionalProperties": false
+      },
       "QuoteResponseDto_Output": {
         "type": "object",
         "properties": {
@@ -8904,6 +9218,142 @@
         },
         "required": [
           "quote",
+          "blocked"
+        ],
+        "additionalProperties": false
+      },
+      "BookingTermsDto_Output": {
+        "type": "object",
+        "properties": {
+          "listing": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "coverUrl": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "city": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "district": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "ownerId": {
+                "type": "string"
+              },
+              "ownerName": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "coverUrl",
+              "city",
+              "district",
+              "ownerId",
+              "ownerName"
+            ],
+            "additionalProperties": false
+          },
+          "pricing": {
+            "type": "object",
+            "properties": {
+              "dailyCents": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "weeklyDiscountPercent": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "depositCents": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "minDays": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "maxDays": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "dailyCents",
+              "weeklyDiscountPercent",
+              "depositCents",
+              "minDays",
+              "maxDays"
+            ],
+            "additionalProperties": false
+          },
+          "servicePercent": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "maxAdvanceDays": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "timeZone": {
+            "type": "string"
+          },
+          "today": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "blocked": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "start": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                },
+                "end": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                }
+              },
+              "required": [
+                "start",
+                "end"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "listing",
+          "pricing",
+          "servicePercent",
+          "maxAdvanceDays",
+          "timeZone",
+          "today",
           "blocked"
         ],
         "additionalProperties": false

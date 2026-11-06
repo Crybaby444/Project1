@@ -8,6 +8,7 @@ import {
   DomainError,
   daysIn,
   localDate,
+  localDateIn,
   period,
   quote,
   type Actor,
@@ -19,6 +20,11 @@ import {
 } from '@yoyo/domain';
 import {
   BOOKINGS_PAGE_SIZE,
+  CLOSED_BOOKING_STATUSES,
+  type BookingGroup,
+  type BookingHistoryResponse,
+  type BookingTerms,
+  type MyBookingsSummary,
   type BookingEventInput,
   type BookingRequest,
   type ResolveRequest,
@@ -121,6 +127,36 @@ export class BookingsService {
   ) {}
 
   readonly urlFor: UrlFor = (key, variant) => this.storage.url(key, variant);
+
+  /**
+   * What anyone needs to price and book a listing in the browser (the inputs of the domain's `quote`)
+   * and the days already taken. Same visibility as `quote`, except a listing that was public but is not
+   * bookable now answers 409 LISTING_UNAVAILABLE, so the page can say so.
+   */
+  async terms(listingId: string): Promise<BookingTerms> {
+    const listing = await bookableListing(this.prisma, listingId);
+    const settings = await this.rules.settings();
+    const cover = [...listing.photos].sort((a, b) => a.position - b.position)[0];
+    const pricing = pricingOf(listing);
+    const blocked = await blockedPeriods(this.prisma, listingId);
+    return {
+      listing: {
+        id: listing.id,
+        title: listing.title ?? '',
+        coverUrl: cover ? this.urlFor(cover.storageKey, 'card') : null,
+        city: listing.city,
+        district: listing.district,
+        ownerId: listing.owner.id,
+        ownerName: listing.owner.name,
+      },
+      pricing: { ...pricing },
+      servicePercent: settings.servicePercent,
+      maxAdvanceDays: settings.maxAdvanceDays,
+      timeZone: listing.timeZone,
+      today: localDateIn(this.clock.now(), listing.timeZone),
+      blocked: blocked.map((b) => ({ start: b.start, end: b.end })),
+    };
+  }
 
   /** What renting `listingId` for these days would cost; for anyone, on a bookable listing only. */
   async quote(listingId: string, start: string, end: string): Promise<QuoteResponse> {
@@ -441,15 +477,63 @@ export class BookingsService {
     return this.serialize(row, actor);
   }
 
+  /** The deal's journal, oldest first, for its sides and administrators (404 to anyone else). */
+  async history(id: string, user: Pick<PublicUser, 'id' | 'role'>): Promise<BookingHistoryResponse> {
+    const row = await this.prisma.booking.findUnique({ where: { id }, select: { renterId: true, ownerId: true } });
+    if (!row || actorFor(row, user) === null) throw bookingNotFound();
+    const events = await this.prisma.bookingEvent.findMany({
+      where: { bookingId: id },
+      orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+      select: { type: true, actorKind: true, fromStatus: true, toStatus: true, createdAt: true },
+    });
+    return {
+      items: events.map((e) => ({
+        type: e.type,
+        actor: e.actorKind as BookingHistoryResponse['items'][number]['actor'],
+        fromStatus: e.fromStatus,
+        toStatus: e.toStatus,
+        at: e.createdAt.toISOString(),
+      })),
+    };
+  }
+
+  /** Open deals and those waiting for the user's step, per side (the tabs of "My deals"). */
+  async summaryMine(user: PublicUser): Promise<MyBookingsSummary> {
+    const rows = await this.prisma.booking.findMany({
+      where: {
+        OR: [{ renterId: user.id }, { ownerId: user.id }],
+        status: { notIn: [...CLOSED_BOOKING_STATUSES] },
+      },
+      include: BOOKING_INCLUDE,
+    });
+    const settings = await this.rules.settings();
+    const summary: MyBookingsSummary = { renter: { open: 0, needsAction: 0 }, owner: { open: 0, needsAction: 0 } };
+    for (const row of rows) {
+      const actor = actorFor(row, user)!;
+      const side = actor.kind === 'RENTER' ? summary.renter : summary.owner;
+      side.open += 1;
+      if ((await this.serialize(row, actor, settings)).actions.length > 0) side.needsAction += 1;
+    }
+    return summary;
+  }
+
   async listMine(
     user: PublicUser,
     role: 'renter' | 'owner',
     status?: BookingStatus,
     page = 1,
+    group?: BookingGroup,
   ): Promise<BookingsPage> {
+    const closed = [...CLOSED_BOOKING_STATUSES];
     const where: Prisma.BookingWhereInput = {
       [role === 'renter' ? 'renterId' : 'ownerId']: user.id,
-      ...(status && { status }),
+      ...(status
+        ? { status }
+        : group === 'open'
+          ? { status: { notIn: closed } }
+          : group === 'closed'
+            ? { status: { in: closed } }
+            : {}),
     };
     const [rows, total] = await Promise.all([
       this.prisma.booking.findMany({

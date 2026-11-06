@@ -176,11 +176,78 @@ export const BookingResponseSchema = z.object({ booking: BookingViewSchema });
 
 export type BookingResponse = z.infer<typeof BookingResponseSchema>;
 
+/** Statuses a deal never leaves. */
+export const CLOSED_BOOKING_STATUSES = ['COMPLETED', 'DECLINED', 'EXPIRED', 'CANCELLED'] as const satisfies readonly BookingStatus[];
+
+/** `open`: the deal is still going; `closed`: it ended (CLOSED_BOOKING_STATUSES). */
+export const BOOKING_GROUPS = ['open', 'closed'] as const;
+
+export type BookingGroup = (typeof BOOKING_GROUPS)[number];
+
 export const MyBookingsQuerySchema = z.object({
   role: z.enum(['renter', 'owner']),
   status: z.enum(BOOKING_STATUSES).optional(),
+  /** Open or closed deals; ignored when `status` is given. */
+  group: z.enum(BOOKING_GROUPS).optional(),
   page: z.coerce.number().int().min(1).max(10_000).optional(),
 });
+
+const RoleSummarySchema = z.object({
+  /** Deals still going. */
+  open: z.number().int(),
+  /** Open deals where the viewer has a step to take now. */
+  needsAction: z.number().int(),
+});
+
+/** Counters for the tabs of "My deals" and the user menu. */
+export const MyBookingsSummarySchema = z.object({ renter: RoleSummarySchema, owner: RoleSummarySchema });
+
+export type MyBookingsSummary = z.infer<typeof MyBookingsSummarySchema>;
+
+/** One step of a deal's journal, as its sides see it (no notes, no card data). */
+export const BookingHistoryItemSchema = z.object({
+  /** The domain event (`ACCEPT`, `PAY`, `TIMEOUT`…) or `REQUEST` for the first one. */
+  type: z.string(),
+  actor: z.enum(['RENTER', 'OWNER', 'ADMIN', 'SYSTEM']),
+  fromStatus: z.enum(BOOKING_STATUSES).nullable(),
+  toStatus: z.enum(BOOKING_STATUSES),
+  at: z.iso.datetime(),
+});
+
+export type BookingHistoryItem = z.infer<typeof BookingHistoryItemSchema>;
+
+export const BookingHistoryResponseSchema = z.object({ items: z.array(BookingHistoryItemSchema) });
+
+export type BookingHistoryResponse = z.infer<typeof BookingHistoryResponseSchema>;
+
+/** What anyone needs to price and book a published listing: the domain's `quote` inputs and the taken days. */
+export const BookingTermsSchema = z.object({
+  listing: z.object({
+    id: z.string(),
+    title: z.string(),
+    coverUrl: z.string().nullable(),
+    city: z.string().nullable(),
+    district: z.string().nullable(),
+    ownerId: z.string(),
+    ownerName: z.string(),
+  }),
+  pricing: z.object({
+    dailyCents: z.number().int(),
+    weeklyDiscountPercent: z.number().int(),
+    depositCents: z.number().int(),
+    minDays: z.number().int(),
+    maxDays: z.number().int(),
+  }),
+  servicePercent: z.number().int(),
+  /** The latest first day of a request, counted from `today`. */
+  maxAdvanceDays: z.number().int(),
+  timeZone: z.string(),
+  /** Today in the listing's time zone: the earliest first day. */
+  today: LocalDateSchema,
+  blocked: z.array(PeriodSchema),
+});
+
+export type BookingTerms = z.infer<typeof BookingTermsSchema>;
 
 export const BookingsPageSchema = z.object({ items: z.array(BookingViewSchema), total: z.number().int() });
 

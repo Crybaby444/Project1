@@ -33,7 +33,7 @@ async function topUpRequest(client: Client, amountCents: number, number: string 
 describe('wallet', () => {
   it('starts empty', async () => {
     const anna = await signedInClient(t);
-    expect((await anna.get('/wallet').expect(200)).body).toEqual({ balanceCents: 0, heldCents: 0 });
+    expect((await anna.get('/wallet').expect(200)).body).toEqual({ balanceCents: 0, heldCents: 0, depositsCents: 0, incomingCents: 0, earnedCents: 0 });
     expect((await anna.get('/wallet/transactions').expect(200)).body).toEqual({ items: [], total: 0 });
     await request(t.server).get('/api/v1/wallet').expect(401);
   });
@@ -49,7 +49,7 @@ describe('wallet', () => {
     expect((await anna.get('/wallet').expect(200)).body.balanceCents).toBe(2_500);
     const history = (await anna.get('/wallet/transactions').expect(200)).body;
     expect(history).toEqual({
-      items: [{ id: expect.any(String), kind: 'TOP_UP', amountCents: 2_500, bookingId: null, createdAt: expect.any(String) }],
+      items: [{ id: expect.any(String), kind: 'TOP_UP', amountCents: 2_500, bookingId: null, listingTitle: null, createdAt: expect.any(String) }],
       total: 1,
     });
     const payment = await t.prisma.payment.findFirstOrThrow();
