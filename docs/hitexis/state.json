@@ -43,14 +43,18 @@
     },
     {
       "id": "W02",
-      "status": "pending",
+      "status": "passed",
       "depends_on": [
         "W01"
       ],
-      "deliverables": [],
-      "gate_evidence": [],
+      "deliverables": [
+        "docs/hitexis/W02-language-architecture.md"
+      ],
+      "gate_evidence": [
+        "docs/hitexis/W02-language-architecture.md#quality-gate-w02"
+      ],
       "blockers": [],
-      "reason": "EN/LV/RU on one market (Latvia)."
+      "reason": "EN default kept by owner 2026-11-06 for Baltic expansion; subdirectories; language-only locales."
     },
     {
       "id": "W03",
@@ -81,5 +85,5 @@
     "version": null,
     "owner": "Zogal"
   },
-  "next_action": "W02 language architecture (question: LV as primary indexable for Latvia vs EN default). Urgent W08: Search Console + sitemap."
+  "next_action": "W03 sitemap & URL architecture with C02/C03. Dev follow-ups from W02 §M sent to plan 7 and lang-switch sessions. Owner: Search Console domain property."
 }
