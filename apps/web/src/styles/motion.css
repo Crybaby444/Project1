@@ -390,3 +390,36 @@ html:is([data-language-switch], [data-page-switch])
     display: none !important;
   }
 }
+
+/*
+ * Deals (plan 8b): moving between "My deals" and a deal, the item's cover glides from its card into the
+ * deal header (a shared element of the page View Transition). Each cover carries its own name in
+ * --vt-name, and the name is set only while a page switch runs, so the theme and language switches
+ * stay geometry-free. Transform and opacity only, via the browser's own snapshot morph.
+ */
+html[data-page-switch] [data-deal-cover] {
+  view-transition-name: var(--vt-name);
+}
+
+html[data-page-switch]::view-transition-group(*) {
+  animation-duration: 420ms;
+  animation-timing-function: var(--ease-yoyo);
+}
+
+/* A deal step that just turned current lands with a small hop of its mark. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-state='current'] > [data-step-mark] {
+    animation: step-hop var(--dur-slow) var(--ease-yoyo) both;
+  }
+}
+
+@keyframes step-hop {
+  from {
+    transform: scale(0.6) rotate(-10deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.12) rotate(3deg);
+    opacity: 1;
+  }
+}

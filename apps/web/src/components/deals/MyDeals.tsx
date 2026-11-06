@@ -187,6 +187,7 @@ export function MyDeals({ initialRole, initialGroup }: { initialRole: DealRole; 
             aria-selected={role === r}
             aria-controls="deals-panel"
             tabIndex={role === r ? 0 : -1}
+            aria-label={waiting(r) > 0 ? `${t(r)}, ${t('badge', { count: waiting(r) })}` : undefined}
             onClick={() => remember(r, group)}
             onKeyDown={onTabKey}
             className={`rounded-pill ease-yoyo flex min-h-10 flex-1 items-center justify-center gap-2 px-4 text-sm font-bold transition-[background-color,color,transform] duration-250 active:scale-[0.96] ${
@@ -195,9 +196,8 @@ export function MyDeals({ initialRole, initialGroup }: { initialRole: DealRole; 
           >
             {t(r)}
             {waiting(r) > 0 && (
-              <span className="rounded-pill bg-sticker-sun animate-pop-in inline-flex min-h-5 min-w-5 items-center justify-center border border-black px-1.5 text-[11px] text-black tabular-nums" data-badge={r}>
-                <span aria-hidden="true">{waiting(r)}</span>
-                <span className="sr-only">, {t('badge', { count: waiting(r) })}</span>
+              <span aria-hidden="true" className="rounded-pill bg-sticker-sun animate-pop-in inline-flex min-h-5 min-w-5 items-center justify-center border border-black px-1.5 text-[11px] text-black tabular-nums" data-badge={r}>
+                {waiting(r)}
               </span>
             )}
           </button>

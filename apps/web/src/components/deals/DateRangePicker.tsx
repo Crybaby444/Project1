@@ -203,6 +203,7 @@ export function DateRangePicker({
                             onClick={() => pick(date)}
                             onKeyDown={(event) => onKeyDown(event, date)}
                             onFocus={() => setFocused(date)}
+                            data-date={date}
                             data-range-end={isStart || isEnd || undefined}
                             className={`ease-yoyo grid aspect-square min-h-10 w-full place-items-center rounded-full border text-sm font-bold tabular-nums transition-[transform,background-color,color] duration-150 ${
                               off
