@@ -73,7 +73,9 @@ export function useToggleFavorite(listingId: string) {
     onSettled: () => {
       if (queryClient.isMutating({ predicate: (m) => m.options.scope?.id === `favorite-${listingId}` }) <= 1) {
         void queryClient.invalidateQueries({ queryKey: favoriteKeys.ids });
-        void queryClient.invalidateQueries({ queryKey: favoriteKeys.list });
+        // The favourites page keeps a card whose heart was just taken off (it can be put back); the
+        // list is loaded again the next time the page opens.
+        void queryClient.invalidateQueries({ queryKey: favoriteKeys.list, refetchType: 'none' });
       }
     },
   });

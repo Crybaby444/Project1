@@ -264,7 +264,8 @@ export type FavoritesResponse = z.infer<typeof FavoritesResponseSchema>;
 
 /** Everything a sitemap lists: only what the catalog shows. */
 export const SitemapResponseSchema = z.object({
-  listings: z.array(z.object({ id: z.string(), contentLocale: z.enum(LOCALES), updatedAt: z.iso.datetime() })),
+  /** Each at its canonical address: `/listings/{id}-{slug}` in its own language. */
+  listings: z.array(z.object({ id: z.string(), slug: z.string(), contentLocale: z.enum(LOCALES), updatedAt: z.iso.datetime() })),
   /** Owners with at least one item in the catalog. */
   users: z.array(z.object({ id: z.string(), updatedAt: z.iso.datetime() })),
   categories: z.array(z.object({ slug: z.string(), slugs: LocalizedTextSchema, count: z.number().int() })),

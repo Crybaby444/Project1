@@ -152,7 +152,15 @@
     "signedOut": "Sesija ir beigta.",
     "lendItem": "Izīrēt lietu",
     "myListings": "Manas lietas",
-    "moderation": "Moderācija"
+    "moderation": "Moderācija",
+    "favorites": "Izlase",
+    "catalog": {
+      "button": "Katalogs",
+      "label": "Kataloga kategorijas",
+      "all": "Visas kategorijas",
+      "search": "Meklēt",
+      "more": "Vēl {count} kategorijā {name}"
+    }
   },
   "banner": {
     "verifyEmail": {
@@ -704,5 +712,233 @@
     },
     "send": "Noraidīt sludinājumu",
     "cancel": "Atcelt"
+  },
+  "catalog": {
+    "allTitle": "Katalogs",
+    "allDescription": "Nomā instrumentus, elektroniku, sporta un kempinga piederumus un daudz ko citu no cilvēkiem Rīgā.",
+    "categoryTitle": "{name} nomai",
+    "categoryDescription": "Nomā {name} no cilvēkiem tuvumā Rīgā: dienas cenas, drošības naudas un brīvie datumi.",
+    "searchTitle": "Meklēšana",
+    "searchTitleFor": "“{q}”",
+    "found": "{count, plural, =0 {Nekas nav atrasts} zero {# lietas} one {# lieta} other {# lietas}}",
+    "related": "Saistītās kategorijas",
+    "breadcrumbs": {
+      "label": "Navigācijas ceļš",
+      "home": "Sākums",
+      "catalog": "Katalogs",
+      "search": "Meklēšana"
+    },
+    "card": {
+      "noPhoto": "Vēl nav foto",
+      "weekly": "−{percent}% par nedēļu",
+      "perDay": "{price} / dienā",
+      "deposit": "Drošības nauda {amount}",
+      "noDeposit": "Bez drošības naudas",
+      "unavailable": "Pašlaik netiek iznomāts"
+    },
+    "search": {
+      "label": "Meklēt katalogā",
+      "placeholder": "Urbjmašīna, telts, projektors…",
+      "clear": "Notīrīt meklēšanu",
+      "submit": "Meklēt",
+      "count": "{count, plural, =0 {Nav ieteikumu} zero {# ieteikumi} one {# ieteikums} other {# ieteikumi}}",
+      "none": "Nav ieteikumu. Nospied Enter, lai tomēr meklētu.",
+      "categories": "Kategorijas",
+      "items": "Lietas"
+    },
+    "filters": {
+      "title": "Filtri",
+      "button": "Filtri",
+      "buttonCount": "Filtri · {count}",
+      "show": "{count, plural, =0 {Nav ko rādīt} zero {Rādīt # lietas} one {Rādīt # lietu} other {Rādīt # lietas}}",
+      "price": "Cena dienā",
+      "priceFrom": "No",
+      "priceTo": "Līdz",
+      "priceWhole": "Ievadi veselus eiro, piemēram, 15.",
+      "priceOrder": "“Līdz” nedrīkst būt mazāks par “No”.",
+      "dates": "Brīvs šajās dienās",
+      "datesHint": "Izvēlies pirmo un pēdējo dienu.",
+      "clearDates": "Notīrīt datumus",
+      "district": "Apkaime",
+      "anyDistrict": "Jebkura apkaime"
+    },
+    "active": {
+      "label": "Aktīvie filtri",
+      "priceBetween": "{min}–{max} € dienā",
+      "priceFrom": "No {min} € dienā",
+      "priceTo": "Līdz {max} € dienā",
+      "dates": "Brīvs {dates}",
+      "remove": "Noņemt filtru: {filter}",
+      "resetAll": "Atiestatīt visu"
+    },
+    "sort": {
+      "label": "Kārtot",
+      "relevance": "Atbilstošākās",
+      "new": "Jaunākās",
+      "price_asc": "Lētākās vispirms",
+      "price_desc": "Dārgākās vispirms"
+    },
+    "view": {
+      "label": "Skats",
+      "list": "Saraksts",
+      "map": "Karte"
+    },
+    "empty": {
+      "title": "Šeit vēl nekā nav",
+      "body": "Pamēģini meklēt plašāk:",
+      "tipDates": "izvēlies citus datumus vai notīri tos",
+      "tipPrice": "paplašini cenu robežas",
+      "tipDistrict": "meklē visās apkaimēs",
+      "tipText": "lieto īsāku vai vispārīgāku vārdu",
+      "reset": "Atiestatīt filtrus",
+      "allCategories": "Visas kategorijas"
+    },
+    "error": {
+      "title": "Katalogs neielādējās",
+      "body": "Mūsu serveris laikus neatbildēja. Iespējams, tas tikai mostas; pamēģini vēlreiz pēc brīža.",
+      "retry": "Mēģināt vēlreiz"
+    },
+    "pagination": {
+      "label": "Lapas",
+      "previous": "Iepriekšējā lapa",
+      "next": "Nākamā lapa",
+      "status": "{page}. lapa no {pages}"
+    },
+    "map": {
+      "label": "Lietu karte",
+      "cell": "{count}",
+      "cellTitle": "{count, plural, zero {Šeit # lietas} one {Šeit # lieta} other {Šeit # lietas}}",
+      "perDay": "{price} / dienā",
+      "more": "{count, plural, zero {un vēl #} one {un vēl #} other {un vēl #}}",
+      "truncated": "Kartē redzamas pirmās 500 lietas. Sašaurini meklēšanu, lai redzētu pārējās.",
+      "approximate": "Vietas ir aptuvenas: precīzu adresi īpašnieks atsūta pēc rezervācijas."
+    }
+  },
+  "rangeCalendar": {
+    "keys": "Bultiņas pārvieto pa dienai vai nedēļai, Page Up un Page Down pa mēnesim. Enter izvēlas dienu.",
+    "previous": "Iepriekšējais mēnesis",
+    "next": "Nākamais mēnesis",
+    "pickStart": "Izvēlies pirmo dienu",
+    "pickEnd": "Tagad izvēlies pēdējo dienu",
+    "taken": "aizņemts",
+    "past": "pagātnē",
+    "tooFar": "pārāk tālu nākotnē",
+    "start": "pirmā diena",
+    "end": "pēdējā diena",
+    "selected": "izvēlēts"
+  },
+  "favorites": {
+    "title": "Izlase",
+    "add": "Pievienot “{title}” izlasei",
+    "remove": "Izņemt “{title}” no izlases",
+    "addShort": "Saglabāt",
+    "removeShort": "Saglabāts",
+    "addFailed": "Neizdevās pievienot izlasei.",
+    "removeFailed": "Neizdevās izņemt no izlases.",
+    "loadFailed": "Tava izlase neielādējās.",
+    "retry": "Mēģināt vēlreiz",
+    "emptyTitle": "Izlasē vēl nekā nav",
+    "emptyBody": "Pieskaries sirsniņai pie jebkuras lietas, lai to saglabātu šeit.",
+    "browse": "Apskatīt katalogu"
+  },
+  "item": {
+    "untitled": "Lieta bez nosaukuma",
+    "metaDescription": "Nomā “{title}” Yoyo: dienas cena, drošības nauda un brīvie datumi.",
+    "inCategory": "Kategorija: <b>{name}</b>",
+    "about": "Par lietu",
+    "similar": "Līdzīgas lietas",
+    "gallery": {
+      "noPhotos": "Vēl nav foto",
+      "photoAlt": "{title}, {number}. foto no {count}",
+      "open": "{count, plural, zero {Visi # foto} one {Pilnekrāns} other {Visi # foto}}",
+      "thumbnails": "Foto",
+      "show": "Rādīt {number}. foto no {count}",
+      "counter": "{number} no {count}",
+      "previous": "Iepriekšējais foto",
+      "next": "Nākamais foto",
+      "close": "Aizvērt"
+    },
+    "booking": {
+      "title": "Rezervēt šo lietu",
+      "perDay": "{price} / dienā",
+      "from": "No {price} dienā",
+      "weekly": "−{percent}% no 7 dienām",
+      "deposit": "Drošības nauda {amount}",
+      "noDeposit": "Bez drošības naudas",
+      "days": "{min}–{max} dienas",
+      "exactDays": "{days, plural, zero {# dienas} one {# diena} other {# dienas}}",
+      "choose": "Izvēlēties datumus",
+      "pickDates": "Izvēlies datumus, lai redzētu cenu.",
+      "problems": {
+        "START_IN_PAST": "Šī diena jau pagājusi. Izvēlies vēlāku.",
+        "TOO_FAR_AHEAD": "Rezervācija var sākties ne vēlāk kā pēc {maxAdvanceDays} dienām.",
+        "PERIOD_TOO_SHORT": "Īpašnieks iznomā vismaz uz {minDays, plural, zero {# dienām} one {# dienu} other {# dienām}}.",
+        "PERIOD_TOO_LONG": "Īpašnieks iznomā ne ilgāk kā uz {maxDays, plural, zero {# dienām} one {# dienu} other {# dienām}}.",
+        "DATES_UNAVAILABLE": "Dažas no šīm dienām ir aizņemtas. Izvēlies citus datumus.",
+        "INVALID_PERIOD": "Pēdējā diena nevar būt pirms pirmās."
+      },
+      "message": "Ziņa īpašniekam (nav obligāti)",
+      "messagePlaceholder": "Kad vēlies to saņemt, kam tas vajadzīgs…",
+      "request": "Pieprasīt rezervāciju",
+      "signInToRequest": "Pieslēdzies, lai rezervētu",
+      "noChargeYet": "Tagad nekas netiek iekasēts: maksā, kad īpašnieks piekrīt.",
+      "sentTitle": "Pieprasījums nosūtīts",
+      "sentBody": "Īpašniekam ir 24 stundas atbildei. Jebkurā gadījumā mēs tev uzrakstīsim.",
+      "own": "Šī ir tava lieta.",
+      "edit": "Labot sludinājumu"
+    },
+    "price": {
+      "days": "{price} × {days, plural, zero {# dienas} one {# diena} other {# dienas}}",
+      "discount": "Nedēļas atlaide −{percent}%",
+      "rent": "Noma",
+      "fee": "Yoyo komisija ({percent}%)",
+      "deposit": "Drošības nauda (atgriezīsies)",
+      "total": "Kopā",
+      "depositNote": "Drošības nauda {amount} tiek rezervēta un atgriezta, kad lieta ir atdota kārtībā."
+    },
+    "facts": {
+      "details": "Informācija",
+      "condition": "Stāvoklis",
+      "yes": "Jā",
+      "no": "Nē",
+      "rules": "Noteikumi",
+      "place": "Kur",
+      "placeNote": "Precīzu adresi īpašnieks atsūta pēc rezervācijas."
+    },
+    "owner": {
+      "label": "Iznomā",
+      "since": "Yoyo kopš {since}",
+      "sinceIn": "{city} · Yoyo kopš {since}",
+      "emailVerified": "E-pasts apstiprināts",
+      "phoneVerified": "Tālrunis apstiprināts",
+      "deals": "{count, plural, =0 {Vēl nav darījumu} zero {# darījumi} one {# darījums} other {# darījumi}}",
+      "items": "{count, plural, zero {# lietas} one {# lieta} other {# lietas}}",
+      "noReviews": "Vēl nav atsauksmju.",
+      "rating": "Vērtējums {rating} no 5",
+      "profile": "Vairāk no {name}"
+    },
+    "away": {
+      "badge": "Uz laiku nav pieejams",
+      "body": "Īpašnieks uz laiku izņēmis šo lietu no kataloga. Apskati līdzīgas.",
+      "category": "Vairāk kategorijā {name}",
+      "catalog": "Atvērt katalogu"
+    },
+    "gone": {
+      "title": "Šīs lietas vairs nav",
+      "body": "Īpašnieks to izņēma, tāpēc tā vairs netiek iznomāta. Daudz kas cits gan.",
+      "catalog": "Atvērt katalogu",
+      "search": "Meklēt"
+    }
+  },
+  "profile": {
+    "title": "{name}",
+    "description": "{name} Yoyo: {count, plural, =0 {vēl nav lietu nomai} zero {# lietas nomai} one {# lieta nomai} other {# lietas nomai}} Rīgā.",
+    "about": "Par sevi",
+    "tabs": "{name}: lietas un atsauksmes",
+    "items": "{count, plural, zero {# lietas} one {# lieta} other {# lietas}}",
+    "reviews": "Atsauksmes",
+    "noItems": "{name} pašlaik neko neiznomā.",
+    "noReviewsTitle": "Vēl nav atsauksmju",
+    "noReviewsBody": "Atsauksmes parādās šeit pēc pabeigtiem darījumiem."
   }
 }

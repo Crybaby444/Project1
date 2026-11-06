@@ -8,6 +8,7 @@ import { LogoMark } from '@/components/ui/LogoMark';
 import { Wordmark } from '@/components/ui/Wordmark';
 import { Link } from '@/i18n/navigation';
 import { useSession } from '@/lib/session/SessionProvider';
+import { CatalogMenu, type MenuRoot } from './CatalogMenu';
 import { UserMenu } from './UserMenu';
 import { VerifyEmailBanner } from './VerifyEmailBanner';
 
@@ -17,18 +18,21 @@ import { VerifyEmailBanner } from './VerifyEmailBanner';
  * visitor sees only "Sign in" (the sign-in page links to sign-up). Below 640px the row is also a
  * little tighter, so the longest "Sign in" (Latvian "Pieteikties") still fits a 320px phone.
  */
-export function SiteHeader() {
+export function SiteHeader({ catalog = [] }: { catalog?: MenuRoot[] }) {
   const t = useTranslations('header');
   const { status, user } = useSession();
 
   return (
     <>
-      <header data-site-header className="border-ink bg-surface border-b">
+      <header data-site-header className="border-ink bg-surface relative border-b">
         <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-2 px-4 sm:gap-3 sm:px-8">
-          <Link href="/" className="rounded-pill inline-flex shrink-0 items-center gap-2">
-            <LogoMark size={36} className="hidden sm:block" />
-            <Wordmark className="text-[24px] sm:text-[28px]" />
-          </Link>
+          <div className="flex min-w-0 items-center gap-1 sm:gap-3">
+            <Link href="/" className="rounded-pill inline-flex shrink-0 items-center gap-2">
+              <LogoMark size={36} className="hidden sm:block" />
+              <Wordmark className="text-[24px] sm:text-[28px]" />
+            </Link>
+            <CatalogMenu roots={catalog} />
+          </div>
 
           <div className="flex min-w-0 items-center gap-1 sm:gap-2">
             <LanguageSwitcher className="shrink-0" />

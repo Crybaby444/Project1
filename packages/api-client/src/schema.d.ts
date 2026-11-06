@@ -2497,6 +2497,7 @@ export interface components {
         SitemapResponseDto_Output: {
             listings: {
                 id: string;
+                slug: string;
                 /** @enum {string} */
                 contentLocale: "en" | "lv" | "ru";
                 /** Format: date-time */

@@ -152,7 +152,15 @@
     "signedOut": "You are signed out.",
     "lendItem": "Lend an item",
     "myListings": "My items",
-    "moderation": "Moderation"
+    "moderation": "Moderation",
+    "favorites": "Favourites",
+    "catalog": {
+      "button": "Catalog",
+      "label": "Catalog categories",
+      "all": "All categories",
+      "search": "Search",
+      "more": "{count} more in {name}"
+    }
   },
   "banner": {
     "verifyEmail": {
@@ -704,5 +712,233 @@
     },
     "send": "Reject listing",
     "cancel": "Cancel"
+  },
+  "catalog": {
+    "allTitle": "Catalog",
+    "allDescription": "Rent tools, electronics, sports and camping gear and more from people in Riga.",
+    "categoryTitle": "{name} for rent",
+    "categoryDescription": "Rent {name} from people near you in Riga: daily prices, deposits and free dates.",
+    "searchTitle": "Search",
+    "searchTitleFor": "“{q}”",
+    "found": "{count, plural, =0 {Nothing found} one {# item} other {# items}}",
+    "related": "Related categories",
+    "breadcrumbs": {
+      "label": "Breadcrumbs",
+      "home": "Home",
+      "catalog": "Catalog",
+      "search": "Search"
+    },
+    "card": {
+      "noPhoto": "No photo yet",
+      "weekly": "−{percent}% for a week",
+      "perDay": "{price} / day",
+      "deposit": "Deposit {amount}",
+      "noDeposit": "No deposit",
+      "unavailable": "Not for rent right now"
+    },
+    "search": {
+      "label": "Search the catalog",
+      "placeholder": "Drill, tent, projector…",
+      "clear": "Clear the search",
+      "submit": "Search",
+      "count": "{count, plural, =0 {No suggestions} one {# suggestion} other {# suggestions}}",
+      "none": "No suggestions. Press Enter to search anyway.",
+      "categories": "Categories",
+      "items": "Items"
+    },
+    "filters": {
+      "title": "Filters",
+      "button": "Filters",
+      "buttonCount": "Filters · {count}",
+      "show": "{count, plural, =0 {Nothing to show} one {Show # item} other {Show # items}}",
+      "price": "Price a day",
+      "priceFrom": "From",
+      "priceTo": "To",
+      "priceWhole": "Use whole euros, like 15.",
+      "priceOrder": "“To” should not be below “From”.",
+      "dates": "Free on these days",
+      "datesHint": "Pick the first and the last day.",
+      "clearDates": "Clear the dates",
+      "district": "District",
+      "anyDistrict": "Any district"
+    },
+    "active": {
+      "label": "Active filters",
+      "priceBetween": "€{min}–{max} a day",
+      "priceFrom": "From €{min} a day",
+      "priceTo": "Up to €{max} a day",
+      "dates": "Free {dates}",
+      "remove": "Remove the filter: {filter}",
+      "resetAll": "Reset all"
+    },
+    "sort": {
+      "label": "Sort",
+      "relevance": "Best match",
+      "new": "Newest",
+      "price_asc": "Cheapest first",
+      "price_desc": "Most expensive first"
+    },
+    "view": {
+      "label": "View",
+      "list": "List",
+      "map": "Map"
+    },
+    "empty": {
+      "title": "Nothing here yet",
+      "body": "Try loosening the search:",
+      "tipDates": "pick other dates or clear them",
+      "tipPrice": "widen the price range",
+      "tipDistrict": "look in every district",
+      "tipText": "use a shorter or more general word",
+      "reset": "Reset the filters",
+      "allCategories": "All categories"
+    },
+    "error": {
+      "title": "The catalog did not load",
+      "body": "Our server did not answer in time. It may be waking up; try again in a moment.",
+      "retry": "Try again"
+    },
+    "pagination": {
+      "label": "Pages",
+      "previous": "Previous page",
+      "next": "Next page",
+      "status": "Page {page} of {pages}"
+    },
+    "map": {
+      "label": "Map of the items",
+      "cell": "{count}",
+      "cellTitle": "{count, plural, one {# item here} other {# items here}}",
+      "perDay": "{price} / day",
+      "more": "{count, plural, one {and # more} other {and # more}}",
+      "truncated": "The map shows the first 500 items. Narrow the search to see the rest.",
+      "approximate": "Places are approximate: the owner shares the exact address after a booking."
+    }
+  },
+  "rangeCalendar": {
+    "keys": "Arrow keys move by a day or a week, Page Up and Page Down by a month. Enter picks a day.",
+    "previous": "Previous month",
+    "next": "Next month",
+    "pickStart": "Pick the first day",
+    "pickEnd": "Now pick the last day",
+    "taken": "taken",
+    "past": "in the past",
+    "tooFar": "too far ahead",
+    "start": "first day",
+    "end": "last day",
+    "selected": "chosen"
+  },
+  "favorites": {
+    "title": "Favourites",
+    "add": "Add “{title}” to favourites",
+    "remove": "Remove “{title}” from favourites",
+    "addShort": "Save",
+    "removeShort": "Saved",
+    "addFailed": "Could not add it to favourites.",
+    "removeFailed": "Could not remove it from favourites.",
+    "loadFailed": "Your favourites did not load.",
+    "retry": "Try again",
+    "emptyTitle": "No favourites yet",
+    "emptyBody": "Tap the heart on any item to keep it here for later.",
+    "browse": "Browse the catalog"
+  },
+  "item": {
+    "untitled": "Untitled item",
+    "metaDescription": "Rent “{title}” on Yoyo: daily price, deposit and free dates.",
+    "inCategory": "In <b>{name}</b>",
+    "about": "About the item",
+    "similar": "Similar items",
+    "gallery": {
+      "noPhotos": "No photos yet",
+      "photoAlt": "{title}, photo {number} of {count}",
+      "open": "{count, plural, one {Full screen} other {All # photos}}",
+      "thumbnails": "Photos",
+      "show": "Show photo {number} of {count}",
+      "counter": "{number} of {count}",
+      "previous": "Previous photo",
+      "next": "Next photo",
+      "close": "Close"
+    },
+    "booking": {
+      "title": "Book this item",
+      "perDay": "{price} / day",
+      "from": "From {price} a day",
+      "weekly": "−{percent}% from 7 days",
+      "deposit": "Deposit {amount}",
+      "noDeposit": "No deposit",
+      "days": "{min}–{max} days",
+      "exactDays": "{days, plural, one {# day} other {# days}}",
+      "choose": "Choose dates",
+      "pickDates": "Choose the dates to see the price.",
+      "problems": {
+        "START_IN_PAST": "That day has passed. Pick a later one.",
+        "TOO_FAR_AHEAD": "Bookings start at most {maxAdvanceDays} days ahead.",
+        "PERIOD_TOO_SHORT": "The owner rents it for at least {minDays, plural, one {# day} other {# days}}.",
+        "PERIOD_TOO_LONG": "The owner rents it for at most {maxDays, plural, one {# day} other {# days}}.",
+        "DATES_UNAVAILABLE": "Some of these days are taken. Pick other dates.",
+        "INVALID_PERIOD": "The last day cannot come before the first."
+      },
+      "message": "A note to the owner (optional)",
+      "messagePlaceholder": "When you would like to pick it up, what it is for…",
+      "request": "Request booking",
+      "signInToRequest": "Sign in to book",
+      "noChargeYet": "Nothing is charged now: you pay once the owner accepts.",
+      "sentTitle": "Request sent",
+      "sentBody": "The owner has 24 hours to answer. We will email you either way.",
+      "own": "This is your item.",
+      "edit": "Edit the listing"
+    },
+    "price": {
+      "days": "{price} × {days, plural, one {# day} other {# days}}",
+      "discount": "Weekly discount −{percent}%",
+      "rent": "Rent",
+      "fee": "Yoyo fee ({percent}%)",
+      "deposit": "Deposit (comes back)",
+      "total": "Total",
+      "depositNote": "The deposit of {amount} is held and returned after the item comes back in order."
+    },
+    "facts": {
+      "details": "Details",
+      "condition": "Condition",
+      "yes": "Yes",
+      "no": "No",
+      "rules": "Rules",
+      "place": "Where",
+      "placeNote": "The owner sends the exact address after the booking."
+    },
+    "owner": {
+      "label": "Lends it",
+      "since": "On Yoyo since {since}",
+      "sinceIn": "{city} · on Yoyo since {since}",
+      "emailVerified": "Email confirmed",
+      "phoneVerified": "Phone confirmed",
+      "deals": "{count, plural, =0 {No deals yet} one {# deal} other {# deals}}",
+      "items": "{count, plural, one {# item} other {# items}}",
+      "noReviews": "No reviews yet.",
+      "rating": "Rated {rating} of 5",
+      "profile": "More from {name}"
+    },
+    "away": {
+      "badge": "Away for now",
+      "body": "The owner has taken this item out of the catalog for a while. Have a look at similar ones.",
+      "category": "More in {name}",
+      "catalog": "Open the catalog"
+    },
+    "gone": {
+      "title": "This item is gone",
+      "body": "Its owner removed it, so it is no longer for rent. Plenty of other things are.",
+      "catalog": "Open the catalog",
+      "search": "Search"
+    }
+  },
+  "profile": {
+    "title": "{name}",
+    "description": "{name} on Yoyo: {count, plural, =0 {no items for rent yet} one {# item for rent} other {# items for rent}} in Riga.",
+    "about": "About",
+    "tabs": "{name}: items and reviews",
+    "items": "{count, plural, one {# item} other {# items}}",
+    "reviews": "Reviews",
+    "noItems": "{name} has nothing for rent right now.",
+    "noReviewsTitle": "No reviews yet",
+    "noReviewsBody": "Reviews appear here after finished deals."
   }
 }

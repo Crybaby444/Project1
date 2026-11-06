@@ -22,14 +22,20 @@ const TIMEOUT_MS = 10_000;
 const CATEGORIES_REVALIDATE = 300;
 
 /**
+ * Every page's header asks for the tree (the catalog menu), so a sleeping API must not hold pages up
+ * for long: after this the menu shows only "All categories" and search (as the landing page does).
+ */
+const CATEGORIES_TIMEOUT_MS = 2500;
+
+/**
  * The typed client for Server Components: straight to the API (no proxy, no cookies: only public
  * data), never cached unless said, and given up after 10 s so a sleeping API shows the error page.
  */
-function client(revalidate?: number) {
+function client(revalidate?: number, timeoutMs = TIMEOUT_MS) {
   return createApiClient(resolveApiUrl(process.env.NEXT_PUBLIC_API_URL, process.env.NODE_ENV), {
     fetch: (request: Request) =>
       fetch(request, {
-        signal: AbortSignal.timeout(TIMEOUT_MS),
+        signal: AbortSignal.timeout(timeoutMs),
         ...(revalidate === undefined ? { cache: 'no-store' } : { next: { revalidate } }),
       }),
   });
@@ -46,7 +52,7 @@ async function load<T>(call: () => Promise<{ data?: T; response: Response }>): P
 
 /** One request per server render, shared by the layout (menu) and the page. */
 export const loadCategories = cache(async (): Promise<Loaded<CategoryNode[]>> => {
-  const loaded = await load(() => client(CATEGORIES_REVALIDATE).GET('/api/v1/categories'));
+  const loaded = await load(() => client(CATEGORIES_REVALIDATE, CATEGORIES_TIMEOUT_MS).GET('/api/v1/categories'));
   return loaded.ok ? { ok: true, data: loaded.data.categories } : loaded;
 });
 

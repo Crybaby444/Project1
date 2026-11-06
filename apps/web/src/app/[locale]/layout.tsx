@@ -1,6 +1,6 @@
-import { parseThemePreference, THEME_COOKIE } from '@yoyo/shared';
+import { LOCALES, parseThemePreference, THEME_COOKIE, type Locale } from '@yoyo/shared';
 import type { Metadata } from 'next';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -8,10 +8,13 @@ import type { ReactNode } from 'react';
 import { themeInitScript } from '@/components/theme/theme-script';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { SiteFooter } from '@/components/layout/SiteFooter';
+import { menuRoots } from '@/components/layout/CatalogMenu';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SyncThemeWithProfile } from '@/components/theme/use-theme-choice';
 import { ToastProvider } from '@/components/ui/Toast';
 import { routing } from '@/i18n/routing';
+import { loadCategories } from '@/lib/catalog/server-api';
+import { CONTENT_LOCALE_HEADER } from '@/lib/page-headers';
 import { QueryProvider } from '@/lib/session/QueryProvider';
 import { SessionProvider } from '@/lib/session/SessionProvider';
 import { SITE_URL } from '@/lib/site';
@@ -39,9 +42,15 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
   // An explicit choice is rendered by the server; "system" is resolved by the head script.
   const preference = parseThemePreference((await cookies()).get(THEME_COOKIE)?.value);
   const serverTheme = preference === 'system' ? undefined : preference;
+  // An item page is in the item's own language (the proxy names it); the header, the footer and the
+  // page's own words keep the interface language (`lang` on them).
+  const content = (await headers()).get(CONTENT_LOCALE_HEADER);
+  const htmlLang = content && (LOCALES as readonly string[]).includes(content) ? (content as Locale) : locale;
+  const tree = await loadCategories();
+  const catalog = tree.ok ? menuRoots(tree.data) : [];
 
   return (
-    <html lang={locale} className={fontVariables} data-theme={serverTheme} suppressHydrationWarning>
+    <html lang={htmlLang} className={fontVariables} data-theme={serverTheme} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
@@ -52,9 +61,15 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
               <ThemeProvider initialPreference={preference}>
                 <ToastProvider>
                   <SyncThemeWithProfile />
-                  <SiteHeader />
-                  <div className="flex flex-1 flex-col *:w-full">{children}</div>
-                  <SiteFooter />
+                  <div lang={locale} className="contents">
+                    <SiteHeader catalog={catalog} />
+                  </div>
+                  <div lang={locale} className="flex flex-1 flex-col *:w-full">
+                    {children}
+                  </div>
+                  <div lang={locale} className="contents">
+                    <SiteFooter />
+                  </div>
                 </ToastProvider>
               </ThemeProvider>
             </SessionProvider>

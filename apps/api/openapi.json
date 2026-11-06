@@ -12009,6 +12009,9 @@
                 "id": {
                   "type": "string"
                 },
+                "slug": {
+                  "type": "string"
+                },
                 "contentLocale": {
                   "type": "string",
                   "enum": [
@@ -12025,6 +12028,7 @@
               },
               "required": [
                 "id",
+                "slug",
                 "contentLocale",
                 "updatedAt"
               ],

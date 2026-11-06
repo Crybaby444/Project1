@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { listingSlug } from '@yoyo/shared';
 import { resetAccounts, resetDeals } from './support/db';
 import { day, requestBooking } from './support/deals';
 import { resetListings, seedListing, signedInClient, type Client } from './support/listings';
@@ -115,7 +116,7 @@ describe('item page, profiles and the sitemap', () => {
     const lv = await seedListing(t, anna.user, { status: 'PUBLISHED', contentLocale: 'lv' });
     await seedListing(t, anna.user, { status: 'HIDDEN' });
     const res = await api('/catalog/sitemap').expect(200);
-    expect(res.body.listings).toEqual([{ id: lv.id, contentLocale: 'lv', updatedAt: expect.any(String) }]);
+    expect(res.body.listings).toEqual([{ id: lv.id, slug: listingSlug(lv.title), contentLocale: 'lv', updatedAt: expect.any(String) }]);
     expect(res.body.users).toEqual([{ id: anna.user.id, updatedAt: expect.any(String) }]);
     const count = (slug: string) => res.body.categories.find((c: { slug: string }) => c.slug === slug);
     expect(count('tools')).toEqual({ slug: 'tools', slugs: { en: 'tools', lv: 'instrumenti', ru: 'instrumenty' }, count: 1 });

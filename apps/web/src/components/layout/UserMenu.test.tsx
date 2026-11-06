@@ -35,6 +35,7 @@ describe('UserMenu', () => {
     const items = within(menu).getAllByRole('menuitem');
     expect(items.map((i) => i.textContent)).toEqual([
       en.header.myListings,
+      en.header.favorites,
       en.header.settings,
       en.header.signOut,
     ]);
@@ -43,7 +44,7 @@ describe('UserMenu', () => {
     await user.keyboard('{ArrowDown}');
     expect(items[1]).toHaveFocus();
     await user.keyboard('{End}');
-    expect(items[2]).toHaveFocus();
+    expect(items[3]).toHaveFocus();
     await user.keyboard('{ArrowDown}');
     expect(items[0]).toHaveFocus(); // wraps around
 

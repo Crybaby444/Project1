@@ -221,7 +221,7 @@ export class CatalogService {
     const [listings, tree] = await Promise.all([
       this.prisma.listing.findMany({
         where: CATALOG_VISIBLE_WHERE,
-        select: { id: true, contentLocale: true, updatedAt: true, categoryId: true, ownerId: true, owner: { select: { updatedAt: true } } },
+        select: { id: true, title: true, contentLocale: true, updatedAt: true, categoryId: true, ownerId: true, owner: { select: { updatedAt: true } } },
         orderBy: { id: 'asc' },
       }),
       this.categories.tree(),
@@ -231,7 +231,7 @@ export class CatalogService {
     const users = new Map<string, Date>();
     for (const listing of listings) users.set(listing.ownerId, listing.owner.updatedAt);
     return {
-      listings: listings.map((l) => ({ id: l.id, contentLocale: l.contentLocale as Locale, updatedAt: l.updatedAt.toISOString() })),
+      listings: listings.map((l) => ({ id: l.id, slug: listingSlug(l.title), contentLocale: l.contentLocale as Locale, updatedAt: l.updatedAt.toISOString() })),
       users: [...users].map(([id, updatedAt]) => ({ id, updatedAt: updatedAt.toISOString() })),
       categories: tree.flatMap(subtree).map((node) => ({
         slug: node.slug,
