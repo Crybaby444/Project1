@@ -29,3 +29,4 @@ next-env.d.ts
 .env.deploy
 docs/hitexis/*.docx
 apps/web/playwright.local.config.ts
+.claude/settings.local.json
