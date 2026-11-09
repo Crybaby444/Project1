@@ -58,14 +58,18 @@
     },
     {
       "id": "W03",
-      "status": "pending",
+      "status": "passed",
       "depends_on": [
         "W02"
       ],
-      "deliverables": [],
-      "gate_evidence": [],
+      "deliverables": [
+        "docs/hitexis/W03-sitemap-urls.md"
+      ],
+      "gate_evidence": [
+        "docs/hitexis/W03-sitemap-urls.md#quality-gate-w03"
+      ],
       "blockers": [],
-      "reason": "Sitemap and URLs shared with catalogue."
+      "reason": "Catalog-led sitemap; flat localized category slugs; /lend and /safety added."
     },
     {
       "id": "C01",
@@ -77,6 +81,17 @@
       "gate_evidence": [],
       "blockers": [],
       "reason": "P2P rental marketplace with deposit, fee and disputes."
+    },
+    {
+      "id": "W04",
+      "status": "pending",
+      "depends_on": [
+        "W03"
+      ],
+      "deliverables": [],
+      "gate_evidence": [],
+      "blockers": [],
+      "reason": "Blueprints for HOME, HOW, LEND, SAFE, FAQ, category, listing templates."
     }
   ],
   "approvals": [],
@@ -85,5 +100,5 @@
     "version": null,
     "owner": "Zogal"
   },
-  "next_action": "W03 sitemap & URL architecture with C02/C03. Dev follow-ups from W02 §M sent to plan 7 and lang-switch sessions. Owner: Search Console domain property."
+  "next_action": "W04 page blueprints; owner proofreads LV category slugs (W03 §D)."
 }

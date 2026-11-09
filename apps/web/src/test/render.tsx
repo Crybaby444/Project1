@@ -13,12 +13,15 @@ import ru from '../../messages/ru.json';
 import siteEn from '../../messages/site/en.json';
 import siteLv from '../../messages/site/lv.json';
 import siteRu from '../../messages/site/ru.json';
+import dealsEn from '../../messages/deals/en.json';
+import dealsLv from '../../messages/deals/lv.json';
+import dealsRu from '../../messages/deals/ru.json';
 
 // The same merge as i18n/request.ts: interface texts plus the landing and service page texts.
 const messages = {
-  en: { ...en, ...siteEn },
-  lv: { ...lv, ...siteLv },
-  ru: { ...ru, ...siteRu },
+  en: { ...en, ...siteEn, ...dealsEn },
+  lv: { ...lv, ...siteLv, ...dealsLv },
+  ru: { ...ru, ...siteRu, ...dealsRu },
 } as const;
 type TestLocale = keyof typeof messages;
 

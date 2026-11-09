@@ -1,6 +1,7 @@
 import { DomainError } from './errors';
 import { add, cents, mulInt, percentOf, sub } from './money';
 import type { Cents } from './money';
+import type { LocalDate } from './dates';
 
 /** The price fields of a listing (spec §4.3). */
 export interface ListingPricing {
@@ -59,8 +60,12 @@ export interface Quote {
   readonly discountCents: Cents;
   /** `base − discount`: the price of the rental itself. */
   readonly rentCents: Cents;
+  /** The fee percent applied (frozen into the booking: later setting changes never alter it). */
+  readonly servicePercent: number;
   /** Yoyo's fee, paid by the renter on top of the rent. */
   readonly serviceFeeCents: Cents;
+  /** When the percent is a launch offer: its last day (see `serviceFeeAt`); null for the regular fee. */
+  readonly servicePromoUntil: LocalDate | null;
   readonly depositCents: Cents;
   /** `rent + fee + deposit`: what the renter pays. */
   readonly totalCents: Cents;
@@ -73,6 +78,8 @@ export interface QuoteInput {
   readonly pricing: ListingPricing;
   readonly days: number;
   readonly servicePercent: number;
+  /** The last day of the launch offer the percent comes from, if it does (`serviceFeeAt`). */
+  readonly servicePromoUntil?: LocalDate | null;
   /**
    * A daily price agreed through an accepted offer. No weekly discount on top of it; if the listing
    * with its discount is cheaper for the renter, the quote uses the listing instead.
@@ -86,7 +93,7 @@ export interface QuoteInput {
  * renter pays whichever is cheaper: the agreed daily price with no discount, or the listed price with
  * the weekly discount (on a tie, the agreed price).
  */
-export function quote({ pricing, days, servicePercent, agreedDailyCents }: QuoteInput): Quote {
+export function quote({ pricing, days, servicePercent, servicePromoUntil = null, agreedDailyCents }: QuoteInput): Quote {
   if (!Number.isSafeInteger(days)) {
     throw new DomainError('INVALID_INPUT', { field: 'days', value: days });
   }
@@ -111,7 +118,9 @@ export function quote({ pricing, days, servicePercent, agreedDailyCents }: Quote
     discountPercent,
     discountCents,
     rentCents,
+    servicePercent,
     serviceFeeCents,
+    servicePromoUntil,
     depositCents,
     totalCents: add(rentCents, serviceFeeCents, depositCents),
     ownerPayoutCents: rentCents,

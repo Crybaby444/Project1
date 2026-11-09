@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { STICKER_COLORS } from '@yoyo/shared';
 import { describe, expect, it, vi } from 'vitest';
 import en from '../../../messages/en.json';
+import deals from '../../../messages/deals/en.json';
 import { fakeApi, meRoute, testUser } from '@/test/fake-api';
 import { renderWithSession } from '@/test/render';
 import { avatarColor, initials, UserMenu } from './UserMenu';
@@ -34,6 +35,8 @@ describe('UserMenu', () => {
     expect(button).toHaveAttribute('aria-expanded', 'true');
     const items = within(menu).getAllByRole('menuitem');
     expect(items.map((i) => i.textContent)).toEqual([
+      deals.dealsMenu.myDeals,
+      deals.dealsMenu.wallet,
       en.header.myListings,
       en.header.favorites,
       en.header.settings,
@@ -44,7 +47,7 @@ describe('UserMenu', () => {
     await user.keyboard('{ArrowDown}');
     expect(items[1]).toHaveFocus();
     await user.keyboard('{End}');
-    expect(items[3]).toHaveFocus();
+    expect(items[5]).toHaveFocus();
     await user.keyboard('{ArrowDown}');
     expect(items[0]).toHaveFocus(); // wraps around
 
@@ -122,5 +125,23 @@ describe('avatar', () => {
     expect(colours).toContain(avatarColor('user-1'));
     const spread = new Set(Array.from({ length: 40 }, (_, i) => avatarColor(`user-${i}`)));
     expect(spread.size).toBeGreaterThan(3);
+  });
+});
+
+describe('UserMenu deal links', () => {
+  it('links My deals and the wallet, and counts the deals waiting for this person', async () => {
+    const user = userEvent.setup();
+    const person = testUser();
+    const { client, calls } = fakeApi({
+      ...meRoute(person),
+      'GET /api/v1/me/bookings/summary': { status: 200, body: { renter: { open: 2, needsAction: 1 }, owner: { open: 1, needsAction: 1 } } },
+    });
+    renderWithSession(<UserMenu user={person} />, { client });
+    // Nothing is asked before the menu opens.
+    expect(calls.some((c) => c.path.endsWith('/summary'))).toBe(false);
+    await user.click(screen.getByRole('button', { name: new RegExp(`^${en.header.account}`) }));
+    const deals = await screen.findByRole('menuitem', { name: /My deals.*2 wait for you/ });
+    expect(deals).toHaveAttribute('href', '/bookings');
+    expect(screen.getByRole('menuitem', { name: 'Wallet' })).toHaveAttribute('href', '/wallet');
   });
 });

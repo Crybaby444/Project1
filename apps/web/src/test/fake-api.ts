@@ -5,7 +5,7 @@ export type FakeReply = { status: number; body?: unknown; headers?: Record<strin
 /** `'POST /api/v1/auth/login'` → a reply, or a function of the request body. */
 export type FakeRoutes = Record<string, FakeReply | ((body: unknown) => FakeReply | Promise<FakeReply>)>;
 /** `query` is the search part of the URL without `?` (`status=ARCHIVED`), empty when there is none. */
-export type FakeCall = { method: string; path: string; query: string; body: unknown };
+export type FakeCall = { method: string; path: string; query: string; body: unknown; headers: Headers };
 
 /**
  * A typed API client backed by a table of canned answers. Unknown routes answer 404.
@@ -19,7 +19,7 @@ export function fakeApi(routes: FakeRoutes): { client: ApiClient; calls: FakeCal
     const path = url.pathname;
     const text = await request.text();
     const body: unknown = text ? JSON.parse(text) : undefined;
-    calls.push({ method: request.method, path, query: url.search.slice(1), body });
+    calls.push({ method: request.method, path, query: url.search.slice(1), body, headers: request.headers });
     const route = routes[`${request.method} ${path}`];
     const reply = typeof route === 'function' ? await route(body) : route;
     if (!reply) return json({ status: 404, body: { error: { code: 'NOT_FOUND', message: 'Not found' } } });

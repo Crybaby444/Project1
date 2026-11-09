@@ -77,7 +77,7 @@ export class LedgerService {
   }
 
   /** Postings of the user's wallet, newest first, `WALLET_PAGE_SIZE` a page. */
-  async walletHistory(userId: string, query: { page: number; kind?: OperationKind }): Promise<{ items: WalletTransaction[]; total: number }> {
+  async walletHistory(userId: string, query: { page: number; kind?: OperationKind }): Promise<{ items: Omit<WalletTransaction, 'listingTitle'>[]; total: number }> {
     const where: Prisma.LedgerEntryWhereInput = {
       account: walletAccount(userId),
       ...(query.kind && { operation: { kind: query.kind } }),
