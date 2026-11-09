@@ -12,6 +12,7 @@ import type {
 import { cache } from 'react';
 import { resolveApiUrl } from '@/lib/api-url';
 import { toApiSearch } from './params';
+import { isCurrentTree } from './tree-shape';
 
 /** An answer of the API on the server: the data, or the status it failed with (0: no answer in time). */
 export type Loaded<T> = { ok: true; data: T } | { ok: false; status: number };
@@ -53,7 +54,9 @@ async function load<T>(call: () => Promise<{ data?: T; response: Response }>): P
 /** One request per server render, shared by the layout (menu) and the page. */
 export const loadCategories = cache(async (): Promise<Loaded<CategoryNode[]>> => {
   const loaded = await load(() => client(CATEGORIES_REVALIDATE, CATEGORIES_TIMEOUT_MS).GET('/api/v1/categories'));
-  return loaded.ok ? { ok: true, data: loaded.data.categories } : loaded;
+  if (!loaded.ok) return loaded;
+  // An API one release behind (Render deploys after Vercel) counts as no answer: no menu, no crash.
+  return isCurrentTree(loaded.data.categories) ? { ok: true, data: loaded.data.categories } : { ok: false, status: 502 };
 });
 
 export const loadItem = cache(async (id: string): Promise<Loaded<ItemDetail>> => {
