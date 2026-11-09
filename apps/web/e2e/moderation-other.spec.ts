@@ -18,7 +18,7 @@ test('the administrator moves a listing out of «Other»; it keeps its status an
 
   await signInAsAdmin(page);
   // The queue loads in the browser: wait for each page (its count, or the empty state) before looking.
-  let card = page.getByRole('article').filter({ has: page.getByRole('heading', { name: title }) });
+  const card = page.getByRole('article').filter({ has: page.getByRole('heading', { name: title }) });
   for (let number = 1; number <= 20; number++) {
     await page.goto(`/admin/listings?queue=other&page=${number}`);
     await expect(page.getByRole('status').filter({ hasText: /Showing/ }).or(page.getByRole('heading', { name: m.otherEmptyTitle }))).toBeVisible();

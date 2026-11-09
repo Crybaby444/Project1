@@ -462,3 +462,12 @@ parse({ sort: 'cheapest' }) → ошибка sort;   сам период дли�
   - SEO (решение владельца 2026-11-06): Task 10. Окончательные slug категорий — из карты сайта W03, механизм готов.
 - **Связь с планами 6 и 8:** `serializeListing(..., 'public')` и `PublicListingSchema`; `blockedPeriods`, `bookableListing` (общее условие видимости), `BookingRulesService` для сбора и `maxAdvanceDays`; `POST /bookings` и `GET /listings/:id/quote` без изменений.
 - **Согласованность имён:** `CatalogQuerySchema`, `CATALOG_VISIBLE`, `yoyo_fold`, `parseCatalogParams`, `catalogSearch`, `serverApi`, `priceFor`, `RangeCalendar`, `HeartButton`, `useToggleFavorite`, `contentLocale`, `slugify`, `itemSeo`, `catalogSeo` одинаковы во всех задачах.
+
+## Исполнение: отклонения от плана
+
+- **Бронирование на странице вещи** — панель плана 8b (`components/deals/BookingPanel`, раскладка `stacked`), а не свой калькулятор `priceFor`: 8b влился раньше, его панель учитывает стартовый сбор (`servicePromoUntil`), шлёт `Idempotency-Key` и после запроса открывает сделку. `calculator.ts` и `PriceBreakdown` удалены; `RangeCalendar` остался для фильтра дат. Поля `booking` в ответе `GET /catalog/listings/:id` пока не используются сайтом.
+- **Общее фото «каталог → вещь»** — через View Transition переходов страниц из `components/motion` (`TransitionLink`, влит в main), а не через экспериментальный `<ViewTransition>` React: имя получает только фото открытой карточки и только на время перехода.
+- **Ветка** — `claude/yoyo-catalog-plan-07-5suewp` (так требует среда), не `feat/catalog`.
+- **Лимиты в e2e:** вход по одному email стал настраиваемым (`LOGIN_EMAIL_HOURLY_CAP`, в production по-прежнему 20 в час); e2e поднимает его и `REGISTRATION_HOURLY_CAP`, иначе полный прогон упирается в них.
+- **Найдено тестами:** сердечко на карточке оказывалось под карточкой (два класса позиционирования); нажатие сердечка до загрузки сессии вело вошедшего на вход; заголовок `Link` указывал на адрес запроса, а не на `SITE_ORIGIN`. Исправлено.
+
