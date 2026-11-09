@@ -82,8 +82,13 @@ jobs:
       - name: Apply database migrations
         run: pnpm --filter @yoyo/api exec prisma migrate deploy
 
-      - name: Lint, typecheck, unit tests and build
-        run: pnpm turbo run lint typecheck test build
+      # Build runs after typecheck: `next build` wipes apps/web/.next while
+      # `next typegen` writes .next/types/routes.d.ts, so running both at once races.
+      - name: Lint, typecheck and unit tests
+        run: pnpm turbo run lint typecheck test
+
+      - name: Build
+        run: pnpm turbo run build
 
       - name: Generated API client is up to date
         run: |
