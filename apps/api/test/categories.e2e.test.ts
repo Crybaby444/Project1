@@ -3,7 +3,9 @@ import type { CategoryNode } from '@yoyo/shared';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { CATALOG } from '../src/categories/catalog-data';
-import { ensureCategories } from '../src/categories/ensure-categories';
+import { CATALOG_VERSION_SETTING, ensureCategories } from '../src/categories/ensure-categories';
+import { resetAccounts } from './support/db';
+import { seedUser } from './support/users';
 import { createTestApp, type TestApp } from './support/test-app';
 
 describe('categories', () => {
@@ -39,6 +41,7 @@ describe('categories', () => {
         options: expect.arrayContaining([{ value: 'ps5', labels: expect.objectContaining({ en: 'PlayStation 5' }) }]),
       });
       expect(consoles.attributes[1]).toMatchObject({ key: 'controllers', type: 'NUMBER', options: null });
+      expect(consoles.slugs).toEqual({ en: 'game-consoles', lv: 'spelu-konsoles', ru: 'igrovye-pristavki' });
     });
 
     it('leaves out inactive categories and everything under them', async () => {
@@ -106,6 +109,40 @@ describe('categories', () => {
       const fresh = await t.prisma.category.findUniqueOrThrow({ where: { id: consoles.id }, include: { attributes: true } });
       expect((fresh.names as { en: string }).en).not.toBe('Old');
       expect(fresh.attributes.find((attribute) => attribute.key === 'model')!.required).toBe(true);
+    });
+
+    it('moves listings of replaced categories once, keeping only attribute values the new category knows', async () => {
+      await t.prisma.$executeRawUnsafe('TRUNCATE TABLE "Listing" CASCADE');
+      await resetAccounts(t.prisma);
+      const { user } = await seedUser(t);
+      const tools = await t.prisma.category.findUniqueOrThrow({ where: { slug: 'tools' } });
+      const old = await t.prisma.category.create({
+        data: { slug: 'test-power-tools', parentId: tools.id, sticker: 'sun', icon: 'drill', names: { en: 'P', lv: 'P', ru: 'P' } },
+      });
+      const listing = await t.prisma.listing.create({
+        data: { ownerId: user.id, categoryId: old.id, title: 'Drill', attributes: { power: 'battery', watts: 750, controllers: 2, brand: 7 } },
+      });
+      const migration = { legacy: { 'test-power-tools': 'drills-drivers', 'test-gone': 'saws' }, version: 'test-1' };
+      await t.prisma.setting.deleteMany({ where: { key: CATALOG_VERSION_SETTING } });
+
+      await ensureCategories(t.prisma, CATALOG, migration);
+
+      const moved = await t.prisma.listing.findUniqueOrThrow({ where: { id: listing.id }, include: { category: true } });
+      expect(moved.category!.slug).toBe('drills-drivers');
+      expect(moved.attributes).toEqual({ power: 'battery', watts: 750 });
+      expect(moved.version).toBe(1);
+      expect((await t.prisma.category.findUniqueOrThrow({ where: { id: old.id } })).active).toBe(false);
+      expect((await t.prisma.setting.findUniqueOrThrow({ where: { key: CATALOG_VERSION_SETTING } })).value).toBe('test-1');
+
+      // Once per version: a listing put back on the old category is left alone on the next start.
+      await t.prisma.listing.update({ where: { id: listing.id }, data: { categoryId: old.id } });
+      await ensureCategories(t.prisma, CATALOG, migration);
+      expect((await t.prisma.listing.findUniqueOrThrow({ where: { id: listing.id } })).categoryId).toBe(old.id);
+
+      // No listing anywhere points at nothing.
+      expect(await t.prisma.listing.count({ where: { categoryId: null } })).toBe(0);
+      await t.prisma.$executeRawUnsafe('TRUNCATE TABLE "Listing" CASCADE');
+      await t.prisma.setting.deleteMany({ where: { key: CATALOG_VERSION_SETTING } });
     });
   });
 });

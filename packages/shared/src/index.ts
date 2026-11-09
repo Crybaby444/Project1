@@ -14,3 +14,5 @@ export * from './wallet';
 export * from './bookings';
 export * from './offers';
 export * from './admin-deals';
+export * from './catalog';
+export * from './slug';

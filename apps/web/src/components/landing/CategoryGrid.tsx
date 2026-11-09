@@ -3,6 +3,8 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Marquee } from '@/components/motion/Marquee';
 import { Tilt } from '@/components/motion/Tilt';
 import { Sticker, type StickerKind } from '@/components/ui/Sticker';
+import { Link } from '@/i18n/navigation';
+import { categoryLink } from '@/lib/catalog/categories';
 
 // Sticker fills are the same in both themes, so the text on them is fixed too (AA on every fill).
 const FILL: Record<StickerColor, string> = {
@@ -27,7 +29,8 @@ export const MARQUEE_BOX = 'mb-12 h-[8.25rem] sm:h-[10.25rem]';
 
 /**
  * The top categories as sticker cards: the name in the page language, how many subcategories it has
- * and their names. Real data only. Not links: the catalog that would open is not on the site yet.
+ * and their names. Real data only. Each card opens its category in the catalog (the heading is the
+ * link, stretched over the card).
  */
 export function CategoryGrid({ categories }: { categories: CategoryNode[] }) {
   const t = useTranslations('landing.categories');
@@ -55,7 +58,14 @@ export function CategoryGrid({ categories }: { categories: CategoryNode[] }) {
               <span data-bounce="" className="absolute -top-4 -right-3">
                 <Sticker kind={STICKERS[index % STICKERS.length]!} size={44} className="rotate-12" />
               </span>
-              <h3 className="pr-8 text-2xl leading-tight font-bold text-balance">{category.names[locale]}</h3>
+              <h3 className="pr-8 text-2xl leading-tight font-bold text-balance hyphens-auto [overflow-wrap:anywhere]">
+                <Link
+                  href={categoryLink(category, locale)}
+                  className="after:rounded-card after:absolute after:inset-0 after:content-[''] focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-3 focus-visible:after:outline-black"
+                >
+                  {category.names[locale]}
+                </Link>
+              </h3>
               {category.children.length > 0 && (
                 <>
                   <p className="text-xs font-bold tracking-[0.032em] uppercase">

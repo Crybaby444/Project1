@@ -24,6 +24,7 @@ const row: ListingWithRelations = {
   lat: new Prisma.Decimal('56.949651'),
   lng: new Prisma.Decimal('24.105190'),
   timeZone: 'Europe/Riga',
+  contentLocale: 'lv',
   rules: { preset: ['NO_SMOKING'], custom: ['Bring it back charged'] },
   rejectionReason: 'Earlier: blurry photos',
   submittedAt: at,

@@ -1,7 +1,7 @@
 'use client';
 
 import type { ApiClient } from '@yoyo/api-client';
-import type { CategoryNode, OwnerListing } from '@yoyo/shared';
+import type { CategoryNode, Locale, OwnerListing } from '@yoyo/shared';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ApiError, unwrap } from '@/lib/session/api-error';
 import { checkListing, emptyValues, valuesFromListing, type ListingValues } from './listing-checks';
@@ -41,6 +41,8 @@ type Options = {
   onCreated?: (listing: OwnerListing) => void;
   /** Tests shorten it. */
   delayMs?: number;
+  /** The language of the page: a new draft's texts are taken to be in it. */
+  locale?: Locale;
 };
 
 export type ListingDraft = {
@@ -77,10 +79,11 @@ export function useListingDraft({
   category,
   onCreated,
   delayMs = AUTOSAVE_DELAY_MS,
+  locale = 'en',
 }: Options): ListingDraft {
   const [listing, setListing] = useState<OwnerListing | null>(initial);
   const [values, setValues] = useState<ListingValues>(() =>
-    initial ? valuesFromListing(initial) : emptyValues(),
+    initial ? valuesFromListing(initial) : emptyValues(locale),
   );
   const [state, setState] = useState<SaveState>(initial?.status === 'ARCHIVED' ? 'readonly' : 'idle');
   const [serverErrors, setServerErrors] = useState<Record<string, string>>({});
@@ -144,7 +147,8 @@ export function useListingDraft({
                 }),
               )
             ).listing
-          : (await unwrap(client.POST('/api/v1/listings', { body: body as never }))).listing;
+          : // A new draft always says its language: the page's, unless the author picked another.
+            (await unwrap(client.POST('/api/v1/listings', { body: { contentLocale: sent.contentLocale, ...body } as never }))).listing;
         // What changed since sending stays dirty; the rest now shows what the API stored (cleaned text).
         const stored = valuesFromListing(saved);
         let next = ref.values;

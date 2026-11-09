@@ -28,3 +28,5 @@ next-env.d.ts
 # deploy wizard output (local only, holds the database connection string)
 .env.deploy
 docs/hitexis/*.docx
+apps/web/playwright.local.config.ts
+.claude/settings.local.json

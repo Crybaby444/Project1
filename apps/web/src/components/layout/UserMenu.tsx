@@ -177,6 +177,17 @@ export function UserMenu({ user }: { user: PublicUser }) {
                 {t('myListings')}
               </Link>
             </li>
+            <li role="none">
+              <Link
+                href="/dashboard/favorites"
+                role="menuitem"
+                tabIndex={-1}
+                onClick={() => close({ refocus: false })}
+                className={ITEM}
+              >
+                {t('favorites')}
+              </Link>
+            </li>
             {user.role === 'ADMIN' && (
               <li role="none">
                 <Link

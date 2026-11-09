@@ -16,7 +16,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ModerationPage({ params, searchParams }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const raw = (await searchParams)['page'];
-  const page = Number(Array.isArray(raw) ? raw[0] : raw);
-  return <ModerationQueue page={Number.isInteger(page) && page >= 1 ? page : 1} />;
+  const query = await searchParams;
+  const first = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value);
+  const page = Number(first(query['page']));
+  return (
+    <ModerationQueue page={Number.isInteger(page) && page >= 1 ? page : 1} queue={first(query['queue']) === 'other' ? 'other' : 'review'} />
+  );
 }

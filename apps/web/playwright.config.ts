@@ -60,6 +60,11 @@ export default defineConfig({
         // Mail goes to the local Mailpit: the production budget (90 a day, for the free SMTP plan) would
         // run out within one full run now that every deal step sends an email.
         MAIL_DAILY_LIMIT: '5000',
+        // Every spec registers its own people; with the catalog's the whole run is past the production
+        // cap of 100 sign-ups an hour from all addresses together.
+        REGISTRATION_HOURLY_CAP: '1000',
+        // The one e2e administrator signs in from a fresh browser in many specs (20 an hour in production).
+        LOGIN_EMAIL_HOURLY_CAP: '500',
       } as Record<string, string>,
       reuseExistingServer: false,
       timeout: 120_000,

@@ -33,6 +33,11 @@ const EnvObject = z.object({
   PROXY_SECRET: z.preprocess(blankAsUnset, z.string().min(32).optional()),
   /** Registrations accepted per hour from all addresses together (a bot wave cannot flood the mail budget). */
   REGISTRATION_HOURLY_CAP: z.preprocess(blankAsUnset, z.coerce.number().int().positive().default(100)),
+  /**
+   * Sign-ins per hour per email from any address without a known device cookie. 20 in production;
+   * e2e raises it, as its browsers sign the one administrator in from many fresh contexts.
+   */
+  LOGIN_EMAIL_HOURLY_CAP: z.preprocess(blankAsUnset, z.coerce.number().int().positive().default(20)),
   /** HS256 key for access tokens and other signed values. Render generates it (render.yaml). */
   JWT_SECRET: z.string().min(32),
   /**

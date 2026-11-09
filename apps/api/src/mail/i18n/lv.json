@@ -245,5 +245,13 @@
         "body": "{other} noraidīja {price} dienā par “{title}”. Joprojām varat to nomāt par sludinājuma cenu."
       }
     }
+  },
+  "listingMoved": {
+    "subject": "Jūsu sludinājums pārcelts uz citu kategoriju",
+    "preview": "Tagad to ir vieglāk atrast.",
+    "heading": "Mēs pārcēlām jūsu sludinājumu",
+    "body": "Mēs pārcēlām “{title}” uz kategoriju “{category}”, kur cilvēki meklē līdzīgas lietas. Viss pārējais palika kā bija.",
+    "attributes": "Pārbaudiet jaunās kategorijas parametrus: dažus laukus, iespējams, vajag aizpildīt.",
+    "button": "Atvērt sludinājumu"
   }
 }

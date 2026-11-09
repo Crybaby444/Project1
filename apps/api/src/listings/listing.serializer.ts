@@ -66,6 +66,7 @@ export function serializeListing(listing: ListingWithRelations, viewer: ListingV
     city: listing.city,
     district: listing.district,
     timeZone: listing.timeZone,
+    contentLocale: listing.contentLocale as PublicListing['contentLocale'],
     rules: listing.rules as ListingRules,
     photos: [...listing.photos].sort(byPosition).map((photo) => serializePhoto(photo, urlFor)),
     unavailability: serializePeriods(listing.unavailability),

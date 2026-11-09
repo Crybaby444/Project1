@@ -28,12 +28,15 @@ export function ModerationCard({
   categories,
   onApprove,
   onReject,
+  onMove,
   busy,
 }: {
   listing: AdminListing;
   categories: CategoryNode[];
   onApprove(): void;
   onReject(): void;
+  /** Files the listing under another category (the «Other» queue). */
+  onMove?: () => void;
   busy: boolean;
 }) {
   const t = useTranslations('moderation');
@@ -161,12 +164,22 @@ export function ModerationCard({
       </dl>
 
       <div className="border-ink/20 flex flex-wrap gap-3 border-t pt-5">
-        <Button onClick={onApprove} disabled={busy}>
-          {t('approve')}
-        </Button>
-        <Button variant="ghost" onClick={onReject} disabled={busy}>
-          {t('reject')}
-        </Button>
+        {/* Only a listing in review can be decided; the «Other» queue also shows published ones. */}
+        {listing.status === 'PENDING_REVIEW' && (
+          <>
+            <Button onClick={onApprove} disabled={busy}>
+              {t('approve')}
+            </Button>
+            <Button variant="ghost" onClick={onReject} disabled={busy}>
+              {t('reject')}
+            </Button>
+          </>
+        )}
+        {onMove && (
+          <Button variant="ghost" onClick={onMove} disabled={busy}>
+            {t('move.button')}
+          </Button>
+        )}
       </div>
 
       <Dialog

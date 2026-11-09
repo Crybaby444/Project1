@@ -44,14 +44,14 @@ function adminListing(overrides: Partial<AdminListing> = {}): AdminListing {
   };
 }
 
-function renderQueue(routes: FakeRoutes, items = [adminListing()]) {
+function renderQueue(routes: FakeRoutes, items = [adminListing()], queue: 'review' | 'other' = 'review') {
   const { client, calls } = fakeApi({
     ...meRoute(admin),
     ...categoriesRoute,
     'GET /api/v1/admin/listings': { status: 200, body: { items, total: items.length } },
     ...routes,
   });
-  renderWithSession(<ModerationQueue page={1} />, { client });
+  renderWithSession(<ModerationQueue page={1} queue={queue} />, { client });
   return calls;
 }
 
@@ -121,5 +121,35 @@ describe('ModerationQueue', () => {
   it('has a friendly empty state', async () => {
     renderQueue({}, []);
     expect(await screen.findByRole('heading', { name: m.emptyTitle })).toBeVisible();
+  });
+
+  describe('the «Other» queue', () => {
+    it('asks for the listings filed under «Other», and offers to move them instead of deciding published ones', async () => {
+      const calls = renderQueue({}, [adminListing({ status: 'PUBLISHED' })], 'other');
+      await screen.findByRole('heading', { name: 'PlayStation 5' });
+      expect(calls.find((c) => c.path === '/api/v1/admin/listings')?.query).toBe('category=other&page=1');
+      expect(screen.getByRole('link', { name: m.queueOther })).toHaveAttribute('aria-current', 'page');
+      expect(screen.queryByRole('button', { name: m.approve })).toBeNull();
+      expect(screen.getByRole('button', { name: m.move.button })).toBeVisible();
+    });
+
+    it('moves a listing to the chosen subcategory with the version it showed', async () => {
+      const user = userEvent.setup();
+      const calls = renderQueue(
+        { 'POST /api/v1/admin/listings/listing-1/category': { status: 200, body: { listing: adminListing() } } },
+        [adminListing({ status: 'PUBLISHED', categoryId: null })],
+        'other',
+      );
+      await user.click(await screen.findByRole('button', { name: m.move.button }));
+      const dialog = screen.getByRole('dialog');
+      await user.click(within(dialog).getByRole('button', { name: m.move.submit }));
+      expect(within(dialog).getByText(m.move.required)).toBeVisible();
+      await user.selectOptions(within(dialog).getByLabelText(m.move.label), 'Game consoles');
+      await user.click(within(dialog).getByRole('button', { name: m.move.submit }));
+      await waitFor(() =>
+        expect(calls.find((c) => c.path.endsWith('/category'))?.body).toEqual({ categoryId: 'cat-consoles', version: 3 }),
+      );
+      expect(await screen.findByText('Moved to Electronics · Game consoles. The owner gets an email.')).toBeVisible();
+    });
   });
 });

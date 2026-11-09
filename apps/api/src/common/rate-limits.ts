@@ -12,12 +12,13 @@ export const RATE_LIMITS = {
   ],
   /**
    * 5 a minute per address and email, 30 a minute per address across all emails (password spraying),
-   * and 20 an hour per email from any address: an address can change, the email cannot.
+   * and `emailHourlyCap` (20 unless LOGIN_EMAIL_HOURLY_CAP says otherwise) an hour per email from any
+   * address: an address can change, the email cannot.
    */
-  login: (ip: string, email: string): RateRule[] => [
+  login: (ip: string, email: string, emailHourlyCap = 20): RateRule[] => [
     { key: `login:ip-email:${ip}|${email}`, limit: 5, windowMs: MINUTE },
     { key: `login:ip:${ip}`, limit: 30, windowMs: MINUTE },
-    { key: `login:email:${email}`, limit: 20, windowMs: HOUR },
+    { key: `login:email:${email}`, limit: emailHourlyCap, windowMs: HOUR },
   ],
   /**
    * Instead of the per-email hour bucket, for a browser that shows a valid device cookie of this
@@ -65,6 +66,10 @@ export const RATE_LIMITS = {
     { key: `booking-request:user:${userId}`, limit: 20, windowMs: HOUR },
     { key: `booking-request:user-day:${userId}`, limit: 30, windowMs: 24 * HOUR },
   ],
+  /** 120 search suggestions a minute per address (a search box asks as people type). */
+  suggest: (ip: string): RateRule[] => [{ key: `suggest:ip:${ip}`, limit: 120, windowMs: MINUTE }],
+  /** 120 favourite changes a minute per user. */
+  favorite: (userId: string): RateRule[] => [{ key: `favorite:user:${userId}`, limit: 120, windowMs: MINUTE }],
   /** 20 price offers a day per renter. */
   offer: (userId: string): RateRule[] => [{ key: `offer:user:${userId}`, limit: 20, windowMs: 24 * HOUR }],
 };

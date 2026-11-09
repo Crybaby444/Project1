@@ -64,6 +64,8 @@ export const ERROR_CODES = [
   'OFFER_UNAVAILABLE',
   /** Over a wallet limit (top-up amount or balance). */
   'WALLET_LIMIT',
+  /** The item was public once and is gone for good (deleted, or its owner left): 410. */
+  'LISTING_GONE',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];

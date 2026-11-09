@@ -37,6 +37,7 @@ const DEFAULT_MESSAGES: Record<ErrorCode, string> = {
   IDEMPOTENCY_IN_PROGRESS: 'The same request is still being handled',
   OFFER_UNAVAILABLE: 'This price offer is not open',
   WALLET_LIMIT: 'Over the wallet limit',
+  LISTING_GONE: 'This item was removed',
 };
 
 /** An expected failure with a stable code; ErrorFilter turns it into the uniform error body. */

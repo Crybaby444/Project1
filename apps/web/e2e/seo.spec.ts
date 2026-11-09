@@ -51,8 +51,16 @@ for (const { locale, prefix, m } of LANGUAGES) {
   }
 }
 
-test('sitemap.xml lists every page in every language with alternates', async ({ request }) => {
-  const response = await request.get('/sitemap.xml');
+test('sitemap.xml is an index; its pages sitemap lists every page in every language with alternates', async ({ request }) => {
+  const index = await request.get('/sitemap.xml');
+  expect(index.status()).toBe(200);
+  const indexXml = await index.text();
+  expect(indexXml).toContain('<sitemapindex');
+  expect(indexXml).toContain(`<loc>${SITE}/sitemap-pages.xml</loc>`);
+  expect(indexXml).toContain(`<loc>${SITE}/sitemap-categories.xml</loc>`);
+  expect(indexXml).toContain(`<loc>${SITE}/sitemap-listings.xml</loc>`);
+
+  const response = await request.get('/sitemap-pages.xml');
   expect(response.status()).toBe(200);
   const xml = await response.text();
   expect(xml.match(/<url>/g)).toHaveLength(18);

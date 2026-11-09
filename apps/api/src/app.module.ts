@@ -5,7 +5,9 @@ import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { OffersModule } from './offers/offers.module';
+import { CatalogModule } from './catalog/catalog.module';
 import { CategoriesModule } from './categories/categories.module';
+import { FavoritesModule } from './favorites/favorites.module';
 import { ClockModule } from './clock/clock';
 import { OriginGuard } from './common/origin.guard';
 import { RateLimiterModule } from './common/rate-limiter';
@@ -54,6 +56,8 @@ class EnvModule {}
     OffersModule,
     TimersModule,
     AdminDealsModule,
+    CatalogModule,
+    FavoritesModule,
   ],
   controllers: [HealthController],
   providers: [

@@ -41,6 +41,7 @@ describe('ERROR_CODES', () => {
         'IDEMPOTENCY_IN_PROGRESS',
         'OFFER_UNAVAILABLE',
         'WALLET_LIMIT',
+        'LISTING_GONE',
       ].sort(),
     );
   });

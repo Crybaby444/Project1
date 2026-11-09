@@ -6,6 +6,7 @@ import {
   AdminListingsQuerySchema,
   AdminListingsResponseSchema,
   ApproveListingRequestSchema,
+  MoveListingCategoryRequestSchema,
   RejectListingRequestSchema,
   type AdminListingResponse,
   type AdminListingsResponse,
@@ -25,6 +26,7 @@ class AdminListingsResponseDto extends createZodDto(AdminListingsResponseSchema)
 class AdminListingResponseDto extends createZodDto(AdminListingResponseSchema) {}
 class ApproveListingDto extends createZodDto(ApproveListingRequestSchema) {}
 class RejectListingDto extends createZodDto(RejectListingRequestSchema) {}
+class MoveListingCategoryDto extends createZodDto(MoveListingCategoryRequestSchema) {}
 
 /** Listing moderation (spec §4.8). Administrators only. */
 @ApiTags('admin')
@@ -35,10 +37,18 @@ export class ModerationController {
   constructor(private readonly moderation: ModerationService) {}
 
   @Get()
-  @ZodResponse({ status: 200, type: AdminListingsResponseDto, description: `Listings in a status (review queue by default), oldest first, ${ADMIN_LISTINGS_PAGE_SIZE} a page` })
+  @ZodResponse({ status: 200, type: AdminListingsResponseDto, description: `Listings in a status (review queue by default) or a category («Other»), oldest first, ${ADMIN_LISTINGS_PAGE_SIZE} a page` })
   @ApiErrors(400, 401, 403)
   async queue(@Query() query: AdminListingsQueryDto): Promise<AdminListingsResponse> {
-    return this.moderation.queue(query.status, query.page);
+    return this.moderation.queue(query.status, query.page, query.category);
+  }
+
+  @Post(':id/category')
+  @HttpCode(200)
+  @ZodResponse({ status: 200, type: AdminListingResponseDto, description: 'Filed under another category; the status stays and the owner gets an email' })
+  @ApiErrors(400, 401, 403, 404, 409)
+  async moveCategory(@CurrentUser() admin: PublicUser, @Param('id') id: string, @Body() body: MoveListingCategoryDto): Promise<AdminListingResponse> {
+    return { listing: await this.moderation.moveCategory(id, admin, body.categoryId, body.version) };
   }
 
   @Post(':id/approve')

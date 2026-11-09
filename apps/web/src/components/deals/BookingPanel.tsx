@@ -52,7 +52,7 @@ export function priceRange(terms: BookingTerms, range: Range | null): { quote: Q
  * catalog (plan 7) can place it in its own column. Sending needs a session; a visitor is sent to sign in
  * and comes back here. The request carries an Idempotency-Key, so a double click sends one request.
  */
-export function BookingPanel({ listingId }: { listingId: string }) {
+export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string; layout?: 'wide' | 'stacked' }) {
   const t = useTranslations('booking');
   const locale = useLocale();
   const errorText = useErrorText();
@@ -136,7 +136,8 @@ export function BookingPanel({ listingId }: { listingId: string }) {
           : null;
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]" data-booking-panel="">
+    // `stacked`: one column, for a side column such as the item page's (the calendar keeps its width).
+    <div className={`grid gap-6 ${layout === 'wide' ? 'lg:grid-cols-[minmax(0,1fr)_22rem]' : ''}`} data-booking-panel="">
       <section aria-labelledby="booking-dates" className="border-ink bg-surface rounded-card flex flex-col gap-4 border p-5 sm:p-6">
         <div className="flex flex-col gap-1">
           <h2 id="booking-dates" className="text-2xl font-bold">
@@ -157,6 +158,7 @@ export function BookingPanel({ listingId }: { listingId: string }) {
             setRange(next);
           }}
           describedBy={hintId}
+          oneMonth={layout === 'stacked'}
         />
         <p role="status" data-range-status="" className="min-h-6 text-sm font-bold">
           {range?.end
@@ -173,7 +175,7 @@ export function BookingPanel({ listingId }: { listingId: string }) {
         )}
       </section>
 
-      <aside className="border-ink bg-surface rounded-card flex flex-col gap-5 self-start border p-5 sm:p-6 lg:sticky lg:top-24">
+      <aside className={`border-ink bg-surface rounded-card flex flex-col gap-5 self-start border p-5 sm:p-6 ${layout === 'wide' ? 'lg:sticky lg:top-24' : ''}`}>
         <PriceSummary quote={priced.quote} />
         {own ? (
           <p className="bg-mist rounded-card p-4 text-sm font-bold">{t('own')}</p>

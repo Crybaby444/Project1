@@ -6,6 +6,7 @@ import { checkListing, emptyValues, stepOf, type ListingValues } from './listing
 const leaf: CategoryNode = {
   id: 'cat-consoles',
   slug: 'consoles',
+  slugs: { en: 'consoles', lv: 'consoles', ru: 'consoles' },
   sticker: 'blue',
   icon: 'gamepad',
   names: { en: 'Consoles', lv: 'Konsoles', ru: 'Приставки' },

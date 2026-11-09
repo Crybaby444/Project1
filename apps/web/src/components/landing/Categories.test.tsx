@@ -11,6 +11,7 @@ import { CategoriesRetry } from './CategoriesRetry';
 const node = (slug: string, en: string, ru: string, children: CategoryNode[] = []): CategoryNode => ({
   id: slug,
   slug,
+  slugs: { en: slug, lv: `${slug}-lv`, ru: `${slug}-ru` },
   sticker: 'mint' as const,
   icon: slug,
   names: { en, lv: en, ru },
@@ -37,9 +38,12 @@ describe('CategoryGrid', () => {
     expect(screen.getByText('Велосипеды · Кемпинг')).toBeInTheDocument();
   });
 
-  it('is not a link: there is no catalog to open yet, and no dead links', () => {
-    renderWithIntl(<CategoryGrid categories={TREE} />);
-    expect(screen.queryAllByRole('link')).toEqual([]);
+  it('opens each top category in the catalog, at its slug in the page language', () => {
+    renderWithIntl(<CategoryGrid categories={TREE} />, 'lv');
+    expect(screen.getAllByRole('link').map((link) => link.getAttribute('href'))).toEqual([
+      '/lv/c/sports-outdoors-lv',
+      '/lv/c/music-lv',
+    ]);
   });
 });
 

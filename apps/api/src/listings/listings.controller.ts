@@ -43,7 +43,7 @@ export class ListingsController {
   async create(@CurrentUser() user: PublicUser, @Req() req: Request): Promise<OwnerListingResponse> {
     const draft = parseOptionalBody(ListingDraftSchema, req.body);
     this.limiter.hit(RATE_LIMITS.createListing(user.id));
-    return { listing: await this.listings.create(user.id, draft) };
+    return { listing: await this.listings.create(user.id, draft, user.locale) };
   }
 
   @Get(':id')

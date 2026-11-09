@@ -12,6 +12,7 @@ import {
   toggleRange,
   weekStartFor,
 } from '@/lib/listings/calendar';
+import { monthLabel } from '@/lib/month-label';
 
 type Props = {
   periods: DatePeriod[];
@@ -86,7 +87,7 @@ export function UnavailabilityCalendar({ periods, today, onChange, readOnly }: P
     year: 'numeric',
     timeZone: 'UTC',
   });
-  const monthLabel = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  const monthHeading = monthLabel(locale);
   const weekdayShort = new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' });
   const weekdayLong = new Intl.DateTimeFormat(locale, { weekday: 'long', timeZone: 'UTC' });
   const rangeLabel = new Intl.DateTimeFormat(locale, {
@@ -169,7 +170,7 @@ export function UnavailabilityCalendar({ periods, today, onChange, readOnly }: P
               className="w-full table-fixed border-separate border-spacing-1"
             >
               <caption id={captionId} className="pb-2 text-left text-lg font-bold capitalize">
-                {monthLabel.format(asDate(`${monthKey(month)}-01`))}
+                {monthHeading.format(asDate(`${monthKey(month)}-01`))}
               </caption>
               <thead>
                 <tr>

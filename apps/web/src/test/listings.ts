@@ -17,6 +17,7 @@ export function ownerListing(overrides: Partial<OwnerListing> = {}): OwnerListin
     depositCents: 0,
     minDays: 1,
     maxDays: 30,
+    contentLocale: 'en',
     city: null,
     district: null,
     timeZone: 'Europe/Riga',
@@ -59,6 +60,7 @@ export const testCategories: CategoryNode[] = [
   {
     id: 'cat-electronics',
     slug: 'electronics',
+    slugs: { en: 'electronics', lv: 'electronics', ru: 'electronics' },
     sticker: 'blue',
     icon: 'plug',
     names: names('Electronics', 'Elektronika', 'Электроника'),
@@ -67,6 +69,7 @@ export const testCategories: CategoryNode[] = [
       {
         id: 'cat-consoles',
         slug: 'consoles',
+        slugs: { en: 'consoles', lv: 'consoles', ru: 'consoles' },
         sticker: 'blue',
         icon: 'gamepad',
         names: names('Game consoles', 'Spēļu konsoles', 'Игровые приставки'),
@@ -114,6 +117,7 @@ export const testCategories: CategoryNode[] = [
   {
     id: 'cat-tools',
     slug: 'tools',
+    slugs: { en: 'tools', lv: 'tools', ru: 'tools' },
     sticker: 'sun',
     icon: 'wrench',
     names: names('Tools', 'Instrumenti', 'Инструменты'),
@@ -121,7 +125,8 @@ export const testCategories: CategoryNode[] = [
     children: [
       {
         id: 'cat-power-tools',
-        slug: 'power-tools',
+        slug: 'drills-drivers',
+        slugs: { en: 'drills-drivers', lv: 'drills-drivers', ru: 'drills-drivers' },
         sticker: 'sun',
         icon: 'drill',
         names: names('Power tools', 'Elektroinstrumenti', 'Электроинструмент'),

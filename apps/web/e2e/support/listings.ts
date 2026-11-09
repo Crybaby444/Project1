@@ -5,7 +5,7 @@ import { E2E_ADMIN } from '../../playwright.config';
 export const FIXTURES = new URL('../fixtures/', import.meta.url);
 export const fixture = (name: string) => new URL(name, FIXTURES).pathname;
 
-type Category = {
+export type Category = {
   id: string;
   slug: string;
   attributes: { key: string; type: string; required: boolean; options: { value: string }[] | null }[];
@@ -22,7 +22,7 @@ export async function leafCategory(request: APIRequestContext): Promise<Category
 }
 
 /** Required attribute values of a category, filled with the first choice or a plain value. */
-function attributesFor(category: Category): Record<string, string | number | boolean> {
+export function attributesFor(category: Category): Record<string, string | number | boolean> {
   const values: Record<string, string | number | boolean> = {};
   for (const attribute of category.attributes.filter((a) => a.required)) {
     if (attribute.type === 'SELECT') values[attribute.key] = attribute.options![0]!.value;
@@ -73,6 +73,9 @@ export async function submitByApi(request: APIRequestContext, listingId: string)
   const res = await request.post(`/api/v1/listings/${listingId}/submit`);
   expect(res.status(), await res.text()).toBe(200);
 }
+
+/** The e2e administrator's sign-in (playwright.config.ts). */
+export const E2E_ADMIN_LOGIN = E2E_ADMIN;
 
 /** Signs the browser of `page` in as the e2e administrator (playwright.config.ts). */
 export async function signInAsAdmin(page: Page) {

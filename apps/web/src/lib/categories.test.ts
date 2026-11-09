@@ -6,6 +6,7 @@ const TREE = {
     {
       id: 'c1',
       slug: 'tools',
+      slugs: { en: 'tools', lv: 'instrumenti', ru: 'instrumenty' },
       sticker: 'sun',
       icon: 'drill',
       names: { en: 'Tools', lv: 'Instrumenti', ru: 'Инструменты' },

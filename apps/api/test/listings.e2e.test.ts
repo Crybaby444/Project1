@@ -51,7 +51,7 @@ describe('listings', () => {
     });
 
     it('cleans HTML out of the texts and checks attributes against the chosen category', async () => {
-      const powerTools = await categoryId(t, 'power-tools');
+      const powerTools = await categoryId(t, 'drills-drivers');
       const ok = await anna
         .post('/listings')
         .send({ title: '<b>Drill</b>', categoryId: powerTools, attributes: { power: 'battery', included: '<i>case</i>' } })
@@ -64,6 +64,20 @@ describe('listings', () => {
         .expect(400);
       expect(bad.body.error.code).toBe('VALIDATION_FAILED');
       expect(Object.keys(bad.body.error.fields).sort()).toEqual(['attributes.model', 'attributes.power', 'attributes.watts']);
+    });
+
+    it('takes the author’s language as the language of the texts, unless the draft names one', async () => {
+      const liga = await signedInClient(t, { name: 'Līga', locale: 'lv' });
+      expect((await liga.post('/listings').send({}).expect(201)).body.listing.contentLocale).toBe('lv');
+      expect((await liga.post('/listings').send({ contentLocale: 'ru' }).expect(201)).body.listing.contentLocale).toBe('ru');
+      expect((await anna.post('/listings').send({}).expect(201)).body.listing.contentLocale).toBe('en');
+      await liga.post('/listings').send({ contentLocale: 'de' }).expect(400);
+    });
+
+    it('changing the language of a live listing is a term: it stays published', async () => {
+      const listing = await seedListing(t, anna.user, { status: 'PUBLISHED' });
+      const res = await anna.patch(`/listings/${listing.id}`).send({ contentLocale: 'lv', version: listing.version }).expect(200);
+      expect(res.body.listing).toMatchObject({ status: 'PUBLISHED', contentLocale: 'lv' });
     });
 
     it('refuses an unknown or inactive category', async () => {
@@ -218,7 +232,7 @@ describe('listings', () => {
 
     it('clears the attributes of the old category when the category changes', async () => {
       const listing = await seedListing(t, anna.user);
-      const bikes = await categoryId(t, 'bikes-scooters');
+      const bikes = await categoryId(t, 'cycling');
       const res = await anna.patch(`/listings/${listing.id}`).send({ version: listing.version, categoryId: bikes }).expect(200);
       expect(res.body.listing).toMatchObject({ categoryId: bikes, attributes: {} });
     });
