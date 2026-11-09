@@ -24,7 +24,10 @@ const abs = (prefix: string, path: string) => `${SITE}${at(prefix, path)}`.repla
 
 for (const { locale, prefix, m } of LANGUAGES) {
   for (const [path, key] of PAGES) {
-    test(`${at(prefix, path)}: title, description, canonical, hreflang and a preview image`, async ({ page, request }) => {
+    test(`${at(prefix, path)}: title, description, canonical, hreflang and a preview image`, async ({
+      page,
+      request,
+    }) => {
       await page.goto(at(prefix, path));
       const meta = m.pages[key];
       await expect(page).toHaveTitle(key === 'home' ? meta.title : `${meta.title} · Yoyo`);
@@ -33,7 +36,9 @@ for (const { locale, prefix, m } of LANGUAGES) {
 
       const hreflang = await page
         .locator('link[rel="alternate"][hreflang]')
-        .evaluateAll((links) => Object.fromEntries(links.map((l) => [l.getAttribute('hreflang'), l.getAttribute('href')])));
+        .evaluateAll((links) =>
+          Object.fromEntries(links.map((l) => [l.getAttribute('hreflang'), l.getAttribute('href')])),
+        );
       expect(hreflang).toEqual({
         en: abs('', path),
         lv: abs('/lv', path),
@@ -41,7 +46,10 @@ for (const { locale, prefix, m } of LANGUAGES) {
         'x-default': abs('', path),
       });
 
-      await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute('content', { en: 'en_US', lv: 'lv_LV', ru: 'ru_RU' }[locale]);
+      await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute(
+        'content',
+        { en: 'en_US', lv: 'lv_LV', ru: 'ru_RU' }[locale],
+      );
       const image = await page.locator('meta[property="og:image"]').getAttribute('content');
       expect(image).toMatch(new RegExp(`^${SITE}/`));
       const response = await request.get(image!.replace(SITE, ''));
@@ -51,13 +59,30 @@ for (const { locale, prefix, m } of LANGUAGES) {
   }
 }
 
-test('sitemap.xml lists every page in every language with alternates', async ({ request }) => {
+test('sitemap.xml lists every page in every language; hreflang comes from each page, not from here', async ({
+  request,
+}) => {
   const response = await request.get('/sitemap.xml');
   expect(response.status()).toBe(200);
   const xml = await response.text();
   expect(xml.match(/<url>/g)).toHaveLength(18);
   expect(xml).toContain(`<loc>${SITE}/lv/faq</loc>`);
-  expect(xml).toContain(`hreflang="ru" href="${SITE}/ru/privacy"`);
+  expect(xml).not.toContain('xhtml:link');
+  expect(xml).not.toContain('hreflang');
+});
+
+test('each page sends its language alternates in the Link header', async ({ request }) => {
+  const response = await request.get('/lv/faq', { maxRedirects: 0 });
+  expect(response.status()).toBe(200);
+  const link = response.headers()['link'] ?? '';
+  for (const [lang, path] of [
+    ['en', '/faq'],
+    ['lv', '/lv/faq'],
+    ['ru', '/ru/faq'],
+    ['x-default', '/faq'],
+  ]) {
+    expect(link).toContain(`${path}>; rel="alternate"; hreflang="${lang}"`);
+  }
 });
 
 test('robots.txt allows the site, keeps the API out and names the sitemap', async ({ request }) => {

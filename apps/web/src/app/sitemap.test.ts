@@ -3,20 +3,16 @@ import robots from './robots';
 import sitemap from './sitemap';
 
 describe('sitemap.xml', () => {
-  it('lists every public page in every language, each with its language alternates', () => {
+  it('lists every public page in every language, without repeating the hreflang alternates', () => {
     const entries = sitemap();
     expect(entries).toHaveLength(18);
     const urls = entries.map((entry) => entry.url);
     expect(urls).toContain('https://yoyo.rent');
     expect(urls).toContain('https://yoyo.rent/lv');
     expect(urls).toContain('https://yoyo.rent/ru/privacy');
-    const faq = entries.find((entry) => entry.url === 'https://yoyo.rent/lv/faq')!;
-    expect(faq.alternates?.languages).toEqual({
-      en: 'https://yoyo.rent/faq',
-      lv: 'https://yoyo.rent/lv/faq',
-      ru: 'https://yoyo.rent/ru/faq',
-      'x-default': 'https://yoyo.rent/faq',
-    });
+    expect(urls).toContain('https://yoyo.rent/lv/faq');
+    // Each page sends its alternates in the Link header (and its <head>); the sitemap does not.
+    expect(entries.every((entry) => entry.alternates === undefined)).toBe(true);
   });
 
   it('leaves out account screens and the styleguide', () => {
@@ -31,7 +27,9 @@ describe('robots.txt', () => {
     const rule = Array.isArray(rules.rules) ? rules.rules[0]! : rules.rules;
     expect(rule.userAgent).toBe('*');
     expect(rule.allow).toBe('/');
-    expect(rule.disallow).toEqual(expect.arrayContaining(['/api/', '/settings', '/lv/settings', '/ru/settings', '/styleguide']));
+    expect(rule.disallow).toEqual(
+      expect.arrayContaining(['/api/', '/settings', '/lv/settings', '/ru/settings', '/styleguide']),
+    );
     expect(rules.sitemap).toBe('https://yoyo.rent/sitemap.xml');
   });
 });

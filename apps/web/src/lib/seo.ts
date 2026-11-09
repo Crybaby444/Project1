@@ -12,10 +12,14 @@ export function localizedPath(locale: Locale, path: string): string {
   return path === '/' ? `/${locale}` : `/${locale}${path}`;
 }
 
+/** Full address of `path` in `locale`; the English home page is the bare origin, as Next.js writes it. */
+export function localizedUrl(path: string, locale: Locale, siteUrl: string = SITE_URL): string {
+  return `${siteUrl}${localizedPath(locale, path).replace(/^\/$/, '')}`;
+}
+
 /** Canonical address of this page in this language, and the same page in every language. */
 export function alternates(path: string, locale: Locale, siteUrl: string = SITE_URL) {
-  // The English home page is the bare origin, as Next.js writes it (no trailing slash).
-  const url = (code: Locale) => `${siteUrl}${localizedPath(code, path).replace(/^\/$/, '')}`;
+  const url = (code: Locale) => localizedUrl(path, code, siteUrl);
   const languages = Object.fromEntries(LOCALES.map((code) => [code, url(code)])) as Record<Locale, string>;
   return {
     canonical: url(locale),

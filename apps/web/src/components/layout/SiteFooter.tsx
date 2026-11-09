@@ -1,6 +1,6 @@
 'use client';
 
-import { LOCALES } from '@yoyo/shared';
+import { LOCALES, type Locale } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import type { MouseEvent } from 'react';
 import { TransitionLink } from '@/components/motion/TransitionLink';
@@ -12,6 +12,7 @@ import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { displayFit } from '@/lib/display-fit';
 import { prefersReducedMotion } from '@/lib/motion';
 import { CONTACT_EMAIL } from '@/lib/site';
+import { useRememberLocale } from '@/lib/locale/use-locale-choice';
 
 const SERVICE_LINKS = [
   ['howItWorks', '/how-it-works'],
@@ -37,18 +38,25 @@ function FooterLanguages({ label }: { label: string }) {
   const current = useLocale();
   const pathname = usePathname();
   const router = useRouter();
+  const remember = useRememberLocale();
 
   function onClick(event: MouseEvent<HTMLAnchorElement>, locale: string) {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     if (locale === current) return;
     event.preventDefault();
+    remember(locale as Locale);
     void switchLanguage({
       locale,
       navigate: () => router.push(pathname, { locale, scroll: false }),
-      animate: shouldAnimateLanguageChange(prefersReducedMotion(), typeof document.startViewTransition === 'function'),
+      animate: shouldAnimateLanguageChange(
+        prefersReducedMotion(),
+        typeof document.startViewTransition === 'function',
+      ),
       afterSwitch: () => {
         if (document.activeElement && document.activeElement !== document.body) return;
-        document.querySelector<HTMLElement>('[data-footer-language="current"]')?.focus({ preventScroll: true });
+        document
+          .querySelector<HTMLElement>('[data-footer-language="current"]')
+          ?.focus({ preventScroll: true });
       },
     });
   }

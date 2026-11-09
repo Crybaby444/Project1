@@ -8,6 +8,7 @@ import type { ReactNode } from 'react';
 import { freshLoadScript } from '@/components/motion/fresh-load';
 import { themeInitScript } from '@/components/theme/theme-script';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
+import { LanguageSuggestion } from '@/components/layout/LanguageSuggestion';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SyncThemeWithProfile } from '@/components/theme/use-theme-choice';
@@ -56,6 +57,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
                   <SiteHeader />
                   <div className="flex flex-1 flex-col *:w-full">{children}</div>
                   <SiteFooter />
+                  <LanguageSuggestion />
                 </ToastProvider>
               </ThemeProvider>
             </SessionProvider>
