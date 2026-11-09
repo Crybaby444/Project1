@@ -140,17 +140,23 @@
   }
 }
 
-[data-bob][data-in-view],
-[data-parallax][data-in-view] [data-bob] {
-  animation: sticker-bob 3.8s ease-in-out var(--bob-delay, 0ms) infinite;
+/*
+ * Stickers float once, on a fresh page load (`html[data-fresh]`, like the load animations below), and
+ * then rest where the float ends. Never a loop: motion that starts by itself and runs past 5 s next
+ * to the content needs a pause button (WCAG 2.2.2), and a sticker that never stops repainted the whole
+ * page every frame in WebKit, which slowed every click and language switch on the screens it is on.
+ */
+html[data-fresh] [data-bob][data-in-view],
+html[data-fresh] [data-parallax][data-in-view] [data-bob] {
+  animation: sticker-bob 3.8s ease-in-out var(--bob-delay, 0ms) 1;
 }
 
 /* A sticker that both drifts and floats runs both animations: scroll-linked drift, timed bob. */
 @supports (animation-timeline: view()) {
-  [data-parallax][data-in-view] [data-parallax-layer][data-bob] {
+  html[data-fresh] [data-parallax][data-in-view] [data-parallax-layer][data-bob] {
     animation:
       parallax linear both,
-      sticker-bob 3.8s ease-in-out var(--bob-delay, 0ms) infinite;
+      sticker-bob 3.8s ease-in-out var(--bob-delay, 0ms) 1;
     animation-timeline: --parallax, auto;
   }
 }
@@ -248,11 +254,21 @@
   /* Never wider than the line: an overlong word (an unexpected translation) still hyphenates or
      breaks inside its own box, as the plain heading would. */
   max-width: 100%;
+}
+
+/*
+ * Load animations (headline letters, the auth card) play once, on a fresh page load:
+ * `html[data-fresh]` is set by the head script (components/motion/fresh-load.ts) and removed shortly
+ * after the page has loaded. They never replay when a language switch or a client navigation
+ * renders the page again, which in WebKit used to restart them right as the switch ended and keep
+ * the next switch waiting.
+ */
+html[data-fresh] [data-rise-word] {
   animation: word-rise var(--dur-slow) var(--ease-yoyo) both;
   animation-delay: calc(var(--i) * var(--stagger, 28ms));
 }
 
-[data-letter] {
+html[data-fresh] [data-letter] {
   animation: letter-in var(--dur-slow) var(--ease-yoyo) both;
   animation-delay: calc(var(--i) * var(--stagger, 28ms));
 }
@@ -271,7 +287,7 @@
 
 /* A screen's main card arriving on load (auth): up from a little below, settling. */
 @media (prefers-reduced-motion: no-preference) {
-  [data-card-rise] {
+  html[data-fresh] [data-card-rise] {
     animation: card-rise var(--dur-slow) var(--ease-yoyo) both;
   }
 }
@@ -287,8 +303,8 @@
  * A language or page switch swaps the page inside a View Transition that must stay geometry-free
  * (globals.css, `html[data-language-switch]`, `html[data-page-switch]`): nothing may move while the
  * browser captures the new page and scrolls a focused field into view, or the header and the scroll
- * position shift (WebKit). So the new page's load animations do not replay, and floating stickers
- * hold still until the switch is over. A normal page load still plays them.
+ * position shift (WebKit). Floating stickers hold still until the switch is over, and load
+ * animations stay off even if a switch starts while the first page is still settling.
  */
 html:is([data-language-switch], [data-page-switch])
   :is([data-card-rise], [data-rise-word], [data-letter], [data-bob], [data-parallax-layer][data-bob]) {
@@ -330,7 +346,7 @@ html:is([data-language-switch], [data-page-switch])
 
 /* ── 8. Page and language transitions ─────────────────────────────────────────────────────
  * TransitionLink (switch-page.ts) and the language switch (switch-language.ts) run one View
- * Transition each; their focus cross-fade (opacity and blur, nothing moves) is in globals.css (`html[data-page-switch]`,
+ * Transition each; their cross-fade (opacity only, nothing moves) is in globals.css (`html[data-page-switch]`,
  * `html[data-language-switch]`).
  */
 
