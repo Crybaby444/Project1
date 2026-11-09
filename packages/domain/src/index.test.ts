@@ -35,6 +35,7 @@ describe('@yoyo/domain entry point', () => {
         'validateOffer',
         'validatePricing',
         'DEFAULT_BOOKING_SETTINGS',
+        'serviceFeeAt',
         'validateBookingSettings',
         // ledger
         'applyOperation',

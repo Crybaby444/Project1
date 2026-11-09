@@ -13,6 +13,9 @@ describe('SETTING_DEFAULTS', () => {
       'booking.damageReplyHours': 48,
       'review.windowDays': 14,
       'fees.servicePercent': 10,
+      // The launch offer (owner decision of 2026-11-06): 0 % until a last day set at launch; none by default.
+      'fees.promoServicePercent': 0,
+      'fees.promoServiceUntil': '',
     });
   });
 });

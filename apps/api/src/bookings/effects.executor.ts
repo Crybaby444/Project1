@@ -65,7 +65,7 @@ export interface ContractTerms {
   };
   period: { start: string; end: string };
   timeZone: string;
-  quote: { [K in keyof BookingSnapshot['quote']]: K extends 'priceSource' ? 'LISTED' | 'AGREED' : number };
+  quote: { [K in keyof BookingSnapshot['quote']]: K extends 'priceSource' ? 'LISTED' | 'AGREED' : K extends 'servicePromoUntil' ? string | null : number };
   deadlines: { handoverConfirmHours: number; returnConfirmHours: number; inspectionHours: number; damageReplyHours: number };
 }
 

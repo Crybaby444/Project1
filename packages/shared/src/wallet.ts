@@ -22,6 +22,8 @@ export const WalletTransactionSchema = z.object({
   kind: z.enum(LEDGER_KINDS),
   amountCents: z.number().int(),
   bookingId: z.string().nullable(),
+  /** The title of the deal's item, for the link to the deal. */
+  listingTitle: z.string().nullable(),
   createdAt: z.iso.datetime(),
 });
 
@@ -73,6 +75,12 @@ export const WalletSummarySchema = z.object({
   balanceCents: z.number().int(),
   /** Rent and deposits the user paid from the wallet that Yoyo still holds for open deals. */
   heldCents: z.number().int(),
+  /** Deposits of the user's open rentals Yoyo keeps frozen, however they were paid. */
+  depositsCents: z.number().int(),
+  /** Rent of the user's own items Yoyo holds until the renter confirms the handover. */
+  incomingCents: z.number().int(),
+  /** Everything the user's items earned into the wallet: rent and deposits kept for damage. */
+  earnedCents: z.number().int(),
 });
 
 export type WalletSummary = z.infer<typeof WalletSummarySchema>;

@@ -31,11 +31,39 @@ export class WalletService {
       FROM "Booking" b
       JOIN "LedgerAccount" a ON a.id IN ('escrow:' || b.id, 'deposit:' || b.id)
       WHERE b."renterId" = ${userId} AND b."paymentMethod" = 'WALLET'`;
-    return { balanceCents: await this.ledger.balance(walletAccount(userId)), heldCents: Number(held?.total ?? 0) };
+    const [deposits] = await this.prisma.$queryRaw<{ total: bigint | null }[]>`
+      SELECT SUM(a.balance) AS total
+      FROM "Booking" b
+      JOIN "LedgerAccount" a ON a.id = 'deposit:' || b.id
+      WHERE b."renterId" = ${userId}`;
+    const [incoming] = await this.prisma.$queryRaw<{ total: bigint | null }[]>`
+      SELECT SUM(a.balance) AS total
+      FROM "Booking" b
+      JOIN "LedgerAccount" a ON a.id = 'escrow:' || b.id
+      WHERE b."ownerId" = ${userId}`;
+    const [earned] = await this.prisma.$queryRaw<{ total: bigint | null }[]>`
+      SELECT SUM(e.amount) AS total
+      FROM "LedgerEntry" e
+      JOIN "LedgerOperation" o ON o.id = e."operationId"
+      WHERE e.account = ${walletAccount(userId)} AND o.kind IN ('RENT_RELEASE', 'DEPOSIT_TO_OWNER') AND e.amount > 0`;
+    return {
+      balanceCents: await this.ledger.balance(walletAccount(userId)),
+      heldCents: Number(held?.total ?? 0),
+      depositsCents: Number(deposits?.total ?? 0),
+      incomingCents: Number(incoming?.total ?? 0),
+      earnedCents: Number(earned?.total ?? 0),
+    };
   }
 
-  history(userId: string, page = 1, kind?: OperationKind): Promise<WalletTransactionsResponse> {
-    return this.ledger.walletHistory(userId, { page, ...(kind && { kind }) });
+  /** Wallet movements with the title of each deal's item, for the link to the deal. */
+  async history(userId: string, page = 1, kind?: OperationKind): Promise<WalletTransactionsResponse> {
+    const result = await this.ledger.walletHistory(userId, { page, ...(kind && { kind }) });
+    const ids = [...new Set(result.items.flatMap((item) => (item.bookingId ? [item.bookingId] : [])))];
+    const bookings = ids.length
+      ? await this.prisma.booking.findMany({ where: { id: { in: ids } }, select: { id: true, listing: { select: { title: true } } } })
+      : [];
+    const titles = new Map(bookings.map((b) => [b.id, b.listing.title]));
+    return { ...result, items: result.items.map((item) => ({ ...item, listingTitle: (item.bookingId && titles.get(item.bookingId)) || null })) };
   }
 
   /**

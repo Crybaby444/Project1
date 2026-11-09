@@ -53,6 +53,7 @@
   --animate-step-in: step-in 250ms var(--ease-yoyo);
   --animate-heart-pop: heart-pop 450ms var(--ease-yoyo);
   --animate-spark: spark 450ms var(--ease-yoyo);
+  --animate-stamp: stamp 450ms var(--ease-yoyo);
 
   @keyframes sticker-wobble {
     25% {
@@ -87,6 +88,18 @@
     from {
       transform: scale(0.96);
       opacity: 0;
+    }
+  }
+
+  /* A signature lands like a rubber stamp: dropped from a little above, a slight twist, settled. */
+  @keyframes stamp {
+    from {
+      transform: scale(1.6) rotate(-14deg);
+      opacity: 0;
+    }
+    60% {
+      transform: scale(0.92) rotate(4deg);
+      opacity: 1;
     }
   }
 
@@ -162,10 +175,12 @@
  * Language switch (components/ui/switch-language.ts) and moving between pages (components/motion/
  * switch-page.ts), 440 ms in all. Deliberately geometry-free, so Safari and Chrome play it the same:
  * nothing is moved, scaled or resized (the groups do not animate, so the snapshots keep the size they
- * were captured at), only opacity and a soft focus change.
+ * were captured at), only opacity.
  *   - the header has its own name only during a switch and stays perfectly still: its words
  *     cross-fade (plus-lighter, so what is the same on both pages never flickers);
- *   - the page goes out of focus and fades (0–180 ms), the new one comes into focus (140–440 ms).
+ *   - the page fades out (0–180 ms) and the new one fades in (140–440 ms). No blur: WebKit filters
+ *     both full-screen snapshots on every frame, which made a 440 ms switch take 1.1–2 s there (and
+ *     sometimes run into the 1.5 s watchdog in switch-language.ts); opacity is composited for free.
  */
 html[data-language-switch] [data-site-header],
 html[data-page-switch] [data-site-header] {
@@ -228,14 +243,12 @@ html[data-page-switch]::view-transition-new(site-header) {
 @keyframes language-out {
   to {
     opacity: 0;
-    filter: blur(4px);
   }
 }
 
 @keyframes language-in {
   from {
     opacity: 0;
-    filter: blur(4px);
   }
 }
 

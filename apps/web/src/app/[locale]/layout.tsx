@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
+import { freshLoadScript } from '@/components/motion/fresh-load';
 import { themeInitScript } from '@/components/theme/theme-script';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { SiteFooter } from '@/components/layout/SiteFooter';
@@ -52,7 +53,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
   return (
     <html lang={htmlLang} className={fontVariables} data-theme={serverTheme} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript + freshLoadScript }} />
       </head>
       <body className="text-ink flex min-h-dvh flex-col">
         <NextIntlClientProvider>
