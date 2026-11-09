@@ -1,3 +1,4 @@
+import { endOfDayIn, localDate, type LocalDate } from './dates';
 import { DomainError } from './errors';
 
 /**
@@ -17,8 +18,15 @@ export interface BookingSettings {
   readonly inspectionHours: number;
   /** The renter answers a damage claim within this time, or it goes to an admin. */
   readonly damageReplyHours: number;
-  /** Service fee paid by the renter, in whole percent of the rent. */
+  /** Service fee paid by the renter, in whole percent of the rent (outside the launch offer). */
   readonly servicePercent: number;
+  /** The fee during the launch offer, in whole percent (owner's decision of 2026-11-06: 0 %). */
+  readonly promoServicePercent: number;
+  /**
+   * The last day of the launch offer, in the listing's time zone, or null when there is none. A request
+   * sent before the end of that day pays `promoServicePercent`; from the next day on, `servicePercent`.
+   */
+  readonly promoServiceUntil: LocalDate | null;
   /** How many days ahead a rental may start. */
   readonly maxAdvanceDays: number;
   /** How long after a completed deal both sides may leave a review. */
@@ -33,6 +41,8 @@ export const DEFAULT_BOOKING_SETTINGS: BookingSettings = Object.freeze({
   inspectionHours: 48,
   damageReplyHours: 48,
   servicePercent: 10,
+  promoServicePercent: 0,
+  promoServiceUntil: null,
   maxAdvanceDays: 365,
   reviewWindowDays: 14,
 });
@@ -63,12 +73,43 @@ export function validateBookingSettings(s: BookingSettings): void {
     const value: unknown = s[field];
     if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) invalidSetting(field, value);
   }
-  const percent: unknown = s.servicePercent;
-  if (typeof percent !== 'number' || !Number.isInteger(percent) || percent < 0 || percent > 100) {
-    invalidSetting('servicePercent', percent);
+  for (const field of ['servicePercent', 'promoServicePercent'] as const) {
+    const percent: unknown = s[field];
+    if (typeof percent !== 'number' || !Number.isInteger(percent) || percent < 0 || percent > 100) {
+      invalidSetting(field, percent);
+    }
+  }
+  const until: unknown = s.promoServiceUntil;
+  if (until !== null) {
+    try {
+      if (typeof until !== 'string') throw new DomainError('INVALID_DATE');
+      localDate(until);
+    } catch (error) {
+      if (!(error instanceof DomainError)) throw error;
+      invalidSetting('promoServiceUntil', until);
+    }
   }
   for (const field of ['maxAdvanceDays', 'reviewWindowDays'] as const) {
     const value: unknown = s[field];
     if (typeof value !== 'number' || !Number.isSafeInteger(value) || value <= 0) invalidSetting(field, value);
   }
+}
+
+/** The fee a request sent at `now` pays: the percent and, during the launch offer, its last day. */
+export interface ServiceFee {
+  readonly percent: number;
+  readonly promoUntil: LocalDate | null;
+}
+
+/**
+ * The service fee that applies at `now` for an item in `timeZone`: the launch offer's percent until the
+ * end of `promoServiceUntil` there (exclusive: the first moment of the next day pays the regular fee),
+ * otherwise `servicePercent`. `createRequest` freezes the answer into the booking's quote.
+ */
+export function serviceFeeAt(settings: BookingSettings, now: Date, timeZone: string): ServiceFee {
+  const until = settings.promoServiceUntil;
+  if (until !== null && now.getTime() < endOfDayIn(until, timeZone).getTime()) {
+    return { percent: settings.promoServicePercent, promoUntil: until };
+  }
+  return { percent: settings.servicePercent, promoUntil: null };
 }

@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import { useToast } from '@/components/ui/Toast';
 import { Link, useRouter } from '@/i18n/navigation';
+import { useDealsSummary } from '@/lib/deals/queries';
 import { useSession } from '@/lib/session/SessionProvider';
 
 const COLOURS = Object.values(STICKER_COLORS);
@@ -35,11 +36,17 @@ const ITEM =
 
 /**
  * The signed-in person's round avatar, opening a menu (WAI-ARIA menu button): who is signed in,
- * My listings, Moderation (administrators only), Settings and Sign out. Arrow keys, Home and End move between items; Esc closes it and returns
+ * My deals (with how many wait for them), Wallet, My listings, Moderation (administrators only),
+ * Settings and Sign out. Arrow keys, Home and End move between items; Esc closes it and returns
  * focus to the button; Tab or a click elsewhere closes it.
  */
 export function UserMenu({ user }: { user: PublicUser }) {
   const t = useTranslations('header');
+  const td = useTranslations('dealsMenu');
+  // Counted only once the menu has been opened: the header never fetches deals on every page.
+  const [wanted, setWanted] = useState(false);
+  const summary = useDealsSummary(wanted);
+  const waiting = (summary.data?.renter.needsAction ?? 0) + (summary.data?.owner.needsAction ?? 0);
   const { signOut } = useSession();
   const router = useRouter();
   const toast = useToast();
@@ -65,6 +72,7 @@ export function UserMenu({ user }: { user: PublicUser }) {
   }, [open, focusOn]);
 
   function openAt(where: 'first' | 'last') {
+    setWanted(true);
     setFocusOn(where);
     setOpen(true);
   }
@@ -130,6 +138,34 @@ export function UserMenu({ user }: { user: PublicUser }) {
             <p className="truncate text-sm">{user.email}</p>
           </div>
           <ul ref={menuRef} id={menuId} role="menu" aria-label={t('account')} onKeyDown={onMenuKeyDown}>
+            <li role="none">
+              <Link
+                href="/bookings"
+                role="menuitem"
+                tabIndex={-1}
+                onClick={() => close({ refocus: false })}
+                className={`${ITEM} justify-between gap-3`}
+              >
+                <span>{td('myDeals')}</span>
+                {waiting > 0 && (
+                  <span className="rounded-pill bg-sticker-sun animate-pop-in inline-flex min-h-6 min-w-6 items-center justify-center border border-black px-2 text-[12px] text-black tabular-nums">
+                    <span aria-hidden="true">{waiting}</span>
+                    <span className="sr-only">{td('waiting', { count: waiting })}</span>
+                  </span>
+                )}
+              </Link>
+            </li>
+            <li role="none">
+              <Link
+                href="/wallet"
+                role="menuitem"
+                tabIndex={-1}
+                onClick={() => close({ refocus: false })}
+                className={ITEM}
+              >
+                {td('wallet')}
+              </Link>
+            </li>
             <li role="none">
               <Link
                 href="/dashboard/lending"

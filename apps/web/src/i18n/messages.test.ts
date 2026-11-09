@@ -6,6 +6,9 @@ import ru from '../../messages/ru.json';
 import siteEn from '../../messages/site/en.json';
 import siteLv from '../../messages/site/lv.json';
 import siteRu from '../../messages/site/ru.json';
+import dealsEn from '../../messages/deals/en.json';
+import dealsLv from '../../messages/deals/lv.json';
+import dealsRu from '../../messages/deals/ru.json';
 
 type Tree = { [key: string]: string | Tree };
 const messages: Record<Locale, Tree> = { en, lv, ru };
@@ -70,5 +73,22 @@ describe('API error texts', () => {
     const errors = messages[locale]['errors'] as Record<string, string>;
     const missing = [...ERROR_CODES, 'NETWORK'].filter((code) => !errors[code]?.trim());
     expect(missing).toEqual([]);
+  });
+});
+
+describe('deal and wallet screen messages', () => {
+  const deals: Record<Locale, Tree> = { en: dealsEn, lv: dealsLv, ru: dealsRu };
+
+  it.each(['lv', 'ru'] as const)('%s has exactly the same keys as English', (locale) => {
+    expect(flatKeys(deals[locale])).toEqual(flatKeys(deals.en));
+  });
+
+  it.each(LOCALES)('%s has no empty strings', (locale) => {
+    expect(emptyValues(deals[locale])).toEqual([]);
+  });
+
+  it('uses namespaces of its own, so it never overrides another file', () => {
+    const others = new Set([...Object.keys(en), ...Object.keys(siteEn)]);
+    expect(Object.keys(dealsEn).filter((key) => others.has(key))).toEqual([]);
   });
 });

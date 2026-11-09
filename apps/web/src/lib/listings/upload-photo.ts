@@ -1,4 +1,10 @@
-import { PhotoUploadResponseSchema, type PhotoUploadResponse } from '@yoyo/shared';
+import {
+  BookingPhotoResponseSchema,
+  PhotoUploadResponseSchema,
+  type BookingPhotoKind,
+  type BookingPhotoResponse,
+  type PhotoUploadResponse,
+} from '@yoyo/shared';
 import { ApiError, toApiError } from '@/lib/session/api-error';
 import { refreshOnce } from '@/lib/session/fetch-with-refresh';
 
@@ -63,6 +69,34 @@ export async function uploadPhoto(
   }
   if (answer.status === 201) {
     const parsed = PhotoUploadResponseSchema.safeParse(answer.body);
+    if (parsed.success) return parsed.data;
+  }
+  throw toApiError(
+    new Response(null, { status: answer.status === 201 ? 500 : answer.status, headers: answer.headers }),
+    answer.body,
+  );
+}
+
+/**
+ * Uploads a photo of a deal's item (`POST /api/v1/bookings/:id/photos?kind=`): its condition at handover
+ * or return, or damage. The same transport as listing photos (progress, one session renewal).
+ */
+export async function uploadBookingPhoto(
+  bookingId: string,
+  kind: BookingPhotoKind,
+  file: Blob,
+  options: UploadOptions = {},
+): Promise<BookingPhotoResponse> {
+  const url = `/api/v1/bookings/${encodeURIComponent(bookingId)}/photos?kind=${kind}`;
+  const refresh = options.refresh ?? refreshOnce;
+  let answer = await send(url, file, options);
+  const code = (answer.body as { error?: { code?: string } } | undefined)?.error?.code;
+  if (answer.status === 401 && code && SESSION_ENDED.has(code) && (await refresh())) {
+    options.onProgress?.(0);
+    answer = await send(url, file, options);
+  }
+  if (answer.status === 201) {
+    const parsed = BookingPhotoResponseSchema.safeParse(answer.body);
     if (parsed.success) return parsed.data;
   }
   throw toApiError(

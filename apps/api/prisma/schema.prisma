@@ -388,7 +388,11 @@ model Booking {
   discountPercent     Int
   discountCents       Int
   rentCents           Int
+  /// The fee percent applied, frozen at request time (later setting changes never alter it).
+  servicePercent      Int
   serviceFeeCents     Int
+  /// The launch offer's last day when the percent came from it; null for the regular fee.
+  servicePromoUntil   DateTime?           @db.Date
   depositCents        Int
   totalCents          Int
   ownerPayoutCents    Int

@@ -9,6 +9,12 @@ import {
   type BookingPhotoResponse,
   type BookingPhotosResponse,
   BookingActionRequestSchema,
+  BookingHistoryResponseSchema,
+  BookingTermsSchema,
+  MyBookingsSummarySchema,
+  type BookingHistoryResponse,
+  type BookingTerms,
+  type MyBookingsSummary,
   LOCALES,
   BookingRequestSchema,
   BookingResponseSchema,
@@ -46,6 +52,9 @@ class BookingsPageDto extends createZodDto(BookingsPageSchema) {}
 class MyBookingsQueryDto extends createZodDto(MyBookingsQuerySchema) {}
 class QuoteQueryDto extends createZodDto(QuoteQuerySchema) {}
 class QuoteResponseDto extends createZodDto(QuoteResponseSchema) {}
+class BookingHistoryResponseDto extends createZodDto(BookingHistoryResponseSchema) {}
+class BookingTermsDto extends createZodDto(BookingTermsSchema) {}
+class MyBookingsSummaryDto extends createZodDto(MyBookingsSummarySchema) {}
 
 /** Deals: one side's or an administrator's view; to anyone else a deal does not exist (404). */
 @ApiTags('bookings')
@@ -114,6 +123,13 @@ export class BookingsController {
     return { booking: await this.bookings.act(id, user, body.version, body.event) };
   }
 
+  @Get(':id/history')
+  @ZodResponse({ status: 200, type: BookingHistoryResponseDto, description: "The deal's steps so far, oldest first (who, from and to which status, when)" })
+  @ApiErrors(401, 403, 404)
+  history(@CurrentUser() user: PublicUser, @Param('id') id: string): Promise<BookingHistoryResponse> {
+    return this.bookings.history(id, user);
+  }
+
   @Get(':id')
   @ZodResponse({ status: 200, type: BookingResponseDto, description: 'The deal, with what the viewer can do now' })
   @ApiErrors(401, 403, 404)
@@ -132,7 +148,14 @@ export class MyBookingsController {
   @ZodResponse({ status: 200, type: BookingsPageDto, description: 'My deals as renter or owner, last changed first, 20 a page' })
   @ApiErrors(400, 401, 403)
   list(@CurrentUser() user: PublicUser, @Query() query: MyBookingsQueryDto): Promise<BookingsPage> {
-    return this.bookings.listMine(user, query.role, query.status, query.page);
+    return this.bookings.listMine(user, query.role, query.status, query.page, query.group);
+  }
+
+  @Get('summary')
+  @ZodResponse({ status: 200, type: MyBookingsSummaryDto, description: 'Open deals, and those waiting for my step, as renter and as owner' })
+  @ApiErrors(401, 403)
+  summary(@CurrentUser() user: PublicUser): Promise<MyBookingsSummary> {
+    return this.bookings.summaryMine(user);
   }
 }
 
@@ -147,5 +170,12 @@ export class ListingQuoteController {
   @ApiErrors(400, 404)
   quote(@Param('id') id: string, @Query() query: QuoteQueryDto): Promise<QuoteResponse> {
     return this.bookings.quote(id, query.start, query.end);
+  }
+
+  @Get(':id/booking-terms')
+  @ZodResponse({ status: 200, type: BookingTermsDto, description: 'Prices, limits and taken days of a bookable listing, to price days in the browser' })
+  @ApiErrors(404, 409)
+  terms(@Param('id') id: string): Promise<BookingTerms> {
+    return this.bookings.terms(id);
   }
 }

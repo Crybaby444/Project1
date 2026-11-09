@@ -75,11 +75,22 @@ describe('quote (Review Focus 5)', () => {
       discountPercent: 0,
       discountCents: 0,
       rentCents: 4500,
+      servicePercent: 10,
       serviceFeeCents: 450,
+      servicePromoUntil: null,
       depositCents: 10000,
       totalCents: 14950,
       ownerPayoutCents: 4500,
       priceSource: 'LISTED',
+    });
+  });
+
+  it('records the fee percent and the launch offer it comes from', () => {
+    expect(quote({ pricing: p, days: 3, servicePercent: 0, servicePromoUntil: '2027-02-05' as never })).toMatchObject({
+      servicePercent: 0,
+      serviceFeeCents: 0,
+      servicePromoUntil: '2027-02-05',
+      totalCents: 14500,
     });
   });
 
@@ -210,7 +221,8 @@ describe('quote (Review Focus 5)', () => {
           ...(s.agreed ? { agreedDailyCents: cents(offer) } : {}),
         });
 
-        const { priceSource, ...amounts } = q;
+        const { priceSource, servicePromoUntil, ...amounts } = q;
+        expect(servicePromoUntil).toBeNull();
         for (const value of Object.values(amounts)) {
           expect(Number.isSafeInteger(value) && value >= 0).toBe(true);
         }

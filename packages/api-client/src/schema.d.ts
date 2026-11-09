@@ -708,6 +708,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/bookings/{id}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["BookingsController_history"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/bookings/{id}": {
         parameters: {
             query?: never;
@@ -740,6 +756,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/bookings/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MyBookingsController_summary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/listings/{id}/quote": {
         parameters: {
             query?: never;
@@ -748,6 +780,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["ListingQuoteController_quote"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/listings/{id}/booking-terms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListingQuoteController_terms"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1456,6 +1504,9 @@ export interface components {
         WalletSummaryDto_Output: {
             balanceCents: number;
             heldCents: number;
+            depositsCents: number;
+            incomingCents: number;
+            earnedCents: number;
         };
         WalletTransactionsResponseDto_Output: {
             items: {
@@ -1464,6 +1515,7 @@ export interface components {
                 kind: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND";
                 amountCents: number;
                 bookingId: string | null;
+                listingTitle: string | null;
                 /** Format: date-time */
                 createdAt: string;
             }[];
@@ -1573,7 +1625,9 @@ export interface components {
                     discountPercent: number;
                     discountCents: number;
                     rentCents: number;
+                    servicePercent: number;
                     serviceFeeCents: number;
+                    servicePromoUntil: string | null;
                     depositCents: number;
                     totalCents: number;
                     ownerPayoutCents: number;
@@ -1703,6 +1757,19 @@ export interface components {
                 note: string;
             };
         };
+        BookingHistoryResponseDto_Output: {
+            items: {
+                type: string;
+                /** @enum {string} */
+                actor: "RENTER" | "OWNER" | "ADMIN" | "SYSTEM";
+                /** @enum {string|null} */
+                fromStatus: "REQUESTED" | "ACCEPTED" | "PAID" | "ACTIVE" | "RETURNED" | "DAMAGE_CLAIMED" | "DISPUTED" | "COMPLETED" | "DECLINED" | "EXPIRED" | "CANCELLED" | null;
+                /** @enum {string} */
+                toStatus: "REQUESTED" | "ACCEPTED" | "PAID" | "ACTIVE" | "RETURNED" | "DAMAGE_CLAIMED" | "DISPUTED" | "COMPLETED" | "DECLINED" | "EXPIRED" | "CANCELLED";
+                /** Format: date-time */
+                at: string;
+            }[];
+        };
         BookingsPageDto_Output: {
             items: {
                 id: string;
@@ -1738,7 +1805,9 @@ export interface components {
                     discountPercent: number;
                     discountCents: number;
                     rentCents: number;
+                    servicePercent: number;
                     serviceFeeCents: number;
+                    servicePromoUntil: string | null;
                     depositCents: number;
                     totalCents: number;
                     ownerPayoutCents: number;
@@ -1807,6 +1876,16 @@ export interface components {
             }[];
             total: number;
         };
+        MyBookingsSummaryDto_Output: {
+            renter: {
+                open: number;
+                needsAction: number;
+            };
+            owner: {
+                open: number;
+                needsAction: number;
+            };
+        };
         QuoteResponseDto_Output: {
             quote: {
                 days: number;
@@ -1815,13 +1894,43 @@ export interface components {
                 discountPercent: number;
                 discountCents: number;
                 rentCents: number;
+                servicePercent: number;
                 serviceFeeCents: number;
+                servicePromoUntil: string | null;
                 depositCents: number;
                 totalCents: number;
                 ownerPayoutCents: number;
                 /** @enum {string} */
                 priceSource: "LISTED" | "AGREED";
             };
+            blocked: {
+                start: string;
+                end: string;
+            }[];
+        };
+        BookingTermsDto_Output: {
+            listing: {
+                id: string;
+                title: string;
+                coverUrl: string | null;
+                city: string | null;
+                district: string | null;
+                ownerId: string;
+                ownerName: string;
+            };
+            pricing: {
+                dailyCents: number;
+                weeklyDiscountPercent: number;
+                depositCents: number;
+                minDays: number;
+                maxDays: number;
+            };
+            servicePercent: number;
+            servicePromoUntil: string | null;
+            regularServicePercent: number;
+            maxAdvanceDays: number;
+            timeZone: string;
+            today: string;
             blocked: {
                 start: string;
                 end: string;
@@ -1925,7 +2034,9 @@ export interface components {
                     discountPercent: number;
                     discountCents: number;
                     rentCents: number;
+                    servicePercent: number;
                     serviceFeeCents: number;
+                    servicePromoUntil: string | null;
                     depositCents: number;
                     totalCents: number;
                     ownerPayoutCents: number;
@@ -2029,7 +2140,9 @@ export interface components {
                     discountPercent: number;
                     discountCents: number;
                     rentCents: number;
+                    servicePercent: number;
                     serviceFeeCents: number;
+                    servicePromoUntil: string | null;
                     depositCents: number;
                     totalCents: number;
                     ownerPayoutCents: number;
@@ -5020,6 +5133,55 @@ export interface operations {
             };
         };
     };
+    BookingsController_history: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The deal's steps so far, oldest first (who, from and to which status, when) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingHistoryResponseDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
     BookingsController_get: {
         parameters: {
             query?: never;
@@ -5074,6 +5236,7 @@ export interface operations {
             query: {
                 role: "renter" | "owner";
                 status?: "REQUESTED" | "ACCEPTED" | "PAID" | "ACTIVE" | "RETURNED" | "DAMAGE_CLAIMED" | "DISPUTED" | "COMPLETED" | "DECLINED" | "EXPIRED" | "CANCELLED";
+                group?: "open" | "closed";
                 page?: number;
             };
             header?: never;
@@ -5098,6 +5261,44 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    MyBookingsController_summary: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Open deals, and those waiting for my step, as renter and as owner */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyBookingsSummaryDto_Output"];
                 };
             };
             /** @description Not signed in or wrong credentials */
@@ -5154,6 +5355,46 @@ export interface operations {
             };
             /** @description Not found or not available */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ListingQuoteController_terms: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Prices, limits and taken days of a bookable listing, to price days in the browser */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingTermsDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };

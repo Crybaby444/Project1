@@ -13,6 +13,9 @@ beforeEach(async () => {
 });
 
 afterAll(async () => {
+  // The database is shared with the browser tests in CI: do not leave a changed fee behind.
+  await prisma.setting.deleteMany({ where: { key: { startsWith: 'fees.' } } });
+  await runSeed(prisma);
   await prisma.$disconnect();
 });
 
