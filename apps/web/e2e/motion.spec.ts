@@ -162,6 +162,30 @@ test.describe('motion on', () => {
     }
   });
 
+  test('load animations play once, on a fresh load, and never replay after a language switch', async ({
+    page,
+  }) => {
+    await page.goto('/login');
+    const card = page.locator('[data-card-rise]');
+    expect(await card.evaluate((el) => getComputedStyle(el).animationName)).toBe('card-rise');
+    await page
+      .locator('[data-site-header]')
+      .getByRole('button', { name: new RegExp(`^${en.language.label}: `) })
+      .click();
+    await page.locator('[data-site-header]').getByRole('menuitemradio', { name: 'Latviešu' }).click();
+    await expect(page.locator('html')).toHaveAttribute('lang', 'lv');
+    await expect(page.locator('html')).not.toHaveAttribute('data-language-switch');
+    // The new page's card and title are simply there: nothing restarts as the switch ends.
+    expect(await card.evaluate((el) => getComputedStyle(el).animationName)).toBe('none');
+    expect(
+      new Set(
+        await page
+          .locator('[data-letter], [data-rise-word]')
+          .evaluateAll((els) => els.map((el) => getComputedStyle(el).animationName)),
+      ),
+    ).toEqual(new Set(['none']));
+  });
+
   test('the auth title is in the page once, so a field with the same name stays unique', async ({ page }) => {
     await page.goto('/reset-password?token=abc');
     await expect(page.getByRole('heading', { level: 1, name: en.auth.reset.title })).toBeVisible();

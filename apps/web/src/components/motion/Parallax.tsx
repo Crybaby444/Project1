@@ -77,8 +77,8 @@ type BobProps = {
 };
 
 /**
- * A gentle float for hero stickers (motion.css, `[data-bob]`). It runs only while on screen and
- * not at all with reduced motion.
+ * A gentle float for hero stickers (motion.css, `[data-bob]`): once, on a fresh page load, while on
+ * screen, then the sticker rests; not at all with reduced motion.
  */
 export function Bob({ children, delay = 0, className = '' }: BobProps) {
   const ref = useRef<HTMLSpanElement>(null);
