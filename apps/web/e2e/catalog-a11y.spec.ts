@@ -20,10 +20,12 @@ async function seriousAxe(page: Page): Promise<string[]> {
     .map((v) => `${v.id} (${v.nodes.length}): ${v.nodes[0]?.target.join(' ')}`);
 }
 
+/** Console errors, each prefixed with the address it happened on. */
 function watchConsole(page: Page): string[] {
   const errors: string[] = [];
-  page.on('pageerror', (error) => errors.push(error.message));
-  page.on('console', (message) => message.type() === 'error' && errors.push(message.text()));
+  const where = () => new URL(page.url()).pathname + new URL(page.url()).search;
+  page.on('pageerror', (error) => errors.push(`${where()}: ${error.message}`));
+  page.on('console', (message) => message.type() === 'error' && errors.push(`${where()}: ${message.text()}`));
   return errors;
 }
 

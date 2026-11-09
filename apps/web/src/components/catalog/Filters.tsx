@@ -35,13 +35,17 @@ function FilterFields({ params, districts, today }: Omit<FiltersProps, 'total'>)
 
   // The address changes from elsewhere too (a removed chip, Back): the fields follow it, during the
   // render (React's "adjusting state when a prop changes"), so there is no frame with stale values.
-  const fromAddress = [params.priceMin, params.priceMax, params.from, params.to].join('|');
+  // Only a field whose own value in the address changed is reset: applying "from" on blur must not
+  // wipe what is already typed into "to" when that navigation lands.
+  const fromAddress = { min: params.priceMin, max: params.priceMax, dates: `${params.from}|${params.to}` };
   const [seen, setSeen] = useState(fromAddress);
-  if (seen !== fromAddress) {
+  if (seen.min !== fromAddress.min || seen.max !== fromAddress.max || seen.dates !== fromAddress.dates) {
     setSeen(fromAddress);
-    setMin(params.priceMin?.toString() ?? '');
-    setMax(params.priceMax?.toString() ?? '');
-    setRange(params.from && params.to ? { start: params.from, end: params.to } : null);
+    if (seen.min !== fromAddress.min) setMin(params.priceMin?.toString() ?? '');
+    if (seen.max !== fromAddress.max) setMax(params.priceMax?.toString() ?? '');
+    if (seen.dates !== fromAddress.dates) {
+      setRange(params.from && params.to ? { start: params.from, end: params.to } : null);
+    }
   }
 
   function applyPrice() {

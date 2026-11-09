@@ -6,6 +6,7 @@ import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import { IconButton } from '@/components/ui/IconButton';
 import { dayRole, isBlockedDay, pickDay, type Range } from '@/lib/catalog/range';
 import { addDays, monthGrid, weekStartFor } from '@/lib/listings/calendar';
+import { monthLabel } from '@/lib/month-label';
 
 type Month = { year: number; month: number };
 
@@ -76,7 +77,7 @@ export function RangeCalendar({ value, onChange, today, lastDay, blocked = [], t
   }, [focused, view]);
 
   const dayLabel = new Intl.DateTimeFormat(locale, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
-  const monthLabel = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  const monthHeading = monthLabel(locale);
   const weekdayShort = new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' });
   const weekdayLong = new Intl.DateTimeFormat(locale, { weekday: 'long', timeZone: 'UTC' });
 
@@ -142,7 +143,7 @@ export function RangeCalendar({ value, onChange, today, lastDay, blocked = [], t
           return (
             <table key={monthKey(month)} role="grid" aria-labelledby={captionId} className="w-full table-fixed border-separate border-spacing-y-1">
               <caption id={captionId} className="pb-2 text-left text-base font-bold capitalize">
-                {monthLabel.format(asDate(`${monthKey(month)}-01`))}
+                {monthHeading.format(asDate(`${monthKey(month)}-01`))}
               </caption>
               <thead>
                 <tr>

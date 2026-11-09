@@ -17,7 +17,8 @@ import { VerifyEmailBanner } from './VerifyEmailBanner';
  * The bar on every page: the wordmark home on the left; language, theme and the account on the right.
  * One row at any width: the language is one compact pill that opens a menu, and below 640px a
  * visitor sees only "Sign in" (the sign-in page links to sign-up). Below 640px the row is also a
- * little tighter, so the longest "Sign in" (Latvian "Pieteikties") still fits a 320px phone.
+ * little tighter, so the longest "Sign in" (Latvian "Pieteikties") still fits a 320px phone next to
+ * the catalog button.
  */
 export function SiteHeader({ catalog = [] }: { catalog?: MenuRoot[] }) {
   const t = useTranslations('header');
@@ -35,7 +36,7 @@ export function SiteHeader({ catalog = [] }: { catalog?: MenuRoot[] }) {
             <CatalogMenu roots={catalog} />
           </div>
 
-          <div className="flex min-w-0 items-center gap-1 sm:gap-2">
+          <div className="flex min-w-0 items-center gap-0.5 sm:gap-2">
             <LanguageSwitcher className="shrink-0" />
             <ThemeToggle className="shrink-0" />
             {status === 'authenticated' && user ? (
@@ -66,7 +67,7 @@ export function SiteHeader({ catalog = [] }: { catalog?: MenuRoot[] }) {
               </>
             ) : status === 'anonymous' ? (
               <>
-                <Button variant="ghost" href="/login" className="shrink-0 max-sm:px-3 max-sm:text-[12px]">
+                <Button variant="ghost" href="/login" className="shrink-0 max-sm:px-2 max-sm:text-[12px]">
                   {t('signIn')}
                 </Button>
                 <div className="hidden shrink-0 sm:block">

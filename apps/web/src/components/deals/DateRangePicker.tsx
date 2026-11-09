@@ -6,6 +6,7 @@ import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import { IconButton } from '@/components/ui/IconButton';
 import { dateLocale } from '@/lib/deals/dates';
 import { addDays, isUnavailable, monthGrid, weekStartFor } from '@/lib/listings/calendar';
+import { monthLabel } from '@/lib/month-label';
 
 export type Range = { start: string; end: string | null };
 
@@ -91,7 +92,7 @@ export function DateRangePicker({
   }, [focused, view]);
 
   const dayLabel = new Intl.DateTimeFormat(intl, { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
-  const monthLabel = new Intl.DateTimeFormat(intl, { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  const monthHeading = monthLabel(intl);
   const weekdayShort = new Intl.DateTimeFormat(intl, { weekday: 'narrow', timeZone: 'UTC' });
   const weekdayLong = new Intl.DateTimeFormat(intl, { weekday: 'long', timeZone: 'UTC' });
 
@@ -162,7 +163,7 @@ export function DateRangePicker({
           return (
             <table key={monthKey(month)} role="grid" aria-labelledby={captionId} className="w-full table-fixed border-collapse">
               <caption id={captionId} className="pb-2 text-left text-lg font-bold capitalize">
-                {monthLabel.format(asDate(`${monthKey(month)}-01`))}
+                {monthHeading.format(asDate(`${monthKey(month)}-01`))}
               </caption>
               <thead>
                 <tr>
