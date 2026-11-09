@@ -141,6 +141,12 @@ describe('loadEnv', () => {
     );
   });
 
+  it('caps sign-ins per email at 20 an hour by default, adjustable with LOGIN_EMAIL_HOURLY_CAP', () => {
+    expect(loadEnv(valid).LOGIN_EMAIL_HOURLY_CAP).toBe(20);
+    expect(loadEnv({ ...valid, LOGIN_EMAIL_HOURLY_CAP: '500' }).LOGIN_EMAIL_HOURLY_CAP).toBe(500);
+    expect(() => loadEnv({ ...valid, LOGIN_EMAIL_HOURLY_CAP: '0' })).toThrow(/LOGIN_EMAIL_HOURLY_CAP/);
+  });
+
   it('caps registrations at 100 an hour by default, adjustable with REGISTRATION_HOURLY_CAP', () => {
     expect(loadEnv(valid).REGISTRATION_HOURLY_CAP).toBe(100);
     expect(loadEnv({ ...valid, REGISTRATION_HOURLY_CAP: '250' }).REGISTRATION_HOURLY_CAP).toBe(250);

@@ -1,11 +1,12 @@
 import { expect, test, type Page } from '@playwright/test';
+import deals from '../messages/deals/en.json' with { type: 'json' };
 import en from '../messages/en.json' with { type: 'json' };
 import { asOwnVisitor, registerByApi } from './support/accounts';
 import { publishListing, uniqueWord, type Published } from './support/catalog';
 import { serveBlankMapTiles } from './support/listings';
 
 const m = en.catalog;
-const item = en.item;
+const book = deals.booking;
 
 test.beforeEach(async ({ context }) => {
   await asOwnVisitor(context);
@@ -19,19 +20,18 @@ function dayFromToday(days: number): string {
   return date.toISOString().slice(0, 10);
 }
 
-/** The calendar button of a day, by the start of its accessible name ("Friday, November 13, 2026…"). */
-function dayButton(page: Page, day: string) {
-  const name = new Intl.DateTimeFormat('en', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' }).format(
-    new Date(`${day}T00:00:00Z`),
-  );
-  return page.getByRole('button', { name: new RegExp(`^${name}`) });
-}
+/** The booking calendar's button of a day (plan 8b's picker marks each with `data-date`). */
+const dayButton = (page: Page, day: string) => page.locator(`[data-booking-panel] [data-date="${day}"]`);
 
-/** Picks a period on the calendar, paging months forward as needed. */
+/** The panel loads the booking terms itself: wait for its calendar before paging it. */
+const calendarReady = (page: Page) => expect(page.locator('[data-range-status]')).toBeVisible();
+
+/** Picks a period on the booking calendar, paging months forward as needed. */
 async function pickPeriod(page: Page, start: string, end: string) {
+  await calendarReady(page);
   for (const day of [start, end]) {
     for (let i = 0; i < 3 && !(await dayButton(page, day).count()); i++) {
-      await page.getByRole('button', { name: en.rangeCalendar.next }).first().click();
+      await page.locator('[data-booking-panel]').getByRole('button', { name: book.calendar.next }).click();
     }
     await dayButton(page, day).click();
   }
@@ -79,18 +79,17 @@ test('catalog → search with suggestions → filter → item → calculator →
   await page.getByRole('link', { name: drill.title }).click();
   await expect(page).toHaveURL(new RegExp(`/listings/${drill.id}-${drill.slug}$`));
   await expect(page.getByRole('heading', { level: 1, name: drill.title })).toBeVisible();
-  await expect(page.getByText(item.booking.pickDates)).toBeVisible();
+  await expect(page.locator('[data-range-status]')).toHaveText(book.pickStart);
 
-  // 7 days at 15 € with 10 % off for a week and Yoyo's 10 %: 94.50 + 9.45 + 50 deposit = 153.95.
+  // 7 days at 15 € with 10 % off for a week: 94.50 rent, the fee in force (10 % unless a launch offer
+  // runs, from the booking terms) and the 50 € deposit, as the domain's quote computes it.
   await pickPeriod(page, dayFromToday(2), dayFromToday(8));
-  const breakdown = page.locator('dl').filter({ hasText: item.price.total });
-  await expect(breakdown).toContainText('€15.00 × 7 days');
-  await expect(breakdown).toContainText('−€10.50');
-  await expect(breakdown).toContainText('€94.50');
-  await expect(breakdown).toContainText('€9.45');
-  await expect(breakdown).toContainText('€153.95');
+  await expect(page.locator('[data-range-status]')).toContainText('7 days');
+  const terms = (await (await page.request.get(`/api/v1/listings/${drill.id}/booking-terms`)).json()) as { servicePercent: number };
+  const fee = Math.round(9450 * terms.servicePercent / 100);
+  await expect(page.locator('[data-total]')).toHaveText(`€${((9450 + fee + 5000) / 100).toFixed(2)}`);
 
-  await page.getByRole('button', { name: item.booking.signInToRequest }).click();
+  await page.getByRole('link', { name: book.signIn }).click();
   await expect(page).toHaveURL(new RegExp(`/login\\?next=${encodeURIComponent(`/listings/${drill.id}-${drill.slug}`)}`));
 });
 
@@ -104,21 +103,24 @@ test('days the owner closed are struck through and cannot be picked; a renter re
 
   await registerByApi(page.request, { name: 'Līga Kalniņa' });
   await page.goto(`/listings/${listing.id}-${listing.slug}`);
+  await calendarReady(page);
   for (let i = 0; i < 2 && !(await dayButton(page, dayFromToday(4)).count()); i++) {
-    await page.getByRole('button', { name: en.rangeCalendar.next }).first().click();
+    await page.locator('[data-booking-panel]').getByRole('button', { name: book.calendar.next }).click();
   }
-  await expect(dayButton(page, dayFromToday(4))).toHaveAccessibleName(new RegExp(en.rangeCalendar.taken));
+  await expect(dayButton(page, dayFromToday(4))).toHaveAccessibleName(new RegExp(book.taken));
   await expect(dayButton(page, dayFromToday(4))).toHaveAttribute('aria-disabled', 'true');
 
-  // A period cannot run across closed days: the later click starts a new period instead.
+  // A period across closed days has no price, and says why.
   await pickPeriod(page, dayFromToday(2), dayFromToday(7));
-  await expect(page.getByText(item.booking.pickDates)).toBeVisible();
+  await expect(page.getByText(book.crossesTaken)).toBeVisible();
+  await expect(page.getByRole('button', { name: book.send })).toBeDisabled();
 
   await pickPeriod(page, dayFromToday(6), dayFromToday(8));
-  await expect(page.locator('dl').filter({ hasText: item.price.total })).toContainText('€15.00 × 3 days');
-  await page.getByLabel(item.booking.message).fill('Hi! I would pick it up in the morning.');
-  await page.getByRole('button', { name: item.booking.request }).click();
-  await expect(page.getByRole('status').filter({ hasText: item.booking.sentTitle })).toBeVisible();
+  await expect(page.locator('[data-range-status]')).toContainText('3 days');
+  await page.getByLabel(book.message).fill('Hi! I would pick it up in the morning.');
+  await page.getByRole('button', { name: book.send }).click();
+  // The request is a deal now: its page opens.
+  await expect(page).toHaveURL(/\/bookings\/[0-9a-f-]{36}$/);
 });
 
 test('the owner sees their own item without the booking button', async ({ browser }) => {
@@ -128,8 +130,8 @@ test('the owner sees their own item without the booking button', async ({ browse
   const cookies = await drill.ownerRequest.storageState();
   await context.addCookies(cookies.cookies);
   await page.goto(`/listings/${drill.id}-${drill.slug}`);
-  await expect(page.getByText(item.booking.own)).toBeVisible();
-  await expect(page.getByRole('button', { name: item.booking.request })).toHaveCount(0);
+  await expect(page.getByText(book.own)).toBeVisible();
+  await expect(page.getByRole('button', { name: book.send })).toHaveCount(0);
   await context.close();
 });
 
@@ -165,7 +167,7 @@ test('the map view shows the item in its district cell, never the exact point', 
 
 test('the owner’s public profile lists the item and has no reviews yet', async ({ page }) => {
   await page.goto(`/listings/${drill.id}-${drill.slug}`);
-  await page.getByRole('link', { name: item.owner.profile.replace('{name}', 'Jānis Ozols') }).click();
+  await page.getByRole('link', { name: en.item.owner.profile.replace('{name}', 'Jānis Ozols') }).click();
   await expect(page).toHaveURL(new RegExp(`/u/${drill.ownerId}$`));
   await expect(page.getByRole('heading', { level: 1, name: 'Jānis Ozols' })).toBeVisible();
   await expect(page.getByRole('link', { name: drill.title })).toBeVisible();

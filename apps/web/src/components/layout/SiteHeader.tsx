@@ -27,7 +27,7 @@ export function SiteHeader({ catalog = [] }: { catalog?: MenuRoot[] }) {
     <>
       <header data-site-header className="border-ink bg-surface relative border-b">
         <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-2 px-4 sm:gap-3 sm:px-8">
-          <div className="flex min-w-0 items-center gap-1 sm:gap-3">
+          <div className="flex min-w-0 items-center gap-0.5 sm:gap-3">
             <Link href="/" className="rounded-pill inline-flex shrink-0 items-center gap-2">
               <LogoMark size={36} className="hidden sm:block" />
               <Wordmark className="text-[24px] sm:text-[28px]" />

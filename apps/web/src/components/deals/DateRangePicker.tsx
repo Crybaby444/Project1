@@ -33,17 +33,18 @@ export function nextRange(range: Range | null, day: string): Range {
   return { start: range.start, end: day };
 }
 
-function useTwoMonths(): boolean {
+function useTwoMonths(allowed: boolean): boolean {
   const [wide, setWide] = useState(false);
   useEffect(() => {
+    if (!allowed) return;
     const query = window.matchMedia?.('(min-width: 768px)');
     if (!query) return;
     const update = () => setWide(query.matches);
     update();
     query.addEventListener?.('change', update);
     return () => query.removeEventListener?.('change', update);
-  }, []);
-  return wide;
+  }, [allowed]);
+  return allowed && wide;
 }
 
 /**
@@ -59,6 +60,7 @@ export function DateRangePicker({
   range,
   onChange,
   describedBy,
+  oneMonth = false,
 }: {
   today: string;
   /** The latest day a rental may start or run to (today + maxAdvanceDays). */
@@ -67,11 +69,13 @@ export function DateRangePicker({
   range: Range | null;
   onChange(range: Range): void;
   describedBy?: string;
+  /** Always one month, for a narrow column (the item page's side column). */
+  oneMonth?: boolean;
 }) {
   const t = useTranslations('booking');
   const locale = useLocale();
   const keysId = useId();
-  const twoMonths = useTwoMonths();
+  const twoMonths = useTwoMonths(!oneMonth);
   const [view, setView] = useState<Month>(() => monthOf(range?.start ?? today));
   const [focused, setFocused] = useState(range?.start ?? today);
   const moveFocus = useRef(false);
@@ -152,7 +156,7 @@ export function DateRangePicker({
           <span aria-hidden="true">→</span>
         </IconButton>
       </div>
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className={`grid gap-6 ${twoMonths ? 'md:grid-cols-2' : ''}`}>
         {months.map((month) => {
           const captionId = `${keysId}-${monthKey(month)}`;
           return (

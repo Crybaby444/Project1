@@ -12,12 +12,13 @@ export const RATE_LIMITS = {
   ],
   /**
    * 5 a minute per address and email, 30 a minute per address across all emails (password spraying),
-   * and 20 an hour per email from any address: an address can change, the email cannot.
+   * and `emailHourlyCap` (20 unless LOGIN_EMAIL_HOURLY_CAP says otherwise) an hour per email from any
+   * address: an address can change, the email cannot.
    */
-  login: (ip: string, email: string): RateRule[] => [
+  login: (ip: string, email: string, emailHourlyCap = 20): RateRule[] => [
     { key: `login:ip-email:${ip}|${email}`, limit: 5, windowMs: MINUTE },
     { key: `login:ip:${ip}`, limit: 30, windowMs: MINUTE },
-    { key: `login:email:${email}`, limit: 20, windowMs: HOUR },
+    { key: `login:email:${email}`, limit: emailHourlyCap, windowMs: HOUR },
   ],
   /**
    * Instead of the per-email hour bucket, for a browser that shows a valid device cookie of this

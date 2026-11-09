@@ -711,7 +711,24 @@
       "contact": "Please remove contact details from the text."
     },
     "send": "Reject listing",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "queues": "Queues",
+    "queueReview": "To review",
+    "queueOther": "Other",
+    "otherIntro": "Listings filed under «Other», oldest first. Move each to the category it belongs to; the owner gets an email.",
+    "otherEmptyTitle": "Nothing in «Other»",
+    "otherEmptyBody": "Every listing has a category of its own. Ones filed under «Other» appear here.",
+    "move": {
+      "button": "Move to another category",
+      "title": "Move “{title}”",
+      "body": "Choose the subcategory it belongs to. Its status stays, details the new category does not ask for are dropped, and the owner gets an email.",
+      "label": "New category",
+      "placeholder": "Choose a subcategory",
+      "required": "Choose a subcategory.",
+      "cancel": "Cancel",
+      "submit": "Move",
+      "done": "Moved to {category}. The owner gets an email."
+    }
   },
   "catalog": {
     "allTitle": "Catalog",
@@ -867,34 +884,7 @@
       "noDeposit": "No deposit",
       "days": "{min}–{max} days",
       "exactDays": "{days, plural, one {# day} other {# days}}",
-      "choose": "Choose dates",
-      "pickDates": "Choose the dates to see the price.",
-      "problems": {
-        "START_IN_PAST": "That day has passed. Pick a later one.",
-        "TOO_FAR_AHEAD": "Bookings start at most {maxAdvanceDays} days ahead.",
-        "PERIOD_TOO_SHORT": "The owner rents it for at least {minDays, plural, one {# day} other {# days}}.",
-        "PERIOD_TOO_LONG": "The owner rents it for at most {maxDays, plural, one {# day} other {# days}}.",
-        "DATES_UNAVAILABLE": "Some of these days are taken. Pick other dates.",
-        "INVALID_PERIOD": "The last day cannot come before the first."
-      },
-      "message": "A note to the owner (optional)",
-      "messagePlaceholder": "When you would like to pick it up, what it is for…",
-      "request": "Request booking",
-      "signInToRequest": "Sign in to book",
-      "noChargeYet": "Nothing is charged now: you pay once the owner accepts.",
-      "sentTitle": "Request sent",
-      "sentBody": "The owner has 24 hours to answer. We will email you either way.",
-      "own": "This is your item.",
-      "edit": "Edit the listing"
-    },
-    "price": {
-      "days": "{price} × {days, plural, one {# day} other {# days}}",
-      "discount": "Weekly discount −{percent}%",
-      "rent": "Rent",
-      "fee": "Yoyo fee ({percent}%)",
-      "deposit": "Deposit (comes back)",
-      "total": "Total",
-      "depositNote": "The deposit of {amount} is held and returned after the item comes back in order."
+      "choose": "Choose dates"
     },
     "facts": {
       "details": "Details",

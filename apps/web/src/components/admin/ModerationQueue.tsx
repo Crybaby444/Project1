@@ -3,16 +3,19 @@
 import { displayFit } from '@/lib/display-fit';
 import { useQueryClient } from '@tanstack/react-query';
 import { ADMIN_LISTINGS_PAGE_SIZE, type AdminListing } from '@yoyo/shared';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Sticker } from '@/components/ui/Sticker';
 import { useToast } from '@/components/ui/Toast';
 import { useErrorText } from '@/lib/forms/error-text';
-import { listingKeys, useCategories, useModerationQueue } from '@/lib/listings/queries';
+import { Link } from '@/i18n/navigation';
+import { findPath } from '@/lib/listings/categories';
+import { listingKeys, useCategories, useModerationQueue, type ModerationQueueName } from '@/lib/listings/queries';
 import { ApiError, unwrap } from '@/lib/session/api-error';
 import { useApiClient } from '@/lib/session/SessionProvider';
 import { ModerationCard } from './ModerationCard';
+import { MoveCategoryDialog } from './MoveCategoryDialog';
 import { RejectDialog } from './RejectDialog';
 
 /**
@@ -20,15 +23,19 @@ import { RejectDialog } from './RejectDialog';
  * the role anyway). Each decision carries the version shown, so an owner's change made meanwhile is
  * never approved unseen (409 → the queue reloads with the latest version).
  */
-export function ModerationQueue({ page }: { page: number }) {
+export function ModerationQueue({ page, queue = 'review' }: { page: number; queue?: ModerationQueueName }) {
   const t = useTranslations('moderation');
+  const locale = useLocale();
   const errorText = useErrorText();
   const toast = useToast();
   const client = useApiClient();
   const queryClient = useQueryClient();
-  const query = useModerationQueue(page);
+  const query = useModerationQueue(page, queue);
   const categories = useCategories().data ?? [];
   const [rejecting, setRejecting] = useState<AdminListing | null>(null);
+  const [moving, setMoving] = useState<AdminListing | null>(null);
+  const base = queue === 'other' ? '/admin/listings?queue=other' : '/admin/listings';
+  const pageHref = (number: number) => `${base}${queue === 'other' ? '&' : '?'}page=${number}`;
   const [busyId, setBusyId] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
@@ -59,7 +66,31 @@ export function ModerationQueue({ page }: { page: number }) {
       setNotice(error instanceof ApiError && error.status === 409 ? t('changed') : errorText(error));
     } finally {
       setBusyId(null);
-      await queryClient.invalidateQueries({ queryKey: listingKeys.queue(page) });
+      await queryClient.invalidateQueries({ queryKey: listingKeys.queue(page, queue) });
+    }
+  }
+
+  /** Files a listing under another category; the owner gets an email in their language. */
+  async function move(listing: AdminListing, categoryId: string) {
+    setBusyId(listing.id);
+    setNotice(null);
+    try {
+      await unwrap(
+        client.POST('/api/v1/admin/listings/{id}/category', {
+          params: { path: { id: listing.id } },
+          body: { categoryId, version: listing.version },
+        }),
+      );
+      const name = findPath(categories, categoryId)
+        .map((node) => node.names[locale as keyof typeof node.names])
+        .join(' · ');
+      toast.show(t('move.done', { category: name }));
+    } catch (error) {
+      setNotice(error instanceof ApiError && error.status === 409 ? t('changed') : errorText(error));
+    } finally {
+      setMoving(null);
+      setBusyId(null);
+      await queryClient.invalidateQueries({ queryKey: ['listings', 'queue'] });
     }
   }
 
@@ -78,8 +109,23 @@ export function ModerationQueue({ page }: { page: number }) {
         >
           {t('title')}
         </h1>
-        <p className="leading-relaxed">{t('intro')}</p>
+        <p className="leading-relaxed">{queue === 'other' ? t('otherIntro') : t('intro')}</p>
       </header>
+
+      <nav aria-label={t('queues')} className="flex flex-wrap gap-2">
+        {(['review', 'other'] as const).map((name) => (
+          <Link
+            key={name}
+            href={name === 'other' ? '/admin/listings?queue=other' : '/admin/listings'}
+            aria-current={queue === name ? 'page' : undefined}
+            className={`rounded-pill ease-yoyo inline-flex min-h-10 items-center border px-4 text-[13px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 ${
+              queue === name ? 'bg-cta text-cta-fg border-cta' : 'border-ink bg-surface text-ink'
+            }`}
+          >
+            {t(name === 'other' ? 'queueOther' : 'queueReview')}
+          </Link>
+        ))}
+      </nav>
 
       {notice && (
         <p
@@ -114,8 +160,8 @@ export function ModerationQueue({ page }: { page: number }) {
       ) : items.length === 0 ? (
         <section className="border-ink bg-surface rounded-card-xl flex flex-col items-center gap-4 border px-6 py-14 text-center">
           <Sticker kind="check" size={88} />
-          <h2 className="text-2xl font-bold">{t('emptyTitle')}</h2>
-          <p className="max-w-[52ch] leading-relaxed">{t('emptyBody')}</p>
+          <h2 className="text-2xl font-bold">{queue === 'other' ? t('otherEmptyTitle') : t('emptyTitle')}</h2>
+          <p className="max-w-[52ch] leading-relaxed">{queue === 'other' ? t('otherEmptyBody') : t('emptyBody')}</p>
         </section>
       ) : (
         <>
@@ -131,6 +177,7 @@ export function ModerationQueue({ page }: { page: number }) {
                   busy={busyId === listing.id}
                   onApprove={() => void decide(listing, { action: 'approve' })}
                   onReject={() => setRejecting(listing)}
+                  {...(queue === 'other' && { onMove: () => setMoving(listing) })}
                 />
               </li>
             ))}
@@ -138,20 +185,32 @@ export function ModerationQueue({ page }: { page: number }) {
           {pages > 1 && (
             <nav aria-label={t('pages')} className="flex flex-wrap justify-between gap-3">
               {page > 1 ? (
-                <Button variant="ghost" href={`/admin/listings?page=${page - 1}`}>
+                <Button variant="ghost" href={pageHref(page - 1)}>
                   {t('previous')}
                 </Button>
               ) : (
                 <span />
               )}
               {page < pages && (
-                <Button variant="ghost" href={`/admin/listings?page=${page + 1}`}>
+                <Button variant="ghost" href={pageHref(page + 1)}>
                   {t('next')}
                 </Button>
               )}
             </nav>
           )}
         </>
+      )}
+
+      {moving && (
+        <MoveCategoryDialog
+          key={moving.id}
+          categories={categories}
+          currentId={moving.categoryId}
+          title={moving.title ?? ''}
+          busy={busyId === moving.id}
+          onClose={() => setMoving(null)}
+          onMove={(categoryId) => void move(moving, categoryId)}
+        />
       )}
 
       {rejecting && (

@@ -711,7 +711,24 @@
       "contact": "Lūdzu, izņem no teksta kontaktinformāciju."
     },
     "send": "Noraidīt sludinājumu",
-    "cancel": "Atcelt"
+    "cancel": "Atcelt",
+    "queues": "Rindas",
+    "queueReview": "Pārbaudei",
+    "queueOther": "Citi",
+    "otherIntro": "Sludinājumi kategorijā «Citi», vecākie vispirms. Pārvieto katru uz tam atbilstošo kategoriju; īpašnieks saņem e-pastu.",
+    "otherEmptyTitle": "Kategorijā «Citi» nekā nav",
+    "otherEmptyBody": "Katram sludinājumam ir sava kategorija. Tie, kas iesniegti kategorijā «Citi», parādās šeit.",
+    "move": {
+      "button": "Pārvietot uz citu kategoriju",
+      "title": "Pārvietot “{title}”",
+      "body": "Izvēlies apakškategoriju, kurai tas pieder. Statuss nemainās, īpašības, ko jaunā kategorija neprasa, tiek dzēstas, un īpašnieks saņem e-pastu.",
+      "label": "Jaunā kategorija",
+      "placeholder": "Izvēlies apakškategoriju",
+      "required": "Izvēlies apakškategoriju.",
+      "cancel": "Atcelt",
+      "submit": "Pārvietot",
+      "done": "Pārvietots uz {category}. Īpašnieks saņem e-pastu."
+    }
   },
   "catalog": {
     "allTitle": "Katalogs",
@@ -867,34 +884,7 @@
       "noDeposit": "Bez drošības naudas",
       "days": "{min}–{max} dienas",
       "exactDays": "{days, plural, zero {# dienas} one {# diena} other {# dienas}}",
-      "choose": "Izvēlēties datumus",
-      "pickDates": "Izvēlies datumus, lai redzētu cenu.",
-      "problems": {
-        "START_IN_PAST": "Šī diena jau pagājusi. Izvēlies vēlāku.",
-        "TOO_FAR_AHEAD": "Rezervācija var sākties ne vēlāk kā pēc {maxAdvanceDays} dienām.",
-        "PERIOD_TOO_SHORT": "Īpašnieks iznomā vismaz uz {minDays, plural, zero {# dienām} one {# dienu} other {# dienām}}.",
-        "PERIOD_TOO_LONG": "Īpašnieks iznomā ne ilgāk kā uz {maxDays, plural, zero {# dienām} one {# dienu} other {# dienām}}.",
-        "DATES_UNAVAILABLE": "Dažas no šīm dienām ir aizņemtas. Izvēlies citus datumus.",
-        "INVALID_PERIOD": "Pēdējā diena nevar būt pirms pirmās."
-      },
-      "message": "Ziņa īpašniekam (nav obligāti)",
-      "messagePlaceholder": "Kad vēlies to saņemt, kam tas vajadzīgs…",
-      "request": "Pieprasīt rezervāciju",
-      "signInToRequest": "Pieslēdzies, lai rezervētu",
-      "noChargeYet": "Tagad nekas netiek iekasēts: maksā, kad īpašnieks piekrīt.",
-      "sentTitle": "Pieprasījums nosūtīts",
-      "sentBody": "Īpašniekam ir 24 stundas atbildei. Jebkurā gadījumā mēs tev uzrakstīsim.",
-      "own": "Šī ir tava lieta.",
-      "edit": "Labot sludinājumu"
-    },
-    "price": {
-      "days": "{price} × {days, plural, zero {# dienas} one {# diena} other {# dienas}}",
-      "discount": "Nedēļas atlaide −{percent}%",
-      "rent": "Noma",
-      "fee": "Yoyo komisija ({percent}%)",
-      "deposit": "Drošības nauda (atgriezīsies)",
-      "total": "Kopā",
-      "depositNote": "Drošības nauda {amount} tiek rezervēta un atgriezta, kad lieta ir atdota kārtībā."
+      "choose": "Izvēlēties datumus"
     },
     "facts": {
       "details": "Informācija",

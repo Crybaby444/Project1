@@ -11,7 +11,7 @@ export const listingKeys = {
   all: ['listings'] as const,
   one: (id: string) => ['listings', 'one', id] as const,
   mine: (status: ListingStatus | 'ALL') => ['listings', 'mine', status] as const,
-  queue: (page: number) => ['listings', 'queue', page] as const,
+  queue: (page: number, queue: ModerationQueueName = 'review') => ['listings', 'queue', queue, page] as const,
 };
 
 /** The category tree with attributes (public, changes rarely). */
@@ -55,13 +55,23 @@ export function useMyListings(status: ListingStatus | 'ALL') {
   });
 }
 
+/** `review`: listings waiting for a decision; `other`: everything filed under «Other», to re-file. */
+export type ModerationQueueName = 'review' | 'other';
+
+/** The category whose listings the «Other» queue shows (C02: the catch-all root). */
+export const OTHER_CATEGORY = 'other';
+
 /** The moderation queue (administrators only), oldest first. */
-export function useModerationQueue(page: number) {
+export function useModerationQueue(page: number, queue: ModerationQueueName = 'review') {
   const client = useApiClient();
   return useQuery({
-    queryKey: listingKeys.queue(page),
+    queryKey: listingKeys.queue(page, queue),
     queryFn: async () =>
-      unwrap(client.GET('/api/v1/admin/listings', { params: { query: { status: 'PENDING_REVIEW', page } } })),
+      unwrap(
+        client.GET('/api/v1/admin/listings', {
+          params: { query: queue === 'other' ? { category: OTHER_CATEGORY, page } : { status: 'PENDING_REVIEW', page } },
+        }),
+      ),
     placeholderData: keepPreviousData,
   });
 }

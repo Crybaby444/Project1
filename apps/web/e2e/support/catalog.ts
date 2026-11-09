@@ -14,6 +14,19 @@ export async function categoryBySlug(request: APIRequestContext, slug: string) {
 }
 
 let admin: Promise<APIRequestContext> | null = null;
+let lender: Promise<{ request: APIRequestContext; id: string; email: string }> | null = null;
+
+/** One owner per worker, «Jānis Ozols», writing in Latvian: sign-ups are capped an hour. */
+function sharedOwner(browser: Browser) {
+  lender ??= (async () => {
+    const context = await browser.newContext({ baseURL: 'http://localhost:3000' });
+    await asOwnVisitor(context);
+    const { email } = await registerByApi(context.request, { name: 'Jānis Ozols', locale: 'lv' });
+    const { user } = (await (await context.request.get('/api/v1/me')).json()) as { user: { id: string } };
+    return { request: context.request, id: user.id, email };
+  })();
+  return lender;
+}
 
 /**
  * The administrator, signed in once per worker (sign-ins to one account are rate limited, and every
@@ -33,7 +46,7 @@ function adminRequest(browser: Browser): Promise<APIRequestContext> {
 /** A word nobody else's listing has, so a search finds only this test's items. */
 export const uniqueWord = (tag: string) => `${tag}${Date.now().toString(36)}${Math.round(Math.random() * 1e6).toString(36)}`;
 
-export type Published = { id: string; title: string; slug: string; ownerId: string; ownerRequest: APIRequestContext };
+export type Published = { id: string; title: string; slug: string; ownerId: string; ownerRequest: APIRequestContext; ownerEmail?: string };
 
 /**
  * Publishes a listing the whole way (owner drafts, uploads a photo, submits; the administrator
@@ -43,15 +56,7 @@ export async function publishListing(
   browser: Browser,
   { title, categorySlug = 'drills-drivers', fields = {}, owner }: { title: string; categorySlug?: string; fields?: Record<string, unknown>; owner?: { request: APIRequestContext; id: string } },
 ): Promise<Published> {
-  let ownerRequest = owner?.request;
-  let ownerId = owner?.id;
-  if (!ownerRequest) {
-    const context = await browser.newContext({ baseURL: 'http://localhost:3000' });
-    await asOwnVisitor(context);
-    ownerRequest = context.request;
-    await registerByApi(ownerRequest, { name: 'Jānis Ozols', locale: 'lv' });
-    ownerId = ((await (await ownerRequest.get('/api/v1/me')).json()) as { user: { id: string } }).user.id;
-  }
+  const { request: ownerRequest, id: ownerId, email: ownerEmail } = owner ? { ...owner, email: undefined } : await sharedOwner(browser);
   const category = await categoryBySlug(ownerRequest, categorySlug);
   const listing = await createListingByApi(ownerRequest, {
     categoryId: category.id,
@@ -77,5 +82,5 @@ export async function publishListing(
   await approveByAdmin(await adminRequest(browser), listing.id);
 
   const address = (await (await ownerRequest.get(`/api/v1/catalog/listings/${listing.id}/address`)).json()) as { slug: string };
-  return { id: listing.id, title, slug: address.slug, ownerId: ownerId!, ownerRequest };
+  return { id: listing.id, title, slug: address.slug, ownerId, ownerRequest, ...(ownerEmail && { ownerEmail }) };
 }

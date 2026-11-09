@@ -77,7 +77,7 @@ export class AuthController {
     private readonly google: GoogleOAuthService,
     private readonly limiter: RateLimiter,
     private readonly devices: DeviceCookieService,
-    @Inject(ENV) private readonly env: Pick<Env, 'NODE_ENV' | 'WEB_ORIGIN' | 'REGISTRATION_HOURLY_CAP'>,
+    @Inject(ENV) private readonly env: Pick<Env, 'NODE_ENV' | 'WEB_ORIGIN' | 'REGISTRATION_HOURLY_CAP' | 'LOGIN_EMAIL_HOURLY_CAP'>,
     @Inject(SMS_PROVIDER) private readonly sms: SmsProvider | null,
   ) {}
 
@@ -242,7 +242,7 @@ export class AuthController {
     this.limiter.hit(
       device
         ? RATE_LIMITS.loginFromDevice(clientIp(req), body.email, device.deviceId)
-        : RATE_LIMITS.login(clientIp(req), body.email),
+        : RATE_LIMITS.login(clientIp(req), body.email, this.env.LOGIN_EMAIL_HOURLY_CAP),
     );
     const { user, session } = await this.auth.login(body, sessionMeta(req));
     setAuthCookies(res, session, this.secureCookies);
