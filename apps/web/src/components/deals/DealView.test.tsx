@@ -1,7 +1,7 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BOOKING_ACTIONS, type BookingView } from '@yoyo/shared';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import '@/test/dialog';
 import { historyItem, testBooking } from '@/test/deals';
 import { apiError, fakeApi, meRoute, testUser, type FakeRoutes } from '@/test/fake-api';
@@ -18,6 +18,16 @@ vi.mock('@/i18n/navigation', async (importOriginal) => ({
 }));
 
 const path = '/api/v1/bookings/booking-1';
+
+// The fixtures are dated around 2026-11-06 (request expiring on the 7th): pin "now" to that day so the
+// countdowns read the same whenever the tests run. Only Date is faked; timers and user events stay real.
+beforeEach(() => {
+  vi.useFakeTimers({ toFake: ['Date'] });
+  vi.setSystemTime(new Date('2026-11-06T12:00:00.000Z'));
+});
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 function setup(booking: BookingView, routes: FakeRoutes = {}) {
   const api = fakeApi({
