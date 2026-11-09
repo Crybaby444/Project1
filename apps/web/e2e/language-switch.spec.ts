@@ -73,6 +73,9 @@ for (const width of [390, 1280]) {
     test('en -> lv -> ru -> en, three rounds in a row: right texts and address, nothing sticks out', async ({
       page,
     }) => {
+      // Nine animated switches in a row: on a CI runner WebKit renders in software and one switch
+      // takes ~3 s, so the default 30 s ran out on the last step (no hang: each switch completed).
+      test.slow();
       await watchTransitions(page);
       const path = '/login?next=%2Fsettings';
       await page.goto(path);
