@@ -68,12 +68,13 @@ describe('SiteHeader', () => {
     expect(brand.className).toMatch(/-translate-x-1\/2/);
   });
 
-  it('leaves a phone the mark and one button: language and theme step aside', async () => {
+  it('on a phone keeps the language in the header (in the empty left corner) and lets the theme step aside', async () => {
     const { client } = fakeApi(meRoute(null));
     renderWithSession(<SiteHeader />, { client });
     const language = screen.getByRole('button', { name: new RegExp(`^${en.language.label}`) });
     const theme = screen.getByRole('button', { name: en.theme.toggle });
-    expect(language.closest('[data-desktop-only]')).not.toBeNull();
+    expect(language.closest('[data-desktop-only]')).toBeNull();
+    expect(language.closest('[data-phone-left]')).not.toBeNull();
     expect(theme.closest('[data-desktop-only]')).not.toBeNull();
   });
 });

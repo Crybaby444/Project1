@@ -41,8 +41,12 @@ export function SiteHeader(_props: { catalog?: MenuRoot[] }) {
           </Link>
 
           <div className="col-start-3 flex min-w-0 items-center justify-self-end gap-0.5 sm:gap-2">
-            <div data-desktop-only className="flex items-center gap-0.5 max-sm:hidden sm:gap-2">
+            {/* On a phone the language moves to the empty left corner (it must stay one tap away); the theme
+                steps aside to the footer. On wider screens both sit here, on the right. */}
+            <div data-phone-left className="max-sm:absolute max-sm:top-1/2 max-sm:left-4 max-sm:-translate-y-1/2">
               <LanguageSwitcher className="shrink-0" />
+            </div>
+            <div data-desktop-only className="flex items-center max-sm:hidden">
               <ThemeToggle className="shrink-0" />
             </div>
             {status === 'authenticated' && user ? (
