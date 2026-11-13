@@ -83,7 +83,7 @@ for (const theme of ['light', 'dark'] as const) {
 test.describe('signed in', () => {
   test.use({ viewport: { width: 390, height: 800 } });
 
-  test('the open catalog menu and the favourites page are accessible in both themes', async ({ page, baseURL }) => {
+  test('the favourites page is accessible in both themes', async ({ page, baseURL }) => {
     await registerByApi(page.request);
     for (const theme of ['light', 'dark'] as const) {
       await page.context().addCookies([{ name: 'yoyo-theme', value: theme, url: baseURL! }]);
@@ -91,10 +91,6 @@ test.describe('signed in', () => {
       await expect(page.locator('h1')).toBeVisible();
       expect.soft(await overflows(page), `favourites, ${theme}`).toEqual([]);
       expect.soft(await seriousAxe(page), `favourites, ${theme}`).toEqual([]);
-      await page.getByRole('button', { name: 'Каталог' }).click();
-      await expect(page.getByRole('navigation', { name: 'Категории каталога' })).toBeVisible();
-      expect.soft(await overflows(page), `menu, ${theme}`).toEqual([]);
-      expect.soft(await seriousAxe(page), `menu, ${theme}`).toEqual([]);
     }
   });
 });

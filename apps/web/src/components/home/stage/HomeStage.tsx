@@ -22,7 +22,9 @@ export default function HomeStage() {
   useEffect(() => {
     const canvas = ref.current;
     const root = document.querySelector<HTMLElement>('[data-home-root]');
-    if (reduce || !canvas || !root) return;
+    // Under automation (navigator.webdriver: CI has no GPU) the set is skipped: software WebGL on every
+    // frame starves the tests running beside it. The plain sections are the page those tests check.
+    if (reduce || !canvas || !root || navigator.webdriver) return;
     const stage = createStage(canvas, { mobile: window.matchMedia('(max-width: 639px)').matches });
     if (!stage) return;
     let alive = true;

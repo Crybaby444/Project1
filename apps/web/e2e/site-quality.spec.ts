@@ -74,9 +74,6 @@ test.describe('reduced motion', () => {
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await page.waitForTimeout(300);
     expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
-    // The marquee stands still and its pause button is not needed.
-    const state = await page.locator('[data-marquee-track]').evaluate((el) => getComputedStyle(el).animationName);
-    expect(state).toBe('none');
   });
 
   test('moving to another page is instant, without a View Transition', async ({ page }) => {

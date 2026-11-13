@@ -16,7 +16,7 @@ export async function WhatIsYoyo() {
           <span aria-hidden="true" className="size-2 rounded-full bg-current" />
           {t('label')}
         </p>
-        <h2 className="font-display m-0 mx-auto max-w-[14em] text-[clamp(2rem,9.4vw,3rem)] leading-[0.86] font-black uppercase sm:text-[clamp(2.4rem,5.3vw,6.4rem)]">
+        <h2 className="font-display m-0 mx-auto max-w-[14em] text-[clamp(2rem,9.4vw,3rem)] leading-[0.95] font-black uppercase sm:text-[clamp(2.4rem,5vw,6rem)]">
           {words.map((w, i) => (
             <span key={i}>
               <span data-word className="inline-block">

@@ -19,12 +19,20 @@ export async function Facts() {
         <ul data-facts className="m-0 grid list-none gap-10 p-0 text-center sm:grid-cols-5 sm:text-left">
           {facts.map((f) => (
             <li key={f.key} data-fact className="grid gap-3">
-              <span className="font-display text-[clamp(3.6rem,8vw,9rem)] leading-[0.8] font-black tabular-nums">
-                <b data-value={f.value} className="font-black">{f.value}</b>
-                {f.unit ? <u className="ml-[0.04em] text-[0.5em] text-[var(--glow)] no-underline">{f.unit === 'h' ? t('hours') : f.unit}</u> : null}
+              {/* Each layer is a mask (the outer box) with the moving content inside ([data-l]): when the
+                  stage slides one fact out and the next in, neither shows outside its own box. */}
+              <span data-layer="num" className="font-display block overflow-hidden text-[clamp(3.6rem,8vw,9rem)] leading-[0.86] font-black tabular-nums">
+                <span data-l className="block">
+                  <b data-value={f.value} className="font-black">{f.value}</b>
+                  {f.unit ? <u className="ml-[0.04em] text-[0.5em] text-[var(--glow)] no-underline">{f.unit === 'h' ? t('hours') : f.unit}</u> : null}
+                </span>
               </span>
-              <h3 className="font-display m-0 text-[clamp(1.6rem,2.4vw,2.6rem)] leading-[0.9] font-black uppercase">{t(`${f.key}.title`)}</h3>
-              <p className="m-0 text-[15px] leading-relaxed text-[var(--paper)]/75">{t(`${f.key}.body`, { after: f.after ?? 0 })}</p>
+              <h3 data-layer="title" className="font-display m-0 overflow-hidden text-[clamp(1.6rem,2.4vw,2.6rem)] leading-[0.95] font-black uppercase">
+                <span data-l className="block pt-[0.08em]">{t(`${f.key}.title`)}</span>
+              </h3>
+              <p data-layer="body" className="m-0 overflow-hidden text-[15px] leading-relaxed text-[var(--paper)]/75">
+                <span data-l className="block">{t(`${f.key}.body`, { after: f.after ?? 0 })}</span>
+              </p>
             </li>
           ))}
         </ul>

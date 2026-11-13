@@ -11,7 +11,7 @@
    */
   --paper: #f4f1e6;
   --night: #0a0b0e;
-  --glow: #9ed2ff;
+  --glow: #a9aeb6; /* the one accent: a neutral chrome grey (owner, 2026-11-13: black and white only, no blue) */
   --chrome: #c9cdd4;
   --sticker-blue: var(--glow);
   --sticker-mint: var(--chrome);

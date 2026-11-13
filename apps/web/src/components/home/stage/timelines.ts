@@ -75,7 +75,7 @@ export function mountTimelines(stage: Stage, root: HTMLElement, opts: { mobile: 
 
     // ---- facts: a stack driven straight by the (smoothed) scroll, no restarts
     const items = q<HTMLElement>('[data-fact]');
-    const layers = items.map((li) => Array.from(li.children) as HTMLElement[]);
+    const layers = items.map((li) => Array.from(li.querySelectorAll<HTMLElement>('[data-l]')));   // the moving content inside each mask
     const values = items.map((li) => li.querySelector<HTMLElement>('b[data-value]')!);
     const segs = q<HTMLElement>('[data-fbar] i');
     const idx = root.querySelector<HTMLElement>('[data-fidx]');

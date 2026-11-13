@@ -24,8 +24,9 @@ describe('v16 palette', () => {
     expect(dark).toMatch(/--ink:\s*#f4f1e6/i);
   });
 
-  it('has the one light, ice blue', () => {
-    expect(css).toMatch(/--glow:\s*#9ed2ff/i);
+  it('is black and white only: the accent is a neutral chrome grey, no blue (owner, 2026-11-13)', () => {
+    expect(css).toMatch(/--glow:\s*#a9aeb6/i);
+    expect(css).not.toMatch(/#9ed2ff/i);
   });
 
   it('has no yellow and none of the old sticker colours', () => {

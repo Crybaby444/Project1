@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { Button } from '@/components/ui/Button';
 
-const ROW = 'font-display flex gap-[0.3em] whitespace-nowrap text-[21vw] leading-[0.82] font-black uppercase will-change-transform sm:text-[clamp(4.4rem,13vw,15rem)]';
+const ROW = 'font-display flex gap-[0.3em] whitespace-nowrap text-[21vw] leading-[0.92] font-black uppercase will-change-transform sm:text-[clamp(4.4rem,13vw,15rem)]';
 
 /** Repeats a phrase across a row, with the small dot between, for the drifting lines of the night. */
 function Row({ text, times, className, row }: { text: string; times: number; className: string; row: number }) {

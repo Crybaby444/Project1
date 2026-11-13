@@ -43,7 +43,7 @@ export function makeYoyo(material = chrome()): { g: Group; body: Group } {
   b.scale.y = -1;
   b.position.y = -0.03;
   body.add(a, b, new Mesh(new CylinderGeometry(0.085, 0.085, 0.07, 48), material));
-  const ring = new Mesh(new TorusGeometry(0.1, 0.007, 8, 64), new MeshBasicMaterial({ color: 0xbfe3ff }));
+  const ring = new Mesh(new TorusGeometry(0.1, 0.007, 8, 64), new MeshBasicMaterial({ color: 0xe9eaec }));
   ring.rotation.x = Math.PI / 2;
   body.add(ring);
   const slitMat = new MeshPhysicalMaterial({ color: 0x0a0b0e, roughness: 0.3, clearcoat: 1 });
@@ -77,7 +77,7 @@ export function studio(renderer: WebGLRenderer, scene: Scene): void {
     };
     bar(60, 30, 900, 120, '#ffffff', 22);
     bar(380, 205, 300, 36, 'rgba(255,255,255,0.95)', 16);
-    bar(0, 120, 230, 300, '#9ed2ff', 34);
+    bar(0, 120, 230, 300, '#d6d9de', 34);   // cold side light, neutral (no blue)
     bar(820, 150, 204, 250, 'rgba(244,241,230,0.8)', 34);
     bar(200, 380, 620, 90, 'rgba(244,241,230,0.65)', 28);
   }
@@ -92,7 +92,7 @@ export function studio(renderer: WebGLRenderer, scene: Scene): void {
   scene.add(new AmbientLight(0xffffff, 0.15));
   const key = new DirectionalLight(0xffffff, 1.8);
   key.position.set(4, 10, 8);
-  const rim = new DirectionalLight(0x9ed2ff, 2.2);
+  const rim = new DirectionalLight(0xffffff, 1.8);
   rim.position.set(-10, 2, -4);
   scene.add(key, rim);
 }
