@@ -177,7 +177,7 @@ export function PhotosStep() {
       {storageOff && (
         <p
           role="alert"
-          className="bg-sticker-lavender rounded-card border border-black p-4 text-sm font-bold text-black"
+          className="bg-mist rounded-media border border-ink/15 p-4 text-sm font-bold text-ink"
         >
           {t('storageOff')}
         </p>
@@ -191,18 +191,18 @@ export function PhotosStep() {
         }}
         onDragLeave={() => setDragOver(false)}
         onDrop={disabled ? undefined : onDrop}
-        className={`rounded-card ease-yoyo flex flex-col items-center gap-3 border-2 border-dashed p-6 text-center transition-[background-color,transform] duration-250 sm:p-8 ${
-          dragOver ? 'border-ink bg-sticker-lavender scale-[1.01] text-black' : 'border-ink/60 bg-canvas'
+        className={`rounded-media ease-yoyo flex flex-col items-center gap-3 border-2 border-dashed p-6 text-center transition-[background-color,transform] duration-250 sm:p-8 ${
+          dragOver ? 'border-ink bg-mist scale-[1.01] text-ink' : 'border-ink/60 bg-canvas'
         } ${disabled ? 'opacity-60' : ''}`}
       >
         <svg
           viewBox="0 0 64 64"
           aria-hidden="true"
-          className={`ease-yoyo size-14 transition-transform duration-450 ${dragOver ? 'scale-110 -rotate-6' : ''}`}
+          className={`ease-yoyo size-14 transition-transform duration-450 ${dragOver ? 'scale-110' : ''}`}
         >
-          <rect x="6" y="14" width="52" height="40" rx="10" fill="var(--sticker-blue)" stroke="#000" />
+          <rect x="6" y="14" width="52" height="40" rx="10" fill="var(--glow)" stroke="#000" />
           <circle cx="32" cy="34" r="11" fill="#fff" stroke="#000" />
-          <rect x="22" y="9" width="20" height="8" rx="3" fill="var(--sticker-sun)" stroke="#000" />
+          <rect x="22" y="9" width="20" height="8" rx="3" fill="var(--paper)" stroke="#000" />
         </svg>
         <div className="flex flex-col items-center gap-2">
           <input
@@ -236,7 +236,7 @@ export function PhotosStep() {
       </p>
       {photoError && (
         <p className="flex items-start gap-1.5 text-sm font-bold">
-          <svg viewBox="0 0 24 24" aria-hidden="true" className="text-sticker-ember mt-0.5 size-4 shrink-0">
+          <svg viewBox="0 0 24 24" aria-hidden="true" className="text-[var(--danger)] mt-0.5 size-4 shrink-0">
             <circle cx="12" cy="12" r="10" fill="currentColor" />
             <path d="M12 7v6M12 16.5v.5" stroke="#000" strokeWidth="2" strokeLinecap="round" />
           </svg>
@@ -251,7 +251,7 @@ export function PhotosStep() {
             .map((item) => (
               <li
                 key={item.key}
-                className="border-ink bg-surface rounded-card flex flex-col gap-2 border p-3"
+                className="border-ink bg-surface rounded-media flex flex-col gap-2 border p-3"
               >
                 {item.status === 'failed' ? (
                   <div role="alert" className="flex flex-wrap items-center justify-between gap-3">
@@ -259,7 +259,7 @@ export function PhotosStep() {
                       <svg
                         viewBox="0 0 24 24"
                         aria-hidden="true"
-                        className="text-sticker-ember mt-0.5 size-4 shrink-0"
+                        className="text-[var(--danger)] mt-0.5 size-4 shrink-0"
                       >
                         <circle cx="12" cy="12" r="10" fill="currentColor" />
                         <path d="M12 7v6M12 16.5v.5" stroke="#000" strokeWidth="2" strokeLinecap="round" />
@@ -293,7 +293,7 @@ export function PhotosStep() {
                       className="border-ink bg-mist rounded-pill h-3 overflow-hidden border"
                     >
                       <div
-                        className="bg-sticker-blue ease-yoyo h-full transition-[width] duration-250"
+                        className="bg-[var(--glow)] ease-yoyo h-full transition-[width] duration-250"
                         style={{ width: `${item.progress}%` }}
                       />
                     </div>

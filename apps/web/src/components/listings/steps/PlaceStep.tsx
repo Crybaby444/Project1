@@ -21,7 +21,7 @@ const LocationMap = dynamic(() => import('./LocationMap').then((module) => modul
   loading: () => (
     <div
       aria-hidden="true"
-      className="border-ink/20 bg-mist rounded-card h-72 animate-pulse border sm:h-80"
+      className="border-ink/20 bg-mist rounded-media h-72 animate-pulse border sm:h-80"
     />
   ),
 });
@@ -123,7 +123,7 @@ export function PlaceStep() {
       <section className="flex flex-col gap-5">
         <AddressSearch onSelect={setPlace} disabled={readOnly} />
         <LocationMap point={point} onPick={(lat, lng) => void pickOnMap(lat, lng)} readOnly={readOnly} />
-        <p className="bg-sticker-lavender rounded-card flex items-start gap-2 border border-black p-4 text-sm font-bold text-black">
+        <p className="bg-mist rounded-media flex items-start gap-2 border border-ink/15 p-4 text-sm font-bold text-ink">
           <svg viewBox="0 0 24 24" aria-hidden="true" className="mt-0.5 size-4 shrink-0">
             <rect
               x="5"

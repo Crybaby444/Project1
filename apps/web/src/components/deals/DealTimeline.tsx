@@ -8,7 +8,7 @@ import { Countdown } from './Countdown';
 
 const DOT: Record<StepState, string> = {
   done: 'bg-ink text-canvas border-ink',
-  current: 'bg-sticker-sun text-black border-black',
+  current: 'bg-ink text-canvas border-ink/15',
   upcoming: 'bg-surface text-ink border-ink/40',
   stopped: 'bg-mist text-ink border-ink',
   skipped: 'bg-surface text-ink/50 border-ink/20 border-dashed',
@@ -59,7 +59,7 @@ export function DealTimeline({
   const steps = dealTimeline(booking, history);
 
   return (
-    <section aria-labelledby="deal-timeline" className="border-ink bg-surface rounded-card flex flex-col gap-4 border p-5 sm:p-6">
+    <section aria-labelledby="deal-timeline" className="border-ink bg-surface rounded-media flex flex-col gap-4 border p-5 sm:p-6">
       <h2 id="deal-timeline" className="text-2xl font-bold">
         {t('title')}
       </h2>

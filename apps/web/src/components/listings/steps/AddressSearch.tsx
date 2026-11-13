@@ -122,7 +122,7 @@ export function AddressSearch({
           ))}
         {state.kind === 'error' && <span className="font-bold">{state.message}</span>}
       </div>
-      <div hidden={!expanded} className="border-ink bg-surface rounded-card animate-pop-in border p-2">
+      <div hidden={!expanded} className="border-ink bg-surface rounded-media animate-pop-in border p-2">
         <ul id={listId} role="listbox" aria-label={t('search')}>
           {results.map((place, index) => (
             <li

@@ -27,7 +27,7 @@ export function EditListing({ id, initialStep }: { id: string; initialStep: Buil
         <div aria-hidden="true" className="bg-mist rounded-pill h-12 w-72 animate-pulse" />
         <div
           aria-hidden="true"
-          className="border-ink/20 bg-surface rounded-card-xl h-96 animate-pulse border"
+          className="border-ink/20 bg-surface rounded-media h-96 animate-pulse border"
         />
       </div>
     );

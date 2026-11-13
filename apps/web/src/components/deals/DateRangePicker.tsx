@@ -193,7 +193,7 @@ export function DateRangePicker({
                           key={date}
                           role="gridcell"
                           aria-selected={isStart || isEnd || inside}
-                          className={`p-0.5 ${inside ? 'bg-sticker-lavender/70' : ''} ${isStart && end ? 'rounded-l-full bg-sticker-lavender/70' : ''} ${isEnd && !isStart ? 'rounded-r-full bg-sticker-lavender/70' : ''}`}
+                          className={`p-0.5 ${inside ? 'bg-[color-mix(in_srgb,var(--glow)_35%,transparent)]' : ''} ${isStart && end ? 'rounded-l-full bg-[color-mix(in_srgb,var(--glow)_35%,transparent)]' : ''} ${isEnd && !isStart ? 'rounded-r-full bg-[color-mix(in_srgb,var(--glow)_35%,transparent)]' : ''}`}
                         >
                           <button
                             ref={(element) => {

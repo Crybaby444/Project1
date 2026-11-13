@@ -2,7 +2,6 @@
 
 import type { PhotoUrls } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
-import { Card } from '@/components/ui/Card';
 import type { ListingValues } from '@/lib/listings/listing-checks';
 import { formatEuros } from '@/lib/listings/money';
 
@@ -29,7 +28,7 @@ export function ListingPreview({ values, cover, categoryName, categoryColor }: P
   const placeholder = 'text-ink/70 italic';
 
   return (
-    <Card interactive className="flex flex-col gap-4 p-4" aria-label={t('label')} role="figure">
+    <div className="border-ink/15 rounded-media border flex flex-col gap-4 p-4" aria-label={t('label')} role="figure">
       <div className="border-ink bg-mist rounded-media relative aspect-[4/3] overflow-hidden border">
         {cover ? (
           // eslint-disable-next-line @next/next/no-img-element -- photos come from the API's storage, already sized
@@ -44,7 +43,7 @@ export function ListingPreview({ values, cover, categoryName, categoryColor }: P
           </div>
         )}
         {values.weeklyDiscountPercent > 0 && Number.isFinite(values.weeklyDiscountPercent) && (
-          <span className="bg-sticker-sun rounded-pill absolute top-3 left-3 -rotate-3 border border-black px-2.5 py-0.5 text-xs font-bold text-black">
+          <span className="bg-ink text-canvas rounded-pill absolute top-3 left-3 border border-ink/15 px-2.5 py-0.5 text-xs font-bold">
             {t('weekly', { percent: values.weeklyDiscountPercent })}
           </span>
         )}
@@ -54,7 +53,7 @@ export function ListingPreview({ values, cover, categoryName, categoryColor }: P
           {categoryName && (
             <span
               style={categoryColor ? { backgroundColor: categoryColor, color: '#000' } : undefined}
-              className="rounded-pill border border-black px-2.5 py-0.5"
+              className="rounded-pill border border-ink/15 px-2.5 py-0.5"
             >
               {categoryName}
             </span>
@@ -99,6 +98,6 @@ export function ListingPreview({ values, cover, categoryName, categoryColor }: P
           )}
         </p>
       </div>
-    </Card>
+    </div>
   );
 }

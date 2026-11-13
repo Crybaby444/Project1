@@ -38,14 +38,12 @@ export function RulesStep() {
       <fieldset className="flex flex-col gap-3" disabled={readOnly}>
         <legend className="mb-2 text-[13px] font-bold tracking-[0.03em] uppercase">{t('presets')}</legend>
         <div className="flex flex-wrap gap-2">
-          {RULE_PRESETS.map((preset, index) => {
+          {RULE_PRESETS.map((preset) => {
             const on = rules.preset.includes(preset);
             return (
               <label
                 key={preset}
-                className={`rounded-pill ease-yoyo has-focus-visible:outline-ink inline-flex min-h-10 cursor-pointer items-center gap-2 border px-4 py-2 text-left text-sm leading-snug font-bold transition-[transform,background-color,color] duration-250 select-none hover:-translate-y-0.5 active:scale-[0.96] has-focus-visible:outline-2 has-focus-visible:outline-offset-3 ${
-                  index % 2 ? 'hover:rotate-2' : 'hover:-rotate-2'
-                } ${on ? 'border-cta bg-cta text-cta-fg' : 'border-ink bg-surface text-ink'}`}
+                className={`rounded-pill ease-yoyo has-focus-visible:outline-ink inline-flex min-h-10 cursor-pointer items-center gap-2 border px-4 py-2 text-left text-sm leading-snug font-bold transition-[transform,background-color,color] duration-250 select-none hover:-translate-y-0.5 active:scale-[0.96] has-focus-visible:outline-2 has-focus-visible:outline-offset-3 ${on ? 'border-cta bg-cta text-cta-fg' : 'border-ink bg-surface text-ink'}`}
               >
                 <input
                   type="checkbox"

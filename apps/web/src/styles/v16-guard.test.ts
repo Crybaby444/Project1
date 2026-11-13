@@ -16,6 +16,12 @@ const PORTED = [
   'components/auth',
   'app/[locale]/(auth)',
   'components/layout',
+  'components/profile',
+  'components/deals',
+  'components/wallet',
+  'components/listings',
+  'components/favorites',
+  'components/settings',
 ];
 const BANNED = /bg-sticker-|[\s:'\"`]-?rotate-(?:[1-9]|1[0-2])\b|rounded-card\b|rounded-card-xl|<Sticker\b|<Card\b/;   // tilts of 1–12° are the sticker look; an icon turning 45/90/180° is fine
 

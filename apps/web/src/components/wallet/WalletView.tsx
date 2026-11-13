@@ -23,14 +23,14 @@ function BalanceTiles({ summary }: { summary: WalletSummary }) {
   const money = useMoney();
   const tiles: Tile[] = [
     { key: 'available', cents: summary.balanceCents, fill: 'bg-surface text-ink' },
-    { key: 'deposits', cents: summary.depositsCents, fill: 'bg-sticker-lavender text-black', hint: t('depositsHint') },
-    { key: 'incoming', cents: summary.incomingCents, fill: 'bg-sticker-sun text-black', hint: t('incomingHint') },
-    { key: 'earned', cents: summary.earnedCents, fill: 'bg-sticker-violet text-white', hint: t('earnedHint') },
+    { key: 'deposits', cents: summary.depositsCents, fill: 'bg-mist text-ink', hint: t('depositsHint') },
+    { key: 'incoming', cents: summary.incomingCents, fill: 'bg-ink text-canvas', hint: t('incomingHint') },
+    { key: 'earned', cents: summary.earnedCents, fill: 'bg-ink text-canvas', hint: t('earnedHint') },
   ];
   return (
     <dl className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {tiles.map((tile, index) => (
-        <Reveal key={tile.key} index={index} className={`rounded-card flex flex-col gap-2 border border-black p-5 ${tile.fill} ${tile.key === 'available' ? 'border-ink' : ''}`}>
+        <Reveal key={tile.key} index={index} className={`rounded-media flex flex-col gap-2 border border-ink/15 p-5 ${tile.fill} ${tile.key === 'available' ? 'border-ink' : ''}`}>
           <dt className="text-[13px] font-bold tracking-[0.03em] uppercase">{t(tile.key)}</dt>
           <dd className="text-3xl font-bold sm:text-4xl" data-tile={tile.key}>
             <CountUp value={tile.cents} format={money} />
@@ -81,11 +81,11 @@ function History() {
       {query.isPending ? (
         <ul aria-busy="true" className="flex flex-col gap-2">
           {[0, 1, 2, 3].map((k) => (
-            <li key={k} aria-hidden="true" className="border-ink/20 bg-surface rounded-card h-16 animate-pulse border" />
+            <li key={k} aria-hidden="true" className="border-ink/20 bg-surface rounded-media h-16 animate-pulse border" />
           ))}
         </ul>
       ) : query.isError ? (
-        <div role="alert" className="border-ink bg-surface rounded-card flex flex-col items-start gap-3 border p-6">
+        <div role="alert" className="border-ink bg-surface rounded-media flex flex-col items-start gap-3 border p-6">
           <p className="font-bold">{t('loadFailed')}</p>
           <p>{errorText(query.error)}</p>
           <Button variant="ghost" onClick={() => void query.refetch()}>
@@ -93,17 +93,17 @@ function History() {
           </Button>
         </div>
       ) : query.data.items.length === 0 ? (
-        <p className="border-ink/40 rounded-card border border-dashed p-8 text-center">{kind === 'ALL' ? t('emptyAll') : t('empty')}</p>
+        <p className="border-ink/40 rounded-media border border-dashed p-8 text-center">{kind === 'ALL' ? t('emptyAll') : t('empty')}</p>
       ) : (
         <>
-          <ul className="border-ink bg-surface rounded-card divide-ink/15 flex flex-col divide-y border" data-ledger="">
+          <ul className="border-ink bg-surface rounded-media divide-ink/15 flex flex-col divide-y border" data-ledger="">
             {query.data.items.map((item) => {
               const incoming = item.amountCents > 0;
               return (
                 <li key={`${item.id}-${item.amountCents}`} className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3" data-ledger-kind={item.kind}>
                   <span
                     aria-hidden="true"
-                    className={`grid size-9 shrink-0 place-items-center rounded-full border ${incoming ? 'bg-sticker-blue border-black text-black' : 'bg-mist border-ink text-ink'}`}
+                    className={`grid size-9 shrink-0 place-items-center rounded-full border ${incoming ? 'bg-[var(--glow)] border-ink/15 text-ink' : 'bg-mist border-ink text-ink'}`}
                   >
                     <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d={incoming ? 'M12 19V5m0 14-6-6m6 6 6-6' : 'M12 5v14m0-14-6 6m6-6 6 6'} />
@@ -177,11 +177,11 @@ export function WalletView() {
       {wallet.isPending ? (
         <div aria-busy="true" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {[0, 1, 2, 3].map((k) => (
-            <div key={k} aria-hidden="true" className="border-ink/20 bg-surface rounded-card h-32 animate-pulse border" />
+            <div key={k} aria-hidden="true" className="border-ink/20 bg-surface rounded-media h-32 animate-pulse border" />
           ))}
         </div>
       ) : wallet.isError ? (
-        <div role="alert" className="border-ink bg-surface rounded-card flex flex-col items-start gap-3 border p-6">
+        <div role="alert" className="border-ink bg-surface rounded-media flex flex-col items-start gap-3 border p-6">
           <p className="font-bold">{t('loadFailed')}</p>
           <p>{errorText(wallet.error)}</p>
           <Button variant="ghost" onClick={() => void wallet.refetch()}>

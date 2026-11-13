@@ -17,6 +17,7 @@
   --sticker-mint: var(--chrome);
   --sticker-lavender: #e9e4d4;
   --sticker-ember: #d9472b;
+  --danger: #d9472b; /* the one warning colour: errors, cancel, damage */
   --sticker-sun: #dcd6c4;
   --sticker-violet: #b9c0cc;
 

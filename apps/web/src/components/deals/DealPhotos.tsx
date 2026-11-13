@@ -71,7 +71,7 @@ function Uploader({
         type="button"
         onClick={() => input.current?.click()}
         disabled={progress !== null}
-        className="rounded-card ease-yoyo border-ink hover:bg-mist grid aspect-square w-24 place-items-center border border-dashed text-center text-[12px] font-bold transition-[transform,background-color] duration-150 hover:-translate-y-0.5 active:scale-[0.96] disabled:opacity-70"
+        className="rounded-media ease-yoyo border-ink hover:bg-mist grid aspect-square w-24 place-items-center border border-dashed text-center text-[12px] font-bold transition-[transform,background-color] duration-150 hover:-translate-y-0.5 active:scale-[0.96] disabled:opacity-70"
       >
         {progress !== null ? (
           <span role="status" className="tabular-nums">
@@ -140,7 +140,7 @@ export function DamagePhotos({
       </div>
       {error && (
         <p className="flex items-start gap-2 text-sm font-bold" aria-live="polite">
-          <span aria-hidden="true" className="bg-sticker-ember mt-0.5 inline-block size-4 shrink-0 rounded-full border border-black" />
+          <span aria-hidden="true" className="bg-[var(--danger)] mt-0.5 inline-block size-4 shrink-0 rounded-full border border-ink/15" />
           {error}
         </p>
       )}
@@ -162,7 +162,7 @@ export function DealPhotos({ booking }: { booking: BookingView }) {
     .filter((g) => g.items.length > 0 || kinds.includes(g.kind));
 
   return (
-    <section aria-labelledby="deal-photos" className="border-ink bg-surface rounded-card flex flex-col gap-4 border p-5 sm:p-6">
+    <section aria-labelledby="deal-photos" className="border-ink bg-surface rounded-media flex flex-col gap-4 border p-5 sm:p-6">
       <div className="flex flex-col gap-1">
         <h2 id="deal-photos" className="text-xl font-bold">
           {t('title')}

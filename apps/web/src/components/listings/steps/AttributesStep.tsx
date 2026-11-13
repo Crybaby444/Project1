@@ -14,7 +14,7 @@ export function AttributesStep() {
 
   if (!category || !isLeaf(category)) {
     return (
-      <div className="border-ink rounded-card flex flex-col items-start gap-4 border border-dashed p-6">
+      <div className="border-ink rounded-media flex flex-col items-start gap-4 border border-dashed p-6">
         <p>{t('needCategory')}</p>
         <Button variant="ghost" onClick={() => goTo('basics')}>
           {t('toBasics')}

@@ -3,7 +3,6 @@
 import type { OwnerListingSummary } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
 import { BookingLinkButton } from '@/components/deals/BookingLinkButton';
 import { formatEuros } from '@/lib/listings/money';
 import { ListingActions, type ListingAction } from './ListingActions';
@@ -25,7 +24,7 @@ export function MyListingCard({
   const archived = listing.status === 'ARCHIVED';
 
   return (
-    <Card interactive className="h-full">
+    <div className="border-ink/15 rounded-media border h-full">
       <article className="flex h-full flex-col gap-4 p-4">
         <div className="border-ink bg-mist rounded-media relative aspect-[4/3] overflow-hidden border">
           {listing.cover ? (
@@ -53,7 +52,7 @@ export function MyListingCard({
           {listing.status === 'REJECTED' && listing.rejectionReason && (
             <div className="mt-2 flex flex-col gap-1">
               <p className="text-[13px] font-bold tracking-[0.03em] uppercase">{t('reason')}</p>
-              <p className="border-sticker-ember border-l-4 pl-3 text-sm font-bold [overflow-wrap:anywhere]">
+              <p className="border-[var(--danger)] border-l-4 pl-3 text-sm font-bold [overflow-wrap:anywhere]">
                 {listing.rejectionReason}
               </p>
             </div>
@@ -71,6 +70,6 @@ export function MyListingCard({
           <ListingActions listing={listing} perform={perform} />
         </div>
       </article>
-    </Card>
+    </div>
   );
 }

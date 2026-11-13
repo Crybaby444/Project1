@@ -150,7 +150,7 @@ export function PhotoGrid({ photos, disabled, onReorder, onRemove }: Props) {
     setAnnouncement(t('dropped', { position, total }));
   }
 
-  const tilt = prefersReducedMotion() ? '' : '-rotate-3 scale-[1.04]';
+  const tilt = prefersReducedMotion() ? '' : 'scale-[1.04] shadow-[0_0_0_2px_var(--glow)]';   // v16: lifted, lit — no tilt
 
   return (
     <div className="flex flex-col gap-3">
@@ -188,7 +188,7 @@ export function PhotoGrid({ photos, disabled, onReorder, onRemove }: Props) {
                   className="ease-yoyo size-full object-cover transition-transform duration-450 group-hover:scale-[1.04]"
                 />
                 {index === 0 && (
-                  <span className="bg-sticker-sun rounded-pill absolute top-2 left-2 -rotate-3 border border-black px-2.5 py-0.5 text-xs font-bold text-black">
+                  <span className="bg-ink text-canvas rounded-pill absolute top-2 left-2 border border-ink/15 px-2.5 py-0.5 text-xs font-bold">
                     {t('cover')}
                   </span>
                 )}

@@ -19,7 +19,7 @@ export function TestModeNotice({ onUse }: { onUse(number: string): void }) {
     <section
       aria-labelledby="test-mode"
       data-test-mode=""
-      className="rounded-card bg-sticker-sun flex flex-col gap-2 border border-black p-4 text-black"
+      className="rounded-media bg-ink text-canvas flex flex-col gap-2 border border-ink/15 p-4"
     >
       <h3 id="test-mode" className="flex items-center gap-2 text-[13px] font-bold tracking-[0.03em] uppercase">
         <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -38,7 +38,7 @@ export function TestModeNotice({ onUse }: { onUse(number: string): void }) {
               type="button"
               onClick={() => onUse(card.number)}
               aria-label={`${t('use')}: ${card.number}, ${t(`cards.${card.key}`)}`}
-              className="rounded-pill ease-yoyo min-h-8 border border-black bg-white px-3 text-[12px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.96]"
+              className="rounded-pill ease-yoyo min-h-8 border border-ink/15 bg-white px-3 text-[12px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.96]"
             >
               {t('use')}
             </button>
@@ -50,9 +50,9 @@ export function TestModeNotice({ onUse }: { onUse(number: string): void }) {
 }
 
 const BRAND_STYLE = {
-  visa: 'bg-sticker-blue text-black',
-  mastercard: 'bg-sticker-ember text-black',
-  amex: 'bg-sticker-violet text-white',
+  visa: 'bg-[var(--glow)] text-black',
+  mastercard: 'bg-[var(--danger)] text-black',
+  amex: 'bg-ink text-canvas',
 } as const;
 
 /**
@@ -102,7 +102,7 @@ export function CardForm({
           <span
             aria-live="polite"
             className={`rounded-pill pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 border px-2.5 py-0.5 text-[12px] font-bold transition-[opacity,transform] duration-250 ease-yoyo ${
-              brand ? `border-black opacity-100 ${BRAND_STYLE[brand]}` : 'scale-90 border-transparent opacity-0'
+              brand ? `border-ink/15 opacity-100 ${BRAND_STYLE[brand]}` : 'scale-90 border-transparent opacity-0'
             }`}
           >
             {brand ? t(`brand.${brand}`) : ''}
@@ -110,7 +110,7 @@ export function CardForm({
         </div>
         {error('number') && (
           <p id={`${id}-number-error`} aria-live="polite" className="flex items-start gap-1.5 text-sm font-bold">
-            <span aria-hidden="true" className="bg-sticker-ember mt-0.5 inline-block size-4 shrink-0 rounded-full border border-black" />
+            <span aria-hidden="true" className="bg-[var(--danger)] mt-0.5 inline-block size-4 shrink-0 rounded-full border border-ink/15" />
             {error('number')}
           </p>
         )}

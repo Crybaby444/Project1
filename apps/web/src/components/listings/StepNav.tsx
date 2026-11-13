@@ -50,7 +50,7 @@ export function StepNav({ current, onSelect }: { current: BuilderStep; onSelect(
                   aria-hidden="true"
                   className={`grid size-8 shrink-0 place-items-center rounded-full border text-[13px] tabular-nums ${
                     done
-                      ? 'bg-sticker-blue border-black text-black'
+                      ? 'bg-[var(--glow)] border-ink/15 text-black'
                       : isCurrent
                         ? 'border-cta-fg'
                         : 'border-ink'

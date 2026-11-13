@@ -34,7 +34,7 @@ function Signature({ who, at, timeZone }: { who: string; at: string | null; time
       <span
         aria-hidden="true"
         data-signed={at ? '' : undefined}
-        className={`grid size-9 shrink-0 place-items-center rounded-full border ${at ? 'bg-sticker-violet animate-stamp border-black text-white' : 'border-ink/40 border-dashed'}`}
+        className={`grid size-9 shrink-0 place-items-center rounded-full border ${at ? 'bg-ink text-canvas animate-stamp border-ink/15' : 'border-ink/40 border-dashed'}`}
       >
         {at && (
           <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -77,7 +77,7 @@ export function ContractCard({ booking }: { booking: BookingView }) {
   }
 
   return (
-    <section aria-labelledby="deal-contract" className="border-ink bg-surface rounded-card flex flex-col gap-4 border p-5 sm:p-6" data-contract="">
+    <section aria-labelledby="deal-contract" className="border-ink bg-surface rounded-media flex flex-col gap-4 border p-5 sm:p-6" data-contract="">
       <div className="flex flex-col gap-1">
         <h2 id="deal-contract" className="text-xl font-bold">
           {t('title')}

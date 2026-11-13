@@ -63,7 +63,7 @@ export function ListingStatusBadge({
       data-status={status}
       style={fill ? { backgroundColor: fill, color: '#000000' } : undefined}
       className={`rounded-pill inline-flex min-h-7 items-center gap-1.5 border px-3 text-[13px] font-bold whitespace-nowrap ${
-        fill ? 'border-black' : 'border-ink bg-surface text-ink'
+        fill ? 'border-ink/15' : 'border-ink bg-surface text-ink'
       } ${className}`}
     >
       <svg viewBox="0 0 24 24" aria-hidden="true" className="size-3.5 shrink-0">

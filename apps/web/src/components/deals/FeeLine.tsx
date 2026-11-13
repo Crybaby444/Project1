@@ -22,7 +22,7 @@ export function FeeLine({ quote }: { quote: Pick<QuoteView, 'servicePercent' | '
           <span
             data-fee-promo=""
             title={t('feePromoLabel', { percent: quote.servicePercent, date })}
-            className="rounded-pill bg-sticker-sun inline-flex min-h-6 items-center border border-black px-2.5 text-[12px] font-bold text-black"
+            className="rounded-pill bg-ink text-canvas inline-flex min-h-6 items-center border border-ink/15 px-2.5 text-[12px] font-bold"
           >
             <span aria-hidden="true">{t('feePromo', { percent: quote.servicePercent, date })}</span>
             <span className="sr-only">{t('feePromoLabel', { percent: quote.servicePercent, date })}</span>
