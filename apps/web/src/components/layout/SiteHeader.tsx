@@ -28,7 +28,8 @@ export function SiteHeader(_props: { catalog?: MenuRoot[] }) {
 
   return (
     <>
-      <header data-site-header className="border-ink bg-surface relative border-b">
+      {/* z-30: its own layer above the page, so the language and account menus open over the content. */}
+      <header data-site-header className="border-ink bg-surface relative z-30 border-b">
         <div className="relative mx-auto grid h-16 max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:gap-3 sm:px-8">
           <div aria-hidden="true" />
           <Link
