@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { Button } from '@/components/ui/Button';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
-import { LogoMark } from '@/components/ui/LogoMark';
+import { Mark } from '@/components/brand/Mark';
 import { Wordmark } from '@/components/ui/Wordmark';
 import { Link } from '@/i18n/navigation';
 import { useSession } from '@/lib/session/SessionProvider';
@@ -30,7 +30,7 @@ export function SiteHeader({ catalog = [] }: { catalog?: MenuRoot[] }) {
         <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-2 px-4 sm:gap-3 sm:px-8">
           <div className="flex min-w-0 items-center gap-0.5 sm:gap-3">
             <Link href="/" className="rounded-pill inline-flex shrink-0 items-center gap-2">
-              <LogoMark size={36} className="hidden sm:block" />
+              <Mark size={24} className="hidden sm:block" />
               <Wordmark className="text-[24px] sm:text-[28px]" />
             </Link>
             <CatalogMenu roots={catalog} />

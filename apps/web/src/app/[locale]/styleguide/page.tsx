@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ApiStatus } from '@/components/ApiStatus';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
-import { LogoMark } from '@/components/ui/LogoMark';
+import { Mark } from '@/components/brand/Mark';
 import { Marquee } from '@/components/ui/Marquee';
 import { Wordmark } from '@/components/ui/Wordmark';
 import { displayFit } from '@/lib/display-fit';
@@ -59,7 +59,7 @@ export default async function StyleguidePage({ params }: { params: Promise<{ loc
   return (
     <main className="mx-auto flex max-w-[1440px] flex-col gap-14 px-4 pt-12 pb-16 sm:px-8">
       <header className="@container flex flex-col items-start gap-5">
-        <LogoMark size={48} />
+        <Mark size={48} />
         <h1
           style={displayFit(t('title'), { max: '5rem' })}
           className="font-display text-display-fit leading-[0.85] font-black uppercase"

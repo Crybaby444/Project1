@@ -6,7 +6,7 @@ import type { MouseEvent } from 'react';
 import { TransitionLink } from '@/components/motion/TransitionLink';
 import { ThemeSelect } from '@/components/theme/ThemeSelect';
 import { shouldAnimateLanguageChange, switchLanguage } from '@/components/ui/switch-language';
-import { LogoMark } from '@/components/ui/LogoMark';
+import { Mark } from '@/components/brand/Mark';
 import { Sticker } from '@/components/ui/Sticker';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { displayFit } from '@/lib/display-fit';
@@ -96,7 +96,7 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-[1440px] gap-10 px-4 pt-12 pb-8 sm:px-8 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1.4fr]">
         <div className="flex flex-col items-start gap-4">
           <div className="flex items-center gap-3">
-            <LogoMark size={44} />
+            <Mark size={32} />
             <Sticker kind="star" size={40} className="-rotate-12" />
           </div>
           <p className="max-w-[36ch] text-lg leading-snug font-bold">{t('tagline')}</p>
