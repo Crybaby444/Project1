@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yoyo concept v16</title>
+<meta name="description" content="Yoyo is a rental marketplace between neighbours in Riga. Rent a thing for a day or a week; the deposit always comes back.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Sofia+Sans+Extra+Condensed:wght@800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --night: #0a0b0e; --cream: #f4f1e6; --cream-2: #e9e4d4; --glow: #9ed2ff; --chrome: #c9cdd4;
+    --ink-body: rgba(10, 11, 14, 0.72); --ink-muted: rgba(10, 11, 14, 0.64); --ink-line: rgba(10, 11, 14, 0.14);
+    --body: rgba(244, 241, 230, 0.72); --muted: rgba(244, 241, 230, 0.6); --line: rgba(244, 241, 230, 0.14);
+    --ease: cubic-bezier(0.2, 0.8, 0.2, 1); --out: cubic-bezier(0.16, 1, 0.3, 1); --gutter: clamp(16px, 3.4vw, 48px);
+  }
+  * { box-sizing: border-box; }
+  html { scrollbar-color: rgba(10, 11, 14, 0.35) var(--cream); }
+  html, body { margin: 0; background: var(--night); color: var(--night); }
+  body { font-family: 'Onest', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; overflow-x: clip; }
+  body.locked { overflow: hidden; }
+  ::selection { background: var(--glow); color: var(--night); }
+  a, button { color: inherit; text-decoration: none; font: inherit; }
+  button { background: none; border: 0; padding: 0; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--glow); outline-offset: 3px; border-radius: 4px; }
+  .display { font-family: 'Sofia Sans Extra Condensed', sans-serif; font-weight: 900; text-transform: uppercase; line-height: 0.8; letter-spacing: -0.01em; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  @media (pointer: fine) { body.has-cursor, body.has-cursor a, body.has-cursor button { cursor: none; } }
+
+  /* Layers: page < 3D canvas < ink canvas < nav < overlay < cursor. The canvas sits over the page on purpose:
+     objects live in front of the type, like props on a set. */
+  #gl { position: fixed; inset: 0; z-index: 5; width: 100%; height: 100%; pointer-events: none; }
+  #goo { position: fixed; inset: 0; z-index: 60; width: 100%; height: 100%; pointer-events: none; mix-blend-mode: difference; opacity: 0; transition: opacity 0.3s; }   /* the cursor: a drop of liquid ink that inverts whatever it is over */
+  body.ov-open #gl { z-index: 45; }
+
+  /* Loader: a mark on the night, then a field of cream dots floods the screen. */
+  .loader { position: fixed; inset: 0; z-index: 100; background: var(--night); color: var(--cream); display: grid; place-items: center; }
+  .loader .mk { width: 44px; height: 44px; animation: turn 1.1s linear infinite; }
+  .loader .pc { position: absolute; left: var(--gutter); bottom: 24px; font-family: 'Sofia Sans Extra Condensed', sans-serif; font-weight: 900; font-size: 64px; line-height: 0.8; font-variant-numeric: tabular-nums; }
+  .loader .nm { position: absolute; right: var(--gutter); bottom: 28px; font-size: 13px; font-weight: 500; color: var(--muted); }
+  #dots { position: fixed; inset: 0; z-index: 101; width: 100%; height: 100%; pointer-events: none; }
+  @keyframes turn { to { transform: rotate(360deg); } }
+
+  /* Nav: one colour that inverts over whatever is under it. */
+  .nav { position: fixed; z-index: 20; top: 0; left: 0; right: 0; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 16px var(--gutter); color: var(--cream); mix-blend-mode: difference; opacity: 0; }
+  .menu { width: 44px; height: 44px; display: grid; place-items: center; position: relative; }
+  .menu { display: none; }
+  .menu i { position: absolute; width: 22px; height: 2px; background: currentColor; border-radius: 1px; transition: transform 0.5s var(--out); }
+  .menu i:first-child { transform: translateY(-4px); } .menu i:last-child { transform: translateY(4px); }
+  .menu:hover i:first-child { transform: rotate(45deg); } .menu:hover i:last-child { transform: rotate(-45deg); }
+  .links { display: flex; gap: 2px; margin-left: -12px; }
+  .links a { position: relative; font-size: 13px; font-weight: 600; padding: 12px; }
+  .links a::after { content: ''; position: absolute; left: 12px; right: 12px; bottom: 6px; height: 1.5px; background: currentColor; transform: scaleX(0); transform-origin: 100% 50%; transition: transform 0.45s var(--out); }
+  .links a:hover::after, .links a.on::after { transform: scaleX(1); transform-origin: 0 50%; }
+  .lang { font-size: 12px; font-weight: 700; height: 40px; padding: 0 12px; display: inline-flex; align-items: center; gap: 6px; }
+  .lang svg { width: 10px; height: 10px; transition: transform 0.4s var(--out); } .lang:hover svg { transform: rotate(180deg); }
+  .brand { position: absolute; left: 50%; translate: -50% 0; display: flex; align-items: center; gap: 8px; font-family: 'Sofia Sans Extra Condensed', sans-serif; font-weight: 900; font-size: 28px; line-height: 1; }
+  .brand svg { width: 24px; height: 24px; transition: transform 0.8s var(--out); } .brand:hover svg { transform: rotate(360deg); }
+  .actions { grid-column: 3; display: flex; gap: 8px; justify-self: end; }
+  .pill { display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-weight: 700; font-size: 12px; letter-spacing: 0.03em; text-transform: uppercase; height: 40px; padding: 0 18px; border-radius: 20px; border: 1.5px solid currentColor; white-space: nowrap; transition: background-color 0.3s, color 0.3s, transform 0.3s var(--out); will-change: transform; }
+  .nav .pill.solid { background: currentColor; } .nav .pill.solid span { color: #000; }
+  .pill.big { height: 54px; padding: 0 26px; border-radius: 27px; font-size: 14px; }
+  .pill.ink { color: var(--night); } .pill.ink.solid { background: var(--night); color: var(--cream); border-color: var(--night); }
+  .pill.ink:not(.solid):hover { background: var(--night); color: var(--cream); }
+  .pill.light { color: var(--cream); } .pill.light.solid { background: var(--cream); color: var(--night); border-color: var(--cream); }
+  .pill.light:not(.solid):hover { background: var(--cream); color: var(--night); }
+  .pill i { width: 9px; height: 9px; border-radius: 50%; background: var(--glow); }
+
+  /* Intro: cream stage, the word, the yo-yo inside it; then through the yo-yo into the night. */
+  .intro { height: 520vh; position: relative; background: var(--cream); }
+  .stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: var(--cream); }
+  .word { position: absolute; left: 0; right: 0; top: 47%; translate: 0 -50%; margin: 0; display: flex; justify-content: center; align-items: center; font-size: clamp(9rem, 43vw, 56rem); white-space: nowrap; letter-spacing: -0.01em; }
+  .word .yo { display: inline-block; overflow: hidden; padding: 0.04em 0.02em 0; }
+  .word .yo b { display: inline-block; font-weight: 900; }
+  body.gl-word .word .yo b { color: transparent; }
+  .slot { position: absolute; left: 50%; top: 58%; width: min(25vh, 19vw); aspect-ratio: 1; translate: -50% -50%; }
+  .hero-foot { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 26px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 24px; }
+  .hero-foot p { margin: 0; max-width: 22em; font-size: clamp(1rem, 1.25vw, 1.2rem); line-height: 1.35; font-weight: 500; color: var(--night); }
+  .hero-foot p .l { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+  .hero-foot p .l i { display: inline-block; font-style: normal; }
+  .scrollcue { display: grid; justify-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--ink-muted); }
+  .scrollcue svg { width: 14px; height: 22px; } .scrollcue svg path { animation: cue 1.8s var(--ease) infinite; }
+  @keyframes cue { 0% { transform: translateY(-4px); opacity: 0; } 40% { opacity: 1; } 100% { transform: translateY(6px); opacity: 0; } }
+  .hero-foot .cta { display: flex; gap: 8px; justify-self: end; flex-wrap: wrap; justify-content: flex-end; }
+  .hero-top { position: absolute; left: var(--gutter); right: var(--gutter); top: 84px; display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: var(--ink-muted); }
+  .hero-top b { color: var(--night); font-weight: 700; }
+
+  .night { position: absolute; inset: 0; background: var(--night); color: var(--cream); clip-path: circle(0% at 50% 50%); display: grid; align-content: center; gap: 1.2vh; overflow: hidden; }
+  .night .row { display: flex; gap: 0.3em; white-space: nowrap; font-size: clamp(4.4rem, 13vw, 15rem); will-change: transform; }
+  .night .row span { flex: none; }
+  .night .row.o span { color: transparent; -webkit-text-stroke: 1.5px var(--cream); }
+  .night .row.b span { color: var(--glow); }
+  .night .row span em { font-style: normal; display: inline-block; width: 0.16em; height: 0.16em; border-radius: 50%; background: currentColor; opacity: 0.45; vertical-align: 0.3em; margin: 0 0.3em; }
+  .night .say { position: absolute; left: 50%; bottom: 7vh; translate: -50% 0; text-align: center; display: grid; justify-items: center; gap: 18px; opacity: 0; width: min(90vw, 30em); }
+  .night .say p { margin: 0; font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.4; font-weight: 500; color: var(--body); }
+
+  /* What is Yoyo: a statement in big type; liquid ink follows the pointer and turns the letters inside it cream. */
+  .what { position: relative; background: var(--cream); border-radius: 28px 28px 0 0; margin-top: -28px; height: 460vh; }
+  .what-pin { position: sticky; top: 0; height: 100vh; height: 100svh; padding: 14vh var(--gutter) 7vh; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }   /* held on screen until the words and all four steps have played */
+  .label { margin: 0 0 3vh; font-size: 13px; font-weight: 600; color: var(--ink-muted); display: flex; gap: 10px; align-items: center; }
+  .label::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .statement { margin: 0; font-size: clamp(2.4rem, 5.3vw, 6.4rem); line-height: 0.86; max-width: 15em; }
+  .statement .w { display: inline-block; opacity: 0.14; }
+  .statement .first { display: none; }
+  .what-pin { align-items: center; text-align: center; }
+  .what-pin .label { justify-content: center; }
+  .statement { margin-inline: auto; max-width: 14em; }
+  .steps { width: 100%; text-align: left; }
+  .steps { position: relative; margin-top: 5vh; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1.5px solid var(--ink-line); }
+  .steps::before { content: ''; position: absolute; left: 0; right: 0; top: -1.5px; height: 1.5px; background: var(--night); transform: scaleX(var(--p, 0)); transform-origin: 0 50%; }
+  .step { padding: 22px 24px 0 0; }
+  .step + .step { padding-left: 24px; border-left: 1px solid var(--ink-line); }
+  .step b { display: block; font-family: 'Sofia Sans Extra Condensed', sans-serif; font-weight: 900; font-size: clamp(3rem, 5vw, 5.4rem); line-height: 0.8; }
+  .step h3 { margin: 18px 0 8px; font-size: 1.1rem; letter-spacing: -0.01em; font-weight: 700; }
+  .step p { margin: 0; font-size: 14.5px; line-height: 1.45; color: var(--ink-body); max-width: 22em; }
+
+  /* Catalog: a quiet index. Heading holds on the left; thirteen rows on the right; light only where the pointer is. */
+  .catalog { position: relative; background: var(--night); color: var(--cream); border-radius: 28px 28px 0 0; margin-top: -28px; padding: 16vh var(--gutter) 14vh; display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 5vw; align-items: start; }
+  .cat-head { position: sticky; top: 16vh; display: grid; gap: 28px; justify-items: start; }
+  .cat-head h2 { margin: 0; font-size: clamp(2.8rem, 4.6vw, 5.8rem); white-space: nowrap; }
+  .cat-head p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--body); max-width: 22em; }
+  .lines { display: grid; grid-template-columns: 1fr 1fr; column-gap: clamp(24px, 3vw, 56px); border-top: 1px solid var(--line); }
+  .line { position: relative; display: grid; grid-template-columns: 2.2em 1fr 22px; align-items: center; gap: 12px; padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .line::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--glow); transform: scaleX(0); transform-origin: 100% 50%; transition: transform 0.6s var(--out); }
+  .line:hover::after, .line:focus-visible::after { transform: scaleX(1); transform-origin: 0 50%; }
+  .line .num { align-self: start; padding-top: 0.5em; font-size: 12px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; transition: color 0.3s; }
+  .line .txt { display: grid; gap: 6px; min-width: 0; transition: transform 0.6s var(--out); }
+  .line .name { font-family: 'Sofia Sans Extra Condensed', sans-serif; font-weight: 900; text-transform: uppercase; font-size: clamp(1.7rem, 2.3vw, 2.6rem); line-height: 0.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.35s; }
+  .line .subs { font-size: 13px; font-weight: 500; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.35s; }
+  .line svg { width: 18px; height: 18px; color: var(--muted); transition: transform 0.5s var(--out), color 0.3s; }
+  .line:hover .num, .line:focus-visible .num { color: var(--glow); }
+  .line:hover .txt, .line:focus-visible .txt { transform: translateX(10px); }
+  .line:hover .name, .line:focus-visible .name { color: var(--glow); }
+  .line:hover .subs, .line:focus-visible .subs { color: var(--body); }
+  .line:hover svg, .line:focus-visible svg { transform: rotate(-45deg); color: var(--glow); }
+  .line:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .lines:hover .line:not(:hover) .name { color: rgba(244, 241, 230, 0.45); }
+
+  /* Facts: one at a time, a huge number that counts up, a title, one line; a five-step bar below. */
+  .facts { position: relative; background: var(--night); color: var(--cream); border-radius: 28px 28px 0 0; margin-top: -28px; height: 520vh; }
+  .facts-pin { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: center; gap: 4vw; padding: 0 var(--gutter); overflow: hidden; }
+  .facts .label { position: absolute; top: 14vh; left: 0; right: 0; justify-content: center; color: var(--muted); }
+  .facts-pin { padding-inline: max(var(--gutter), calc((100vw - 1560px) / 2)); }   /* on very wide screens the composition stays together in the middle */
+  .f-num { justify-self: end; justify-items: end; }
+  .f-num { font-size: clamp(9rem, 29vw, 36rem); line-height: 0.8; height: 0.84em; overflow: hidden; white-space: nowrap; font-variant-numeric: tabular-nums; display: grid; }
+  .f-num > span, .f-title > span, .f-sub > span { grid-area: 1 / 1; will-change: transform; }
+  .f-title, .f-sub { display: grid; }
+  .f-num b { font-weight: 900; } .f-num u { text-decoration: none; color: var(--glow); font-size: 0.5em; margin-left: 0.04em; }
+  .f-text { display: grid; gap: 22px; max-width: 30em; }
+  .f-title { margin: 0; font-size: clamp(2.4rem, 4.6vw, 5.4rem); overflow: hidden; }
+  .f-sub { margin: 0; font-size: clamp(1rem, 1.3vw, 1.25rem); line-height: 1.45; color: var(--body); overflow: hidden; padding-bottom: 0.1em; }
+  .f-bar { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 6vh; display: grid; grid-template-columns: repeat(5, 1fr) auto; gap: 8px; align-items: center; }
+  .f-bar i { position: relative; height: 2px; background: var(--line); overflow: hidden; }
+  .f-bar i::after { content: ''; position: absolute; inset: 0; background: var(--glow); transform: scaleX(var(--f, 0)); transform-origin: 0 50%; }
+  .f-idx { margin-left: 12px; font-size: 12px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  /* Category page: an ice-blue sheet opens from the click. */
+  .ov { position: fixed; inset: 0; z-index: 40; background: var(--glow); color: var(--night); clip-path: circle(0% at 50% 50%); visibility: hidden; overflow: hidden; }
+  .ov-title { position: absolute; left: 0; top: 50%; translate: 0 -50%; display: flex; white-space: nowrap; font-size: clamp(7rem, 24vw, 30rem); will-change: transform; }
+  .ov-title span { flex: none; padding-right: 0.25em; }
+  .ov-slot { position: absolute; left: 50%; top: 50%; width: min(52vmin, 520px); aspect-ratio: 1; translate: -50% -50%; }
+  .ov-back { position: absolute; top: 18px; left: var(--gutter); }
+  .ov-foot { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 26px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; }
+  .ov-foot ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; max-width: 40em; }
+  .ov-foot li { font-size: 13px; font-weight: 600; padding: 8px 12px; border-radius: 16px; background: rgba(10, 11, 14, 0.08); }
+  .ov-foot p { margin: 0 0 12px; font-size: 14px; line-height: 1.45; max-width: 24em; color: rgba(10, 11, 14, 0.75); }
+  .ov-foot .r { display: grid; justify-items: end; text-align: right; }
+
+  /* Final: under the words the yo-yo rolls away and comes back, on a loop; only its soft shadow marks the floor. */
+  .final { position: relative; background: var(--night); color: var(--night); height: 210vh; }
+  .comeback { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; place-items: center; background: var(--cream); overflow: hidden; padding: 0 var(--gutter); }
+  .shade { position: absolute; inset: 0; z-index: 9; background: var(--night); pointer-events: none; }
+  .stack { position: relative; text-align: center; }
+  .stack h2 { margin: 0; font-size: clamp(5rem, 17vw, 21rem); line-height: 0.82; }
+  .stack h2 span { display: block; }
+  .stack h2 em { font-style: normal; color: transparent; -webkit-text-stroke: 2px var(--night); }
+  .roll { position: relative; margin: 3vh auto 0; width: 100%; height: clamp(84px, 9vw, 150px); }
+  .final-slot { position: absolute; left: 50%; bottom: 0; height: 100%; aspect-ratio: 1; translate: -50% 0; }
+  .roll .shadow { position: absolute; left: 50%; bottom: -10px; width: clamp(70px, 7.5vw, 124px); height: 20px; margin-left: calc(clamp(70px, 7.5vw, 124px) / -2); border-radius: 50%; background: radial-gradient(closest-side, rgba(10, 11, 14, 0.34), rgba(10, 11, 14, 0.08) 60%, transparent); will-change: transform; }
+  .final .cta { position: absolute; left: 0; right: 0; bottom: 6vh; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; padding: 0 16px; z-index: 8; }
+  footer { position: relative; background: var(--night); color: var(--muted); padding: 22px var(--gutter); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 13px; font-weight: 500; border-top: 1px solid var(--line); }
+
+  .cursor { display: none !important; position: fixed; z-index: 60; left: 0; top: 0; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: var(--cream); mix-blend-mode: difference; pointer-events: none; display: grid; place-items: center; transition: width 0.4s var(--out), height 0.4s var(--out), margin 0.4s var(--out); opacity: 0; }
+  .cursor span { font-size: 12px; font-weight: 700; color: #000; opacity: 0; transition: opacity 0.2s; text-transform: uppercase; letter-spacing: 0.03em; }
+  .cursor.big { width: 76px; height: 76px; margin: -38px 0 0 -38px; } .cursor.big span { opacity: 1; }
+
+  @media (max-width: 900px) {
+    .nav { grid-template-columns: 1fr auto 1fr; } .brand { justify-self: center; } .actions .lang { display: none; } .nav .pill { height: 36px; padding: 0 14px; font-size: 11px; }   /* on a phone: logo dead centre, one compact button */ .actions .ghost, .links { display: none; } .menu { display: grid; }
+    .word { font-size: 46vw; top: 38%; } .slot { top: 44%; width: 24vw; }
+    .hero-top { top: 76px; } .hero-top span:last-child { display: none; }
+    .hero-foot { grid-template-columns: 1fr; gap: 16px; bottom: 24px; justify-items: center; text-align: center; } .hero-foot p { margin-inline: auto; } .scrollcue { display: none; } .hero-foot .cta { justify-self: center; justify-content: center; }
+    .night .row { font-size: 21vw; }
+    .what-pin { padding: 11vh 16px 6vh; } .statement { font-size: clamp(2rem, 9.4vw, 3rem); } .steps { text-align: center; } .step p { margin-inline: auto; }
+    .steps { grid-template-columns: 1fr; } .step, .step + .step { grid-area: 1 / 1; padding: 18px 0 0; border-left: 0; }   /* on a phone the steps take turns in one place */
+    .facts-pin { grid-template-columns: 1fr; align-content: center; justify-items: center; text-align: center; gap: 4vh; padding: 0 16px; } .facts .label { top: 12vh; } .f-num { font-size: 40vw; justify-self: center; justify-items: center; } .f-text { justify-items: center; } .f-bar { left: 16px; right: 16px; }
+    .ov-foot { grid-template-columns: 1fr; } .ov-foot .r { justify-items: start; text-align: left; }
+    .comeback { padding: 0 16px; } .stack h2 { font-size: 22vw; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .loader, #dots { display: none; } .nav { opacity: 1; } .statement .w { opacity: 1; } .night { clip-path: none; position: relative; height: 100%; }
+    .scrollcue svg path, .loader .mk { animation: none; }
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="mark-spin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M2.6 12h18.8" stroke="#0a0b0e" stroke-width="2.3"/></symbol>   <!-- the loader: the mark without its string, so it turns about its own centre -->
+  <symbol id="mark" viewBox="0 0 24 24"><path d="M12 1v4.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="14" r="8.6" fill="currentColor"/><path d="M4.2 14h15.6" stroke="#0a0b0e" stroke-width="2"/></symbol>
+</defs></svg>
+
+<div class="loader" aria-hidden="true"><svg class="mk"><use href="#mark-spin"/></svg><span class="pc">0</span><span class="nm">Yoyo · rentals between people</span></div>
+<canvas id="dots" aria-hidden="true"></canvas>
+
+<header class="nav">
+  <div aria-hidden="true"></div>
+  <a class="brand" href="#top" aria-label="Yoyo home"><svg aria-hidden="true"><use href="#mark"/></svg>YOYO</a>
+  <div class="actions"><button class="lang" type="button" aria-label="Language: English">EN<svg viewBox="0 0 10 10" fill="none"><path d="M2 3.5 5 6.5 8 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button><a class="pill ghost" href="#">Log in</a><a class="pill solid" href="#"><span>Sign up</span></a></div>
+</header>
+
+<canvas id="gl" aria-hidden="true"></canvas>
+<canvas id="goo" aria-hidden="true"></canvas>
+<div class="cursor" aria-hidden="true"><span>Open</span></div>
+
+<main>
+  <section class="intro" id="top">
+    <div class="stage">
+      <h1 class="word display" aria-label="Yoyo: rent anything from people nearby"><span class="yo l" aria-hidden="true"><b>Y</b><b>O</b></span><span class="yo r" aria-hidden="true"><b>Y</b><b>O</b></span></h1>
+      <div class="slot" aria-hidden="true"></div>
+      <div class="hero-foot">
+        <p data-lines>Rent from the people around you, for as long as you need.</p>
+        <div class="scrollcue" aria-hidden="true"><svg viewBox="0 0 14 22" fill="none"><rect x="1" y="1" width="12" height="20" rx="6" stroke="currentColor" stroke-width="1.5"/><path d="M7 6v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Scroll</div>
+        <div class="cta"><a class="pill ink solid big magnetic" href="#"><i></i>Find something</a><a class="pill ink big magnetic" href="#">Lend an item</a></div>
+      </div>
+      <div class="night">
+        <div class="row display"><span>Rent it<em></em>Rent it<em></em>Rent it<em></em>Rent it<em></em></span></div>
+        <div class="row o display"><span>Use it<em></em>Use it<em></em>Use it<em></em>Use it<em></em>Use it<em></em></span></div>
+        <div class="row b display"><span>Bring it back<em></em>Bring it back<em></em>Bring it back<em></em></span></div>
+        <div class="say"><p>Why buy what you only need once? Someone near you already has it, and is happy to share.</p><a class="pill light solid magnetic" href="#"><i></i>Open the catalog</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="what" id="what">
+   <div class="what-pin">
+    <p class="label">What is Yoyo</p>
+    <h2 class="statement display" data-words><span class="first"></span>Yoyo is a rental marketplace between people. Take what you need for as long as you need it, share what you rarely use, and everything finds its way back.</h2>
+    <div class="steps">
+      <div class="step"><b>01</b><h3>Find it nearby</h3><p>Search the catalog or the map. Every listing is checked by a person before it goes live.</p></div>
+      <div class="step"><b>02</b><h3>Book the days</h3><p>Pick the dates and send a request. Nothing is charged until the owner accepts and you both sign the contract.</p></div>
+      <div class="step"><b>03</b><h3>Meet and check</h3><p>Hand it over with photos in the deal, so both sides see the state it left in.</p></div>
+      <div class="step"><b>04</b><h3>Bring it back</h3><p>The owner checks it, and the deposit goes back to you. Like a yo-yo.</p></div>
+    </div>
+   </div>
+  </section>
+
+  <section class="facts" id="facts">
+    <div class="facts-pin">
+      <p class="label">How Yoyo keeps it fair</p>
+      <div class="f-num display" aria-hidden="true"></div>
+      <div class="f-text" aria-hidden="true"><div class="display f-title"></div><div class="f-sub"></div></div>
+      <div class="f-bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><span class="f-idx">01 / 05</span></div>
+      <ul class="sr">
+        <li>0% service fee for the first three months, then 10%, shown before you book.</li>
+        <li>48 hours to check the return, then the deposit goes back by itself.</li>
+        <li>One contract for every deal, signed by both sides before any money moves.</li>
+        <li>100% of listings checked by a person before they go live.</li>
+        <li>3 languages: English, Latviešu and Русский.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="final" id="final">
+    <div class="comeback">
+      <div class="shade" aria-hidden="true"></div>
+      <div class="stack">
+        <h2 class="display back"><span>It always</span><span><em>comes back.</em></span></h2>
+        <div class="roll" aria-hidden="true"><div class="final-slot"></div><i class="shadow"></i></div>
+      </div>
+      <div class="cta"><a class="pill ink solid big magnetic" href="#"><i></i>Find something</a><a class="pill ink big magnetic" href="#">Lend an item</a></div>
+    </div>
+  </section>
+</main>
+<footer><span>© 2026 Yoyo · Rentals between people · Test mode: payments are simulated</span><span>Concept v16 prototype</span></footer>
+
+<div class="ov" role="dialog" aria-modal="true" aria-label="Category">
+  <div class="ov-title display" aria-hidden="true"></div>
+  <div class="ov-slot"></div>
+  <button class="pill ink ov-back magnetic" type="button">← Back</button>
+  <div class="ov-foot"><ul></ul><div class="r"><p>Every listing here was checked by a person before it went live. Pay the owner per day; the deposit comes back after the return.</p><a class="pill ink solid big" href="#"><i></i>See listings</a></div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
+<script type="module">
+import * as THREE from 'three';
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const mobile = matchMedia('(max-width: 900px)').matches;
+const fine = matchMedia('(pointer: fine)').matches;
+const lerp = THREE.MathUtils.lerp, clamp = THREE.MathUtils.clamp;
+const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+gsap.registerPlugin(ScrollTrigger);
+let lenis = null;
+if (!reduce && window.Lenis) {
+  lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.9, smoothWheel: true });
+  lenis.on('scroll', ScrollTrigger.update); gsap.ticker.add((t) => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);
+  $$('a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => { const id = a.getAttribute('href'); if (id.length < 2) return; e.preventDefault(); lenis.scrollTo(id, { duration: 1.8 }); }));
+}
+
+/* ============================== The set: one renderer over the page, a studio of light ============================== */
+const canvas = $('#gl');
+const R = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+R.setPixelRatio(Math.min(devicePixelRatio, 1.5)); R.outputColorSpace = THREE.SRGBColorSpace; R.toneMapping = THREE.ACESFilmicToneMapping;
+const scene = new THREE.Scene();
+{
+  const c = document.createElement('canvas'); c.width = 1024; c.height = 512; const g = c.getContext('2d');
+  g.fillStyle = '#16181d'; g.fillRect(0, 0, 1024, 512);
+  const bar = (x, y, w, h, color, blur) => { g.save(); g.filter = `blur(${blur}px)`; g.fillStyle = color; g.fillRect(x, y, w, h); g.restore(); };
+  bar(60, 30, 900, 120, '#ffffff', 22);                 // long softbox above
+  bar(380, 205, 300, 36, 'rgba(255,255,255,0.95)', 16);  // eye-level strip: the crisp highlight
+  bar(0, 120, 230, 300, '#9ed2ff', 34);                  // cold light from the left
+  bar(820, 150, 204, 250, 'rgba(244,241,230,0.8)', 34);  // cream bounce from the page
+  bar(200, 380, 620, 90, 'rgba(244,241,230,0.65)', 28);  // the cream floor
+  const tex = new THREE.CanvasTexture(c); tex.mapping = THREE.EquirectangularReflectionMapping; tex.colorSpace = THREE.SRGBColorSpace;
+  const pm = new THREE.PMREMGenerator(R); scene.environment = pm.fromEquirectangular(tex).texture; pm.dispose(); scene.environmentIntensity = 1.9;
+}
+scene.add(new THREE.AmbientLight(0xffffff, 0.15));
+const key = new THREE.DirectionalLight(0xffffff, 1.8); key.position.set(4, 10, 8); scene.add(key);
+const rim = new THREE.DirectionalLight(0x9ed2ff, 2.2); rim.position.set(-10, 2, -4); scene.add(rim);
+const FOV = 30, CZ = 20;
+const cam = new THREE.PerspectiveCamera(FOV, 1, 0.1, 200); cam.position.set(0, 0, CZ);
+const VH = 2 * CZ * Math.tan(THREE.MathUtils.degToRad(FOV / 2));
+let W = 1, H = 1;
+function size() { W = canvas.clientWidth; H = canvas.clientHeight; R.setSize(W, H, false); cam.aspect = W / H; cam.updateProjectionMatrix(); goo.size(); }
+
+const M = {
+  chrome: (r = 0.14) => new THREE.MeshPhysicalMaterial({ color: 0x9aa0aa, metalness: 1, roughness: r, clearcoat: 0.6, clearcoatRoughness: 0.1 }),
+  ink: () => new THREE.MeshPhysicalMaterial({ color: 0x07080a, metalness: 0.05, roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.05, envMapIntensity: 0.45 }),
+  ice: () => new THREE.MeshPhysicalMaterial({ color: 0x9ed2ff, metalness: 0, roughness: 0.35, clearcoat: 0.6, emissive: 0x9ed2ff, emissiveIntensity: 0.12 }),
+  cream: () => new THREE.MeshPhysicalMaterial({ color: 0xf4f1e6, metalness: 0, roughness: 0.5, clearcoat: 0.3 }),
+  light: () => new THREE.MeshBasicMaterial({ color: 0xbfe3ff }),
+};
+// Pixel → world at the z = 0 plane, so a DOM box can hold a 3D prop.
+const wpp = () => VH / H;
+function place(rect, out) { const k = wpp(); out.x = (rect.left + rect.width / 2 - W / 2) * k; out.y = -(rect.top + rect.height / 2 - H / 2) * k; out.s = rect.width * k; out.on = rect.bottom > -rect.height && rect.top < H + rect.height; return out; }
+
+/* ---- The chrome yo-yo (diameter 1) ---- */
+const PROFILE = [[0.001, 0], [0.18, 0], [0.2, 0.06], [0.55, 0.1], [0.86, 0.2], [0.99, 0.34], [1, 0.42], [0.94, 0.5], [0.7, 0.545], [0.3, 0.555], [0.001, 0.555]];
+const HALF = new THREE.LatheGeometry(PROFILE.map(([x, y]) => new THREE.Vector2(x * 0.5, y * 0.5)), 128);
+function makeYoyo() {
+  const g = new THREE.Group(), body = new THREE.Group(); body.rotation.x = Math.PI / 2; g.add(body);
+  const mat = M.chrome(0.12);
+  const a = new THREE.Mesh(HALF, mat); a.position.y = 0.03; body.add(a);
+  const b = new THREE.Mesh(HALF, mat); b.scale.y = -1; b.position.y = -0.03; body.add(b);
+  body.add(new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.085, 0.07, 48), M.chrome(0.3)));
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.007, 8, 64), M.light()); ring.rotation.x = Math.PI / 2; body.add(ring);
+  return { g, body };
+}
+
+/* ---- A tube whose centre line and radius are rebuilt every frame (the ink stroke) ---- */
+function Tube(K, Mr, mat) {
+  const geo = new THREE.BufferGeometry(), n = K * (Mr + 1);
+  const pos = new Float32Array(n * 3), nor = new Float32Array(n * 3), idx = [];
+  for (let i = 0; i < K - 1; i++) for (let j = 0; j < Mr; j++) { const a = i * (Mr + 1) + j, b = a + Mr + 1; idx.push(a, a + 1, b, b, a + 1, b + 1); }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3).setUsage(THREE.DynamicDrawUsage));
+  geo.setAttribute('normal', new THREE.BufferAttribute(nor, 3).setUsage(THREE.DynamicDrawUsage)); geo.setIndex(idx);
+  const mesh = new THREE.Mesh(geo, mat); mesh.frustumCulled = false;
+  const C = new Float32Array(K * 3), Rr = new Float32Array(K), T = new THREE.Vector3(), N = new THREE.Vector3(), B = new THREE.Vector3(), Q = new THREE.Vector3();
+  function build() {
+    N.set(0, 0, 1);
+    for (let i = 0; i < K; i++) {
+      const a = Math.max(0, i - 1) * 3, b = Math.min(K - 1, i + 1) * 3;
+      T.set(C[b] - C[a], C[b + 1] - C[a + 1], C[b + 2] - C[a + 2]).normalize();
+      N.addScaledVector(T, -N.dot(T)); if (N.lengthSq() < 1e-6) N.set(T.y, -T.x, 0); N.normalize(); B.crossVectors(T, N);
+      for (let j = 0; j <= Mr; j++) {
+        const th = (j / Mr) * Math.PI * 2; Q.copy(N).multiplyScalar(Math.cos(th)).addScaledVector(B, Math.sin(th));
+        const v = (i * (Mr + 1) + j) * 3;
+        nor[v] = Q.x; nor[v + 1] = Q.y; nor[v + 2] = Q.z;
+        pos[v] = C[i * 3] + Q.x * Rr[i]; pos[v + 1] = C[i * 3 + 1] + Q.y * Rr[i]; pos[v + 2] = C[i * 3 + 2] + Q.z * Rr[i];
+      }
+    }
+    geo.attributes.position.needsUpdate = true; geo.attributes.normal.needsUpdate = true;
+  }
+  return { mesh, C, R: Rr, build, K };
+}
+
+/* ============================== Cast ============================== */
+const hero = makeYoyo(); scene.add(hero.g);
+const HK = 420 / 230;   // intro scroll span now / span the hero was tuned for
+const SHOW_TUBE = false;   // the background tube is switched off for now (owner, 2026-11-13); set to true to bring it back
+const creamFog = new THREE.Fog(0xf4f1e6, 22, 52);   // only while the cream hero is on screen: pushes the tube into the background
+const tubeMat = new THREE.MeshPhysicalMaterial({ color: 0x0b0c10, metalness: 0.55, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.05, envMapIntensity: 0.9 });
+const inkTube = Tube(mobile ? 260 : 420, mobile ? 20 : 32, tubeMat); scene.add(inkTube.mesh);
+/* ---- The word in the scene: one plane per letter, placed exactly over the DOM letter it replaces ---- */
+const letters = $$('.word .yo b').map((el) => {
+  const c = document.createElement('canvas'), tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: tex, transparent: true, alphaTest: 0.02, depthWrite: true, toneMapped: false, fog: false }));
+  m.renderOrder = -2; scene.add(m);
+  return { el, c, tex, m };
+});
+function paintLetters() {
+  letters.forEach((L) => {
+    const r = L.el.getBoundingClientRect(), cs = getComputedStyle(L.el), dpr = Math.min(devicePixelRatio, 2);
+    L.c.width = Math.max(2, Math.round(r.width * dpr)); L.c.height = Math.max(2, Math.round(r.height * dpr));
+    const g = L.c.getContext('2d'); g.scale(dpr, dpr); g.clearRect(0, 0, r.width, r.height);
+    g.font = `900 ${cs.fontSize} 'Sofia Sans Extra Condensed'`; g.fillStyle = '#0a0b0e'; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+    const mt = g.measureText(L.el.textContent); g.fillText(L.el.textContent, r.width / 2, r.height / 2 + (mt.actualBoundingBoxAscent - mt.actualBoundingBoxDescent) / 2);
+    L.tex.needsUpdate = true;
+  });
+}
+document.fonts.ready.then(() => { paintLetters(); document.body.classList.add('gl-word'); });
+addEventListener('resize', () => document.fonts.ready.then(paintLetters));
+const back = makeYoyo(); scene.add(back.g);
+for (const y of [0.31, -0.31]) { const slit = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.012, 0.035), new THREE.MeshPhysicalMaterial({ color: 0x0a0b0e, roughness: 0.3, clearcoat: 1 })); slit.position.y = y; back.body.add(slit); hero.body.add(slit.clone()); }   // the line from the logo, on both yo-yos
+// Face-on it mirrors the dark middle of the studio: give the closing yo-yo a brighter, softer chrome and its own front light.
+{
+  const bright = new THREE.MeshPhysicalMaterial({ color: 0xbfc4cc, metalness: 1, roughness: 0.2, clearcoat: 0.8, clearcoatRoughness: 0.1, envMapIntensity: 2.6 });
+  [back, hero].forEach((yy) => yy.body.children.forEach((m) => { if (m.isMesh && m.material.metalness === 1) m.material = bright; }));
+  inkTube.mesh.material = bright;   // the tube is the same chrome as the yo-yo
+}
+const backLight = new THREE.PointLight(0xffffff, 0, 0, 1.4); scene.add(backLight);
+const heroLight = new THREE.PointLight(0xffffff, 0, 0, 1.4); scene.add(heroLight);
+const heroString = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 12), new THREE.MeshPhysicalMaterial({ color: 0xc6cbd3, metalness: 1, roughness: 0.18, clearcoat: 0.8, envMapIntensity: 2.4 })); scene.add(heroString);
+const UP = new THREE.Vector3(0, 1, 0), strDir = new THREE.Vector3(), nightEl = $('.night');
+const RL = { x: 0, hop: 0 };
+const FQ = { q: 0 }; let backSpin = 0;
+const backString = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 12), new THREE.MeshPhysicalMaterial({ color: 0xc6cbd3, metalness: 1, roughness: 0.18, clearcoat: 0.8, envMapIntensity: 2.4 })); scene.add(backString);
+const shade = $('.shade'), cb = $('.comeback');   // the roll: x in units of the roll range, hop in yo-yo diameters
+
+const ovYo = makeYoyo(); scene.add(ovYo.g); ovYo.g.visible = false;
+// The thirteen root categories and their first subcategories (docs/hitexis/C02-categories.md).
+const CATS = [
+  ['Tools', 'Drills & drivers', 'Rotary hammers', 'Grinders & sanders', 'Saws'],
+  ['Electronics', 'Game consoles', 'Laptops & tablets', 'Projectors & screens', 'Drones'],
+  ['Photo & video', 'Cameras', 'Action cameras', 'Lenses & flashes', 'Tripods & lights'],
+  ['Construction', 'Plate compactors', 'Concrete mixers', 'Generators', 'Dehumidifiers'],
+  ['Garden & yard', 'Lawn mowers', 'Pressure washers', 'Snow blowers', 'Garden furniture'],
+  ['Home & kitchen', 'Vacuum cleaners', 'Fans & heaters', 'Kitchen appliances'],
+  ['Sports', 'Bikes', 'E-scooters', 'Skates & boards', 'Skis'],
+  ['Camping & outdoors', 'Tents', 'Sleeping bags', 'Camping furniture', 'Stoves & coolers'],
+  ['Kids', 'Strollers', 'Car seats', 'Balance bikes', 'Playhouses'],
+  ['Events & parties', 'Event tents', 'Tables & chairs', 'Sound & light', 'Costumes'],
+  ['Music', 'Instruments', 'DJ equipment'],
+  ['Car & travel', 'Roof boxes', 'Bike carriers', 'Dashcams & GPS', 'Chargers'],
+  ['Other', 'Everything that fits nowhere else'],
+].map(([name, ...subs]) => ({ name, subs }));
+if ($('.lines')) {
+  const nav = $('.lines');
+  const arrow = '<svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  nav.innerHTML = CATS.map((c, i) => `<a class="line" href="#" data-i="${i}"><span class="num">${String(i + 1).padStart(2, '0')}</span><span class="txt"><span class="name">${c.name}</span><span class="subs">${c.subs.slice(0, 2).join(' · ')}</span></span>${arrow}</a>`).join('');
+}
+
+/* ============================== State ============================== */
+const S = { p: 0, ps: 0, intro: reduce ? 1 : 0, ink: reduce ? 1 : 0, drop: reduce ? 0 : 1, spinBoost: 0, fq: 0 };
+const P = { x: 0, y: 0, tx: 0, ty: 0, cx: W / 2, cy: H / 2 };
+addEventListener('pointermove', (e) => { P.tx = (e.clientX / innerWidth) * 2 - 1; P.ty = -((e.clientY / innerHeight) * 2 - 1); P.cx = e.clientX; P.cy = e.clientY; });
+let ov = { i: -1, t: 0 };
+const tmp = {};
+const slot = $('.slot'), finalSlot = $('.final-slot'), ovSlot = $('.ov-slot'), rollShadow = $('.roll .shadow');
+
+/* ---- The cursor: a drop of liquid ink. Small at rest; speed stretches it into a tail and swells it;
+        over anything clickable it is drawn to the element and spills over it, inverting it. ---- */
+const goo = (() => {
+  const c = $('#goo'); const gl = c.getContext('webgl', { premultipliedAlpha: true, antialias: false, alpha: true });
+  const N = 16, NT = 11, NF = 5;   // 11 drops in the tail, 5 that fill a hovered element
+  const vs = 'attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }';
+  const fs = `precision highp float; uniform vec3 uP[${N}]; uniform float uA;
+  void main(){ vec2 p = gl_FragCoord.xy; float f = 0.0;
+    for (int i = 0; i < ${N}; i++) { vec2 d = p - uP[i].xy; f += uP[i].z * uP[i].z / (dot(d, d) + 1.0); }
+    float a = smoothstep(0.9, 1.1, f) * uA; gl_FragColor = vec4(vec3(0.957, 0.945, 0.902) * a, a); }`;
+  const sh = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return o; };
+  const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(pr); gl.useProgram(pr);
+  const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  const uP = gl.getUniformLocation(pr, 'uP'), uA = gl.getUniformLocation(pr, 'uA');
+  const pts = new Float32Array(N * 3), trail = Array.from({ length: NT }, () => ({ x: -200, y: -200 })), fill = Array.from({ length: NF }, () => ({ x: -200, y: -200 }));
+  const rng = document.createRange();
+  const st = { a: 0, w: 1, h: 1, x: -200, y: -200, speed: 0, hover: 0, hr: 0, burst: 0, el: null, px: -200, py: -200 };
+  return {
+    st,
+    size() { st.w = c.clientWidth; st.h = c.clientHeight; c.width = st.w; c.height = st.h; gl.viewport(0, 0, st.w, st.h); },
+    draw(dt) {
+      c.style.opacity = st.a > 0.01 ? '1' : '0';
+      if (st.a < 0.01) return;
+      // speed of the pointer, smoothed: it swells the drop
+      const v = Math.hypot(st.x - st.px, st.y - st.py) / Math.max(dt, 1e-3); st.px = st.x; st.py = st.y;
+      st.speed = lerp(st.speed, v, 0.18);
+      let hx = st.x, hy = st.y;
+      if (st.el && st.hover > 0.01) {                       // drawn towards the middle of what you point at
+        const r = st.el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        hx = lerp(hx, cx, 0.35 * st.hover); hy = lerp(hy, cy, 0.35 * st.hover);
+      }
+      const head = (9 + Math.min(st.speed * 0.016, 22)) * (1 - st.hover * 0.85) + st.burst * 20;   // over a button the drop melts into the fill
+      // the tail: each drop follows the one ahead closely, so a fast move pulls one continuous stream
+      trail.forEach((b, i) => { const tg = i ? trail[i - 1] : { x: hx, y: hy }; const f = i ? 0.6 : 0.55; b.x += (tg.x - b.x) * f; b.y += (tg.y - b.y) * f; });
+      const stretch = Math.min(1, st.speed / 1200 + 0.2);
+      trail.forEach((b, i) => { pts[i * 3] = b.x; pts[i * 3 + 1] = st.h - b.y; pts[i * 3 + 2] = i ? head * Math.pow(0.9, i) * stretch : head; });
+      // the fill: on hover, drops run out from the cursor along the element and merge into its shape
+      let fr = null;
+      if (st.el && st.hover > 0.01) {
+        if (st.el.classList.contains('line')) { rng.selectNodeContents(st.el.querySelector('.name')); fr = rng.getBoundingClientRect(); }   // the text itself, not its box
+        else fr = st.el.getBoundingClientRect();
+      }
+      fill.forEach((b, j) => {
+        let tx = hx, ty = hy, r = 0;
+        if (fr) { const rad = Math.min(fr.height / 2, 40) * 0.68, x0 = fr.left + rad * 1.15, x1 = fr.right - rad * 1.15; tx = lerp(x0, Math.max(x0, x1), j / (NF - 1)); ty = fr.top + fr.height / 2; r = rad * st.hover * (st.hr / 26); }
+        b.x += ((fr ? lerp(hx, tx, st.hover) : hx) - b.x) * 0.3; b.y += ((fr ? lerp(hy, ty, st.hover) : hy) - b.y) * 0.3;
+        const k = (NT + j) * 3; pts[k] = b.x; pts[k + 1] = st.h - b.y; pts[k + 2] = r;
+      });
+      gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform3fv(uP, pts); gl.uniform1f(uA, st.a); gl.drawArrays(gl.TRIANGLES, 0, 3);
+    },
+  };
+})();
+size(); addEventListener('resize', size);
+
+/* ============================== Frame ============================== */
+let spin = 0, last = performance.now(), visible = true;
+document.addEventListener('visibilitychange', () => (visible = !document.hidden));
+const v3 = new THREE.Vector3();
+function frame() {
+  if (!visible) return;
+  const now = performance.now(), dt = Math.min(0.05, (now - last) / 1000); last = now; const t = now / 1000;
+  P.x = lerp(P.x, P.tx, 0.06); P.y = lerp(P.y, P.ty, 0.06);
+  S.ps = reduce ? S.p : lerp(S.ps, S.p, 1 - Math.pow(0.004, dt));
+  const p = Math.min(1, S.ps * HK);   // hero progress: the hero keeps its old length inside the longer intro
+
+  // ---- Hero yo-yo: sits in the word, then flies at the lens and we go through it into the night
+  place(slot.getBoundingClientRect(), tmp);
+  // The yo-yo hangs on a chrome string from above the frame. On scroll the string reels it back up, spinning, out of the top.
+  // 1) it spins up in place  2) the night spills out of it  3) in the dark the string reels it up and away
+  const rev = smooth(0.04, 0.3, p), spill = smooth(0.2, 0.4, p), reel = smooth(0.4, 0.52, p), wind = rev;
+  hero.g.visible = S.intro > 0.001 && reel < 0.999; heroLight.visible = hero.g.visible; heroString.visible = hero.g.visible;
+  if (!hero.g.visible && spill > 0.5) nightEl.style.clipPath = 'none';                // jumped past it: the night is simply full
+  if (hero.g.visible) {
+    const hs = tmp.s * 1.02 * Math.max(S.intro, 0.001), topY = VH / 2 + 1.2;
+    const sway = Math.sin(t * 0.9) * tmp.s * 0.035 * (1 - reel);                       // a lazy pendulum
+    const x = tmp.x + sway;
+    const y = lerp(tmp.y + Math.sin(t * 1.6) * tmp.s * 0.02 * (1 - rev) + rev * tmp.s * 0.12, topY + hs * 0.7, Math.pow(reel, 1.5)) + S.drop * VH * 0.9;   // the string tightens a little, then pulls
+    hero.g.position.set(x, y, 0); hero.g.scale.setScalar(hs);
+    // the night grows out of the yo-yo itself: a circle that starts at its rim and fills the screen
+    if (spill < 0.999 && reel < 0.01) {
+      const px = x / wpp() + W / 2, py = H / 2 - y / wpp(), r0 = hs / 2 / wpp(), R1 = Math.hypot(Math.max(px, W - px), Math.max(py, H - py)) + 20;
+      nightEl.style.clipPath = spill > 0.001 ? `circle(${lerp(r0 * 0.9, R1, Math.pow(spill, 1.7))}px at ${px}px ${py}px)` : 'circle(0px at 50% 50%)';
+    } else nightEl.style.clipPath = 'none';
+    hero.g.lookAt(cam.position);
+    const sv = S.spinBoost + rev * 26 + reel * 20;                                    // it revs up, then spins hard as it climbs the string
+    if (sv > 0.4) spin += dt * sv; else spin += (Math.round(spin / Math.PI) * Math.PI - spin) * (1 - Math.pow(0.03, dt));
+    hero.body.rotation.y = spin;
+    heroLight.position.set(x - hs * 0.8, y + hs * 1.2, hs * 2.4); heroLight.intensity = 9 * hs * hs;
+    // the string: from the axle (hidden behind the rim) straight up past the top of the frame
+    const ax = x, ay = y, az = -hs * 0.06, bx = tmp.x, by = topY + 2, len = Math.hypot(bx - ax, by - ay);
+    heroString.position.set((ax + bx) / 2, (ay + by) / 2, az);
+    heroString.scale.set(Math.max(hs * 0.011, 0.012), len, Math.max(hs * 0.011, 0.012));
+    heroString.quaternion.setFromUnitVectors(UP, strDir.set(bx - ax, by - ay, 0).normalize());
+  }
+
+  // ---- The tube: a calm wave far behind the word and the yo-yo. It never touches them; it just drifts.
+  const reveal = S.ink * (1 - smooth(0.38, 0.44, p));
+  inkTube.mesh.visible = SHOW_TUBE && reveal > 0.002 && p < 0.45;
+  scene.fog = p < 0.45 ? creamFog : null;
+  if (inkTube.mesh.visible) {
+    const K = inkTube.K, C = inkTube.C, Rr = inkTube.R;
+    const ZB = -VH * 0.95, f = (CZ - ZB) / CZ;                          // far back; scale up so it still spans the screen
+    const half = (W / 2) * wpp() * 1.3 * f, A = VH * (mobile ? 0.1 : 0.17) * f, Z = VH * 0.12, TRw = VH * (mobile ? 0.022 : 0.04) * f;
+    const turns = mobile ? 1.4 : 2, cy = tmp.y;
+    // On scroll it is drawn into a vortex behind the yo-yo: the middle goes first, the ends follow, spinning down into the haze.
+    const reel = smooth(0.02, 0.36, p), vx = hero.g.position.x, vy = hero.g.position.y;
+    for (let i = 0; i < K; i++) {
+      const u = i / (K - 1), a = u * Math.PI * 2 * turns - t * 0.32;
+      let x = lerp(-half, half, u);
+      let y = cy + A * Math.sin(a) + A * 0.08 * Math.sin(a * 0.5 + t * 0.25);
+      let z = ZB + Z * Math.sin(a + 1.15);
+      const k = smooth(0, 1, reel * 1.75 - Math.abs(u - 0.5) * 1.5);
+      if (k > 0) {
+        const ang = (u - 0.5) * Math.PI * 2 * 4 + t * 1.6 + k * 7, rad = lerp(VH * 0.62 * f, VH * 0.42 * f, k);   // rings wider than the yo-yo, shrinking only by depth: a tunnel
+        x = lerp(x, vx + Math.cos(ang) * rad, k); y = lerp(y, vy + Math.sin(ang) * rad * 0.85, k); z = lerp(z, ZB - k * VH * 2.6, k);
+      }
+      C[i * 3] = x; C[i * 3 + 1] = y; C[i * 3 + 2] = z;
+      Rr[i] = TRw * (1 - smooth(reveal - 0.06, reveal, u)) * (1 - k * 0.45);
+    }
+    inkTube.build();
+  }
+
+  // ---- The category sheet has its own yo-yo, spinning in the middle of the giant name
+  ovYo.g.visible = ov.t > 0.01;
+  if (ovYo.g.visible) {
+    place(ovSlot.getBoundingClientRect(), tmp);
+    ovYo.g.position.set(tmp.x, tmp.y + (1 - ov.t) * -VH * 0.6, 2);
+    ovYo.g.scale.setScalar(tmp.s * Math.max(ov.t, 0.001));
+    ovYo.g.rotation.set(-0.25 + P.y * 0.35, 0.5 + P.x * 0.5, 0, 'YXZ');
+    ovYo.body.rotation.y += dt * (1.6 + (1 - ov.t) * 18);
+  }
+
+  // ---- Final, the mirror of the opening: in the dark the yo-yo comes down on its string; light spills out of it
+  //      and uncovers the last slide; the string lets go, it lands, and it rolls away and back on a loop.
+  place(finalSlot.getBoundingClientRect(), tmp);
+  const fq = FQ.q, down = smooth(0.0, 0.34, fq), light = smooth(0.34, 0.66, fq), loose = smooth(0.66, 0.82, fq), land = smooth(0.8, 0.9, fq);
+  back.g.visible = tmp.on && fq > 0.001; backLight.visible = back.g.visible; backString.visible = back.g.visible && loose < 0.99;
+  if (back.g.visible) {
+    const s = tmp.s, range = Math.min($('.roll').clientWidth * 0.42, 560), xpx = RL.x * range, topY = VH / 2 + 1.2;
+    const e = 1 - Math.pow(1 - down, 3), bounce = Math.sin(down * Math.PI * 3) * (1 - down) * 0.06 * (down > 0.6 ? 1 : 0);
+    const hang = tmp.y + s * 0.06 * (1 - land);                                   // held a touch above the floor until the string lets go
+    const x = tmp.x + xpx * wpp(), y = lerp(topY + s, hang, e) + bounce * s + RL.hop * s * 0.35;
+    back.g.position.set(x, y, 0); back.g.scale.setScalar(s); back.g.lookAt(cam.position);
+    backLight.position.set(x - s * 0.8, y + s * 1.2, s * 2.4); backLight.intensity = 9 * s * s;
+    const sv = (1 - down) * 26 + (down > 0 && down < 1 ? 6 : 0);
+    if (sv > 0.4) backSpin += dt * sv; else backSpin += (Math.round(backSpin / Math.PI) * Math.PI - backSpin) * (1 - Math.pow(0.03, dt));
+    back.body.rotation.y = backSpin - (xpx * wpp()) / (s * 0.5);                    // spins down the string, then rolls without slipping
+    // the string from the axle up out of the frame; when it lets go its lower end runs up and away
+    if (backString.visible) {
+      const by = topY + 2, ay = lerp(y, by, Math.pow(loose, 0.8)), len = Math.max(0.001, by - ay);
+      backString.position.set(tmp.x, (ay + by) / 2, -s * 0.06); backString.scale.set(Math.max(s * 0.011, 0.012), len, Math.max(s * 0.011, 0.012));
+    }
+    // light out of the yo-yo: a hole in the night that starts at its rim and opens to the whole screen
+    const c = cb.getBoundingClientRect(), px = x / wpp() + W / 2 - c.left, py = H / 2 - y / wpp() - c.top, r0 = s / 2 / wpp();
+    const R1 = Math.hypot(Math.max(px, c.width - px), Math.max(py, c.height - py)) + 20, rr = light > 0 ? lerp(r0 * 0.9, R1, Math.pow(light, 1.7)) : 0;
+    const m = `radial-gradient(circle at ${px}px ${py}px, transparent ${rr}px, #000 ${rr + 1}px)`;
+    shade.style.webkitMaskImage = m; shade.style.maskImage = m; shade.style.visibility = light >= 0.999 ? 'hidden' : 'visible';
+    rollShadow.style.transform = `translateX(${xpx}px) scale(${1 - RL.hop * 0.35})`;
+    rollShadow.style.opacity = land * (1 - RL.hop * 0.5);
+  }
+
+  letters.forEach((L) => {
+    const r = L.el.getBoundingClientRect(); place(r, tmp);
+    const rise = Math.abs(gsap.getProperty(L.el, 'yPercent')) / 105;
+    const dark = smooth(0.26, 0.38, p);                                // the letters go out with the light
+    L.m.visible = p < 0.6 && tmp.on && rise < 0.99 && dark < 0.99;
+    if (!L.m.visible) return;
+    // the word sits behind the yo-yo (and in front of the tube); scaled so it lands exactly on its DOM letters
+    const ZW = -VH * 0.4, fW = (CZ - ZW) / CZ;
+    L.m.position.set(tmp.x * fW, tmp.y * fW, ZW); L.m.scale.set(r.width * wpp() * fW, r.height * wpp() * fW, 1);
+    L.m.material.opacity = (1 - rise) * (1 - dark);
+  });
+  cam.position.set(P.x * 0.25, P.y * 0.18, CZ); cam.lookAt(0, 0, 0);
+  R.render(scene, cam);
+  goo.draw(dt);
+}
+gsap.ticker.add(frame);
+
+/* ============================== Words ============================== */
+$$('[data-lines]').forEach((h) => { h.innerHTML = h.textContent.trim().split(/\s+/).map((w) => `<span class="l"><i>${w}</i></span>`).join(' '); });
+$$('[data-words]').forEach((h) => { const first = h.querySelector('.first'); const txt = h.textContent.trim(); h.innerHTML = ''; if (first) h.append(first); h.insertAdjacentHTML('beforeend', txt.split(/\s+/).map((w) => `<span class="w">${w}</span>`).join(' ')); });
+
+/* ============================== Intro: loader → dot flood → set ============================== */
+function dotsFlood() {
+  return new Promise((done) => {
+    const c = $('#dots'), g = c.getContext('2d'), dpr = Math.min(devicePixelRatio, 2);
+    c.width = innerWidth * dpr; c.height = innerHeight * dpr; g.scale(dpr, dpr);
+    const sp = mobile ? 24 : 32, rows = Math.ceil(innerHeight / (sp * 0.866)) + 2, cols = Math.ceil(innerWidth / sp) + 2;
+    const cx = innerWidth / 2, cy = innerHeight * 0.47, maxD = Math.hypot(innerWidth, innerHeight) / 2;
+    const dots = [];
+    for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) { const x = i * sp + (j % 2) * sp / 2, y = j * sp * 0.866; dots.push([x, y, Math.hypot(x - cx, y - cy) / maxD * 0.6 + Math.random() * 0.12]); }
+    const o = { t: 0 };
+    gsap.to(o, { t: 1, duration: 1.25, ease: 'none', onUpdate: () => {
+      g.clearRect(0, 0, innerWidth, innerHeight); g.fillStyle = '#f4f1e6'; g.beginPath();
+      for (const [x, y, d] of dots) { const k = clamp((o.t - d) / 0.28, 0, 1); if (k <= 0) continue; const r = sp * 0.64 * (1 - Math.pow(1 - k, 3)); g.moveTo(x + r, y); g.arc(x, y, r, 0, Math.PI * 2); }
+      g.fill();
+    }, onComplete: () => { $('.loader').remove(); gsap.to(c, { opacity: 0, duration: 0.25, onComplete: () => { c.remove(); done(); } }); } });
+  });
+}
+async function boot() {
+  if (reduce) { $('.loader')?.remove(); $('#dots')?.remove(); return; }
+  document.body.classList.add('locked'); lenis?.stop();
+  const pc = $('.loader .pc'), o = { v: 0 };
+  await Promise.all([document.fonts.ready, gsap.to(o, { v: 100, duration: 1.1, ease: 'power2.inOut', onUpdate: () => (pc.textContent = Math.round(o.v)) })]);
+  gsap.to('.loader .mk, .loader .pc, .loader .nm', { opacity: 0, duration: 0.3 });
+  await dotsFlood();
+  document.body.classList.remove('locked'); lenis?.start();
+}
+gsap.set('.word .yo b', { yPercent: reduce ? 0 : 105 });
+gsap.set('.hero-foot p .l i', { yPercent: reduce ? 0 : 110 });
+gsap.set('.hero-foot .cta, .scrollcue', { opacity: reduce ? 1 : 0 });
+boot().then(() => {
+  if (reduce) return;
+  gsap.timeline()
+    .to('.nav', { opacity: 1, duration: 0.8 }, 0)
+    .to('.word .yo b', { yPercent: 0, stagger: 0.06, duration: 1.1, ease: 'expo.out' }, 0)
+    .to(S, { intro: 1, duration: 1.2, ease: 'back.out(1.4)' }, 0.15)
+    .to(S, { drop: 0, duration: 1.9, ease: 'elastic.out(1, 0.55)' }, 0.15)   // it drops on its string and bounces at the end of it, like a real yo-yo
+    .fromTo(S, { spinBoost: 16 }, { spinBoost: 0, duration: 2.4, ease: 'power2.out' }, 0.15)
+    .to(S, { ink: 1.06, duration: 2.2, ease: 'power2.inOut' }, 0.6)        // and the ink writes itself around it
+    .to('.hero-foot p .l i', { yPercent: 0, stagger: 0.025, duration: 0.8, ease: 'expo.out' }, 0.7)
+    .to('.hero-foot .cta, .scrollcue', { opacity: 1, duration: 0.8, stagger: 0.1 }, 1.0);
+});
+if (reduce) { S.intro = 1; S.ink = 1; S.drop = 0; gsap.set('.nav', { opacity: 1 }); }
+
+/* ============================== Scroll ============================== */
+if (!reduce) {
+  ScrollTrigger.create({ trigger: '.intro', start: 'top top', end: 'bottom bottom', onUpdate: (st) => (S.p = st.progress) });
+  // The word opens like doors, the night pours out of the yo-yo's gap, the rows run.
+  const it = gsap.timeline({ scrollTrigger: { trigger: '.intro', start: 'top top', end: 'bottom bottom', scrub: 1 } });
+  const h = (x) => x / HK;   // hero-time → intro progress
+  it.to('.word .l', { xPercent: -140, ease: 'power2.in', duration: h(0.5) }, h(0.08))
+    .to('.word .r', { xPercent: 140, ease: 'power2.in', duration: h(0.5) }, h(0.08))
+    .to('.hero-foot', { opacity: 0, y: 30, duration: h(0.15) }, h(0.06))
+    // the night: the rows drift the whole time; they come out of the dark dim, then light up one by one, like the story they tell
+    .fromTo('.night .row:nth-child(1)', { xPercent: 0 }, { xPercent: -30, ease: 'none', duration: 0.73 }, 0.27)
+    .fromTo('.night .row:nth-child(2)', { xPercent: -32 }, { xPercent: -2, ease: 'none', duration: 0.73 }, 0.27)
+    .fromTo('.night .row:nth-child(3)', { xPercent: -4 }, { xPercent: -34, ease: 'none', duration: 0.73 }, 0.27)
+    .fromTo('.night .row', { scale: 1.12, opacity: 0, filter: 'blur(14px)' }, { scale: 1, opacity: 0.22, filter: 'blur(0px)', stagger: 0.02, duration: 0.07 }, h(0.58))
+    .to('.night .row:nth-child(1)', { opacity: 1, scale: 1.03, duration: 0.07, ease: 'power2.inOut' }, 0.4)                                  // rent it
+    .to('.night .row:nth-child(1)', { opacity: 0.3, scale: 1, duration: 0.07, ease: 'power2.inOut' }, 0.52)
+    .to('.night .row:nth-child(2)', { opacity: 1, scale: 1.03, duration: 0.07, ease: 'power2.inOut' }, 0.52)                                // use it: the outline fills
+    .to('.night .row.o span', { color: '#f4f1e6', duration: 0.07, ease: 'power2.inOut' }, 0.52)
+    .to('.night .row:nth-child(2)', { opacity: 0.3, scale: 1, duration: 0.07, ease: 'power2.inOut' }, 0.64)
+    .to('.night .row.o span', { color: 'rgba(244,241,230,0)', duration: 0.07, ease: 'power2.inOut' }, 0.64)
+    .to('.night .row:nth-child(3)', { opacity: 1, scale: 1.04, duration: 0.07, ease: 'power2.inOut' }, 0.64)                                // bring it back
+    .to('.night .row', { opacity: 1, scale: 1, duration: 0.07, ease: 'power2.inOut' }, 0.78)                                                // and all three together
+    .fromTo('.night .say', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.08, ease: 'power3.out' }, 0.84)
+    .set({}, {}, 1);
+
+  // Statement: words light up as you read; the ink only lives here.
+  // What is Yoyo is held on screen: first the words light up, then the four steps arrive one by one while the line above them fills.
+  {
+    const steps = $$('.step'), wt = gsap.timeline({ scrollTrigger: { trigger: '.what', start: 'top top', end: 'bottom bottom', scrub: 1.4 } });
+    gsap.set(steps, { opacity: 0, y: 50 });
+    wt.to('.statement .w', { opacity: 1, duration: 0.04, ease: 'none', stagger: { amount: 0.34 } }, 0.02);
+    steps.forEach((st, i) => {
+      const at = 0.4 + i * 0.14;
+      if (mobile && i > 0) wt.to(steps[i - 1], { opacity: 0, y: -40, duration: 0.1, ease: 'power2.inOut' }, at - 0.04);
+      wt.to(st, { opacity: 1, y: 0, duration: 0.16, ease: 'power2.inOut' }, at)                       // each step glides in while the last one is still settling
+        .to('.steps', { '--p': (i + 1) / steps.length, duration: 0.14, ease: 'power1.inOut' }, at);
+    });
+    wt.set({}, {}, 1);
+  }
+
+  // Catalog: props drift at different speeds; the heading rises.
+  // Facts: the pinned slide steps through five facts; each number leaves upwards and the next one rises and counts up.
+  const FACTS = [
+    { n: 0, u: '%', t: 'Service fee', s: 'For the first three months. Then 10%, always shown before you book.' },
+    { n: 48, u: 'h', t: 'To check the return', s: 'Then the deposit goes back to you by itself.' },
+    { n: 1, u: '', t: 'Contract for every deal', s: 'Signed by both sides before any money moves.' },
+    { n: 100, u: '%', t: 'Listings checked by a person', s: 'Nothing goes live without a look from us first.' },
+    { n: 3, u: '', t: 'Languages', s: 'English, Latviešu and Русский, everywhere on the site.' },
+  ];
+  const fNum = $('.f-num'), fTitle = $('.f-title'), fSub = $('.f-sub'), fIdx = $('.f-idx'), segs = $$('.f-bar i');
+  fNum.innerHTML = FACTS.map((F) => `<span><b>${F.n}</b>${F.u ? `<u>${F.u}</u>` : ''}</span>`).join('');
+  fTitle.innerHTML = FACTS.map((F) => `<span>${F.t}</span>`).join('');
+  fSub.innerHTML = FACTS.map((F) => `<span>${F.s}</span>`).join('');
+  const layers = [[...fNum.children], [...fTitle.children], [...fSub.children]], nums = [...fNum.querySelectorAll('b')];
+  const FK = { k: 0, ks: 0 };
+  ScrollTrigger.create({ trigger: '.facts', start: 'top top', end: 'bottom bottom', onUpdate: (st) => (FK.k = st.progress * FACTS.length) });
+  // Each fact owns one unit of scroll: it rises in over the first 30%, holds, and leaves upwards over the last 30%.
+  const IN = 0.3, sm = (x) => x * x * (3 - 2 * x);
+  gsap.ticker.add((time, dms) => {
+    FK.ks += (FK.k - FK.ks) * (1 - Math.pow(0.0025, Math.min(dms, 50) / 1000));   // soft follow: no steps, no restarts
+    const last = FACTS.length - 1;
+    for (let i = 0; i <= last; i++) {
+      layers.forEach((L, j) => {
+        const tt = FK.ks - i - j * 0.05;                                         // title and line trail the number a little
+        let y = 0;
+        if (tt < IN && i > 0) y = 110 * (1 - sm(clamp((tt + IN) / (2 * IN), 0, 1)));          // enter from below
+        else if (tt > 1 - IN && i < last) y = -110 * sm(clamp((tt - (1 - IN)) / (2 * IN), 0, 1)); // leave upwards
+        if (i > 0 && tt < -IN) y = 110; if (i < last && tt > 1 + IN) y = -110;
+        L[i].style.transform = `translate3d(0, ${y}%, 0)`; L[i].style.visibility = Math.abs(y) >= 109.9 ? 'hidden' : 'visible';
+      });
+      const c = i === 0 ? 1 : sm(clamp((FK.ks - i + IN) / (IN * 2.2), 0, 1));                 // the number counts up as it rises
+      nums[i].textContent = Math.round(FACTS[i].n * c);
+    }
+    segs.forEach((g, i) => g.style.setProperty('--f', clamp(FK.ks - i, 0, 1)));
+    fIdx.textContent = `0${Math.min(last, Math.max(0, Math.round(FK.ks - 0.5))) + 1} / 05`;
+  });
+  gsap.from('.f-num, .f-text, .facts .label', { y: 60, opacity: 0, duration: 1.1, stagger: 0.1, ease: 'expo.out', scrollTrigger: { trigger: '.facts', start: 'top 70%' } });
+
+  // Final: the yo-yo rises through "comes back".
+  const roll = gsap.timeline({ repeat: -1, paused: true });
+  for (const dir of [1, -1]) {
+    roll.to(RL, { x: dir, duration: 1.7, ease: 'power2.inOut' })
+        .to(RL, { x: 0, duration: 1.25, ease: 'power3.inOut' }, '+=0.35')
+        .to(RL, { hop: 1, duration: 0.22, ease: 'power2.out' }, '-=0.3')
+        .to(RL, { hop: 0, duration: 0.45, ease: 'bounce.out' })
+        .to({}, { duration: 0.7 });
+  }
+  // The final sequence is driven by how far you are into the pinned last slide.
+  ScrollTrigger.create({ trigger: '.final', start: 'top top', end: () => '+=' + innerHeight * 1.0, scrub: true, onUpdate: (st) => {
+    FQ.q = st.progress;
+    if (st.progress > 0.9) roll.play(); else { roll.pause(); gsap.to(RL, { x: 0, hop: 0, duration: 0.4, overwrite: true }); }
+  } });
+  gsap.from('.stack h2 span', { yPercent: 40, opacity: 0, stagger: 0.12, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: '.final', start: 'top+=' + innerHeight * 0.4 + ' top' } });
+
+  // Magnetic buttons.
+  $$('.magnetic, .nav .pill').forEach((n) => {
+    n.addEventListener('pointermove', (e) => { const r = n.getBoundingClientRect(); gsap.to(n, { x: (e.clientX - r.left - r.width / 2) * 0.25, y: (e.clientY - r.top - r.height / 2) * 0.35, duration: 0.4, ease: 'power3.out' }); });
+    n.addEventListener('pointerleave', () => gsap.to(n, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.5)' }));
+  });
+} else { S.fq = 1; FQ.q = 1; }
+
+/* ============================== Catalog hover + category sheet ============================== */
+const cursor = $('.cursor');
+if (fine && !reduce) {
+  document.body.classList.add('has-cursor');
+  const G = goo.st;
+  addEventListener('pointermove', (e) => { G.x = e.clientX; G.y = e.clientY; if (G.a < 1) gsap.to(G, { a: 1, duration: 0.3 }); });
+  document.addEventListener('pointerleave', () => gsap.to(G, { a: 0, duration: 0.3 }));
+  // Anything you can press: the drop is pulled to it and spills over it with an elastic plop.
+  const sizeFor = () => 26;   // the plop: scales the fill, overshoots on entry
+  $$('a, button').forEach((el) => {
+    el.addEventListener('pointerenter', () => {
+      G.el = el; gsap.killTweensOf(G, 'hover,hr');
+      gsap.to(G, { hover: 1, duration: 0.5, ease: 'power3.out' });
+      gsap.fromTo(G, { hr: 0 }, { hr: sizeFor(el), duration: 0.9, ease: 'elastic.out(1, 0.42)' });
+    });
+    el.addEventListener('pointerleave', () => {
+      if (G.el !== el) return;
+      gsap.killTweensOf(G, 'hover,hr');
+      gsap.to(G, { hover: 0, hr: 0, duration: 0.45, ease: 'power3.out', onComplete: () => { if (G.el === el) G.el = null; } });
+    });
+  });
+  addEventListener('pointerdown', () => gsap.fromTo(G, { burst: 1 }, { burst: 0, duration: 0.6, ease: 'power3.out' }));
+}
+$$('.line').forEach((el) => {
+  el.addEventListener('click', (e) => { e.preventDefault(); const r = el.getBoundingClientRect(); openCat(+el.dataset.i, e.clientX || r.left + r.width / 2, e.clientY || r.top + r.height / 2); });
+});
+const ovEl = $('.ov'), ovTitle = $('.ov-title');
+let marquee = null;
+function openCat(i, x, y) {
+  const c = CATS[i]; ov.i = i;
+  ovTitle.innerHTML = Array.from({ length: 4 }, () => `<span>${c.name}</span>`).join('');
+  $('.ov-foot ul').innerHTML = c.subs.map((s) => `<li>${s}</li>`).join('');
+  ovEl.setAttribute('aria-label', c.name);
+  lenis?.stop(); document.body.classList.add('ov-open'); cursor.classList.remove('big');
+  gsap.set(ovEl, { visibility: 'visible', clipPath: `circle(0% at ${x}px ${y}px)` });
+  marquee?.kill(); marquee = gsap.fromTo(ovTitle, { xPercent: 0 }, { xPercent: -25, duration: 14, ease: 'none', repeat: -1 });
+  const tl = gsap.timeline();
+  tl.to(ovEl, { clipPath: `circle(150% at ${x}px ${y}px)`, duration: reduce ? 0 : 1.0, ease: 'power3.inOut' }, 0)
+    .to(ov, { t: 1, duration: reduce ? 0 : 1.2, ease: 'expo.inOut' }, 0.05)
+    .fromTo('.ov-foot > *, .ov-back', { y: 30, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.08, duration: 0.8, ease: 'expo.out' }, 0.6)
+    .fromTo(ovTitle, { yPercent: 30, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1, ease: 'expo.out' }, 0.35);
+  $('.ov-back').focus({ preventScroll: true });
+}
+function closeCat() {
+  if (ov.i < 0) return;
+  const el = $(`.line[data-i="${ov.i}"]`);
+  gsap.timeline({ onComplete: () => { gsap.set(ovEl, { visibility: 'hidden' }); document.body.classList.remove('ov-open'); ov.i = -1; marquee?.kill(); lenis?.start(); el.focus({ preventScroll: true }); } })
+    .to('.ov-foot > *, .ov-back, .ov-title', { opacity: 0, duration: 0.3 }, 0)
+    .to(ov, { t: 0, duration: reduce ? 0 : 1.0, ease: 'expo.inOut' }, 0.1)
+    .to(ovEl, { clipPath: 'circle(0% at 50% 50%)', duration: reduce ? 0 : 0.9, ease: 'power3.inOut' }, 0.2);
+}
+$('.ov-back').addEventListener('click', closeCat);
+addEventListener('keydown', (e) => { if (e.key === 'Escape') closeCat(); });
+
+</script>
+</body>
+</html>
