@@ -184,7 +184,7 @@ export function RangeCalendar({ value, onChange, today, lastDay, blocked = [], t
                               : null;
                       return (
                         <td key={date} role="gridcell" aria-selected={chosen} className="relative p-0">
-                          {band && <span aria-hidden="true" className={`bg-sticker-lavender absolute inset-y-0 ${band}`} />}
+                          {band && <span aria-hidden="true" className={`bg-[color-mix(in_srgb,var(--glow)_40%,transparent)] absolute inset-y-0 ${band}`} />}
                           <button
                             ref={(element) => {
                               if (element) buttons.current.set(date, element);

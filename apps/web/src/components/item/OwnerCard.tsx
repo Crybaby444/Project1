@@ -1,6 +1,5 @@
 import type { OwnerSummary } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
-import { Card } from '@/components/ui/Card';
 import { Link } from '@/i18n/navigation';
 import { profilePath } from '@/lib/seo';
 
@@ -33,9 +32,9 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
   const since = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(owner.memberSince));
 
   return (
-    <Card className="flex flex-col gap-4 p-5 sm:p-6">
+    <div className="border-ink/15 flex flex-col gap-4 border-t pt-6">
       <div className="flex items-center gap-4">
-        <span aria-hidden="true" className="bg-sticker-lavender grid size-14 shrink-0 place-items-center rounded-full border border-black text-lg font-bold text-black">
+        <span aria-hidden="true" className="bg-ink text-canvas font-display grid size-14 shrink-0 place-items-center rounded-full text-2xl font-black">
           {initials(owner.name)}
         </span>
         <div className="min-w-0">
@@ -46,13 +45,13 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
       </div>
       <ul className="flex flex-wrap gap-2 text-xs font-bold">
         {owner.emailVerified && (
-          <li className="bg-sticker-mint rounded-pill inline-flex items-center gap-1 border border-black px-2.5 py-0.5 text-black">
+          <li className="border-ink/25 rounded-pill inline-flex items-center gap-1 border px-2.5 py-0.5">
             <Check />
             {t('emailVerified')}
           </li>
         )}
         {owner.phoneVerified && (
-          <li className="bg-sticker-mint rounded-pill inline-flex items-center gap-1 border border-black px-2.5 py-0.5 text-black">
+          <li className="border-ink/25 rounded-pill inline-flex items-center gap-1 border px-2.5 py-0.5">
             <Check />
             {t('phoneVerified')}
           </li>
@@ -66,6 +65,6 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
           {t('profile', { name: owner.name })}
         </Link>
       )}
-    </Card>
+    </div>
   );
 }

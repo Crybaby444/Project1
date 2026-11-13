@@ -100,11 +100,11 @@ export default async function ItemPage({ params }: Props) {
       {detail.available ? (
         <Available item={detail} title={title} category={category} locale={locale} />
       ) : (
-        <section className="border-ink rounded-card-xl bg-surface flex flex-col items-start gap-4 border border-dashed p-6 sm:p-10">
-          <p className="bg-sticker-sun rounded-pill -rotate-2 border border-black px-3 py-1 text-xs font-bold text-black uppercase">
+        <section className="border-ink rounded-media bg-surface flex flex-col items-start gap-4 border border-dashed p-6 sm:p-10">
+          <p className="bg-ink text-canvas rounded-pill inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold uppercase before:size-1.5 before:rounded-full before:bg-[var(--glow)] before:content-['']">
             {t('away.badge')}
           </p>
-          <h1 className="text-3xl leading-tight font-bold hyphens-auto [overflow-wrap:anywhere] sm:text-4xl" lang={detail.listing.contentLocale}>
+          <h1 className="font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]" lang={detail.listing.contentLocale}>
             {title}
           </h1>
           <p className="max-w-[52ch] text-lg">{t('away.body')}</p>
@@ -115,7 +115,7 @@ export default async function ItemPage({ params }: Props) {
       )}
       {similar.length > 0 && (
         <section aria-labelledby="similar" className="flex flex-col gap-4">
-          <h2 id="similar" className="text-2xl font-bold">
+          <h2 id="similar" className="font-display text-[clamp(1.8rem,3vw,2.8rem)] leading-[0.9] font-black uppercase">
             {t('similar')}
           </h2>
           <ul className="grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 lg:grid-cols-4">
@@ -142,7 +142,7 @@ async function Available({ item, title, category, locale }: { item: AvailableIte
         <div className="flex min-w-0 flex-col gap-8">
           <Gallery listingId={listing.id} title={title} photos={listing.photos} />
           <div className="flex items-start justify-between gap-4">
-            <h1 className="min-w-0 text-3xl leading-tight font-bold hyphens-auto [overflow-wrap:anywhere] sm:text-4xl" lang={listing.contentLocale}>
+            <h1 className="font-display min-w-0 text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]" lang={listing.contentLocale}>
               {title}
             </h1>
             <HeartButton listingId={listing.id} title={title} className="shrink-0" />
@@ -154,7 +154,7 @@ async function Available({ item, title, category, locale }: { item: AvailableIte
           )}
           {listing.description && (
             <section aria-labelledby="item-about" className="flex flex-col gap-3">
-              <h2 id="item-about" className="text-2xl font-bold">
+              <h2 id="item-about" className="font-display text-[clamp(1.8rem,3vw,2.8rem)] leading-[0.9] font-black uppercase">
                 {t('about')}
               </h2>
               <p className="max-w-[68ch] text-lg leading-relaxed whitespace-pre-line [overflow-wrap:anywhere]" lang={listing.contentLocale}>

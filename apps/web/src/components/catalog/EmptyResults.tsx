@@ -16,7 +16,7 @@ export async function EmptyResults({ params, resetHref }: { params: CatalogParam
     params.q ? t('tipText') : null,
   ].filter((tip): tip is string => tip !== null);
   return (
-    <div className="border-ink bg-surface rounded-card flex flex-col items-center gap-4 border px-6 py-12 text-center">
+    <div className="border-ink bg-surface rounded-media flex flex-col items-center gap-4 border px-6 py-12 text-center">
       <Mark size={64} string={false} className="animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
       <h2 className="text-2xl font-bold">{t('title')}</h2>
       {tips.length > 0 ? (

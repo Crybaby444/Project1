@@ -28,7 +28,7 @@ export function BookingPanel({ item }: { item: AvailableItem }) {
           <p className="text-3xl font-bold tabular-nums">{t('perDay', { price: formatEuros(daily, locale) })}</p>
           <ul className="flex flex-wrap gap-2 text-xs font-bold">
             {listing.weeklyDiscountPercent > 0 && (
-              <li className="bg-sticker-sun rounded-pill -rotate-2 border border-black px-2.5 py-0.5 text-black">
+              <li className="bg-ink text-canvas rounded-pill inline-flex items-center gap-1.5 px-2.5 py-1 before:size-1.5 before:rounded-full before:bg-[var(--glow)] before:content-['']">
                 {t('weekly', { percent: listing.weeklyDiscountPercent })}
               </li>
             )}

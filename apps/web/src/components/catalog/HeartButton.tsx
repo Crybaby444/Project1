@@ -48,7 +48,7 @@ export function HeartButton({ listingId, title, className = '' }: { listingId: s
       // Until the page is interactive and it is known who is signed in, a press would be lost or would
       // send a signed-in person to sign in; tests and fast fingers wait instead.
       disabled={!hydrated || status === 'loading'}
-      className={`group border-ink bg-surface text-ink ease-yoyo ${position} inline-grid size-11 shrink-0 place-items-center rounded-full border transition-transform duration-150 hover:-translate-y-0.5 hover:-rotate-6 active:scale-[0.9] ${className}`}
+      className={`group border-ink bg-surface text-ink ease-yoyo ${position} inline-grid size-11 shrink-0 place-items-center rounded-full border transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.9] ${className}`}
     >
       <svg
         key={burst}

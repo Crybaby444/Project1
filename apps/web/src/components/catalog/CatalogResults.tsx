@@ -89,14 +89,12 @@ export async function CatalogResults({ params: raw, category, related, path, tit
           {related.length > 0 && (
             <nav aria-label={t('related')}>
               <ul className="flex flex-wrap gap-2">
-                {related.map((link, index) => (
+                {related.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
                       aria-current={link.current ? 'page' : undefined}
-                      className={`rounded-pill ease-yoyo inline-flex min-h-10 items-center border px-4 text-sm font-bold transition-transform duration-250 hover:-translate-y-0.5 active:scale-95 ${
-                        index % 2 ? 'hover:rotate-2' : 'hover:-rotate-2'
-                      } ${link.current ? 'bg-cta text-cta-fg border-cta' : 'border-ink bg-surface'}`}
+                      className={`rounded-pill ease-yoyo inline-flex min-h-10 items-center border px-4 text-sm font-bold transition-transform duration-250 active:scale-95 ${link.current ? 'bg-cta text-cta-fg border-cta' : 'border-ink hover:bg-mist bg-transparent'}`}
                     >
                       <span className="[overflow-wrap:anywhere]">{link.label}</span>
                     </Link>

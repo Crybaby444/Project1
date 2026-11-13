@@ -43,7 +43,7 @@ export function ItemFacts({ listing, attributes }: { listing: PublicListing; att
           <h2 id="item-details" className="text-2xl font-bold">
             {t('details')}
           </h2>
-          <dl className="border-ink rounded-card divide-ink/20 divide-y border">
+          <dl className="border-ink rounded-media divide-ink/20 divide-y border">
             {listing.condition && (
               <div className="grid gap-1 px-4 py-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] sm:gap-4">
                 <dt className="font-bold">{t('condition')}</dt>
@@ -70,13 +70,13 @@ export function ItemFacts({ listing, attributes }: { listing: PublicListing; att
           <ul className="flex flex-col gap-2">
             {listing.rules.preset.map((rule) => (
               <li key={rule} className="flex gap-2">
-                <span aria-hidden="true" className="bg-sticker-sun mt-1.5 size-2.5 shrink-0 rounded-full border border-black" />
+                <span aria-hidden="true" className="mt-1.5 size-2 shrink-0 rounded-full bg-[var(--glow)] ring-1 ring-black/15" />
                 {tRules(rule)}
               </li>
             ))}
             {listing.rules.custom.map((rule, index) => (
               <li key={index} className="flex gap-2 [overflow-wrap:anywhere]" lang={listing.contentLocale}>
-                <span aria-hidden="true" className="bg-sticker-sun mt-1.5 size-2.5 shrink-0 rounded-full border border-black" />
+                <span aria-hidden="true" className="mt-1.5 size-2 shrink-0 rounded-full bg-[var(--glow)] ring-1 ring-black/15" />
                 {rule}
               </li>
             ))}
