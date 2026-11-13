@@ -1,0 +1,234 @@
+/*
+ * The staged home (v16). These rules apply only once HomeStage has started (html[data-staged]): without
+ * WebGL, without script or with reduced motion the home stays the plain stack of sections.
+ * Heights are the concept's: intro 520vh (the hero keeps its own 230vh of travel inside it), what 460vh,
+ * facts 520vh, finale 210vh. Each scene is held on screen by a sticky inner box.
+ */
+/* On the staged home the header floats over the scenes in one colour that inverts over whatever is under
+   it (cream over night, night over cream), as in the concept. */
+html[data-staged] [data-site-header] {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 20;
+  border: 0;
+  background: transparent;
+  mix-blend-mode: difference;
+  --ink: var(--paper);
+  --surface: transparent;
+  --mist: transparent;
+  --cta-bg: var(--paper);
+  --cta-fg: #000;
+  color: var(--paper);
+}
+
+/* Intro: the hero and the night share one held screen; the night spills over the hero from the yo-yo. */
+html[data-staged] [data-intro] {
+  position: relative;
+  height: 520vh;
+}
+html[data-staged] [data-intro] > [data-home='hero'] {
+  position: sticky;
+  top: 0;
+}
+html[data-staged] [data-intro] > [data-home='night'] {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: 100svh;
+  min-height: 0;
+  margin-top: -100svh;
+  padding-block: 0;
+  clip-path: circle(0px at 50% 50%);
+}
+html[data-staged] [data-home='hero'] [data-letter] {
+  color: transparent; /* the stage draws the letters, so the yo-yo can hang in front of them */
+}
+html[data-staged] [data-home='night'] [data-row],
+html[data-staged] [data-home='night'] [data-say] {
+  opacity: 0;
+}
+html[data-staged] [data-home='night'] [data-say] {
+  position: absolute;
+  bottom: 7vh;
+  left: 50%;
+  translate: -50% 0;
+  margin: 0;
+}
+
+/* What is Yoyo: held while the words light up and the steps arrive. */
+html[data-staged] [data-home='what'] {
+  height: 460vh;
+}
+html[data-staged] [data-home='what'] > [data-pin],
+html[data-staged] [data-home='facts'] > [data-pin],
+html[data-staged] [data-home='finale'] > [data-pin] {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 0;
+  overflow: hidden;
+}
+html[data-staged] [data-home='what'] [data-word] {
+  opacity: 0.14;
+}
+html[data-staged] [data-home='what'] [data-step] {
+  opacity: 0;
+}
+html[data-staged] [data-home='what'] [data-steps]::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: -1.5px;
+  height: 1.5px;
+  background: var(--ink);
+  transform: scaleX(var(--p, 0));
+  transform-origin: 0 50%;
+}
+@media (max-width: 639px) {
+  html[data-staged] [data-home='what'] [data-step] {
+    grid-area: 1 / 1; /* on a phone the steps take turns in one place */
+  }
+}
+
+/* Facts: one at a time, a huge number beside its title and line; a five-step bar below. */
+html[data-staged] [data-home='facts'] {
+  height: 520vh;
+  border-radius: 28px 28px 0 0;
+  margin-top: -28px;
+}
+html[data-staged] [data-home='facts'] > [data-pin] {
+  padding-block: 0;
+  padding-inline: max(var(--gutter, 32px), calc((100vw - 1560px) / 2));
+}
+html[data-staged] [data-home='facts'] h2 {
+  position: absolute;
+  top: 14vh;
+  inset-inline: 0;
+}
+html[data-staged] [data-facts] {
+  display: grid;
+  grid-template-columns: 1fr; /* one fact at a time: every fact in the same cell */
+  width: 100%;
+}
+html[data-staged] [data-fact] {
+  grid-area: 1 / 1;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 4vw;
+  text-align: left;
+}
+html[data-staged] [data-fact] > span {
+  grid-row: 1 / 3;
+  justify-self: end;
+  overflow: hidden;
+  font-size: clamp(9rem, 29vw, 36rem);
+}
+html[data-staged] [data-fact] > h3 {
+  align-self: end;
+  overflow: hidden;
+  font-size: clamp(2.4rem, 4.6vw, 5.4rem);
+}
+html[data-staged] [data-fact] > p {
+  align-self: start;
+  overflow: hidden;
+  max-width: 30em;
+  font-size: clamp(1rem, 1.3vw, 1.25rem);
+}
+html[data-staged] [data-fact] > * {
+  will-change: transform;
+}
+@media (max-width: 639px) {
+  html[data-staged] [data-fact] {
+    grid-template-columns: 1fr;
+    text-align: center;
+    justify-items: center;
+  }
+  html[data-staged] [data-fact] > span {
+    grid-row: auto;
+    justify-self: center;
+    font-size: 40vw;
+  }
+}
+html[data-staged] [data-fbar] {
+  position: absolute;
+  inset-inline: 16px;
+  bottom: 6vh;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+@media (min-width: 640px) {
+  html[data-staged] [data-fbar] {
+    inset-inline: max(32px, calc((100vw - 1560px) / 2));
+  }
+}
+html[data-staged] [data-fbar] i {
+  position: relative;
+  height: 2px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--paper) 14%, transparent);
+}
+html[data-staged] [data-fbar] i::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--glow);
+  transform: scaleX(var(--f, 0));
+  transform-origin: 0 50%;
+}
+html[data-staged] [data-fidx] {
+  margin-left: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--paper) 60%, transparent);
+}
+
+/* Finale: the night after the facts closes into the yo-yo. */
+html[data-staged] [data-home='finale'] {
+  height: 210vh;
+  background: var(--night);
+}
+html[data-staged] [data-home='finale'] > [data-pin] {
+  background: var(--canvas);
+}
+html[data-staged] [data-shade] {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  display: block;
+  pointer-events: none;
+  background: var(--night);
+}
+
+/* The loader: the stringless mark turns while the set is built, then the paper lifts. */
+.home-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: var(--night);
+  color: var(--paper);
+}
+.home-loader svg {
+  animation: home-loader-turn 1.1s linear infinite;
+}
+.home-loader b {
+  position: absolute;
+  left: 32px;
+  bottom: 22px;
+  font-family: var(--font-display-face), sans-serif;
+  font-size: 64px;
+  line-height: 0.8;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+@keyframes home-loader-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}

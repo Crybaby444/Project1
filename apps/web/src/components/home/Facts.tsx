@@ -28,6 +28,10 @@ export async function Facts() {
             </li>
           ))}
         </ul>
+        <div data-fbar aria-hidden="true" className="hidden">
+          {facts.map((f) => <i key={f.key} />)}
+          <span data-fidx>01 / 0{facts.length}</span>
+        </div>
       </div>
     </section>
   );

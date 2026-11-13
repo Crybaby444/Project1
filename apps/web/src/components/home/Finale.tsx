@@ -11,6 +11,7 @@ export async function Finale() {
   return (
     <section data-home="finale" className="bg-canvas text-ink relative">
       <div data-pin className="relative grid min-h-svh place-items-center overflow-hidden px-4 sm:px-8">
+        <div data-shade aria-hidden="true" className="hidden" />
         <div className="w-full text-center">
           <h2 className="font-display m-0 text-[22vw] leading-[0.82] font-black uppercase sm:text-[clamp(5rem,17vw,21rem)]">
             <span className="block">{t('finale.line1')}</span>

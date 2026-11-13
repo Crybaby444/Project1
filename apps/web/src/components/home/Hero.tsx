@@ -15,13 +15,13 @@ export async function Hero() {
         aria-label="Yoyo"
         className="font-display absolute inset-x-0 top-[38%] m-0 flex -translate-y-1/2 justify-center text-[46vw] leading-[0.8] font-black whitespace-nowrap uppercase sm:top-[47%] sm:text-[clamp(9rem,43vw,56rem)]"
       >
-        <span data-word className="inline-block overflow-hidden pt-[0.04em]" aria-hidden="true">
-          {['Y', 'O', 'Y', 'O'].map((l, i) => (
-            <b key={i} data-letter className="inline-block font-black">
-              {l}
-            </b>
-          ))}
-        </span>
+        {/* Two halves, so the word can open like doors on scroll. */}
+        {(['l', 'r'] as const).map((half) => (
+          <span key={half} data-half={half} className="inline-block overflow-hidden pt-[0.04em]" aria-hidden="true">
+            <b data-letter className="inline-block font-black">Y</b>
+            <b data-letter className="inline-block font-black">O</b>
+          </span>
+        ))}
       </h1>
       <div data-anchor="hero-slot" aria-hidden="true" className="absolute top-[44%] left-1/2 aspect-square w-[24vw] -translate-1/2 sm:top-[58%] sm:w-[min(25vh,19vw)]" />
       <div className="absolute inset-x-4 bottom-6 grid justify-items-center gap-4 text-center sm:inset-x-8 sm:grid-cols-[1fr_auto_1fr] sm:items-end sm:justify-items-stretch sm:text-left">

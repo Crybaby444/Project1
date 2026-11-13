@@ -6,6 +6,7 @@ import { Finale } from '@/components/home/Finale';
 import { Hero } from '@/components/home/Hero';
 import { NightScene } from '@/components/home/NightScene';
 import { WhatIsYoyo } from '@/components/home/WhatIsYoyo';
+import { HomeStageLoader } from '@/components/home/HomeStageLoader';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { pageMetadata } from '@/lib/seo';
 import { CONTACT_EMAIL, SITE_URL } from '@/lib/site';
@@ -53,11 +54,14 @@ export default async function HomePage({ params }: Params) {
   return (
     <main data-home-root className="flex flex-1 flex-col">
       <JsonLd data={structuredData(meta('description'))} />
-      <Hero />
-      <NightScene />
+      <div data-intro>
+        <Hero />
+        <NightScene />
+      </div>
       <WhatIsYoyo />
       <Facts />
       <Finale />
+      <HomeStageLoader />
     </main>
   );
 }
