@@ -1,19 +1,14 @@
 import type { Locale } from '@yoyo/shared';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Categories } from '@/components/landing/Categories';
-import { FaqTeaser } from '@/components/landing/FaqTeaser';
-import { FinalCta } from '@/components/landing/FinalCta';
-import { Hero } from '@/components/landing/Hero';
-import { HowRenting } from '@/components/landing/HowRenting';
-import { Safety } from '@/components/landing/Safety';
-import { WhatIsYoyo } from '@/components/landing/WhatIsYoyo';
+import { Facts } from '@/components/home/Facts';
+import { Finale } from '@/components/home/Finale';
+import { Hero } from '@/components/home/Hero';
+import { NightScene } from '@/components/home/NightScene';
+import { WhatIsYoyo } from '@/components/home/WhatIsYoyo';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { Marquee } from '@/components/ui/Marquee';
 import { pageMetadata } from '@/lib/seo';
 import { CONTACT_EMAIL, SITE_URL } from '@/lib/site';
-
-const MARQUEE = ['one', 'two', 'three', 'four', 'five'] as const;
 
 type Params = { params: Promise<{ locale: string }> };
 
@@ -52,20 +47,17 @@ function structuredData(description: string) {
 export default async function HomePage({ params }: Params) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations('landing');
   const meta = await getTranslations('pages.home');
 
+  // v16: five scenes. As plain markup each shows its final state; the home stage (Task 6–7) plays them.
   return (
-    <main className="flex flex-1 flex-col">
+    <main data-home-root className="flex flex-1 flex-col">
       <JsonLd data={structuredData(meta('description'))} />
       <Hero />
-      <Marquee items={MARQUEE.map((key) => t(`marquee.${key}`))} />
+      <NightScene />
       <WhatIsYoyo />
-      <HowRenting />
-      <Safety />
-      <Categories />
-      <FaqTeaser />
-      <FinalCta />
+      <Facts />
+      <Finale />
     </main>
   );
 }

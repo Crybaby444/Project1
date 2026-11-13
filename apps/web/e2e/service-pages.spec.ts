@@ -68,13 +68,6 @@ test('a FAQ answer opens from the keyboard, and a link to a question opens it', 
   await expect(page.getByText(en.faq.groups.renting.items.who.a)).toBeHidden();
 });
 
-test('the landing page answers four common questions and leads to the rest', async ({ page }) => {
-  await page.goto('/');
-  const faq = page.locator('#faq');
-  await expect(faq.locator('details')).toHaveCount(4);
-  await expect(faq.getByRole('link', { name: en.landing.faq.all })).toHaveAttribute('href', '/faq');
-});
-
 for (const { locale, prefix } of LANGUAGES) {
   for (const [path, doc] of [
     ['/terms', TERMS[locale]],
