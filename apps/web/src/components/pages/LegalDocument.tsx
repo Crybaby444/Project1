@@ -70,7 +70,7 @@ function BlockView({ block, fill }: { block: Block; fill: (text: string) => stri
       role="region"
       aria-label={block.table.head.join(', ')}
       tabIndex={0}
-      className="border-ink rounded-card overflow-x-auto border"
+      className="border-ink rounded-media overflow-x-auto border"
     >
       <table className="w-full min-w-[34rem] border-collapse text-left text-[15px] leading-relaxed">
         <thead className="bg-mist">
@@ -135,7 +135,7 @@ export function LegalDocument({ doc, effective }: { doc: LegalDoc; effective: st
           </nav>
 
           <article className="flex max-w-[72ch] flex-col gap-12 text-base">
-            <section aria-labelledby="summary" className="border-ink bg-sticker-lavender rounded-card-xl flex flex-col gap-3 border p-6 text-black sm:p-8">
+            <section aria-labelledby="summary" className="border-ink bg-mist rounded-media flex flex-col gap-3 border p-6 text-ink sm:p-8">
               <h2 id="summary" className="text-2xl leading-tight font-bold">
                 {t('summary')}
               </h2>

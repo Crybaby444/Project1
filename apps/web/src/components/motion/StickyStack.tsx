@@ -29,7 +29,7 @@ export function StickyStack({ children, label, labelledBy, className = '' }: Sti
         <li
           key={index}
           data-stack-item=""
-          style={{ '--i': index, '--tip': index % 2 === 0 ? '-1.2deg' : '1deg' } as CSSProperties}
+          style={{ '--i': index, '--tip': '0deg' } as CSSProperties}   // v16: the cards land square, no tilt
         >
           {child}
         </li>

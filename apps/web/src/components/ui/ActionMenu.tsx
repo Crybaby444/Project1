@@ -90,7 +90,7 @@ export function ActionMenu({
           role="menu"
           aria-label={label}
           onKeyDown={onKeyDown}
-          className={`border-ink bg-surface animate-pop-in rounded-card absolute top-full z-40 mt-2 min-w-48 border p-2 ${
+          className={`border-ink bg-surface animate-pop-in rounded-media absolute top-full z-40 mt-2 min-w-48 border p-2 ${
             align === 'right' ? 'right-0 origin-top-right' : 'left-0 origin-top-left'
           }`}
         >

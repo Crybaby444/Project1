@@ -319,7 +319,7 @@ function LanguageMenu({ href, className }: { href: string; className: string }) 
               }
             : { right: 0 }
         }
-        className={`border-ink bg-surface rounded-card absolute z-40 flex w-48 flex-col gap-0.5 border p-1.5 [filter:drop-shadow(0_0_0.6px_var(--sticker-edge))] ${
+        className={`border-ink bg-surface rounded-media absolute z-40 flex w-48 flex-col gap-0.5 border p-1.5 [filter:drop-shadow(0_0_0.6px_var(--sticker-edge))] ${
           placement?.above ? 'bottom-full mb-2' : 'top-full mt-2'
         }`}
       >

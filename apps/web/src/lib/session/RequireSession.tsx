@@ -44,11 +44,11 @@ export function RequireSession({
       <div aria-hidden="true" className="rounded-pill bg-mist h-8 w-48 animate-pulse" />
       <div
         aria-hidden="true"
-        className="rounded-card-xl border-ink/20 bg-surface h-40 w-full animate-pulse border"
+        className="rounded-media border-ink/20 bg-surface h-40 w-full animate-pulse border"
       />
       <div
         aria-hidden="true"
-        className="rounded-card-xl border-ink/20 bg-surface h-40 w-full animate-pulse border"
+        className="rounded-media border-ink/20 bg-surface h-40 w-full animate-pulse border"
       />
     </div>
   );

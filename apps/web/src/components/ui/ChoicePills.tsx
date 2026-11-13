@@ -1,6 +1,6 @@
 'use client';
 
-import { STICKER_COLORS, type StickerColor } from '@yoyo/shared';
+import type { StickerColor } from '@yoyo/shared';
 import { useId, type ReactNode } from 'react';
 
 export type Choice<T extends string> = { value: T; label: ReactNode; color?: StickerColor };
@@ -20,8 +20,6 @@ type ChoicePillsProps<T extends string> = {
   name?: string;
 };
 
-// Sticker fills keep black text (white on violet), the same in both themes.
-const ink = (color: StickerColor) => (color === 'violet' ? '#fff' : '#000');
 
 /**
  * One choice of a few, as pill-shaped radio buttons (native radios, so arrows move between them and
@@ -48,19 +46,17 @@ export function ChoicePills<T extends string>({
         {note && <span className="ml-2 font-medium tracking-normal normal-case">· {note}</span>}
       </legend>
       <div className="flex flex-wrap gap-2">
-        {choices.map((choice, index) => {
+        {choices.map((choice) => {
           const checked = choice.value === value;
           const fill =
-            false && choice.color   // v16: no sticker fills; the chosen pill is the only filled one
-              ? { backgroundColor: STICKER_COLORS[choice.color!], color: ink(choice.color!) }
+            false   // v16: no sticker fills; the chosen pill is the only filled one
+              ? {}
               : undefined;
           return (
             <label
               key={choice.value}
               style={fill}
-              className={`rounded-pill ease-yoyo has-focus-visible:outline-ink relative inline-flex min-h-10 cursor-pointer items-center gap-2 border px-4 py-2 text-left text-sm leading-snug font-bold transition-[transform,background-color,color] duration-250 select-none hover:-translate-y-0.5 active:scale-[0.96] has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-disabled:cursor-default has-disabled:opacity-55 ${
-                index % 2 === 0 ? 'hover:-rotate-2' : 'hover:rotate-2'
-              } ${checked ? 'border-cta bg-cta text-cta-fg' : fill ? 'border-black' : 'border-ink bg-surface text-ink'}`}
+              className={`rounded-pill ease-yoyo has-focus-visible:outline-ink relative inline-flex min-h-10 cursor-pointer items-center gap-2 border px-4 py-2 text-left text-sm leading-snug font-bold transition-[transform,background-color,color] duration-250 select-none hover:-translate-y-0.5 active:scale-[0.96] has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-disabled:cursor-default has-disabled:opacity-55 ${checked ? 'border-cta bg-cta text-cta-fg' : fill ? 'border-ink/15' : 'border-ink bg-surface text-ink'}`}
             >
               <input
                 type="radio"

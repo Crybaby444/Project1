@@ -1,6 +1,6 @@
 'use client';
 
-import { STICKER_COLORS, type AdminListing, type CategoryNode } from '@yoyo/shared';
+import type { AdminListing, CategoryNode } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState, type ReactNode } from 'react';
 import { ListingStatusBadge } from '@/components/listings/ListingStatusBadge';
@@ -65,7 +65,7 @@ export function ModerationCard({
   };
 
   return (
-    <article className="border-ink bg-surface rounded-card-xl flex flex-col gap-6 border p-5 sm:p-8">
+    <article className="border-ink bg-surface rounded-media flex flex-col gap-6 border p-5 sm:p-8">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-2">
           <h2 className="text-2xl leading-tight font-bold [overflow-wrap:anywhere]">{listing.title}</h2>
@@ -83,7 +83,7 @@ export function ModerationCard({
                   type="button"
                   aria-label={t('openPhoto', { number: index + 1, total })}
                   onClick={() => setViewing(index)}
-                  className="border-ink rounded-media ease-yoyo block aspect-[4/3] w-full overflow-hidden border transition-transform duration-250 hover:-translate-y-0.5 hover:-rotate-1"
+                  className="border-ink rounded-media ease-yoyo block aspect-[4/3] w-full overflow-hidden border transition-transform duration-250 hover:-translate-y-0.5"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element -- sized by the API's storage */}
                   <img src={photo.urls.thumb} alt="" className="size-full object-cover" />
@@ -98,8 +98,8 @@ export function ModerationCard({
         <Row term={t('category')}>
           {path.length > 0 ? (
             <span
-              style={leaf ? { backgroundColor: STICKER_COLORS[leaf.sticker], color: '#000' } : undefined}
-              className="rounded-pill inline-block border border-black px-2.5 py-0.5 text-sm font-bold"
+              
+              className="rounded-pill inline-block border border-ink/15 px-2.5 py-0.5 text-sm font-bold"
             >
               {path.map((node) => localized(node.names, locale)).join(' · ')}
             </span>

@@ -22,7 +22,18 @@ const PORTED = [
   'components/listings',
   'components/favorites',
   'components/settings',
+  'components/pages',
+  'components/admin',
+  'components/ui',
+  'components/ErrorView.tsx',
+  'lib/session/RequireSession.tsx',
+  'app/[locale]/faq',
+  'app/[locale]/how-it-works',
+  'app/[locale]/not-found.tsx',
+  'app/[locale]/error.tsx',
 ];
+/** The old primitives themselves, kept only for the developer styleguide (not a public page). */
+const LEGACY = ['components/ui/Sticker.tsx', 'components/ui/Card.tsx'];
 const BANNED = /bg-sticker-|[\s:'\"`]-?rotate-(?:[1-9]|1[0-2])\b|rounded-card\b|rounded-card-xl|<Sticker\b|<Card\b/;   // tilts of 1–12° are the sticker look; an icon turning 45/90/180° is fine
 
 const files = (p: string): string[] => {
@@ -30,7 +41,8 @@ const files = (p: string): string[] => {
   if (statSync(abs).isFile()) return [abs];
   return readdirSync(abs, { recursive: true, encoding: 'utf8' })
     .filter((f) => /\.tsx?$/.test(f) && !/\.test\.tsx?$/.test(f))
-    .map((f) => join(abs, f));
+    .map((f) => join(abs, f))
+    .filter((f) => !LEGACY.some((l) => f.endsWith(l)));
 };
 
 describe('v16 guard', () => {
