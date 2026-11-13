@@ -31,6 +31,7 @@
     "service": "Yoyo",
     "documents": "Dokumenti",
     "links": {
+      "catalog": "Katalogs",
       "howItWorks": "Kā tas strādā",
       "faq": "Jautājumi un atbildes",
       "terms": "Lietošanas noteikumi",

@@ -14,6 +14,7 @@ import { prefersReducedMotion } from '@/lib/motion';
 import { CONTACT_EMAIL } from '@/lib/site';
 
 const SERVICE_LINKS = [
+  ['catalog', '/c'], // the header carries no catalog (owner, 2026-11-13): it lives here and on the home page
   ['howItWorks', '/how-it-works'],
   ['faq', '/faq'],
 ] as const;

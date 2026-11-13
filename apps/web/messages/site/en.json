@@ -31,6 +31,7 @@
     "service": "Yoyo",
     "documents": "Documents",
     "links": {
+      "catalog": "Catalog",
       "howItWorks": "How it works",
       "faq": "Questions and answers",
       "terms": "Terms of service",
