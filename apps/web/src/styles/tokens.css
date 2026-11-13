@@ -86,6 +86,7 @@
   --marquee-bg: #f4f1e6;
   --marquee-fg: #0a0b0e;
   --sticker-edge: #f4f1e6; /* die-cut edge around stickers */
+  --night: #050608; /* in the dark the night scenes go one step deeper, so the transitions still read */
 }
 
 /* Without JavaScript, still follow a dark OS until a theme is set explicitly. */
@@ -102,5 +103,6 @@
     --marquee-bg: #f4f1e6;
     --marquee-fg: #0a0b0e;
     --sticker-edge: #f4f1e6;
+    --night: #050608;
   }
 }
