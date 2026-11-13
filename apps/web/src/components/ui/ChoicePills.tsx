@@ -51,8 +51,8 @@ export function ChoicePills<T extends string>({
         {choices.map((choice, index) => {
           const checked = choice.value === value;
           const fill =
-            !checked && choice.color
-              ? { backgroundColor: STICKER_COLORS[choice.color], color: ink(choice.color) }
+            false && choice.color   // v16: no sticker fills; the chosen pill is the only filled one
+              ? { backgroundColor: STICKER_COLORS[choice.color!], color: ink(choice.color!) }
               : undefined;
           return (
             <label

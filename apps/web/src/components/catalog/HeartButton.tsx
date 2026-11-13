@@ -7,7 +7,7 @@ import { usePathname, useRouter } from '@/i18n/navigation';
 import { useFavoriteIds, useToggleFavorite } from '@/lib/catalog/use-favorites';
 import { useSession } from '@/lib/session/SessionProvider';
 
-const SPARKS = ['var(--sticker-ember)', 'var(--sticker-sun)', 'var(--sticker-blue)', 'var(--sticker-mint)', 'var(--sticker-violet)', 'var(--sticker-lavender)'];
+const SPARKS = ['var(--glow)', 'var(--paper)', 'var(--glow)', 'var(--chrome)', 'var(--glow)', 'var(--paper)']; // v16: the one light
 
 /**
  * The favourite heart (spec §8): pressed at once, it pops with sparks of the sticker palette when it
