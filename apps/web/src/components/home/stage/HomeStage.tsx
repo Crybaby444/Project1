@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Mark } from '@/components/brand/Mark';
 import { useReducedMotion } from '@/components/motion/hooks';
 import { createStage } from './scene';
+import { repaintOnThemeChange } from './repaint';
 import { mountTimelines } from './timelines';
 import './home-stage.css';
 
@@ -50,6 +51,9 @@ export default function HomeStage() {
       if (el) el.animate([{ clipPath: 'inset(0 0 0 0)' }, { clipPath: 'inset(0 0 100% 0)' }], { duration: 900, easing: 'cubic-bezier(0.65,0,0.35,1)', fill: 'forwards' }).finished.then(() => alive && setLoading(false));
       else setLoading(false);
       unmount = mountTimelines(stage, root, { mobile: window.matchMedia('(max-width: 639px)').matches });
+      const stopRepaint = repaintOnThemeChange(() => requestAnimationFrame(() => stage.paintLetters()));
+      const stopTimelines = unmount;
+      unmount = () => { stopRepaint(); stopTimelines(); };
     });
     return () => {
       alive = false;
