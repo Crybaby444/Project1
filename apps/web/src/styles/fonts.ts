@@ -1,9 +1,10 @@
-import { Onest, Unbounded } from 'next/font/google';
+import { Onest, Sofia_Sans_Extra_Condensed } from 'next/font/google';
 
 /**
  * The single place where fonts are chosen (DESIGN.md "Project adaptations" §5).
  * Both faces cover Latin Extended (Latvian) and Cyrillic (Russian).
- * Swap in licensed Lateral / Aeonik Pro here later; components only use the
+ * v16 (owner, 2026-11-13): Sofia Sans Extra Condensed 800/900 for display, Onest for text.
+ * Swap in licensed faces here later; components only use the
  * `font-display` / `font-body` utilities, which read these variables.
  */
 /*
@@ -12,7 +13,7 @@ import { Onest, Unbounded } from 'next/font/google';
  * served, fetched only by pages whose text needs them (unicode-range). Preloading every subset of both
  * faces meant ~280 KB ahead of the first paint on every visit (Lighthouse mobile, plan 12).
  */
-export const displayFont = Unbounded({
+export const displayFont = Sofia_Sans_Extra_Condensed({
   subsets: ['latin'], // preloaded; latin-ext and cyrillic are still served (see above)
   weight: ['800', '900'],
   variable: '--font-display-face',
@@ -21,7 +22,7 @@ export const displayFont = Unbounded({
 
 export const bodyFont = Onest({
   subsets: ['latin'], // preloaded; latin-ext and cyrillic are still served (see above)
-  weight: ['500', '700'],
+  weight: ['400', '500', '600', '700'],
   variable: '--font-body-face',
   display: 'swap',
 });

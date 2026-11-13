@@ -28,14 +28,14 @@
  * Big display titles sized from their container, not the viewport: the longest word (--fit-chars,
  * set by displayFit()) fits the width of the nearest @container on one line, up to --fit-max (the
  * DESIGN.md size on wide screens) and down to --fit-min. --fit-em is the width of one uppercase
- * letter of the display face, in em, for the widest title word measured (Unbounded "WORK", 1.02),
- * plus a little room. A word that still does not fit
+ * letter of the display face, in em, for the widest title word measured (Sofia Sans Extra Condensed
+ * 900 "WORK", 0.51; "WWWW" 0.65), plus room for Latvian and Cyrillic capitals. A word that still does not fit
  * (an unexpected translation) is hyphenated in the page language or, failing that, broken.
  */
 @utility text-display-fit {
   font-size: clamp(
     var(--fit-min, 1rem),
-    calc(100cqi / (var(--fit-chars, 10) * var(--fit-em, 1.04))),
+    calc(100cqi / (var(--fit-chars, 10) * var(--fit-em, 0.6))),
     var(--fit-max, 2.75rem)
   );
   -webkit-hyphens: auto;
