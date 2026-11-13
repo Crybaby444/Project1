@@ -372,3 +372,15 @@ html[data-page-switch]::view-transition-new(site-header) {
   font-weight: 700;
   color: #000;
 }
+
+/* The drop cursor (components/motion/DropCursor) replaces the arrow and the hand for a mouse; text fields keep their caret. */
+@media (pointer: fine) {
+  body.has-cursor,
+  body.has-cursor a,
+  body.has-cursor button,
+  body.has-cursor [role='button'],
+  body.has-cursor label,
+  body.has-cursor summary {
+    cursor: none;
+  }
+}

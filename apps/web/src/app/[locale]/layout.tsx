@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
+import { DropCursor } from '@/components/motion/DropCursor';
 import { freshLoadScript } from '@/components/motion/fresh-load';
 import { themeInitScript } from '@/components/theme/theme-script';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
@@ -71,6 +72,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
                   <div lang={locale} className="contents">
                     <SiteFooter />
                   </div>
+                  <DropCursor />
                 </ToastProvider>
               </ThemeProvider>
             </SessionProvider>
