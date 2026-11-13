@@ -10,7 +10,7 @@ function MailIcon() {
   return (
     <span
       aria-hidden="true"
-      className="bg-sticker-sun rounded-pill inline-grid size-8 shrink-0 place-items-center border border-black text-black"
+      className="bg-ink text-canvas rounded-pill inline-grid size-8 shrink-0 place-items-center"
     >
       <svg
         viewBox="0 0 24 24"

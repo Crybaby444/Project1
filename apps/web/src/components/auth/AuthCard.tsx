@@ -1,9 +1,8 @@
 'use client';
 
 import { useEffect, useRef, type ReactNode } from 'react';
-import { Bob } from '@/components/motion/Parallax';
 import { LetterRise } from '@/components/motion/LetterRise';
-import { Sticker } from '@/components/ui/Sticker';
+import { Mark } from '@/components/brand/Mark';
 import { displayFit } from '@/lib/display-fit';
 
 type AuthCardProps = {
@@ -21,9 +20,8 @@ type AuthCardProps = {
 };
 
 /**
- * The calm frame of the sign-in screens (DESIGN.md §7): canvas, one surface card with a 1px outline
- * and 40px corners, the display face only in the title, and a single small sticker as the accent.
- * Motion: the card rises in on load, the title's letters follow, and the sticker floats gently.
+ * The calm frame of the sign-in screens (v16): no card, a centred column on the paper — the mark on its
+ * string, a big display title, the form under a hairline. Motion: the column rises in, the letters follow.
  */
 export function AuthCard({ title, subtitle, children, footer, focusTitle = false }: AuthCardProps) {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -34,24 +32,20 @@ export function AuthCard({ title, subtitle, children, footer, focusTitle = false
   return (
     <main className="flex flex-1 justify-center px-4 py-10 sm:py-16">
       <div className="flex w-full max-w-[30rem] flex-col gap-6">
-        <section
-          data-card-rise=""
-          className="border-ink bg-surface rounded-card-xl relative flex flex-col gap-6 border p-6 sm:p-8"
-        >
-          <Bob className="absolute -top-9 right-6">
-            <Sticker kind="yoyo" size={52} className="rotate-12" />
-          </Bob>
-          <header className="@container flex flex-col gap-2">
+        <section data-card-rise="" className="relative flex flex-col gap-7">
+          <header className="@container flex flex-col items-center gap-3 text-center">
+            <Mark size={36} />
             <h1
               ref={titleRef}
               tabIndex={focusTitle ? -1 : undefined}
-              style={displayFit(title, { max: '2.75rem' })}
+              style={displayFit(title, { max: '4.5rem' })}
               className="font-display text-display-fit leading-[0.85] font-black uppercase focus:outline-none"
             >
               <LetterRise text={title} stagger={18} />
             </h1>
-            {subtitle && <p className="text-base leading-relaxed">{subtitle}</p>}
+            {subtitle && <p className="text-ink/75 max-w-[26em] text-base leading-relaxed">{subtitle}</p>}
           </header>
+          <div aria-hidden="true" className="bg-ink/15 h-px" />
           {children}
         </section>
         {footer && <div className="flex flex-col items-center gap-2 text-center text-sm">{footer}</div>}

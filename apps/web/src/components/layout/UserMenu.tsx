@@ -28,8 +28,6 @@ export function avatarColor(id: string): string {
   return COLOURS[hash % COLOURS.length]!;
 }
 
-/** Black initials, except on violet, where only white text reaches AA contrast. */
-const textOn = (colour: string) => (colour === STICKER_COLORS.violet ? '#fff' : '#000');
 
 const ITEM =
   'flex min-h-10 w-full items-center rounded-pill px-4 text-left text-sm font-bold transition-colors duration-150 ease-yoyo hover:bg-mist focus-visible:bg-mist';
@@ -56,7 +54,6 @@ export function UserMenu({ user }: { user: PublicUser }) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLUListElement>(null);
   const menuId = useId();
-  const colour = avatarColor(user.id);
 
   const items = () => Array.from(menuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? []);
 
@@ -123,7 +120,7 @@ export function UserMenu({ user }: { user: PublicUser }) {
         aria-controls={open ? menuId : undefined}
         onClick={() => (open ? close({ refocus: false }) : openAt('first'))}
         onKeyDown={onButtonKeyDown}
-        style={{ backgroundColor: colour, color: textOn(colour) }}
+        style={{ backgroundColor: 'var(--ink)', color: 'var(--canvas)' }}   // v16: one ink disc for everyone
         className="border-ink rounded-pill ease-yoyo inline-grid size-10 place-items-center border text-[13px] font-bold tracking-[0.03em] [filter:drop-shadow(0_0_0.6px_var(--sticker-edge))] transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96]"
       >
         {/* The name says what the button is and still contains the visible initials (WCAG 2.5.3). */}
@@ -132,7 +129,7 @@ export function UserMenu({ user }: { user: PublicUser }) {
       </button>
 
       {open && (
-        <div className="border-ink bg-surface animate-pop-in rounded-card absolute top-full right-0 z-40 mt-2 w-72 max-w-[calc(100vw-2rem)] origin-top-right border p-2">
+        <div className="border-ink bg-surface animate-pop-in rounded-media absolute top-full right-0 z-40 mt-2 w-72 max-w-[calc(100vw-2rem)] origin-top-right border p-2">
           <div className="border-ink/15 mb-1 border-b px-4 pt-2 pb-3">
             <p className="truncate text-sm font-bold">{user.name}</p>
             <p className="truncate text-sm">{user.email}</p>
@@ -148,7 +145,7 @@ export function UserMenu({ user }: { user: PublicUser }) {
               >
                 <span>{td('myDeals')}</span>
                 {waiting > 0 && (
-                  <span className="rounded-pill bg-sticker-sun animate-pop-in inline-flex min-h-6 min-w-6 items-center justify-center border border-black px-2 text-[12px] text-black tabular-nums">
+                  <span className="rounded-pill bg-ink text-canvas animate-pop-in inline-flex min-h-6 min-w-6 items-center justify-center px-2 text-[12px] tabular-nums">
                     <span aria-hidden="true">{waiting}</span>
                     <span className="sr-only">{td('waiting', { count: waiting })}</span>
                   </span>

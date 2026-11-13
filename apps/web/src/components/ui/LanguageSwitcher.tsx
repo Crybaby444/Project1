@@ -364,11 +364,11 @@ function LanguageSticker() {
     <svg
       viewBox="0 0 20 20"
       aria-hidden="true"
-      className="group-hover:animate-sticker-wobble hidden size-[18px] shrink-0 [filter:drop-shadow(0_0_0.6px_var(--sticker-edge))] sm:block"
+      className="hidden size-[18px] shrink-0 sm:block"
     >
-      <circle cx="10" cy="10" r="8.5" fill="var(--sticker-sun)" stroke="#000" strokeWidth="1" />
-      <ellipse cx="10" cy="10" rx="3.6" ry="8.5" fill="none" stroke="#000" strokeWidth="1" />
-      <path d="M1.8 7.2h16.4M1.8 12.8h16.4" fill="none" stroke="#000" strokeWidth="1" />
+      <circle cx="10" cy="10" r="8.5" fill="none" stroke="currentColor" strokeWidth="1.3" />
+      <ellipse cx="10" cy="10" rx="3.6" ry="8.5" fill="none" stroke="currentColor" strokeWidth="1.3" />
+      <path d="M1.8 7.2h16.4M1.8 12.8h16.4" fill="none" stroke="currentColor" strokeWidth="1.3" />
     </svg>
   );
 }
@@ -377,7 +377,7 @@ function LanguageSticker() {
 function CheckSticker({ visible }: { visible: boolean }) {
   return (
     <svg viewBox="0 0 20 20" aria-hidden="true" className={`size-5 shrink-0 ${visible ? '' : 'invisible'}`}>
-      <circle cx="10" cy="10" r="8.5" fill="var(--sticker-mint)" stroke="#000" strokeWidth="1" />
+      <circle cx="10" cy="10" r="8.5" fill="var(--glow)" stroke="#000" strokeWidth="1" />
       <path
         d="m6 10.3 2.7 2.7L14 7.6"
         fill="none"

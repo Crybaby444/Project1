@@ -13,8 +13,11 @@ const PORTED = [
   'app/[locale]/c',
   'app/[locale]/search',
   'app/[locale]/listings/[id]/page.tsx',
+  'components/auth',
+  'app/[locale]/(auth)',
+  'components/layout',
 ];
-const BANNED = /bg-sticker-|[\s:'\"`]-?rotate-(?!45\b)[1-9]|rounded-card\b|rounded-card-xl|<Sticker\b|<Card\b/;   // an arrow turning 45° is fine
+const BANNED = /bg-sticker-|[\s:'\"`]-?rotate-(?:[1-9]|1[0-2])\b|rounded-card\b|rounded-card-xl|<Sticker\b|<Card\b/;   // tilts of 1–12° are the sticker look; an icon turning 45/90/180° is fine
 
 const files = (p: string): string[] => {
   const abs = join(__dirname, '..', p);

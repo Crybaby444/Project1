@@ -4,7 +4,7 @@ export function FormError({ message }: { message: string | null }) {
   return (
     <div
       role="alert"
-      className="border-ink bg-surface rounded-card flex items-start gap-3 border-2 px-4 py-3 text-sm font-bold"
+      className="border-sticker-ember rounded-media flex items-start gap-3 border-l-4 bg-[color-mix(in_srgb,var(--sticker-ember)_8%,transparent)] px-4 py-3 text-sm font-bold"
     >
       <svg viewBox="0 0 24 24" aria-hidden="true" className="text-sticker-ember mt-0.5 size-5 shrink-0">
         <circle cx="12" cy="12" r="10" fill="currentColor" />

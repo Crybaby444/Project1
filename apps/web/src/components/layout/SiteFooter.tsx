@@ -7,7 +7,6 @@ import { TransitionLink } from '@/components/motion/TransitionLink';
 import { ThemeSelect } from '@/components/theme/ThemeSelect';
 import { shouldAnimateLanguageChange, switchLanguage } from '@/components/ui/switch-language';
 import { Mark } from '@/components/brand/Mark';
-import { Sticker } from '@/components/ui/Sticker';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { displayFit } from '@/lib/display-fit';
 import { prefersReducedMotion } from '@/lib/motion';
@@ -98,7 +97,6 @@ export function SiteFooter() {
         <div className="flex flex-col items-start gap-4">
           <div className="flex items-center gap-3">
             <Mark size={32} />
-            <Sticker kind="star" size={40} className="-rotate-12" />
           </div>
           <p className="max-w-[36ch] text-lg leading-snug font-bold">{t('tagline')}</p>
           <div className="flex flex-col gap-1">
