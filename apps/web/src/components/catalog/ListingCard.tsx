@@ -4,7 +4,6 @@ import type { CatalogItem } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRef, type CSSProperties } from 'react';
 import { TransitionLink } from '@/components/motion';
-import { Card } from '@/components/ui/Card';
 import { formatEuros } from '@/lib/listings/money';
 import { listingPath } from '@/lib/seo';
 import { HeartButton } from './HeartButton';
@@ -38,9 +37,9 @@ export function ListingCard({
   const photo = useRef<HTMLImageElement>(null);
 
   return (
-    <Card interactive className={`group/card relative h-full ${unavailable ? 'opacity-70' : ''}`}>
-      <article className="flex h-full flex-col gap-3 p-3">
-        <div className="border-ink bg-mist rounded-media relative aspect-[4/3] overflow-hidden border">
+    <div className={`group/card relative h-full ${unavailable ? 'opacity-70' : ''}`}>
+      <article className="flex h-full flex-col gap-3">
+        <div className="border-ink/15 bg-mist rounded-media relative aspect-[4/3] overflow-hidden border">
           {item.cover ? (
             // eslint-disable-next-line @next/next/no-img-element -- sized by the API's storage, 640×480
             <img
@@ -58,12 +57,13 @@ export function ListingCard({
             <div className="grid size-full place-items-center text-sm italic">{t('noPhoto')}</div>
           )}
           {item.weeklyDiscountPercent > 0 && !unavailable && (
-            <span className="bg-sticker-sun rounded-pill absolute bottom-3 left-3 -rotate-3 border border-black px-2.5 py-0.5 text-xs font-bold text-black">
+            <span className="rounded-pill bg-ink text-canvas absolute bottom-3 left-3 inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold">
+              <i aria-hidden="true" className="size-1.5 rounded-full bg-[var(--glow)]" />
               {t('weekly', { percent: item.weeklyDiscountPercent })}
             </span>
           )}
         </div>
-        <div className="flex flex-1 flex-col gap-1 px-1 pb-1">
+        <div className="flex flex-1 flex-col gap-1">
           <h3
             className="line-clamp-2 text-base leading-snug font-bold [overflow-wrap:anywhere] hyphens-auto"
             lang={item.contentLocale}
@@ -72,7 +72,7 @@ export function ListingCard({
               href={listingPath(item.id, item.title)}
               // Only the photo of the card that was opened flies to the item page.
               onClick={() => photo.current?.setAttribute('data-shared-photo', '')}
-              className="after:rounded-card focus-visible:after:outline-ink rounded-[6px] after:absolute after:inset-0 after:content-[''] focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-3"
+              className="after:rounded-media focus-visible:after:outline-ink rounded-[6px] after:absolute after:inset-0 after:content-[''] focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-3"
             >
               {item.title}
             </TransitionLink>
@@ -81,7 +81,7 @@ export function ListingCard({
             <p className="text-sm font-bold">{t('unavailable')}</p>
           ) : (
             <>
-              <p className="text-lg font-bold tabular-nums">
+              <p className="font-display text-[1.7rem] leading-[0.9] font-black uppercase tabular-nums">
                 {t('perDay', { price: formatEuros(item.dailyCents, locale) })}
               </p>
               <p className="text-sm">
@@ -107,7 +107,7 @@ export function ListingCard({
           )}
         </div>
       </article>
-      <HeartButton listingId={item.id} title={item.title} className="absolute top-5 right-5 z-10" />
-    </Card>
+      <HeartButton listingId={item.id} title={item.title} className="absolute top-3 right-3 z-10" />
+    </div>
   );
 }
