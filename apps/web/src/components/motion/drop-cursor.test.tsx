@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { stubMatchMedia } from '@/test/match-media';
 import { DropCursor } from './DropCursor';
-import { fillPoints, headRadius } from './drop-cursor';
+import { fillPoints, headRadius, moved } from './drop-cursor';
 
 const rect = (left: number, top: number, width: number, height: number) =>
   ({ left, top, width, height, right: left + width, bottom: top + height, x: left, y: top }) as DOMRect;
@@ -44,8 +44,30 @@ describe('fillPoints', () => {
   });
 });
 
+describe('moved', () => {
+  it('says a frame can be skipped when nothing has moved more than a twentieth of a pixel', () => {
+    const a = new Float32Array([10, 20, 9, 30, 40, 5]);
+    expect(moved(a, new Float32Array([10.01, 20, 9, 30, 40.02, 5]))).toBe(false);
+    expect(moved(a, new Float32Array([10, 20, 9.3, 30, 40, 5]))).toBe(true);
+  });
+});
+
 describe('DropCursor', () => {
-  afterEach(() => stubMatchMedia(false));
+  afterEach(() => {
+    stubMatchMedia(false);
+    delete (navigator as { webdriver?: boolean }).webdriver;
+  });
+
+  it('stays off under automation (no GPU in CI: a full-screen shader every frame starves the tests)', () => {
+    const base = window.matchMedia;
+    window.matchMedia = (q: string) => ({ ...base(q), matches: q.includes('pointer: fine') }) as MediaQueryList;
+    const on = render(<DropCursor />);
+    expect(on.container.querySelector('canvas'), 'a mouse gets the drop').not.toBeNull();
+    on.unmount();
+    Object.defineProperty(navigator, 'webdriver', { value: true, configurable: true });
+    const { container } = render(<DropCursor />);
+    expect(container.querySelector('canvas')).toBeNull();
+  });
 
   it('is not drawn on a touch screen', () => {
     stubMatchMedia(false); // (pointer: fine) answers false in the stub

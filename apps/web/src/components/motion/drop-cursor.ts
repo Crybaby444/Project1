@@ -29,3 +29,12 @@ export function fillPoints(rect: DOMRect, n = 5, hover: number, plop: number): D
     r: rad * hover * (plop / 26),
   }));
 }
+
+/**
+ * Whether the drops moved since the last drawn frame (more than a twentieth of a pixel or of a radius).
+ * A still cursor needs no new frame: the full-screen shader is the costly part, so it is skipped.
+ */
+export function moved(prev: Float32Array, next: Float32Array, eps = 0.05): boolean {
+  for (let i = 0; i < next.length; i++) if (Math.abs(next[i]! - prev[i]!) > eps) return true;
+  return false;
+}

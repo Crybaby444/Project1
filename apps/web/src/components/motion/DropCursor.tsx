@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useSyncExternalStore } from 'react';
-import { fillPoints, headRadius } from './drop-cursor';
+import { fillPoints, headRadius, moved } from './drop-cursor';
 import { useReducedMotion } from './hooks';
 
 const TAIL = 11;
@@ -27,10 +27,14 @@ void main(){ vec2 p = gl_FragCoord.xy; float f = 0.0;
  * spills over it with an elastic plop; a click splashes. Only for a mouse or trackpad, never with
  * reduced motion; touch screens keep their own behaviour.
  */
+const subscribeNone = () => () => {};
+
 export function DropCursor() {
   const fine = useSyncExternalStore(subscribeFine, () => window.matchMedia?.(FINE).matches === true, () => false);
   const reduce = useReducedMotion();
-  const on = fine && !reduce;
+  // Under automation (navigator.webdriver) there is no GPU: the shader would starve the tests beside it.
+  const automated = useSyncExternalStore(subscribeNone, () => navigator.webdriver === true, () => false);
+  const on = fine && !reduce && !automated;
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -50,12 +54,14 @@ export function DropCursor() {
 
     document.body.classList.add('has-cursor');
     const pts = new Float32Array(N * 3);
+    const drawn = new Float32Array(N * 3).fill(-1e9);
+    let drawnA = -1;
     const tail = Array.from({ length: TAIL }, () => ({ x: -200, y: -200 }));
     const fill = Array.from({ length: FILL }, () => ({ x: -200, y: -200 }));
     const range = document.createRange();
     const s = { x: -200, y: -200, px: -200, py: -200, speed: 0, a: 0, ta: 0, hover: 0, plop: 0, plopV: 0, burst: 0, el: null as Element | null };
 
-    const size = () => { c.width = c.clientWidth; c.height = c.clientHeight; gl.viewport(0, 0, c.width, c.height); };
+    const size = () => { c.width = c.clientWidth; c.height = c.clientHeight; gl.viewport(0, 0, c.width, c.height); drawn.fill(-1e9); };
     size();
     const onMove = (e: PointerEvent) => { s.x = e.clientX; s.y = e.clientY; s.ta = 1; };
     const onLeave = () => { s.ta = 0; };
@@ -97,8 +103,12 @@ export function DropCursor() {
         b.x += (hx + (t.x - hx) * s.hover - b.x) * 0.3; b.y += (hy + (t.y - hy) * s.hover - b.y) * 0.3;
         const k = (TAIL + j) * 3; pts[k] = b.x; pts[k + 1] = c.height - b.y; pts[k + 2] = t.r;
       });
-      gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.uniform3fv(uP, pts); gl.uniform1f(uA, s.a); gl.drawArrays(gl.TRIANGLES, 0, 3);
+      // A still cursor keeps its last frame: no full-screen shader pass until something moves.
+      if (moved(drawn, pts) || Math.abs(s.a - drawnA) > 0.002) {
+        gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.uniform3fv(uP, pts); gl.uniform1f(uA, s.a); gl.drawArrays(gl.TRIANGLES, 0, 3);
+        drawn.set(pts); drawnA = s.a;
+      }
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);
