@@ -17,15 +17,15 @@ import { Head, Html, Preview } from 'react-email';
  * that the dark block overrides with !important.
  */
 
-/** DESIGN.md tokens in light and dark. */
-const LIGHT = { canvas: '#dceeff', surface: '#ffffff', ink: '#000000', ctaBg: '#000000', ctaFg: '#ffffff' };
-const DARK = { canvas: '#0d0e16', surface: '#171823', ink: '#ffffff', ctaBg: '#ffffff', ctaFg: '#000000' };
+/** The v16 palette (DESIGN.md): cream paper, night ink, in light and dark. Black and white only. */
+const LIGHT = { canvas: '#f4f1e6', surface: '#faf8f1', ink: '#0a0b0e', line: '#d8d4c7', ctaBg: '#0a0b0e', ctaFg: '#f4f1e6' };
+const DARK = { canvas: '#0a0b0e', surface: '#121419', ink: '#f4f1e6', line: '#2a2c31', ctaBg: '#f4f1e6', ctaFg: '#0a0b0e' };
 
 const FONT =
   "Onest, Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
-/** The display face of the site (Unbounded), then heavy system faces that cover Latvian and Cyrillic. */
+/** The display face of the site (Sofia Sans Extra Condensed), then condensed heavy system faces that cover Latvian and Cyrillic. */
 const DISPLAY_FONT =
-  "Unbounded, 'Arial Black', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+  "'Sofia Sans Extra Condensed', 'Arial Narrow', 'Helvetica Neue Condensed Black', 'Roboto Condensed', Impact, 'Arial Black', sans-serif";
 
 const CSS = `
 :root { color-scheme: light dark; supported-color-schemes: light dark; }
@@ -37,7 +37,7 @@ body { margin: 0; padding: 0; -webkit-text-size-adjust: 100%; }
 }
 @media (prefers-color-scheme: dark) {
   .yoyo-body, .yoyo-canvas { background-color: ${DARK.canvas} !important; color: ${DARK.ink} !important; }
-  .yoyo-card { background-color: ${DARK.surface} !important; border-color: ${DARK.ink} !important; }
+  .yoyo-card { background-color: ${DARK.surface} !important; border-color: ${DARK.line} !important; }
   .yoyo-text, .yoyo-link { color: ${DARK.ink} !important; }
   .yoyo-cta-cell { background-color: ${DARK.ctaBg} !important; border-color: ${DARK.ctaBg} !important; }
   .yoyo-cta { background-color: ${DARK.ctaBg} !important; color: ${DARK.ctaFg} !important; }
@@ -58,20 +58,29 @@ const styles = {
   wordmark: {
     ...text,
     fontFamily: DISPLAY_FONT,
-    fontSize: '28px',
+    fontSize: '26px',
     fontWeight: 900,
-    letterSpacing: '0.02em',
-    lineHeight: '32px',
-    margin: '0 0 16px',
+    letterSpacing: '0.01em',
+    lineHeight: '28px',
+    margin: '0 0 18px',
   },
   card: {
     backgroundColor: LIGHT.surface,
-    border: `1px solid ${LIGHT.ink}`,
-    borderRadius: '20px',
+    border: `1px solid ${LIGHT.line}`,
+    borderRadius: '14px',
     borderCollapse: 'separate' as const,
   },
   cardCell: { padding: '32px 28px' },
-  heading: { ...text, fontSize: '24px', fontWeight: 700, lineHeight: '30px', margin: '0 0 16px' },
+  heading: {
+    ...text,
+    fontFamily: DISPLAY_FONT,
+    fontSize: '38px',
+    fontWeight: 900,
+    lineHeight: '38px',
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0',
+    margin: '0 0 20px',
+  },
   paragraph: { ...text, fontSize: '16px', fontWeight: 500, lineHeight: '24px', margin: '0 0 16px' },
   fine: { ...text, fontSize: '14px', fontWeight: 500, lineHeight: '20px', margin: '16px 0 0' },
   link: { color: LIGHT.ink, textDecoration: 'underline', wordBreak: 'break-all' as const },
@@ -112,7 +121,7 @@ export function Layout(props: { lang: string; preview: string; footer: string; c
                     <tr>
                       <td align="left">
                         <p className="yoyo-text" style={styles.wordmark}>
-                          YOYO
+                          <span aria-hidden="true">● </span>YOYO
                         </p>
                         <table
                           role="presentation"
@@ -198,7 +207,7 @@ export function CallToAction({ href, children }: { href: string; children: strin
     `<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${url}" ` +
     `style="height:${BUTTON_HEIGHT}px;v-text-anchor:middle;width:${outlookWidth(children)}px;" arcsize="50%" ` +
     `strokecolor="${LIGHT.ink}" strokeweight="1px" fillcolor="${LIGHT.ctaBg}">` +
-    `<w:anchorlock/><center style="color:${LIGHT.ctaFg};font-family:'Arial Black',Arial,sans-serif;font-size:14px;font-weight:bold;letter-spacing:0.4px;">${label}</center>` +
+    `<w:anchorlock/><center style="color:${LIGHT.ctaFg};font-family:'Arial Black',Arial,sans-serif;font-size:14px;font-weight:bold;letter-spacing:0.6px;text-transform:uppercase;">${label}</center>` +
     `</v:roundrect>` +
     `<![endif]-->` +
     `<!--[if !mso]><!-->` +
@@ -207,7 +216,7 @@ export function CallToAction({ href, children }: { href: string; children: strin
     `style="background-color:${LIGHT.ctaBg};border:1px solid ${LIGHT.ink};${pill}">` +
     `<a class="yoyo-cta" href="${url}" target="_blank" rel="noopener" ` +
     `style="background-color:${LIGHT.ctaBg};color:${LIGHT.ctaFg};display:inline-block;${pill}` +
-    `font-family:${DISPLAY_FONT};font-size:14px;font-weight:800;letter-spacing:0.032em;` +
+    `font-family:${DISPLAY_FONT};font-size:14px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;` +
     `line-height:20px;padding:13px 24px;text-align:center;text-decoration:none;-webkit-text-size-adjust:none;">` +
     `<span class="yoyo-cta-label" style="color:${LIGHT.ctaFg};text-decoration:none;">${label}</span>` +
     `</a></td></tr></table>` +
