@@ -56,7 +56,7 @@ describe('catalog search', () => {
     expect(res.body).toMatchObject({ total: 1, page: 1, pageSize: 24 });
     const item = res.body.items[0];
     expect(Object.keys(item).sort()).toEqual(
-      ['categoryId', 'city', 'condition', 'contentLocale', 'cover', 'dailyCents', 'depositCents', 'district', 'id', 'ownerId', 'publishedAt', 'title', 'weeklyDiscountPercent'].sort(),
+      ['categoryId', 'city', 'condition', 'contentLocale', 'cover', 'dailyCents', 'depositCents', 'district', 'id', 'ownerId', 'publishedAt', 'rating', 'reviewCount', 'title', 'weeklyDiscountPercent'].sort(),
     );
     expect(JSON.stringify(res.body)).not.toMatch(/"lat"|"lng"|version|rejectionReason/);
   });

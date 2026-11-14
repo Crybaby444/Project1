@@ -37,7 +37,10 @@ export function availableItem(overrides: Partial<AvailableItem['listing']> = {})
       completedDeals: 2,
       listingCount: 1,
       rating: null,
+      reviewCount: 0,
     },
+    rating: null,
+    reviewCount: 0,
     blocked: [{ start: '2026-12-10', end: '2026-12-11' }],
     booking: { servicePercent: 10, maxAdvanceDays: 180, today: '2026-12-01' },
   };
@@ -58,6 +61,8 @@ export function catalogItem(overrides: Partial<CatalogItem> = {}): CatalogItem {
     ownerId: 'owner-1',
     contentLocale: 'en',
     publishedAt: '2026-11-01T10:00:00.000Z',
+    rating: null,
+    reviewCount: 0,
     ...overrides,
   };
 }

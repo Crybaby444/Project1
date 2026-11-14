@@ -67,6 +67,8 @@ model User {
   payments         Payment[]
   payouts          Payout[]
   favorites        Favorite[]
+  reviewsWritten   Review[]  @relation("ReviewAuthor")
+  reviewsReceived  Review[]  @relation("ReviewSubject")
 }
 
 /// One refresh token of a session. Rotation chains tokens of the same family; reuse revokes the family.
@@ -268,6 +270,7 @@ model Listing {
   @@index([status, categoryId])
   /// The catalog's default order. Trigram indexes on yoyo_fold(title…) live in migration `catalog` only.
   @@index([status, publishedAt(sort: Desc), id(sort: Desc)], map: "Listing_catalog_idx")
+  reviews               Review[]
 }
 
 /// A photo of a listing; the file lives in the storage provider under `storageKey` (random, never the
@@ -462,6 +465,7 @@ model Booking {
   contract Contract?
   photos   BookingPhoto[]
   payments Payment[]
+  reviews  Review[]
 
   @@index([renterId, updatedAt])
   @@index([ownerId, updatedAt])
@@ -706,4 +710,34 @@ model IdempotencyKey {
 
   @@id([userId, key])
   @@index([createdAt])
+}
+
+enum ReviewRole {
+  RENTER
+  OWNER
+}
+
+/// A review after a completed deal (plan 10): the author's stars and words about the other side; the
+/// renter also scores the item. One per side per deal. Shown blind: only once both sides wrote, or the
+/// review window closed (@yoyo/domain reviewIsPublic). Stars are 1–5 (CHECK constraints in the migration).
+model Review {
+  id         String     @id @default(cuid())
+  bookingId  String
+  authorId   String
+  subjectId  String
+  listingId  String
+  authorRole ReviewRole
+  rating     Int
+  itemRating Int?
+  text       String
+  createdAt  DateTime   @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  author  User    @relation("ReviewAuthor", fields: [authorId], references: [id], onDelete: Restrict)
+  subject User    @relation("ReviewSubject", fields: [subjectId], references: [id], onDelete: Restrict)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Restrict)
+
+  @@unique([bookingId, authorId])
+  @@index([subjectId, createdAt])
+  @@index([listingId, createdAt])
 }

@@ -17,6 +17,7 @@ import { DealPhotos } from './DealPhotos';
 import { DealStatusBadge } from './DealStatusBadge';
 import { DealSummary } from './DealSummary';
 import { DealTimeline } from './DealTimeline';
+import { DealReviewsPanel } from '@/components/reviews/DealReviewsPanel';
 
 /** Answers that mean "the deal moved on while you were looking": read it again and say so. */
 const MOVED = new Set(['DEADLINE_PASSED', 'ACTION_NOT_ALLOWED', 'INVALID_STATUS', 'IDEMPOTENCY_KEY_REUSED']);
@@ -212,6 +213,9 @@ export function DealView({ id }: { id: string }) {
             </section>
           )}
           <DealPhotos booking={booking} />
+          {booking.status === 'COMPLETED' && booking.viewerRole !== 'ADMIN' && (
+            <DealReviewsPanel bookingId={booking.id} otherName={booking.viewerRole === 'RENTER' ? booking.owner.name : booking.renter.name} />
+          )}
         </div>
 
         <aside className="flex flex-col gap-6 lg:sticky lg:top-24">

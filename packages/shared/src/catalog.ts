@@ -113,6 +113,9 @@ export const CatalogItemSchema = z.object({
   ownerId: z.string(),
   contentLocale: z.enum(LOCALES),
   publishedAt: z.iso.datetime().nullable(),
+  /** The average of the renters' item stars in public reviews (one decimal), or null with none. */
+  rating: z.number().nullable(),
+  reviewCount: z.number().int(),
 });
 
 export type CatalogItem = z.infer<typeof CatalogItemSchema>;
@@ -185,8 +188,10 @@ export const OwnerSummarySchema = z.object({
   completedDeals: z.number().int(),
   /** Items in the catalog. */
   listingCount: z.number().int(),
-  /** Average review score; reviews arrive with plan 10, until then always null. */
+  /** The average of the public reviews about them (one decimal), or null with none. */
   rating: z.number().nullable(),
+  /** How many public reviews are about them. */
+  reviewCount: z.number().int(),
 });
 
 export type OwnerSummary = z.infer<typeof OwnerSummarySchema>;
@@ -196,6 +201,9 @@ export const AvailableItemSchema = z.object({
   available: z.literal(true),
   listing: PublicListingSchema,
   owner: OwnerSummarySchema,
+  /** The renters' item stars in public reviews (one decimal), or null with none. */
+  rating: z.number().nullable(),
+  reviewCount: z.number().int(),
   /** Days nobody can book: other people's bookings and the days the owner closed, from today on. */
   blocked: z.array(DatePeriodSchema),
   /** What the price calculator needs to match the API's own quote. */

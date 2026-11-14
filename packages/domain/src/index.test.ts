@@ -58,6 +58,8 @@ describe('@yoyo/domain entry point', () => {
         'availableActions',
         // reviews
         'canReview',
+      'reviewDeadline',
+      'reviewIsPublic',
       ].sort(),
     );
   });

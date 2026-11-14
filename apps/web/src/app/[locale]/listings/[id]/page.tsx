@@ -16,6 +16,7 @@ import { categoryLink, categoryName, pathTo } from '@/lib/catalog/categories';
 import { itemJsonLd } from '@/lib/catalog/item-json-ld';
 import { loadCategories, loadItem, loadSearch } from '@/lib/catalog/server-api';
 import { itemSeo, seoMetadata, siteOrigin } from '@/lib/seo';
+import { ReviewsFeed } from '@/components/reviews/ReviewsFeed';
 
 type Props = { params: Promise<{ locale: string; id: string }> };
 
@@ -133,6 +134,7 @@ export default async function ItemPage({ params }: Props) {
 
 async function Available({ item, title, category, locale }: { item: AvailableItem; title: string; category: CategoryNode | undefined; locale: Locale }) {
   const t = await getTranslations('item');
+  const tr = await getTranslations('reviews');
   const { listing, owner } = item;
   const seo = itemSeo(listing, true);
   return (
@@ -163,6 +165,12 @@ async function Available({ item, title, category, locale }: { item: AvailableIte
             </section>
           )}
           <ItemFacts listing={listing} attributes={category?.attributes ?? []} />
+          <ReviewsFeed
+            source={{ kind: 'listing', id: listing.id }}
+            heading={
+              <h2 className="font-display m-0 text-[clamp(1.8rem,3vw,2.8rem)] leading-[0.9] font-black uppercase">{tr('itemHeading')}</h2>
+            }
+          />
         </div>
         <aside className="flex flex-col gap-6 lg:sticky lg:top-6">
           <BookingPanel item={item} />

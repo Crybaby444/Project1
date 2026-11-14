@@ -7,6 +7,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { serializeCatalogItem } from './catalog.serializer';
 import { CatalogService } from './catalog.service';
 import { CATALOG_VISIBLE_WHERE } from './visibility';
+import { ReviewsService } from '../reviews/reviews.service';
 
 /** Items shown on a profile. */
 const PROFILE_ITEMS = 48;
@@ -17,6 +18,7 @@ export class ProfilesService {
     private readonly prisma: PrismaService,
     private readonly catalog: CatalogService,
     @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider,
+    private readonly reviews: ReviewsService,
   ) {}
 
   private readonly urlFor: UrlFor = (key, variant) => this.storage.url(key, variant);
@@ -34,6 +36,7 @@ export class ProfilesService {
         take: PROFILE_ITEMS,
       }),
     ]);
-    return { user: { ...summary, about: user.about }, listings: listings.map((l) => serializeCatalogItem(l, this.urlFor)) };
+    const ratings = await this.reviews.ratingsOfListings(listings.map((l) => l.id));
+    return { user: { ...summary, about: user.about }, listings: listings.map((l) => serializeCatalogItem(l, this.urlFor, ratings.get(l.id))) };
   }
 }
