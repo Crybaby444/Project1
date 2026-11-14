@@ -13,8 +13,9 @@ const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">Op
 const START = { lat: 56.9496, lng: 24.1052 };
 
 const PIN = `<svg viewBox="0 0 36 44" width="36" height="44" aria-hidden="true">
-  <path d="M18 43s15-14.2 15-25.5A15 15 0 0 0 3 17.5C3 28.8 18 43 18 43z" fill="#fb4903" stroke="#000" stroke-width="1.5"/>
-  <circle cx="18" cy="17.5" r="6" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <path d="M18 43s15-14.2 15-25.5A15 15 0 0 0 3 17.5C3 28.8 18 43 18 43z" fill="var(--ink)" stroke="var(--canvas)" stroke-width="2"/>
+  <circle cx="18" cy="17.5" r="7" fill="var(--canvas)"/>
+  <path d="M11 17.5h14" stroke="var(--ink)" stroke-width="2"/>
 </svg>`;
 
 type Props = {

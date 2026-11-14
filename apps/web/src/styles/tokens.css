@@ -76,7 +76,8 @@
 }
 
 /* Dark theme, set explicitly by the theme script or the user's choice. */
-[data-theme='dark'] {
+/* The home always shows the light palette (owner, 2026-11-14): the dark tokens skip a page with the home. */
+[data-theme='dark']:not(:has([data-home-root])) {
   color-scheme: dark;
   --canvas: #0a0b0e;
   --surface: #121419;
@@ -97,7 +98,7 @@
 
 /* Without JavaScript, still follow a dark OS until a theme is set explicitly. */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) {
+  :root:not([data-theme]):not(:has([data-home-root])) {
     color-scheme: dark;
     --canvas: #0a0b0e;
     --surface: #121419;

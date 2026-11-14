@@ -363,7 +363,12 @@
         "submit": "Dzēst neatgriezeniski",
         "done": "Jūsu konts ir izdzēsts."
       },
-      "cancel": "Atcelt"
+      "cancel": "Atcelt",
+      "data": {
+        "title": "Tavi dati",
+        "intro": "Lejupielādē visu, ko Yoyo glabā par tevi — profilu, sludinājumus, darījumus, atsauksmes un maku — vienā failā, ko vari paturēt vai pārnest citur.",
+        "download": "Lejupielādēt manus datus"
+      }
     }
   },
   "listingRules": {

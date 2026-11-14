@@ -363,7 +363,12 @@
         "submit": "Delete for good",
         "done": "Your account has been deleted."
       },
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "data": {
+        "title": "Your data",
+        "intro": "Download everything Yoyo holds about you — profile, listings, deals, reviews and wallet — as one file you can keep or take elsewhere.",
+        "download": "Download my data"
+      }
     }
   },
   "listingRules": {
