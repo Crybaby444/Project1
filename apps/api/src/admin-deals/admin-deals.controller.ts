@@ -8,6 +8,7 @@ import {
   AdminBookingsResponseSchema,
   AdminLedgerQuerySchema,
   AdminLedgerResponseSchema,
+  AdminOverviewSchema,
   BookingResponseSchema,
   LedgerSummarySchema,
   ResolveRequestSchema,
@@ -15,6 +16,7 @@ import {
   type AdminBookingDetail,
   type AdminBookingsResponse,
   type AdminLedgerResponse,
+  type AdminOverview,
   type BookingResponse,
   type LedgerSummary,
   type PublicUser,
@@ -27,6 +29,7 @@ import { ApiErrors } from '../common/api-errors';
 import { Idempotent } from '../idempotency/idempotent.decorator';
 import { BookingsService } from '../bookings/bookings.service';
 import { AdminDealsService } from './admin-deals.service';
+import { AdminOverviewService } from './admin-overview.service';
 
 class AdminBookingsQueryDto extends createZodDto(AdminBookingsQuerySchema) {}
 class AdminBookingsResponseDto extends createZodDto(AdminBookingsResponseSchema) {}
@@ -38,6 +41,7 @@ class AdminAccountsResponseDto extends createZodDto(AdminAccountsResponseSchema)
 class LedgerSummaryDto extends createZodDto(LedgerSummarySchema) {}
 class ResolveRequestDto extends createZodDto(ResolveRequestSchema) {}
 class BookingResponseDto extends createZodDto(BookingResponseSchema) {}
+class AdminOverviewDto extends createZodDto(AdminOverviewSchema) {}
 
 /** Deals and money for administrators: read everything, decide disputes. */
 @ApiTags('admin')
@@ -48,7 +52,15 @@ export class AdminDealsController {
   constructor(
     private readonly deals: AdminDealsService,
     private readonly bookings: BookingsService,
+    private readonly overviews: AdminOverviewService,
   ) {}
+
+  @Get('overview')
+  @ZodResponse({ status: 200, type: AdminOverviewDto, description: 'The first screen of the admin panel: what waits, totals, money, 14 days and the newest activity' })
+  @ApiErrors(401, 403)
+  overview(): Promise<AdminOverview> {
+    return this.overviews.overview();
+  }
 
   @Get('bookings')
   @ZodResponse({ status: 200, type: AdminBookingsResponseDto, description: 'Deals, 50 a page; `disputed=true` for the dispute queue' })

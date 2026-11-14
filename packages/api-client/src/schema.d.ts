@@ -756,6 +756,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/users/{id}/block": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminController_block"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{id}/unblock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminController_unblock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/listings/{id}/photos": {
         parameters: {
             query?: never;
@@ -1054,6 +1086,22 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["OffersController_withdraw"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminDealsController_overview"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -2289,6 +2337,31 @@ export interface components {
             }[];
             total: number;
         };
+        AdminUserResponseDto_Output: {
+            user: {
+                id: string;
+                email: string;
+                name: string;
+                city: string | null;
+                about: string | null;
+                /** @enum {string} */
+                locale: "en" | "lv" | "ru";
+                /** @enum {string} */
+                theme: "system" | "light" | "dark";
+                /** @enum {string} */
+                role: "USER" | "ADMIN";
+                emailVerified: boolean;
+                hasPassword: boolean;
+                phone: string | null;
+                phoneVerified: boolean;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                blockedAt: string | null;
+                /** Format: date-time */
+                deletedAt: string | null;
+            };
+        };
         PhotoUploadResponseDto_Output: {
             photo: {
                 id: string;
@@ -2587,6 +2660,46 @@ export interface components {
                 answeredAt: string | null;
                 /** Format: date-time */
                 createdAt: string;
+            }[];
+        };
+        AdminOverviewDto_Output: {
+            users: {
+                total: number;
+                new7d: number;
+                blocked: number;
+            };
+            listings: {
+                pendingReview: number;
+                published: number;
+                total: number;
+            };
+            deals: {
+                open: number;
+                requested: number;
+                disputed: number;
+                completed30d: number;
+            };
+            money: {
+                turnover30dCents: number;
+                revenueCents: number;
+                escrowCents: number;
+                depositsCents: number;
+                walletsCents: number;
+            };
+            ledgerOk: boolean;
+            series: {
+                day: string;
+                users: number;
+                deals: number;
+            }[];
+            activity: {
+                /** @enum {string} */
+                kind: "USER_JOINED" | "LISTING_SUBMITTED" | "DEAL_REQUESTED" | "DISPUTE_OPENED";
+                /** Format: date-time */
+                at: string;
+                id: string;
+                title: string;
+                who: string;
             }[];
         };
         AdminBookingsResponseDto_Output: {
@@ -5906,6 +6019,113 @@ export interface operations {
             };
         };
     };
+    AdminController_block: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The account is blocked and signed out everywhere */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUserResponseDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminController_unblock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The account may sign in again */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUserResponseDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
     PhotosController_upload: {
         parameters: {
             query?: never;
@@ -7115,6 +7335,44 @@ export interface operations {
             };
             /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminDealsController_overview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The first screen of the admin panel: what waits, totals, money, 14 days and the newest activity */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminOverviewDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
