@@ -700,3 +700,54 @@ const ru: LegalDoc = {
 };
 
 export const PRIVACY_POLICY: LegalTexts = { en, lv, ru };
+
+/** The sentences that change once analytics is on (NEXT_PUBLIC_GA_ID set), per language: [now, then]. */
+const WITH_ANALYTICS: Record<'en' | 'lv' | 'ru', [string, string][]> = {
+  en: [
+    ['We keep only what the service needs. No advertising, no tracking, no selling of data.', 'We keep only what the service needs. No advertising and no selling of data; visits are counted only if you agree.'],
+    [
+      'We do not use analytics, advertising or tracking tools, and we do not buy data about you from anyone.',
+      'If you agree in the cookie question, we count visits with Google Analytics 4 (Google Ireland Limited processes it for us) to see which pages help; without your consent it sets no cookies and sends no identifiers. We use no advertising or tracking tools and buy no data about you from anyone. You can withdraw consent under "Cookie settings" at the bottom of every page.',
+    ],
+    [
+      'We use only the cookies the site needs to work. The [cookie policy](/cookies) lists every one of them.',
+      'We use the cookies the site needs to work and, only with your consent, Google Analytics cookies. The [cookie policy](/cookies) lists every one of them.',
+    ],
+  ],
+  lv: [
+    ['Mēs glabājam tikai to, kas vajadzīgs pakalpojumam. Nekādas reklāmas, izsekošanas vai datu pārdošanas.', 'Mēs glabājam tikai to, kas vajadzīgs pakalpojumam. Nekādas reklāmas vai datu pārdošanas; apmeklējumus skaitām tikai ar jūsu piekrišanu.'],
+    [
+      'Mēs neizmantojam analītikas, reklāmas vai izsekošanas rīkus un nepērkam datus par jums ne no viena.',
+      'Ja piekrītat sīkdatņu jautājumā, mēs skaitām apmeklējumus ar Google Analytics 4 (mūsu vārdā datus apstrādā Google Ireland Limited), lai redzētu, kuras lapas palīdz; bez jūsu piekrišanas tā neiestata sīkdatnes un nesūta identifikatorus. Mēs neizmantojam reklāmas vai izsekošanas rīkus un nepērkam datus par jums ne no viena. Piekrišanu varat atsaukt sadaļā "Sīkdatņu iestatījumi" katras lapas apakšā.',
+    ],
+    [
+      'Mēs izmantojam tikai tās sīkdatnes, bez kurām vietne nedarbojas. Tās visas uzskaitītas [sīkdatņu politikā](/cookies).',
+      'Mēs izmantojam sīkdatnes, bez kurām vietne nedarbojas, un tikai ar jūsu piekrišanu — Google Analytics sīkdatnes. Tās visas uzskaitītas [sīkdatņu politikā](/cookies).',
+    ],
+  ],
+  ru: [
+    ['Мы храним только то, что нужно сервису. Никакой рекламы, слежки и продажи данных.', 'Мы храним только то, что нужно сервису. Никакой рекламы и продажи данных; посещения считаем только с вашего согласия.'],
+    [
+      'Мы не используем инструменты аналитики, рекламы и слежки и не покупаем данные о вас ни у кого.',
+      'Если вы согласитесь в вопросе о cookie, мы считаем посещения с помощью Google Analytics 4 (данные по нашему поручению обрабатывает Google Ireland Limited), чтобы видеть, какие страницы помогают; без согласия она не ставит cookie и не отправляет идентификаторы. Мы не используем инструменты рекламы и слежки и не покупаем данные о вас ни у кого. Отозвать согласие можно в «Настройках cookie» внизу каждой страницы.',
+    ],
+    [
+      'Мы используем только cookie, без которых сайт не работает. Все они перечислены в [политике cookie](/cookies).',
+      'Мы используем cookie, без которых сайт не работает, и только с вашего согласия — cookie Google Analytics. Все они перечислены в [политике cookie](/cookies).',
+    ],
+  ],
+};
+
+/** The privacy policy as it stands: with analytics on, the sentences about analytics say what is true. */
+export function privacyPolicy(analytics: boolean): LegalTexts {
+  if (!analytics) return PRIVACY_POLICY;
+  const swap = (doc: LegalDoc, locale: 'en' | 'lv' | 'ru'): LegalDoc => {
+    let json = JSON.stringify(doc);
+    for (const [now, then] of WITH_ANALYTICS[locale]) {
+      if (!json.includes(JSON.stringify(now).slice(1, -1))) throw new Error(`privacy ${locale}: sentence not found: ${now.slice(0, 40)}`);
+      json = json.split(JSON.stringify(now).slice(1, -1)).join(JSON.stringify(then).slice(1, -1));
+    }
+    return JSON.parse(json) as LegalDoc;
+  };
+  return { en: swap(PRIVACY_POLICY.en, 'en'), lv: swap(PRIVACY_POLICY.lv, 'lv'), ru: swap(PRIVACY_POLICY.ru, 'ru') };
+}

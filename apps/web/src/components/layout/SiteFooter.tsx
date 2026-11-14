@@ -10,6 +10,8 @@ import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { prefersReducedMotion } from '@/lib/motion';
 import { CONTACT_EMAIL } from '@/lib/site';
 import { useRememberLocale } from '@/lib/locale/use-locale-choice';
+import { CookieSettingsButton } from '@/components/analytics/ConsentBanner';
+import { GA_ID } from '@/lib/analytics/consent';
 
 const SERVICE_LINKS = [
   ['catalog', '/c'], // the header carries no catalog (owner, 2026-11-13): it lives here and on the home page
@@ -136,6 +138,7 @@ export function SiteFooter() {
           <p className="text-ink/75 m-0 text-[13px] font-medium">{t('copyright', { year: new Date().getFullYear() })}</p>
           <div className="-mx-3 flex flex-wrap items-center gap-x-6 gap-y-1">
             <FooterLanguages label={t('languageLabel')} />
+            <CookieSettingsButton gaId={GA_ID} className="text-ink/70 hover:text-ink inline-flex min-h-10 items-center px-3 text-[12px] font-bold tracking-[0.03em] whitespace-nowrap uppercase" />
             <div data-theme-control>
               <ThemeSelect compact />
             </div>
