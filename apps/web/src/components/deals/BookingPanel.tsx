@@ -175,7 +175,7 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
         )}
       </section>
 
-      <aside className={`border-ink/15 bg-surface rounded-media flex flex-col gap-5 self-start border p-5 sm:p-6 ${layout === 'wide' ? 'lg:sticky lg:top-24' : ''}`}>
+      <aside className={`border-ink flex flex-col gap-5 self-start border-t-2 pt-6 ${layout === 'wide' ? 'lg:sticky lg:top-24' : ''}`}>
         <PriceSummary quote={priced.quote} />
         {own ? (
           <p className="bg-mist rounded-media p-4 text-sm font-bold">{t('own')}</p>

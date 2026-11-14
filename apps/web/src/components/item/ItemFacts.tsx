@@ -43,16 +43,16 @@ export function ItemFacts({ listing, attributes }: { listing: PublicListing; att
           <h2 id="item-details" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
             {t('details')}
           </h2>
-          <dl className="border-ink/15 rounded-media divide-ink/20 divide-y border">
+          <dl className="border-ink/15 divide-ink/15 divide-y border-y">
             {listing.condition && (
-              <div className="grid gap-1 px-4 py-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] sm:gap-4">
-                <dt className="font-bold">{t('condition')}</dt>
+              <div className="grid gap-1 py-3.5 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] sm:gap-4">
+                <dt className="text-ink/75 font-bold">{t('condition')}</dt>
                 <dd>{tCondition(listing.condition)}</dd>
               </div>
             )}
             {rows.map((row) => (
-              <div key={row.key} className="grid gap-1 px-4 py-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] sm:gap-4">
-                <dt className="font-bold hyphens-auto [overflow-wrap:anywhere]">{row.label}</dt>
+              <div key={row.key} className="grid gap-1 py-3.5 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] sm:gap-4">
+                <dt className="text-ink/75 font-bold hyphens-auto [overflow-wrap:anywhere]">{row.label}</dt>
                 <dd className="[overflow-wrap:anywhere]" lang={row.free ? listing.contentLocale : undefined}>
                   {row.text}
                 </dd>
@@ -70,13 +70,13 @@ export function ItemFacts({ listing, attributes }: { listing: PublicListing; att
           <ul className="flex flex-col gap-2">
             {listing.rules.preset.map((rule) => (
               <li key={rule} className="flex gap-2">
-                <span aria-hidden="true" className="mt-1.5 size-2 shrink-0 rounded-full bg-[var(--glow)] ring-1 ring-black/15" />
+                <span aria-hidden="true" className="bg-ink mt-2 size-1.5 shrink-0 rounded-full" />
                 {tRules(rule)}
               </li>
             ))}
             {listing.rules.custom.map((rule, index) => (
               <li key={index} className="flex gap-2 [overflow-wrap:anywhere]" lang={listing.contentLocale}>
-                <span aria-hidden="true" className="mt-1.5 size-2 shrink-0 rounded-full bg-[var(--glow)] ring-1 ring-black/15" />
+                <span aria-hidden="true" className="bg-ink mt-2 size-1.5 shrink-0 rounded-full" />
                 {rule}
               </li>
             ))}

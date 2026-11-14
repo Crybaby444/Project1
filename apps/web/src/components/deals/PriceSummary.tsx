@@ -20,7 +20,7 @@ export function PriceSummary({ quote, title }: { quote: QuoteView | null; title?
         {title ?? t('title')}
       </h3>
       {quote === null ? (
-        <p className="border-ink/40 rounded-media flex min-h-44 items-center justify-center border border-dashed p-4 text-center text-sm">
+        <p className="border-ink/15 text-ink/80 flex min-h-24 items-center border-y py-4 text-sm">
           {t('empty')}
         </p>
       ) : (
