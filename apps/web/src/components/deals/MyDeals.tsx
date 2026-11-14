@@ -110,7 +110,6 @@ function Empty({ role, group }: { role: DealRole; group: DealGroup }) {
   return (
     <EmptyState
       title={t(`empty.${role}`)}
-      body={t(`empty.${role}Body`)}
       action={
         role === 'owner' ? (
           <Button href="/listings/new" size="lg">

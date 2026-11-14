@@ -70,6 +70,7 @@ export const RATE_LIMITS = {
   suggest: (ip: string): RateRule[] => [{ key: `suggest:ip:${ip}`, limit: 120, windowMs: MINUTE }],
   /** 120 favourite changes a minute per user. */
   favorite: (userId: string): RateRule[] => [{ key: `favorite:user:${userId}`, limit: 120, windowMs: MINUTE }],
+  dataExport: (userId: string): RateRule[] => [{ key: `export:user:${userId}`, limit: 5, windowMs: 60 * MINUTE }],
   review: (userId: string): RateRule[] => [{ key: `review:user:${userId}`, limit: 20, windowMs: MINUTE }],
   /** 30 chat messages a minute and 500 a day per user. */
   chatMessage: (userId: string): RateRule[] => [

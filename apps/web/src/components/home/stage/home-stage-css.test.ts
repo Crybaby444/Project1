@@ -13,4 +13,17 @@ describe('home-stage.css', () => {
     expect(rule).toMatch(/--ink:\s*inherit/);
     expect(rule).toMatch(/background:\s*var\(--canvas\)/);
   });
+
+  it('hangs the home header as a chin: a solid page-coloured bar with a rounded bottom, no blending', () => {
+    const at = css.indexOf('html[data-staged] [data-site-header] {');
+    const rule = css.slice(at, css.indexOf('}', at));
+    expect(rule).toMatch(/background:\s*var\(--canvas\)/);
+    expect(rule).toMatch(/border-radius:\s*0 0/);
+    expect(rule).not.toMatch(/mix-blend-mode:\s*difference/);
+  });
+
+  it('hides the theme controls on the home (it always shows the light palette), in the global styles', () => {
+    const globals = readFileSync(join(__dirname, '../../../app/globals.css'), 'utf8');
+    expect(globals).toMatch(/\[data-theme-control\][^{]*\{[^}]*display:\s*none/);
+  });
 });
