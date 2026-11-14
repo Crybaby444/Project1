@@ -42,6 +42,11 @@ describe('v16 palette', () => {
     expect(ratio(pick(dark, 'night-dim'), pick(dark, 'night'))).toBeGreaterThanOrEqual(3);
   });
 
+  it('keeps the home in the light palette whatever the theme (owner, 2026-11-14)', () => {
+    expect(css).toMatch(/\[data-theme='dark'\]:not\(:has\(\[data-home-root\]\)\)\s*\{/);
+    expect(css).toMatch(/:root:not\(\[data-theme\]\):not\(:has\(\[data-home-root\]\)\)/);
+  });
+
   it('is black and white only: the accent is a neutral chrome grey, no blue (owner, 2026-11-13)', () => {
     expect(css).toMatch(/--glow:\s*#a9aeb6/i);
     expect(css).not.toMatch(/#9ed2ff/i);

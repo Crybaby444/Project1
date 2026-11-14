@@ -69,7 +69,7 @@ test.describe('site footer', () => {
   });
 
   test('the footer theme choice switches the theme', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/faq'); // the home has no theme to choose
     const footer = page.getByRole('contentinfo');
     await footer.getByText(en.theme.dark, { exact: true }).click();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');

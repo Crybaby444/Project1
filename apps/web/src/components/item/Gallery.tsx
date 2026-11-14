@@ -48,6 +48,11 @@ export function Gallery({ listingId, title, photos }: Props) {
           fetchPriority={index === 0 ? 'high' : 'auto'}
           className="size-full object-cover"
         />
+        {photos.length > 1 && (
+          <span aria-hidden="true" className="bg-ink/80 text-canvas font-display absolute top-3 left-3 rounded-full px-3 py-1 text-[1.1rem] leading-none font-black tabular-nums backdrop-blur-sm">
+            {String(index + 1).padStart(2, '0')} / {String(photos.length).padStart(2, '0')}
+          </span>
+        )}
         <button
           type="button"
           onClick={() => setOpen(true)}
@@ -68,8 +73,8 @@ export function Gallery({ listingId, title, photos }: Props) {
                 aria-current={at === index || undefined}
                 aria-label={t('show', { number: at + 1, count: photos.length })}
                 onClick={() => setIndex(at)}
-                className={`rounded-media ease-yoyo block overflow-hidden border transition-transform duration-150 hover:-translate-y-0.5 ${
-                  at === index ? 'border-ink/15 outline-ink outline-2 outline-offset-2' : 'border-ink/40'
+                className={`rounded-media ease-yoyo block overflow-hidden border transition-[transform,opacity] duration-150 hover:-translate-y-0.5 ${
+                  at === index ? 'border-ink/15 outline-ink outline-2 outline-offset-2' : 'border-ink/15 opacity-70 hover:opacity-100'
                 }`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element -- 160×120 thumbnails */}
@@ -140,8 +145,11 @@ export function GalleryDialog({ open, onClose, photos, index, onIndex, title }: 
             <IconButton label={t('previous')} onClick={() => go(-1)} disabled={count < 2}>
               <span aria-hidden="true">←</span>
             </IconButton>
-            <p className="text-sm font-bold tabular-nums" aria-live="polite">
-              {t('counter', { number: index + 1, count })}
+            <p className="font-display m-0 text-[1.6rem] leading-none font-black tabular-nums" aria-live="polite">
+              <span className="sr-only">{t('counter', { number: index + 1, count })}</span>
+              <span aria-hidden="true">
+                {String(index + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}
+              </span>
             </p>
             <IconButton label={t('next')} onClick={() => go(1)} disabled={count < 2}>
               <span aria-hidden="true">→</span>
