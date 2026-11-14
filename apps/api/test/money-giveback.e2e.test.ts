@@ -9,9 +9,29 @@ import { FakeClock } from './support/fake-clock';
 import { resetListings, seedListing, signedInClient, type Client } from './support/listings';
 import { createTestApp, type TestApp } from './support/test-app';
 
-/** The test card provider, but its next refunds fail as if the provider were down. */
+/**
+ * The test card provider, but its next refunds fail as if the provider were down. With `meet` set, each
+ * charge waits until that many charges are in flight, so two payments of one deal are both charged
+ * before either is saved (otherwise a fast first payment makes the second fail its check before
+ * charging, and there is nothing to give back).
+ */
 class FlakyRefunds extends FakeCardProvider {
   failures = 0;
+  meet = 0;
+  private waiting: (() => void)[] = [];
+
+  override async charge(input: Parameters<FakeCardProvider['charge']>[0]) {
+    if (this.meet > 0) {
+      await new Promise<void>((resolve) => {
+        this.waiting.push(resolve);
+        if (this.waiting.length >= this.meet) {
+          this.meet = 0;
+          this.waiting.splice(0).forEach((go) => go());
+        }
+      });
+    }
+    return super.charge(input);
+  }
 
   override async refund(input: { paymentRef: string; amountCents: number; idempotencyKey: string }) {
     if (this.failures > 0) {
@@ -55,6 +75,7 @@ describe('giving back a charge the deal did not take', () => {
     await step(owner, booking.id, { type: 'SIGN' });
     const [t1, t2] = [await cardToken(renter), await cardToken(renter)];
     cards.failures = 1;
+    cards.meet = 2;
     const pay = (token: string) =>
       renter.post(`/bookings/${booking.id}/events`).set('Idempotency-Key', newKey()).send({ version: 3, event: { type: 'PAY', method: 'CARD', cardToken: token } });
     const results = await Promise.all([pay(t1), pay(t2)]);
