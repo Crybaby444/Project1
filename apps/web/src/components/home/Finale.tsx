@@ -15,7 +15,7 @@ export async function Finale() {
         <div data-shade aria-hidden="true" className="hidden" />
         <div className="@container w-full text-center">
           <h2
-            style={displayFit(`${t('finale.line1')} ${t('finale.line2')}`, { min: '2.6rem', max: '19rem' })}
+            style={displayFit(`${t('finale.line1')} ${t('finale.line2')}`, { min: '2.6rem', max: 'min(19rem, 20svh)' })}
             className="font-display text-display-fit m-0 leading-[0.96] font-black uppercase [--fit-em:0.62]"
           >
             <span className="block">{t('finale.line1')}</span>
