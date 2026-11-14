@@ -57,4 +57,12 @@ describe('SiteFooter', () => {
     renderFooter();
     expect(screen.getByRole('contentinfo')).toBeInTheDocument();
   });
+
+  it('is minimal (v16): no giant wordmark, no tagline, no column headings', () => {
+    renderFooter();
+    const footer = screen.getByRole('contentinfo');
+    expect(within(footer).queryByText('YOYO')).toBeNull();
+    expect(within(footer).queryByText(siteLv.footer.tagline)).toBeNull();
+    expect(footer.querySelectorAll('h2')).toHaveLength(0);
+  });
 });

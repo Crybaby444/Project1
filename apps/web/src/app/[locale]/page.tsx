@@ -6,6 +6,7 @@ import { Finale } from '@/components/home/Finale';
 import { Hero } from '@/components/home/Hero';
 import { NightScene } from '@/components/home/NightScene';
 import { WhatIsYoyo } from '@/components/home/WhatIsYoyo';
+import { HomeLoader } from '@/components/home/HomeLoader';
 import { HomeStageLoader } from '@/components/home/HomeStageLoader';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { pageMetadata } from '@/lib/seo';
@@ -53,6 +54,7 @@ export default async function HomePage({ params }: Params) {
   // v16: five scenes. As plain markup each shows its final state; the home stage (Task 6–7) plays them.
   return (
     <main data-home-root className="flex flex-1 flex-col">
+      <HomeLoader />
       <JsonLd data={structuredData(meta('description'))} />
       <div data-intro>
         <Hero />

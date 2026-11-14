@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { Button } from '@/components/ui/Button';
+import { displayFit } from '@/lib/display-fit';
 import { LIST_ITEM_HREF } from '@/lib/site';
 
 /**
@@ -12,8 +13,11 @@ export async function Finale() {
     <section data-home="finale" className="bg-canvas text-ink relative">
       <div data-pin className="relative grid min-h-svh place-items-center overflow-hidden px-4 sm:px-8">
         <div data-shade aria-hidden="true" className="hidden" />
-        <div className="w-full text-center">
-          <h2 className="font-display m-0 text-[22vw] leading-[0.96] font-black uppercase sm:text-[clamp(5rem,15vw,19rem)]">
+        <div className="@container w-full text-center">
+          <h2
+            style={displayFit(`${t('finale.line1')} ${t('finale.line2')}`, { min: '2.6rem', max: '19rem' })}
+            className="font-display text-display-fit m-0 leading-[0.96] font-black uppercase [--fit-em:0.62]"
+          >
             <span className="block">{t('finale.line1')}</span>
             <span className="block text-transparent [-webkit-text-stroke:2px_var(--ink)]">{t('finale.line2')}</span>
           </h2>

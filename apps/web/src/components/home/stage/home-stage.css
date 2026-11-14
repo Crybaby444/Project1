@@ -203,32 +203,3 @@ html[data-staged] [data-shade] {
   pointer-events: none;
   background: var(--night);
 }
-
-/* The loader: the stringless mark turns while the set is built, then the paper lifts. */
-.home-loader {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: grid;
-  place-items: center;
-  background: var(--night);
-  color: var(--paper);
-}
-.home-loader svg {
-  animation: home-loader-turn 1.1s linear infinite;
-}
-.home-loader b {
-  position: absolute;
-  left: 32px;
-  bottom: 22px;
-  font-family: var(--font-display-face), sans-serif;
-  font-size: 64px;
-  line-height: 0.8;
-  font-weight: 900;
-  font-variant-numeric: tabular-nums;
-}
-@keyframes home-loader-turn {
-  to {
-    transform: rotate(360deg);
-  }
-}

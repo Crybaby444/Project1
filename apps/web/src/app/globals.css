@@ -384,3 +384,75 @@ html[data-page-switch]::view-transition-new(site-header) {
     cursor: none;
   }
 }
+
+/* The night rows of the home: each track is two identical halves and slides by one, endlessly. */
+@keyframes night-run {
+  to {
+    transform: translateX(calc(-50% - 0.15em));
+  }
+}
+@keyframes scroll-cue {
+  0% { transform: translateY(-4px); opacity: 0; }
+  40% { opacity: 1; }
+  100% { transform: translateY(6px); opacity: 0; }
+}
+
+/* The home loader (components/home/HomeLoader): the inverse of the page — night on cream, cream on night.
+   The mark turns, the count runs 0 → 100 in CSS; it fades away by itself if no stage takes it over. */
+@property --home-count {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 0;
+}
+.home-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: var(--ink);
+  color: var(--canvas);
+  animation: home-loader-out 0.5s ease 4.5s forwards;
+}
+html[data-staged] .home-loader {
+  animation: none; /* the stage is here: it decides when the loader goes */
+}
+.home-loader-mark {
+  animation: home-loader-turn 1.1s linear infinite;
+}
+.home-loader-count {
+  position: absolute;
+  left: max(16px, 3.4vw);
+  bottom: 22px;
+  font-family: var(--font-display-face), sans-serif;
+  font-size: 64px;
+  line-height: 0.8;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  counter-reset: home-count var(--home-count);
+  animation: home-count 1.6s cubic-bezier(0.45, 0, 0.2, 1) forwards;
+}
+.home-loader-count::after {
+  content: counter(home-count);
+}
+@keyframes home-count {
+  to {
+    --home-count: 100;
+  }
+}
+@keyframes home-loader-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes home-loader-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-loader {
+    display: none;
+  }
+}

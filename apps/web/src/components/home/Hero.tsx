@@ -28,7 +28,12 @@ export async function Hero() {
         <p data-reveal className="m-0 max-w-[22em] text-[clamp(1rem,1.25vw,1.2rem)] leading-snug font-medium">
           {t('line')}
         </p>
-        <span aria-hidden="true" className="text-ink/60 hidden text-xs font-semibold sm:block">
+        <span aria-hidden="true" className="text-ink/60 hidden justify-items-center gap-1.5 text-xs font-semibold sm:grid">
+          {/* The mouse with its wheel rolling down (the concept's scroll cue). */}
+          <svg viewBox="0 0 14 22" fill="none" className="h-[22px] w-[14px]">
+            <rect x="1" y="1" width="12" height="20" rx="6" stroke="currentColor" strokeWidth="1.5" />
+            <path d="M7 6v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="animate-[scroll-cue_1.8s_cubic-bezier(0.2,0.8,0.2,1)_infinite] motion-reduce:animate-none" />
+          </svg>
           {t('scroll')}
         </span>
         <div className="flex flex-wrap justify-center gap-2 sm:justify-end">
