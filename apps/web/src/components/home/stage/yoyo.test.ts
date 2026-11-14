@@ -1,7 +1,7 @@
 import { Mesh } from 'three';
 import { describe, expect, it } from 'vitest';
 import { createStage } from './scene';
-import { makeYoyo } from './yoyo';
+import { makeYoyo, inkMaterial, yoyoLook } from './yoyo';
 
 describe('makeYoyo', () => {
   it('is two lathe halves, an axle, and the logo slit on both faces', () => {
@@ -19,5 +19,23 @@ describe('createStage', () => {
     const canvas = document.createElement('canvas');
     canvas.getContext = (() => null) as typeof canvas.getContext;
     expect(createStage(canvas, { mobile: false })).toBeNull();
+  });
+});
+
+describe('yoyoLook', () => {
+  it('is the logo\'s ink by default, chrome only when asked for (?yoyo=chrome), to compare', () => {
+    expect(yoyoLook('')).toBe('ink');
+    expect(yoyoLook('?yoyo=chrome')).toBe('chrome');
+    expect(yoyoLook('?x=1&yoyo=chrome')).toBe('chrome');
+    expect(yoyoLook('?yoyo=gold')).toBe('ink');
+  });
+});
+
+describe('inkMaterial', () => {
+  it('is a matte, non-metal solid in the given colour, not a mirror', () => {
+    const m = inkMaterial('#0a0b0e');
+    expect(m.metalness).toBe(0);
+    expect(m.roughness).toBeGreaterThan(0.4);
+    expect('#' + m.color.getHexString()).toBe('#0a0b0e');
   });
 });

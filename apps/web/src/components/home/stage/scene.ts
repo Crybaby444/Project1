@@ -12,7 +12,7 @@ import {
   Vector3,
   WebGLRenderer,
 } from 'three';
-import { chrome, makeString, makeYoyo, studio } from './yoyo';
+import { chrome, inkMaterial, makeString, makeYoyo, studio, yoyoLook } from './yoyo';
 
 const { lerp, clamp } = MathUtils;
 export const smooth = (a: number, b: number, x: number) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
@@ -74,8 +74,12 @@ export function createStage(canvas: HTMLCanvasElement, opts: { mobile: boolean }
   let W = 1, H = 1;
   const wpp = () => VH / H;
 
-  const mat = chrome();
-  const hero = makeYoyo(mat), back = makeYoyo(mat);
+  // The logo's ink yo-yo by default; the chrome one with ?yoyo=chrome (kept to compare, owner 2026-11-14).
+  const look = yoyoLook(window.location.search);
+  const tone = (name: string, fallback: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+  const mat = look === 'ink' ? inkMaterial(tone('--ink', '#0a0b0e')) : chrome();
+  const slitColor = look === 'ink' ? tone('--canvas', '#f4f1e6') : 0x0a0b0e;
+  const hero = makeYoyo(mat, slitColor), back = makeYoyo(mat, slitColor);
   const heroString = makeString(mat), backString = makeString(mat);
   const heroLight = new PointLight(0xffffff, 0, 0, 1.4), backLight = new PointLight(0xffffff, 0, 0, 1.4);
   scene.add(hero.g, back.g, heroString, backString, heroLight, backLight);
@@ -112,6 +116,12 @@ export function createStage(canvas: HTMLCanvasElement, opts: { mobile: boolean }
     /** Draws each letter of YOYO into its own texture, in the page's ink, at its DOM size. */
     paintLetters() {
       const ink = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#0a0b0e';
+      if (look === 'ink') {
+        // The ink yo-yo follows the theme like the letters: night on cream, cream in the dark.
+        mat.color.set(ink);
+        const cut = tone('--canvas', '#f4f1e6');
+        hero.slit.color.set(cut); back.slit.color.set(cut);
+      }
       letters.forEach((L) => {
         const r = L.el.getBoundingClientRect(), cs = getComputedStyle(L.el), dpr = Math.min(window.devicePixelRatio, 2);
         L.c.width = Math.max(2, Math.round(r.width * dpr)); L.c.height = Math.max(2, Math.round(r.height * dpr));
