@@ -63,4 +63,18 @@ describe('GET /me/export — my data, machine-readable (GDPR access and portabil
     expect(text).not.toContain('Late, and the case was cracked.');
     expect(text).not.toContain(renter.user.email);
   });
+
+  it('carries my conversations with their messages', async () => {
+    const listing = await seedListing(t, owner.user, { status: 'PUBLISHED', title: 'Cordless drill' });
+    const { conversation } = (await renter.post(`/listings/${listing.id}/conversation`).expect(200)).body;
+    await renter.post(`/conversations/${conversation.id}/messages`).send({ text: 'Is it free on Saturday?' }).expect(201);
+    await owner.post(`/conversations/${conversation.id}/messages`).send({ text: 'Yes, from 10.' }).expect(201);
+    const data = (await renter.get('/me/export').expect(200)).body;
+    expect(data.conversations).toHaveLength(1);
+    expect(data.conversations[0]).toMatchObject({ item: 'Cordless drill', with: 'Olga Owner', role: 'RENTER' });
+    expect(data.conversations[0].messages.map((m: { from: string; text: string }) => [m.from, m.text])).toEqual([
+      ['me', 'Is it free on Saturday?'],
+      ['Olga Owner', 'Yes, from 10.'],
+    ]);
+  });
 });

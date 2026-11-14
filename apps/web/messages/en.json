@@ -935,5 +935,13 @@
     "noItems": "{name} has nothing for rent right now.",
     "noReviewsTitle": "No reviews yet",
     "noReviewsBody": "Reviews appear here after finished deals."
+  },
+  "consent": {
+    "label": "Cookie choice",
+    "text": "May we count visits to improve Yoyo? Google Analytics, only with your consent.",
+    "accept": "Accept",
+    "decline": "Decline",
+    "policy": "Cookie policy",
+    "settings": "Cookie settings"
   }
 }

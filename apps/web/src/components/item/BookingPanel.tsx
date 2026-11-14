@@ -4,6 +4,7 @@ import type { AvailableItem } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import { BookingPanel as DealBookingPanel } from '@/components/deals/BookingPanel';
+import { MessageOwnerButton } from '@/components/chat/MessageOwnerButton';
 import { Button } from '@/components/ui/Button';
 import { formatEuros } from '@/lib/listings/money';
 
@@ -41,6 +42,7 @@ export function BookingPanel({ item }: { item: AvailableItem }) {
           </ul>
         </div>
         <DealBookingPanel listingId={listing.id} layout="stacked" />
+        <MessageOwnerButton listingId={listing.id} ownerId={item.owner.id} />
       </section>
 
       {/* Phones: the way to the panel stays at hand while the photos and the description scroll by. */}

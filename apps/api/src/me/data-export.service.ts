@@ -21,7 +21,7 @@ export class DataExportService {
 
   async export(userId: string): Promise<Record<string, unknown>> {
     const now = this.clock.now();
-    const [user, oauth, sessions, listings, deals, written, favorites, payments, payouts, wallet, entries] = await Promise.all([
+    const [user, oauth, sessions, listings, deals, written, favorites, payments, payouts, wallet, entries, conversations] = await Promise.all([
       this.prisma.user.findUniqueOrThrow({ where: { id: userId } }),
       this.prisma.oAuthAccount.findMany({ where: { userId }, select: { provider: true, createdAt: true } }),
       this.prisma.refreshToken.findMany({
@@ -41,6 +41,16 @@ export class DataExportService {
       this.prisma.payout.findMany({ where: { userId }, orderBy: { createdAt: 'asc' } }),
       this.prisma.ledgerAccount.findUnique({ where: { id: `wallet:${userId}` } }),
       this.prisma.ledgerEntry.findMany({ where: { account: `wallet:${userId}` }, include: { operation: true }, orderBy: { id: 'asc' } }),
+      this.prisma.conversation.findMany({
+        where: { OR: [{ renterId: userId }, { ownerId: userId }] },
+        include: {
+          listing: { select: { title: true } },
+          renter: { select: { name: true } },
+          owner: { select: { name: true } },
+          messages: { orderBy: [{ createdAt: 'asc' }, { id: 'asc' }], include: { author: { select: { name: true } } } },
+        },
+        orderBy: { createdAt: 'asc' },
+      }),
     ]);
 
     // Reviews about them: every public page (the blind rule decides what is public).
@@ -137,6 +147,21 @@ export class DataExportService {
         listing: r.listing?.title ?? null,
         createdAt: r.createdAt,
       })),
+      // The talks they took part in, both sides' lines: what they saw in the chat.
+      conversations: conversations.map((c) => {
+        const asRenter = c.renterId === userId;
+        return {
+          item: c.listing.title ?? '',
+          role: asRenter ? 'RENTER' : 'OWNER',
+          with: asRenter ? c.owner.name : c.renter.name,
+          startedAt: iso(c.createdAt),
+          messages: c.messages.map((m) =>
+            m.kind === 'SYSTEM'
+              ? { from: 'Yoyo', dealStep: m.event, deal: m.bookingId, at: iso(m.createdAt) }
+              : { from: m.authorId === userId ? 'me' : (m.author?.name ?? ''), text: m.text, at: iso(m.createdAt) },
+          ),
+        };
+      }),
       favourites: favorites.map((f) => ({ listing: f.listing.id, title: f.listing.title, addedAt: iso(f.createdAt) })),
       wallet: {
         balanceCents: wallet?.balance ?? 0,

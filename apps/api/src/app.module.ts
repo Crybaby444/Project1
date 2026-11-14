@@ -27,6 +27,7 @@ import { TimersModule } from './timers/timers.module';
 import { AdminDealsModule } from './admin-deals/admin-deals.module';
 import { SettingsModule } from './settings/settings.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { ChatModule } from './chat/chat.module';
 
 @Global()
 @Module({
@@ -45,6 +46,7 @@ class EnvModule {}
     RateLimiterModule,
     SettingsModule,
     ReviewsModule,
+    ChatModule,
     AuthModule,
     MeModule,
     AdminModule,

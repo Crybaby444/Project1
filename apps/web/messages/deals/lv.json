@@ -426,5 +426,47 @@
       "closed": "Atsauksmju laiks ir beidzies.",
       "starLabel": "{count, plural, zero {# zvaigžņu} one {# zvaigzne} other {# zvaigznes}}"
     }
+  },
+  "chat": {
+    "title": "Ziņas",
+    "menu": "Ziņas",
+    "unread": "{count, plural, zero {# nelasītu} one {# nelasīta} other {# nelasītas}}",
+    "listLabel": "Sarunas",
+    "emptyTitle": "Sarunu vēl nav",
+    "emptyBody": "Pajautā īpašniekam par lietu, un saruna parādīsies šeit.",
+    "browse": "Skatīt katalogu",
+    "pick": "Izvēlies sarunu",
+    "loadFailed": "Sarunas neielādējās.",
+    "retry": "Mēģināt vēlreiz",
+    "back": "Visas sarunas",
+    "withOwner": "Īpašnieks",
+    "withRenter": "Īrnieks",
+    "about": "Par",
+    "openDeal": "Atvērt darījumu",
+    "placeholder": "Raksti ziņu",
+    "send": "Sūtīt",
+    "sending": "Sūta…",
+    "sendFailed": "Ziņa netika nosūtīta. Mēģini vēlreiz.",
+    "seen": "Izlasīts",
+    "you": "Tu",
+    "today": "Šodien",
+    "yesterday": "Vakar",
+    "noMessages": "Sasveicinies un pajautā, ko vēlies uzzināt.",
+    "messageOwner": "Rakstīt īpašniekam",
+    "messageRenter": "Rakstīt īrniekam",
+    "hint": "Maksā caur Yoyo: drošības nauda aizsargā tikai šeit apmaksātus darījumus.",
+    "system": {
+      "REQUESTED": "Nomas pieprasījums nosūtīts",
+      "ACCEPTED": "Īpašnieks pieņēma pieprasījumu",
+      "PAID": "Samaksāts. Drošības nauda iesaldēta",
+      "ACTIVE": "Lieta nodota",
+      "RETURNED": "Lieta atgriezta un tiek pārbaudīta",
+      "DAMAGE_CLAIMED": "Īpašnieks ziņoja par bojājumu",
+      "DISPUTED": "Darījums nonāca strīdā",
+      "COMPLETED": "Darījums pabeigts",
+      "DECLINED": "Īpašnieks noraidīja pieprasījumu",
+      "EXPIRED": "Pieprasījuma termiņš beidzās",
+      "CANCELLED": "Darījums atcelts"
+    }
   }
 }

@@ -2,7 +2,8 @@ import type { Locale } from '@yoyo/shared';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { LegalDocument } from '@/components/pages/LegalDocument';
-import { PRIVACY_POLICY } from '@/content/legal/privacy';
+import { privacyPolicy } from '@/content/legal/privacy';
+import { validGaId } from '@/components/analytics/Analytics';
 import { LEGAL_EFFECTIVE_DATE } from '@/content/legal/types';
 import { pageMetadata } from '@/lib/seo';
 
@@ -17,5 +18,5 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 export default async function PrivacyPage({ params }: Params) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <LegalDocument doc={PRIVACY_POLICY[locale as Locale]} effective={LEGAL_EFFECTIVE_DATE} />;
+  return <LegalDocument doc={privacyPolicy(validGaId(process.env.NEXT_PUBLIC_GA_ID) !== null)[locale as Locale]} effective={LEGAL_EFFECTIVE_DATE} />;
 }

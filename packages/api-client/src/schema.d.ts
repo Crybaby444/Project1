@@ -436,6 +436,102 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/listings/{id}/conversation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ChatController_open"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/conversations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ChatController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/conversations/unread": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ChatController_unread"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/conversations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ChatController_thread"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/conversations/{id}/messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ChatController_send"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/conversations/{id}/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ChatController_read"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/me/export": {
         parameters: {
             query?: never;
@@ -1826,6 +1922,132 @@ export interface components {
                 start: string;
                 end: string;
             }[];
+        };
+        ConversationResponseDto_Output: {
+            conversation: {
+                id: string;
+                /** @enum {string} */
+                role: "RENTER" | "OWNER";
+                listing: {
+                    id: string;
+                    title: string;
+                    photoUrl: string | null;
+                };
+                other: {
+                    id: string;
+                    name: string;
+                };
+                lastMessage: {
+                    id: string;
+                    /** @enum {string} */
+                    kind: "TEXT" | "SYSTEM";
+                    text: string;
+                    /** @enum {string|null} */
+                    event: "REQUESTED" | "ACCEPTED" | "PAID" | "ACTIVE" | "RETURNED" | "DAMAGE_CLAIMED" | "DISPUTED" | "COMPLETED" | "DECLINED" | "EXPIRED" | "CANCELLED" | null;
+                    bookingId: string | null;
+                    mine: boolean;
+                    /** Format: date-time */
+                    createdAt: string;
+                } | null;
+                /** Format: date-time */
+                lastMessageAt: string;
+                unread: number;
+            };
+        };
+        ConversationListDto_Output: {
+            items: {
+                id: string;
+                /** @enum {string} */
+                role: "RENTER" | "OWNER";
+                listing: {
+                    id: string;
+                    title: string;
+                    photoUrl: string | null;
+                };
+                other: {
+                    id: string;
+                    name: string;
+                };
+                lastMessage: {
+                    id: string;
+                    /** @enum {string} */
+                    kind: "TEXT" | "SYSTEM";
+                    text: string;
+                    /** @enum {string|null} */
+                    event: "REQUESTED" | "ACCEPTED" | "PAID" | "ACTIVE" | "RETURNED" | "DAMAGE_CLAIMED" | "DISPUTED" | "COMPLETED" | "DECLINED" | "EXPIRED" | "CANCELLED" | null;
+                    bookingId: string | null;
+                    mine: boolean;
+                    /** Format: date-time */
+                    createdAt: string;
+                } | null;
+                /** Format: date-time */
+                lastMessageAt: string;
+                unread: number;
+            }[];
+        };
+        UnreadCountDto_Output: {
+            count: number;
+        };
+        ConversationThreadDto_Output: {
+            id: string;
+            /** @enum {string} */
+            role: "RENTER" | "OWNER";
+            listing: {
+                id: string;
+                title: string;
+                photoUrl: string | null;
+            };
+            other: {
+                id: string;
+                name: string;
+            };
+            lastMessage: {
+                id: string;
+                /** @enum {string} */
+                kind: "TEXT" | "SYSTEM";
+                text: string;
+                /** @enum {string|null} */
+                event: "REQUESTED" | "ACCEPTED" | "PAID" | "ACTIVE" | "RETURNED" | "DAMAGE_CLAIMED" | "DISPUTED" | "COMPLETED" | "DECLINED" | "EXPIRED" | "CANCELLED" | null;
+                bookingId: string | null;
+                mine: boolean;
+                /** Format: date-time */
+                createdAt: string;
+            } | null;
+            /** Format: date-time */
+            lastMessageAt: string;
+            unread: number;
+            /** Format: date-time */
+            otherReadAt: string | null;
+            dealId: string | null;
+            messages: {
+                id: string;
+                /** @enum {string} */
+                kind: "TEXT" | "SYSTEM";
+                text: string;
+                /** @enum {string|null} */
+                event: "REQUESTED" | "ACCEPTED" | "PAID" | "ACTIVE" | "RETURNED" | "DAMAGE_CLAIMED" | "DISPUTED" | "COMPLETED" | "DECLINED" | "EXPIRED" | "CANCELLED" | null;
+                bookingId: string | null;
+                mine: boolean;
+                /** Format: date-time */
+                createdAt: string;
+            }[];
+        };
+        MessageRequestDto: {
+            text: string;
+        };
+        MessageResponseDto_Output: {
+            message: {
+                id: string;
+                /** @enum {string} */
+                kind: "TEXT" | "SYSTEM";
+                text: string;
+                /** @enum {string|null} */
+                event: "REQUESTED" | "ACCEPTED" | "PAID" | "ACTIVE" | "RETURNED" | "DAMAGE_CLAIMED" | "DISPUTED" | "COMPLETED" | "DECLINED" | "EXPIRED" | "CANCELLED" | null;
+                bookingId: string | null;
+                mine: boolean;
+                /** Format: date-time */
+                createdAt: string;
+            };
         };
         UpdateProfileDto: {
             name?: string;
@@ -4409,6 +4631,266 @@ export interface operations {
             };
             /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ChatController_open: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description My conversation with the item's owner, started when there is none */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationResponseDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ChatController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description My conversations, newest activity first */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationListDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ChatController_unread: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description How many lines I have not read, over all conversations */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnreadCountDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ChatController_thread: {
+        parameters: {
+            query?: {
+                after?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A conversation with its messages, oldest first (only newer than `after`, when given) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationThreadDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ChatController_send: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MessageRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Sends a plain-text message */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ChatController_read: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

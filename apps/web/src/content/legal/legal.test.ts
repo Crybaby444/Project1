@@ -1,9 +1,9 @@
 import { LOCALES, SESSION_HINT_COOKIE, THEME_COOKIE, type Locale } from '@yoyo/shared';
 import { describe, expect, it } from 'vitest';
 import { SERVICE_FACTS } from '@/lib/site';
-import { COOKIES_POLICY } from './cookies';
+import { COOKIES_POLICY, cookiesPolicy } from './cookies';
 import { describeOperator } from './operator';
-import { PRIVACY_POLICY } from './privacy';
+import { PRIVACY_POLICY, privacyPolicy } from './privacy';
 import { TERMS } from './terms';
 import type { Block, LegalDoc, LegalTexts } from './types';
 
@@ -88,8 +88,29 @@ describe('cookie policy', () => {
     expect(names).toEqual(NAMES);
   });
 
+  it.each(LOCALES)('%s with analytics on: says so, lists the consent and Google Analytics cookies, and how to withdraw', (locale) => {
+    const doc = cookiesPolicy(true)[locale];
+    const table = doc.sections.find((section) => section.id === 'list')!.blocks.find((b) => 'table' in b);
+    const names = table && 'table' in table ? table.table.rows.map((row) => row[0]) : [];
+    expect(names).toEqual([...NAMES, 'yoyo-consent', '_ga', '_ga_<id>']);
+    expect(doc.sections.some((section) => section.id === 'analytics')).toBe(true);
+    expect(doc.summary.join(' ')).not.toEqual(COOKIES_POLICY[locale].summary.join(' '));
+    expect(cookiesPolicy(false)[locale]).toEqual(COOKIES_POLICY[locale]);
+  });
+
   it.each(LOCALES)('%s mentions the one thing kept in local storage', (locale) => {
     expect(allText(COOKIES_POLICY[locale])).toContain('yoyo-refreshed-at');
+  });
+});
+
+describe('privacy policy with analytics on', () => {
+  it.each(LOCALES)('%s no longer says there is no analytics, and names Google Analytics with consent', (locale) => {
+    const off = allText(PRIVACY_POLICY[locale]);
+    const on = allText(privacyPolicy(true)[locale]);
+    expect(privacyPolicy(false)[locale]).toEqual(PRIVACY_POLICY[locale]);
+    expect(on).not.toEqual(off);
+    expect(on).toContain('Google Analytics');
+    expect(on).not.toMatch(/We do not use analytics|Mēs neizmantojam analītikas|Мы не используем инструменты аналитики/);
   });
 });
 

@@ -11,6 +11,6 @@ export async function resetAccounts(prisma: PrismaClient): Promise<void> {
  */
 export async function resetDeals(prisma: PrismaClient): Promise<void> {
   await prisma.$executeRawUnsafe(
-    'TRUNCATE TABLE "LedgerEntry", "LedgerOperation", "LedgerAccount", "IdempotencyKey", "Booking", "Offer", "Payment", "Payout", "Setting" CASCADE',
+    'TRUNCATE TABLE "LedgerEntry", "LedgerOperation", "LedgerAccount", "IdempotencyKey", "Booking", "Offer", "Payment", "Payout", "Setting", "Message", "Conversation" CASCADE',
   );
 }
