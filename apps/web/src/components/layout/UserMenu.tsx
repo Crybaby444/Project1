@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import { useToast } from '@/components/ui/Toast';
 import { Link, useRouter } from '@/i18n/navigation';
+import { useUnreadCount } from '@/lib/chat/queries';
 import { useDealsSummary } from '@/lib/deals/queries';
 import { useSession } from '@/lib/session/SessionProvider';
 
@@ -39,6 +40,8 @@ export function UserMenu({ user }: { user: PublicUser }) {
   const [wanted, setWanted] = useState(false);
   const summary = useDealsSummary(wanted);
   const waiting = (summary.data?.renter.needsAction ?? 0) + (summary.data?.owner.needsAction ?? 0);
+  const tc = useTranslations('chat');
+  const unread = useUnreadCount().data ?? 0;
   const { signOut } = useSession();
   const router = useRouter();
   const toast = useToast();
@@ -115,11 +118,16 @@ export function UserMenu({ user }: { user: PublicUser }) {
         onClick={() => (open ? close({ refocus: false }) : openAt('first'))}
         onKeyDown={onButtonKeyDown}
         style={{ backgroundColor: 'var(--ink)', color: 'var(--canvas)' }}   // v16: one ink disc for everyone
-        className="border-ink rounded-pill ease-yoyo inline-grid size-10 place-items-center border text-[13px] font-bold tracking-[0.03em] [filter:drop-shadow(0_0_0.6px_var(--sticker-edge))] transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96]"
+        className="border-ink rounded-pill ease-yoyo relative inline-grid size-10 place-items-center border text-[13px] font-bold tracking-[0.03em] [filter:drop-shadow(0_0_0.6px_var(--sticker-edge))] transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96]"
       >
         {/* The name says what the button is and still contains the visible initials (WCAG 2.5.3). */}
         <span className="sr-only">{t('account')}, </span>
         {initials(user.name)}
+        {unread > 0 && (
+          <span className="absolute -top-0.5 -right-0.5 size-3 rounded-full border-2 border-[var(--canvas)] bg-[var(--ink)]">
+            <span className="sr-only">, {tc('unread', { count: unread })}</span>
+          </span>
+        )}
       </button>
 
       {open && (
@@ -147,6 +155,23 @@ export function UserMenu({ user }: { user: PublicUser }) {
                   <span className="rounded-pill bg-ink text-canvas animate-pop-in font-sans inline-flex min-h-6 min-w-6 items-center justify-center px-2 text-[12px] tabular-nums">
                     <span aria-hidden="true">{waiting}</span>
                     <span className="sr-only">{td('waiting', { count: waiting })}</span>
+                  </span>
+                )}
+              </Link>
+            </li>
+            <li role="none">
+              <Link
+                href="/messages"
+                role="menuitem"
+                tabIndex={-1}
+                onClick={() => close({ refocus: false })}
+                className={ITEM}
+              >
+                <span>{tc('menu')}</span>
+                {unread > 0 && (
+                  <span className="rounded-pill bg-ink text-canvas animate-pop-in font-sans inline-flex min-h-6 min-w-6 items-center justify-center px-2 text-[12px] tabular-nums">
+                    <span aria-hidden="true">{unread}</span>
+                    <span className="sr-only">{tc('unread', { count: unread })}</span>
                   </span>
                 )}
               </Link>

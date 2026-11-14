@@ -1,5 +1,6 @@
 'use client';
 
+import { DealChatLink } from '@/components/chat/DealChatLink';
 import type { BookingView } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -237,6 +238,13 @@ export function DealView({ id }: { id: string }) {
               <p className="text-sm">{t('nothingToDo')}</p>
             )}
           </section>
+          {booking.viewerRole !== 'ADMIN' && (
+            <DealChatLink
+              listingId={booking.listing.id}
+              otherId={booking.viewerRole === 'RENTER' ? booking.owner.id : booking.renter.id}
+              role={booking.viewerRole}
+            />
+          )}
           <ContractCard booking={booking} />
           <DealSummary booking={booking} />
         </aside>

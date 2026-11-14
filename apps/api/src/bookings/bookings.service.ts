@@ -48,6 +48,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { bookingNotFound, staleBooking } from './booking-errors';
 import { assertDamagePhotos } from './booking-photos.service';
 import { BookingRulesService } from './booking-rules.service';
+import { writeDealLine } from '../chat/deal-lines';
 import { DealNotifier } from './deal-notifier';
 import { BOOKING_INCLUDE, serializeBooking, type BookingWithParties } from './booking.serializer';
 import { dateOf, snapshotData, toSnapshot } from './booking.store';
@@ -263,6 +264,7 @@ export class BookingsService {
           createdAt: now,
         },
       });
+      await writeDealLine(tx, { bookingId: next.id, listingId: row.listingId, renterId: row.renterId, ownerId: row.ownerId, status: next.status, now });
       return { id: next.id, after: done.after };
     });
     await this.afterCommit(after);
@@ -471,6 +473,9 @@ export class BookingsService {
         createdAt: ctx.now,
       },
     });
+    if (next.status !== before.status) {
+      await writeDealLine(tx, { bookingId: row.id, listingId: row.listingId, renterId: row.renterId, ownerId: row.ownerId, status: next.status, now: ctx.now });
+    }
     return { next, after: done.after, changed: true };
   }
 
