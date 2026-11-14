@@ -79,7 +79,8 @@ export function createStage(canvas: HTMLCanvasElement, opts: { mobile: boolean }
   const tone = (name: string, fallback: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
   const mat = look === 'ink' ? inkMaterial(tone('--ink', '#0a0b0e')) : chrome();
   const slitColor = look === 'ink' ? tone('--canvas', '#f4f1e6') : 0x0a0b0e;
-  const hero = makeYoyo(mat, slitColor), back = makeYoyo(mat, slitColor);
+  const edgeColor = look === 'ink' ? tone('--canvas', '#f4f1e6') : null;
+  const hero = makeYoyo(mat, slitColor, edgeColor), back = makeYoyo(mat, slitColor, edgeColor);
   const heroString = makeString(mat), backString = makeString(mat);
   const heroLight = new PointLight(0xffffff, 0, 0, 1.4), backLight = new PointLight(0xffffff, 0, 0, 1.4);
   scene.add(hero.g, back.g, heroString, backString, heroLight, backLight);
@@ -121,6 +122,7 @@ export function createStage(canvas: HTMLCanvasElement, opts: { mobile: boolean }
         mat.color.set(ink);
         const cut = tone('--canvas', '#f4f1e6');
         hero.slit.color.set(cut); back.slit.color.set(cut);
+        hero.edge?.color.set(cut); back.edge?.color.set(cut);
       }
       letters.forEach((L) => {
         const r = L.el.getBoundingClientRect(), cs = getComputedStyle(L.el), dpr = Math.min(window.devicePixelRatio, 2);

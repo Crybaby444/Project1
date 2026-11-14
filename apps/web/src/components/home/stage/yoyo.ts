@@ -30,11 +30,11 @@ export function yoyoLook(search: string): YoyoLook {
 }
 
 /**
- * The logo's yo-yo as a solid (owner, 2026-11-14: like the concept, not chrome): a matte satin body in
- * the page's ink — night on cream, cream in the dark — with a soft clear coat so its shape still reads.
+ * The logo's yo-yo, flat (owner, 2026-11-14: like the concept, not chrome, and not too 3D): one unlit
+ * colour, the page's ink — night on cream, cream in the dark. Its turning shows by the slit.
  */
-export const inkMaterial = (color: string) =>
-  new MeshPhysicalMaterial({ color, metalness: 0, roughness: 0.55, clearcoat: 0.35, clearcoatRoughness: 0.45, envMapIntensity: 0.4 });
+// toneMapped: false — the scene's filmic tone mapping would turn the page's ink to pure black and the cream grey.
+export const inkMaterial = (color: string) => new MeshBasicMaterial({ color, toneMapped: false });
 
 /** Half-profile of one side of the yo-yo, x = radius, y = height, for a diameter of 1. */
 const PROFILE: [number, number][] = [
@@ -45,7 +45,12 @@ const PROFILE: [number, number][] = [
  * The yo-yo, one unit across. `g` is placed and faced at the camera; `body` spins about the axle (its
  * local y). The logo's slit sits across both faces so the spin and the rolling read.
  */
-export function makeYoyo(material = chrome(), slitColor: number | string = 0x0a0b0e): { g: Group; body: Group; slit: MeshPhysicalMaterial } {
+export function makeYoyo(
+  material: MeshPhysicalMaterial | MeshBasicMaterial = chrome(),
+  slitColor: number | string = 0x0a0b0e,
+  /** A thin rim in this colour cuts a flat yo-yo out from what is behind it (the letters); none for chrome. */
+  edgeColor: number | string | null = null,
+): { g: Group; body: Group; slit: MeshPhysicalMaterial | MeshBasicMaterial; edge: MeshBasicMaterial | null } {
   const g = new Group();
   const body = new Group();
   body.rotation.x = Math.PI / 2;
@@ -60,17 +65,29 @@ export function makeYoyo(material = chrome(), slitColor: number | string = 0x0a0
   const ring = new Mesh(new TorusGeometry(0.1, 0.007, 8, 64), new MeshBasicMaterial({ color: 0xe9eaec }));
   ring.rotation.x = Math.PI / 2;
   body.add(ring);
-  const slitMat = new MeshPhysicalMaterial({ color: slitColor, roughness: 0.3, clearcoat: 1 });
+  // A flat yo-yo gets a flat slit; the chrome one a glossy one.
+  const slitMat = material instanceof MeshBasicMaterial ? new MeshBasicMaterial({ color: slitColor, toneMapped: false }) : new MeshPhysicalMaterial({ color: slitColor, roughness: 0.3, clearcoat: 1 });
   for (const y of [0.31, -0.31]) {
     const slit = new Mesh(new BoxGeometry(0.62, 0.012, 0.035), slitMat);
     slit.position.y = y;
     body.add(slit);
   }
-  return { g, body, slit: slitMat };
+  let edge: MeshBasicMaterial | null = null;
+  if (edgeColor !== null) {
+    edge = new MeshBasicMaterial({ color: edgeColor, toneMapped: false });
+    // On both faces' outer rim, in the face plane (the body's local y is the axle).
+    for (const y of [0.22, -0.22]) {
+      const rim = new Mesh(new TorusGeometry(0.505, 0.012, 8, 128), edge);
+      rim.rotation.x = Math.PI / 2;
+      rim.position.y = y;
+      body.add(rim);
+    }
+  }
+  return { g, body, slit: slitMat, edge };
 }
 
 /** A thin chrome rod, one unit long along y: the string, scaled and turned each frame. */
-export function makeString(material = chrome()): Mesh {
+export function makeString(material: MeshPhysicalMaterial | MeshBasicMaterial = chrome()): Mesh {
   return new Mesh(new CylinderGeometry(1, 1, 1, 12), material);
 }
 

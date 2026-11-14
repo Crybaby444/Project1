@@ -1,4 +1,4 @@
-import { Mesh } from 'three';
+import { Mesh, MeshBasicMaterial } from 'three';
 import { describe, expect, it } from 'vitest';
 import { createStage } from './scene';
 import { makeYoyo, inkMaterial, yoyoLook } from './yoyo';
@@ -32,10 +32,19 @@ describe('yoyoLook', () => {
 });
 
 describe('inkMaterial', () => {
-  it('is a matte, non-metal solid in the given colour, not a mirror', () => {
+  it('is flat like the logo: one unlit colour, no shading or highlights (owner: too 3D)', () => {
     const m = inkMaterial('#0a0b0e');
-    expect(m.metalness).toBe(0);
-    expect(m.roughness).toBeGreaterThan(0.4);
+    expect(m).toBeInstanceOf(MeshBasicMaterial);
+    expect(m.toneMapped).toBe(false); // the page's exact ink, not tone-mapped to pure black
     expect('#' + m.color.getHexString()).toBe('#0a0b0e');
+  });
+});
+
+describe('makeYoyo with an edge', () => {
+  it('cuts the flat yo-yo out with a thin rim in the page colour, so it parts from the letters behind', () => {
+    const { body, edge } = makeYoyo(inkMaterial('#0a0b0e'), '#f4f1e6', '#f4f1e6');
+    expect(edge).not.toBeNull();
+    const rims = body.children.filter((c): c is Mesh => c instanceof Mesh && c.geometry.type === 'TorusGeometry' && c.material === edge);
+    expect(rims.length).toBeGreaterThan(0);
   });
 });
