@@ -648,7 +648,7 @@
       "ARCHIVED": "Deleted"
     },
     "emptyTitle": "Nothing to lend yet",
-    "emptyBody": "Add the first thing you rarely use: a drill, a tent, a console. It takes a few minutes, and it saves as you go.",
+    "emptyBody": "Add the first thing you rarely use. It takes a few minutes, and it saves as you go.",
     "emptyFilter": "Nothing here right now.",
     "untitled": "Untitled",
     "noPhoto": "No photo yet",
@@ -755,7 +755,7 @@
     },
     "search": {
       "label": "Search the catalog",
-      "placeholder": "Drill, tent, projector…",
+      "placeholder": "What are you looking for?",
       "clear": "Clear the search",
       "submit": "Search",
       "count": "{count, plural, =0 {No suggestions} one {# suggestion} other {# suggestions}}",

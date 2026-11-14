@@ -16,8 +16,10 @@ export default async function FavoritesPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   return (
-    <RequireSession className="mx-auto w-full max-w-[1440px] px-4 py-10 sm:px-8">
-      <FavoritesList />
-    </RequireSession>
+    <main className="mx-auto flex w-full max-w-[1440px] flex-1 flex-col px-4 py-10 sm:px-8 sm:py-14">
+      <RequireSession>
+        <FavoritesList />
+      </RequireSession>
+    </main>
   );
 }

@@ -6,7 +6,6 @@ import { ADMIN_LISTINGS_PAGE_SIZE, type AdminListing } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import { Mark } from '@/components/brand/Mark';
 import { useToast } from '@/components/ui/Toast';
 import { useErrorText } from '@/lib/forms/error-text';
 import { Link } from '@/i18n/navigation';
@@ -17,6 +16,7 @@ import { useApiClient } from '@/lib/session/SessionProvider';
 import { ModerationCard } from './ModerationCard';
 import { MoveCategoryDialog } from './MoveCategoryDialog';
 import { RejectDialog } from './RejectDialog';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 /**
  * The review queue (spec §4.8), administrators only (the page is behind RequireRole; the API checks
@@ -158,11 +158,7 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
           </Button>
         </div>
       ) : items.length === 0 ? (
-        <section className="border-ink/15 flex flex-col items-center gap-4 border-y px-6 py-16 text-center">
-          <Mark size={88} string={false} className="shrink-0 animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
-          <h2 className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">{queue === 'other' ? t('otherEmptyTitle') : t('emptyTitle')}</h2>
-          <p className="max-w-[52ch] leading-relaxed">{queue === 'other' ? t('otherEmptyBody') : t('emptyBody')}</p>
-        </section>
+        <EmptyState title={queue === 'other' ? t('otherEmptyTitle') : t('emptyTitle')} body={queue === 'other' ? t('otherEmptyBody') : t('emptyBody')} />
       ) : (
         <>
           <p role="status" className="text-sm font-bold">

@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
-import { Mark } from '@/components/brand/Mark';
 import { Link } from '@/i18n/navigation';
 import type { CatalogParams } from '@/lib/catalog/params';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 /**
  * Nothing found (W03 §H: a 200 with a clear empty state and somewhere to go, not a soft 404): a
@@ -16,26 +16,25 @@ export async function EmptyResults({ params, resetHref }: { params: CatalogParam
     params.q ? t('tipText') : null,
   ].filter((tip): tip is string => tip !== null);
   return (
-    <div className="border-ink/15 flex flex-col items-center gap-4 border-y px-6 py-16 text-center">
-      <Mark size={64} string={false} className="animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
-      <h2 className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">{t('title')}</h2>
-      {tips.length > 0 ? (
-        <ul className="flex max-w-[46ch] flex-col gap-1 text-base">
+    <EmptyState
+      title={t('title')}
+      body={tips.length > 0 ? (
+        <span className="flex flex-col gap-1">
           {tips.map((tip) => (
-            <li key={tip}>{tip}</li>
+            <span key={tip}>{tip}</span>
           ))}
-        </ul>
+        </span>
       ) : (
-        <p className="max-w-[46ch]">{t('body')}</p>
+        t('body')
       )}
-      <div className="flex flex-wrap justify-center gap-3">
-        <Link href={resetHref} className="bg-cta text-cta-fg border-cta rounded-pill ease-yoyo inline-flex min-h-10 items-center border px-5 text-[13px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5">
+      action={<>
+        <Link href={resetHref} className="bg-ink text-canvas border-ink rounded-pill ease-yoyo inline-flex min-h-11 items-center border px-5 text-[13px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5">
           {t('reset')}
         </Link>
-        <Link href="/c" className="border-ink bg-surface rounded-pill ease-yoyo inline-flex min-h-10 items-center border px-5 text-[13px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5">
+        <Link href="/c" className="border-ink bg-surface rounded-pill ease-yoyo inline-flex min-h-11 items-center border px-5 text-[13px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5">
           {t('allCategories')}
         </Link>
-      </div>
-    </div>
+      </>}
+    />
   );
 }
