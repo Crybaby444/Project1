@@ -239,9 +239,7 @@
     "count": "{count, plural, one {# deal} other {# deals}}",
     "empty": {
       "renter": "You have not rented anything yet",
-      "renterBody": "Find something you need for a day or a week, and book it from its page.",
       "owner": "Nobody has asked for your items yet",
-      "ownerBody": "Requests for your items appear here. Lend something to get the first one.",
       "action": "Nothing waits for you. Nice.",
       "closed": "No closed deals yet."
     },
