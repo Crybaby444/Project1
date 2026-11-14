@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { stubMatchMedia } from '@/test/match-media';
 import { DropCursor } from './DropCursor';
-import { fillPoints, headRadius, moved } from './drop-cursor';
+import { fillPoints, headRadius, moved, stepsAside } from './drop-cursor';
 
 const rect = (left: number, top: number, width: number, height: number) =>
   ({ left, top, width, height, right: left + width, bottom: top + height, x: left, y: top }) as DOMRect;
@@ -73,5 +73,15 @@ describe('DropCursor', () => {
     stubMatchMedia(false); // (pointer: fine) answers false in the stub
     const { container } = render(<DropCursor />);
     expect(container.querySelector('canvas')).toBeNull();
+  });
+});
+
+describe('stepsAside', () => {
+  it('gives way to the native cursor in a text field and inside a modal dialog (drawn above the drop)', () => {
+    document.body.innerHTML = '<p id="p">x</p><input id="i"><dialog open><button id="b">ok</button></dialog>';
+    expect(stepsAside(document.getElementById('p'))).toBe(false);
+    expect(stepsAside(document.getElementById('i'))).toBe(true);
+    expect(stepsAside(document.getElementById('b'))).toBe(true);
+    expect(stepsAside(null)).toBe(false);
   });
 });

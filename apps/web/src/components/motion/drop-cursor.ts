@@ -38,3 +38,15 @@ export function moved(prev: Float32Array, next: Float32Array, eps = 0.05): boole
   for (let i = 0; i < next.length; i++) if (Math.abs(next[i]! - prev[i]!) > eps) return true;
   return false;
 }
+
+/** Over these the native caret shows and the drop steps aside. */
+export const TYPING = 'input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]), textarea, [contenteditable="true"]';
+
+/**
+ * Whether the drop gives way to the native cursor here: in a text field (for the caret), and inside an
+ * open modal dialog, which the browser draws in the top layer above the drop's canvas (owner,
+ * 2026-11-14: "the cursor does not work in the card forms").
+ */
+export function stepsAside(node: Element | null): boolean {
+  return !!node && (!!node.closest(TYPING) || !!node.closest('dialog[open]'));
+}
