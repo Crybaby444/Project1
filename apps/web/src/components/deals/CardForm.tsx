@@ -38,7 +38,7 @@ export function TestModeNotice({ onUse }: { onUse(number: string): void }) {
               type="button"
               onClick={() => onUse(card.number)}
               aria-label={`${t('use')}: ${card.number}, ${t(`cards.${card.key}`)}`}
-              className="rounded-pill ease-yoyo min-h-8 border border-ink/15 bg-white px-3 text-[12px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.96]"
+              className="rounded-pill ease-yoyo min-h-8 border border-canvas/30 bg-canvas text-ink px-3 text-[12px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.96]"
             >
               {t('use')}
             </button>

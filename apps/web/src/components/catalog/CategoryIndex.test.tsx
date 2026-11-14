@@ -36,4 +36,11 @@ describe('CategoryIndex', () => {
     renderWithIntl(<CategoryIndex roots={roots} locale="en" />);
     expect(screen.getAllByRole('link')[0]!.querySelector('[data-cursor-text]')).toHaveTextContent('Electronics');
   });
+
+  it('wraps a long name onto two lines on a phone instead of clipping it (display text never cut)', () => {
+    renderWithIntl(<CategoryIndex roots={roots} locale="en" />);
+    const name = screen.getAllByRole('link')[0]!.querySelector('[data-cursor-text]')!;
+    expect(name.className).not.toMatch(/\btruncate\b|whitespace-nowrap/);
+    expect(name.className).toMatch(/overflow-wrap:anywhere/);
+  });
 });

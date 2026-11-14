@@ -11,6 +11,7 @@
    */
   --paper: #f4f1e6;
   --night: #0a0b0e;
+  --night-dim: #a9aeb6; /* the quiet third line of the night */
   --glow: #a9aeb6; /* the one accent: a neutral chrome grey (owner, 2026-11-13: black and white only, no blue) */
   --chrome: #c9cdd4;
   --sticker-blue: var(--glow);
@@ -90,6 +91,7 @@
   /* In the dark the home's "night" scenes are the inverse of the page — cream with night type — so the
      transitions out of the yo-yo still read (and match the loader, which is always the inverse). */
   --night: #f4f1e6;
+  --night-dim: #5f646c;
   --paper: #0a0b0e;
 }
 
@@ -108,6 +110,7 @@
     --marquee-fg: #0a0b0e;
     --sticker-edge: #f4f1e6;
     --night: #f4f1e6;
+  --night-dim: #5f646c;
     --paper: #0a0b0e;
   }
 }

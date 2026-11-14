@@ -24,7 +24,7 @@ export function CategoryIndex({ roots, locale }: { roots: CategoryNode[]; locale
               <span className="grid min-w-0 gap-1.5 transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/row:translate-x-2.5">
                 <span
                   data-cursor-text
-                  className="font-display truncate text-[2rem] leading-[0.9] font-black uppercase transition-opacity duration-300 group-hover/index:opacity-40 group-hover/row:!opacity-100 sm:text-[clamp(1.7rem,2.3vw,2.6rem)]"
+                  className="font-display text-[clamp(1.6rem,8.4vw,2rem)] leading-[0.95] text-balance [overflow-wrap:anywhere] font-black uppercase transition-opacity duration-300 group-hover/index:opacity-40 group-hover/row:!opacity-100 sm:text-[clamp(1.7rem,2.3vw,2.6rem)]"
                 >
                   {name}
                 </span>

@@ -30,6 +30,18 @@ describe('v16 palette', () => {
     expect(dark).toMatch(/--paper:\s*#0a0b0e/i);
   });
 
+  it('the dim night line keeps 3:1 on the night in both themes (axe, large text)', () => {
+    const lum = (hex: string) => {
+      const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+      return 0.2126 * c[0]! + 0.7152 * c[1]! + 0.0722 * c[2]!;
+    };
+    const ratio = (a: string, b: string) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x! + 0.05) / (y! + 0.05); };
+    const pick = (src: string, name: string) => src.match(new RegExp(`--${name}:\\s*(#[0-9a-f]{6})`, 'i'))?.[1] ?? '';
+    const dark = block("[data-theme='dark']");
+    expect(ratio(pick(css, 'night-dim'), pick(css, 'night'))).toBeGreaterThanOrEqual(3);
+    expect(ratio(pick(dark, 'night-dim'), pick(dark, 'night'))).toBeGreaterThanOrEqual(3);
+  });
+
   it('is black and white only: the accent is a neutral chrome grey, no blue (owner, 2026-11-13)', () => {
     expect(css).toMatch(/--glow:\s*#a9aeb6/i);
     expect(css).not.toMatch(/#9ed2ff/i);

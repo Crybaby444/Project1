@@ -133,9 +133,8 @@ test.describe('motion on', () => {
       page
         .locator('[data-card-rise], [data-rise-word], [data-letter], [data-bob]')
         .evaluateAll((els) => els.map((el) => getComputedStyle(el).animationName));
-    // A normal load plays the card rise, the title and the floating sticker.
+    // A normal load plays the card rise and the title (v16: no floating sticker any more).
     expect(await running()).toContain('card-rise');
-    expect(await running()).toContain('sticker-bob');
     for (const attribute of ['data-language-switch', 'data-page-switch']) {
       await page.evaluate((name) => document.documentElement.setAttribute(name, ''), attribute);
       expect(new Set(await running())).toEqual(new Set(['none']));
