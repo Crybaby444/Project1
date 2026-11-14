@@ -416,6 +416,7 @@ html[data-page-switch]::view-transition-new(site-header) {
   place-items: center;
   background: var(--ink);
   color: var(--canvas);
+  --mark-cut: var(--ink); /* the slit in the loader's own ground, so the turning shows */
   animation: home-loader-out 0.5s ease 4.5s forwards;
 }
 html[data-no-loader] .home-loader {
@@ -437,7 +438,15 @@ html[data-staged] .home-loader {
   font-weight: 900;
   font-variant-numeric: tabular-nums;
   counter-reset: home-count var(--home-count);
-  animation: home-count 1.6s cubic-bezier(0.45, 0, 0.2, 1) forwards;
+  animation: home-count 1.1s cubic-bezier(0.45, 0, 0.55, 1) forwards;
+}
+.home-loader-name {
+  position: absolute;
+  right: max(16px, 3.4vw);
+  bottom: 28px;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.72;
 }
 .home-loader-count::after {
   content: counter(home-count);

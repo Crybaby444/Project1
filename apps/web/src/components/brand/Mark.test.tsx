@@ -18,6 +18,11 @@ describe('Mark', () => {
     expect([c.getAttribute('cx'), c.getAttribute('cy')]).toEqual(['12', '12']);
   });
 
+  it('cuts the slit in the colour behind it (--mark-cut), so the turning shows on any ground', () => {
+    const { container } = render(<Mark string={false} />);
+    expect(container.querySelector('path')!.getAttribute('stroke')).toBe('var(--mark-cut, var(--canvas))');
+  });
+
   it('takes a size in pixels', () => {
     const { container } = render(<Mark size={36} />);
     expect(container.querySelector('svg')!.getAttribute('width')).toBe('36');

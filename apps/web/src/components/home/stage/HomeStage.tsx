@@ -70,6 +70,12 @@ export default function HomeStage() {
     let unmount: (() => void) | null = null;
     const html = document.documentElement;
     html.dataset.staged = '';
+    // Under the loader: the header and the hero's foot wait, and come in after the letters (concept v16).
+    const waiting = [
+      document.querySelector<HTMLElement>('[data-site-header]'),
+      ...root.querySelectorAll<HTMLElement>('[data-home="hero"] [data-reveal], [data-home="hero"] [data-hero-in]'),
+    ].filter((el): el is HTMLElement => el !== null);
+    waiting.forEach((el) => { el.style.opacity = '0'; el.style.visibility = 'hidden'; });
     stage.resize();
     const dom = {
       heroSlot: root.querySelector<HTMLElement>('[data-anchor="hero-slot"]')!,
@@ -80,9 +86,9 @@ export default function HomeStage() {
       rollShadow: root.querySelector<HTMLElement>('[data-roll-shadow]')!,
       letters: Array.from(root.querySelectorAll<HTMLElement>('[data-home="hero"] [data-letter]')),
     };
-    // The loader's count runs in CSS (1.6 s); the set waits for the fonts and at least that long, then the
+    // The loader's count runs in CSS (1.1 s); the set waits for the fonts and at least that long, then the
     // dots flood the loader away and the intro plays.
-    const minimum = new Promise((r) => setTimeout(r, 1500));
+    const minimum = new Promise((r) => setTimeout(r, 1150));
     Promise.all([document.fonts.ready, minimum]).then(async () => {
       if (!alive) return;
       stage.attach(dom);
@@ -99,7 +105,9 @@ export default function HomeStage() {
       unmount?.();
       stage.dispose();
       delete html.dataset.staged;
-      document.querySelector('[data-home-loader]')?.remove();
+      waiting.forEach((el) => { el.style.opacity = ''; el.style.visibility = ''; });
+      // The loader stays: a remount (React's strict mode in development) floods it away itself, and
+      // without a stage it fades away on its own (CSS).
     };
   }, [reduce]);
 

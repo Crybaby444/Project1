@@ -24,12 +24,12 @@ export function Mark({ size = 24, string = true, className }: MarkProps) {
         <>
           <path d="M12 1v4.2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
           <circle cx="12" cy="14" r="8.6" fill="currentColor" />
-          <path d="M4.2 14h15.6" stroke="var(--canvas)" strokeWidth="2" />
+          <path d="M4.2 14h15.6" stroke="var(--mark-cut, var(--canvas))" strokeWidth="2" />
         </>
       ) : (
         <>
           <circle cx="12" cy="12" r="10" fill="currentColor" />
-          <path d="M2.6 12h18.8" stroke="var(--canvas)" strokeWidth="2.3" />
+          <path d="M2.6 12h18.8" stroke="var(--mark-cut, var(--canvas))" strokeWidth="2.3" />
         </>
       )}
     </svg>

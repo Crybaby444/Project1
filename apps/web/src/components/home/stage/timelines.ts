@@ -38,7 +38,9 @@ export function mountTimelines(stage: Stage, root: HTMLElement, opts: { mobile: 
       .to(S, { intro: 1, duration: 1.2, ease: 'back.out(1.4)' }, 0.15)
       .fromTo(S, { drop: 1 }, { drop: 0, duration: 1.9, ease: 'elastic.out(1, 0.55)' }, 0.15)
       .fromTo(S, { spinBoost: 16 }, { spinBoost: 0, duration: 2.4, ease: 'power2.out' }, 0.15)
-      .from('[data-home="hero"] [data-reveal]', { yPercent: 60, opacity: 0, duration: 1, ease: 'expo.out' }, 0.6);
+      .to(document.querySelector('[data-site-header]'), { autoAlpha: 1, duration: 0.8 }, 0) // outside root: the element, not a selector scoped to it
+      .fromTo('[data-home="hero"] [data-reveal]', { yPercent: 60, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.8, ease: 'expo.out' }, 0.7)
+      .to('[data-home="hero"] [data-hero-in]', { autoAlpha: 1, duration: 0.8, stagger: 0.1 }, 1.0);
 
     // ---- the intro on scroll: the hero (its own length), then the night's story
     ScrollTrigger.create({ trigger: '[data-intro]', start: 'top top', end: 'bottom bottom', onUpdate: (st) => (S.p = Math.min(1, st.progress * HK)) });
