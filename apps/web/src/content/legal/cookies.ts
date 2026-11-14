@@ -30,8 +30,16 @@ const en: LegalDoc = {
           table: {
             head: ['Name', 'What it does', 'How long'],
             rows: [
-              ['yoyo_at', 'Keeps you signed in: a short-lived sign-in token that scripts cannot read.', '15 minutes'],
-              ['yoyo_rt', 'Renews your sign-in without asking for the password again. Sent only to the sign-in endpoints.', '30 days'],
+              [
+                'yoyo_at',
+                'Keeps you signed in: a short-lived sign-in token that scripts cannot read.',
+                '15 minutes',
+              ],
+              [
+                'yoyo_rt',
+                'Renews your sign-in without asking for the password again. Sent only to the sign-in endpoints.',
+                '30 days',
+              ],
               [
                 'yoyo_session',
                 'Tells the site’s scripts that you may be signed in, so they ask for your account only then. Holds no personal data.',
@@ -44,7 +52,11 @@ const en: LegalDoc = {
               ],
               ['yoyo_oauth', 'Connects your return from Google to the sign-in you started.', '10 minutes'],
               ['yoyo-theme', 'Remembers the light or dark theme, if you chose one.', '1 year'],
-              ['NEXT_LOCALE', 'Remembers the site language you picked.', 'Until you close the browser'],
+              [
+                'NEXT_LOCALE',
+                'Remembers the site language you picked, or that you chose to stay on this one.',
+                '1 year',
+              ],
             ],
           },
         },
@@ -89,7 +101,11 @@ const en: LegalDoc = {
     {
       id: 'contact',
       heading: '6. Contact',
-      blocks: [{ p: 'Questions about cookies: [admin@yoyo.rent](mailto:admin@yoyo.rent). See also the [privacy policy](/privacy).' }],
+      blocks: [
+        {
+          p: 'Questions about cookies: [admin@yoyo.rent](mailto:admin@yoyo.rent). See also the [privacy policy](/privacy).',
+        },
+      ],
     },
   ],
 };
@@ -119,8 +135,16 @@ const lv: LegalDoc = {
           table: {
             head: ['Nosaukums', 'Ko tā dara', 'Cik ilgi'],
             rows: [
-              ['yoyo_at', 'Uztur jūs pieteikušos: īslaicīgs pieteikšanās marķieris, ko skripti nevar nolasīt.', '15 minūtes'],
-              ['yoyo_rt', 'Atjauno pieteikšanos, atkārtoti neprasot paroli. Tiek sūtīta tikai pieteikšanās adresēm.', '30 dienas'],
+              [
+                'yoyo_at',
+                'Uztur jūs pieteikušos: īslaicīgs pieteikšanās marķieris, ko skripti nevar nolasīt.',
+                '15 minūtes',
+              ],
+              [
+                'yoyo_rt',
+                'Atjauno pieteikšanos, atkārtoti neprasot paroli. Tiek sūtīta tikai pieteikšanās adresēm.',
+                '30 dienas',
+              ],
               [
                 'yoyo_session',
                 'Pasaka vietnes skriptiem, ka jūs, iespējams, esat pieteicies, lai tie jautātu pēc jūsu konta tikai tad. Personas datus nesatur.',
@@ -133,7 +157,11 @@ const lv: LegalDoc = {
               ],
               ['yoyo_oauth', 'Sasaista jūsu atgriešanos no Google ar jūsu sākto pieteikšanos.', '10 minūtes'],
               ['yoyo-theme', 'Atceras gaišo vai tumšo tēmu, ja to izvēlējāties.', '1 gads'],
-              ['NEXT_LOCALE', 'Atceras jūsu izvēlēto vietnes valodu.', 'Līdz pārlūka aizvēršanai'],
+              [
+                'NEXT_LOCALE',
+                'Atceras jūsu izvēlēto vietnes valodu vai to, ka izvēlējāties palikt šajā.',
+                '1 gads',
+              ],
             ],
           },
         },
@@ -178,7 +206,11 @@ const lv: LegalDoc = {
     {
       id: 'contact',
       heading: '6. Kontakti',
-      blocks: [{ p: 'Jautājumi par sīkdatnēm: [admin@yoyo.rent](mailto:admin@yoyo.rent). Skatiet arī [privātuma politiku](/privacy).' }],
+      blocks: [
+        {
+          p: 'Jautājumi par sīkdatnēm: [admin@yoyo.rent](mailto:admin@yoyo.rent). Skatiet arī [privātuma politiku](/privacy).',
+        },
+      ],
     },
   ],
 };
@@ -208,8 +240,16 @@ const ru: LegalDoc = {
           table: {
             head: ['Название', 'Зачем', 'Срок'],
             rows: [
-              ['yoyo_at', 'Держит вас в аккаунте: короткоживущий токен входа, недоступный скриптам.', '15 минут'],
-              ['yoyo_rt', 'Продлевает вход, не спрашивая пароль снова. Отправляется только на адреса входа.', '30 дней'],
+              [
+                'yoyo_at',
+                'Держит вас в аккаунте: короткоживущий токен входа, недоступный скриптам.',
+                '15 минут',
+              ],
+              [
+                'yoyo_rt',
+                'Продлевает вход, не спрашивая пароль снова. Отправляется только на адреса входа.',
+                '30 дней',
+              ],
               [
                 'yoyo_session',
                 'Подсказывает скриптам сайта, что вы, возможно, вошли, чтобы они запрашивали аккаунт только тогда. Персональных данных не содержит.',
@@ -222,7 +262,7 @@ const ru: LegalDoc = {
               ],
               ['yoyo_oauth', 'Связывает ваше возвращение из Google с начатым входом.', '10 минут'],
               ['yoyo-theme', 'Помнит светлую или тёмную тему, если вы её выбрали.', '1 год'],
-              ['NEXT_LOCALE', 'Помнит выбранный язык сайта.', 'До закрытия браузера'],
+              ['NEXT_LOCALE', 'Помнит выбранный язык сайта или то, что вы решили остаться на этом.', '1 год'],
             ],
           },
         },
@@ -267,7 +307,11 @@ const ru: LegalDoc = {
     {
       id: 'contact',
       heading: '6. Контакты',
-      blocks: [{ p: 'Вопросы о cookie: [admin@yoyo.rent](mailto:admin@yoyo.rent). См. также [политику конфиденциальности](/privacy).' }],
+      blocks: [
+        {
+          p: 'Вопросы о cookie: [admin@yoyo.rent](mailto:admin@yoyo.rent). См. также [политику конфиденциальности](/privacy).',
+        },
+      ],
     },
   ],
 };
