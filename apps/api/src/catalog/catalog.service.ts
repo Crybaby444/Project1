@@ -26,6 +26,7 @@ import { AppError } from '../common/app-error';
 import type { User } from '../generated/prisma/client';
 import { serializeListing, type UrlFor } from '../listings/listing.serializer';
 import { STORAGE_PROVIDER, type StorageProvider } from '../media/storage.provider';
+import { ReviewsService } from '../reviews/reviews.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { fold, orderSql, textMatchSql, VISIBLE_FROM, whereSql, type FilterContext } from './catalog-query';
 import { serializeCatalogItem } from './catalog.serializer';
@@ -51,6 +52,7 @@ export class CatalogService {
     private readonly rules: BookingRulesService,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider,
+    private readonly reviews: ReviewsService,
   ) {}
 
   private readonly urlFor: UrlFor = (key, variant) => this.storage.url(key, variant);
@@ -172,26 +174,32 @@ export class CatalogService {
       };
     }
     const today = localDateIn(this.clock.now(), found.timeZone);
-    const [settings, blocked, owner] = await Promise.all([
+    const [settings, blocked, owner, ratings] = await Promise.all([
       this.rules.settings(),
       blockedPeriods(this.prisma, found.id),
       this.ownerSummary(found.owner),
+      this.reviews.ratingsOfListings([found.id]),
     ]);
+    const rating = ratings.get(found.id) ?? { rating: null, reviewCount: 0 };
     return {
       available: true,
       listing: serializeListing(found, 'public', this.urlFor),
       owner,
+      rating: rating.rating,
+      reviewCount: rating.reviewCount,
       blocked: blocked.filter((p) => compareDates(p.end, today) >= 0).map((p) => ({ start: p.start, end: p.end })),
       booking: { servicePercent: settings.servicePercent, maxAdvanceDays: settings.maxAdvanceDays, today },
     };
   }
 
-  /** Someone as everyone may see them. Reviews arrive with plan 10: until then no rating. */
+  /** Someone as everyone may see them, with their rating from public reviews. */
   async ownerSummary(user: User): Promise<OwnerSummary> {
-    const [completedDeals, listingCount] = await Promise.all([
+    const [completedDeals, listingCount, ratings] = await Promise.all([
       this.prisma.booking.count({ where: { status: 'COMPLETED', OR: [{ ownerId: user.id }, { renterId: user.id }] } }),
       this.prisma.listing.count({ where: { ...CATALOG_VISIBLE_WHERE, ownerId: user.id } }),
+      this.reviews.ratingsOfUsers([user.id]),
     ]);
+    const rating = ratings.get(user.id) ?? { rating: null, reviewCount: 0 };
     return {
       id: user.id,
       name: user.name,
@@ -201,7 +209,8 @@ export class CatalogService {
       phoneVerified: user.phoneVerifiedAt !== null,
       completedDeals,
       listingCount,
-      rating: null,
+      rating: rating.rating,
+      reviewCount: rating.reviewCount,
     };
   }
 
@@ -210,9 +219,10 @@ export class CatalogService {
     if (ids.length === 0) return [];
     const rows = await this.prisma.listing.findMany({ where: { id: { in: ids }, ...CATALOG_VISIBLE_WHERE }, include: { photos: true } });
     const byId = new Map(rows.map((row) => [row.id, row]));
+    const ratings = await this.reviews.ratingsOfListings(rows.map((row) => row.id));
     return ids.flatMap((id) => {
       const row = byId.get(id);
-      return row ? [serializeCatalogItem(row, this.urlFor)] : [];
+      return row ? [serializeCatalogItem(row, this.urlFor, ratings.get(id))] : [];
     });
   }
 

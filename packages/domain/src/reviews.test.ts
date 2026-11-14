@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { NOW, given, owner, step } from './booking/test-support';
-import { canReview } from './reviews';
+import { canReview, reviewIsPublic } from './reviews';
 import { DEFAULT_BOOKING_SETTINGS } from './settings';
 
 const DAY_MS = 86_400_000;
@@ -33,5 +33,23 @@ describe('canReview', () => {
     ] as const) {
       expect(canReview(given(status), NOW, DEFAULT_BOOKING_SETTINGS)).toBe(false);
     }
+  });
+});
+
+describe('reviewIsPublic (blind reviews)', () => {
+  const completedAt = NOW;
+  const base = { completedAt, windowDays: 14 };
+
+  it('stays hidden while only one side has written and the window is open', () => {
+    expect(reviewIsPublic({ ...base, now: afterCompletion(2), otherSideReviewed: false })).toBe(false);
+  });
+
+  it('shows once the other side has written too', () => {
+    expect(reviewIsPublic({ ...base, now: afterCompletion(2), otherSideReviewed: true })).toBe(true);
+  });
+
+  it('shows when the window closes, even if the other side never wrote', () => {
+    expect(reviewIsPublic({ ...base, now: afterCompletion(14), otherSideReviewed: false })).toBe(false);
+    expect(reviewIsPublic({ ...base, now: afterCompletion(14, 1), otherSideReviewed: false })).toBe(true);
   });
 });

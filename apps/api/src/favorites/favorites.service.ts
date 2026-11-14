@@ -6,6 +6,7 @@ import { AppError } from '../common/app-error';
 import type { UrlFor } from '../listings/listing.serializer';
 import { STORAGE_PROVIDER, type StorageProvider } from '../media/storage.provider';
 import { PrismaService } from '../prisma/prisma.service';
+import { ReviewsService } from '../reviews/reviews.service';
 
 /** Someone's favourites (spec §4.2). Adding and removing are idempotent, so a retry never fails. */
 @Injectable()
@@ -13,6 +14,7 @@ export class FavoritesService {
   constructor(
     private readonly prisma: PrismaService,
     @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider,
+    private readonly reviews: ReviewsService,
   ) {}
 
   private readonly urlFor: UrlFor = (key, variant) => this.storage.url(key, variant);
@@ -52,8 +54,9 @@ export class FavoritesService {
       include: { listing: { include: { photos: true, owner: { select: { blockedAt: true, deletedAt: true } } } } },
       orderBy: [{ createdAt: 'desc' }, { listingId: 'asc' }],
     });
+    const ratings = await this.reviews.ratingsOfListings(rows.map((row) => row.listingId));
     return rows.map(({ listing }) => {
-      const item = serializeCatalogItem(listing, this.urlFor);
+      const item = serializeCatalogItem(listing, this.urlFor, ratings.get(listing.id));
       if (isCatalogVisible(listing)) return { ...item, available: true };
       return { ...item, cover: null, dailyCents: 0, depositCents: 0, weeklyDiscountPercent: 0, district: null, city: null, available: false };
     });

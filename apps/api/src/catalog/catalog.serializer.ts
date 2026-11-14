@@ -1,9 +1,14 @@
 import type { CatalogItem, Locale } from '@yoyo/shared';
 import type { Listing, ListingPhoto } from '../generated/prisma/client';
 import { byPosition, photoUrls, type UrlFor } from '../listings/listing.serializer';
+import type { Rating } from '../reviews/reviews.service';
 
 /** A listing as its catalog card shows it. Fields one by one: never the point, the version or review data. */
-export function serializeCatalogItem(listing: Listing & { photos: ListingPhoto[] }, urlFor: UrlFor): CatalogItem {
+export function serializeCatalogItem(
+  listing: Listing & { photos: ListingPhoto[] },
+  urlFor: UrlFor,
+  rating: Rating = { rating: null, reviewCount: 0 },
+): CatalogItem {
   const cover = [...listing.photos].sort(byPosition)[0];
   return {
     id: listing.id,
@@ -19,5 +24,7 @@ export function serializeCatalogItem(listing: Listing & { photos: ListingPhoto[]
     ownerId: listing.ownerId,
     contentLocale: listing.contentLocale as Locale,
     publishedAt: listing.publishedAt?.toISOString() ?? null,
+    rating: rating.rating,
+    reviewCount: rating.reviewCount,
   };
 }
