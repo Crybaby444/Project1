@@ -65,10 +65,10 @@ export function ModerationCard({
   };
 
   return (
-    <article className="border-ink/15 bg-surface rounded-media flex flex-col gap-6 border p-5 sm:p-8">
+    <article className="border-ink flex flex-col gap-6 border-t-2 pt-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-2">
-          <h2 className="text-2xl leading-tight font-bold [overflow-wrap:anywhere]">{listing.title}</h2>
+          <h2 className="font-display text-[clamp(2rem,3.4vw,3rem)] leading-[0.95] font-black uppercase [overflow-wrap:anywhere]">{listing.title}</h2>
           <p className="text-sm">{t('waiting', { date: date(listing.submittedAt) })}</p>
         </div>
         <ListingStatusBadge status={listing.status} className="self-start" />

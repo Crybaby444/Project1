@@ -2,7 +2,6 @@ import type { Locale } from '@yoyo/shared';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { CallToAction } from '@/components/landing/CallToAction';
-import { StickyStack } from '@/components/motion/StickyStack';
 import { PageBanner } from '@/components/pages/PageBanner';
 import { Mark } from '@/components/brand/Mark';
 import { pageMetadata } from '@/lib/seo';
@@ -19,14 +18,6 @@ const FACTS = {
 
 const RENTER = ['find', 'request', 'contract', 'pay', 'handover', 'return'] as const;
 const OWNER = ['list', 'review', 'accept', 'handover', 'check'] as const;
-const DOTS = [
-  'bg-ink text-canvas',
-  'bg-ink text-canvas',
-  'bg-ink text-canvas',
-  'bg-ink text-canvas',
-  'bg-ink text-canvas',
-  'bg-ink text-canvas',
-];
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { locale } = await params;
@@ -53,26 +44,20 @@ function StepList({
       <h2 id={id} className="font-display text-[clamp(2.2rem,4vw,3.6rem)] leading-[0.9] font-black uppercase">
         {heading}
       </h2>
-      {/* Each step is a small card that pins and lands on the pile as the page scrolls. */}
-      <StickyStack labelledBy={id} className="gap-4">
+      {/* The steps read as the catalog's index: a number, a display title, one line; hairlines between. */}
+      <ol className="border-ink/15 m-0 list-none border-t p-0">
         {steps.map((step, index) => (
-          <div
-            key={step.title}
-            className="border-ink/15 bg-canvas text-ink rounded-media grid grid-cols-[3rem_1fr] gap-4 border p-5 sm:p-6"
-          >
-            <span
-              aria-hidden="true"
-              className={`font-display inline-grid size-12 place-items-center rounded-full text-lg font-black ${DOTS[index % DOTS.length]}`}
-            >
-              {index + 1}
+          <li key={step.title} className="border-ink/15 grid grid-cols-[2.6rem_1fr] gap-x-4 gap-y-2 border-b py-6 sm:grid-cols-[3.4rem_1fr]">
+            <span aria-hidden="true" className="font-display text-ink/55 text-[2.2rem] leading-[0.85] font-black tabular-nums sm:text-[2.8rem]">
+              {String(index + 1).padStart(2, '0')}
             </span>
-            <span className="flex flex-col gap-1 pt-1">
-              <span className="text-xl leading-snug font-bold">{step.title}</span>
-              <span className="max-w-[60ch] text-base leading-relaxed">{step.body}</span>
+            <span className="flex flex-col gap-2">
+              <span className="font-display text-[1.7rem] leading-[0.95] font-black uppercase sm:text-[2rem]">{step.title}</span>
+              <span className="text-ink/85 max-w-[60ch] text-base leading-relaxed">{step.body}</span>
             </span>
-          </div>
+          </li>
         ))}
-      </StickyStack>
+      </ol>
     </section>
   );
 }
@@ -94,8 +79,8 @@ export default async function HowItWorksPage({ params }: Params) {
         ]}
       />
 
-      <div className="bg-band overflow-x-clip">
-        <div className="reveal mx-auto grid max-w-[1440px] gap-6 px-4 py-16 sm:px-8 sm:py-24 lg:grid-cols-2">
+      <div className="overflow-x-clip">
+        <div className="reveal mx-auto grid max-w-[1440px] gap-14 px-4 py-16 sm:px-8 sm:py-24 lg:grid-cols-2 lg:gap-[clamp(32px,4vw,72px)]">
           <StepList
             id="renter"
             heading={t('renter.heading')}
@@ -115,8 +100,8 @@ export default async function HowItWorksPage({ params }: Params) {
         </div>
       </div>
 
-      <div className="bg-surface overflow-x-clip">
-        <div className="reveal mx-auto grid max-w-[1440px] gap-10 px-4 py-16 sm:px-8 sm:py-24 lg:grid-cols-[1.4fr_1fr]">
+      <div className="overflow-x-clip">
+        <div className="border-ink/15 reveal mx-auto grid max-w-[1440px] gap-14 border-t px-4 py-16 sm:px-8 sm:py-24 lg:grid-cols-[1.4fr_1fr] lg:gap-[clamp(32px,4vw,72px)]">
           <section aria-labelledby="deposit" className="flex flex-col gap-5">
             <div className="flex items-center gap-4">
               <Mark size={64} string={false} className="shrink-0 animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
@@ -125,16 +110,14 @@ export default async function HowItWorksPage({ params }: Params) {
               </h2>
             </div>
             <p className="text-lg leading-relaxed">{t('deposit.lead')}</p>
-            <ul className="flex flex-col gap-3">
+            <ol className="border-ink/15 m-0 list-none border-t p-0">
               {(['fine', 'agreed', 'disputed'] as const).map((key, index) => (
-                <li
-                  key={key}
-                  className={`border-ink/15 rounded-media border p-5 text-base leading-relaxed ${['bg-mist', 'bg-mist', 'bg-mist'][index]}`}
-                >
-                  {t(`deposit.${key}`)}
+                <li key={key} className="border-ink/15 grid grid-cols-[2.2rem_1fr] gap-3 border-b py-4 text-base leading-relaxed">
+                  <span aria-hidden="true" className="pt-0.5 text-xs font-bold tabular-nums">{String(index + 1).padStart(2, '0')}</span>
+                  <span>{t(`deposit.${key}`)}</span>
                 </li>
               ))}
-            </ul>
+            </ol>
             <p className="max-w-[64ch] leading-relaxed">{t('deposit.timeouts', FACTS)}</p>
             <p className="max-w-[64ch] leading-relaxed">{t('deposit.notReturned')}</p>
           </section>
@@ -154,7 +137,7 @@ export default async function HowItWorksPage({ params }: Params) {
             </section>
             <section
               aria-labelledby="today"
-              className="border-ink/15 bg-canvas rounded-media flex flex-col gap-3 border p-6"
+              className="border-ink flex flex-col gap-3 border-t-2 pt-6"
             >
               <h2 id="today" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
                 {t('today.heading')}
@@ -165,8 +148,8 @@ export default async function HowItWorksPage({ params }: Params) {
         </div>
       </div>
 
-      <div className="bg-canvas overflow-x-clip">
-        <div className="reveal mx-auto flex max-w-[1440px] flex-col items-start gap-6 px-4 py-16 sm:px-8 sm:py-24">
+      <div className="overflow-x-clip">
+        <div className="border-ink/15 reveal mx-auto flex max-w-[1440px] flex-col items-start gap-6 border-t px-4 py-16 sm:px-8 sm:py-24">
           <h2 className="font-display text-[clamp(2.25rem,7vw,5.5rem)] leading-[0.85] font-black uppercase">
             {t('cta.title')}
           </h2>

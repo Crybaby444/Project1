@@ -43,26 +43,26 @@ export function FaqList({ groups, titled = true }: { groups: FaqGroup[]; /** Off
               {group.title}
             </h2>
           )}
-          <div className="flex flex-col gap-3">
+          <div className="border-ink/15 flex flex-col border-t">
             {group.items.map((item) => (
               <details
                 key={item.id}
                 id={item.id}
                 name={`faq-${group.id}`}
-                className="group border-ink/15 bg-surface text-ink rounded-media scroll-mt-6 border open:[&>summary_svg]:rotate-45"
+                className="group border-ink/15 text-ink scroll-mt-6 border-b open:[&>summary_svg]:rotate-45"
               >
-                <summary className="rounded-media flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-lg leading-snug font-bold transition-transform duration-150 ease-yoyo hover:-translate-y-0.5 [&::-webkit-details-marker]:hidden">
+                <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-5 text-lg leading-snug font-bold transition-[padding] duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:pl-1.5 sm:text-xl [&::-webkit-details-marker]:hidden">
                   {item.question}
                   <span
                     aria-hidden="true"
-                    className="border-ink bg-ink text-canvas inline-grid size-10 shrink-0 place-items-center rounded-full border"
+                    className="border-ink/40 group-open:bg-ink group-open:text-canvas group-open:border-ink inline-grid size-9 shrink-0 place-items-center rounded-full border transition-colors duration-300"
                   >
                     <svg viewBox="0 0 24 24" className="size-5 transition-transform duration-250 ease-yoyo" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                       <path d="M12 5v14M5 12h14" />
                     </svg>
                   </span>
                 </summary>
-                <p className="max-w-[68ch] px-5 pb-5 text-base leading-relaxed">{item.answer}</p>
+                <p className="text-ink/85 max-w-[68ch] pb-6 text-base leading-relaxed">{item.answer}</p>
               </details>
             ))}
           </div>

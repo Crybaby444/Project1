@@ -30,9 +30,9 @@ export default async function FaqPage({ params }: Params) {
         lead={t('lead')}
         stickers={[{ kind: 'star', size: 112, top: '-12%', right: '4%', rotate: 14, className: 'max-sm:hidden' }]}
       />
-      <div className="bg-band overflow-x-clip">
+      <div className="overflow-x-clip">
         <div className="reveal mx-auto grid max-w-[1440px] gap-10 px-4 py-16 sm:px-8 sm:py-24 lg:grid-cols-[1fr_2.2fr]">
-          <aside className="border-ink/15 bg-mist rounded-media flex flex-col gap-3 self-start border p-6 text-ink lg:sticky lg:top-6">
+          <aside className="border-ink text-ink flex flex-col gap-3 self-start border-t-2 pt-5 lg:sticky lg:top-6">
             <p className="text-lg leading-relaxed font-bold">
               {t.rich('askUs', {
                 email: CONTACT_EMAIL,

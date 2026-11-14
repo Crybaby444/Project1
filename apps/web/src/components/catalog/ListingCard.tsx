@@ -65,7 +65,7 @@ export function ListingCard({
         </div>
         <div className="flex flex-1 flex-col gap-1">
           <h3
-            className="line-clamp-2 text-base leading-snug font-bold [overflow-wrap:anywhere] hyphens-auto"
+            className="line-clamp-2 text-base leading-snug font-bold [overflow-wrap:break-word]"
             lang={item.contentLocale}
           >
             <TransitionLink

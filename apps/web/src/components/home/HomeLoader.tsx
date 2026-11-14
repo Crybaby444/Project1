@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { Mark } from '@/components/brand/Mark';
+import { LoaderCount } from './LoaderCount';
 
 /**
  * The loader of the home (v16), in the server HTML so it covers the very first frame: on the night, the
@@ -13,10 +14,7 @@ export async function HomeLoader() {
   return (
     <div data-home-loader aria-hidden="true" className="home-loader">
       <Mark size={44} string={false} className="home-loader-mark" />
-      {/* The head script counts it up (components/home/loader-count.ts); React leaves the number alone. */}
-      <b className="home-loader-count" suppressHydrationWarning>
-        0
-      </b>
+      <LoaderCount />
       <span className="home-loader-name">{t('loader')}</span>
     </div>
   );
