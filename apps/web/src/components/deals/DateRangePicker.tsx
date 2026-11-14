@@ -162,7 +162,7 @@ export function DateRangePicker({
           const captionId = `${keysId}-${monthKey(month)}`;
           return (
             <table key={monthKey(month)} role="grid" aria-labelledby={captionId} className="w-full table-fixed border-collapse">
-              <caption id={captionId} className="pb-2 text-left text-lg font-bold capitalize">
+              <caption id={captionId} className="font-display pb-3 text-left text-[1.7rem] leading-none font-black uppercase">
                 {monthHeading.format(asDate(`${monthKey(month)}-01`))}
               </caption>
               <thead>
@@ -193,7 +193,7 @@ export function DateRangePicker({
                           key={date}
                           role="gridcell"
                           aria-selected={isStart || isEnd || inside}
-                          className={`p-0.5 ${inside ? 'bg-[color-mix(in_srgb,var(--glow)_35%,transparent)]' : ''} ${isStart && end ? 'rounded-l-full bg-[color-mix(in_srgb,var(--glow)_35%,transparent)]' : ''} ${isEnd && !isStart ? 'rounded-r-full bg-[color-mix(in_srgb,var(--glow)_35%,transparent)]' : ''}`}
+                          className={`px-0 py-0.5 ${inside ? 'bg-ink/10' : ''} ${isStart && end ? 'bg-ink/10 rounded-l-full' : ''} ${isEnd && !isStart ? 'bg-ink/10 rounded-r-full' : ''}`}
                         >
                           <button
                             ref={(element) => {
@@ -210,15 +210,15 @@ export function DateRangePicker({
                             onFocus={() => setFocused(date)}
                             data-date={date}
                             data-range-end={isStart || isEnd || undefined}
-                            className={`ease-yoyo grid aspect-square min-h-10 w-full place-items-center rounded-full border text-sm font-bold tabular-nums transition-[transform,background-color,color] duration-150 ${
+                            className={`ease-yoyo mx-auto grid aspect-square min-h-10 w-full max-w-11 place-items-center rounded-full border border-transparent text-sm font-bold tabular-nums transition-[transform,background-color,color] duration-150 ${
                               off
-                                ? `text-ink/55 cursor-not-allowed border-transparent ${taken ? 'line-through decoration-2' : ''}`
+                                ? `text-ink/55 cursor-not-allowed ${taken ? 'line-through decoration-2' : ''}`
                                 : isStart || isEnd
-                                  ? 'border-cta bg-cta text-cta-fg scale-105'
+                                  ? 'bg-ink text-canvas'
                                   : inside
-                                    ? 'border-transparent text-black hover:-translate-y-0.5'
-                                    : 'border-ink/25 hover:border-ink hover:-translate-y-0.5 active:scale-[0.96]'
-                            } ${date === today ? 'outline-ink outline-1 outline-offset-1 outline-dashed' : ''}`}
+                                    ? 'text-ink hover:bg-ink/10'
+                                    : 'text-ink hover:bg-mist active:scale-[0.94]'
+                            } ${date === today ? 'border-ink/40 border-dashed' : ''}`}
                           >
                             {Number(date.slice(8, 10))}
                           </button>

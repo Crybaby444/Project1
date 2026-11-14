@@ -24,39 +24,44 @@ export function PriceSummary({ quote, title }: { quote: QuoteView | null; title?
           {t('empty')}
         </p>
       ) : (
-        <dl aria-live="polite" className="flex min-h-44 flex-col gap-2 text-[15px]">
-          <div className="flex flex-wrap items-baseline justify-between gap-x-3">
-            <dt>
-              {quote.priceSource === 'AGREED'
-                ? t('agreed')
-                : t('days', { price: money(quote.dailyCents), days: quote.days })}
-            </dt>
-            <dd className="font-bold tabular-nums">{money(quote.baseCents)}</dd>
-          </div>
-          {quote.discountCents > 0 && (
+        <div aria-live="polite" className="flex min-h-44 flex-col gap-2">
+          <dl className="m-0 flex flex-col gap-2 text-[15px]">
             <div className="flex flex-wrap items-baseline justify-between gap-x-3">
-              <dt>{t('discount', { percent: quote.discountPercent })}</dt>
-              <dd className="font-bold tabular-nums">{money(-quote.discountCents)}</dd>
-            </div>
-          )}
-          <FeeLine quote={quote} />
-          {quote.depositCents > 0 && (
-            <div className="flex flex-wrap items-baseline justify-between gap-x-3">
-              <dt className="flex items-center gap-2">
-                <span aria-hidden="true" className="bg-mist inline-block size-3 rounded-full border border-ink/15" />
-                {t('deposit')}
+              <dt>
+                {quote.priceSource === 'AGREED'
+                  ? t('agreed')
+                  : t('days', { price: money(quote.dailyCents), days: quote.days })}
               </dt>
-              <dd className="font-bold tabular-nums">{money(quote.depositCents)}</dd>
+              <dd className="font-bold tabular-nums">{money(quote.baseCents)}</dd>
             </div>
-          )}
-          <div className="border-ink mt-1 flex flex-wrap items-baseline justify-between gap-x-3 border-t pt-3">
-            <dt className="font-bold">{t('total')}</dt>
-            <dd className="text-2xl font-bold tabular-nums" data-total="">
-              {money(quote.totalCents)}
-            </dd>
-          </div>
-          {quote.depositCents > 0 && <p className="text-sm">{t('depositNote')}</p>}
-        </dl>
+            {quote.discountCents > 0 && (
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3">
+                <dt>{t('discount', { percent: quote.discountPercent })}</dt>
+                <dd className="font-bold tabular-nums">{money(-quote.discountCents)}</dd>
+              </div>
+            )}
+            <FeeLine quote={quote} />
+            {quote.depositCents > 0 && (
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3">
+                <dt className="flex items-center gap-2">
+                  <span
+                    aria-hidden="true"
+                    className="bg-mist border-ink/15 inline-block size-3 rounded-full border"
+                  />
+                  {t('deposit')}
+                </dt>
+                <dd className="font-bold tabular-nums">{money(quote.depositCents)}</dd>
+              </div>
+            )}
+            <div className="border-ink mt-1 flex flex-wrap items-baseline justify-between gap-x-3 border-t pt-3">
+              <dt className="font-bold">{t('total')}</dt>
+              <dd className="font-display text-[2.2rem] leading-none font-black tabular-nums" data-total="">
+                {money(quote.totalCents)}
+              </dd>
+            </div>
+          </dl>
+          {quote.depositCents > 0 && <p className="text-ink/80 m-0 text-sm">{t('depositNote')}</p>}
+        </div>
       )}
     </section>
   );
