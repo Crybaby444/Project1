@@ -1,7 +1,9 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import type { ReactElement } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { renderWithIntl } from '@/test/render';
+import { fakeApi, meRoute, testUser } from '@/test/fake-api';
+import { renderWithSession } from '@/test/render';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
 const location = vi.hoisted(() => ({ pathname: '/settings', search: '' }));
@@ -23,7 +25,20 @@ vi.mock('next/navigation', async (importOriginal) => ({
   useSearchParams: () => new URLSearchParams(location.search),
 }));
 
+type TestLocale = 'en' | 'lv' | 'ru';
+
+/** As in the app: inside the session (signed out unless a person is given), with a fake API. */
+function renderSwitcher(ui: ReactElement, locale: TestLocale = 'en', person?: ReturnType<typeof testUser>) {
+  const api = fakeApi({
+    ...meRoute(person ?? null),
+    'PATCH /api/v1/me': (body) => ({ status: 200, body: { user: { ...person, ...(body as object) } } }),
+  });
+  renderWithSession(ui, { client: api.client, locale, hasSession: Boolean(person) });
+  return api;
+}
+
 afterEach(() => {
+  document.cookie = 'NEXT_LOCALE=; path=/; max-age=0';
   location.pathname = '/settings';
   location.search = '';
   push.mockClear();
@@ -35,7 +50,7 @@ const items = () => screen.queryAllByRole('menuitemradio');
 
 describe('one compact language pill', () => {
   it('shows the current language code and says the language in full (WCAG 2.5.3)', () => {
-    renderWithIntl(<LanguageSwitcher />, 'lv');
+    renderSwitcher(<LanguageSwitcher />, 'lv');
     const button = screen.getByRole('button', { name: /^Valoda: Latviešu,\s*lv$/ });
     expect(button).toHaveAttribute('aria-haspopup', 'menu');
     expect(button).toHaveAttribute('aria-expanded', 'false');
@@ -53,7 +68,7 @@ describe('one compact language pill', () => {
 
   it('opens a menu of the three languages in their own language, the current one checked', async () => {
     const user = userEvent.setup();
-    renderWithIntl(<LanguageSwitcher />, 'ru');
+    renderSwitcher(<LanguageSwitcher />, 'ru');
     const button = pill(/^Язык: Русский/);
     await user.click(button);
 
@@ -79,7 +94,7 @@ describe('one compact language pill', () => {
     location.pathname = '/reset-password';
     location.search = 'token=abc123&next=%2Fsettings';
     const user = userEvent.setup();
-    renderWithIntl(<LanguageSwitcher />, 'ru');
+    renderSwitcher(<LanguageSwitcher />, 'ru');
     await user.click(pill(/^Язык: Русский/));
     expect(screen.getByRole('menuitemradio', { name: 'English' })).toHaveAttribute(
       'href',
@@ -95,7 +110,7 @@ describe('one compact language pill', () => {
 describe('keyboard', () => {
   it('arrow keys move and wrap, Home and End jump', async () => {
     const user = userEvent.setup();
-    renderWithIntl(<LanguageSwitcher />);
+    renderSwitcher(<LanguageSwitcher />);
     await user.click(pill());
     const [en, lv, ru] = items();
     expect(en).toHaveFocus();
@@ -113,7 +128,7 @@ describe('keyboard', () => {
 
   it('opens from the button with Enter, Space, ArrowDown (first) and ArrowUp (last)', async () => {
     const user = userEvent.setup();
-    renderWithIntl(<LanguageSwitcher />, 'lv');
+    renderSwitcher(<LanguageSwitcher />, 'lv');
     const button = pill(/^Valoda: Latviešu/);
     button.focus();
     await user.keyboard('{Enter}');
@@ -131,7 +146,7 @@ describe('keyboard', () => {
 
   it('type-ahead finds a language by its name or its code', async () => {
     const user = userEvent.setup();
-    renderWithIntl(<LanguageSwitcher />);
+    renderSwitcher(<LanguageSwitcher />);
     await user.click(pill());
     await user.keyboard('l');
     expect(screen.getByRole('menuitemradio', { name: 'Latviešu' })).toHaveFocus();
@@ -145,7 +160,7 @@ describe('keyboard', () => {
 
   it('Escape closes the menu and returns the focus to the pill', async () => {
     const user = userEvent.setup();
-    renderWithIntl(<LanguageSwitcher />);
+    renderSwitcher(<LanguageSwitcher />);
     const button = pill();
     await user.click(button);
     await user.keyboard('{Escape}');
@@ -156,7 +171,7 @@ describe('keyboard', () => {
 
   it('Tab closes the menu and moves on', async () => {
     const user = userEvent.setup();
-    renderWithIntl(
+    renderSwitcher(
       <>
         <LanguageSwitcher />
         <button type="button">next</button>
@@ -171,7 +186,7 @@ describe('keyboard', () => {
 describe('pointer and touch', () => {
   it('a click (or a tap) outside closes the menu; a second click on the pill too', async () => {
     const user = userEvent.setup();
-    renderWithIntl(
+    renderSwitcher(
       <>
         <LanguageSwitcher />
         <p>elsewhere</p>
@@ -191,7 +206,7 @@ describe('choosing a language', () => {
     location.pathname = '/reset-password';
     location.search = 'token=abc123';
     const user = userEvent.setup();
-    renderWithIntl(<LanguageSwitcher />);
+    renderSwitcher(<LanguageSwitcher />);
     await user.click(pill());
 
     await user.click(screen.getByRole('menuitemradio', { name: 'Latviešu' }));
@@ -203,9 +218,34 @@ describe('choosing a language', () => {
     expect(pill()).toHaveAttribute('aria-expanded', 'false');
   });
 
+  it('remembers the choice in the NEXT_LOCALE cookie, and leaves the profile alone when signed out', async () => {
+    const user = userEvent.setup();
+    const signedOut = renderSwitcher(<LanguageSwitcher />);
+    await user.click(pill());
+    await user.click(screen.getByRole('menuitemradio', { name: 'Latviešu' }));
+    expect(document.cookie).toContain('NEXT_LOCALE=lv');
+    expect(signedOut.calls.some((call) => call.method === 'PATCH')).toBe(false);
+  });
+
+  it('saves the picked language in the profile of a signed-in person', async () => {
+    const user = userEvent.setup();
+    const person = testUser({ locale: 'en' });
+    const { calls } = renderSwitcher(<LanguageSwitcher />, 'en', person);
+    await waitFor(() =>
+      expect(calls.some((call) => call.method === 'GET' && call.path === '/api/v1/me')).toBe(true),
+    );
+    await user.click(pill());
+    await user.click(screen.getByRole('menuitemradio', { name: 'Русский' }));
+    await waitFor(() =>
+      expect(calls.find((call) => call.method === 'PATCH' && call.path === '/api/v1/me')?.body).toEqual({
+        locale: 'ru',
+      }),
+    );
+  });
+
   it('Enter and Space on a language switch to it', async () => {
     const user = userEvent.setup();
-    renderWithIntl(<LanguageSwitcher />);
+    renderSwitcher(<LanguageSwitcher />);
     await user.click(pill());
     await user.keyboard('{ArrowDown}{Enter}');
     expect(push).toHaveBeenLastCalledWith('/settings', { locale: 'lv', scroll: false });
@@ -216,7 +256,7 @@ describe('choosing a language', () => {
 
   it('leaves a click with a modifier (new tab) and the current language to the link', async () => {
     const user = userEvent.setup();
-    renderWithIntl(<LanguageSwitcher />);
+    renderSwitcher(<LanguageSwitcher />);
     await user.click(pill());
     const latvian = screen.getByRole('menuitemradio', { name: 'Latviešu' });
     latvian.addEventListener('click', (event) => event.preventDefault()); // jsdom cannot open a tab
@@ -241,7 +281,7 @@ describe('choosing a language', () => {
       focus.call(this, options);
     });
     const user = userEvent.setup();
-    renderWithIntl(<LanguageSwitcher />);
+    renderSwitcher(<LanguageSwitcher />);
     await user.click(pill());
     await user.keyboard('{ArrowDown}l{Escape}');
     await user.click(pill());
@@ -253,7 +293,7 @@ describe('choosing a language', () => {
 
   it('gives the focus back to the pill once the new language is there', async () => {
     const user = userEvent.setup();
-    renderWithIntl(<LanguageSwitcher />);
+    renderSwitcher(<LanguageSwitcher />);
     const button = pill();
     await user.click(button);
 

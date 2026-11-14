@@ -1,6 +1,6 @@
 'use client';
 
-import { LOCALES } from '@yoyo/shared';
+import { LOCALES, type Locale } from '@yoyo/shared';
 import { useSearchParams } from 'next/navigation';
 import { flushSync } from 'react-dom';
 import { useLocale, useTranslations } from 'next-intl';
@@ -17,6 +17,7 @@ import {
   useState,
 } from 'react';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
+import { useRememberLocale } from '@/lib/locale/use-locale-choice';
 import { EASE_YOYO, prefersReducedMotion } from '@/lib/motion';
 import { shouldAnimateLanguageChange, switchLanguage } from './switch-language';
 
@@ -37,9 +38,11 @@ import { shouldAnimateLanguageChange, switchLanguage } from './switch-language';
 function useSwitchTo(href: string) {
   const router = useRouter();
   const current = useLocale();
+  const remember = useRememberLocale();
   return (event: MouseEvent<HTMLAnchorElement>, locale: string) => {
     if (event.defaultPrevented || !isPlainClick(event) || locale === current) return;
     event.preventDefault();
+    remember(locale as Locale);
     void switchLanguage({
       locale,
       navigate: () => router.push(href, { locale, scroll: false }),

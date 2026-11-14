@@ -15,6 +15,28 @@ export const E2E_ADMIN = { email: 'admin.e2e@yoyo.test', password: 'e2e admin pa
 /** The local stand-in for Nominatim (e2e/support/fake-nominatim.mjs), so no test calls OpenStreetMap. */
 const FAKE_NOMINATIM_PORT = 4599;
 
+/**
+ * Every test starts as a visitor who has already answered the language suggestion (a NEXT_LOCALE
+ * cookie, which no longer redirects anything: routing.ts). Otherwise the suggestion bar would sit over
+ * the bottom of every /lv and /ru page these English browsers open. e2e/language-suggestion.spec.ts
+ * starts without it.
+ */
+export const ANSWERED_LANGUAGE = {
+  cookies: [
+    {
+      name: 'NEXT_LOCALE',
+      value: 'en',
+      domain: 'localhost',
+      path: '/',
+      expires: -1,
+      httpOnly: false,
+      secure: false,
+      sameSite: 'Lax' as const,
+    },
+  ],
+  origins: [],
+};
+
 export default defineConfig({
   testDir: 'e2e',
   fullyParallel: true,
@@ -24,6 +46,7 @@ export default defineConfig({
   use: {
     baseURL: webUrl,
     trace: 'retain-on-failure',
+    storageState: ANSWERED_LANGUAGE,
   },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
@@ -31,7 +54,7 @@ export default defineConfig({
     {
       name: 'webkit-iphone',
       use: { ...devices['iPhone 15'] },
-      testMatch: /language-(switch|transition)\.spec\.ts$/,
+      testMatch: /language-(switch|transition|suggestion)\.spec\.ts$/,
     },
   ],
   // e2e runs against the production build (`turbo run e2e` builds first). Never reuse a running

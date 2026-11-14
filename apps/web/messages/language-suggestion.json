@@ -1,0 +1,20 @@
+{
+  "en": {
+    "label": "Language suggestion",
+    "text": "This page is also available in English.",
+    "switch": "Switch",
+    "stay": "Stay"
+  },
+  "lv": {
+    "label": "Valodas ieteikums",
+    "text": "Šī lapa ir pieejama arī latviešu valodā.",
+    "switch": "Pāriet",
+    "stay": "Palikt"
+  },
+  "ru": {
+    "label": "Предложение языка",
+    "text": "Эта страница есть и на русском языке.",
+    "switch": "Перейти",
+    "stay": "Остаться"
+  }
+}
