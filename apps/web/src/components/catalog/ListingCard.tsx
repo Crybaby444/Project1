@@ -65,7 +65,7 @@ export function ListingCard({
         </div>
         <div className="flex flex-1 flex-col gap-1">
           <h3
-            className="line-clamp-2 text-base leading-snug font-bold [overflow-wrap:break-word]"
+            className="line-clamp-2 text-[15px] leading-snug font-bold [overflow-wrap:break-word] sm:text-base"
             lang={item.contentLocale}
           >
             <TransitionLink
@@ -81,7 +81,7 @@ export function ListingCard({
             <p className="text-sm font-bold">{t('unavailable')}</p>
           ) : (
             <>
-              <p className="font-display text-[1.7rem] leading-[0.9] font-black uppercase tabular-nums">
+              <p className="font-display text-[1.45rem] leading-[0.9] font-black uppercase tabular-nums sm:text-[1.7rem]">
                 {t('perDay', { price: formatEuros(item.dailyCents, locale) })}
               </p>
               <p className="text-sm">

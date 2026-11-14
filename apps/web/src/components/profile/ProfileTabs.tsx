@@ -58,7 +58,7 @@ export function ProfileTabs({ listings, name }: { listings: CatalogItem[]; name:
         {listings.length === 0 ? (
           <EmptyState headingLevel={3} title={t('noItems', { name })} />
         ) : (
-          <ul className="grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 lg:grid-cols-4">
+          <ul className="grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-4 lg:grid-cols-4">
             {listings.map((item, index) => (
               <li key={item.id}>
                 <ListingCard item={item} eager={index < 4} />

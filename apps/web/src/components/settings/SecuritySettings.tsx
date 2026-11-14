@@ -165,7 +165,7 @@ function DeleteAccount({ hasPassword }: { hasPassword: boolean }) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button variant="ghost" onClick={() => setOpen(true)} className="self-start">
+      <Button variant="ghost" onClick={() => setOpen(true)} className="self-start border-[var(--danger)] hover:border-[var(--danger)] hover:bg-[var(--danger)] hover:text-white">
         {t('delete.open')}
       </Button>
       <Dialog open={open} onClose={() => setOpen(false)} title={t('delete.title')}>
@@ -235,7 +235,7 @@ function DeleteAccountForm({ hasPassword, onCancel }: { hasPassword: boolean; on
         <Button variant="ghost" onClick={onCancel}>
           {t('cancel')}
         </Button>
-        <Button type="submit" loading={busy} disabled={disabled || !confirmed}>
+        <Button type="submit" loading={busy} disabled={disabled || !confirmed} className="border-[var(--danger)] bg-[var(--danger)] text-white">
           {t('delete.submit')}
         </Button>
       </div>
