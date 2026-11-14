@@ -58,11 +58,14 @@ describe('SiteFooter', () => {
     expect(screen.getByRole('contentinfo')).toBeInTheDocument();
   });
 
-  it('is minimal (v16): no giant wordmark, no tagline, no column headings', () => {
+  it('signs off with the wordmark as decoration only, and no tagline or column headings (v16)', () => {
     renderFooter();
     const footer = screen.getByRole('contentinfo');
-    expect(within(footer).queryByText('YOYO')).toBeNull();
+    const mark = footer.querySelector('[data-footer-wordmark]');
+    expect(mark).toHaveAttribute('aria-hidden', 'true');
+    expect(mark).toHaveTextContent('YOYO');
     expect(within(footer).queryByText(siteLv.footer.tagline)).toBeNull();
     expect(footer.querySelectorAll('h2')).toHaveLength(0);
   });
+
 });

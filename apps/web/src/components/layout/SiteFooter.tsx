@@ -6,7 +6,6 @@ import type { MouseEvent } from 'react';
 import { TransitionLink } from '@/components/motion/TransitionLink';
 import { ThemeSelect } from '@/components/theme/ThemeSelect';
 import { shouldAnimateLanguageChange, switchLanguage } from '@/components/ui/switch-language';
-import { Mark } from '@/components/brand/Mark';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { prefersReducedMotion } from '@/lib/motion';
 import { CONTACT_EMAIL } from '@/lib/site';
@@ -82,23 +81,39 @@ function FooterLanguages({ label }: { label: string }) {
 }
 
 /**
- * The bottom of every page (v16): minimal. One row — the mark and the year, the pages as a single line of
- * links, the contact address; one small row under it for the language and the theme.
+ * The bottom of every page (v16): the pages in two short lists (the service in the display face, the
+ * documents beside them) and the contact address, the wordmark across the width as the sign-off, and
+ * one small row for the year, the language and the theme. No tagline, no column headings.
  */
 export function SiteFooter() {
   const t = useTranslations('footer');
-  const links = [...SERVICE_LINKS, ...DOCUMENT_LINKS];
 
   return (
-    <footer data-site-footer className="border-ink/15 bg-canvas text-ink border-t">
-      <div className="mx-auto flex max-w-[1440px] flex-col gap-6 px-4 py-8 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
-        <p className="flex items-center gap-2.5 text-[13px] font-medium">
-          <Mark size={20} />
-          <span>{t('copyright', { year: new Date().getFullYear() })}</span>
-        </p>
-        <nav aria-label={t('pagesLabel')}>
-          <ul className="flex flex-wrap gap-x-5 gap-y-2 text-[13px] font-semibold">
-            {links.map(([key, href]) => (
+    <footer data-site-footer className="border-ink/15 bg-canvas text-ink overflow-x-clip border-t">
+      <div className="mx-auto grid max-w-[1440px] gap-10 px-4 pt-14 pb-6 sm:px-8 sm:pt-20 md:grid-cols-[1.3fr_1fr_1fr]">
+        <a
+          href={`mailto:${CONTACT_EMAIL}`}
+          className="group font-display self-start text-[clamp(1.6rem,2.6vw,2.4rem)] leading-none font-black break-all uppercase"
+        >
+          <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_2px] bg-left-bottom bg-no-repeat pb-1 transition-[background-size] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:bg-[length:100%_2px]">
+            {CONTACT_EMAIL}
+          </span>
+        </a>
+        <nav aria-label={t('pagesLabel')} className="contents">
+          <ul className="m-0 flex list-none flex-col gap-1 p-0">
+            {SERVICE_LINKS.map(([key, href]) => (
+              <li key={key}>
+                <TransitionLink
+                  href={href}
+                  className="font-display inline-flex min-h-10 items-center text-[clamp(1.5rem,2.2vw,2rem)] leading-none font-black uppercase transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:translate-x-1.5"
+                >
+                  {t(`links.${key}`)}
+                </TransitionLink>
+              </li>
+            ))}
+          </ul>
+          <ul className="m-0 flex list-none flex-col gap-1 p-0">
+            {DOCUMENT_LINKS.map(([key, href]) => (
               <li key={key}>
                 <TransitionLink href={href} className={LINK}>
                   {t(`links.${key}`)}
@@ -107,14 +122,23 @@ export function SiteFooter() {
             ))}
           </ul>
         </nav>
-        <a href={`mailto:${CONTACT_EMAIL}`} className={`${LINK} text-[13px] font-semibold`}>
-          {CONTACT_EMAIL}
-        </a>
       </div>
-      <div className="border-ink/10 border-t">
-        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-8">
-          <FooterLanguages label={t('languageLabel')} />
-          <ThemeSelect compact />
+      <div className="@container mx-auto max-w-[1440px] px-4 sm:px-8">
+        <p
+          data-footer-wordmark
+          aria-hidden="true"
+          className="font-display m-0 text-center text-[59cqw] leading-[0.72] font-black tracking-[-0.02em] uppercase select-none"
+        >
+          YOYO
+        </p>
+      </div>
+      <div className="border-ink/15 mt-6 border-t">
+        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-4 sm:px-8">
+          <p className="text-ink/75 m-0 text-[13px] font-medium">{t('copyright', { year: new Date().getFullYear() })}</p>
+          <div className="-mx-3 flex flex-wrap items-center gap-x-6 gap-y-1">
+            <FooterLanguages label={t('languageLabel')} />
+            <ThemeSelect compact />
+          </div>
         </div>
       </div>
     </footer>
