@@ -19,8 +19,12 @@ export function initials(name: string): string {
     .toLocaleUpperCase();
 }
 
+/** A menu row (v16): the display face, a hairline under it, an arrow that slides in on hover or focus. */
 const ITEM =
-  'flex min-h-10 w-full items-center rounded-pill px-4 text-left text-sm font-bold transition-colors duration-150 ease-yoyo hover:bg-mist focus-visible:bg-mist';
+  "group/item font-display flex min-h-12 w-full items-center gap-3 border-b border-ink/10 px-3 text-left text-[1.35rem] leading-none font-black uppercase transition-[padding,background-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-mist hover:pl-4 focus-visible:bg-mist focus-visible:pl-4 after:ml-auto after:text-base after:opacity-0 after:transition-opacity after:duration-300 after:content-['→'_/_''] hover:after:opacity-100 focus-visible:after:opacity-100";
+/** Signing out: quiet, the body face, no arrow. */
+const QUIET_ITEM =
+  'flex min-h-11 w-full items-center rounded-pill px-3 text-left text-sm font-bold text-ink/75 transition-colors duration-150 hover:bg-mist hover:text-ink focus-visible:bg-mist focus-visible:text-ink';
 
 /**
  * The signed-in person's round avatar, opening a menu (WAI-ARIA menu button): who is signed in,
@@ -119,10 +123,15 @@ export function UserMenu({ user }: { user: PublicUser }) {
       </button>
 
       {open && (
-        <div className="border-ink/15 bg-surface animate-pop-in rounded-media absolute top-full right-0 z-40 mt-2 w-72 max-w-[calc(100vw-2rem)] origin-top-right border p-2">
-          <div className="border-ink/15 mb-1 border-b px-4 pt-2 pb-3">
-            <p className="truncate text-sm font-bold">{user.name}</p>
-            <p className="truncate text-sm">{user.email}</p>
+        <div className="border-ink/15 bg-surface text-ink animate-pop-in rounded-media absolute top-full right-0 z-40 mt-2 w-80 max-w-[calc(100vw-2rem)] origin-top-right overflow-hidden border p-2 shadow-[0_24px_48px_-28px_rgba(10,11,14,0.5)]">
+          <div className="border-ink/15 flex items-center gap-3 border-b px-3 pt-2 pb-4">
+            <span aria-hidden="true" className="bg-ink text-canvas font-display grid size-11 shrink-0 place-items-center rounded-full text-lg font-black">
+              {initials(user.name)}
+            </span>
+            <span className="min-w-0">
+              <span className="font-display block truncate text-[1.5rem] leading-none font-black uppercase">{user.name}</span>
+              <span className="text-ink/75 block truncate text-sm">{user.email}</span>
+            </span>
           </div>
           <ul ref={menuRef} id={menuId} role="menu" aria-label={t('account')} onKeyDown={onMenuKeyDown}>
             <li role="none">
@@ -131,11 +140,11 @@ export function UserMenu({ user }: { user: PublicUser }) {
                 role="menuitem"
                 tabIndex={-1}
                 onClick={() => close({ refocus: false })}
-                className={`${ITEM} justify-between gap-3`}
+                className={ITEM}
               >
                 <span>{td('myDeals')}</span>
                 {waiting > 0 && (
-                  <span className="rounded-pill bg-ink text-canvas animate-pop-in inline-flex min-h-6 min-w-6 items-center justify-center px-2 text-[12px] tabular-nums">
+                  <span className="rounded-pill bg-ink text-canvas animate-pop-in font-sans inline-flex min-h-6 min-w-6 items-center justify-center px-2 text-[12px] tabular-nums">
                     <span aria-hidden="true">{waiting}</span>
                     <span className="sr-only">{td('waiting', { count: waiting })}</span>
                   </span>
@@ -200,7 +209,7 @@ export function UserMenu({ user }: { user: PublicUser }) {
               </Link>
             </li>
             <li role="none">
-              <button type="button" role="menuitem" tabIndex={-1} onClick={onSignOut} className={ITEM}>
+              <button type="button" role="menuitem" tabIndex={-1} onClick={onSignOut} className={`${QUIET_ITEM} mt-1`}>
                 {t('signOut')}
               </button>
             </li>

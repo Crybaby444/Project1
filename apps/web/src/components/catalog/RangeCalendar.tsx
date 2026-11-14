@@ -142,7 +142,7 @@ export function RangeCalendar({ value, onChange, today, lastDay, blocked = [], t
           const captionId = `${keysId}-${monthKey(month)}`;
           return (
             <table key={monthKey(month)} role="grid" aria-labelledby={captionId} className="w-full table-fixed border-separate border-spacing-y-1">
-              <caption id={captionId} className="pb-2 text-left text-base font-bold capitalize">
+              <caption id={captionId} className="font-display pb-2 text-left text-[1.35rem] leading-none font-black uppercase">
                 {monthHeading.format(asDate(`${monthKey(month)}-01`))}
               </caption>
               <thead>
@@ -184,7 +184,7 @@ export function RangeCalendar({ value, onChange, today, lastDay, blocked = [], t
                               : null;
                       return (
                         <td key={date} role="gridcell" aria-selected={chosen} className="relative p-0">
-                          {band && <span aria-hidden="true" className={`bg-[color-mix(in_srgb,var(--glow)_40%,transparent)] absolute inset-y-0 ${band}`} />}
+                          {band && <span aria-hidden="true" className={`bg-ink/10 absolute inset-y-0 ${band}`} />}
                           <button
                             ref={(element) => {
                               if (element) buttons.current.set(date, element);

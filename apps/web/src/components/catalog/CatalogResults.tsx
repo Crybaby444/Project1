@@ -118,7 +118,7 @@ export async function CatalogResults({ params: raw, category, related, path, tit
                 {items.length === 0 ? (
                   <EmptyResults params={params} resetHref={params.q ? `${path}?q=${encodeURIComponent(params.q)}` : path} />
                 ) : (
-                  <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                  <ul className="grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 xl:grid-cols-3">
                     {items.map((item, index) => (
                       <li key={item.id}>
                         <ListingCard item={item} eager={index < 3} />
