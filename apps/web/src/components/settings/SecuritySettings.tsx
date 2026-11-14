@@ -49,6 +49,19 @@ export function SecuritySettings({ user }: { user: PublicUser }) {
       <SettingsSection title={t('logoutAll.open')} intro={t('logoutAll.intro')}>
         <LogoutEverywhere />
       </SettingsSection>
+      <SettingsSection title={t('data.title')} intro={t('data.intro')}>
+        {/* The API answers with a JSON file (Content-Disposition: attachment): GDPR access and portability. */}
+        <a
+          href="/api/v1/me/export"
+          download
+          className="rounded-pill border-ink bg-surface text-ink hover:bg-mist inline-flex min-h-11 items-center gap-2 self-start border px-5 text-[13px] font-bold tracking-[0.03em] uppercase transition-colors duration-150"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M5 20h14" />
+          </svg>
+          {t('data.download')}
+        </a>
+      </SettingsSection>
       <SettingsSection title={t('delete.open')} intro={t('delete.intro')}>
         <DeleteAccount hasPassword={user.hasPassword} />
       </SettingsSection>

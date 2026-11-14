@@ -33,6 +33,13 @@ function renderSecurity(
 describe('SecuritySettings', () => {
   beforeEach(() => replace.mockClear());
 
+  it('offers all my data as one JSON download (GDPR access and portability)', () => {
+    renderSecurity(testUser(), {});
+    const link = screen.getByRole('link', { name: en.settings.security.data.download });
+    expect(link).toHaveAttribute('href', '/api/v1/me/export');
+    expect(link).toHaveAttribute('download');
+  });
+
   it('changes the password with the current one', async () => {
     const user = userEvent.setup();
     const calls = renderSecurity(testUser(), {

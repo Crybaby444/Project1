@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, Inject, Patch, Post, Req, Res, UseGuards } from '@nestjs/common';
-import { ApiAcceptedResponse, ApiBody, ApiNoContentResponse, ApiTags } from '@nestjs/swagger';
+import { ApiAcceptedResponse, ApiBody, ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { DeleteAccountRequestSchema, type PublicUser, type RefreshResponse, type UserResponse } from '@yoyo/shared';
 import type { Request, Response } from 'express';
 import { ZodResponse } from 'nestjs-zod';
@@ -18,6 +18,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ChangePasswordDto, DeleteAccountDto, PhoneDto, PhoneVerifyDto, UpdateProfileDto } from './me.dto';
 import { MeService } from './me.service';
 import { PhoneService } from './phone.service';
+import { DataExportService } from './data-export.service';
 
 @ApiTags('me')
 @Controller('me')
@@ -28,11 +29,24 @@ export class MeController {
     private readonly phone: PhoneService,
     private readonly prisma: PrismaService,
     private readonly limiter: RateLimiter,
+    private readonly dataExport: DataExportService,
     @Inject(ENV) private readonly env: Pick<Env, 'NODE_ENV'>,
   ) {}
 
   private get secureCookies(): boolean {
     return this.env.NODE_ENV === 'production';
+  }
+
+  /** Everything Yoyo holds about me as a JSON file (GDPR access and portability). */
+  @Get('export')
+  @ApiOkResponse({ description: 'A JSON download of all my data' })
+  @ApiErrors(401, 403, 429)
+  async export(@CurrentUser() user: PublicUser, @Res({ passthrough: true }) res: Response): Promise<Record<string, unknown>> {
+    this.limiter.hit(RATE_LIMITS.dataExport(user.id));
+    const data = await this.dataExport.export(user.id);
+    res.setHeader('Content-Disposition', `attachment; filename="yoyo-data-${new Date().toISOString().slice(0, 10)}.json"`);
+    res.setHeader('Cache-Control', 'no-store');
+    return data;
   }
 
   @Get()
