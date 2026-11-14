@@ -24,6 +24,12 @@ describe('v16 palette', () => {
     expect(dark).toMatch(/--ink:\s*#f4f1e6/i);
   });
 
+  it('in the dark the "night" scenes are the inverse of the page (cream), so their transitions still show', () => {
+    const dark = block("[data-theme='dark']");
+    expect(dark).toMatch(/--night:\s*#f4f1e6/i);
+    expect(dark).toMatch(/--paper:\s*#0a0b0e/i);
+  });
+
   it('is black and white only: the accent is a neutral chrome grey, no blue (owner, 2026-11-13)', () => {
     expect(css).toMatch(/--glow:\s*#a9aeb6/i);
     expect(css).not.toMatch(/#9ed2ff/i);

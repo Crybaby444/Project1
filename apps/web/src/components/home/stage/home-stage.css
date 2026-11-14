@@ -14,12 +14,12 @@ html[data-staged] [data-site-header] {
   border: 0;
   background: transparent;
   mix-blend-mode: difference;
-  --ink: var(--paper);
+  --ink: #f4f1e6; /* a light ink: 'difference' over the scenes turns it dark over cream, light over night */
   --surface: transparent;
   --mist: transparent;
-  --cta-bg: var(--paper);
+  --cta-bg: #f4f1e6;
   --cta-fg: #000;
-  color: var(--paper);
+  color: #f4f1e6;
 }
 
 /* Intro: the hero and the night share one held screen; the night spills over the hero from the yo-yo. */
