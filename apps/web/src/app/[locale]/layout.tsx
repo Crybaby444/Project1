@@ -6,6 +6,7 @@ import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import { DropCursor } from '@/components/motion/DropCursor';
+import { loaderCountScript } from '@/components/home/loader-count';
 import { freshLoadScript } from '@/components/motion/fresh-load';
 import { themeInitScript } from '@/components/theme/theme-script';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
@@ -58,7 +59,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
   return (
     <html lang={htmlLang} className={fontVariables} data-theme={serverTheme} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript + freshLoadScript + NO_LOADER }} />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript + freshLoadScript + NO_LOADER + loaderCountScript }} />
       </head>
       <body className="text-ink flex min-h-dvh flex-col">
         <NextIntlClientProvider>
