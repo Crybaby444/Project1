@@ -538,3 +538,7 @@ html[data-staged] .home-loader {
   100% { transform: rotate(720deg); }
 }
 
+/* The home has no theme to choose: it always shows the light palette. */
+html:has([data-home-root]) [data-theme-control] {
+  display: none;
+}
