@@ -1,6 +1,7 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
+import { shouldRelayout } from './relayout';
 import type { Stage } from './scene';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -14,6 +15,8 @@ const clamp = (x: number, a: number, b: number) => Math.min(b, Math.max(a, x));
  * facts and the finale (all values from docs/design/concept-v16.html). Returns the clean-up.
  */
 export function mountTimelines(stage: Stage, root: HTMLElement, opts: { mobile: boolean }): () => void {
+  // A phone's browser bar changes the height while scrolling: the triggers keep their layout through it.
+  ScrollTrigger.config({ ignoreMobileResize: true });
   const lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.9, smoothWheel: true });
   lenis.on('scroll', ScrollTrigger.update);
   const tick = (time: number) => { lenis.raf(time * 1000); stage.frame(performance.now()); };
@@ -120,7 +123,13 @@ export function mountTimelines(stage: Stage, root: HTMLElement, opts: { mobile: 
     gsap.from('[data-home="finale"] h2 > span', { yPercent: 40, opacity: 0, stagger: 0.12, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: '[data-home="finale"]', start: () => 'top+=' + innerHeight * 0.4 + ' top' } });
   }, root);
 
-  const onResize = () => { stage.resize(); stage.paintLetters(); ScrollTrigger.refresh(); };
+  let size = { w: innerWidth, h: innerHeight };
+  const onResize = () => {
+    const next = { w: innerWidth, h: innerHeight };
+    if (!shouldRelayout(size, next, opts.mobile)) return;
+    size = next;
+    stage.resize(); stage.paintLetters(); ScrollTrigger.refresh();
+  };
   addEventListener('resize', onResize);
   return () => {
     removeEventListener('resize', onResize);
