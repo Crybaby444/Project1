@@ -19,7 +19,7 @@ export async function Finale() {
             className="font-display text-display-fit m-0 leading-[0.96] font-black uppercase [--fit-em:0.62]"
           >
             <span className="block">{t('finale.line1')}</span>
-            <span className="block text-transparent [-webkit-text-stroke:2px_var(--ink)]">{t('finale.line2')}</span>
+            <span className="block text-[var(--canvas)] [-webkit-text-stroke:4px_var(--ink)] [paint-order:stroke_fill]">{t('finale.line2')}</span>
           </h2>
           <div className="relative mx-auto mt-[3vh] h-[clamp(84px,9vw,150px)]">
             <div data-anchor="final-slot" aria-hidden="true" className="absolute bottom-0 left-1/2 aspect-square h-full -translate-x-1/2" />

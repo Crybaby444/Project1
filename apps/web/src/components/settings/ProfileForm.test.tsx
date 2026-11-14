@@ -6,6 +6,7 @@ import lv from '../../../messages/lv.json';
 import { apiError, fakeApi, meRoute, testUser, type FakeRoutes } from '@/test/fake-api';
 import { renderWithSession } from '@/test/render';
 import { ProfileForm } from './ProfileForm';
+import { choose } from '@/test/select';
 
 const replace = vi.fn();
 vi.mock('@/i18n/navigation', async (importOriginal) => ({
@@ -64,7 +65,7 @@ describe('ProfileForm', () => {
     const user = userEvent.setup();
     const calls = renderProfile(echo);
 
-    await user.selectOptions(screen.getByLabelText(en.settings.profile.language), 'lv');
+    await choose(user, screen.getByRole('combobox', { name: en.settings.profile.language }), 'Latviešu');
     await user.click(screen.getByRole('button', { name: en.settings.profile.save }));
 
     await waitFor(() => expect(replace).toHaveBeenCalledWith('/settings', { locale: 'lv' }));

@@ -70,6 +70,11 @@ export default function HomeStage() {
     let unmount: (() => void) | null = null;
     const html = document.documentElement;
     html.dataset.staged = '';
+    // The staged home always starts at its top: a reload mid-way restored the scroll before the scenes
+    // were set, and showed them half-way (cream above, night below).
+    const restoration = history.scrollRestoration;
+    history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
     // Under the loader: the header and the hero's foot wait, and come in after the letters (concept v16).
     const waiting = [
       document.querySelector<HTMLElement>('[data-site-header]'),
@@ -105,6 +110,7 @@ export default function HomeStage() {
       unmount?.();
       stage.dispose();
       delete html.dataset.staged;
+      history.scrollRestoration = restoration;
       waiting.forEach((el) => { el.style.opacity = ''; el.style.visibility = ''; });
       // The loader stays: a remount (React's strict mode in development) floods it away itself, and
       // without a stage it fades away on its own (CSS).
@@ -112,5 +118,5 @@ export default function HomeStage() {
   }, [reduce]);
 
   if (reduce) return null;
-  return <canvas ref={ref} aria-hidden="true" className="pointer-events-none fixed inset-0 z-[5] h-full w-full" />;
+  return <canvas ref={ref} aria-hidden="true" className="pointer-events-none fixed inset-x-0 top-0 z-[5] h-lvh w-full" />;
 }

@@ -648,7 +648,7 @@
       "ARCHIVED": "Dzēsti"
     },
     "emptyTitle": "Vēl nav ko izīrēt",
-    "emptyBody": "Pievieno pirmo lietu, ko reti lieto: urbi, telti, konsoli. Tas aizņem dažas minūtes un saglabājas pa ceļam.",
+    "emptyBody": "Pievieno pirmo lietu, ko reti lieto. Tas aizņem dažas minūtes un saglabājas pa ceļam.",
     "emptyFilter": "Te pagaidām nekā nav.",
     "untitled": "Bez nosaukuma",
     "noPhoto": "Vēl nav foto",
@@ -755,7 +755,7 @@
     },
     "search": {
       "label": "Meklēt katalogā",
-      "placeholder": "Urbjmašīna, telts, projektors…",
+      "placeholder": "Ko tu meklē?",
       "clear": "Notīrīt meklēšanu",
       "submit": "Meklēt",
       "count": "{count, plural, =0 {Nav ieteikumu} zero {# ieteikumi} one {# ieteikums} other {# ieteikumi}}",

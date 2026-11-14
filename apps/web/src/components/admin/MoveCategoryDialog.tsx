@@ -1,5 +1,6 @@
 'use client';
 
+import { Select } from '@/components/ui/Select';
 import type { CategoryNode, Locale } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useId, useState } from 'react';
@@ -51,25 +52,17 @@ export function MoveCategoryDialog({
           <label htmlFor={selectId} className="text-sm font-bold">
             {t('label')}
           </label>
-          <select
+          <Select
             id={selectId}
             value={choice}
-            onChange={(event) => setChoice(event.target.value)}
+            placeholder={t('placeholder')}
+            onChange={setChoice}
             aria-invalid={missing || undefined}
             aria-describedby={missing ? errorId : undefined}
-            className="border-ink bg-surface rounded-pill min-h-12 w-full border px-4 text-base"
-          >
-            <option value="">{t('placeholder')}</option>
-            {roots.map((root) => (
-              <optgroup key={root.id} label={root.names[locale]}>
-                {root.children.map((leaf) => (
-                  <option key={leaf.id} value={leaf.id} disabled={leaf.id === currentId}>
-                    {leaf.names[locale]}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </select>
+            options={roots.flatMap((root) =>
+              root.children.map((leaf) => ({ value: leaf.id, label: leaf.names[locale], group: root.names[locale], disabled: leaf.id === currentId })),
+            )}
+          />
           {missing && (
             <p id={errorId} className="text-sm font-bold">
               {t('required')}

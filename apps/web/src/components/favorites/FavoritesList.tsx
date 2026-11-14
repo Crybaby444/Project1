@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { ListingCard } from '@/components/catalog/ListingCard';
 import { Button } from '@/components/ui/Button';
 import { useFavorites } from '@/lib/catalog/use-favorites';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 /**
  * The signed-in person's favourites, newest first. One that left the catalog (hidden, archived)
@@ -31,11 +32,15 @@ export function FavoritesList() {
           </Button>
         </div>
       ) : favorites.data.length === 0 ? (
-        <div className="border-ink/15 rounded-media flex flex-col items-start gap-3 border border-dashed p-6 sm:p-10">
-          <p className="text-2xl font-bold">{t('emptyTitle')}</p>
-          <p className="max-w-[52ch]">{t('emptyBody')}</p>
-          <Button href="/c">{t('browse')}</Button>
-        </div>
+        <EmptyState
+          title={t('emptyTitle')}
+          body={t('emptyBody')}
+          action={
+            <Button href="/c" size="lg">
+              {t('browse')}
+            </Button>
+          }
+        />
       ) : (
         <ul className="grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 lg:grid-cols-4">
           {favorites.data.map((item) => (

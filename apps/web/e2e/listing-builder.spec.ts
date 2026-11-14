@@ -160,8 +160,12 @@ test.describe('send for review', () => {
       .fill('A PS5 with two controllers and three games, ready for a weekend of play.');
 
     await page.getByRole('button', { name: b.next, exact: true }).click();
-    const details = page.locator('select');
-    for (const select of await details.all()) await select.selectOption({ index: 1 });
+    // The site's own selects (components/ui/Select): open each and take its first option.
+    const details = page.locator('main [role="combobox"][aria-haspopup="listbox"]');
+    for (const select of await details.all()) {
+      await select.click();
+      await page.getByRole('listbox').getByRole('option').first().click();
+    }
     await page.getByLabel(/^Controllers/).fill('2');
 
     await page.getByRole('button', { name: b.next, exact: true }).click();

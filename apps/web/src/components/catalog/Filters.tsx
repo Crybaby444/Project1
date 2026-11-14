@@ -6,6 +6,7 @@ import { useId, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Dialog } from '@/components/ui/Dialog';
 import { Field } from '@/components/ui/Field';
+import { Select } from '@/components/ui/Select';
 import { INPUT_CLASS } from '@/components/ui/inputs';
 import { catalogSearch, filterCount, type CatalogParams } from '@/lib/catalog/params';
 import type { Range } from '@/lib/catalog/range';
@@ -122,18 +123,14 @@ function FilterFields({ params, districts, today }: Omit<FiltersProps, 'total'>)
 
       {districts.length > 0 && (
         <Field label={t('district')}>
-          <select
+          <Select
             value={params.district ?? ''}
-            onChange={(event) => navigate(catalogSearch(params, { district: event.target.value || undefined }))}
-            className={`${INPUT_CLASS} appearance-none`}
-          >
-            <option value="">{t('anyDistrict')}</option>
-            {districts.map((d) => (
-              <option key={d.slug} value={d.slug}>
-                {d.district} ({d.count})
-              </option>
-            ))}
-          </select>
+            onChange={(next) => navigate(catalogSearch(params, { district: next || undefined }))}
+            options={[
+              { value: '', label: t('anyDistrict') },
+              ...districts.map((d) => ({ value: d.slug, label: `${d.district} (${d.count})` })),
+            ]}
+          />
         </Field>
       )}
     </div>

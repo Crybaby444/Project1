@@ -7,6 +7,7 @@ import { apiError, fakeApi, meRoute, testUser, type FakeRoutes } from '@/test/fa
 import { categoriesRoute, ownerListing } from '@/test/listings';
 import { renderWithSession } from '@/test/render';
 import { ModerationQueue } from './ModerationQueue';
+import { choose } from '@/test/select';
 
 vi.mock('@/i18n/navigation', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/i18n/navigation')>()),
@@ -144,7 +145,7 @@ describe('ModerationQueue', () => {
       const dialog = screen.getByRole('dialog');
       await user.click(within(dialog).getByRole('button', { name: m.move.submit }));
       expect(within(dialog).getByText(m.move.required)).toBeVisible();
-      await user.selectOptions(within(dialog).getByLabelText(m.move.label), 'Game consoles');
+      await choose(user, within(dialog).getByRole('combobox', { name: m.move.label }), 'Game consoles');
       await user.click(within(dialog).getByRole('button', { name: m.move.submit }));
       await waitFor(() =>
         expect(calls.find((c) => c.path.endsWith('/category'))?.body).toEqual({ categoryId: 'cat-consoles', version: 3 }),

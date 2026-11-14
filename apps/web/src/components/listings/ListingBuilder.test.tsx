@@ -7,6 +7,7 @@ import { fakeApi, meRoute, testUser, type FakeRoutes } from '@/test/fake-api';
 import { categoriesRoute, echoListing, ownerListing } from '@/test/listings';
 import { renderWithSession } from '@/test/render';
 import { ListingBuilder } from './ListingBuilder';
+import { choose } from '@/test/select';
 
 vi.mock('@/i18n/navigation', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/i18n/navigation')>()),
@@ -104,9 +105,8 @@ describe('ListingBuilder', () => {
   it('shows the attributes of the category in the page language and sends numbers as numbers', async () => {
     const user = userEvent.setup();
     const calls = renderBuilder({}, ownerListing({ categoryId: 'cat-consoles' }), 'attributes', 'lv');
-    const model = await screen.findByLabelText(`Modelis · ${lv.builder.attributes.required}`);
-    expect(within(model).getByRole('option', { name: 'PlayStation 5' })).toBeInTheDocument();
-    await user.selectOptions(model, 'ps5');
+    const model = await screen.findByRole('combobox', { name: `Modelis · ${lv.builder.attributes.required}` });
+    await choose(user, model, 'PlayStation 5');
     await user.type(screen.getByLabelText('Pultis'), '2,5');
     await user.click(screen.getByRole('radio', { name: lv.builder.attributes.yes }));
 

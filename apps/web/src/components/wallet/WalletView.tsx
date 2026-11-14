@@ -14,6 +14,7 @@ import { useMoney } from '@/lib/deals/money';
 import { useWallet, useWalletHistory } from '@/lib/deals/queries';
 import { useErrorText } from '@/lib/forms/error-text';
 import { MoneyDialog, type MoneyMode } from './MoneyDialog';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 type Tile = { key: 'available' | 'deposits' | 'incoming' | 'earned'; cents: number; hint?: string };
 
@@ -97,7 +98,7 @@ function History() {
           </Button>
         </div>
       ) : query.data.items.length === 0 ? (
-        <p className="border-ink/15 border-y py-10 text-center">{kind === 'ALL' ? t('emptyAll') : t('empty')}</p>
+        <EmptyState headingLevel={3} title={kind === 'ALL' ? t('emptyAll') : t('empty')} />
       ) : (
         <>
           <ul className="border-ink/15 divide-ink/15 flex flex-col divide-y border-y" data-ledger="">

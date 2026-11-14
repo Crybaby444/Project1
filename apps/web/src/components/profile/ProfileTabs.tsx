@@ -4,6 +4,7 @@ import type { CatalogItem } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
 import { useId, useRef, useState, type KeyboardEvent } from 'react';
 import { ListingCard } from '@/components/catalog/ListingCard';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 const TABS = ['items', 'reviews'] as const;
 type Tab = (typeof TABS)[number];
@@ -55,7 +56,7 @@ export function ProfileTabs({ listings, name }: { listings: CatalogItem[]; name:
       </div>
       <div role="tabpanel" id={`${base}-items`} aria-labelledby={`${base}-items-tab`} hidden={tab !== 'items'}>
         {listings.length === 0 ? (
-          <p className="border-ink/15 rounded-media border border-dashed p-6">{t('noItems', { name })}</p>
+          <EmptyState headingLevel={3} title={t('noItems', { name })} />
         ) : (
           <ul className="grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 lg:grid-cols-4">
             {listings.map((item, index) => (
@@ -67,10 +68,7 @@ export function ProfileTabs({ listings, name }: { listings: CatalogItem[]; name:
         )}
       </div>
       <div role="tabpanel" id={`${base}-reviews`} aria-labelledby={`${base}-reviews-tab`} hidden={tab !== 'reviews'}>
-        <div className="border-ink/15 rounded-media flex flex-col gap-2 border border-dashed p-6">
-          <p className="text-lg font-bold">{t('noReviewsTitle')}</p>
-          <p>{t('noReviewsBody')}</p>
-        </div>
+        <EmptyState headingLevel={3} title={t('noReviewsTitle')} body={t('noReviewsBody')} />
       </div>
     </div>
   );

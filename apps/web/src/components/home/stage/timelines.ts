@@ -1,6 +1,7 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
+import { shouldRelayout } from './relayout';
 import type { Stage } from './scene';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -14,6 +15,8 @@ const clamp = (x: number, a: number, b: number) => Math.min(b, Math.max(a, x));
  * facts and the finale (all values from docs/design/concept-v16.html). Returns the clean-up.
  */
 export function mountTimelines(stage: Stage, root: HTMLElement, opts: { mobile: boolean }): () => void {
+  // A phone's browser bar changes the height while scrolling: the triggers keep their layout through it.
+  ScrollTrigger.config({ ignoreMobileResize: true });
   const lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.9, smoothWheel: true });
   lenis.on('scroll', ScrollTrigger.update);
   const tick = (time: number) => { lenis.raf(time * 1000); stage.frame(performance.now()); };
@@ -28,6 +31,8 @@ export function mountTimelines(stage: Stage, root: HTMLElement, opts: { mobile: 
 
   const ctx = gsap.context(() => {
     const h = (x: number) => x / HK;
+    // GSAP blends colours, not var(): read the theme's value when the tween starts.
+    const tone = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
     const letters = q<HTMLElement>('[data-home="hero"] [data-letter]');
 
     // ---- intro on arrival: the letters rise, the yo-yo drops on its string and bounces at its end
@@ -52,9 +57,9 @@ export function mountTimelines(stage: Stage, root: HTMLElement, opts: { mobile: 
       .to('[data-row="1"]', { opacity: 1, scale: 1.03, duration: 0.07, ease: 'power2.inOut' }, 0.4)
       .to('[data-row="1"]', { opacity: 0.3, scale: 1, duration: 0.07, ease: 'power2.inOut' }, 0.52)
       .to('[data-row="2"]', { opacity: 1, scale: 1.03, duration: 0.07, ease: 'power2.inOut' }, 0.52)
-      .to('[data-row="2"]', { color: 'var(--paper)', duration: 0.07, ease: 'power2.inOut' }, 0.52)
+      .to('[data-row="2"]', { color: () => tone('--paper'), duration: 0.07, ease: 'power2.inOut' }, 0.52)
       .to('[data-row="2"]', { opacity: 0.3, scale: 1, duration: 0.07, ease: 'power2.inOut' }, 0.64)
-      .to('[data-row="2"]', { color: 'rgba(244,241,230,0)', duration: 0.07, ease: 'power2.inOut' }, 0.64)
+      .to('[data-row="2"]', { color: () => tone('--night'), duration: 0.07, ease: 'power2.inOut' }, 0.64)
       .to('[data-row="3"]', { opacity: 1, scale: 1.04, duration: 0.07, ease: 'power2.inOut' }, 0.64)
       .to('[data-row]', { opacity: 1, scale: 1, duration: 0.07, ease: 'power2.inOut' }, 0.78)
       .fromTo('[data-say]', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.08, ease: 'power3.out' }, 0.84)
@@ -120,7 +125,13 @@ export function mountTimelines(stage: Stage, root: HTMLElement, opts: { mobile: 
     gsap.from('[data-home="finale"] h2 > span', { yPercent: 40, opacity: 0, stagger: 0.12, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: '[data-home="finale"]', start: () => 'top+=' + innerHeight * 0.4 + ' top' } });
   }, root);
 
-  const onResize = () => { stage.resize(); stage.paintLetters(); ScrollTrigger.refresh(); };
+  let size = { w: innerWidth, h: innerHeight };
+  const onResize = () => {
+    const next = { w: innerWidth, h: innerHeight };
+    if (!shouldRelayout(size, next, opts.mobile)) return;
+    size = next;
+    stage.resize(); stage.paintLetters(); ScrollTrigger.refresh();
+  };
   addEventListener('resize', onResize);
   return () => {
     removeEventListener('resize', onResize);

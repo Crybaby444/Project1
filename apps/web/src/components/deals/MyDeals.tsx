@@ -7,8 +7,8 @@ import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { TransitionLink } from '@/components/motion/TransitionLink';
 import { Reveal } from '@/components/motion/Reveal';
 import { Button } from '@/components/ui/Button';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { Chip } from '@/components/ui/Chip';
-import { Mark } from '@/components/brand/Mark';
 import { displayFit } from '@/lib/display-fit';
 import { formatPeriod } from '@/lib/deals/dates';
 import { useDeadline } from '@/lib/deals/deadline';
@@ -106,20 +106,19 @@ function Page({ role, group, page, onTotal }: { role: DealRole; group: DealGroup
 
 function Empty({ role, group }: { role: DealRole; group: DealGroup }) {
   const t = useTranslations('myDeals');
-  if (group !== 'open') {
-    return <p className="border-ink/40 rounded-media border border-dashed p-8 text-center">{t(`empty.${group}`)}</p>;
-  }
+  if (group !== 'open') return <EmptyState title={t(`empty.${group}`)} />;
   return (
-    <section className="border-ink/15 flex flex-col items-center gap-5 border-y px-6 py-16 text-center">
-      <Mark size={88} string={false} className="animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
-      <h2 className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">{t(`empty.${role}`)}</h2>
-      <p className="max-w-[52ch] leading-relaxed">{t(`empty.${role}Body`)}</p>
-      {role === 'owner' && (
-        <Button href="/listings/new" size="lg">
-          {t('lend')}
-        </Button>
-      )}
-    </section>
+    <EmptyState
+      title={t(`empty.${role}`)}
+      body={t(`empty.${role}Body`)}
+      action={
+        role === 'owner' ? (
+          <Button href="/listings/new" size="lg">
+            {t('lend')}
+          </Button>
+        ) : null
+      }
+    />
   );
 }
 
@@ -238,7 +237,7 @@ export function MyDeals({ initialRole, initialGroup }: { initialRole: DealRole; 
               ))}
             </ul>
             {group === 'action' && total !== undefined && waiting(role) === 0 && summary.data && (
-              <p className="border-ink/40 rounded-media border border-dashed p-8 text-center">{t('empty.action')}</p>
+              <EmptyState title={t('empty.action')} />
             )}
             {!loadedAll && (
               <Button variant="ghost" className="self-center" onClick={() => setPages((p) => p + 1)}>

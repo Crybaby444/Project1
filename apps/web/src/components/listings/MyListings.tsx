@@ -7,13 +7,13 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Chip } from '@/components/ui/Chip';
-import { Mark } from '@/components/brand/Mark';
 import { useErrorText } from '@/lib/forms/error-text';
 import { useMyListings } from '@/lib/listings/queries';
 import { unwrap } from '@/lib/session/api-error';
 import { useApiClient } from '@/lib/session/SessionProvider';
 import type { ListingAction } from './ListingActions';
 import { MyListingCard } from './MyListingCard';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 export type MyListingsFilter = ListingStatus | 'ALL';
 const FILTERS: MyListingsFilter[] = ['ALL', ...LISTING_STATUSES];
@@ -106,18 +106,17 @@ export function MyListings({ initialStatus }: { initialStatus: MyListingsFilter 
         </div>
       ) : items.length === 0 ? (
         status === 'ALL' ? (
-          <section className="border-ink/15 flex flex-col items-center gap-5 border-y px-6 py-16 text-center">
-            <Mark size={96} string={false} className="animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
-            <h2 className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">{t('emptyTitle')}</h2>
-            <p className="max-w-[52ch] leading-relaxed">{t('emptyBody')}</p>
-            <Button href="/listings/new" size="lg">
-              {t('lend')}
-            </Button>
-          </section>
+          <EmptyState
+            title={t('emptyTitle')}
+            body={t('emptyBody')}
+            action={
+              <Button href="/listings/new" size="lg">
+                {t('lend')}
+              </Button>
+            }
+          />
         ) : (
-          <p className="border-ink/40 rounded-media border border-dashed p-8 text-center">
-            {t('emptyFilter')}
-          </p>
+          <EmptyState title={t('emptyFilter')} />
         )
       ) : (
         <>

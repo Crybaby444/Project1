@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { ChoicePills } from '@/components/ui/ChoicePills';
 import { Field } from '@/components/ui/Field';
+import { Select } from '@/components/ui/Select';
 import { INPUT_CLASS } from '@/components/ui/inputs';
 import { localized } from '@/lib/listings/categories';
 import { useCheckText } from '../BuilderContext';
@@ -53,21 +54,14 @@ export function AttributeField({ def, value, onChange, onBlur, error, readOnly }
     case 'SELECT':
       return (
         <Field label={fieldLabel} error={error}>
-          <select
+          <Select
             value={typeof value === 'string' ? value : ''}
             disabled={readOnly}
-            aria-required={def.required || undefined}
-            onChange={(event) => onChange(event.target.value === '' ? undefined : event.target.value)}
+            placeholder={t('choose')}
+            onChange={(next) => onChange(next === '' ? undefined : next)}
             onBlur={onBlur}
-            className={`${INPUT_CLASS} appearance-auto`}
-          >
-            <option value="">{t('choose')}</option>
-            {(def.options ?? []).map((option) => (
-              <option key={option.value} value={option.value}>
-                {localized(option.labels, locale)}
-              </option>
-            ))}
-          </select>
+            options={(def.options ?? []).map((option) => ({ value: option.value, label: localized(option.labels, locale) }))}
+          />
         </Field>
       );
     case 'NUMBER':
