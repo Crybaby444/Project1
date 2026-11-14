@@ -90,6 +90,6 @@ describe('chat (plan 9, spec §4.6)', () => {
     const thread = (await renter.get(`/conversations/${list[0].id}`).expect(200)).body;
     const events = thread.messages.filter((m: { kind: string }) => m.kind === 'SYSTEM').map((m: { event: string }) => m.event);
     expect(events).toEqual(['REQUESTED', 'ACCEPTED']);
-    expect(thread.bookingId).toBe(booking.id);
+    expect(thread.dealId).toBe(booking.id);
   });
 });

@@ -2000,6 +2000,9 @@ export interface components {
             /** Format: date-time */
             lastMessageAt: string;
             unread: number;
+            /** Format: date-time */
+            otherReadAt: string | null;
+            dealId: string | null;
             messages: {
                 id: string;
                 /** @enum {string} */
@@ -2012,9 +2015,6 @@ export interface components {
                 /** Format: date-time */
                 createdAt: string;
             }[];
-            /** Format: date-time */
-            otherReadAt: string | null;
-            bookingId: string[];
         };
         MessageRequestDto: {
             text: string;

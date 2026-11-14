@@ -96,7 +96,7 @@ export class ChatService {
       ...(await this.summary(row, userId)),
       messages: messages.reverse().map((m) => this.message(m, userId)),
       otherReadAt: otherReadAt?.toISOString() ?? null,
-      bookingId: deal?.id ?? null,
+      dealId: deal?.id ?? null,
     };
   }
 

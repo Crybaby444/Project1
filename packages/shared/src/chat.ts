@@ -46,12 +46,16 @@ export const ConversationListSchema = z.object({ items: z.array(ConversationSumm
 export type ConversationList = z.infer<typeof ConversationListSchema>;
 
 /** One conversation with its messages, oldest first (only those after `after`, when asked). */
-export const ConversationThreadSchema = ConversationSummarySchema.extend({
-  messages: z.array(ChatMessageSchema),
+export const ConversationThreadSchema = z.object({
+  ...ConversationSummarySchema.shape,
   /** When the other side last read the conversation. */
   otherReadAt: z.iso.datetime().nullable(),
-  /** The newest deal on this item between the two, if any. */
-  bookingId: z.string().nullable(),
+  /**
+   * The newest deal on this item between the two, if any. `.min(1)` is there for the OpenAPI emitter:
+   * a bare top-level `z.string().nullable()` comes out as `string[]`.
+   */
+  dealId: z.string().min(1).nullable(),
+  messages: z.array(ChatMessageSchema),
 });
 export type ConversationThread = z.infer<typeof ConversationThreadSchema>;
 
