@@ -43,7 +43,7 @@ describe('LanguageSuggestion', () => {
     renderOn('en');
     const bar = await screen.findByRole('region', { name: 'Valodas ieteikums' });
     expect(bar).toHaveAttribute('lang', 'lv');
-    expect(bar).toHaveTextContent('Šķiet, jūs runājat latviski — pāriet uz latviešu versiju?');
+    expect(bar).toHaveTextContent('Šī lapa ir pieejama arī latviešu valodā.');
     expect(screen.getByRole('button', { name: 'Pāriet' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Palikt' })).toBeInTheDocument();
     expect(push).not.toHaveBeenCalled();
