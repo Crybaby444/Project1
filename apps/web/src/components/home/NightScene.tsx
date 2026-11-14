@@ -30,7 +30,7 @@ export async function NightScene() {
     <section data-home="night" className="relative grid min-h-svh content-center gap-[1.2vh] overflow-hidden bg-[var(--night)] py-24 text-[var(--paper)]">
       <h2 className="sr-only">{`${t('rent')}. ${t('use')}. ${t('back')}.`}</h2>
       <Row row={1} text={t('rent')} times={5} className="" />
-      <Row row={2} text={t('use')} times={6} className="text-transparent [-webkit-text-stroke:1.5px_var(--paper)]" />
+      <Row row={2} text={t('use')} times={6} className="text-[var(--night)] [-webkit-text-stroke:3px_var(--paper)] [paint-order:stroke_fill]" />
       <Row row={3} text={t('back')} times={4} className="text-[var(--night-dim)]" />
       <div data-say className="mx-auto mt-[6vh] grid w-[min(90vw,30em)] justify-items-center gap-[18px] text-center">
         <p className="m-0 text-[clamp(1rem,1.3vw,1.2rem)] leading-relaxed font-medium text-[var(--paper)]/75">{t('line')}</p>

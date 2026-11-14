@@ -31,6 +31,8 @@ export function mountTimelines(stage: Stage, root: HTMLElement, opts: { mobile: 
 
   const ctx = gsap.context(() => {
     const h = (x: number) => x / HK;
+    // GSAP blends colours, not var(): read the theme's value when the tween starts.
+    const tone = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
     const letters = q<HTMLElement>('[data-home="hero"] [data-letter]');
 
     // ---- intro on arrival: the letters rise, the yo-yo drops on its string and bounces at its end
@@ -55,9 +57,9 @@ export function mountTimelines(stage: Stage, root: HTMLElement, opts: { mobile: 
       .to('[data-row="1"]', { opacity: 1, scale: 1.03, duration: 0.07, ease: 'power2.inOut' }, 0.4)
       .to('[data-row="1"]', { opacity: 0.3, scale: 1, duration: 0.07, ease: 'power2.inOut' }, 0.52)
       .to('[data-row="2"]', { opacity: 1, scale: 1.03, duration: 0.07, ease: 'power2.inOut' }, 0.52)
-      .to('[data-row="2"]', { color: 'var(--paper)', duration: 0.07, ease: 'power2.inOut' }, 0.52)
+      .to('[data-row="2"]', { color: () => tone('--paper'), duration: 0.07, ease: 'power2.inOut' }, 0.52)
       .to('[data-row="2"]', { opacity: 0.3, scale: 1, duration: 0.07, ease: 'power2.inOut' }, 0.64)
-      .to('[data-row="2"]', { color: 'rgba(244,241,230,0)', duration: 0.07, ease: 'power2.inOut' }, 0.64)
+      .to('[data-row="2"]', { color: () => tone('--night'), duration: 0.07, ease: 'power2.inOut' }, 0.64)
       .to('[data-row="3"]', { opacity: 1, scale: 1.04, duration: 0.07, ease: 'power2.inOut' }, 0.64)
       .to('[data-row]', { opacity: 1, scale: 1, duration: 0.07, ease: 'power2.inOut' }, 0.78)
       .fromTo('[data-say]', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.08, ease: 'power3.out' }, 0.84)
