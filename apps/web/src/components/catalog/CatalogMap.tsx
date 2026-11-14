@@ -45,6 +45,7 @@ export function CatalogMap({ pins, truncated }: { pins: MapPin[]; truncated: boo
               iconSize: undefined,
             }),
             keyboard: true,
+            riseOnHover: true,
             title: pin.count > 1 ? t('cellTitle', { count: pin.count }) : (pin.items[0]?.title ?? label),
             alt: label,
           },
@@ -52,7 +53,7 @@ export function CatalogMap({ pins, truncated }: { pins: MapPin[]; truncated: boo
         const list = pin.items
           .map(
             (item) =>
-              `<li><a href="${escapeHtml(localePath(locale, listingPath(item.id, item.title)))}">${escapeHtml(item.title)}</a> <span>${escapeHtml(
+              `<li><a href="${escapeHtml(localePath(locale, listingPath(item.id, item.title)))}">${escapeHtml(item.title)}</a><span class="yoyo-map-popup-price">${escapeHtml(
                 t('perDay', { price: formatEuros(item.dailyCents, locale) }),
               )}</span></li>`,
           )
