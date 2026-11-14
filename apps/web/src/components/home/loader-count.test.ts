@@ -23,5 +23,6 @@ describe('loaderCountScript (the home loader’s count, run from <head>)', () =>
     expect(seen.at(-1)).toBe(100);
     expect(new Set(seen.filter((v) => v > 0 && v < 100)).size).toBeGreaterThan(8);
     expect(seen.every((v, i) => i === 0 || v >= seen[i - 1]!)).toBe(true);
+    expect((window as { __homeCountEnd?: number }).__homeCountEnd).toBe(1100);
   });
 });
