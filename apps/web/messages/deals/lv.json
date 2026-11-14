@@ -239,9 +239,7 @@
     "count": "{count, plural, zero {# darījumu} one {# darījums} other {# darījumi}}",
     "empty": {
       "renter": "Tu vēl neko neesi nomājis",
-      "renterBody": "Atrodi to, kas vajadzīgs uz dienu vai nedēļu, un rezervē to tās lapā.",
       "owner": "Tavas lietas vēl neviens nav prasījis",
-      "ownerBody": "Pieprasījumi tavām lietām parādīsies šeit. Iznomā kaut ko, lai saņemtu pirmo.",
       "action": "Nekas tevi negaida. Lieliski.",
       "closed": "Noslēgtu darījumu vēl nav."
     },
