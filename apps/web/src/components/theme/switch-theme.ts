@@ -40,3 +40,16 @@ export function switchTheme(apply: () => void, origin: Point, animate: boolean):
       // The transition was skipped (e.g. tab hidden); the theme is already applied.
     });
 }
+
+/**
+ * Puts a theme on screen in one step: every CSS transition is off (`html[data-theme-instant]`) while
+ * the colours change, and back on two frames later, so no text passes through unreadable half-way
+ * colours. The visible change, when there is one, is the view transition's circle.
+ */
+export function applyThemeInstantly(apply: () => void): void {
+  const html = document.documentElement;
+  html.setAttribute('data-theme-instant', '');
+  apply();
+  void getComputedStyle(html).color; // land the new colours while transitions are off
+  requestAnimationFrame(() => requestAnimationFrame(() => html.removeAttribute('data-theme-instant')));
+}

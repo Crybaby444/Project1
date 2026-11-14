@@ -26,7 +26,7 @@ export function Gallery({ listingId, title, photos }: Props) {
 
   if (!current) {
     return (
-      <div className="border-ink/15 bg-mist rounded-media grid aspect-[4/3] place-items-center border text-sm italic">
+      <div className="border-ink/15 bg-mist rounded-media grid aspect-[4/3] place-items-center border text-sm font-bold text-ink/70">
         {t('noPhotos')}
       </div>
     );

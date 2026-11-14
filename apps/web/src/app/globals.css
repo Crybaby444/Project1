@@ -152,9 +152,13 @@
     font-weight: 500;
     letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
-    transition:
-      background-color var(--dur-base) var(--ease-yoyo),
-      color var(--dur-base) var(--ease-yoyo);
+  }
+
+  /* A theme lands in one step (components/theme/switch-theme.ts): no half-way colours. */
+  html[data-theme-instant] *,
+  html[data-theme-instant] *::before,
+  html[data-theme-instant] *::after {
+    transition: none !important;
   }
 
   /* Visible focus everywhere: 2px outline, 3px offset (DESIGN.md §9). */

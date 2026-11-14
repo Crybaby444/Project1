@@ -35,7 +35,7 @@ export function MyListingCard({
               className="ease-yoyo size-full object-cover transition-transform duration-450 hover:scale-[1.04]"
             />
           ) : (
-            <div className="grid size-full place-items-center text-sm italic">{t('noPhoto')}</div>
+            <div className="text-ink/70 grid size-full place-items-center text-sm font-bold">{t('noPhoto')}</div>
           )}
           <ListingStatusBadge status={listing.status} className="absolute top-3 left-3" />
         </div>

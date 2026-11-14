@@ -54,7 +54,7 @@ export function ListingCard({
               className="ease-yoyo size-full object-cover transition-transform duration-450 group-hover/card:scale-[1.04]"
             />
           ) : (
-            <div className="grid size-full place-items-center text-sm italic">{t('noPhoto')}</div>
+            <div className="text-ink/70 grid size-full place-items-center text-sm font-bold">{t('noPhoto')}</div>
           )}
           {item.weeklyDiscountPercent > 0 && !unavailable && (
             <span className="rounded-pill bg-ink text-canvas absolute bottom-3 left-3 inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold">

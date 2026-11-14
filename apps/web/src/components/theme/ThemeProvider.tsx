@@ -16,7 +16,7 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from 'react';
-import { shouldAnimateThemeChange, switchTheme, type Point } from './switch-theme';
+import { applyThemeInstantly, shouldAnimateThemeChange, switchTheme, type Point } from './switch-theme';
 
 const ONE_YEAR_S = 365 * 24 * 60 * 60;
 const DARK_QUERY = '(prefers-color-scheme: dark)';
@@ -41,7 +41,9 @@ function subscribeToDomTheme(onChange: () => void): () => void {
 }
 
 function setDomTheme(theme: ResolvedTheme): void {
-  document.documentElement.dataset['theme'] = theme;
+  applyThemeInstantly(() => {
+    document.documentElement.dataset['theme'] = theme;
+  });
 }
 
 function viewportCenter(): Point {
