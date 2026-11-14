@@ -317,3 +317,69 @@ const ru: LegalDoc = {
 };
 
 export const COOKIES_POLICY: LegalTexts = { en, lv, ru };
+
+/** What the policy says once analytics is on (NEXT_PUBLIC_GA_ID set): per language. */
+const ANALYTICS: Record<'en' | 'lv' | 'ru', { summary: string; rows: [string, string, string][]; heading: string; body: string[] }> = {
+  en: {
+    summary: 'Analytics (Google Analytics) only if you agree in the cookie question; you can change your mind under "Cookie settings" at the bottom of every page.',
+    rows: [
+      ['yoyo-consent', 'Remembers your answer to the cookie question.', '1 year'],
+      ['_ga', 'Google Analytics, only with your consent: tells visits apart, without your name or account.', '2 years'],
+      ['_ga_<id>', 'Google Analytics, only with your consent: keeps the state of a visit.', '2 years'],
+    ],
+    heading: 'Analytics, only with your consent',
+    body: [
+      'We use Google Analytics 4 to count visits and see which pages help, so we can improve Yoyo. It runs in Google Consent Mode: until you agree, it sets no cookies and sends no identifiers; advertising features are always off.',
+      'Google Ireland Limited processes this data for us. You can withdraw your consent at any time under "Cookie settings" at the bottom of every page, or by deleting the cookies in your browser.',
+    ],
+  },
+  lv: {
+    summary: 'Analītika (Google Analytics) tikai tad, ja piekrītat sīkdatņu jautājumā; domas varat mainīt sadaļā "Sīkdatņu iestatījumi" katras lapas apakšā.',
+    rows: [
+      ['yoyo-consent', 'Atceras jūsu atbildi uz sīkdatņu jautājumu.', '1 gads'],
+      ['_ga', 'Google Analytics, tikai ar jūsu piekrišanu: atšķir apmeklējumus, bez jūsu vārda vai konta.', '2 gadi'],
+      ['_ga_<id>', 'Google Analytics, tikai ar jūsu piekrišanu: saglabā apmeklējuma stāvokli.', '2 gadi'],
+    ],
+    heading: 'Analītika, tikai ar jūsu piekrišanu',
+    body: [
+      'Mēs izmantojam Google Analytics 4, lai skaitītu apmeklējumus un redzētu, kuras lapas palīdz, un uzlabotu Yoyo. Tā darbojas Google piekrišanas režīmā: kamēr neesat piekritis, tā neiestata sīkdatnes un nesūta identifikatorus; reklāmas funkcijas vienmēr ir izslēgtas.',
+      'Šos datus mūsu vārdā apstrādā Google Ireland Limited. Piekrišanu varat atsaukt jebkurā laikā sadaļā "Sīkdatņu iestatījumi" katras lapas apakšā vai izdzēšot sīkdatnes pārlūkā.',
+    ],
+  },
+  ru: {
+    summary: 'Аналитика (Google Analytics) — только если вы согласитесь в вопросе о cookie; передумать можно в «Настройках cookie» внизу каждой страницы.',
+    rows: [
+      ['yoyo-consent', 'Запоминает ваш ответ на вопрос о cookie.', '1 год'],
+      ['_ga', 'Google Analytics, только с вашего согласия: различает посещения, без имени и аккаунта.', '2 года'],
+      ['_ga_<id>', 'Google Analytics, только с вашего согласия: хранит состояние посещения.', '2 года'],
+    ],
+    heading: 'Аналитика — только с вашего согласия',
+    body: [
+      'Мы используем Google Analytics 4, чтобы считать посещения и видеть, какие страницы помогают, и улучшать Yoyo. Она работает в режиме согласия Google: пока вы не согласились, она не ставит cookie и не отправляет идентификаторы; рекламные функции всегда выключены.',
+      'Эти данные по нашему поручению обрабатывает Google Ireland Limited. Отозвать согласие можно в любой момент в «Настройках cookie» внизу каждой страницы или удалив cookie в браузере.',
+    ],
+  },
+};
+
+/**
+ * The cookie policy as it stands: with analytics on (a measurement id), its second summary line, its
+ * table and an "Analytics" section say what Google Analytics stores and how to withdraw consent.
+ */
+export function cookiesPolicy(analytics: boolean): LegalTexts {
+  if (!analytics) return COOKIES_POLICY;
+  const withAnalytics = (doc: LegalDoc, locale: 'en' | 'lv' | 'ru'): LegalDoc => {
+    const a = ANALYTICS[locale];
+    const sections = doc.sections.map((section) =>
+      section.id !== 'list'
+        ? section
+        : {
+            ...section,
+            blocks: section.blocks.map((block) => ('table' in block ? { table: { ...block.table, rows: [...block.table.rows, ...a.rows] } } : block)),
+          },
+    );
+    const at = sections.findIndex((section) => section.id === 'list') + 1;
+    sections.splice(at, 0, { id: 'analytics', heading: a.heading, blocks: a.body.map((p) => ({ p })) });
+    return { ...doc, summary: doc.summary.map((line, i) => (i === 1 ? a.summary : line)), sections };
+  };
+  return { en: withAnalytics(COOKIES_POLICY.en, 'en'), lv: withAnalytics(COOKIES_POLICY.lv, 'lv'), ru: withAnalytics(COOKIES_POLICY.ru, 'ru') };
+}

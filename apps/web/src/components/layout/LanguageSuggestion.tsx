@@ -10,6 +10,7 @@ import { useRememberLocale } from '@/lib/locale/use-locale-choice';
 import { prefersReducedMotion } from '@/lib/motion';
 import TEXTS from '../../../messages/language-suggestion.json';
 import { Mark } from '@/components/brand/Mark';
+import { CONSENT_EVENT, GA_ID, readConsent } from '@/lib/analytics/consent';
 
 /**
  * The polite alternative to a language redirect: every URL serves its own language, and on a first
@@ -27,12 +28,20 @@ export function LanguageSuggestion() {
   const [suggested, setSuggested] = useState<Locale | null>(null);
 
   useEffect(() => {
-    // What the browser prefers is only known here, after hydration.
-    const next = readLocaleChoice()
-      ? null
-      : suggestLocale(navigator.languages ?? [navigator.language], pageLocale);
-    const frame = requestAnimationFrame(() => setSuggested(next));
-    return () => cancelAnimationFrame(frame);
+    let frame = 0;
+    const decide = () => {
+      // The cookie question comes first (one bar at a time at the bottom): wait for its answer.
+      if (GA_ID && readConsent(document.cookie) === null) return setSuggested(null);
+      // What the browser prefers is only known here, after hydration.
+      const next = readLocaleChoice() ? null : suggestLocale(navigator.languages ?? [navigator.language], pageLocale);
+      frame = requestAnimationFrame(() => setSuggested(next));
+    };
+    decide();
+    window.addEventListener(CONSENT_EVENT, decide);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener(CONSENT_EVENT, decide);
+    };
   }, [pageLocale]);
 
   if (!suggested) return null;

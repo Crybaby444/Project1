@@ -930,5 +930,13 @@
     "noItems": "{name} сейчас ничего не сдаёт.",
     "noReviewsTitle": "Отзывов пока нет",
     "noReviewsBody": "Отзывы появятся здесь после завершённых сделок."
+  },
+  "consent": {
+    "label": "Выбор cookie",
+    "text": "Можно мы будем считать посещения, чтобы улучшать Yoyo? Google Analytics, только с вашего согласия.",
+    "accept": "Принять",
+    "decline": "Отклонить",
+    "policy": "Политика cookie",
+    "settings": "Настройки cookie"
   }
 }

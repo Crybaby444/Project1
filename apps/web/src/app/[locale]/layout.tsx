@@ -24,6 +24,8 @@ import { SessionProvider } from '@/lib/session/SessionProvider';
 import { SITE_URL } from '@/lib/site';
 import { fontVariables } from '@/styles/fonts';
 import '../globals.css';
+import { Analytics, validGaId } from '@/components/analytics/Analytics';
+import { ConsentBanner } from '@/components/analytics/ConsentBanner';
 
 /** Before the first paint: no home loader for automation (CI) or reduced motion (globals.css). */
 const NO_LOADER =
@@ -80,6 +82,8 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
                   </div>
                   <DropCursor />
                   <LanguageSuggestion />
+                  <ConsentBanner gaId={validGaId(process.env.NEXT_PUBLIC_GA_ID) ?? ''} />
+                  <Analytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
                 </ToastProvider>
               </ThemeProvider>
             </SessionProvider>

@@ -930,5 +930,13 @@
     "noItems": "{name} pašlaik neko neiznomā.",
     "noReviewsTitle": "Vēl nav atsauksmju",
     "noReviewsBody": "Atsauksmes parādās šeit pēc pabeigtiem darījumiem."
+  },
+  "consent": {
+    "label": "Sīkdatņu izvēle",
+    "text": "Vai drīkstam skaitīt apmeklējumus, lai uzlabotu Yoyo? Google Analytics, tikai ar tavu piekrišanu.",
+    "accept": "Piekrītu",
+    "decline": "Nepiekrītu",
+    "policy": "Sīkdatņu politika",
+    "settings": "Sīkdatņu iestatījumi"
   }
 }
