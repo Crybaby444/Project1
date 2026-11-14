@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useId, useRef, useState, type KeyboardEvent } from 'react';
 import { ListingCard } from '@/components/catalog/ListingCard';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { ReviewsFeed } from '@/components/reviews/ReviewsFeed';
 
 const TABS = ['items', 'reviews'] as const;
 type Tab = (typeof TABS)[number];
@@ -13,7 +14,7 @@ type Tab = (typeof TABS)[number];
  * A profile's two tabs (WAI-ARIA tabs, arrows move between them): the person's items in the catalog,
  * and their reviews, which arrive with plan 10 (until then a placeholder).
  */
-export function ProfileTabs({ listings, name }: { listings: CatalogItem[]; name: string }) {
+export function ProfileTabs({ listings, name, userId }: { listings: CatalogItem[]; name: string; userId: string }) {
   const t = useTranslations('profile');
   const base = useId();
   const [tab, setTab] = useState<Tab>('items');
@@ -68,7 +69,7 @@ export function ProfileTabs({ listings, name }: { listings: CatalogItem[]; name:
         )}
       </div>
       <div role="tabpanel" id={`${base}-reviews`} aria-labelledby={`${base}-reviews-tab`} hidden={tab !== 'reviews'}>
-        <EmptyState headingLevel={3} title={t('noReviewsTitle')} body={t('noReviewsBody')} />
+        <ReviewsFeed source={{ kind: 'user', id: userId }} empty={<EmptyState headingLevel={3} title={t('noReviewsTitle')} body={t('noReviewsBody')} />} />
       </div>
     </div>
   );

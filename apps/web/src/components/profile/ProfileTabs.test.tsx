@@ -16,8 +16,11 @@ vi.mock('@/i18n/navigation', async (importOriginal) => ({
 describe('ProfileTabs', () => {
   it('shows the items, and the reviews placeholder; arrows move between the tabs', async () => {
     const user = userEvent.setup();
-    const api = fakeApi(meRoute(null));
-    renderWithSession(<ProfileTabs listings={[catalogItem()]} name="Jānis" />, { client: api.client, hasSession: false });
+    const api = fakeApi({
+      ...meRoute(null),
+      'GET /api/v1/users/owner-1/reviews': { status: 200, body: { items: [], total: 0, page: 1, pageSize: 10, average: 0 } },
+    });
+    renderWithSession(<ProfileTabs listings={[catalogItem()]} name="Jānis" userId="owner-1" />, { client: api.client, hasSession: false });
     const items = screen.getByRole('tab', { name: '1 item' });
     expect(items).toHaveAttribute('aria-selected', 'true');
     expect(screen.getByRole('link', { name: 'Cordless drill' })).toBeVisible();
@@ -26,6 +29,6 @@ describe('ProfileTabs', () => {
     const reviews = screen.getByRole('tab', { name: en.profile.reviews });
     expect(reviews).toHaveFocus();
     expect(reviews).toHaveAttribute('aria-selected', 'true');
-    expect(screen.getByText(en.profile.noReviewsTitle)).toBeVisible();
+    expect(await screen.findByText(en.profile.noReviewsTitle)).toBeVisible();
   });
 });

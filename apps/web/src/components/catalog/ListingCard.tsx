@@ -7,6 +7,7 @@ import { TransitionLink } from '@/components/motion';
 import { formatEuros } from '@/lib/listings/money';
 import { listingPath } from '@/lib/seo';
 import { HeartButton } from './HeartButton';
+import { Stars } from '@/components/reviews/Stars';
 
 /** The shared name of an item's photo in the catalog and on its page: the photo flies between them. */
 export const photoTransitionName = (id: string) => `listing-photo-${id}`;
@@ -84,6 +85,12 @@ export function ListingCard({
               <p className="font-display text-[1.45rem] leading-[0.9] font-black uppercase tabular-nums sm:text-[1.7rem]">
                 {t('perDay', { price: formatEuros(item.dailyCents, locale) })}
               </p>
+              {item.reviewCount > 0 && item.rating !== null && (
+                <p className="m-0 flex items-center gap-1.5 text-sm" data-card-rating="">
+                  <Stars value={item.rating} size={12} />
+                  <span className="text-ink/75 tabular-nums">({item.reviewCount})</span>
+                </p>
+              )}
               <p className="text-sm">
                 {item.depositCents > 0
                   ? t('deposit', { amount: formatEuros(item.depositCents, locale) })

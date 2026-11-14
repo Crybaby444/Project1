@@ -396,5 +396,37 @@
     "DEPOSIT_REFUND": "Deposit returned",
     "DEPOSIT_TO_OWNER": "Deposit received for damage",
     "BOOKING_REFUND": "Booking refunded"
+  },
+  "reviews": {
+    "title": "Reviews",
+    "stars": "{rating} of 5",
+    "count": "{count, plural, one {# review} other {# reviews}}",
+    "role": {
+      "RENTER": "rented from them",
+      "OWNER": "lent to them"
+    },
+    "roleItem": {
+      "RENTER": "rented it",
+      "OWNER": "lent it"
+    },
+    "itemStars": "The item",
+    "more": "More reviews",
+    "loadFailed": "Reviews did not load.",
+    "itemHeading": "What renters say",
+    "deal": {
+      "heading": "Reviews",
+      "intro": "How did it go? Your review shows once {name} writes theirs, or on {date}.",
+      "aboutPerson": "Stars for {name}",
+      "aboutItem": "Stars for the item",
+      "text": "Your review",
+      "hint": "What went well, what could be better. {min} to {max} characters.",
+      "submit": "Send the review",
+      "sent": "Thank you. Your review shows once {name} writes theirs, or on {date}.",
+      "mine": "Your review",
+      "theirs": "{name} about you",
+      "waiting": "{name} has written their review. It shows once you write yours.",
+      "closed": "The time for reviews has passed.",
+      "starLabel": "{count, plural, one {# star} other {# stars}}"
+    }
   }
 }

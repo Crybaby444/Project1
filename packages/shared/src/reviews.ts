@@ -55,8 +55,8 @@ export const ReviewPageSchema = z.object({
   total: z.number().int(),
   page: z.number().int(),
   pageSize: z.number().int(),
-  /** The average of the stars on this page's subject (one decimal), or null with no reviews. */
-  average: z.number().nullable(),
+  /** The average of the stars on this page's subject (one decimal); 0 with no reviews (total 0). */
+  average: z.number(),
 });
 
 export type ReviewPage = z.infer<typeof ReviewPageSchema>;

@@ -2,6 +2,7 @@ import type { OwnerSummary } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { profilePath } from '@/lib/seo';
+import { Stars } from '@/components/reviews/Stars';
 
 /** "AB" from "Anna Bērziņa", "A" from "Anna". */
 export function initials(name: string): string {
@@ -27,6 +28,7 @@ function Check() {
  */
 export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; heading?: 'h2' | 'h1' }) {
   const t = useTranslations('item.owner');
+  const tr = useTranslations('reviews');
   const locale = useLocale();
   const Heading = heading;
   const since = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(owner.memberSince));
@@ -67,7 +69,17 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
         <li className="border-ink rounded-pill border px-2.5 py-0.5">{t('deals', { count: owner.completedDeals })}</li>
         <li className="border-ink rounded-pill border px-2.5 py-0.5">{t('items', { count: owner.listingCount })}</li>
       </ul>
-      <p className="text-sm">{owner.rating === null ? t('noReviews') : t('rating', { rating: owner.rating.toFixed(1) })}</p>
+      {owner.rating === null ? (
+        <p className="text-sm">{t('noReviews')}</p>
+      ) : (
+        <p className="m-0 flex items-center gap-2.5 text-sm" data-owner-rating="">
+          <span className="font-display text-[1.6rem] leading-none font-black tabular-nums" aria-hidden="true">
+            {owner.rating.toFixed(1)}
+          </span>
+          <Stars value={owner.rating} />
+          <span className="text-ink/75">{tr('count', { count: owner.reviewCount })}</span>
+        </p>
+      )}
       {heading === 'h2' && (
         <Link href={profilePath(owner.id)} className="self-start text-sm font-bold underline underline-offset-4">
           {t('profile', { name: owner.name })}

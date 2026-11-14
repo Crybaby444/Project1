@@ -396,5 +396,37 @@
     "DEPOSIT_REFUND": "Drošības nauda atgriezta",
     "DEPOSIT_TO_OWNER": "Saņemta drošības nauda par bojājumu",
     "BOOKING_REFUND": "Rezervācija atmaksāta"
+  },
+  "reviews": {
+    "title": "Atsauksmes",
+    "stars": "{rating} no 5",
+    "count": "{count, plural, zero {# atsauksmju} one {# atsauksme} other {# atsauksmes}}",
+    "role": {
+      "RENTER": "nomāja no viņa",
+      "OWNER": "izīrēja viņam"
+    },
+    "roleItem": {
+      "RENTER": "nomāja",
+      "OWNER": "izīrēja"
+    },
+    "itemStars": "Lieta",
+    "more": "Vairāk atsauksmju",
+    "loadFailed": "Atsauksmes neielādējās.",
+    "itemHeading": "Ko saka nomnieki",
+    "deal": {
+      "heading": "Atsauksmes",
+      "intro": "Kā gāja? Tava atsauksme parādīsies, kad {name} uzrakstīs savējo, vai {date}.",
+      "aboutPerson": "Zvaigznes: {name}",
+      "aboutItem": "Zvaigznes lietai",
+      "text": "Tava atsauksme",
+      "hint": "Kas izdevās, ko varētu uzlabot. No {min} līdz {max} rakstzīmēm.",
+      "submit": "Nosūtīt atsauksmi",
+      "sent": "Paldies! Tava atsauksme parādīsies, kad {name} uzrakstīs savējo, vai {date}.",
+      "mine": "Tava atsauksme",
+      "theirs": "{name} par tevi",
+      "waiting": "{name} ir uzrakstījis atsauksmi. Tā parādīsies, kad uzrakstīsi savējo.",
+      "closed": "Atsauksmju laiks ir beidzies.",
+      "starLabel": "{count, plural, zero {# zvaigžņu} one {# zvaigzne} other {# zvaigznes}}"
+    }
   }
 }

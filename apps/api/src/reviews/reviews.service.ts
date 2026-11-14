@@ -138,7 +138,7 @@ export class ReviewsService {
       total: rows.length,
       page,
       pageSize: PAGE_SIZE,
-      average: scored.length ? oneDecimal(scored.reduce((a, b) => a + b, 0) / scored.length) : null,
+      average: scored.length ? oneDecimal(scored.reduce((a, b) => a + b, 0) / scored.length) : 0,
     };
   }
 

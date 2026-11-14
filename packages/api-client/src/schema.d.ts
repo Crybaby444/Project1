@@ -1422,7 +1422,7 @@ export interface components {
             total: number;
             page: number;
             pageSize: number;
-            average: number[];
+            average: number;
         };
         BookingPhotoResponseDto_Output: {
             photo: {

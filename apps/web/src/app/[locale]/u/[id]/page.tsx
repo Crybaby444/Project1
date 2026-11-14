@@ -49,7 +49,7 @@ export default async function ProfilePage({ params }: Props) {
           </section>
         )}
       </div>
-      <ProfileTabs listings={listings} name={user.name} />
+      <ProfileTabs listings={listings} name={user.name} userId={user.id} />
     </main>
   );
 }
