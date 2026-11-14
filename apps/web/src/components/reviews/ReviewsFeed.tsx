@@ -28,7 +28,8 @@ export function ReviewsFeed({ source, heading, empty = null }: { source: Source;
     getNextPageParam: (last) => (last.page * last.pageSize < last.total ? last.page + 1 : undefined),
   });
 
-  if (query.isError) return <p className="m-0 text-sm">{t('loadFailed')}</p>;
+  // Under an item the reviews are extra: if they fail, the page goes on without them.
+  if (query.isError) return source.kind === 'listing' ? null : <p className="m-0 text-sm">{t('loadFailed')}</p>;
   if (!query.data) return null;
   const first = query.data.pages[0]!;
   if (first.total === 0) return <>{empty}</>;
