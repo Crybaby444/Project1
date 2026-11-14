@@ -110,7 +110,7 @@ function Empty({ role, group }: { role: DealRole; group: DealGroup }) {
     return <p className="border-ink/40 rounded-media border border-dashed p-8 text-center">{t(`empty.${group}`)}</p>;
   }
   return (
-    <section className="border-ink/15 bg-surface rounded-media flex flex-col items-center gap-5 border px-6 py-14 text-center">
+    <section className="border-ink/15 flex flex-col items-center gap-5 border-y px-6 py-16 text-center">
       <Mark size={88} string={false} className="animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
       <h2 className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">{t(`empty.${role}`)}</h2>
       <p className="max-w-[52ch] leading-relaxed">{t(`empty.${role}Body`)}</p>

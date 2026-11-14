@@ -106,7 +106,7 @@ export function MyListings({ initialStatus }: { initialStatus: MyListingsFilter 
         </div>
       ) : items.length === 0 ? (
         status === 'ALL' ? (
-          <section className="border-ink/15 bg-surface rounded-media flex flex-col items-center gap-5 border px-6 py-14 text-center">
+          <section className="border-ink/15 flex flex-col items-center gap-5 border-y px-6 py-16 text-center">
             <Mark size={96} string={false} className="animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
             <h2 className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">{t('emptyTitle')}</h2>
             <p className="max-w-[52ch] leading-relaxed">{t('emptyBody')}</p>
