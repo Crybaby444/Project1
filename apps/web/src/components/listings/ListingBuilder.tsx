@@ -2,7 +2,7 @@
 
 import { displayFit } from '@/lib/display-fit';
 import { useQueryClient } from '@tanstack/react-query';
-import { STICKER_COLORS, type Locale, type OwnerListing } from '@yoyo/shared';
+import type { Locale, OwnerListing } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useState, type ReactNode } from 'react';
 import { Button } from '@/components/ui/Button';
@@ -165,7 +165,7 @@ function BuilderLayout({
           <StepNav current={step} onSelect={goTo} />
         </div>
 
-        <div className="border-ink/15 bg-surface rounded-media flex min-w-0 flex-col gap-8 border p-5 sm:p-8">
+        <div className="flex min-w-0 flex-col gap-8">
           <div
             key={step}
             style={
@@ -173,7 +173,7 @@ function BuilderLayout({
             }
             className={moved ? 'animate-step-in' : undefined}
           >
-            <p className="mb-2 text-[13px] font-bold tracking-[0.03em] uppercase">
+            <p className="text-ink/70 mb-3 text-xs font-bold tracking-[0.08em] uppercase tabular-nums">
               {t('steps.number', { number: index + 1, total: BUILDER_STEPS.length })}
             </p>
             <StepSection
@@ -185,7 +185,7 @@ function BuilderLayout({
             </StepSection>
           </div>
 
-          <div className="border-ink/20 flex flex-wrap items-center justify-between gap-3 border-t pt-5">
+          <div className="border-ink/15 flex flex-wrap items-center justify-between gap-3 border-t pt-6">
             {previous ? (
               <Button variant="ghost" onClick={() => goTo(previous)}>
                 <span aria-hidden="true">←</span> {t('back')}
@@ -230,13 +230,11 @@ function BuilderPreview() {
   const locale = useLocale();
   const { draft, categories } = useBuilder();
   const path = findPath(categories, draft.values.categoryId);
-  const leaf = path.at(-1);
   return (
     <ListingPreview
       values={draft.values}
       cover={draft.listing?.photos[0]?.urls ?? null}
       categoryName={path.length > 0 ? path.map((node) => localized(node.names, locale)).join(' · ') : null}
-      categoryColor={leaf ? STICKER_COLORS[leaf.sticker] : undefined}
     />
   );
 }

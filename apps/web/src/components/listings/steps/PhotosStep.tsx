@@ -192,17 +192,20 @@ export function PhotosStep() {
         onDragLeave={() => setDragOver(false)}
         onDrop={disabled ? undefined : onDrop}
         className={`rounded-media ease-yoyo flex flex-col items-center gap-3 border-2 border-dashed p-6 text-center transition-[background-color,transform] duration-250 sm:p-8 ${
-          dragOver ? 'border-ink/15 bg-mist scale-[1.01] text-ink' : 'border-ink/60 bg-canvas'
+          dragOver ? 'border-ink bg-mist scale-[1.01] text-ink' : 'border-ink/40 bg-transparent'
         } ${disabled ? 'opacity-60' : ''}`}
       >
         <svg
-          viewBox="0 0 64 64"
+          viewBox="0 0 48 48"
           aria-hidden="true"
-          className={`ease-yoyo size-14 transition-transform duration-450 ${dragOver ? 'scale-110' : ''}`}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinejoin="round"
+          className={`ease-yoyo size-12 transition-transform duration-450 ${dragOver ? 'scale-110' : ''}`}
         >
-          <rect x="6" y="14" width="52" height="40" rx="10" fill="var(--glow)" stroke="#000" />
-          <circle cx="32" cy="34" r="11" fill="#fff" stroke="#000" />
-          <rect x="22" y="9" width="20" height="8" rx="3" fill="var(--paper)" stroke="#000" />
+          <path d="M6 16a4 4 0 0 1 4-4h6l3-4h10l3 4h6a4 4 0 0 1 4 4v20a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4z" />
+          <circle cx="24" cy="25" r="7.5" />
         </svg>
         <div className="flex flex-col items-center gap-2">
           <input

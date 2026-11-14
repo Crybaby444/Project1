@@ -1,14 +1,12 @@
 'use client';
 
-import { STICKER_COLORS, type PublicUser } from '@yoyo/shared';
+import type { PublicUser } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import { useToast } from '@/components/ui/Toast';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useDealsSummary } from '@/lib/deals/queries';
 import { useSession } from '@/lib/session/SessionProvider';
-
-const COLOURS = Object.values(STICKER_COLORS);
 
 /** The first letters of the first two names: "Anna Bērziņa" → "AB". */
 export function initials(name: string): string {
@@ -20,14 +18,6 @@ export function initials(name: string): string {
     .join('')
     .toLocaleUpperCase();
 }
-
-/** A sticker colour picked from the user id, so the same person always gets the same one. */
-export function avatarColor(id: string): string {
-  let hash = 0;
-  for (const char of id) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
-  return COLOURS[hash % COLOURS.length]!;
-}
-
 
 const ITEM =
   'flex min-h-10 w-full items-center rounded-pill px-4 text-left text-sm font-bold transition-colors duration-150 ease-yoyo hover:bg-mist focus-visible:bg-mist';

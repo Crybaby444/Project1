@@ -1,18 +1,19 @@
-import { STICKER_COLORS, type ListingStatus } from '@yoyo/shared';
+import type { ListingStatus } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 
 /**
- * Listing states in the sticker palette (plan 6b): colour, icon and words together. A draft is plain
- * paper (it follows the theme); the others are fixed sticker fills with black text. Mint is never used.
+ * Listing states in black and white (v16, owner 2026-11-13: no colour): the look, the icon and the words
+ * tell them apart. Live is solid ink, waiting is dashed, rejected carries the one red, hidden and
+ * archived are quiet.
  */
-const FILL: Record<ListingStatus, string | null> = {
-  DRAFT: null,
-  PENDING_REVIEW: STICKER_COLORS.sun,
-  PUBLISHED: STICKER_COLORS.blue,
-  REJECTED: STICKER_COLORS.ember,
-  HIDDEN: STICKER_COLORS.lavender,
-  ARCHIVED: '#e9e9e9',
+const TONE: Record<ListingStatus, string> = {
+  DRAFT: 'border-ink text-ink',
+  PENDING_REVIEW: 'border-ink border-dashed text-ink',
+  PUBLISHED: 'border-ink bg-ink text-canvas',
+  REJECTED: 'border-[var(--danger)] text-ink [&_svg]:text-[var(--danger)]',
+  HIDDEN: 'border-ink/40 text-ink/80',
+  ARCHIVED: 'border-transparent bg-mist text-ink/80',
 };
 
 const STROKE = {
@@ -57,14 +58,11 @@ export function ListingStatusBadge({
   className?: string;
 }) {
   const t = useTranslations('listingStatus');
-  const fill = FILL[status];
   return (
     <span
       data-status={status}
-      style={fill ? { backgroundColor: fill, color: '#000000' } : undefined}
-      className={`rounded-pill inline-flex min-h-7 items-center gap-1.5 border px-3 text-[13px] font-bold whitespace-nowrap ${
-        fill ? 'border-ink/15' : 'border-ink bg-surface text-ink'
-      } ${className}`}
+      data-tone={status.toLowerCase()}
+      className={`rounded-pill inline-flex min-h-7 items-center gap-1.5 border px-3 text-[13px] font-bold whitespace-nowrap ${TONE[status]} ${className}`}
     >
       <svg viewBox="0 0 24 24" aria-hidden="true" className="size-3.5 shrink-0">
         {ICON[status]}

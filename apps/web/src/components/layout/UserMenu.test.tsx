@@ -1,12 +1,11 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { STICKER_COLORS } from '@yoyo/shared';
 import { describe, expect, it, vi } from 'vitest';
 import en from '../../../messages/en.json';
 import deals from '../../../messages/deals/en.json';
 import { fakeApi, meRoute, testUser } from '@/test/fake-api';
 import { renderWithSession } from '@/test/render';
-import { avatarColor, initials, UserMenu } from './UserMenu';
+import { initials, UserMenu } from './UserMenu';
 
 const push = vi.fn();
 vi.mock('@/i18n/navigation', async (importOriginal) => ({
@@ -117,14 +116,6 @@ describe('avatar', () => {
     expect(initials('Anna Bērziņa')).toBe('AB');
     expect(initials('  jānis  ')).toBe('J');
     expect(initials('Мария Анна Петрова')).toBe('МА');
-  });
-
-  it('always gives the same user the same sticker colour', () => {
-    const colours = Object.values(STICKER_COLORS);
-    expect(avatarColor('user-1')).toBe(avatarColor('user-1'));
-    expect(colours).toContain(avatarColor('user-1'));
-    const spread = new Set(Array.from({ length: 40 }, (_, i) => avatarColor(`user-${i}`)));
-    expect(spread.size).toBeGreaterThan(3);
   });
 });
 
