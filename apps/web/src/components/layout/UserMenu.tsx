@@ -212,7 +212,7 @@ export function UserMenu({ user }: { user: PublicUser }) {
             {user.role === 'ADMIN' && (
               <li role="none">
                 <Link
-                  href="/admin/listings"
+                  href="/admin"
                   role="menuitem"
                   tabIndex={-1}
                   onClick={() => close({ refocus: false })}

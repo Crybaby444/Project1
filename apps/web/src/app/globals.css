@@ -538,6 +538,11 @@ html[data-staged] .home-loader {
   100% { transform: rotate(720deg); }
 }
 
+/* The admin panel is a tool: no site footer under it (AdminShell). */
+html:has([data-admin-root]) [data-site-footer] {
+  display: none;
+}
+
 /* The home has no theme to choose: it always shows the light palette. */
 html:has([data-home-root]) [data-theme-control] {
   display: none;
