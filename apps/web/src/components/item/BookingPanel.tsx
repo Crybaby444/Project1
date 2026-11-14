@@ -65,9 +65,13 @@ export function BookingPanel({ item }: { item: AvailableItem }) {
   );
 }
 
-/** Whether the element is on the screen (true when the browser cannot tell, so the bar stays away). */
+/**
+ * Whether the element is on the screen. It starts true on the server and the client alike (so hydration
+ * matches and the bar stays away until the observer says otherwise), and stays true when the browser
+ * cannot tell.
+ */
 function useInView(ref: RefObject<HTMLElement | null>): boolean {
-  const [inView, setInView] = useState(typeof IntersectionObserver === 'undefined');
+  const [inView, setInView] = useState(true);
   useEffect(() => {
     const element = ref.current;
     if (!element || typeof IntersectionObserver === 'undefined') return;

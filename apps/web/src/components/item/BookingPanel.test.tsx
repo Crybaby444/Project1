@@ -35,6 +35,15 @@ function renderPanel(userId: string | null) {
 }
 
 describe('item BookingPanel', () => {
+  it('starts with the phone bar hidden, as the server renders it, until the observer says the panel is away', () => {
+    // An observer that never reports: the first client render must match the server's (bar hidden).
+    vi.stubGlobal('IntersectionObserver', class { observe() {} disconnect() {} unobserve() {} });
+    renderPanel(null);
+    const bar = screen.getByText(/from/i, { selector: 'p.tabular-nums' }).parentElement!;
+    expect(bar).toHaveAttribute('aria-hidden', 'true');
+    vi.unstubAllGlobals();
+  });
+
   it('shows the price, discount, deposit and days, then the deal screens’ booking panel in one column', async () => {
     const api = renderPanel(null);
     expect(screen.getAllByText('€15 / day')[0]).toBeInTheDocument();
