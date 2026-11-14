@@ -41,9 +41,9 @@ export function DealCover({ booking, size }: { booking: Pick<BookingView, 'id' |
   );
 }
 
-function Panel({ title, tone = 'bg-surface', children }: { title: string; tone?: string; children: React.ReactNode }) {
+function Panel({ title, tone = '', children }: { title: string; tone?: string; children: React.ReactNode }) {
   return (
-    <section className={`border-ink/15 rounded-media flex flex-col gap-2 border p-5 ${tone}`}>
+    <section className={`border-ink/15 flex flex-col gap-2 border-t pt-5 ${tone}`}>
       <h2 className="text-[13px] font-bold tracking-[0.03em] uppercase">{title}</h2>
       {children}
     </section>
@@ -108,7 +108,7 @@ export function DealView({ id }: { id: string }) {
   if (deal.isError) {
     const missing = deal.error instanceof ApiError && deal.error.code === 'NOT_FOUND';
     return missing ? (
-      <section role="alert" className="border-ink/15 bg-surface rounded-media flex flex-col items-center gap-4 border px-6 py-14 text-center">
+      <section role="alert" className="flex flex-col items-center gap-4 px-6 py-14 text-center">
         <Mark size={80} string={false} className="animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
         <h1 className="font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{t('notFound')}</h1>
         <p className="max-w-[46ch]">{t('notFoundBody')}</p>
@@ -156,7 +156,7 @@ export function DealView({ id }: { id: string }) {
             {!closed && (
               <span
                 data-turn={myTurn ? 'mine' : 'theirs'}
-                className={`rounded-pill inline-flex min-h-7 items-center border px-3 text-[13px] font-bold ${myTurn ? 'bg-cta text-cta-fg border-cta' : 'border-ink'}`}
+                className={`rounded-pill inline-flex min-h-7 items-center border px-3 text-[13px] font-bold ${myTurn ? 'bg-ink text-canvas border-ink' : 'border-ink/40'}`}
               >
                 {myTurn ? t('yourTurn') : t('theirTurn')}
               </span>
@@ -178,23 +178,23 @@ export function DealView({ id }: { id: string }) {
             </Panel>
           )}
           {booking.declineReason && (
-            <Panel title={t('declined')} tone="bg-mist">
+            <Panel title={t('declined')}>
               <p className="[overflow-wrap:anywhere] whitespace-pre-line">{booking.declineReason}</p>
             </Panel>
           )}
           {booking.cancellation && (
-            <Panel title={t('cancelled', { by: t(`by.${booking.cancellation.by}`) })} tone="bg-mist">
+            <Panel title={t('cancelled', { by: t(`by.${booking.cancellation.by}`) })}>
               {booking.cancellation.reason && <p className="[overflow-wrap:anywhere] whitespace-pre-line">{booking.cancellation.reason}</p>}
               <p className="text-sm">{formatMoment(booking.cancellation.at, locale, booking.timeZone)}</p>
             </Panel>
           )}
           {booking.damage && (
-            <Panel title={t('damage.title')} tone="bg-surface">
+            <Panel title={t('damage.title')}>
               <p className="[overflow-wrap:anywhere] whitespace-pre-line">{booking.damage.description}</p>
             </Panel>
           )}
           {booking.dispute && (
-            <section className="rounded-media flex flex-col gap-2 border border-ink/15 bg-[color-mix(in_srgb,var(--danger)_22%,var(--surface))] p-5" data-dispute="">
+            <section className="flex flex-col gap-2 border-t-2 border-[var(--danger)] pt-5" data-dispute="">
               <h2 className="text-[13px] font-bold tracking-[0.03em] uppercase">
                 {t('dispute.title')} · {t(`dispute.reason.${booking.dispute.reason}`)}
               </h2>
@@ -215,7 +215,7 @@ export function DealView({ id }: { id: string }) {
         </div>
 
         <aside className="flex flex-col gap-6 lg:sticky lg:top-24">
-          <section aria-label={myTurn ? t('yourTurn') : t('theirTurn')} className="border-ink/15 bg-surface rounded-media flex flex-col gap-3 border p-5 sm:p-6">
+          <section aria-label={myTurn ? t('yourTurn') : t('theirTurn')} className="border-ink flex flex-col gap-3 border-t-2 pt-5">
             {notice && (
               <p role="alert" className="rounded-media border-ink/15 flex items-start gap-2 border p-3 text-sm font-bold">
                 <span aria-hidden="true" className="bg-ink text-canvas mt-0.5 inline-block size-4 shrink-0 rounded-full border border-ink/15" />

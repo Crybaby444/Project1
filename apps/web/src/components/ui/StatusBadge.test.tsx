@@ -1,3 +1,4 @@
+import { STATUS_TONES } from '@yoyo/shared';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { StatusBadge } from './StatusBadge';
@@ -9,20 +10,22 @@ describe('StatusBadge', () => {
         Dispute
       </StatusBadge>,
     );
-    const badge = screen.getByText('Dispute').closest('[data-tone]');
-    expect(badge).toHaveAttribute('data-tone', 'dispute');
-    expect(badge).toHaveStyle({ backgroundColor: 'rgb(251, 73, 3)', color: 'rgb(0, 0, 0)' });
+    expect(screen.getByText('Dispute').closest('[data-tone]')).toHaveAttribute('data-tone', 'dispute');
   });
 
-  it('uses white text only on the dark violet "completed" fill', () => {
-    render(
-      <StatusBadge tone="completed" icon={<svg aria-hidden="true" />}>
-        Completed
-      </StatusBadge>,
-    );
-    expect(screen.getByText('Completed').closest('[data-tone]')).toHaveStyle({
-      backgroundColor: 'rgb(92, 74, 222)',
-      color: 'rgb(255, 255, 255)',
-    });
+  it('is black and white (owner, 2026-11-13): no sticker fill, and each tone looks different', () => {
+    const looks = new Set<string>();
+    for (const tone of STATUS_TONES) {
+      const { container, unmount } = render(
+        <StatusBadge tone={tone} icon={<svg aria-hidden="true" />}>
+          {tone}
+        </StatusBadge>,
+      );
+      const badge = container.firstElementChild as HTMLElement;
+      expect(badge.style.backgroundColor).toBe('');
+      looks.add(badge.className);
+      unmount();
+    }
+    expect(looks.size).toBe(STATUS_TONES.length);
   });
 });

@@ -162,9 +162,9 @@ export function DealPhotos({ booking }: { booking: BookingView }) {
     .filter((g) => g.items.length > 0 || kinds.includes(g.kind));
 
   return (
-    <section aria-labelledby="deal-photos" className="border-ink/15 bg-surface rounded-media flex flex-col gap-4 border p-5 sm:p-6">
+    <section aria-labelledby="deal-photos" className="border-ink/15 flex flex-col gap-4 border-t pt-6">
       <div className="flex flex-col gap-1">
-        <h2 id="deal-photos" className="text-xl font-bold">
+        <h2 id="deal-photos" className="font-display text-[2rem] leading-[0.95] font-black uppercase">
           {t('title')}
         </h2>
         {kinds.length > 0 && <p className="text-sm">{t('hint')}</p>}

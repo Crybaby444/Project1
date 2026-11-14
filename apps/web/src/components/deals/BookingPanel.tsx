@@ -138,7 +138,7 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
   return (
     // `stacked`: one column, for a side column such as the item page's (the calendar keeps its width).
     <div className={`grid gap-6 ${layout === 'wide' ? 'lg:grid-cols-[minmax(0,1fr)_22rem]' : ''}`} data-booking-panel="">
-      <section aria-labelledby="booking-dates" className="border-ink/15 bg-surface rounded-media flex flex-col gap-4 border p-5 sm:p-6">
+      <section aria-labelledby="booking-dates" className="border-ink/15 flex flex-col gap-4 border-t pt-6">
         <div className="flex flex-col gap-1">
           <h2 id="booking-dates" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
             {t('dates')}

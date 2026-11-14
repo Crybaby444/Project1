@@ -36,19 +36,19 @@ export function DealCard({ booking, index }: { booking: BookingView; index: numb
       <TransitionLink
         href={`/bookings/${booking.id}`}
         data-deal-card={booking.id}
-        className="group border-ink/15 bg-surface rounded-media ease-yoyo relative flex h-full gap-4 border p-4 transition-transform duration-250 hover:-translate-y-1 active:scale-[0.99]"
+        className="group border-ink/15 relative flex h-full items-start gap-4 border-b py-5 sm:items-center after:absolute after:inset-x-0 after:-bottom-px after:h-[1.5px] after:origin-right after:scale-x-0 after:bg-current after:transition-transform after:duration-[600ms] after:ease-[cubic-bezier(0.16,1,0.3,1)] hover:after:origin-left hover:after:scale-x-100 focus-visible:after:origin-left focus-visible:after:scale-x-100"
       >
         <DealCover booking={booking} size="card" />
-        <div className="flex min-w-0 flex-1 flex-col gap-2">
+        <div className="flex min-w-0 flex-1 flex-col gap-2 transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1.5">
           <div className="flex flex-wrap items-center gap-2">
             <DealStatusBadge status={booking.status} />
             {mine && (
-              <span className="rounded-pill bg-cta text-cta-fg border-cta inline-flex min-h-7 items-center border px-3 text-[13px] font-bold" data-your-turn="">
+              <span className="rounded-pill bg-ink text-canvas border-ink inline-flex min-h-7 items-center border px-3 text-[13px] font-bold" data-your-turn="">
                 {t('yourTurn')}
               </span>
             )}
           </div>
-          <h2 className="text-lg leading-snug font-bold [overflow-wrap:anywhere]">{booking.listing.title}</h2>
+          <h2 data-cursor-text className="font-display text-[1.75rem] leading-[0.95] font-black uppercase [overflow-wrap:anywhere]">{booking.listing.title}</h2>
           <p className="flex flex-wrap gap-x-3 gap-y-0.5 text-sm">
             <span>{t(`with.${booking.viewerRole === 'OWNER' ? 'owner' : 'renter'}`, { name: other })}</span>
             <span className="font-bold">{formatPeriod(booking.period.start, booking.period.end, locale)}</span>
@@ -78,14 +78,14 @@ function Page({ role, group, page, onTotal }: { role: DealRole; group: DealGroup
     return (
       <>
         {[0, 1, 2].map((key) => (
-          <li key={key} aria-hidden="true" className="border-ink/20 bg-surface rounded-media h-36 animate-pulse border" />
+          <li key={key} aria-hidden="true" className="border-ink/15 bg-mist/50 h-32 animate-pulse border-b" />
         ))}
       </>
     );
   }
   if (query.isError) {
     return (
-      <li role="alert" className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6 sm:col-span-2">
+      <li role="alert" className="flex flex-col items-start gap-3 py-6 lg:col-span-2">
         <p className="font-bold">{t('loadFailed')}</p>
         <p>{errorText(query.error)}</p>
         <Button variant="ghost" onClick={() => void query.refetch()}>
@@ -226,7 +226,7 @@ export function MyDeals({ initialRole, initialGroup }: { initialRole: DealRole; 
                 {t('count', { count: total })}
               </p>
             )}
-            <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3" key={`${role}-${group}`}>
+            <ul className="border-ink/15 grid border-t lg:grid-cols-2 lg:gap-x-[clamp(24px,3vw,56px)]" key={`${role}-${group}`}>
               {Array.from({ length: pages }, (_, i) => (
                 <Page
                   key={i}

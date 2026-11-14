@@ -77,9 +77,9 @@ export function ContractCard({ booking }: { booking: BookingView }) {
   }
 
   return (
-    <section aria-labelledby="deal-contract" className="border-ink/15 bg-surface rounded-media flex flex-col gap-4 border p-5 sm:p-6" data-contract="">
+    <section aria-labelledby="deal-contract" className="border-ink/15 flex flex-col gap-4 border-t pt-6" data-contract="">
       <div className="flex flex-col gap-1">
-        <h2 id="deal-contract" className="text-xl font-bold">
+        <h2 id="deal-contract" className="font-display text-[2rem] leading-[0.95] font-black uppercase">
           {t('title')}
         </h2>
         <p className="text-sm">{booking.hasContract ? t('body') : t('notYet')}</p>
