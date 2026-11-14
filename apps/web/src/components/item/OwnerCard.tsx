@@ -39,7 +39,15 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
         </span>
         <div className="min-w-0">
           <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('label')}</p>
-          <Heading className="text-xl leading-tight font-bold [overflow-wrap:anywhere]">{owner.name}</Heading>
+          <Heading
+            className={
+              heading === 'h1'
+                ? 'font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase [overflow-wrap:anywhere]'
+                : 'text-xl leading-tight font-bold [overflow-wrap:anywhere]'
+            }
+          >
+            {owner.name}
+          </Heading>
           <p className="text-sm">{owner.city ? t('sinceIn', { since, city: owner.city }) : t('since', { since })}</p>
         </div>
       </div>

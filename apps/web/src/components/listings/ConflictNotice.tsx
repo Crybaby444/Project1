@@ -27,7 +27,7 @@ export function ConflictNotice({ onReload }: { onReload(): Promise<void> }) {
   return (
     <section
       role="alert"
-      className="border-ink bg-mist rounded-media flex flex-col gap-3 border p-5 text-ink sm:flex-row sm:items-center sm:justify-between"
+      className="border-ink/15 bg-mist rounded-media flex flex-col gap-3 border p-5 text-ink sm:flex-row sm:items-center sm:justify-between"
     >
       <div className="flex flex-col gap-1">
         <h2 className="text-lg font-bold">{t('title')}</h2>

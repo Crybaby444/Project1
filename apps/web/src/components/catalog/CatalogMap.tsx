@@ -72,7 +72,7 @@ export function CatalogMap({ pins, truncated }: { pins: MapPin[]; truncated: boo
 
   return (
     <div className="flex flex-col gap-2">
-      <div ref={element} role="region" aria-label={t('label')} className="border-ink rounded-media bg-mist relative z-0 h-[420px] overflow-hidden border lg:h-[560px]" />
+      <div ref={element} role="region" aria-label={t('label')} className="border-ink/15 rounded-media bg-mist relative z-0 h-[420px] overflow-hidden border lg:h-[560px]" />
       <p className="text-sm">{truncated ? t('truncated') : t('approximate')}</p>
     </div>
   );

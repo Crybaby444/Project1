@@ -42,7 +42,7 @@ export default async function ProfilePage({ params }: Props) {
         <OwnerCard owner={user} heading="h1" />
         {user.about && (
           <section aria-labelledby="profile-about" className="flex flex-col gap-2">
-            <h2 id="profile-about" className="text-2xl font-bold">
+            <h2 id="profile-about" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
               {t('about')}
             </h2>
             <p className="max-w-[68ch] text-lg leading-relaxed whitespace-pre-line [overflow-wrap:anywhere]">{user.about}</p>

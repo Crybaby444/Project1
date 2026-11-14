@@ -26,7 +26,7 @@ export function MyListingCard({
   return (
     <div className="border-ink/15 rounded-media border h-full">
       <article className="flex h-full flex-col gap-4 p-4">
-        <div className="border-ink bg-mist rounded-media relative aspect-[4/3] overflow-hidden border">
+        <div className="border-ink/15 bg-mist rounded-media relative aspect-[4/3] overflow-hidden border">
           {listing.cover ? (
             // eslint-disable-next-line @next/next/no-img-element -- sized by the API's storage
             <img

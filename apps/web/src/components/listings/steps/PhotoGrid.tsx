@@ -177,7 +177,7 @@ export function PhotoGrid({ photos, disabled, onReorder, onRemove }: Props) {
             >
               <div
                 className={`bg-mist rounded-media relative aspect-[4/3] overflow-hidden border ${
-                  lifted ? 'border-ink outline-ink border-2 outline-2 outline-offset-2' : 'border-ink'
+                  lifted ? 'border-ink/15 outline-ink border-2 outline-2 outline-offset-2' : 'border-ink/15'
                 }`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element -- sized by the API's storage */}

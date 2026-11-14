@@ -30,7 +30,7 @@ function BalanceTiles({ summary }: { summary: WalletSummary }) {
   return (
     <dl className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {tiles.map((tile, index) => (
-        <Reveal key={tile.key} index={index} className={`rounded-media flex flex-col gap-2 border border-ink/15 p-5 ${tile.fill} ${tile.key === 'available' ? 'border-ink' : ''}`}>
+        <Reveal key={tile.key} index={index} className={`rounded-media flex flex-col gap-2 border border-ink/15 p-5 ${tile.fill} ${tile.key === 'available' ? 'border-ink/15' : ''}`}>
           <dt className="text-[13px] font-bold tracking-[0.03em] uppercase">{t(tile.key)}</dt>
           <dd className="text-3xl font-bold sm:text-4xl" data-tile={tile.key}>
             <CountUp value={tile.cents} format={money} />
@@ -68,7 +68,7 @@ function History() {
 
   return (
     <section aria-labelledby="wallet-history" className="flex flex-col gap-4">
-      <h2 id="wallet-history" className="text-2xl font-bold">
+      <h2 id="wallet-history" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
         {t('history')}
       </h2>
       <div role="group" aria-label={t('filters')} className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
@@ -85,7 +85,7 @@ function History() {
           ))}
         </ul>
       ) : query.isError ? (
-        <div role="alert" className="border-ink bg-surface rounded-media flex flex-col items-start gap-3 border p-6">
+        <div role="alert" className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6">
           <p className="font-bold">{t('loadFailed')}</p>
           <p>{errorText(query.error)}</p>
           <Button variant="ghost" onClick={() => void query.refetch()}>
@@ -96,7 +96,7 @@ function History() {
         <p className="border-ink/40 rounded-media border border-dashed p-8 text-center">{kind === 'ALL' ? t('emptyAll') : t('empty')}</p>
       ) : (
         <>
-          <ul className="border-ink bg-surface rounded-media divide-ink/15 flex flex-col divide-y border" data-ledger="">
+          <ul className="border-ink/15 bg-surface rounded-media divide-ink/15 flex flex-col divide-y border" data-ledger="">
             {query.data.items.map((item) => {
               const incoming = item.amountCents > 0;
               return (
@@ -181,7 +181,7 @@ export function WalletView() {
           ))}
         </div>
       ) : wallet.isError ? (
-        <div role="alert" className="border-ink bg-surface rounded-media flex flex-col items-start gap-3 border p-6">
+        <div role="alert" className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6">
           <p className="font-bold">{t('loadFailed')}</p>
           <p>{errorText(wallet.error)}</p>
           <Button variant="ghost" onClick={() => void wallet.refetch()}>

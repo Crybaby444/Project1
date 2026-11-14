@@ -63,7 +63,7 @@ export async function CatalogResults({ params: raw, category, related, path, tit
   if (!results.ok) {
     return (
       <main className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-4 px-4 py-20 text-center sm:px-8">
-        <h1 className="text-3xl font-bold">{t('error.title')}</h1>
+        <h1 className="font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{t('error.title')}</h1>
         <p className="max-w-[46ch]">{t('error.body')}</p>
         <Link href={`${path}${catalogSearch(params)}`} className="bg-cta text-cta-fg border-cta rounded-pill inline-flex min-h-10 items-center border px-5 text-[13px] font-bold tracking-[0.03em] uppercase">
           {t('error.retry')}

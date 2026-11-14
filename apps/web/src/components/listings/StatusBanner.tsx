@@ -42,7 +42,7 @@ export function StatusBanner() {
   return (
     <section
       aria-label={tStatus(status)}
-      className="border-ink bg-surface rounded-media flex flex-col gap-3 border p-5"
+      className="border-ink/15 bg-surface rounded-media flex flex-col gap-3 border p-5"
     >
       <div className="flex flex-wrap items-center gap-3">
         <ListingStatusBadge status={status} />

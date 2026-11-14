@@ -23,6 +23,10 @@ import { SITE_URL } from '@/lib/site';
 import { fontVariables } from '@/styles/fonts';
 import '../globals.css';
 
+/** Before the first paint: no home loader for automation (CI) or reduced motion (globals.css). */
+const NO_LOADER =
+  ";try{if(navigator.webdriver||matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.setAttribute('data-no-loader','')}catch(e){}";
+
 type LocaleParams = { params: Promise<{ locale: string }> };
 
 export function generateStaticParams() {
@@ -54,7 +58,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
   return (
     <html lang={htmlLang} className={fontVariables} data-theme={serverTheme} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript + freshLoadScript }} />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript + freshLoadScript + NO_LOADER }} />
       </head>
       <body className="text-ink flex min-h-dvh flex-col">
         <NextIntlClientProvider>

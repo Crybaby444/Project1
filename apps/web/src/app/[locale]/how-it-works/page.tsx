@@ -120,7 +120,7 @@ export default async function HowItWorksPage({ params }: Params) {
           <section aria-labelledby="deposit" className="flex flex-col gap-5">
             <div className="flex items-center gap-4">
               <Mark size={64} string={false} className="shrink-0 animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
-              <h2 id="deposit" className="text-[clamp(1.75rem,3vw,2.5rem)] leading-tight font-bold">
+              <h2 id="deposit" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
                 {t('deposit.heading')}
               </h2>
             </div>
@@ -129,7 +129,7 @@ export default async function HowItWorksPage({ params }: Params) {
               {(['fine', 'agreed', 'disputed'] as const).map((key, index) => (
                 <li
                   key={key}
-                  className={`border-ink rounded-media border p-5 text-base leading-relaxed ${['bg-mist', 'bg-mist', 'bg-mist'][index]}`}
+                  className={`border-ink/15 rounded-media border p-5 text-base leading-relaxed ${['bg-mist', 'bg-mist', 'bg-mist'][index]}`}
                 >
                   {t(`deposit.${key}`)}
                 </li>
@@ -141,22 +141,22 @@ export default async function HowItWorksPage({ params }: Params) {
 
           <div className="flex flex-col gap-10">
             <section aria-labelledby="cancel" className="flex flex-col gap-3">
-              <h2 id="cancel" className="text-[30px] leading-tight font-bold">
+              <h2 id="cancel" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
                 {t('cancel.heading')}
               </h2>
               <p className="leading-relaxed">{t('cancel.body')}</p>
             </section>
             <section aria-labelledby="reviews" className="flex flex-col gap-3">
-              <h2 id="reviews" className="text-[30px] leading-tight font-bold">
+              <h2 id="reviews" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
                 {t('reviews.heading')}
               </h2>
               <p className="leading-relaxed">{t('reviews.body', FACTS)}</p>
             </section>
             <section
               aria-labelledby="today"
-              className="border-ink bg-canvas rounded-media flex flex-col gap-3 border p-6"
+              className="border-ink/15 bg-canvas rounded-media flex flex-col gap-3 border p-6"
             >
-              <h2 id="today" className="text-2xl leading-tight font-bold">
+              <h2 id="today" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
                 {t('today.heading')}
               </h2>
               <p className="leading-relaxed">{t('today.body')}</p>

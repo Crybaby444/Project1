@@ -77,7 +77,7 @@ export function ContractCard({ booking }: { booking: BookingView }) {
   }
 
   return (
-    <section aria-labelledby="deal-contract" className="border-ink bg-surface rounded-media flex flex-col gap-4 border p-5 sm:p-6" data-contract="">
+    <section aria-labelledby="deal-contract" className="border-ink/15 bg-surface rounded-media flex flex-col gap-4 border p-5 sm:p-6" data-contract="">
       <div className="flex flex-col gap-1">
         <h2 id="deal-contract" className="text-xl font-bold">
           {t('title')}

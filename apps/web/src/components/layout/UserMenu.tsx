@@ -129,7 +129,7 @@ export function UserMenu({ user }: { user: PublicUser }) {
       </button>
 
       {open && (
-        <div className="border-ink bg-surface animate-pop-in rounded-media absolute top-full right-0 z-40 mt-2 w-72 max-w-[calc(100vw-2rem)] origin-top-right border p-2">
+        <div className="border-ink/15 bg-surface animate-pop-in rounded-media absolute top-full right-0 z-40 mt-2 w-72 max-w-[calc(100vw-2rem)] origin-top-right border p-2">
           <div className="border-ink/15 mb-1 border-b px-4 pt-2 pb-3">
             <p className="truncate text-sm font-bold">{user.name}</p>
             <p className="truncate text-sm">{user.email}</p>

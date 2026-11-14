@@ -34,7 +34,7 @@ function RoleGate({ role, children }: { role: PublicUser['role']; children: Reac
       >
         403
       </p>
-      <h1 className="text-3xl font-bold">{t('title')}</h1>
+      <h1 className="font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{t('title')}</h1>
       <p className="max-w-[52ch] leading-relaxed">{t('body')}</p>
       <Button variant="ghost" href="/">
         {t('back')}

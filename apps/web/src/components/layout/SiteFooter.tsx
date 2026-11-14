@@ -68,7 +68,7 @@ function FooterLanguages({ label }: { label: string }) {
                 data-footer-language={active ? 'current' : undefined}
                 onClick={(event) => onClick(event, locale)}
                 className={`rounded-pill inline-flex min-h-10 items-center px-3 text-[12px] font-bold tracking-[0.03em] uppercase transition-colors duration-200 ${
-                  active ? 'text-ink underline decoration-1 underline-offset-4' : 'text-ink/55 hover:text-ink'
+                  active ? 'text-ink underline decoration-1 underline-offset-4' : 'text-ink/70 hover:text-ink'
                 }`}
               >
                 {t(locale)}

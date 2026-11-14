@@ -192,7 +192,7 @@ export function PhotosStep() {
         onDragLeave={() => setDragOver(false)}
         onDrop={disabled ? undefined : onDrop}
         className={`rounded-media ease-yoyo flex flex-col items-center gap-3 border-2 border-dashed p-6 text-center transition-[background-color,transform] duration-250 sm:p-8 ${
-          dragOver ? 'border-ink bg-mist scale-[1.01] text-ink' : 'border-ink/60 bg-canvas'
+          dragOver ? 'border-ink/15 bg-mist scale-[1.01] text-ink' : 'border-ink/60 bg-canvas'
         } ${disabled ? 'opacity-60' : ''}`}
       >
         <svg
@@ -251,7 +251,7 @@ export function PhotosStep() {
             .map((item) => (
               <li
                 key={item.key}
-                className="border-ink bg-surface rounded-media flex flex-col gap-2 border p-3"
+                className="border-ink/15 bg-surface rounded-media flex flex-col gap-2 border p-3"
               >
                 {item.status === 'failed' ? (
                   <div role="alert" className="flex flex-wrap items-center justify-between gap-3">

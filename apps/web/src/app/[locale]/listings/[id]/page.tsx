@@ -100,7 +100,7 @@ export default async function ItemPage({ params }: Props) {
       {detail.available ? (
         <Available item={detail} title={title} category={category} locale={locale} />
       ) : (
-        <section className="border-ink rounded-media bg-surface flex flex-col items-start gap-4 border border-dashed p-6 sm:p-10">
+        <section className="border-ink/15 rounded-media bg-surface flex flex-col items-start gap-4 border border-dashed p-6 sm:p-10">
           <p className="bg-ink text-canvas rounded-pill inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold uppercase before:size-1.5 before:rounded-full before:bg-[var(--glow)] before:content-['']">
             {t('away.badge')}
           </p>

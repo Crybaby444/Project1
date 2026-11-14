@@ -71,7 +71,7 @@ function Uploader({
         type="button"
         onClick={() => input.current?.click()}
         disabled={progress !== null}
-        className="rounded-media ease-yoyo border-ink hover:bg-mist grid aspect-square w-24 place-items-center border border-dashed text-center text-[12px] font-bold transition-[transform,background-color] duration-150 hover:-translate-y-0.5 active:scale-[0.96] disabled:opacity-70"
+        className="rounded-media ease-yoyo border-ink/15 hover:bg-mist grid aspect-square w-24 place-items-center border border-dashed text-center text-[12px] font-bold transition-[transform,background-color] duration-150 hover:-translate-y-0.5 active:scale-[0.96] disabled:opacity-70"
       >
         {progress !== null ? (
           <span role="status" className="tabular-nums">
@@ -98,7 +98,7 @@ function Uploader({
 function Thumb({ photo, n, kindLabel }: { photo: BookingPhoto; n: number; kindLabel: string }) {
   const t = useTranslations('deal.photos');
   return (
-    <a href={photo.urls.full} target="_blank" rel="noreferrer" className="border-ink rounded-media ease-yoyo block size-24 overflow-hidden border transition-transform duration-150 hover:-translate-y-0.5">
+    <a href={photo.urls.full} target="_blank" rel="noreferrer" className="border-ink/15 rounded-media ease-yoyo block size-24 overflow-hidden border transition-transform duration-150 hover:-translate-y-0.5">
       {/* eslint-disable-next-line @next/next/no-img-element -- sized by the API's storage */}
       <img src={photo.urls.thumb} alt={t('alt', { n, kind: kindLabel })} width={96} height={96} className="size-full object-cover" />
     </a>
@@ -162,7 +162,7 @@ export function DealPhotos({ booking }: { booking: BookingView }) {
     .filter((g) => g.items.length > 0 || kinds.includes(g.kind));
 
   return (
-    <section aria-labelledby="deal-photos" className="border-ink bg-surface rounded-media flex flex-col gap-4 border p-5 sm:p-6">
+    <section aria-labelledby="deal-photos" className="border-ink/15 bg-surface rounded-media flex flex-col gap-4 border p-5 sm:p-6">
       <div className="flex flex-col gap-1">
         <h2 id="deal-photos" className="text-xl font-bold">
           {t('title')}

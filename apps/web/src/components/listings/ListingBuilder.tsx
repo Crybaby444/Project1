@@ -151,7 +151,7 @@ function BuilderLayout({
       {categoriesFailed !== null && (
         <div
           role="alert"
-          className="border-ink bg-surface rounded-media flex flex-wrap items-center gap-3 border p-4"
+          className="border-ink/15 bg-surface rounded-media flex flex-wrap items-center gap-3 border p-4"
         >
           <p className="font-bold">{errorText(categoriesFailed)}</p>
           <Button variant="ghost" onClick={retryCategories}>
@@ -165,7 +165,7 @@ function BuilderLayout({
           <StepNav current={step} onSelect={goTo} />
         </div>
 
-        <div className="border-ink bg-surface rounded-media flex min-w-0 flex-col gap-8 border p-5 sm:p-8">
+        <div className="border-ink/15 bg-surface rounded-media flex min-w-0 flex-col gap-8 border p-5 sm:p-8">
           <div
             key={step}
             style={

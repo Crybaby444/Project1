@@ -96,7 +96,7 @@ export function MyListings({ initialStatus }: { initialStatus: MyListingsFilter 
       ) : query.isError ? (
         <div
           role="alert"
-          className="border-ink bg-surface rounded-media flex flex-col items-start gap-3 border p-6"
+          className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6"
         >
           <p className="font-bold">{t('loadFailed')}</p>
           <p>{errorText(query.error)}</p>
@@ -106,9 +106,9 @@ export function MyListings({ initialStatus }: { initialStatus: MyListingsFilter 
         </div>
       ) : items.length === 0 ? (
         status === 'ALL' ? (
-          <section className="border-ink bg-surface rounded-media flex flex-col items-center gap-5 border px-6 py-14 text-center">
+          <section className="border-ink/15 bg-surface rounded-media flex flex-col items-center gap-5 border px-6 py-14 text-center">
             <Mark size={96} string={false} className="animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
-            <h2 className="text-2xl font-bold">{t('emptyTitle')}</h2>
+            <h2 className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">{t('emptyTitle')}</h2>
             <p className="max-w-[52ch] leading-relaxed">{t('emptyBody')}</p>
             <Button href="/listings/new" size="lg">
               {t('lend')}

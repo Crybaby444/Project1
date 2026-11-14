@@ -27,7 +27,7 @@ export function DealCover({ booking, size }: { booking: Pick<BookingView, 'id' |
     <div
       data-deal-cover={booking.id}
       style={{ '--vt-name': `deal-cover-${booking.id.replace(/[^A-Za-z0-9_-]/g, '')}` } as React.CSSProperties}
-      className={`border-ink bg-mist rounded-media shrink-0 overflow-hidden border ${size === 'page' ? 'size-24 sm:size-28' : 'size-20'}`}
+      className={`border-ink/15 bg-mist rounded-media shrink-0 overflow-hidden border ${size === 'page' ? 'size-24 sm:size-28' : 'size-20'}`}
     >
       {booking.listing.coverUrl ? (
         // eslint-disable-next-line @next/next/no-img-element -- sized by the API's storage
@@ -43,7 +43,7 @@ export function DealCover({ booking, size }: { booking: Pick<BookingView, 'id' |
 
 function Panel({ title, tone = 'bg-surface', children }: { title: string; tone?: string; children: React.ReactNode }) {
   return (
-    <section className={`border-ink rounded-media flex flex-col gap-2 border p-5 ${tone}`}>
+    <section className={`border-ink/15 rounded-media flex flex-col gap-2 border p-5 ${tone}`}>
       <h2 className="text-[13px] font-bold tracking-[0.03em] uppercase">{title}</h2>
       {children}
     </section>
@@ -108,14 +108,14 @@ export function DealView({ id }: { id: string }) {
   if (deal.isError) {
     const missing = deal.error instanceof ApiError && deal.error.code === 'NOT_FOUND';
     return missing ? (
-      <section role="alert" className="border-ink bg-surface rounded-media flex flex-col items-center gap-4 border px-6 py-14 text-center">
+      <section role="alert" className="border-ink/15 bg-surface rounded-media flex flex-col items-center gap-4 border px-6 py-14 text-center">
         <Mark size={80} string={false} className="animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
-        <h1 className="text-3xl font-bold">{t('notFound')}</h1>
+        <h1 className="font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{t('notFound')}</h1>
         <p className="max-w-[46ch]">{t('notFoundBody')}</p>
         <Button href="/bookings">{t('back')}</Button>
       </section>
     ) : (
-      <div role="alert" className="border-ink bg-surface rounded-media flex flex-col items-start gap-3 border p-6">
+      <div role="alert" className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6">
         <p className="font-bold">{t('loadFailed')}</p>
         <p>{errorText(deal.error)}</p>
         <Button variant="ghost" onClick={() => void deal.refetch()}>
@@ -215,9 +215,9 @@ export function DealView({ id }: { id: string }) {
         </div>
 
         <aside className="flex flex-col gap-6 lg:sticky lg:top-24">
-          <section aria-label={myTurn ? t('yourTurn') : t('theirTurn')} className="border-ink bg-surface rounded-media flex flex-col gap-3 border p-5 sm:p-6">
+          <section aria-label={myTurn ? t('yourTurn') : t('theirTurn')} className="border-ink/15 bg-surface rounded-media flex flex-col gap-3 border p-5 sm:p-6">
             {notice && (
-              <p role="alert" className="rounded-media border-ink flex items-start gap-2 border p-3 text-sm font-bold">
+              <p role="alert" className="rounded-media border-ink/15 flex items-start gap-2 border p-3 text-sm font-bold">
                 <span aria-hidden="true" className="bg-ink text-canvas mt-0.5 inline-block size-4 shrink-0 rounded-full border border-ink/15" />
                 {notice}
               </p>

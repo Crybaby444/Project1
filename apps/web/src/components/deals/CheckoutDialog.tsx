@@ -114,7 +114,7 @@ export function CheckoutDialog({ booking, open, onClose }: { booking: BookingVie
             <label
               key={value}
               className={`rounded-media ease-yoyo flex min-h-12 cursor-pointer items-center gap-3 border px-4 py-3 transition-[background-color,transform] duration-150 active:scale-[0.99] ${
-                chosen === value ? 'border-ink bg-mist text-ink' : 'border-ink/40 hover:border-ink'
+                chosen === value ? 'border-ink/15 bg-mist text-ink' : 'border-ink/40 hover:border-ink'
               }`}
             >
               <input
@@ -173,7 +173,7 @@ export function CheckoutDialog({ booking, open, onClose }: { booking: BookingVie
         )}
 
         {error && (
-          <p role="alert" data-pay-error="" className="rounded-media border-ink flex items-start gap-2 border p-3 text-sm font-bold">
+          <p role="alert" data-pay-error="" className="rounded-media border-ink/15 flex items-start gap-2 border p-3 text-sm font-bold">
             <span aria-hidden="true" className="bg-[var(--danger)] mt-0.5 inline-block size-4 shrink-0 rounded-full border border-ink/15" />
             {error}
           </p>

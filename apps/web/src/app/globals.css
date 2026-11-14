@@ -414,6 +414,9 @@ html[data-page-switch]::view-transition-new(site-header) {
   color: var(--canvas);
   animation: home-loader-out 0.5s ease 4.5s forwards;
 }
+html[data-no-loader] .home-loader {
+  display: none;
+}
 html[data-staged] .home-loader {
   animation: none; /* the stage is here: it decides when the loader goes */
 }

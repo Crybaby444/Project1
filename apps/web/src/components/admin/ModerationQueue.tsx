@@ -149,7 +149,7 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
       ) : query.isError ? (
         <div
           role="alert"
-          className="border-ink bg-surface rounded-media flex flex-col items-start gap-3 border p-6"
+          className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6"
         >
           <p className="font-bold">{t('loadFailed')}</p>
           <p>{errorText(query.error)}</p>
@@ -158,9 +158,9 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
           </Button>
         </div>
       ) : items.length === 0 ? (
-        <section className="border-ink bg-surface rounded-media flex flex-col items-center gap-4 border px-6 py-14 text-center">
+        <section className="border-ink/15 bg-surface rounded-media flex flex-col items-center gap-4 border px-6 py-14 text-center">
           <Mark size={88} string={false} className="shrink-0 animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
-          <h2 className="text-2xl font-bold">{queue === 'other' ? t('otherEmptyTitle') : t('emptyTitle')}</h2>
+          <h2 className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">{queue === 'other' ? t('otherEmptyTitle') : t('emptyTitle')}</h2>
           <p className="max-w-[52ch] leading-relaxed">{queue === 'other' ? t('otherEmptyBody') : t('emptyBody')}</p>
         </section>
       ) : (

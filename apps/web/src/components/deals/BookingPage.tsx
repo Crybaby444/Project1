@@ -17,7 +17,7 @@ export function BookingPage({ listingId }: { listingId: string }) {
   return (
     <main className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-10 sm:px-8 sm:py-14">
       <header className="flex flex-col gap-5 sm:flex-row sm:items-center">
-        <div className="border-ink bg-mist rounded-media size-24 shrink-0 overflow-hidden border sm:size-28">
+        <div className="border-ink/15 bg-mist rounded-media size-24 shrink-0 overflow-hidden border sm:size-28">
           {listing?.coverUrl && (
             // eslint-disable-next-line @next/next/no-img-element -- photos come from the API's storage, already sized
             <img src={listing.coverUrl} alt="" width={224} height={224} className="size-full object-cover" />

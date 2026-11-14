@@ -201,7 +201,7 @@ export function SearchBox({ initialQuery = '', className = '' }: { initialQuery?
       <p role="status" aria-live="polite" className="sr-only">
         {open && text.trim().length >= 2 && !loading && answer ? (options.length > 0 ? t('count', { count: options.length }) : t('none')) : ''}
       </p>
-      <div hidden={!expanded} className="border-ink bg-surface rounded-media animate-pop-in absolute inset-x-0 top-full z-30 mt-2 origin-top border p-2">
+      <div hidden={!expanded} className="border-ink/15 bg-surface rounded-media animate-pop-in absolute inset-x-0 top-full z-30 mt-2 origin-top border p-2">
         <ul id={ids.list} role="listbox" aria-label={t('label')} className="flex flex-col gap-1">
           {categories.length > 0 && (
             <li role="presentation">

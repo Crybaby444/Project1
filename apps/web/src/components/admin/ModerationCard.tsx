@@ -65,7 +65,7 @@ export function ModerationCard({
   };
 
   return (
-    <article className="border-ink bg-surface rounded-media flex flex-col gap-6 border p-5 sm:p-8">
+    <article className="border-ink/15 bg-surface rounded-media flex flex-col gap-6 border p-5 sm:p-8">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-2">
           <h2 className="text-2xl leading-tight font-bold [overflow-wrap:anywhere]">{listing.title}</h2>
@@ -83,7 +83,7 @@ export function ModerationCard({
                   type="button"
                   aria-label={t('openPhoto', { number: index + 1, total })}
                   onClick={() => setViewing(index)}
-                  className="border-ink rounded-media ease-yoyo block aspect-[4/3] w-full overflow-hidden border transition-transform duration-250 hover:-translate-y-0.5"
+                  className="border-ink/15 rounded-media ease-yoyo block aspect-[4/3] w-full overflow-hidden border transition-transform duration-250 hover:-translate-y-0.5"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element -- sized by the API's storage */}
                   <img src={photo.urls.thumb} alt="" className="size-full object-cover" />
@@ -194,7 +194,7 @@ export function ModerationCard({
             <img
               src={listing.photos[viewing]!.urls.full}
               alt={t('photo', { number: viewing + 1, total })}
-              className="border-ink rounded-media max-h-[70dvh] w-full border object-contain"
+              className="border-ink/15 rounded-media max-h-[70dvh] w-full border object-contain"
             />
             <Button variant="ghost" className="self-end" onClick={() => setViewing(null)}>
               {t('close')}

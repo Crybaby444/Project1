@@ -29,7 +29,7 @@ export function ListingPreview({ values, cover, categoryName, categoryColor }: P
 
   return (
     <div className="border-ink/15 rounded-media border flex flex-col gap-4 p-4" aria-label={t('label')} role="figure">
-      <div className="border-ink bg-mist rounded-media relative aspect-[4/3] overflow-hidden border">
+      <div className="border-ink/15 bg-mist rounded-media relative aspect-[4/3] overflow-hidden border">
         {cover ? (
           // eslint-disable-next-line @next/next/no-img-element -- photos come from the API's storage, already sized
           <img

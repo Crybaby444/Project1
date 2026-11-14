@@ -59,8 +59,8 @@ export function DealTimeline({
   const steps = dealTimeline(booking, history);
 
   return (
-    <section aria-labelledby="deal-timeline" className="border-ink bg-surface rounded-media flex flex-col gap-4 border p-5 sm:p-6">
-      <h2 id="deal-timeline" className="text-2xl font-bold">
+    <section aria-labelledby="deal-timeline" className="border-ink/15 bg-surface rounded-media flex flex-col gap-4 border p-5 sm:p-6">
+      <h2 id="deal-timeline" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
         {t('title')}
       </h2>
       <ol className="flex flex-col" data-timeline="">

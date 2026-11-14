@@ -36,7 +36,7 @@ export function DealCard({ booking, index }: { booking: BookingView; index: numb
       <TransitionLink
         href={`/bookings/${booking.id}`}
         data-deal-card={booking.id}
-        className="group border-ink bg-surface rounded-media ease-yoyo relative flex h-full gap-4 border p-4 transition-transform duration-250 hover:-translate-y-1 active:scale-[0.99]"
+        className="group border-ink/15 bg-surface rounded-media ease-yoyo relative flex h-full gap-4 border p-4 transition-transform duration-250 hover:-translate-y-1 active:scale-[0.99]"
       >
         <DealCover booking={booking} size="card" />
         <div className="flex min-w-0 flex-1 flex-col gap-2">
@@ -85,7 +85,7 @@ function Page({ role, group, page, onTotal }: { role: DealRole; group: DealGroup
   }
   if (query.isError) {
     return (
-      <li role="alert" className="border-ink bg-surface rounded-media flex flex-col items-start gap-3 border p-6 sm:col-span-2">
+      <li role="alert" className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6 sm:col-span-2">
         <p className="font-bold">{t('loadFailed')}</p>
         <p>{errorText(query.error)}</p>
         <Button variant="ghost" onClick={() => void query.refetch()}>
@@ -110,9 +110,9 @@ function Empty({ role, group }: { role: DealRole; group: DealGroup }) {
     return <p className="border-ink/40 rounded-media border border-dashed p-8 text-center">{t(`empty.${group}`)}</p>;
   }
   return (
-    <section className="border-ink bg-surface rounded-media flex flex-col items-center gap-5 border px-6 py-14 text-center">
+    <section className="border-ink/15 bg-surface rounded-media flex flex-col items-center gap-5 border px-6 py-14 text-center">
       <Mark size={88} string={false} className="animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
-      <h2 className="text-2xl font-bold">{t(`empty.${role}`)}</h2>
+      <h2 className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">{t(`empty.${role}`)}</h2>
       <p className="max-w-[52ch] leading-relaxed">{t(`empty.${role}Body`)}</p>
       {role === 'owner' && (
         <Button href="/listings/new" size="lg">

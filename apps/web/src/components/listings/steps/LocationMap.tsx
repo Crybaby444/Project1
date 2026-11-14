@@ -97,7 +97,7 @@ export function LocationMap({ point, onPick, readOnly }: Props) {
         ref={element}
         role="region"
         aria-label={t('map')}
-        className="border-ink rounded-media relative z-0 h-72 overflow-hidden border sm:h-80"
+        className="border-ink/15 rounded-media relative z-0 h-72 overflow-hidden border sm:h-80"
       />
       <p className="text-sm">{t('mapHelp')}</p>
       {!readOnly && (

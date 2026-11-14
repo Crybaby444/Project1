@@ -186,7 +186,7 @@ export function CropDialog({ file, name, onDone, onCancel, onUnreadable }: Props
           onPointerCancel={() => (drag.current = null)}
           onWheel={onWheel}
           onKeyDown={onKeyDown}
-          className="border-ink rounded-media aspect-[4/3] w-full cursor-grab touch-none border active:cursor-grabbing"
+          className="border-ink/15 rounded-media aspect-[4/3] w-full cursor-grab touch-none border active:cursor-grabbing"
         />
         <p className="text-sm">{t('hint')}</p>
         <div className="flex flex-wrap items-center gap-3">
