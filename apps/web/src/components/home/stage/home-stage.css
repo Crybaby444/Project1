@@ -21,6 +21,20 @@ html[data-staged] [data-site-header] {
   --cta-fg: #000;
   color: #f4f1e6;
 }
+/* While one of its menus is open the header stops blending: a blended group cannot have a solid
+   panel (the scene showed through the language list). It turns into a plain bar in the page's own
+   colours until the menu closes. */
+html[data-staged] [data-site-header]:has([aria-expanded='true']) {
+  mix-blend-mode: normal;
+  --ink: inherit;
+  --surface: inherit;
+  --mist: inherit;
+  --cta-bg: inherit;
+  --cta-fg: inherit;
+  color: var(--ink);
+  background: var(--canvas);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+}
 
 /* Intro: the hero and the night share one held screen; the night spills over the hero from the yo-yo. */
 html[data-staged] [data-intro] {

@@ -135,7 +135,7 @@ export function LegalDocument({ doc, effective }: { doc: LegalDoc; effective: st
           </nav>
 
           <article className="flex max-w-[72ch] flex-col gap-12 text-base">
-            <section aria-labelledby="summary" className="border-ink/15 bg-mist rounded-media flex flex-col gap-3 border p-6 text-ink sm:p-8">
+            <section aria-labelledby="summary" className="border-ink text-ink flex flex-col gap-3 border-t-2 pt-6">
               <h2 id="summary" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
                 {t('summary')}
               </h2>
