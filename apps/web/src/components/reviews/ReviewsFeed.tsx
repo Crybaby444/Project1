@@ -1,13 +1,14 @@
 'use client';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/Button';
 import { unwrap } from '@/lib/session/api-error';
 import { useApiClient } from '@/lib/session/SessionProvider';
 import { ReviewList } from './ReviewList';
 import { Stars } from './Stars';
+import { formatScore } from './format';
 
 type Source = { kind: 'user'; id: string } | { kind: 'listing'; id: string };
 
@@ -17,6 +18,7 @@ type Source = { kind: 'user'; id: string } | { kind: 'listing'; id: string };
  */
 export function ReviewsFeed({ source, heading, empty = null }: { source: Source; heading?: ReactNode; empty?: ReactNode }) {
   const t = useTranslations('reviews');
+  const locale = useLocale();
   const client = useApiClient();
   const query = useInfiniteQuery({
     queryKey: ['reviews', source.kind, source.id],
@@ -42,7 +44,7 @@ export function ReviewsFeed({ source, heading, empty = null }: { source: Source;
           {first.average > 0 && (
             <>
               <span className="font-display text-[2.2rem] leading-none font-black tabular-nums" aria-hidden="true">
-                {first.average.toFixed(1)}
+                {formatScore(first.average, locale, true)}
               </span>
               <Stars value={first.average} size={16} />
             </>

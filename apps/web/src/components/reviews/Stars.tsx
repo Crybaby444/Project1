@@ -1,7 +1,8 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useId } from 'react';
+import { formatScore } from './format';
 
 const STAR = 'M12 2.8l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 16.8l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z';
 
@@ -11,9 +12,10 @@ const STAR = 'M12 2.8l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 16.8l-5.4 2.9 1-6.1-4.4-4.3
 export function Stars({ value, size = 14, className = '' }: { value: number; size?: number; className?: string }) {
   const t = useTranslations('reviews');
   const uid = useId();
+  const locale = useLocale();
   const shown = Math.round(value * 2) / 2;
   return (
-    <span role="img" aria-label={t('stars', { rating: value })} className={`inline-flex items-center gap-0.5 ${className}`}>
+    <span role="img" aria-label={t('stars', { rating: formatScore(value, locale) })} className={`inline-flex items-center gap-0.5 ${className}`}>
       {[1, 2, 3, 4, 5].map((n) => {
         const fill = shown >= n ? 1 : shown >= n - 0.5 ? 0.5 : 0;
         return (

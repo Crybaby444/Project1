@@ -3,6 +3,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { profilePath } from '@/lib/seo';
 import { Stars } from '@/components/reviews/Stars';
+import { formatScore } from '@/components/reviews/format';
 
 /** "AB" from "Anna Bērziņa", "A" from "Anna". */
 export function initials(name: string): string {
@@ -74,7 +75,7 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
       ) : (
         <p className="m-0 flex items-center gap-2.5 text-sm" data-owner-rating="">
           <span className="font-display text-[1.6rem] leading-none font-black tabular-nums" aria-hidden="true">
-            {owner.rating.toFixed(1)}
+            {formatScore(owner.rating, locale, true)}
           </span>
           <Stars value={owner.rating} />
           <span className="text-ink/75">{tr('count', { count: owner.reviewCount })}</span>

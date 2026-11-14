@@ -420,7 +420,7 @@
       "aboutItem": "Zvaigznes lietai",
       "text": "Tava atsauksme",
       "hint": "Kas izdevās, ko varētu uzlabot. No {min} līdz {max} rakstzīmēm.",
-      "submit": "Nosūtīt atsauksmi",
+      "submit": "Atstāt atsauksmi",
       "sent": "Paldies! Tava atsauksme parādīsies, kad {name} uzrakstīs savējo, vai {date}.",
       "mine": "Tava atsauksme",
       "theirs": "{name} par tevi",

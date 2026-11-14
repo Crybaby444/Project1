@@ -37,6 +37,11 @@ describe('Stars', () => {
     renderWithIntl(<Stars value={4.5} />);
     expect(screen.getByRole('img', { name: '4.5 of 5' })).toBeInTheDocument();
   });
+
+  it('writes the score the way the language does (a decimal comma in Latvian, as Airbnb shows "5,0 no 5")', () => {
+    renderWithIntl(<Stars value={4.5} />, 'lv');
+    expect(screen.getByRole('img', { name: '4,5 no 5' })).toBeInTheDocument();
+  });
 });
 
 describe('StarInput', () => {
