@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import deals from '../messages/deals/en.json';
+import deals from '../messages/deals/en.json' with { type: 'json' };
 import { administrator, person, publishedListing, returnedDealByApi, stepByApi } from './support/deals';
 
 const r = deals.reviews;
