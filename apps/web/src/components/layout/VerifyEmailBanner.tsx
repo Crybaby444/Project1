@@ -10,7 +10,7 @@ function MailIcon() {
   return (
     <span
       aria-hidden="true"
-      className="bg-ink text-canvas rounded-pill inline-grid size-8 shrink-0 place-items-center"
+      className="border-ink/30 rounded-pill inline-grid size-8 shrink-0 place-items-center border"
     >
       <svg
         viewBox="0 0 24 24"
@@ -39,10 +39,10 @@ function Banner() {
   const { resend, busy, retryInSeconds } = useResendVerification();
 
   return (
-    <div className="border-ink bg-surface border-b">
+    <div className="border-ink/15 bg-surface border-b">
       <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2.5 sm:px-8">
         <MailIcon />
-        <p className="min-w-48 flex-1 text-sm font-bold">{t('title')}</p>
+        <p className="min-w-48 flex-1 text-sm font-semibold">{t('title')}</p>
         <div className="flex flex-wrap items-center gap-3">
           <RetryAfterNotice seconds={retryInSeconds} inline />
           <Button variant="ghost" onClick={resend} loading={busy} disabled={retryInSeconds > 0}>

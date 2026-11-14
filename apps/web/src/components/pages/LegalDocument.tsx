@@ -76,7 +76,7 @@ function BlockView({ block, fill }: { block: Block; fill: (text: string) => stri
         <thead className="bg-mist">
           <tr>
             {block.table.head.map((cell) => (
-              <th key={cell} scope="col" className="border-ink border-b px-4 py-3 text-xs font-bold tracking-[0.032em] uppercase">
+              <th key={cell} scope="col" className="border-ink/15 border-b px-4 py-3 text-xs font-bold tracking-[0.032em] uppercase">
                 {cell}
               </th>
             ))}
@@ -84,7 +84,7 @@ function BlockView({ block, fill }: { block: Block; fill: (text: string) => stri
         </thead>
         <tbody>
           {block.table.rows.map((row) => (
-            <tr key={row.join('|')} className="border-ink border-b last:border-b-0">
+            <tr key={row.join('|')} className="border-ink/15 border-b last:border-b-0">
               {row.map((cell, index) => (
                 <td key={index} className={`px-4 py-3 align-top ${index === 0 ? 'font-bold' : ''}`}>
                   <Inline text={fill(cell)} />

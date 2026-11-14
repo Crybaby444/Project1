@@ -17,7 +17,7 @@ type PageBannerProps = {
 // and the stickers belonged to the retired sticker book).
 export function PageBanner({ title, lead, children }: PageBannerProps) {
   return (
-    <header className="bg-canvas border-ink relative overflow-x-clip border-b">
+    <header className="bg-canvas border-ink/15 relative overflow-x-clip border-b">
       <div
         className={`relative mx-auto flex max-w-[1440px] flex-col gap-6 px-4 pt-14 sm:px-8 sm:pt-20 pb-14 sm:pb-20`}
       >
