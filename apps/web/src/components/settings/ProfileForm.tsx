@@ -8,6 +8,7 @@ import { RetryAfterNotice } from '@/components/auth/RetryAfterNotice';
 import { ThemeSelect } from '@/components/theme/ThemeSelect';
 import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/Field';
+import { Select } from '@/components/ui/Select';
 import { INPUT_CLASS, TEXTAREA_CLASS } from '@/components/ui/inputs';
 import { useToast } from '@/components/ui/Toast';
 import { usePathname, useRouter } from '@/i18n/navigation';
@@ -99,13 +100,12 @@ export function ProfileForm({ user }: { user: PublicUser }) {
             </p>
           </div>
           <Field label={t('language')} hint={t('languageHint')} error={fieldError('locale')}>
-            <select className={`${INPUT_CLASS} appearance-auto`} {...form.register('locale')}>
-              {LOCALES.map((locale) => (
-                <option key={locale} value={locale} lang={locale}>
-                  {tLanguage(locale)}
-                </option>
-              ))}
-            </select>
+            <Select
+              name="locale"
+              value={form.watch('locale')}
+              onChange={(next) => form.setValue('locale', next as Locale, { shouldDirty: true })}
+              options={LOCALES.map((locale) => ({ value: locale, label: tLanguage(locale), lang: locale }))}
+            />
           </Field>
           <Button type="submit" size="lg" loading={busy} disabled={disabled} className="self-start">
             {t('save')}

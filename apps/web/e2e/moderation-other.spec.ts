@@ -30,7 +30,8 @@ test('the administrator moves a listing out of «Other»; it keeps its status an
 
   await card.getByRole('button', { name: m.move.button }).click();
   const dialog = page.getByRole('dialog');
-  await dialog.getByLabel(m.move.label).selectOption({ label: 'Drills & drivers' });
+  await dialog.getByRole('combobox', { name: m.move.label }).click();
+  await dialog.getByRole('option', { name: 'Drills & drivers' }).click();
   await dialog.getByRole('button', { name: m.move.submit }).click();
   await expect(page.getByText('Moved to Tools · Drills & drivers. The owner gets an email.')).toBeVisible();
 

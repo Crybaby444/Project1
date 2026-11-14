@@ -34,7 +34,8 @@ test.describe('profile', () => {
     await registerByApi(page.request);
     await page.goto('/settings');
 
-    await page.getByRole('combobox', { name: en.settings.profile.language }).selectOption('lv');
+    await page.getByRole('combobox', { name: en.settings.profile.language }).click();
+    await page.getByRole('option', { name: 'Latviešu' }).click();
     await page.getByRole('button', { name: en.settings.profile.save }).click();
 
     await expect(page).toHaveURL(/\/lv\/settings$/);

@@ -1,5 +1,6 @@
 'use client';
 
+import { Select } from '@/components/ui/Select';
 import { LOCALES, type BookingView, type Locale } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useId, useState } from 'react';
@@ -95,18 +96,13 @@ export function ContractCard({ booking }: { booking: BookingView }) {
               <label htmlFor={selectId} className="text-[13px] font-bold tracking-[0.03em] uppercase">
                 {t('language')}
               </label>
-              <select
+              <Select
                 id={selectId}
                 value={lang}
-                onChange={(event) => setLang(event.target.value as Locale)}
-                className="rounded-pill border-ink bg-surface min-h-10 border px-4 text-sm font-bold"
-              >
-                {LOCALES.map((code) => (
-                  <option key={code} value={code}>
-                    {tl(code)}
-                  </option>
-                ))}
-              </select>
+                className="min-w-44"
+                onChange={(next) => setLang(next as Locale)}
+                options={LOCALES.map((code) => ({ value: code, label: tl(code), lang: code }))}
+              />
             </div>
             <Button variant="ghost" onClick={() => void download()} loading={busy} data-download-contract="">
               <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
