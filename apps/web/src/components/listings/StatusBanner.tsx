@@ -42,16 +42,16 @@ export function StatusBanner() {
   return (
     <section
       aria-label={tStatus(status)}
-      className="border-ink bg-surface rounded-card flex flex-col gap-3 border p-5"
+      className="border-ink/15 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-y py-4"
     >
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex min-w-0 flex-wrap items-center gap-3">
         <ListingStatusBadge status={status} />
         {status !== 'REJECTED' && <p className="max-w-[80ch] text-sm leading-relaxed">{t(status)}</p>}
       </div>
       {status === 'REJECTED' && (
-        <div className="flex flex-col gap-2">
+        <div className="flex basis-full flex-col gap-2">
           <p className="text-sm">{t('REJECTED')}</p>
-          <blockquote className="border-sticker-ember border-l-4 py-1 pl-4 text-base font-bold [overflow-wrap:anywhere]">
+          <blockquote className="border-[var(--danger)] border-l-4 py-1 pl-4 text-base font-bold [overflow-wrap:anywhere]">
             {listing?.rejectionReason}
           </blockquote>
           <p className="text-sm">

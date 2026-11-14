@@ -28,14 +28,14 @@
  * Big display titles sized from their container, not the viewport: the longest word (--fit-chars,
  * set by displayFit()) fits the width of the nearest @container on one line, up to --fit-max (the
  * DESIGN.md size on wide screens) and down to --fit-min. --fit-em is the width of one uppercase
- * letter of the display face, in em, for the widest title word measured (Unbounded "WORK", 1.02),
- * plus a little room. A word that still does not fit
+ * letter of the display face, in em, for the widest title word measured (Sofia Sans Extra Condensed
+ * 900 "WORK", 0.51; "WWWW" 0.65), plus room for Latvian and Cyrillic capitals. A word that still does not fit
  * (an unexpected translation) is hyphenated in the page language or, failing that, broken.
  */
 @utility text-display-fit {
   font-size: clamp(
     var(--fit-min, 1rem),
-    calc(100cqi / (var(--fit-chars, 10) * var(--fit-em, 1.04))),
+    calc(100cqi / (var(--fit-chars, 10) * var(--fit-em, 0.6))),
     var(--fit-max, 2.75rem)
   );
   -webkit-hyphens: auto;
@@ -152,9 +152,13 @@
     font-weight: 500;
     letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
-    transition:
-      background-color var(--dur-base) var(--ease-yoyo),
-      color var(--dur-base) var(--ease-yoyo);
+  }
+
+  /* A theme lands in one step (components/theme/switch-theme.ts): no half-way colours. */
+  html[data-theme-instant] *,
+  html[data-theme-instant] *::before,
+  html[data-theme-instant] *::after {
+    transition: none !important;
   }
 
   /* Visible focus everywhere: 2px outline, 3px offset (DESIGN.md §9). */
@@ -371,4 +375,85 @@ html[data-page-switch]::view-transition-new(site-header) {
 .yoyo-map-popup a {
   font-weight: 700;
   color: #000;
+}
+
+/* The drop cursor (components/motion/DropCursor) replaces the arrow and the hand for a mouse; text fields keep their caret. */
+@media (pointer: fine) {
+  body.has-cursor,
+  body.has-cursor a,
+  body.has-cursor button,
+  body.has-cursor [role='button'],
+  body.has-cursor label,
+  body.has-cursor summary {
+    cursor: none;
+  }
+}
+
+/* The night rows of the home: each track is two identical halves and slides by one, endlessly. */
+@keyframes night-run {
+  to {
+    transform: translateX(calc(-50% - 0.15em));
+  }
+}
+@keyframes scroll-cue {
+  0% { transform: translateY(-4px); opacity: 0; }
+  40% { opacity: 1; }
+  100% { transform: translateY(6px); opacity: 0; }
+}
+
+/* The home loader (components/home/HomeLoader): the inverse of the page — night on cream, cream on night.
+   The mark turns, the count runs 0 → 100 (head script, components/home/loader-count.ts); it fades away by itself if no stage takes it over. */
+.home-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: var(--ink);
+  color: var(--canvas);
+  --mark-cut: var(--ink); /* the slit in the loader's own ground, so the turning shows */
+  animation: home-loader-out 0.5s ease 4.5s forwards;
+}
+html[data-no-loader] .home-loader {
+  display: none;
+}
+html[data-staged] .home-loader {
+  animation: none; /* the stage is here: it decides when the loader goes */
+}
+.home-loader-mark {
+  animation: home-loader-turn 1.1s linear infinite;
+}
+.home-loader-count {
+  position: absolute;
+  left: max(16px, 3.4vw);
+  bottom: 22px;
+  font-family: var(--font-display-face), sans-serif;
+  font-size: 64px;
+  line-height: 0.8;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+.home-loader-name {
+  position: absolute;
+  right: max(16px, 3.4vw);
+  bottom: 28px;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.72;
+}
+@keyframes home-loader-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes home-loader-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-loader {
+    display: none;
+  }
 }

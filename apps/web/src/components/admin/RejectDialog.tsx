@@ -64,16 +64,14 @@ export function RejectDialog({
         <div className="flex flex-col gap-2">
           <p className="text-[13px] font-bold tracking-[0.03em] uppercase">{t('suggestions')}</p>
           <div className="flex flex-wrap gap-2">
-            {SUGGESTIONS.map((key, index) => (
+            {SUGGESTIONS.map((key) => (
               <button
                 key={key}
                 type="button"
                 onClick={() =>
                   setReason((text) => [text.trim(), t(`suggestion.${key}`)].filter(Boolean).join(' '))
                 }
-                className={`border-ink bg-surface rounded-pill ease-yoyo min-h-10 border px-3 text-left text-sm font-bold transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.96] ${
-                  index % 2 ? 'hover:rotate-1' : 'hover:-rotate-1'
-                }`}
+                className={`border-ink bg-surface rounded-pill ease-yoyo min-h-10 border px-3 text-left text-sm font-bold transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.96]`}
               >
                 {t(`suggestion.${key}`)}
               </button>

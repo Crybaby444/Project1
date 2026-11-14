@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { Sticker } from '@/components/ui/Sticker';
+import { Mark } from '@/components/brand/Mark';
 import { Link } from '@/i18n/navigation';
 import type { CatalogParams } from '@/lib/catalog/params';
 
@@ -16,9 +16,9 @@ export async function EmptyResults({ params, resetHref }: { params: CatalogParam
     params.q ? t('tipText') : null,
   ].filter((tip): tip is string => tip !== null);
   return (
-    <div className="border-ink bg-surface rounded-card flex flex-col items-center gap-4 border px-6 py-12 text-center">
-      <Sticker kind="star" size={72} />
-      <h2 className="text-2xl font-bold">{t('title')}</h2>
+    <div className="border-ink/15 flex flex-col items-center gap-4 border-y px-6 py-16 text-center">
+      <Mark size={64} string={false} className="animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
+      <h2 className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">{t('title')}</h2>
       {tips.length > 0 ? (
         <ul className="flex max-w-[46ch] flex-col gap-1 text-base">
           {tips.map((tip) => (

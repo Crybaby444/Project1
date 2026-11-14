@@ -35,7 +35,8 @@ export function passwordStrength(password: string): PasswordStrength {
 }
 
 const LEVEL = { 1: 'weak', 2: 'fair', 3: 'strong' } as const;
-const BAR_COLOUR = { 1: 'bg-sticker-ember', 2: 'bg-sticker-sun', 3: 'bg-sticker-violet' } as const;
+// v16: weak is the warning red, fair is half ink, strong is ink with the blue light.
+const BAR_COLOUR = { 1: 'bg-[var(--sticker-ember)]', 2: 'bg-ink/50', 3: 'bg-ink shadow-[0_0_0_1px_var(--glow)]' } as const;
 
 function StrengthMeter({ password }: { password: string }) {
   const t = useTranslations('auth.strength');

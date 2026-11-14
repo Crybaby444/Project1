@@ -4,7 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { CallToAction } from '@/components/landing/CallToAction';
 import { StickyStack } from '@/components/motion/StickyStack';
 import { PageBanner } from '@/components/pages/PageBanner';
-import { Sticker } from '@/components/ui/Sticker';
+import { Mark } from '@/components/brand/Mark';
 import { pageMetadata } from '@/lib/seo';
 import { SERVICE_FACTS } from '@/lib/site';
 
@@ -20,12 +20,12 @@ const FACTS = {
 const RENTER = ['find', 'request', 'contract', 'pay', 'handover', 'return'] as const;
 const OWNER = ['list', 'review', 'accept', 'handover', 'check'] as const;
 const DOTS = [
-  'bg-sticker-sun',
-  'bg-sticker-blue',
-  'bg-sticker-lavender',
-  'bg-sticker-mint',
-  'bg-sticker-ember',
-  'bg-sticker-sun',
+  'bg-ink text-canvas',
+  'bg-ink text-canvas',
+  'bg-ink text-canvas',
+  'bg-ink text-canvas',
+  'bg-ink text-canvas',
+  'bg-ink text-canvas',
 ];
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
@@ -50,7 +50,7 @@ function StepList({
 }) {
   return (
     <section aria-labelledby={id} className="flex flex-col gap-6">
-      <h2 id={id} className="text-[clamp(1.75rem,3vw,2.5rem)] leading-tight font-bold">
+      <h2 id={id} className="font-display text-[clamp(2.2rem,4vw,3.6rem)] leading-[0.9] font-black uppercase">
         {heading}
       </h2>
       {/* Each step is a small card that pins and lands on the pile as the page scrolls. */}
@@ -58,11 +58,11 @@ function StepList({
         {steps.map((step, index) => (
           <div
             key={step.title}
-            className="border-ink bg-surface text-ink rounded-card grid grid-cols-[3rem_1fr] gap-4 border p-5 sm:p-6"
+            className="border-ink/15 bg-canvas text-ink rounded-media grid grid-cols-[3rem_1fr] gap-4 border p-5 sm:p-6"
           >
             <span
               aria-hidden="true"
-              className={`border-ink font-display inline-grid size-12 place-items-center rounded-full border text-lg font-black text-black ${DOTS[index % DOTS.length]}`}
+              className={`font-display inline-grid size-12 place-items-center rounded-full text-lg font-black ${DOTS[index % DOTS.length]}`}
             >
               {index + 1}
             </span>
@@ -119,8 +119,8 @@ export default async function HowItWorksPage({ params }: Params) {
         <div className="reveal mx-auto grid max-w-[1440px] gap-10 px-4 py-16 sm:px-8 sm:py-24 lg:grid-cols-[1.4fr_1fr]">
           <section aria-labelledby="deposit" className="flex flex-col gap-5">
             <div className="flex items-center gap-4">
-              <Sticker kind="coin" size={64} className="shrink-0 -rotate-6" />
-              <h2 id="deposit" className="text-[clamp(1.75rem,3vw,2.5rem)] leading-tight font-bold">
+              <Mark size={64} string={false} className="shrink-0 animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
+              <h2 id="deposit" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
                 {t('deposit.heading')}
               </h2>
             </div>
@@ -129,7 +129,7 @@ export default async function HowItWorksPage({ params }: Params) {
               {(['fine', 'agreed', 'disputed'] as const).map((key, index) => (
                 <li
                   key={key}
-                  className={`border-ink rounded-card border p-5 text-base leading-relaxed text-black ${['bg-sticker-mint', 'bg-sticker-lavender', 'bg-sticker-sun'][index]}`}
+                  className={`border-ink/15 rounded-media border p-5 text-base leading-relaxed ${['bg-mist', 'bg-mist', 'bg-mist'][index]}`}
                 >
                   {t(`deposit.${key}`)}
                 </li>
@@ -141,22 +141,22 @@ export default async function HowItWorksPage({ params }: Params) {
 
           <div className="flex flex-col gap-10">
             <section aria-labelledby="cancel" className="flex flex-col gap-3">
-              <h2 id="cancel" className="text-[30px] leading-tight font-bold">
+              <h2 id="cancel" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
                 {t('cancel.heading')}
               </h2>
               <p className="leading-relaxed">{t('cancel.body')}</p>
             </section>
             <section aria-labelledby="reviews" className="flex flex-col gap-3">
-              <h2 id="reviews" className="text-[30px] leading-tight font-bold">
+              <h2 id="reviews" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
                 {t('reviews.heading')}
               </h2>
               <p className="leading-relaxed">{t('reviews.body', FACTS)}</p>
             </section>
             <section
               aria-labelledby="today"
-              className="border-ink bg-canvas rounded-card flex flex-col gap-3 border p-6"
+              className="border-ink/15 bg-canvas rounded-media flex flex-col gap-3 border p-6"
             >
-              <h2 id="today" className="text-2xl leading-tight font-bold">
+              <h2 id="today" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
                 {t('today.heading')}
               </h2>
               <p className="leading-relaxed">{t('today.body')}</p>

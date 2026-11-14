@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Chip } from '@/components/ui/Chip';
-import { Sticker } from '@/components/ui/Sticker';
+import { Mark } from '@/components/brand/Mark';
 import { useErrorText } from '@/lib/forms/error-text';
 import { useMyListings } from '@/lib/listings/queries';
 import { unwrap } from '@/lib/session/api-error';
@@ -89,14 +89,14 @@ export function MyListings({ initialStatus }: { initialStatus: MyListingsFilter 
             <li
               key={key}
               aria-hidden="true"
-              className="border-ink/20 bg-surface rounded-card h-96 animate-pulse border"
+              className="border-ink/20 bg-surface rounded-media h-96 animate-pulse border"
             />
           ))}
         </ul>
       ) : query.isError ? (
         <div
           role="alert"
-          className="border-ink bg-surface rounded-card flex flex-col items-start gap-3 border p-6"
+          className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6"
         >
           <p className="font-bold">{t('loadFailed')}</p>
           <p>{errorText(query.error)}</p>
@@ -106,16 +106,16 @@ export function MyListings({ initialStatus }: { initialStatus: MyListingsFilter 
         </div>
       ) : items.length === 0 ? (
         status === 'ALL' ? (
-          <section className="border-ink bg-surface rounded-card-xl flex flex-col items-center gap-5 border px-6 py-14 text-center">
-            <Sticker kind="yoyo" size={96} />
-            <h2 className="text-2xl font-bold">{t('emptyTitle')}</h2>
+          <section className="border-ink/15 flex flex-col items-center gap-5 border-y px-6 py-16 text-center">
+            <Mark size={96} string={false} className="animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
+            <h2 className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">{t('emptyTitle')}</h2>
             <p className="max-w-[52ch] leading-relaxed">{t('emptyBody')}</p>
             <Button href="/listings/new" size="lg">
               {t('lend')}
             </Button>
           </section>
         ) : (
-          <p className="border-ink/40 rounded-card border border-dashed p-8 text-center">
+          <p className="border-ink/40 rounded-media border border-dashed p-8 text-center">
             {t('emptyFilter')}
           </p>
         )

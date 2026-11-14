@@ -5,6 +5,8 @@ import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
+import { DropCursor } from '@/components/motion/DropCursor';
+import { loaderCountScript } from '@/components/home/loader-count';
 import { freshLoadScript } from '@/components/motion/fresh-load';
 import { themeInitScript } from '@/components/theme/theme-script';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
@@ -21,6 +23,10 @@ import { SessionProvider } from '@/lib/session/SessionProvider';
 import { SITE_URL } from '@/lib/site';
 import { fontVariables } from '@/styles/fonts';
 import '../globals.css';
+
+/** Before the first paint: no home loader for automation (CI) or reduced motion (globals.css). */
+const NO_LOADER =
+  ";try{if(navigator.webdriver||matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.setAttribute('data-no-loader','')}catch(e){}";
 
 type LocaleParams = { params: Promise<{ locale: string }> };
 
@@ -53,7 +59,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
   return (
     <html lang={htmlLang} className={fontVariables} data-theme={serverTheme} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript + freshLoadScript }} />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript + freshLoadScript + NO_LOADER + loaderCountScript }} />
       </head>
       <body className="text-ink flex min-h-dvh flex-col">
         <NextIntlClientProvider>
@@ -71,6 +77,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
                   <div lang={locale} className="contents">
                     <SiteFooter />
                   </div>
+                  <DropCursor />
                 </ToastProvider>
               </ThemeProvider>
             </SessionProvider>

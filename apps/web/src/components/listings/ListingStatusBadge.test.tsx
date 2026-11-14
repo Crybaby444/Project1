@@ -14,16 +14,16 @@ describe('ListingStatusBadge', () => {
     expect(badge.closest('[data-status]')?.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
   });
 
-  it('uses sticker colours, never mint, and a different one for each live state', () => {
-    const colours = new Set<string>();
+  it('is black and white (owner, 2026-11-13): no fill colour, a different look for each live state', () => {
+    const looks = new Set<string>();
     for (const status of ['PENDING_REVIEW', 'PUBLISHED', 'REJECTED', 'HIDDEN'] as const) {
       const { container, unmount } = renderWithIntl(<ListingStatusBadge status={status} />);
-      const colour = (container.firstElementChild as HTMLElement).style.backgroundColor;
-      expect(colour).not.toBe('rgb(85, 219, 156)');
-      colours.add(colour);
+      const badge = container.firstElementChild as HTMLElement;
+      expect(badge.style.backgroundColor).toBe('');
+      looks.add(badge.dataset.tone ?? '');
       unmount();
     }
-    expect(colours.size).toBe(4);
+    expect(looks.size).toBe(4);
   });
 
   it('speaks the page language', () => {

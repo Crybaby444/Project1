@@ -105,12 +105,12 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
   }
 
   if (terms.isPending) {
-    return <div aria-busy="true" className="rounded-card-xl border-ink/20 bg-surface h-[36rem] animate-pulse border" />;
+    return <div aria-busy="true" className="rounded-media border-ink/20 bg-surface h-[36rem] animate-pulse border" />;
   }
   if (terms.isError) {
     const code = terms.error instanceof ApiError ? terms.error.code : null;
     return (
-      <div role="alert" className="border-ink bg-surface rounded-card flex flex-col items-start gap-3 border p-6">
+      <div role="alert" className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6">
         <p className="text-lg font-bold">
           {code === 'NOT_FOUND' ? t('notFound') : code === 'LISTING_UNAVAILABLE' ? t('unavailable') : t('loadFailed')}
         </p>
@@ -138,9 +138,9 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
   return (
     // `stacked`: one column, for a side column such as the item page's (the calendar keeps its width).
     <div className={`grid gap-6 ${layout === 'wide' ? 'lg:grid-cols-[minmax(0,1fr)_22rem]' : ''}`} data-booking-panel="">
-      <section aria-labelledby="booking-dates" className="border-ink bg-surface rounded-card flex flex-col gap-4 border p-5 sm:p-6">
+      <section aria-labelledby="booking-dates" className="border-ink/15 flex flex-col gap-4 border-t pt-6">
         <div className="flex flex-col gap-1">
-          <h2 id="booking-dates" className="text-2xl font-bold">
+          <h2 id="booking-dates" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
             {t('dates')}
           </h2>
           <p id={hintId} className="text-sm">
@@ -169,16 +169,16 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
         </p>
         {problemText && (
           <p role="alert" className="flex items-start gap-2 text-sm font-bold">
-            <span aria-hidden="true" className="bg-sticker-ember mt-0.5 inline-block size-4 shrink-0 rounded-full border border-black" />
+            <span aria-hidden="true" className="bg-[var(--danger)] mt-0.5 inline-block size-4 shrink-0 rounded-full border border-ink/15" />
             {problemText}
           </p>
         )}
       </section>
 
-      <aside className={`border-ink bg-surface rounded-card flex flex-col gap-5 self-start border p-5 sm:p-6 ${layout === 'wide' ? 'lg:sticky lg:top-24' : ''}`}>
+      <aside className={`border-ink flex flex-col gap-5 self-start border-t-2 pt-6 ${layout === 'wide' ? 'lg:sticky lg:top-24' : ''}`}>
         <PriceSummary quote={priced.quote} />
         {own ? (
-          <p className="bg-mist rounded-card p-4 text-sm font-bold">{t('own')}</p>
+          <p className="bg-mist rounded-media p-4 text-sm font-bold">{t('own')}</p>
         ) : (
           <>
             <Field label={t('message')} hint={t('messageHint')}>
@@ -192,7 +192,7 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
             </Field>
             {error && (
               <p role="alert" className="flex items-start gap-2 text-sm font-bold">
-                <span aria-hidden="true" className="bg-sticker-ember mt-0.5 inline-block size-4 shrink-0 rounded-full border border-black" />
+                <span aria-hidden="true" className="bg-[var(--danger)] mt-0.5 inline-block size-4 shrink-0 rounded-full border border-ink/15" />
                 {error}
               </p>
             )}

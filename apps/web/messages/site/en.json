@@ -31,6 +31,7 @@
     "service": "Yoyo",
     "documents": "Documents",
     "links": {
+      "catalog": "Catalog",
       "howItWorks": "How it works",
       "faq": "Questions and answers",
       "terms": "Terms of service",
@@ -44,124 +45,73 @@
     "copyright": "© {year} Yoyo. Rentals between people in the Baltics."
   },
   "landing": {
-    "kicker": "Rentals between people · Baltics",
     "ctaSignUp": "Create an account",
     "ctaListItem": "List an item",
     "ctaHowItWorks": "How it works",
-    "marquee": {
-      "one": "Rent from people nearby",
-      "two": "A deposit with clear rules",
-      "three": "A contract before you pay",
-      "four": "Every listing checked by a person",
-      "five": "Reviews from real deals only"
+    "hero": {
+      "line": "Rent from the people around you, for as long as you need.",
+      "find": "Find something",
+      "lend": "Lend an item",
+      "scroll": "Scroll"
+    },
+    "night": {
+      "rent": "Rent it",
+      "use": "Use it",
+      "back": "Bring it back",
+      "line": "Why buy what you only need once? Someone near you already has it, and is happy to share.",
+      "catalog": "Open the catalog"
     },
     "what": {
-      "eyebrow": "What is Yoyo",
-      "title": "Rent. Lend. Repeat.",
-      "lead": "Yoyo is a marketplace where people rent things to each other. The drill you need once a year, a tent for one weekend, a console for a party night: someone nearby already has it, and it is gathering dust on a shelf.",
-      "rent": {
-        "title": "Rent instead of buying",
-        "body": "Pay only for the days you use it. Nothing to store, nothing to dust, no purchase to regret."
-      },
-      "lend": {
-        "title": "Earn from your shelf",
-        "body": "List the things you rarely use, set your price and deposit, and decide who you trust them to."
-      },
-      "back": {
-        "title": "It comes back",
-        "body": "Every rental ends with the item home again. That is the whole idea behind the name."
-      }
-    },
-    "how": {
-      "eyebrow": "How it works",
-      "title": "How a rental goes",
-      "renter": "When you rent",
-      "owner": "When you lend",
-      "renterSteps": {
+      "label": "What is Yoyo",
+      "statement": "Yoyo is a rental marketplace between people. Take what you need for as long as you need it, share what you rarely use, and everything finds its way back.",
+      "steps": {
         "find": {
-          "title": "Find it",
-          "body": "Look for what you need and mark your days on the calendar."
+          "title": "Find it nearby",
+          "body": "Search the catalog or the map. Every listing is checked by a person before it goes live."
         },
-        "ask": {
-          "title": "Ask the owner",
-          "body": "Send a request. The owner has 24 hours to accept it."
-        },
-        "sign": {
-          "title": "Sign, then pay",
-          "body": "You both sign a short rental contract, then you pay the rent and the deposit."
+        "book": {
+          "title": "Book the days",
+          "body": "Pick the dates and send a request. Nothing is charged until the owner accepts and you both sign the contract."
         },
         "meet": {
-          "title": "Meet and use it",
-          "body": "Pick the item up in person, both mark the handover, and it is yours for those days."
+          "title": "Meet and check",
+          "body": "Hand it over with photos in the deal, so both sides see the state it left in."
         },
-        "return": {
+        "back": {
           "title": "Bring it back",
-          "body": "Once the owner confirms all is well, the whole deposit comes back to you."
+          "body": "The owner checks it, and the deposit goes back to you. Like a yo-yo."
         }
-      },
-      "ownerSteps": {
-        "list": {
-          "title": "List it",
-          "body": "Photos, a fair price per day, a deposit and your rules. We check every listing before it goes live."
-        },
-        "choose": {
-          "title": "Choose who rents",
-          "body": "Requests come to you, and you accept the ones that suit you."
-        },
-        "handover": {
-          "title": "Hand it over",
-          "body": "Meet up, photograph the item's condition and mark the handover."
-        },
-        "paid": {
-          "title": "Get paid",
-          "body": "The rent is yours as soon as the handover is confirmed."
-        },
-        "check": {
-          "title": "Check and close",
-          "body": "When it is back, check it within 48 hours: all good, or report damage."
-        }
-      },
-      "more": "The full walkthrough"
-    },
-    "safety": {
-      "eyebrow": "Safety",
-      "title": "Trust, built in",
-      "deposit": {
-        "title": "A deposit with one clear rule",
-        "body": "The deposit is frozen during the rental. All fine: it goes back to the renter in full. Damage the renter accepts: it goes to the owner. If they disagree, our team looks at the photos and the chat and decides."
-      },
-      "contract": {
-        "title": "A contract before any money",
-        "body": "Dates, price, deposit and rules go into a rental contract that both sides sign before anyone pays."
-      },
-      "moderation": {
-        "title": "Every listing checked",
-        "body": "A person reviews each listing before it appears on the site. If something looks wrong, write to us and we will look into it."
-      },
-      "reviews": {
-        "title": "Reviews from real deals only",
-        "body": "Only people who actually rented from each other can leave a review, within 14 days of the deal."
       }
     },
-    "categories": {
-      "eyebrow": "Categories",
-      "title": "What you can rent",
-      "lead": "These are the categories on Yoyo today. You pick one of them when you list an item.",
-      "count": "{count, plural, one {# subcategory} other {# subcategories}}",
-      "loading": "Loading the categories…",
-      "error": "We couldn't load the categories just now. The server may still be waking up.",
-      "retry": "Try again"
+    "facts": {
+      "label": "How Yoyo keeps it fair",
+      "hours": "h",
+      "fee": {
+        "title": "Service fee",
+        "body": "For the first three months. Then {after}%, always shown before you book."
+      },
+      "inspection": {
+        "title": "To check the return",
+        "body": "Then the deposit goes back to you by itself."
+      },
+      "contract": {
+        "title": "Contract for every deal",
+        "body": "Signed by both sides before any money moves."
+      },
+      "checked": {
+        "title": "Listings checked by a person",
+        "body": "Nothing goes live without a look from us first."
+      },
+      "languages": {
+        "title": "Languages",
+        "body": "English, Latviešu and Русский, everywhere on the site."
+      }
     },
-    "faq": {
-      "eyebrow": "FAQ",
-      "title": "Good questions",
-      "all": "All questions and answers"
+    "finale": {
+      "line1": "It always",
+      "line2": "comes back."
     },
-    "final": {
-      "title": "Got something on a shelf?",
-      "lead": "List it in a few minutes, or create an account and rent your first thing this weekend.",
-      "faq": "Read the FAQ"
-    }
+    "loader": "Yoyo · rentals between people"
   },
   "howItWorks": {
     "title": "How it works",

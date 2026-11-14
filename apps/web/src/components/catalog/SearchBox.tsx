@@ -15,14 +15,6 @@ type Option =
   | { kind: 'category'; key: string; label: string; href: string; sticker: string }
   | { kind: 'listing'; key: string; label: string; href: string; cover: string | null };
 
-const STICKER_BG: Record<string, string> = {
-  blue: 'bg-sticker-blue',
-  mint: 'bg-sticker-mint',
-  lavender: 'bg-sticker-lavender',
-  ember: 'bg-sticker-ember',
-  sun: 'bg-sticker-sun',
-  violet: 'bg-sticker-violet',
-};
 
 function optionsOf(answer: SuggestResponse | null, locale: Locale): Option[] {
   if (!answer) return [];
@@ -141,7 +133,7 @@ export function SearchBox({ initialQuery = '', className = '' }: { initialQuery?
         className={`rounded-pill ease-yoyo flex min-h-11 cursor-pointer items-center gap-3 px-3 py-1.5 text-sm font-bold transition-colors duration-150 ${selected ? 'bg-cta text-cta-fg' : ''}`}
       >
         {option.kind === 'category' ? (
-          <span aria-hidden="true" className={`size-4 shrink-0 rounded-full border border-black ${STICKER_BG[option.sticker] ?? 'bg-mist'}`} />
+          <span aria-hidden="true" className="size-2 shrink-0 rounded-full bg-[var(--glow)] ring-1 ring-black/15" />
         ) : option.cover ? (
           // eslint-disable-next-line @next/next/no-img-element -- a 160×120 thumbnail from the API's storage
           <img src={option.cover} alt="" width={40} height={30} className="border-ink rounded-[6px] h-[30px] w-10 shrink-0 border object-cover" />
@@ -209,7 +201,7 @@ export function SearchBox({ initialQuery = '', className = '' }: { initialQuery?
       <p role="status" aria-live="polite" className="sr-only">
         {open && text.trim().length >= 2 && !loading && answer ? (options.length > 0 ? t('count', { count: options.length }) : t('none')) : ''}
       </p>
-      <div hidden={!expanded} className="border-ink bg-surface rounded-card animate-pop-in absolute inset-x-0 top-full z-30 mt-2 origin-top border p-2">
+      <div hidden={!expanded} className="border-ink/15 bg-surface rounded-media animate-pop-in absolute inset-x-0 top-full z-30 mt-2 origin-top border p-2">
         <ul id={ids.list} role="listbox" aria-label={t('label')} className="flex flex-col gap-1">
           {categories.length > 0 && (
             <li role="presentation">

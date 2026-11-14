@@ -28,11 +28,11 @@ export function StepSection({
           ref={heading}
           id="builder-step-title"
           tabIndex={-1}
-          className="text-2xl leading-tight font-bold sm:text-3xl"
+          className="font-display text-[clamp(2.4rem,5vw,3.6rem)] leading-[0.95] font-black uppercase outline-none [overflow-wrap:anywhere]"
         >
           {title}
         </h2>
-        <p className="leading-relaxed">{intro}</p>
+        <p className="text-ink/80 max-w-[60ch] leading-relaxed">{intro}</p>
       </header>
       {children}
     </section>

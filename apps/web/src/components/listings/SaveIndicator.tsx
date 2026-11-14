@@ -5,11 +5,11 @@ import type { SaveState } from '@/lib/listings/use-listing-draft';
 
 const DOT: Record<SaveState, string> = {
   idle: 'bg-ink/30',
-  saving: 'bg-sticker-sun animate-pulse',
-  saved: 'bg-sticker-blue',
-  error: 'bg-sticker-ember',
-  invalid: 'bg-sticker-ember',
-  conflict: 'bg-sticker-ember',
+  saving: 'bg-ink text-canvas animate-pulse',
+  saved: 'bg-[var(--glow)]',
+  error: 'bg-[var(--danger)]',
+  invalid: 'bg-[var(--danger)]',
+  conflict: 'bg-[var(--danger)]',
   readonly: 'bg-mist',
 };
 
@@ -24,7 +24,7 @@ export function SaveIndicator({ state }: { state: SaveState }) {
     >
       <span
         aria-hidden="true"
-        className={`size-2.5 shrink-0 rounded-full border border-black ${DOT[state]}`}
+        className={`size-2.5 shrink-0 rounded-full border border-ink/15 ${DOT[state]}`}
       />
       {t(state)}
     </p>

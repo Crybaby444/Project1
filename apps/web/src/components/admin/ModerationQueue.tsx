@@ -6,7 +6,7 @@ import { ADMIN_LISTINGS_PAGE_SIZE, type AdminListing } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import { Sticker } from '@/components/ui/Sticker';
+import { Mark } from '@/components/brand/Mark';
 import { useToast } from '@/components/ui/Toast';
 import { useErrorText } from '@/lib/forms/error-text';
 import { Link } from '@/i18n/navigation';
@@ -130,7 +130,7 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
       {notice && (
         <p
           role="alert"
-          className="bg-sticker-lavender rounded-card border border-black p-4 font-bold text-black"
+          className="bg-mist rounded-media border border-ink/15 p-4 font-bold text-ink"
         >
           {notice}
         </p>
@@ -142,14 +142,14 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
             <div
               key={key}
               aria-hidden="true"
-              className="border-ink/20 bg-surface rounded-card-xl h-96 animate-pulse border"
+              className="border-ink/20 bg-surface rounded-media h-96 animate-pulse border"
             />
           ))}
         </div>
       ) : query.isError ? (
         <div
           role="alert"
-          className="border-ink bg-surface rounded-card flex flex-col items-start gap-3 border p-6"
+          className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6"
         >
           <p className="font-bold">{t('loadFailed')}</p>
           <p>{errorText(query.error)}</p>
@@ -158,9 +158,9 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
           </Button>
         </div>
       ) : items.length === 0 ? (
-        <section className="border-ink bg-surface rounded-card-xl flex flex-col items-center gap-4 border px-6 py-14 text-center">
-          <Sticker kind="check" size={88} />
-          <h2 className="text-2xl font-bold">{queue === 'other' ? t('otherEmptyTitle') : t('emptyTitle')}</h2>
+        <section className="border-ink/15 flex flex-col items-center gap-4 border-y px-6 py-16 text-center">
+          <Mark size={88} string={false} className="shrink-0 animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
+          <h2 className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">{queue === 'other' ? t('otherEmptyTitle') : t('emptyTitle')}</h2>
           <p className="max-w-[52ch] leading-relaxed">{queue === 'other' ? t('otherEmptyBody') : t('emptyBody')}</p>
         </section>
       ) : (

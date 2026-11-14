@@ -112,37 +112,18 @@ test.describe('motion on', () => {
     expect(errors).toEqual([]);
   });
 
-  test('the landing: sections morph the page colour, the statement fills, steps pin, stickers drift', async ({
-    page,
-  }) => {
+  test('the v16 home under automation is its plain sections: every scene, nothing staged, no errors', async ({ page }) => {
+    // The WebGL stage skips itself under navigator.webdriver (CI has no GPU); its motion is checked by eye.
     const errors = watchErrors(page);
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto('/');
-
-    // Hero stickers drift with the scroll (the translate changes) and float.
-    const sticker = page.locator('#hero-title ~ [data-parallax] [data-sticker-slot]').first();
-    const before = await sticker.evaluate((el) => getComputedStyle(el).translate);
-    await page.evaluate(() => window.scrollTo(0, 300));
-    await expect.poll(() => sticker.evaluate((el) => getComputedStyle(el).translate)).not.toBe(before);
-    expect(await sticker.evaluate((el) => getComputedStyle(el).animationName)).toContain('sticker-bob');
-
-    // "What is Yoyo" brings its blue tone in over the page.
-    await page.evaluate(() => document.getElementById('what')!.scrollIntoView({ block: 'start' }));
-    const layer = page.locator('#what > [data-tone-layer]');
-    await expect
-      .poll(async () => Number(await layer.evaluate((el) => getComputedStyle(el).opacity)))
-      .toBeGreaterThan(0.9);
-    await expect(page.locator('#what [data-word-fill]')).toHaveCount(1);
-
-    // The how-it-works steps are pinned cards.
-    expect(
-      await page
-        .locator('#how [data-stack-item]')
-        .first()
-        .evaluate((el) => getComputedStyle(el).position),
-    ).toBe('sticky');
+    for (const scene of ['hero', 'night', 'what', 'facts', 'finale']) {
+      await expect(page.locator(`[data-home="${scene}"]`)).toBeVisible();
+    }
+    expect(await page.evaluate(() => document.documentElement.hasAttribute('data-staged'))).toBe(false);
     expect(errors).toEqual([]);
   });
+
 
   test('during a language or page switch nothing on the new page moves (the transition stays geometry-free)', async ({
     page,
@@ -152,9 +133,8 @@ test.describe('motion on', () => {
       page
         .locator('[data-card-rise], [data-rise-word], [data-letter], [data-bob]')
         .evaluateAll((els) => els.map((el) => getComputedStyle(el).animationName));
-    // A normal load plays the card rise, the title and the floating sticker.
+    // A normal load plays the card rise and the title (v16: no floating sticker any more).
     expect(await running()).toContain('card-rise');
-    expect(await running()).toContain('sticker-bob');
     for (const attribute of ['data-language-switch', 'data-page-switch']) {
       await page.evaluate((name) => document.documentElement.setAttribute(name, ''), attribute);
       expect(new Set(await running())).toEqual(new Set(['none']));
@@ -237,32 +217,17 @@ test.describe('reduced motion', () => {
     expect(errors).toEqual([]);
   });
 
-  test('the landing is still: flat colour bands, plain steps, no drift', async ({ page }) => {
+  test('the home is still: not staged, every word of the statement fully there', async ({ page }) => {
     const errors = watchErrors(page);
     await page.goto('/');
-    const what = page.locator('#what');
-    expect(await what.locator('> [data-tone-layer]').evaluate((el) => getComputedStyle(el).display)).toBe(
-      'none',
-    );
-    expect(await what.evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe('rgba(0, 0, 0, 0)');
-    expect(
-      await page
-        .locator('#how [data-stack-item]')
-        .first()
-        .evaluate((el) => getComputedStyle(el).position),
-    ).toBe('static');
+    expect(await page.evaluate(() => document.documentElement.hasAttribute('data-staged'))).toBe(false);
     const words = await page
-      .locator('#what [data-word]')
+      .locator('[data-home="what"] [data-word]')
       .evaluateAll((list) => list.map((word) => Number(getComputedStyle(word).opacity)));
     expect(Math.min(...words)).toBe(1);
-    expect(
-      await page
-        .locator('[data-sticker-slot]')
-        .first()
-        .evaluate((el) => [getComputedStyle(el).translate, getComputedStyle(el).animationName]),
-    ).toEqual(['none', 'none']);
     expect(errors).toEqual([]);
   });
+
 
   test('home and sign-in render with the letters already in place', async ({ page }) => {
     const errors = watchErrors(page);

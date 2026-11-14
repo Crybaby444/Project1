@@ -28,6 +28,7 @@ describe('SiteFooter', () => {
     const nav = screen.getByRole('navigation', { name: siteLv.footer.pagesLabel });
     const links = within(nav).getAllByRole('link');
     expect(links.map((link) => [link.textContent, link.getAttribute('href')])).toEqual([
+      [siteLv.footer.links.catalog, '/lv/c'],
       [siteLv.footer.links.howItWorks, '/lv/how-it-works'],
       [siteLv.footer.links.faq, '/lv/faq'],
       [siteLv.footer.links.terms, '/lv/terms'],
@@ -55,5 +56,13 @@ describe('SiteFooter', () => {
   it('is the page footer landmark', () => {
     renderFooter();
     expect(screen.getByRole('contentinfo')).toBeInTheDocument();
+  });
+
+  it('is minimal (v16): no giant wordmark, no tagline, no column headings', () => {
+    renderFooter();
+    const footer = screen.getByRole('contentinfo');
+    expect(within(footer).queryByText('YOYO')).toBeNull();
+    expect(within(footer).queryByText(siteLv.footer.tagline)).toBeNull();
+    expect(footer.querySelectorAll('h2')).toHaveLength(0);
   });
 });

@@ -33,17 +33,17 @@ function renderBuilder(
 }
 
 describe('ListingBuilder', () => {
-  it('lists the six steps as links, the open one marked as the current step', async () => {
+  it('lists the six steps as a numbered index (01–06, like the catalog), the open one marked as the current step', async () => {
     renderBuilder({});
     const nav = screen.getByRole('navigation', { name: b.steps.label });
     const links = within(nav).getAllByRole('link');
     expect(links.map((l) => l.textContent)).toEqual([
-      `1${b.steps.photos}`,
-      `2${b.steps.basics}`,
-      `3${b.steps.attributes}`,
-      `4${b.steps.price}`,
-      `5${b.steps.place}`,
-      `6${b.steps.rules}`,
+      `01${b.steps.photos}`,
+      `02${b.steps.basics}`,
+      `03${b.steps.attributes}`,
+      `04${b.steps.price}`,
+      `05${b.steps.place}`,
+      `06${b.steps.rules}`,
     ]);
     expect(within(nav).getByRole('link', { name: /Basics/ })).toHaveAttribute('aria-current', 'step');
     expect(within(nav).getByRole('link', { name: /Price/ })).toHaveAttribute('href', '?step=price');

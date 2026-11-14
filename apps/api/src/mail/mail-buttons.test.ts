@@ -287,7 +287,7 @@ describe('every email call-to-action is a bulletproof button', () => {
           expect(cell['border']).toMatch(/^1px solid #[0-9a-f]{6}$/);
           expect(cell['border-radius']).toBe('9999px');
           expect(link['border-radius']).toBe('9999px');
-          expect(link['font-family']).toMatch(/^unbounded,.*sans-serif$/);
+          expect(link['font-family']).toMatch(/^'sofia sans extra condensed',.*sans-serif$/);
         });
 
         it('gives every coloured element of the email a dark colour too (no dark text on a dark card)', async () => {
@@ -317,6 +317,6 @@ describe('every email call-to-action is a bulletproof button', () => {
     const { t } = textsFor('ru');
     const source = await render(createElement(PhoneCode, { t, lang: 'ru', name: 'Анна', code: '123456' }));
     expect(source).toMatch(/<meta[^>]+name="color-scheme"[^>]+content="light dark"/);
-    expect(darkRules(source)['.yoyo-text']?.['color']).toBe('#ffffff');
+    expect(darkRules(source)['.yoyo-text']?.['color']).toBe('#f4f1e6')   // v16 dark ink: cream;
   });
 });

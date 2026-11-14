@@ -20,7 +20,7 @@ export function PriceSummary({ quote, title }: { quote: QuoteView | null; title?
         {title ?? t('title')}
       </h3>
       {quote === null ? (
-        <p className="border-ink/40 rounded-card flex min-h-44 items-center justify-center border border-dashed p-4 text-center text-sm">
+        <p className="border-ink/15 text-ink/80 flex min-h-24 items-center border-y py-4 text-sm">
           {t('empty')}
         </p>
       ) : (
@@ -43,7 +43,7 @@ export function PriceSummary({ quote, title }: { quote: QuoteView | null; title?
           {quote.depositCents > 0 && (
             <div className="flex flex-wrap items-baseline justify-between gap-x-3">
               <dt className="flex items-center gap-2">
-                <span aria-hidden="true" className="bg-sticker-lavender inline-block size-3 rounded-full border border-black" />
+                <span aria-hidden="true" className="bg-mist inline-block size-3 rounded-full border border-ink/15" />
                 {t('deposit')}
               </dt>
               <dd className="font-bold tabular-nums">{money(quote.depositCents)}</dd>

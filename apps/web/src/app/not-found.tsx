@@ -17,7 +17,7 @@ export default function GlobalNotFound() {
           >
             404
           </p>
-          <h1 className="text-3xl font-bold">{en.notFound.title}</h1>
+          <h1 className="font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{en.notFound.title}</h1>
           <p className="max-w-[46ch] leading-relaxed">{en.notFound.body}</p>
           <Link
             href="/"

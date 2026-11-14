@@ -8,7 +8,7 @@ import { TransitionLink } from '@/components/motion/TransitionLink';
 import { Reveal } from '@/components/motion/Reveal';
 import { Button } from '@/components/ui/Button';
 import { Chip } from '@/components/ui/Chip';
-import { Sticker } from '@/components/ui/Sticker';
+import { Mark } from '@/components/brand/Mark';
 import { displayFit } from '@/lib/display-fit';
 import { formatPeriod } from '@/lib/deals/dates';
 import { useDeadline } from '@/lib/deals/deadline';
@@ -36,19 +36,19 @@ export function DealCard({ booking, index }: { booking: BookingView; index: numb
       <TransitionLink
         href={`/bookings/${booking.id}`}
         data-deal-card={booking.id}
-        className="group border-ink bg-surface rounded-card ease-yoyo relative flex h-full gap-4 border p-4 transition-transform duration-250 hover:-translate-y-1 active:scale-[0.99] [&:hover_[data-deal-cover]]:-rotate-2"
+        className="group border-ink/15 relative flex h-full items-start gap-4 border-b py-5 sm:items-center after:absolute after:inset-x-0 after:-bottom-px after:h-[1.5px] after:origin-right after:scale-x-0 after:bg-current after:transition-transform after:duration-[600ms] after:ease-[cubic-bezier(0.16,1,0.3,1)] hover:after:origin-left hover:after:scale-x-100 focus-visible:after:origin-left focus-visible:after:scale-x-100"
       >
         <DealCover booking={booking} size="card" />
-        <div className="flex min-w-0 flex-1 flex-col gap-2">
+        <div className="flex min-w-0 flex-1 flex-col gap-2 transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1.5">
           <div className="flex flex-wrap items-center gap-2">
             <DealStatusBadge status={booking.status} />
             {mine && (
-              <span className="rounded-pill bg-cta text-cta-fg border-cta inline-flex min-h-7 items-center border px-3 text-[13px] font-bold" data-your-turn="">
+              <span className="rounded-pill bg-ink text-canvas border-ink inline-flex min-h-7 items-center border px-3 text-[13px] font-bold" data-your-turn="">
                 {t('yourTurn')}
               </span>
             )}
           </div>
-          <h2 className="text-lg leading-snug font-bold [overflow-wrap:anywhere]">{booking.listing.title}</h2>
+          <h2 data-cursor-text className="font-display text-[1.75rem] leading-[0.95] font-black uppercase [overflow-wrap:anywhere]">{booking.listing.title}</h2>
           <p className="flex flex-wrap gap-x-3 gap-y-0.5 text-sm">
             <span>{t(`with.${booking.viewerRole === 'OWNER' ? 'owner' : 'renter'}`, { name: other })}</span>
             <span className="font-bold">{formatPeriod(booking.period.start, booking.period.end, locale)}</span>
@@ -78,14 +78,14 @@ function Page({ role, group, page, onTotal }: { role: DealRole; group: DealGroup
     return (
       <>
         {[0, 1, 2].map((key) => (
-          <li key={key} aria-hidden="true" className="border-ink/20 bg-surface rounded-card h-36 animate-pulse border" />
+          <li key={key} aria-hidden="true" className="border-ink/15 bg-mist/50 h-32 animate-pulse border-b" />
         ))}
       </>
     );
   }
   if (query.isError) {
     return (
-      <li role="alert" className="border-ink bg-surface rounded-card flex flex-col items-start gap-3 border p-6 sm:col-span-2">
+      <li role="alert" className="flex flex-col items-start gap-3 py-6 lg:col-span-2">
         <p className="font-bold">{t('loadFailed')}</p>
         <p>{errorText(query.error)}</p>
         <Button variant="ghost" onClick={() => void query.refetch()}>
@@ -107,12 +107,12 @@ function Page({ role, group, page, onTotal }: { role: DealRole; group: DealGroup
 function Empty({ role, group }: { role: DealRole; group: DealGroup }) {
   const t = useTranslations('myDeals');
   if (group !== 'open') {
-    return <p className="border-ink/40 rounded-card border border-dashed p-8 text-center">{t(`empty.${group}`)}</p>;
+    return <p className="border-ink/40 rounded-media border border-dashed p-8 text-center">{t(`empty.${group}`)}</p>;
   }
   return (
-    <section className="border-ink bg-surface rounded-card-xl flex flex-col items-center gap-5 border px-6 py-14 text-center">
-      <Sticker kind={role === 'renter' ? 'tag' : 'yoyo'} size={88} />
-      <h2 className="text-2xl font-bold">{t(`empty.${role}`)}</h2>
+    <section className="border-ink/15 flex flex-col items-center gap-5 border-y px-6 py-16 text-center">
+      <Mark size={88} string={false} className="animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
+      <h2 className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">{t(`empty.${role}`)}</h2>
       <p className="max-w-[52ch] leading-relaxed">{t(`empty.${role}Body`)}</p>
       {role === 'owner' && (
         <Button href="/listings/new" size="lg">
@@ -195,7 +195,7 @@ export function MyDeals({ initialRole, initialGroup }: { initialRole: DealRole; 
           >
             {t(r)}
             {waiting(r) > 0 && (
-              <span aria-hidden="true" className="rounded-pill bg-sticker-sun animate-pop-in inline-flex min-h-5 min-w-5 items-center justify-center border border-black px-1.5 text-[11px] text-black tabular-nums" data-badge={r}>
+              <span aria-hidden="true" className="rounded-pill bg-ink text-canvas animate-pop-in inline-flex min-h-5 min-w-5 items-center justify-center border border-ink/15 px-1.5 text-[11px] tabular-nums" data-badge={r}>
                 {waiting(r)}
               </span>
             )}
@@ -226,7 +226,7 @@ export function MyDeals({ initialRole, initialGroup }: { initialRole: DealRole; 
                 {t('count', { count: total })}
               </p>
             )}
-            <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3" key={`${role}-${group}`}>
+            <ul className="border-ink/15 grid border-t lg:grid-cols-2 lg:gap-x-[clamp(24px,3vw,56px)]" key={`${role}-${group}`}>
               {Array.from({ length: pages }, (_, i) => (
                 <Page
                   key={i}
@@ -238,7 +238,7 @@ export function MyDeals({ initialRole, initialGroup }: { initialRole: DealRole; 
               ))}
             </ul>
             {group === 'action' && total !== undefined && waiting(role) === 0 && summary.data && (
-              <p className="border-ink/40 rounded-card border border-dashed p-8 text-center">{t('empty.action')}</p>
+              <p className="border-ink/40 rounded-media border border-dashed p-8 text-center">{t('empty.action')}</p>
             )}
             {!loadedAll && (
               <Button variant="ghost" className="self-center" onClick={() => setPages((p) => p + 1)}>

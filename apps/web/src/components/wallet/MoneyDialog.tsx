@@ -132,8 +132,8 @@ export function MoneyDialog({ mode, balanceCents, onClose }: { mode: MoneyMode; 
         <TestModeNotice onUse={(number) => setCard({ number, expiry: '12 / 34', cvc: '123', holder: card.holder || user?.name || '' })} />
         <CardForm value={card} onChange={setCard} problems={cardProblems} showErrors={tried} disabled={pending} />
         {error && (
-          <p role="alert" className="rounded-card border-ink flex items-start gap-2 border p-3 text-sm font-bold">
-            <span aria-hidden="true" className="bg-sticker-ember mt-0.5 inline-block size-4 shrink-0 rounded-full border border-black" />
+          <p role="alert" className="rounded-media border-ink/15 flex items-start gap-2 border p-3 text-sm font-bold">
+            <span aria-hidden="true" className="bg-[var(--danger)] mt-0.5 inline-block size-4 shrink-0 rounded-full border border-ink/15" />
             {error}
           </p>
         )}

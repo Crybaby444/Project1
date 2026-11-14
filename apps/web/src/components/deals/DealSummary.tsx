@@ -20,9 +20,9 @@ export function depositState(booking: BookingView): DepositState {
 const DEPOSIT_FILL: Record<DepositState, string> = {
   none: 'bg-mist text-ink',
   pending: 'bg-surface text-ink',
-  frozen: 'bg-sticker-lavender text-black',
-  refunded: 'bg-sticker-violet text-white',
-  toOwner: 'bg-sticker-ember text-black',
+  frozen: 'bg-mist text-ink',
+  refunded: 'bg-ink text-canvas',
+  toOwner: 'bg-[var(--danger)] text-black',
   refundedAll: 'bg-mist text-ink',
 };
 
@@ -34,8 +34,8 @@ export function DealSummary({ booking }: { booking: BookingView }) {
   const deposit = depositState(booking);
 
   return (
-    <section aria-labelledby="deal-money" className="border-ink bg-surface rounded-card flex flex-col gap-3 border p-5 sm:p-6">
-      <h2 id="deal-money" className="text-xl font-bold">
+    <section aria-labelledby="deal-money" className="border-ink/15 flex flex-col gap-3 border-t pt-6">
+      <h2 id="deal-money" className="font-display text-[2rem] leading-[0.95] font-black uppercase">
         {t('title')}
       </h2>
       <dl className="flex flex-col gap-2 text-[15px]">
@@ -47,7 +47,7 @@ export function DealSummary({ booking }: { booking: BookingView }) {
         <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
           <dt className="flex flex-wrap items-center gap-2">
             {t('deposit')}
-            <span data-deposit-state={deposit} className={`rounded-pill inline-flex min-h-6 items-center border border-black px-2.5 text-[12px] font-bold ${DEPOSIT_FILL[deposit]}`}>
+            <span data-deposit-state={deposit} className={`rounded-pill inline-flex min-h-6 items-center border border-ink/15 px-2.5 text-[12px] font-bold ${DEPOSIT_FILL[deposit]}`}>
               {t(`depositState.${deposit}`)}
             </span>
           </dt>

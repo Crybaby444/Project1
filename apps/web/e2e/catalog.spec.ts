@@ -175,20 +175,14 @@ test('the owner’s public profile lists the item and has no reviews yet', async
   await expect(page.getByRole('tabpanel').getByText(en.profile.noReviewsTitle, { exact: true })).toBeVisible();
 });
 
-test('the header’s Catalog menu links to every root category with plain links', async ({ page }) => {
+test('the catalog is reached from the footer and the home, not the header (owner, 2026-11-13)', async ({ page }) => {
   await page.goto('/');
-  const menu = page.getByRole('button', { name: en.header.catalog.button });
-  await expect(menu).toHaveAttribute('aria-expanded', 'false');
-  // The links are in the page even while the panel is closed (for search engines).
-  expect(await page.locator('nav[aria-label="Catalog categories"] a[href^="/c/"]').count()).toBeGreaterThan(13);
-  await menu.click();
-  const nav = page.getByRole('navigation', { name: en.header.catalog.label });
-  await expect(nav.getByRole('link', { name: 'Tools', exact: true })).toBeVisible();
-  await page.keyboard.press('Escape');
-  await expect(menu).toHaveAttribute('aria-expanded', 'false');
-  await expect(menu).toBeFocused();
-  await menu.click();
-  await nav.getByRole('link', { name: 'Tools', exact: true }).click();
+  await expect(page.getByRole('banner').getByRole('button', { name: /catalog/i })).toHaveCount(0);
+  await page.getByRole('contentinfo').getByRole('link', { name: 'Catalog' }).click();
+  await expect(page).toHaveURL(/\/c$/);
+  // Every root category is a plain link on /c (for search engines and the keyboard).
+  expect(await page.locator('a[href^="/c/"]').count()).toBeGreaterThanOrEqual(13);
+  await page.locator('a[href="/c/tools"]').first().click();
   await expect(page).toHaveURL(/\/c\/tools$/);
   await expect(page.getByRole('heading', { level: 1, name: 'Tools' })).toBeVisible();
 });

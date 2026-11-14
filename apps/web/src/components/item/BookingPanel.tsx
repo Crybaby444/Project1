@@ -25,10 +25,10 @@ export function BookingPanel({ item }: { item: AvailableItem }) {
     <>
       <section ref={panel} id="booking" aria-label={t('title')} className="flex scroll-mt-24 flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <p className="text-3xl font-bold tabular-nums">{t('perDay', { price: formatEuros(daily, locale) })}</p>
+          <p className="font-display text-[clamp(3rem,4.4vw,4.2rem)] leading-[0.9] font-black uppercase tabular-nums">{t('perDay', { price: formatEuros(daily, locale) })}</p>
           <ul className="flex flex-wrap gap-2 text-xs font-bold">
             {listing.weeklyDiscountPercent > 0 && (
-              <li className="bg-sticker-sun rounded-pill -rotate-2 border border-black px-2.5 py-0.5 text-black">
+              <li className="bg-ink text-canvas rounded-pill inline-flex items-center gap-1.5 px-2.5 py-1 before:size-1.5 before:rounded-full before:bg-[var(--glow)] before:content-['']">
                 {t('weekly', { percent: listing.weeklyDiscountPercent })}
               </li>
             )}
@@ -65,9 +65,13 @@ export function BookingPanel({ item }: { item: AvailableItem }) {
   );
 }
 
-/** Whether the element is on the screen (true when the browser cannot tell, so the bar stays away). */
+/**
+ * Whether the element is on the screen. It starts true on the server and the client alike (so hydration
+ * matches and the bar stays away until the observer says otherwise), and stays true when the browser
+ * cannot tell.
+ */
 function useInView(ref: RefObject<HTMLElement | null>): boolean {
-  const [inView, setInView] = useState(typeof IntersectionObserver === 'undefined');
+  const [inView, setInView] = useState(true);
   useEffect(() => {
     const element = ref.current;
     if (!element || typeof IntersectionObserver === 'undefined') return;

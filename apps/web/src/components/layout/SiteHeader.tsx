@@ -4,41 +4,52 @@ import { useTranslations } from 'next-intl';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { Button } from '@/components/ui/Button';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
-import { LogoMark } from '@/components/ui/LogoMark';
+import { Mark } from '@/components/brand/Mark';
 import { Wordmark } from '@/components/ui/Wordmark';
 import { Link } from '@/i18n/navigation';
 import { useSession } from '@/lib/session/SessionProvider';
 import type { MenuRoot } from '@/lib/catalog/menu';
-import { CatalogMenu } from './CatalogMenu';
 import { UserMenu } from './UserMenu';
 import { VerifyEmailBanner } from './VerifyEmailBanner';
 
 /**
- * The bar on every page: the wordmark home on the left; language, theme and the account on the right.
+ * The bar on every page (v16): the mark dead centre; language, theme and the account on the right; nothing
+ * on the left. The catalog is reached from the home page and the footer (owner, 2026-11-13), so `catalog`
+ * is accepted for the layout's sake and not drawn here. On a phone only the mark and one button remain.
  * One row at any width: the language is one compact pill that opens a menu, and below 640px a
  * visitor sees only "Sign in" (the sign-in page links to sign-up). Below 640px the row is also a
  * little tighter, so the longest "Sign in" (Latvian "Pieteikties") still fits a 320px phone next to
  * the catalog button.
  */
-export function SiteHeader({ catalog = [] }: { catalog?: MenuRoot[] }) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function SiteHeader(_props: { catalog?: MenuRoot[] }) {
   const t = useTranslations('header');
   const { status, user } = useSession();
 
   return (
     <>
-      <header data-site-header className="border-ink bg-surface relative border-b">
-        <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-2 px-4 sm:gap-3 sm:px-8">
-          <div className="flex min-w-0 items-center gap-0.5 sm:gap-3">
-            <Link href="/" className="rounded-pill inline-flex shrink-0 items-center gap-2">
-              <LogoMark size={36} className="hidden sm:block" />
-              <Wordmark className="text-[24px] sm:text-[28px]" />
-            </Link>
-            <CatalogMenu roots={catalog} />
-          </div>
+      {/* z-30: its own layer above the page, so the language and account menus open over the content. */}
+      <header data-site-header className="border-ink bg-surface relative z-30 border-b">
+        <div className="relative mx-auto grid h-16 max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:gap-3 sm:px-8">
+          <div aria-hidden="true" />
+          <Link
+            href="/"
+            data-site-brand
+            className="rounded-pill absolute left-1/2 inline-flex -translate-x-1/2 items-center gap-2"
+          >
+            <Mark size={24} />
+            <Wordmark className="text-[26px] sm:text-[28px]" />
+          </Link>
 
-          <div className="flex min-w-0 items-center gap-0.5 sm:gap-2">
-            <LanguageSwitcher className="shrink-0" />
-            <ThemeToggle className="shrink-0" />
+          <div className="col-start-3 flex min-w-0 items-center justify-self-end gap-0.5 sm:gap-2">
+            {/* On a phone the language moves to the empty left corner (it must stay one tap away); the theme
+                steps aside to the footer. On wider screens both sit here, on the right. */}
+            <div data-phone-left className="max-sm:absolute max-sm:top-1/2 max-sm:left-4 max-sm:-translate-y-1/2">
+              <LanguageSwitcher className="shrink-0" />
+            </div>
+            <div data-desktop-only className="flex items-center max-sm:hidden">
+              <ThemeToggle className="shrink-0" />
+            </div>
             {status === 'authenticated' && user ? (
               <>
                 <Link

@@ -26,7 +26,7 @@ export function Gallery({ listingId, title, photos }: Props) {
 
   if (!current) {
     return (
-      <div className="border-ink bg-mist rounded-card-xl grid aspect-[4/3] place-items-center border text-sm italic">
+      <div className="border-ink/15 bg-mist rounded-media grid aspect-[4/3] place-items-center border text-sm font-bold text-ink/70">
         {t('noPhotos')}
       </div>
     );
@@ -34,7 +34,7 @@ export function Gallery({ listingId, title, photos }: Props) {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="border-ink bg-mist rounded-card-xl relative aspect-[4/3] overflow-hidden border">
+      <div className="border-ink/15 bg-mist rounded-media relative aspect-[4/3] overflow-hidden border">
         {/* eslint-disable-next-line @next/next/no-img-element -- sized by the API's storage */}
         <img
           data-shared-photo=""
@@ -69,7 +69,7 @@ export function Gallery({ listingId, title, photos }: Props) {
                 aria-label={t('show', { number: at + 1, count: photos.length })}
                 onClick={() => setIndex(at)}
                 className={`rounded-media ease-yoyo block overflow-hidden border transition-transform duration-150 hover:-translate-y-0.5 ${
-                  at === index ? 'border-ink outline-ink outline-2 outline-offset-2' : 'border-ink/40'
+                  at === index ? 'border-ink/15 outline-ink outline-2 outline-offset-2' : 'border-ink/40'
                 }`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element -- 160×120 thumbnails */}
@@ -122,7 +122,7 @@ export function GalleryDialog({ open, onClose, photos, index, onIndex, title }: 
       {photo && (
         <div className="flex flex-col gap-4" onKeyDown={onKeyDown}>
           <div
-            className="border-ink bg-mist rounded-media relative grid aspect-[4/3] touch-pan-y place-items-center overflow-hidden border"
+            className="border-ink/15 bg-mist rounded-media relative grid aspect-[4/3] touch-pan-y place-items-center overflow-hidden border"
             onPointerDown={(event) => (start.current = event.clientX)}
             onPointerUp={onPointerUp}
             onPointerCancel={() => (start.current = null)}

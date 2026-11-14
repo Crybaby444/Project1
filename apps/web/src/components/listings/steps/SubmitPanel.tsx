@@ -88,7 +88,7 @@ export function SubmitPanel() {
                     setAttempted(true);
                     goTo(step);
                   }}
-                  className="bg-sticker-sun rounded-pill ease-yoyo inline-flex min-h-10 items-center border border-black px-4 text-sm font-bold text-black transition-transform duration-150 hover:-translate-y-0.5 hover:-rotate-1 active:scale-[0.96]"
+                  className="bg-ink text-canvas rounded-pill ease-yoyo inline-flex min-h-10 items-center border border-ink/15 px-4 text-sm font-bold transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.96]"
                 >
                   {t('leftStep', { step: tSteps(step), count: byStep.get(step)! })}
                 </a>
@@ -99,7 +99,7 @@ export function SubmitPanel() {
       ) : (
         <p className="flex items-center gap-2 text-sm font-bold">
           <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5">
-            <circle cx="12" cy="12" r="10" fill="var(--sticker-blue)" stroke="#000" />
+            <circle cx="12" cy="12" r="10" fill="var(--glow)" stroke="#000" />
             <path
               d="m7.5 12.5 3 3 6-6.5"
               fill="none"

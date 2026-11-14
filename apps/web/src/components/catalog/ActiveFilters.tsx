@@ -40,7 +40,7 @@ export function ActiveFilters({ params, districts }: { params: CatalogParams; di
             type="button"
             onClick={() => navigate(catalogSearch(params, chip.patch))}
             aria-label={t('remove', { filter: chip.label })}
-            className="border-ink bg-sticker-lavender rounded-pill ease-yoyo inline-flex min-h-10 items-center gap-2 border py-1 pr-2 pl-4 text-sm font-bold text-black transition-transform duration-150 hover:-translate-y-0.5 hover:-rotate-2 active:scale-95"
+            className="border-ink text-ink rounded-pill ease-yoyo hover:bg-ink hover:text-canvas inline-flex min-h-10 items-center gap-2 border py-1 pr-2 pl-4 text-sm font-bold transition-[background-color,color,transform] duration-200 active:scale-95"
           >
             <span className="[overflow-wrap:anywhere]">{chip.label}</span>
             <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4 shrink-0">

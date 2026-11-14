@@ -81,4 +81,12 @@ describe('HeartButton', () => {
     await waitFor(() => expect(heart).toHaveAttribute('aria-pressed', 'false'));
     expect(api.calls.some((call) => call.method === 'DELETE')).toBe(true);
   });
+
+  it('is the photo with its text below, no tilted sticker badge (v16)', () => {
+    const api = fakeApi(meRoute(null));
+    const { container } = renderWithSession(<ListingCard item={catalogItem({ weeklyDiscountPercent: 10 })} />, { client: api.client, hasSession: false });
+    const badge = screen.getByText(en.catalog.card.weekly.replace('{percent}', '10'));
+    expect(badge.className).not.toMatch(/sticker|rotate/);
+    expect(container.querySelector('[class*="perspective"]')).toBeNull();   // no tilting card
+  });
 });

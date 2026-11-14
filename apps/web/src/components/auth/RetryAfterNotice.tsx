@@ -19,7 +19,7 @@ function Notice({ seconds, inline }: { seconds: number; inline: boolean }) {
   if (seconds > announced) setAnnounced(seconds); // a new, longer wait
 
   return (
-    <div className={inline ? 'text-sm' : 'bg-mist rounded-card px-4 py-3 text-sm font-bold'}>
+    <div className={inline ? 'text-sm' : 'bg-mist rounded-media px-4 py-3 text-sm font-bold'}>
       <p role="status" className="sr-only">
         {t('retryIn', { seconds: announced })}
       </p>

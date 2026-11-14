@@ -40,19 +40,19 @@ export function ItemFacts({ listing, attributes }: { listing: PublicListing; att
     <div className="flex flex-col gap-8">
       {(listing.condition || rows.length > 0) && (
         <section aria-labelledby="item-details" className="flex flex-col gap-3">
-          <h2 id="item-details" className="text-2xl font-bold">
+          <h2 id="item-details" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
             {t('details')}
           </h2>
-          <dl className="border-ink rounded-card divide-ink/20 divide-y border">
+          <dl className="border-ink/15 divide-ink/15 divide-y border-y">
             {listing.condition && (
-              <div className="grid gap-1 px-4 py-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] sm:gap-4">
-                <dt className="font-bold">{t('condition')}</dt>
+              <div className="grid gap-1 py-3.5 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] sm:gap-4">
+                <dt className="text-ink/75 font-bold">{t('condition')}</dt>
                 <dd>{tCondition(listing.condition)}</dd>
               </div>
             )}
             {rows.map((row) => (
-              <div key={row.key} className="grid gap-1 px-4 py-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] sm:gap-4">
-                <dt className="font-bold hyphens-auto [overflow-wrap:anywhere]">{row.label}</dt>
+              <div key={row.key} className="grid gap-1 py-3.5 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] sm:gap-4">
+                <dt className="text-ink/75 font-bold hyphens-auto [overflow-wrap:anywhere]">{row.label}</dt>
                 <dd className="[overflow-wrap:anywhere]" lang={row.free ? listing.contentLocale : undefined}>
                   {row.text}
                 </dd>
@@ -64,19 +64,19 @@ export function ItemFacts({ listing, attributes }: { listing: PublicListing; att
 
       {hasRules && (
         <section aria-labelledby="item-rules" className="flex flex-col gap-3">
-          <h2 id="item-rules" className="text-2xl font-bold">
+          <h2 id="item-rules" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
             {t('rules')}
           </h2>
           <ul className="flex flex-col gap-2">
             {listing.rules.preset.map((rule) => (
               <li key={rule} className="flex gap-2">
-                <span aria-hidden="true" className="bg-sticker-sun mt-1.5 size-2.5 shrink-0 rounded-full border border-black" />
+                <span aria-hidden="true" className="bg-ink mt-2 size-1.5 shrink-0 rounded-full" />
                 {tRules(rule)}
               </li>
             ))}
             {listing.rules.custom.map((rule, index) => (
               <li key={index} className="flex gap-2 [overflow-wrap:anywhere]" lang={listing.contentLocale}>
-                <span aria-hidden="true" className="bg-sticker-sun mt-1.5 size-2.5 shrink-0 rounded-full border border-black" />
+                <span aria-hidden="true" className="bg-ink mt-2 size-1.5 shrink-0 rounded-full" />
                 {rule}
               </li>
             ))}
@@ -86,7 +86,7 @@ export function ItemFacts({ listing, attributes }: { listing: PublicListing; att
 
       {place && (
         <section aria-labelledby="item-place" className="flex flex-col gap-2">
-          <h2 id="item-place" className="text-2xl font-bold">
+          <h2 id="item-place" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
             {t('place')}
           </h2>
           <p className="flex items-center gap-2 text-lg">

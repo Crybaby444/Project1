@@ -6,14 +6,13 @@ import type { MouseEvent } from 'react';
 import { TransitionLink } from '@/components/motion/TransitionLink';
 import { ThemeSelect } from '@/components/theme/ThemeSelect';
 import { shouldAnimateLanguageChange, switchLanguage } from '@/components/ui/switch-language';
-import { LogoMark } from '@/components/ui/LogoMark';
-import { Sticker } from '@/components/ui/Sticker';
+import { Mark } from '@/components/brand/Mark';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
-import { displayFit } from '@/lib/display-fit';
 import { prefersReducedMotion } from '@/lib/motion';
 import { CONTACT_EMAIL } from '@/lib/site';
 
 const SERVICE_LINKS = [
+  ['catalog', '/c'], // the header carries no catalog (owner, 2026-11-13): it lives here and on the home page
   ['howItWorks', '/how-it-works'],
   ['faq', '/faq'],
 ] as const;
@@ -24,7 +23,6 @@ const DOCUMENT_LINKS = [
   ['cookies', '/cookies'],
 ] as const;
 
-const HEADING = 'text-xs font-bold tracking-[0.032em] uppercase';
 const LINK =
   'inline-flex min-h-10 items-center rounded-pill text-[15px] font-bold underline-offset-4 transition-transform duration-150 ease-yoyo hover:-translate-y-0.5 hover:underline';
 
@@ -55,7 +53,7 @@ function FooterLanguages({ label }: { label: string }) {
 
   return (
     <nav aria-label={label}>
-      <ul className="border-ink bg-surface rounded-pill flex flex-wrap gap-1 border p-1">
+      <ul className="flex flex-wrap gap-1">
         {LOCALES.map((locale) => {
           const active = locale === current;
           return (
@@ -69,8 +67,8 @@ function FooterLanguages({ label }: { label: string }) {
                 aria-current={active ? 'true' : undefined}
                 data-footer-language={active ? 'current' : undefined}
                 onClick={(event) => onClick(event, locale)}
-                className={`rounded-pill ease-yoyo inline-flex min-h-10 items-center px-4 text-[13px] font-bold tracking-[0.03em] uppercase transition-[background-color,color,transform] duration-200 active:scale-[0.97] ${
-                  active ? 'bg-cta text-cta-fg' : 'hover:bg-mist hover:-translate-y-px'
+                className={`rounded-pill inline-flex min-h-10 items-center px-3 text-[12px] font-bold tracking-[0.03em] uppercase transition-colors duration-200 ${
+                  active ? 'text-ink underline decoration-1 underline-offset-4' : 'text-ink/70 hover:text-ink'
                 }`}
               >
                 {t(locale)}
@@ -84,79 +82,40 @@ function FooterLanguages({ label }: { label: string }) {
 }
 
 /**
- * The bottom of every page: what Yoyo is, the service and legal pages, the contact address, and the
- * language and theme controls. Calm on purpose (it also sits under app screens, DESIGN.md §7): no
- * ribbon, one sticker, the wordmark as the closing line.
+ * The bottom of every page (v16): minimal. One row — the mark and the year, the pages as a single line of
+ * links, the contact address; one small row under it for the language and the theme.
  */
 export function SiteFooter() {
   const t = useTranslations('footer');
+  const links = [...SERVICE_LINKS, ...DOCUMENT_LINKS];
 
   return (
-    <footer data-site-footer className="border-ink bg-band text-ink border-t">
-      <div className="mx-auto grid max-w-[1440px] gap-10 px-4 pt-12 pb-8 sm:px-8 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1.4fr]">
-        <div className="flex flex-col items-start gap-4">
-          <div className="flex items-center gap-3">
-            <LogoMark size={44} />
-            <Sticker kind="star" size={40} className="-rotate-12" />
-          </div>
-          <p className="max-w-[36ch] text-lg leading-snug font-bold">{t('tagline')}</p>
-          <div className="flex flex-col gap-1">
-            <h2 className={HEADING}>{t('contact')}</h2>
-            <p className="max-w-[40ch] text-[15px] leading-relaxed">{t('contactLead')}</p>
-            <a href={`mailto:${CONTACT_EMAIL}`} className={`${LINK} self-start`}>
-              {CONTACT_EMAIL}
-            </a>
-          </div>
-        </div>
-
-        <nav aria-label={t('pagesLabel')} className="grid grid-cols-1 gap-8 min-[380px]:grid-cols-2">
-          <div className="flex flex-col gap-2">
-            <h2 className={HEADING}>{t('service')}</h2>
-            <ul className="flex flex-col">
-              {SERVICE_LINKS.map(([key, href]) => (
-                <li key={key}>
-                  <TransitionLink href={href} className={LINK}>
-                    {t(`links.${key}`)}
-                  </TransitionLink>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex flex-col gap-2">
-            <h2 className={HEADING}>{t('documents')}</h2>
-            <ul className="flex flex-col">
-              {DOCUMENT_LINKS.map(([key, href]) => (
-                <li key={key}>
-                  <TransitionLink href={href} className={LINK}>
-                    {t(`links.${key}`)}
-                  </TransitionLink>
-                </li>
-              ))}
-            </ul>
-          </div>
+    <footer data-site-footer className="border-ink/15 bg-canvas text-ink border-t">
+      <div className="mx-auto flex max-w-[1440px] flex-col gap-6 px-4 py-8 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
+        <p className="flex items-center gap-2.5 text-[13px] font-medium">
+          <Mark size={20} />
+          <span>{t('copyright', { year: new Date().getFullYear() })}</span>
+        </p>
+        <nav aria-label={t('pagesLabel')}>
+          <ul className="flex flex-wrap gap-x-5 gap-y-2 text-[13px] font-semibold">
+            {links.map(([key, href]) => (
+              <li key={key}>
+                <TransitionLink href={href} className={LINK}>
+                  {t(`links.${key}`)}
+                </TransitionLink>
+              </li>
+            ))}
+          </ul>
         </nav>
-
-        <div className="flex flex-col items-start gap-5 md:col-span-2 lg:col-span-1">
-          <h2 className={HEADING}>{t('settings')}</h2>
+        <a href={`mailto:${CONTACT_EMAIL}`} className={`${LINK} text-[13px] font-semibold`}>
+          {CONTACT_EMAIL}
+        </a>
+      </div>
+      <div className="border-ink/10 border-t">
+        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-8">
           <FooterLanguages label={t('languageLabel')} />
-          <ThemeSelect />
+          <ThemeSelect compact />
         </div>
-      </div>
-
-      <div className="@container mx-auto max-w-[1440px] overflow-hidden px-4 sm:px-8">
-        <p
-          aria-hidden="true"
-          style={displayFit('YOYO', { min: '4rem', max: '32rem' })}
-          className="font-display text-display-fit -mb-[0.12em] text-center leading-[0.78] font-black tracking-normal uppercase select-none"
-        >
-          YOYO
-        </p>
-      </div>
-
-      <div className="border-ink border-t">
-        <p className="mx-auto max-w-[1440px] px-4 py-4 text-[13px] sm:px-8">
-          {t('copyright', { year: new Date().getFullYear() })}
-        </p>
       </div>
     </footer>
   );

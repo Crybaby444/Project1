@@ -2,7 +2,6 @@
 
 import type { PhotoUrls } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
-import { Card } from '@/components/ui/Card';
 import type { ListingValues } from '@/lib/listings/listing-checks';
 import { formatEuros } from '@/lib/listings/money';
 
@@ -12,7 +11,6 @@ type PreviewProps = {
   /** "Electronics · Game consoles", or null before a category is chosen. */
   categoryName: string | null;
   /** The sticker colour of the category's pill. */
-  categoryColor?: string | undefined;
 };
 
 /**
@@ -20,17 +18,17 @@ type PreviewProps = {
  * price, deposit and the city with the district. Never the exact point: the props carry it (they
  * are the builder's values), so this component must not read lat or lng.
  */
-export function ListingPreview({ values, cover, categoryName, categoryColor }: PreviewProps) {
+export function ListingPreview({ values, cover, categoryName }: PreviewProps) {
   const t = useTranslations('builder.preview');
   const tCondition = useTranslations('listingCondition');
   const locale = useLocale();
   const price = values.dailyCents !== null && Number.isFinite(values.dailyCents) ? values.dailyCents : null;
   const place = [values.city.trim(), values.district.trim()].filter(Boolean).join(', ');
-  const placeholder = 'text-ink/70 italic';
+  const placeholder = 'text-ink/70';
 
   return (
-    <Card interactive className="flex flex-col gap-4 p-4" aria-label={t('label')} role="figure">
-      <div className="border-ink bg-mist rounded-media relative aspect-[4/3] overflow-hidden border">
+    <div className="flex flex-col gap-3" aria-label={t('label')} role="figure">
+      <div className="border-ink/15 bg-mist rounded-media relative aspect-[4/3] overflow-hidden border">
         {cover ? (
           // eslint-disable-next-line @next/next/no-img-element -- photos come from the API's storage, already sized
           <img
@@ -44,37 +42,36 @@ export function ListingPreview({ values, cover, categoryName, categoryColor }: P
           </div>
         )}
         {values.weeklyDiscountPercent > 0 && Number.isFinite(values.weeklyDiscountPercent) && (
-          <span className="bg-sticker-sun rounded-pill absolute top-3 left-3 -rotate-3 border border-black px-2.5 py-0.5 text-xs font-bold text-black">
+          <span className="bg-ink text-canvas rounded-pill absolute top-3 left-3 border border-ink/15 px-2.5 py-0.5 text-xs font-bold">
             {t('weekly', { percent: values.weeklyDiscountPercent })}
           </span>
         )}
       </div>
-      <div className="flex flex-col gap-2 px-1 pb-1">
+      <div className="flex flex-col gap-1.5">
         <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
           {categoryName && (
             <span
-              style={categoryColor ? { backgroundColor: categoryColor, color: '#000' } : undefined}
-              className="rounded-pill border border-black px-2.5 py-0.5"
+              className="rounded-pill border-ink/15 border px-2.5 py-0.5"
             >
               {categoryName}
             </span>
           )}
           {values.condition && (
-            <span className="border-ink rounded-pill border px-2.5 py-0.5">
+            <span className="border-ink/15 rounded-pill border px-2.5 py-0.5">
               {tCondition(values.condition)}
             </span>
           )}
         </div>
         <p
-          className={`text-lg leading-snug font-bold [overflow-wrap:anywhere] ${values.title.trim() ? '' : placeholder}`}
+          className={`text-base leading-snug font-bold [overflow-wrap:anywhere] ${values.title.trim() ? '' : placeholder}`}
         >
           {values.title.trim() || t('noTitle')}
         </p>
-        <p className="text-base font-bold">
+        <p className="font-display text-[1.7rem] leading-[0.9] font-black uppercase tabular-nums">
           {price !== null ? (
             t('perDay', { price: formatEuros(price, locale) })
           ) : (
-            <span className={placeholder}>{t('noPrice')}</span>
+            <span className={`${placeholder} font-sans text-base font-bold normal-case`}>{t('noPrice')}</span>
           )}
         </p>
         <p className="text-sm">
@@ -99,6 +96,6 @@ export function ListingPreview({ values, cover, categoryName, categoryColor }: P
           )}
         </p>
       </div>
-    </Card>
+    </div>
   );
 }

@@ -39,7 +39,7 @@ export function FaqList({ groups, titled = true }: { groups: FaqGroup[]; /** Off
           className="flex flex-col gap-4"
         >
           {titled && (
-            <h2 id={`group-${group.id}`} className="text-[clamp(1.75rem,3vw,2.5rem)] leading-tight font-bold">
+            <h2 id={`group-${group.id}`} className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
               {group.title}
             </h2>
           )}
@@ -49,13 +49,13 @@ export function FaqList({ groups, titled = true }: { groups: FaqGroup[]; /** Off
                 key={item.id}
                 id={item.id}
                 name={`faq-${group.id}`}
-                className="group border-ink bg-surface text-ink rounded-card scroll-mt-6 border open:[&>summary_svg]:rotate-45"
+                className="group border-ink/15 bg-surface text-ink rounded-media scroll-mt-6 border open:[&>summary_svg]:rotate-45"
               >
-                <summary className="rounded-card flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-lg leading-snug font-bold transition-transform duration-150 ease-yoyo hover:-translate-y-0.5 [&::-webkit-details-marker]:hidden">
+                <summary className="rounded-media flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-lg leading-snug font-bold transition-transform duration-150 ease-yoyo hover:-translate-y-0.5 [&::-webkit-details-marker]:hidden">
                   {item.question}
                   <span
                     aria-hidden="true"
-                    className="border-ink bg-sticker-sun inline-grid size-10 shrink-0 place-items-center rounded-full border text-black"
+                    className="border-ink bg-ink text-canvas inline-grid size-10 shrink-0 place-items-center rounded-full border"
                   >
                     <svg viewBox="0 0 24 24" className="size-5 transition-transform duration-250 ease-yoyo" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                       <path d="M12 5v14M5 12h14" />

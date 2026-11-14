@@ -61,7 +61,7 @@ function OpenDialog({ onClose, title, children, wide = false }: DialogProps) {
         onClose();
       }}
       onKeyDown={onKeyDown}
-      className={`border-ink bg-surface text-ink animate-pop-in rounded-card-xl m-auto w-[calc(100%-2rem)] border p-6 backdrop:bg-black/60 sm:p-8 ${wide ? 'max-w-2xl' : 'max-w-md'}`}
+      className={`border-ink/15 bg-surface text-ink animate-pop-in rounded-media m-auto w-[calc(100%-2rem)] border p-6 backdrop:bg-black/60 sm:p-8 ${wide ? 'max-w-2xl' : 'max-w-md'}`}
     >
       <h2 id={titleId} className="mb-3 text-2xl leading-tight font-bold">
         {title}

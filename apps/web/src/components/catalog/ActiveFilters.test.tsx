@@ -30,4 +30,15 @@ describe('ActiveFilters', () => {
     // Reset all clears the sort too: the list goes back to how the category opens.
     expect(replace).toHaveBeenLastCalledWith('/c/tools', { scroll: false });
   });
+
+  it('draws a filter as a quiet outlined pill: no sticker colour, no tilt (v16)', () => {
+    const params = parseCatalogParams(new URLSearchParams('price_min=10&price_max=20'));
+    renderWithIntl(
+      <CatalogShell>
+        <ActiveFilters params={params} districts={[]} />
+      </CatalogShell>,
+    );
+    const chip = screen.getByRole('button', { name: 'Remove the filter: €10–20 a day' });
+    expect(chip.className).not.toMatch(/sticker|rotate/);
+  });
 });

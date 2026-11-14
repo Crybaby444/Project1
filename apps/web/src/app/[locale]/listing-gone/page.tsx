@@ -24,7 +24,7 @@ export default async function ListingGonePage({ params }: Props) {
       <p aria-hidden="true" style={displayFit('410', { min: '3rem', max: '10rem' })} className="font-display text-display-fit leading-[0.8] font-black">
         410
       </p>
-      <h1 className="text-3xl font-bold">{t('title')}</h1>
+      <h1 className="font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{t('title')}</h1>
       <p className="max-w-[46ch] leading-relaxed">{t('body')}</p>
       <div className="flex flex-wrap justify-center gap-3">
         <Button href="/c">{t('catalog')}</Button>

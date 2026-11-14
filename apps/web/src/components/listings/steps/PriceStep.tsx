@@ -135,7 +135,7 @@ export function PriceStep() {
 
       <section
         aria-label={t('payout')}
-        className="bg-sticker-sun rounded-card flex flex-col gap-3 border border-black p-5 text-black"
+        className="bg-ink text-canvas rounded-media flex flex-col gap-3 border border-ink/15 p-5"
       >
         <h3 className="text-[13px] font-bold tracking-[0.03em] uppercase">{t('payout')}</h3>
         {examples.length > 0 ? (

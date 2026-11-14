@@ -3,7 +3,7 @@
 import type { BookingView } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Sticker } from '@/components/ui/Sticker';
+import { Mark } from '@/components/brand/Mark';
 import { TransitionLink } from '@/components/motion/TransitionLink';
 import { Button } from '@/components/ui/Button';
 import { displayFit } from '@/lib/display-fit';
@@ -27,13 +27,13 @@ export function DealCover({ booking, size }: { booking: Pick<BookingView, 'id' |
     <div
       data-deal-cover={booking.id}
       style={{ '--vt-name': `deal-cover-${booking.id.replace(/[^A-Za-z0-9_-]/g, '')}` } as React.CSSProperties}
-      className={`border-ink bg-mist rounded-media shrink-0 overflow-hidden border ${size === 'page' ? 'size-24 sm:size-28' : 'size-20'}`}
+      className={`border-ink/15 bg-mist rounded-media shrink-0 overflow-hidden border ${size === 'page' ? 'size-24 sm:size-28' : 'size-20'}`}
     >
       {booking.listing.coverUrl ? (
         // eslint-disable-next-line @next/next/no-img-element -- sized by the API's storage
         <img src={booking.listing.coverUrl} alt="" width={160} height={120} className="size-full object-cover" />
       ) : (
-        <span aria-hidden="true" className="bg-sticker-lavender grid size-full place-items-center text-2xl font-black text-black">
+        <span aria-hidden="true" className="bg-mist grid size-full place-items-center text-2xl font-black text-ink">
           {Array.from(booking.listing.title)[0]?.toLocaleUpperCase() ?? 'Y'}
         </span>
       )}
@@ -41,9 +41,9 @@ export function DealCover({ booking, size }: { booking: Pick<BookingView, 'id' |
   );
 }
 
-function Panel({ title, tone = 'bg-surface', children }: { title: string; tone?: string; children: React.ReactNode }) {
+function Panel({ title, tone = '', children }: { title: string; tone?: string; children: React.ReactNode }) {
   return (
-    <section className={`border-ink rounded-card flex flex-col gap-2 border p-5 ${tone}`}>
+    <section className={`border-ink/15 flex flex-col gap-2 border-t pt-5 ${tone}`}>
       <h2 className="text-[13px] font-bold tracking-[0.03em] uppercase">{title}</h2>
       {children}
     </section>
@@ -98,8 +98,8 @@ export function DealView({ id }: { id: string }) {
           <div className="bg-mist rounded-pill h-10 w-2/3 animate-pulse" />
         </div>
         <div aria-hidden="true" className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_24rem]">
-          <div className="rounded-card border-ink/20 bg-surface h-[32rem] animate-pulse border" />
-          <div className="rounded-card border-ink/20 bg-surface h-72 animate-pulse border" />
+          <div className="rounded-media border-ink/20 bg-surface h-[32rem] animate-pulse border" />
+          <div className="rounded-media border-ink/20 bg-surface h-72 animate-pulse border" />
         </div>
       </div>
     );
@@ -108,14 +108,14 @@ export function DealView({ id }: { id: string }) {
   if (deal.isError) {
     const missing = deal.error instanceof ApiError && deal.error.code === 'NOT_FOUND';
     return missing ? (
-      <section role="alert" className="border-ink bg-surface rounded-card-xl flex flex-col items-center gap-4 border px-6 py-14 text-center">
-        <Sticker kind="key" size={80} />
-        <h1 className="text-3xl font-bold">{t('notFound')}</h1>
+      <section role="alert" className="flex flex-col items-center gap-4 px-6 py-14 text-center">
+        <Mark size={80} string={false} className="animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
+        <h1 className="font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{t('notFound')}</h1>
         <p className="max-w-[46ch]">{t('notFoundBody')}</p>
         <Button href="/bookings">{t('back')}</Button>
       </section>
     ) : (
-      <div role="alert" className="border-ink bg-surface rounded-card flex flex-col items-start gap-3 border p-6">
+      <div role="alert" className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6">
         <p className="font-bold">{t('loadFailed')}</p>
         <p>{errorText(deal.error)}</p>
         <Button variant="ghost" onClick={() => void deal.refetch()}>
@@ -156,7 +156,7 @@ export function DealView({ id }: { id: string }) {
             {!closed && (
               <span
                 data-turn={myTurn ? 'mine' : 'theirs'}
-                className={`rounded-pill inline-flex min-h-7 items-center border px-3 text-[13px] font-bold ${myTurn ? 'bg-cta text-cta-fg border-cta' : 'border-ink'}`}
+                className={`rounded-pill inline-flex min-h-7 items-center border px-3 text-[13px] font-bold ${myTurn ? 'bg-ink text-canvas border-ink' : 'border-ink/40'}`}
               >
                 {myTurn ? t('yourTurn') : t('theirTurn')}
               </span>
@@ -178,23 +178,23 @@ export function DealView({ id }: { id: string }) {
             </Panel>
           )}
           {booking.declineReason && (
-            <Panel title={t('declined')} tone="bg-mist">
+            <Panel title={t('declined')}>
               <p className="[overflow-wrap:anywhere] whitespace-pre-line">{booking.declineReason}</p>
             </Panel>
           )}
           {booking.cancellation && (
-            <Panel title={t('cancelled', { by: t(`by.${booking.cancellation.by}`) })} tone="bg-mist">
+            <Panel title={t('cancelled', { by: t(`by.${booking.cancellation.by}`) })}>
               {booking.cancellation.reason && <p className="[overflow-wrap:anywhere] whitespace-pre-line">{booking.cancellation.reason}</p>}
               <p className="text-sm">{formatMoment(booking.cancellation.at, locale, booking.timeZone)}</p>
             </Panel>
           )}
           {booking.damage && (
-            <Panel title={t('damage.title')} tone="bg-surface">
+            <Panel title={t('damage.title')}>
               <p className="[overflow-wrap:anywhere] whitespace-pre-line">{booking.damage.description}</p>
             </Panel>
           )}
           {booking.dispute && (
-            <section className="rounded-card flex flex-col gap-2 border border-black bg-[color-mix(in_srgb,var(--sticker-ember)_22%,var(--surface))] p-5" data-dispute="">
+            <section className="flex flex-col gap-2 border-t-2 border-[var(--danger)] pt-5" data-dispute="">
               <h2 className="text-[13px] font-bold tracking-[0.03em] uppercase">
                 {t('dispute.title')} · {t(`dispute.reason.${booking.dispute.reason}`)}
               </h2>
@@ -215,10 +215,10 @@ export function DealView({ id }: { id: string }) {
         </div>
 
         <aside className="flex flex-col gap-6 lg:sticky lg:top-24">
-          <section aria-label={myTurn ? t('yourTurn') : t('theirTurn')} className="border-ink bg-surface rounded-card flex flex-col gap-3 border p-5 sm:p-6">
+          <section aria-label={myTurn ? t('yourTurn') : t('theirTurn')} className="border-ink flex flex-col gap-3 border-t-2 pt-5">
             {notice && (
-              <p role="alert" className="rounded-card border-ink flex items-start gap-2 border p-3 text-sm font-bold">
-                <span aria-hidden="true" className="bg-sticker-sun mt-0.5 inline-block size-4 shrink-0 rounded-full border border-black" />
+              <p role="alert" className="rounded-media border-ink/15 flex items-start gap-2 border p-3 text-sm font-bold">
+                <span aria-hidden="true" className="bg-ink text-canvas mt-0.5 inline-block size-4 shrink-0 rounded-full border border-ink/15" />
                 {notice}
               </p>
             )}
