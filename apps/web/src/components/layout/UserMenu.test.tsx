@@ -82,13 +82,13 @@ describe('UserMenu', () => {
     expect(screen.queryByRole('menuitem', { name: en.header.moderation })).toBeNull();
   });
 
-  it('offers moderation to an administrator', async () => {
+  it('offers the admin panel to an administrator', async () => {
     const user = userEvent.setup();
     const { button } = await renderMenu(testUser({ role: 'ADMIN' }));
     await user.click(button);
     expect(screen.getByRole('menuitem', { name: en.header.moderation })).toHaveAttribute(
       'href',
-      '/admin/listings',
+      '/admin',
     );
   });
 

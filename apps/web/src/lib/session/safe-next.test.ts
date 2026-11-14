@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { safeNext } from './safe-next';
+import { afterSignIn, safeNext } from './safe-next';
 
 describe('safeNext', () => {
   it('keeps a path on this site, with its query', () => {
@@ -22,5 +22,15 @@ describe('safeNext', () => {
   it('treats a missing value as /', () => {
     expect(safeNext(null)).toBe('/');
     expect(safeNext(undefined)).toBe('/');
+  });
+});
+
+describe('afterSignIn', () => {
+  it('opens the admin panel for an administrator with nowhere else to go', () => {
+    expect(afterSignIn('ADMIN', null)).toBe('/admin');
+    expect(afterSignIn('ADMIN', '/')).toBe('/admin');
+    expect(afterSignIn('ADMIN', '/bookings/b1')).toBe('/bookings/b1');
+    expect(afterSignIn('USER', null)).toBe('/');
+    expect(afterSignIn('USER', 'https://evil.example')).toBe('/');
   });
 });

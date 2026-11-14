@@ -9,7 +9,7 @@ import { INPUT_CLASS } from '@/components/ui/inputs';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useApiForm } from '@/lib/forms/use-api-form';
 import { unwrap } from '@/lib/session/api-error';
-import { safeNext } from '@/lib/session/safe-next';
+import { afterSignIn, safeNext } from '@/lib/session/safe-next';
 import { useApiClient, useSession } from '@/lib/session/SessionProvider';
 import { AuthCard, TEXT_LINK } from './AuthCard';
 import { FormError } from './FormError';
@@ -25,11 +25,12 @@ export function withNext(path: string, next: string | null): string {
 
 /** Sends a signed-in person on to `next` (the sign-in screens are for visitors). */
 export function useLeaveWhenSignedIn(next: string | null): void {
-  const { status } = useSession();
+  const { status, user } = useSession();
   const router = useRouter();
+  const role = user?.role ?? 'USER';
   useEffect(() => {
-    if (status === 'authenticated') router.replace(safeNext(next));
-  }, [status, next, router]);
+    if (status === 'authenticated') router.replace(afterSignIn(role, next));
+  }, [status, role, next, router]);
 }
 
 export function LoginForm({ next, oauthError }: { next: string | null; oauthError: string | null }) {
@@ -47,7 +48,7 @@ export function LoginForm({ next, oauthError }: { next: string | null; oauthErro
       onSubmit: async (body) => {
         const { user } = await unwrap(client.POST('/api/v1/auth/login', { body }));
         setUser(user);
-        router.replace(safeNext(next));
+        router.replace(afterSignIn(user.role, next));
       },
     },
   );

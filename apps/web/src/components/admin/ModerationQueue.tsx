@@ -101,7 +101,7 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
   const pages = Math.max(1, Math.ceil(total / ADMIN_LISTINGS_PAGE_SIZE));
 
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-10 sm:px-8 sm:py-14">
+    <div className="flex w-full max-w-5xl flex-col gap-8">
       <header className="@container flex flex-col gap-2">
         <h1
           style={displayFit(t('title'), { max: '3.5rem' })}
@@ -218,6 +218,6 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
           onReject={(reason) => void decide(rejecting, { action: 'reject', reason })}
         />
       )}
-    </main>
+    </div>
   );
 }
