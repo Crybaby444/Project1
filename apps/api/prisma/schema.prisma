@@ -68,6 +68,9 @@ model User {
   payouts          Payout[]
   favorites        Favorite[]
   reviewsWritten   Review[]  @relation("ReviewAuthor")
+  conversationsAsRenter Conversation[] @relation("ConversationRenter")
+  conversationsAsOwner  Conversation[] @relation("ConversationOwner")
+  messages         Message[]
   reviewsReceived  Review[]  @relation("ReviewSubject")
 }
 
@@ -271,6 +274,7 @@ model Listing {
   /// The catalog's default order. Trigram indexes on yoyo_fold(title…) live in migration `catalog` only.
   @@index([status, publishedAt(sort: Desc), id(sort: Desc)], map: "Listing_catalog_idx")
   reviews               Review[]
+  conversations         Conversation[]
 }
 
 /// A photo of a listing; the file lives in the storage provider under `storageKey` (random, never the
@@ -740,4 +744,50 @@ model Review {
   @@unique([bookingId, authorId])
   @@index([subjectId, createdAt])
   @@index([listingId, createdAt])
+}
+
+enum MessageKind {
+  TEXT
+  SYSTEM
+}
+
+/// A conversation about one item between its owner and one renter (spec §4.6). One per (listing,
+/// renter). Each side's lastReadAt marks what they have read; unread = their counterpart's messages
+/// after it, plus system messages after it.
+model Conversation {
+  id              String    @id @default(cuid())
+  listingId       String
+  renterId        String
+  ownerId         String
+  renterLastReadAt DateTime?
+  ownerLastReadAt  DateTime?
+  lastMessageAt   DateTime  @default(now())
+  createdAt       DateTime  @default(now())
+
+  listing  Listing   @relation(fields: [listingId], references: [id], onDelete: Restrict)
+  renter   User      @relation("ConversationRenter", fields: [renterId], references: [id], onDelete: Restrict)
+  owner    User      @relation("ConversationOwner", fields: [ownerId], references: [id], onDelete: Restrict)
+  messages Message[]
+
+  @@unique([listingId, renterId])
+  @@index([renterId, lastMessageAt])
+  @@index([ownerId, lastMessageAt])
+}
+
+/// A message: a person's text, or a system line about the deal (authorId null, `event` names it, its
+/// text rendered by the site in each reader's language from `event` and `params`).
+model Message {
+  id             String      @id @default(cuid())
+  conversationId String
+  authorId       String?
+  kind           MessageKind
+  text           String      @default("")
+  event          String?
+  bookingId      String?
+  createdAt      DateTime    @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  author       User?        @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([conversationId, createdAt])
 }

@@ -426,5 +426,47 @@
       "closed": "The time for reviews has passed.",
       "starLabel": "{count, plural, one {# star} other {# stars}}"
     }
+  },
+  "chat": {
+    "title": "Messages",
+    "menu": "Messages",
+    "unread": "{count, plural, one {# unread} other {# unread}}",
+    "listLabel": "Conversations",
+    "emptyTitle": "No conversations yet",
+    "emptyBody": "Ask an owner about an item, and the talk shows up here.",
+    "browse": "Browse the catalog",
+    "pick": "Pick a conversation",
+    "loadFailed": "The conversations did not load.",
+    "retry": "Try again",
+    "back": "All conversations",
+    "withOwner": "Owner",
+    "withRenter": "Renter",
+    "about": "About",
+    "openDeal": "Open the deal",
+    "placeholder": "Write a message",
+    "send": "Send",
+    "sending": "Sending…",
+    "sendFailed": "The message was not sent. Try again.",
+    "seen": "Seen",
+    "you": "You",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "noMessages": "Say hello and ask what you need to know.",
+    "messageOwner": "Message the owner",
+    "messageRenter": "Message the renter",
+    "hint": "Keep payments on Yoyo: the deposit protects only deals paid here.",
+    "system": {
+      "REQUESTED": "Booking requested",
+      "ACCEPTED": "The owner accepted the request",
+      "PAID": "Paid. The deposit is frozen",
+      "ACTIVE": "The item was handed over",
+      "RETURNED": "The item was returned and is being checked",
+      "DAMAGE_CLAIMED": "The owner reported damage",
+      "DISPUTED": "The deal went to a dispute",
+      "COMPLETED": "Deal completed",
+      "DECLINED": "The owner declined the request",
+      "EXPIRED": "The request expired",
+      "CANCELLED": "The deal was cancelled"
+    }
   }
 }

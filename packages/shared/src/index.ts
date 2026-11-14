@@ -17,4 +17,5 @@ export * from './admin-deals';
 export * from './catalog';
 export * from './slug';
 export * from './reviews';
+export * from './chat';
 export * from './admin-overview';
