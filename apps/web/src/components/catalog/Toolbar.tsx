@@ -14,14 +14,14 @@ export function Toolbar({ params }: { params: CatalogParams }) {
   const current = params.sort ?? (params.q ? 'relevance' : 'new');
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <div className="flex items-center gap-2">
+      <div className="flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
         <label htmlFor={sortId} className="text-[13px] font-bold tracking-[0.03em] uppercase">
           {t('sort.label')}
         </label>
         <Select
           id={sortId}
           value={current}
-          className="min-w-44"
+          className="min-w-0 flex-1 sm:min-w-44 sm:flex-none"
           onChange={(value) => navigate(catalogSearch(params, { sort: value === 'relevance' ? undefined : (value as Sort) }))}
           options={[
             ...(params.q ? [{ value: 'relevance', label: t('sort.relevance') }] : []),

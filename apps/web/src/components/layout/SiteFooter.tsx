@@ -127,7 +127,7 @@ export function SiteFooter() {
         <p
           data-footer-wordmark
           aria-hidden="true"
-          className="font-display m-0 text-center text-[59cqw] leading-[0.72] font-black tracking-[-0.02em] uppercase select-none"
+          className="font-display pointer-events-none m-0 pt-[0.1em] text-center text-[59cqw] leading-[0.72] font-black tracking-[-0.02em] uppercase select-none"
         >
           YOYO
         </p>
