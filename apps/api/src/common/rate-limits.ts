@@ -71,6 +71,13 @@ export const RATE_LIMITS = {
   /** 120 favourite changes a minute per user. */
   favorite: (userId: string): RateRule[] => [{ key: `favorite:user:${userId}`, limit: 120, windowMs: MINUTE }],
   review: (userId: string): RateRule[] => [{ key: `review:user:${userId}`, limit: 20, windowMs: MINUTE }],
+  /** 30 chat messages a minute and 500 a day per user. */
+  chatMessage: (userId: string): RateRule[] => [
+    { key: `chat-message:user:${userId}`, limit: 30, windowMs: MINUTE },
+    { key: `chat-message:user-day:${userId}`, limit: 500, windowMs: 24 * HOUR },
+  ],
+  /** 30 new conversations an hour per user. */
+  chatOpen: (userId: string): RateRule[] => [{ key: `chat-open:user:${userId}`, limit: 30, windowMs: HOUR }],
   /** 20 price offers a day per renter. */
   offer: (userId: string): RateRule[] => [{ key: `offer:user:${userId}`, limit: 20, windowMs: 24 * HOUR }],
 };
