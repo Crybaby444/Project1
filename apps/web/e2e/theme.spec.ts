@@ -21,7 +21,7 @@ test.describe('a saved theme', () => {
 
   test('switching is saved for a year and survives a reload', async ({ page, context, baseURL }) => {
     await context.addCookies([{ name: 'yoyo-theme', value: 'light', url: baseURL! }]);
-    await page.goto('/');
+    await page.goto('/how-it-works')  // the home has no theme to choose;
 
     await page.getByRole('button', { name: en.theme.toggle }).click();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
@@ -47,7 +47,7 @@ test.describe('with motion allowed', () => {
     page.on('pageerror', (error) => errors.push(error.message));
     page.on('console', (message) => message.type() === 'error' && errors.push(message.text()));
     await context.addCookies([{ name: 'yoyo-theme', value: 'dark', url: baseURL! }]);
-    await page.goto('/');
+    await page.goto('/how-it-works')  // the home has no theme to choose;
 
     await page.getByRole('button', { name: en.theme.toggle }).click();
 
@@ -61,7 +61,7 @@ test.describe('reduced motion', () => {
   test.use({ contextOptions: { reducedMotion: 'reduce' } });
 
   test('switches the theme instantly with no animation', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/how-it-works')  // the home has no theme to choose;
     const before = await page.getAttribute('html', 'data-theme');
 
     await page.getByRole('button', { name: en.theme.toggle }).click();
@@ -70,3 +70,15 @@ test.describe('reduced motion', () => {
     expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
   });
 });
+
+test('the home always shows the light palette and offers no theme switch (owner, 2026-11-14)', async ({ page, context, baseURL }) => {
+  await context.addCookies([{ name: 'yoyo-theme', value: 'dark', url: baseURL! }]);
+  await page.goto('/');
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor)).toBe('rgb(244, 241, 230)');
+  await expect(page.getByRole('button', { name: en.theme.toggle })).toBeHidden();
+  await expect(page.getByRole('contentinfo').getByText(en.theme.dark, { exact: true })).toBeHidden();
+  // Elsewhere the dark theme stands.
+  await page.goto('/how-it-works');
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor)).toBe('rgb(10, 11, 14)');
+});
+

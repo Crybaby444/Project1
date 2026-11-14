@@ -47,7 +47,7 @@ export function SiteHeader(_props: { catalog?: MenuRoot[] }) {
             <div data-phone-left className="max-sm:absolute max-sm:top-1/2 max-sm:left-4 max-sm:-translate-y-1/2">
               <LanguageSwitcher className="shrink-0" />
             </div>
-            <div data-desktop-only className="flex items-center max-sm:hidden">
+            <div data-desktop-only data-theme-control className="flex items-center max-sm:hidden">
               <ThemeToggle className="shrink-0" />
             </div>
             {status === 'authenticated' && user ? (

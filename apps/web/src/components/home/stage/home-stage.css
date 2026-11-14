@@ -4,22 +4,18 @@
  * Heights are the concept's: intro 520vh (the hero keeps its own 230vh of travel inside it), what 460vh,
  * facts 520vh, finale 210vh. Each scene is held on screen by a sticky inner box.
  */
-/* On the staged home the header floats over the scenes in one colour that inverts over whatever is under
-   it (cream over night, night over cream), as in the concept. */
+/* On the staged home the header hangs from the top as a chin (owner, 2026-11-14): a solid bar in the
+   page's colour, rounded at the bottom, floating over the scenes; the yo-yo's string goes under it. */
 html[data-staged] [data-site-header] {
   position: fixed;
-  inset-inline: 0;
+  inset-inline: clamp(8px, 2vw, 28px);
   top: 0;
   z-index: 20;
-  border: 0;
-  background: transparent;
-  mix-blend-mode: difference;
-  --ink: #f4f1e6; /* a light ink: 'difference' over the scenes turns it dark over cream, light over night */
-  --surface: transparent;
-  --mist: transparent;
-  --cta-bg: #f4f1e6;
-  --cta-fg: #000;
-  color: #f4f1e6;
+  border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  border-top: 0;
+  border-radius: 0 0 28px 28px;
+  background: var(--canvas);
+  box-shadow: 0 18px 40px -26px rgba(10, 11, 14, 0.45);
 }
 /* While one of its menus is open the header stops blending: a blended group cannot have a solid
    panel (the scene showed through the language list). It turns into a plain bar in the page's own
