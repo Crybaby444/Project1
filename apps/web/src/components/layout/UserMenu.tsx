@@ -124,7 +124,7 @@ export function UserMenu({ user }: { user: PublicUser }) {
         <span className="sr-only">{t('account')}, </span>
         {initials(user.name)}
         {unread > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 size-3 rounded-full border-2 border-[var(--canvas)] bg-[var(--glow)]">
+          <span className="absolute -top-0.5 -right-0.5 size-3 rounded-full border-2 border-[var(--canvas)] bg-[var(--ink)]">
             <span className="sr-only">, {tc('unread', { count: unread })}</span>
           </span>
         )}
