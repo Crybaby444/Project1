@@ -246,3 +246,15 @@ export function useChangeStaffRole() {
     onSettled: () => void queryClient.invalidateQueries({ queryKey: ['admin'] }),
   });
 }
+
+/** The owner turns off someone's two-step sign-in (they lost their phone). */
+export function useResetTwoFactor() {
+  const client = useApiClient();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      await unwrap(client.DELETE('/api/v1/admin/users/{id}/two-factor', { params: { path: { id } } }));
+    },
+    onSettled: () => void queryClient.invalidateQueries({ queryKey: ['admin'] }),
+  });
+}

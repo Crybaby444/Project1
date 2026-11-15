@@ -163,4 +163,35 @@ describe('Google on the sign-in page', () => {
     const link = await screen.findByRole('link', { name: 'Turpināt ar Google' });
     expect(link).toHaveAttribute('href', '/api/v1/auth/google?returnTo=%2Flv%2Fsettings');
   });
+
+  it('asks for the app code when two-step sign-in is on, then signs in with it', async () => {
+    const user = userEvent.setup();
+    const calls = renderLogin({
+      'POST /api/v1/auth/login': (body) =>
+        (body as { code?: string }).code === '123456'
+          ? { status: 200, body: { user: testUser() } }
+          : (body as { code?: string }).code
+            ? apiError(401, 'AUTH_CODE_INVALID')
+            : apiError(401, 'AUTH_CODE_REQUIRED'),
+    });
+    await user.type(email(), 'anna@mail.lv');
+    await user.type(password(), 'correct horse');
+    await user.click(submit());
+
+    const code = await screen.findByLabelText(en.auth.login.code);
+    expect(code).toHaveFocus();
+    expect(code).toHaveAttribute('autocomplete', 'one-time-code');
+    expect(screen.queryByRole('alert')?.textContent ?? '').not.toContain(en.errors.AUTH_CODE_REQUIRED);
+
+    await user.type(code, '000000');
+    await user.click(submit());
+    expect(await screen.findByText(en.errors.AUTH_CODE_INVALID)).toBeInTheDocument();
+
+    await user.clear(code);
+    await user.type(code, '123456');
+    await user.click(submit());
+    await waitFor(() => expect(replace).toHaveBeenCalled());
+    expect(calls.filter((c) => c.path === '/api/v1/auth/login').at(-1)?.body).toMatchObject({ code: '123456' });
+  });
 });
+

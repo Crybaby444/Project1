@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toast';
 import { Link } from '@/i18n/navigation';
-import { useAdminStaff, useChangeStaffRole } from '@/lib/admin/queries';
+import { useAdminStaff, useChangeStaffRole, useResetTwoFactor } from '@/lib/admin/queries';
 import { ApiError } from '@/lib/session/api-error';
 import { useSession } from '@/lib/session/SessionProvider';
 import { AdminPageHeader, Panel, SELECT_CLASS } from './parts';
@@ -71,6 +71,8 @@ export function AdminStaff() {
   const locale = useLocale();
   const { user } = useSession();
   const staff = useAdminStaff();
+  const reset = useResetTwoFactor();
+  const toast = useToast();
   const when = new Intl.DateTimeFormat(locale, {
     day: 'numeric',
     month: 'short',
@@ -113,6 +115,16 @@ export function AdminStaff() {
                 <p className="text-ink/75 text-[13px]">
                   {ts('twoFactor')}:{' '}
                   <span className="font-semibold">{m.twoFactor ? ts('on') : ts('off')}</span>
+                  {m.twoFactor && !me && (
+                    <button
+                      type="button"
+                      onClick={() => reset.mutate(m.id, { onSuccess: () => toast.show(ts('resetDone')), onError: () => toast.show(ts('failed')) })}
+                      disabled={reset.isPending}
+                      className="ml-2 font-bold underline decoration-1 underline-offset-4"
+                    >
+                      {ts('resetTwoFactor')}
+                    </button>
+                  )}
                   <br />
                   {ts('lastSeen')}:{' '}
                   <span className="tabular-nums">

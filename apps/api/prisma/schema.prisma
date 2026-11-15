@@ -92,6 +92,8 @@ model User {
   /// Two-factor sign-in (TOTP): the secret, encrypted with the server key, and when it was turned on.
   totpSecret       String?
   totpEnabledAt    DateTime?
+  /// The 30-second step of the last code accepted: a code works once.
+  totpLastStep     Int?
 }
 
 /// One refresh token of a session. Rotation chains tokens of the same family; reuse revokes the family.

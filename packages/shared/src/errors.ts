@@ -12,6 +12,10 @@ export const ERROR_CODES = [
   'AUTH_FORBIDDEN',
   'AUTH_BLOCKED',
   'AUTH_PROVIDER_DISABLED',
+  /** Two-step sign-in is on: send the 6-digit code from the authenticator app too. */
+  'AUTH_CODE_REQUIRED',
+  /** The 6-digit code is wrong, too old, or was already used. */
+  'AUTH_CODE_INVALID',
   'TOKEN_EXPIRED',
   'TOKEN_USED',
   'RATE_LIMITED',

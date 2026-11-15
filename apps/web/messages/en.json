@@ -209,7 +209,9 @@
     "NETWORK": "We cannot reach Yoyo. Check your connection and try again.",
     "fieldInvalid": "Check this field.",
     "retryIn": "Too many attempts. Try again in {seconds} s.",
-    "LISTING_GONE": "This item has been removed and is no longer for rent."
+    "LISTING_GONE": "This item has been removed and is no longer for rent.",
+    "AUTH_CODE_REQUIRED": "This account uses two-step sign-in: sign in with your email, password and the code from your authenticator app.",
+    "AUTH_CODE_INVALID": "That code is wrong or already used. Enter the newest code from the app."
   },
   "validation": {
     "required": "Fill in this field.",
@@ -245,7 +247,10 @@
       "submit": "Sign in",
       "forgot": "Forgot your password?",
       "noAccount": "No account yet?",
-      "register": "Sign up"
+      "register": "Sign up",
+      "codeTitle": "One more step",
+      "codeHint": "Open your authenticator app and enter the 6-digit code for Yoyo.",
+      "code": "Code"
     },
     "register": {
       "title": "Sign up",
@@ -974,5 +979,25 @@
     "decline": "Decline",
     "policy": "Cookie policy",
     "settings": "Cookie settings"
+  },
+  "twoFactor": {
+    "title": "Two-step sign-in",
+    "intro": "After the password, a 6-digit code from an app on your phone. Someone who learns your password still can’t get in.",
+    "offIntro": "Off. You need an authenticator app: Google Authenticator, Microsoft Authenticator, 1Password or any other.",
+    "turnOn": "Turn on",
+    "step1": "Open the authenticator app and add an account.",
+    "step2": "Scan this QR code, or type the key by hand.",
+    "step3": "Enter the 6-digit code the app shows.",
+    "qrLabel": "QR code for the authenticator app",
+    "keyLabel": "Key",
+    "codeToTurnOn": "Code from the app",
+    "confirm": "Turn on",
+    "cancel": "Cancel",
+    "on": "On: signing in asks for the code from the app.",
+    "codeToTurnOff": "Code from the app, to turn it off",
+    "turnOff": "Turn off",
+    "turnedOn": "Two-step sign-in is on",
+    "turnedOff": "Two-step sign-in is off",
+    "needPassword": "Your account signs in with Google. Set a password first (Forgot password on the sign-in page), then turn this on."
   }
 }

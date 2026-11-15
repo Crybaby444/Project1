@@ -21,6 +21,7 @@ describe('isOAuthErrorCode', () => {
   it('knows only the codes the Google callback sends', () => {
     expect(isOAuthErrorCode('OAUTH_CANCELLED')).toBe(true);
     expect(isOAuthErrorCode('AUTH_BLOCKED')).toBe(true);
+    expect(isOAuthErrorCode('AUTH_CODE_REQUIRED')).toBe(true);
     expect(isOAuthErrorCode('RATE_LIMITED')).toBe(false);
     expect(isOAuthErrorCode(null)).toBe(false);
   });

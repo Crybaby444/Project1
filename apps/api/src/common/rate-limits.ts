@@ -42,6 +42,8 @@ export const RATE_LIMITS = {
     { key: `password-check:user-hour:${userId}`, limit: 20, windowMs: HOUR },
   ],
   /** One phone code a minute per user. */
+  /** Guessing a two-step code while setting it up or turning it off: 10 tries per 15 minutes. */
+  twoFactorCode: (userId: string): RateRule[] => [{ key: `two-factor:user:${userId}`, limit: 10, windowMs: 15 * MINUTE }],
   phoneCode: (userId: string): RateRule[] => [{ key: `phone-code:user:${userId}`, limit: 1, windowMs: MINUTE }],
   /** At most 5 confirmation emails per account a day, the one sent at registration included. */
   verificationMail: (userId: string): RateRule[] => [

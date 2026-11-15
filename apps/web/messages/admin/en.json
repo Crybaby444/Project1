@@ -17,7 +17,8 @@
       "settings": "Settings",
       "system": "System",
       "categories": "Categories",
-      "staff": "Staff"
+      "staff": "Staff",
+      "security": "Security"
     },
     "common": {
       "loadFailed": "This did not load.",
@@ -297,7 +298,8 @@
         "REVIEW_SHOWN": "Review shown again",
         "SETTINGS_CHANGED": "Settings changed",
         "CATEGORY_CHANGED": "Category changed",
-        "STAFF_CHANGED": "Staff role changed"
+        "STAFF_CHANGED": "Staff role changed",
+        "TWO_FACTOR_RESET": "Two-step sign-in reset"
       }
     },
     "settings": {
@@ -483,12 +485,17 @@
         "FINANCE": "Deals, money, system and exports",
         "EDITOR": "Traffic, SEO, content, categories"
       },
-      "access": "Can open"
+      "access": "Can open",
+      "resetTwoFactor": "Reset two-step sign-in",
+      "resetDone": "Two-step sign-in reset: they set it up again"
     },
     "noAccess": {
       "title": "Not in your part of the panel",
       "body": "Your role doesn’t open this section. Ask the owner if you need it.",
       "back": "To the overview"
+    },
+    "security": {
+      "title": "Your two-step sign-in"
     }
   }
 }

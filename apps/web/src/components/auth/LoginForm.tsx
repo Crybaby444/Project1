@@ -2,13 +2,13 @@
 
 import { isOAuthErrorCode, LoginRequestSchema } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/Field';
 import { INPUT_CLASS } from '@/components/ui/inputs';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useApiForm } from '@/lib/forms/use-api-form';
-import { unwrap } from '@/lib/session/api-error';
+import { ApiError, unwrap } from '@/lib/session/api-error';
 import { afterSignIn, safeNext } from '@/lib/session/safe-next';
 import { useApiClient, useSession } from '@/lib/session/SessionProvider';
 import { AuthCard, TEXT_LINK } from './AuthCard';
@@ -40,13 +40,24 @@ export function LoginForm({ next, oauthError }: { next: string | null; oauthErro
   const { setUser } = useSession();
   const router = useRouter();
   useLeaveWhenSignedIn(next);
+  // Two-step sign-in: the API answers AUTH_CODE_REQUIRED after a right password; then the code field shows.
+  const [needCode, setNeedCode] = useState(false);
 
   const { form, submit, formError, retryInSeconds, busy, disabled, fieldError } = useApiForm(
     LoginRequestSchema,
     {
       defaultValues: { email: '', password: '' },
       onSubmit: async (body) => {
-        const { user } = await unwrap(client.POST('/api/v1/auth/login', { body }));
+        let user;
+        try {
+          ({ user } = await unwrap(client.POST('/api/v1/auth/login', { body })));
+        } catch (error) {
+          if (error instanceof ApiError && error.code === 'AUTH_CODE_REQUIRED' && !body.code) {
+            setNeedCode(true);
+            return;
+          }
+          throw error;
+        }
         setUser(user);
         router.replace(afterSignIn(user.role, next));
       },
@@ -84,6 +95,23 @@ export function LoginForm({ next, oauthError }: { next: string | null; oauthErro
         <Field label={t('fields.password')} error={fieldError('password')}>
           <PasswordField autoComplete="current-password" {...form.register('password')} />
         </Field>
+        {needCode && (
+          <div className="border-ink/15 rounded-media flex flex-col gap-3 border p-4">
+            <p className="font-semibold">{t('login.codeTitle')}</p>
+            <p className="text-ink/75 -mt-2 text-sm">{t('login.codeHint')}</p>
+            <Field label={t('login.code')} error={fieldError('code')}>
+              <input
+                autoFocus
+                autoComplete="one-time-code"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={6}
+                className={`${INPUT_CLASS} font-mono text-[1.4rem] tracking-[0.4em]`}
+                {...form.register('code', { setValueAs: (v: string) => (v ? v.replace(/\D/g, '') : undefined) })}
+              />
+            </Field>
+          </div>
+        )}
         <Link href="/forgot-password" className={`${TEXT_LINK} -mt-2 self-start text-sm`}>
           {t('login.forgot')}
         </Link>

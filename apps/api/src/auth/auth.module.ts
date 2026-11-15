@@ -5,6 +5,8 @@ import { SmsModule } from '../sms/sms.module';
 import { AccessTokenService } from './access-token.service';
 import { AuthController } from './auth.controller';
 import { AuthGuard } from './auth.guard';
+import { TwoFactorController } from './two-factor.controller';
+import { TwoFactorService } from './two-factor.service';
 import { AuthService } from './auth.service';
 import { DeviceCookieService } from './device-cookie.service';
 import { GoogleOAuthService } from './google-oauth.service';
@@ -13,8 +15,8 @@ import { RefreshTokenService } from './refresh-token.service';
 
 @Module({
   imports: [MailModule, SmsModule, AnalyticsCoreModule],
-  controllers: [AuthController],
-  providers: [AuthService, AuthGuard, DeviceCookieService, GoogleOAuthService, PasswordService, AccessTokenService, RefreshTokenService],
-  exports: [AuthService, AuthGuard, PasswordService, AccessTokenService, RefreshTokenService],
+  controllers: [AuthController, TwoFactorController],
+  providers: [AuthService, AuthGuard, DeviceCookieService, GoogleOAuthService, PasswordService, AccessTokenService, RefreshTokenService, TwoFactorService],
+  exports: [AuthService, TwoFactorService, AuthGuard, PasswordService, AccessTokenService, RefreshTokenService],
 })
 export class AuthModule {}

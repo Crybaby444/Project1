@@ -130,7 +130,7 @@ export class AuthController {
   @ApiFoundResponse({
     description:
       'Signed in (session cookies) and sent to the page the user started from; or, if the sign-in failed, ' +
-      'sent to the site’s /login?oauthError=OAUTH_CANCELLED|OAUTH_STATE_INVALID|OAUTH_FAILED|AUTH_BLOCKED',
+      'sent to the site’s /login?oauthError=OAUTH_CANCELLED|OAUTH_STATE_INVALID|OAUTH_FAILED|AUTH_BLOCKED|AUTH_CODE_REQUIRED',
   })
   @ApiErrors(404)
   async googleCallback(
@@ -165,7 +165,7 @@ export class AuthController {
       if (!(error instanceof AppError)) {
         this.logger.error(`Google sign-in failed: ${error instanceof Error ? (error.stack ?? error.message) : String(error)}`);
       }
-      const code = error instanceof AppError && error.code === 'AUTH_BLOCKED' ? 'AUTH_BLOCKED' : 'OAUTH_FAILED';
+      const code = error instanceof AppError && (error.code === 'AUTH_BLOCKED' || error.code === 'AUTH_CODE_REQUIRED') ? error.code : 'OAUTH_FAILED';
       this.backToLogin(res, code, attempt.returnTo);
       return;
     }

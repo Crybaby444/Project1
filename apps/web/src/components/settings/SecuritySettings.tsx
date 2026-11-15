@@ -18,6 +18,7 @@ import { useApiForm } from '@/lib/forms/use-api-form';
 import { ApiError, unwrap } from '@/lib/session/api-error';
 import { useApiClient, useSession } from '@/lib/session/SessionProvider';
 import { SettingsSection } from './SettingsSection';
+import { TwoFactorSettings } from './TwoFactorSettings';
 
 const ChangePasswordSchema = z
   .object({
@@ -36,6 +37,7 @@ const isWrongPassword = (error: unknown) =>
 /** Settings → Security: the password (or why there is none), sign out everywhere, delete the account. */
 export function SecuritySettings({ user }: { user: PublicUser }) {
   const t = useTranslations('settings.security');
+  const tf = useTranslations('twoFactor');
 
   return (
     <div className="flex flex-col gap-6">
@@ -45,6 +47,9 @@ export function SecuritySettings({ user }: { user: PublicUser }) {
         ) : (
           <p className="leading-relaxed">{t('password.google')}</p>
         )}
+      </SettingsSection>
+      <SettingsSection title={tf('title')} intro={tf('intro')}>
+        <TwoFactorSettings hasPassword={user.hasPassword} />
       </SettingsSection>
       <SettingsSection title={t('logoutAll.open')} intro={t('logoutAll.intro')}>
         <LogoutEverywhere />

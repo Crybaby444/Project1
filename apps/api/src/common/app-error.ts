@@ -8,6 +8,8 @@ const DEFAULT_MESSAGES: Record<ErrorCode, string> = {
   AUTH_FORBIDDEN: 'You do not have access to this',
   AUTH_BLOCKED: 'This account is blocked',
   AUTH_PROVIDER_DISABLED: 'This sign-in method is not available',
+  AUTH_CODE_REQUIRED: 'Enter the code from your authenticator app',
+  AUTH_CODE_INVALID: 'Wrong or used code',
   TOKEN_EXPIRED: 'This link or code has expired',
   TOKEN_USED: 'This link or code has already been used',
   RATE_LIMITED: 'Too many attempts, try again later',

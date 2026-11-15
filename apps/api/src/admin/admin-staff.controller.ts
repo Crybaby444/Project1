@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Put, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { StaffChangeSchema, StaffListSchema, type PublicUser, type StaffList } from '@yoyo/shared';
 import { createZodDto, ZodResponse } from 'nestjs-zod';
@@ -8,6 +8,7 @@ import { CurrentUser } from '../auth/current-user.decorator';
 import { Roles, RolesGuard, Section } from '../auth/roles.guard';
 import { ApiErrors } from '../common/api-errors';
 import { AppError } from '../common/app-error';
+import { TwoFactorService } from '../auth/two-factor.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 class StaffListDto extends createZodDto(StaffListSchema) {}
@@ -26,6 +27,7 @@ export class AdminStaffController {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
+    private readonly twoFactor: TwoFactorService,
   ) {}
 
   @Get('staff')
@@ -72,5 +74,17 @@ export class AdminStaffController {
       before: { role: user.role, staffRole: user.role === 'ADMIN' ? (user.staffRole ?? 'OWNER') : null },
       after: { staffRole: body.staffRole },
     });
+  }
+
+  /** Someone lost their phone: turn their two-step sign-in off so they can set it up again. */
+  @Delete('users/:id/two-factor')
+  @HttpCode(204)
+  @ApiErrors(401, 403, 404)
+  async resetTwoFactor(@CurrentUser() admin: PublicUser, @Param('id') id: string): Promise<void> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user || user.deletedAt !== null) throw new AppError('NOT_FOUND', 404, 'User not found');
+    if (!this.twoFactor.enabled(user)) return;
+    await this.twoFactor.clear(id);
+    await this.audit.record(admin, { action: 'TWO_FACTOR_RESET', targetType: 'USER', targetId: id, summary: user.email });
   }
 }

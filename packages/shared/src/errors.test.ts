@@ -12,6 +12,8 @@ describe('ERROR_CODES', () => {
         'AUTH_FORBIDDEN',
         'AUTH_BLOCKED',
         'AUTH_PROVIDER_DISABLED',
+        'AUTH_CODE_REQUIRED',
+        'AUTH_CODE_INVALID',
         'TOKEN_EXPIRED',
         'TOKEN_USED',
         'RATE_LIMITED',
