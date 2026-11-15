@@ -20,6 +20,7 @@ describe('admin: a person in full, notes, taking listings down and hiding review
     await resetDeals(t.prisma);
     await resetListings(t);
     await resetAccounts(t.prisma);
+    await t.prisma.$executeRawUnsafe('TRUNCATE TABLE "AdminAuditLog"');
     t.clock.advance(60 * 60_000);
     admin = await signedInClient(t, { name: 'Ada', role: 'ADMIN' });
     owner = await signedInClient(t, { name: 'Olga' });
