@@ -9,6 +9,14 @@ import { useIdempotentMutation } from './idempotency';
 import type { DealRole } from './status';
 
 /**
+ * Live updates (owner, 2026-11-16: every change, message and deal step shows at once): open screens ask
+ * again on these beats while the tab is visible (React Query pauses in a background tab), and at once
+ * when the tab comes back.
+ */
+export const DEAL_POLL_MS = 5_000;
+export const LIST_POLL_MS = 15_000;
+
+/**
  * Query keys of deal and wallet data. Everything under `deals` and `wallet` is private: signing out
  * drops it (SessionProvider keeps only the session). Booking terms are public.
  */
@@ -34,8 +42,9 @@ export function useDeal(id: string) {
     queryKey: dealKeys.one(id),
     queryFn: async () =>
       (await unwrap(client.GET('/api/v1/bookings/{id}', { params: { path: { id } } }))).booking,
-    // The other side may act at any time; a returning tab shows the deal as it is.
+    // The other side may act at any time: the open deal follows them live.
     refetchOnWindowFocus: true,
+    refetchInterval: DEAL_POLL_MS,
   });
 }
 
@@ -45,6 +54,7 @@ export function useDealHistory(id: string) {
     queryKey: dealKeys.history(id),
     queryFn: async () =>
       (await unwrap(client.GET('/api/v1/bookings/{id}/history', { params: { path: { id } } }))).items,
+    refetchInterval: DEAL_POLL_MS * 2,
   });
 }
 
@@ -64,6 +74,7 @@ export function useMyDeals(role: DealRole, group: 'open' | 'closed', page = 1) {
     queryKey: dealKeys.mine(role, group, page),
     queryFn: async () => unwrap(client.GET('/api/v1/me/bookings', { params: { query: { role, group, page } } })),
     placeholderData: keepPreviousData,
+    refetchInterval: LIST_POLL_MS,
   });
 }
 
@@ -74,7 +85,8 @@ export function useDealsSummary(enabled = true) {
     queryKey: dealKeys.summary,
     queryFn: async () => unwrap(client.GET('/api/v1/me/bookings/summary')),
     enabled,
-    staleTime: 30_000,
+    staleTime: 10_000,
+    refetchInterval: LIST_POLL_MS,
   });
 }
 

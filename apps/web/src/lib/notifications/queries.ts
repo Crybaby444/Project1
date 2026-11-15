@@ -13,7 +13,7 @@ export const notificationKeys = {
 };
 
 /** How often the bell asks for news while the tab is visible. */
-export const BELL_POLL_MS = 30_000;
+export const BELL_POLL_MS = 10_000;
 
 export function useNotifications() {
   const client = useApiClient();

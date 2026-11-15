@@ -36,3 +36,11 @@ export type DealGroup = (typeof DEAL_GROUPS)[number];
 export const DEAL_ROLES = ['renter', 'owner'] as const;
 
 export type DealRole = (typeof DEAL_ROLES)[number];
+
+/** Steps that are always open but don't mean the deal waits for you (owner walk, 2026-11-16). */
+const NOT_A_TURN = new Set(['RESOLVE', 'CANCEL', 'WITHDRAW']);
+
+/** The deal waits for this side: a step that moves it forward, not just a way out. */
+export function isMyTurn(actions: readonly string[]): boolean {
+  return actions.some((a) => !NOT_A_TURN.has(a));
+}
