@@ -1300,6 +1300,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminCategoriesController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/categories/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["AdminCategoriesController_change"];
+        trace?: never;
+    };
     "/api/v1/listings/{id}/photos": {
         parameters: {
             query?: never;
@@ -3349,6 +3381,52 @@ export interface components {
                 messages: number;
                 reviews: number;
             };
+        };
+        AdminCategoriesDto_Output: {
+            categories: {
+                id: string;
+                slug: string;
+                names: {
+                    en: string;
+                    lv: string;
+                    ru: string;
+                };
+                defaultNames: {
+                    en: string;
+                    lv: string;
+                    ru: string;
+                };
+                renamed: boolean;
+                hidden: boolean;
+                items: number;
+                children: {
+                    id: string;
+                    slug: string;
+                    names: {
+                        en: string;
+                        lv: string;
+                        ru: string;
+                    };
+                    defaultNames: {
+                        en: string;
+                        lv: string;
+                        ru: string;
+                    };
+                    renamed: boolean;
+                    hidden: boolean;
+                    items: number;
+                }[];
+            }[];
+        };
+        AdminCategoryChangeDto: {
+            names?: {
+                en: string;
+                lv: string;
+                ru: string;
+            } | null;
+            /** @enum {string} */
+            move?: "up" | "down";
+            hidden?: boolean;
         };
         PhotoUploadResponseDto_Output: {
             photo: {
@@ -8254,6 +8332,97 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminCategoriesController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Every active category with its visible items, hidden ones included */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCategoriesDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminCategoriesController_change: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdminCategoryChangeDto"];
+            };
+        };
+        responses: {
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
             /** @description Not signed in or wrong credentials */
             401: {
                 headers: {

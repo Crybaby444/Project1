@@ -140,3 +140,30 @@ export type AdminSystem = z.infer<typeof AdminSystemSchema>;
 
 export const ADMIN_EXPORTS = ['users', 'listings', 'deals', 'ledger'] as const;
 export type AdminExport = (typeof ADMIN_EXPORTS)[number];
+
+const Names = z.object({ en: z.string(), lv: z.string(), ru: z.string() });
+
+/** One category for administrators: the names from the catalog, the admin's own over them, order, hiding. */
+const AdminCategoryLeafSchema = z.object({
+  id: z.string(),
+  slug: z.string(),
+  names: Names,
+  defaultNames: Names,
+  renamed: z.boolean(),
+  hidden: z.boolean(),
+  items: z.number().int(),
+});
+/** The catalog has two levels: a root and its subcategories. */
+export const AdminCategorySchema = AdminCategoryLeafSchema.extend({ children: z.array(AdminCategoryLeafSchema) });
+export type AdminCategory = z.infer<typeof AdminCategorySchema>;
+export const AdminCategoriesSchema = z.object({ categories: z.array(AdminCategorySchema) });
+
+/** Rename (null: back to the catalog's names), move up or down among its siblings, hide or show. */
+export const AdminCategoryChangeSchema = z
+  .object({
+    names: z.object({ en: z.string().trim().min(1).max(60), lv: z.string().trim().min(1).max(60), ru: z.string().trim().min(1).max(60) }).nullable().optional(),
+    move: z.enum(['up', 'down']).optional(),
+    hidden: z.boolean().optional(),
+  })
+  .refine((v) => v.names !== undefined || v.move !== undefined || v.hidden !== undefined, { message: 'Nothing to change' });
+export type AdminCategoryChange = z.infer<typeof AdminCategoryChangeSchema>;

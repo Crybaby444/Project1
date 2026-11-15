@@ -11,12 +11,13 @@ import { ReviewsModule } from '../reviews/reviews.module';
 import { AdminPeopleController } from './admin-people.controller';
 import { AdminSearchController } from './admin-search';
 import { AdminSystemController } from './admin-system.controller';
+import { AdminCategoriesController } from './admin-categories.controller';
 import { MailModule } from '../mail/mail.module';
 import { AdminPeopleService } from './admin-people.service';
 
 @Module({
   imports: [AuthModule, BookingsModule, NotificationsModule, ReviewsModule, MailModule],
-  controllers: [AdminController, AdminAuditController, AdminPeopleController, AdminSearchController, AdminSystemController],
+  controllers: [AdminController, AdminAuditController, AdminPeopleController, AdminSearchController, AdminSystemController, AdminCategoriesController],
   providers: [AdminBootstrap, RolesGuard, AdminSettingsService, AdminPeopleService],
 })
 export class AdminModule {}
