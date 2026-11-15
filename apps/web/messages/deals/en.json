@@ -468,5 +468,61 @@
       "EXPIRED": "The request expired",
       "CANCELLED": "The deal was cancelled"
     }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "bell": "Notifications",
+    "unread": "{count, plural, one {# unread} other {# unread}}",
+    "empty": "Nothing new yet. Steps of your deals, offers and reviews will show up here.",
+    "markAll": "Mark all as read",
+    "seeAll": "All notifications",
+    "loadFailed": "Notifications did not load.",
+    "retry": "Try again",
+    "fallback": "“{title}”: something changed",
+    "event": {
+      "DEAL": {
+        "REQUESTED": "Booking request: “{title}”",
+        "ACCEPTED": "“{title}”: the request was accepted",
+        "DECLINED": "“{title}”: the request was declined",
+        "EXPIRED": "“{title}”: the request expired",
+        "SIGNED": "“{title}”: the contract was signed",
+        "PAID": "“{title}”: paid, the deposit is frozen",
+        "CANCELLED": "“{title}”: the deal was cancelled",
+        "HANDED_OVER": "“{title}”: handed over",
+        "RECEIVED": "“{title}”: received",
+        "RETURNED": "“{title}”: brought back",
+        "RECEIVED_BACK": "“{title}”: received back, being checked",
+        "ALL_FINE": "“{title}”: all fine, the deal is completed",
+        "DAMAGE_REPORTED": "“{title}”: damage reported",
+        "DAMAGE_ACCEPTED": "“{title}”: the damage was accepted",
+        "DISPUTE_OPENED": "“{title}”: a dispute was opened",
+        "DISPUTE_RESOLVED": "“{title}”: the dispute was decided"
+      },
+      "OFFER": {
+        "OFFER_MADE": "New price offer for “{title}”",
+        "OFFER_ACCEPTED": "Your offer for “{title}” was accepted",
+        "OFFER_DECLINED": "Your offer for “{title}” was declined"
+      },
+      "LISTING": {
+        "APPROVED": "“{title}” is published",
+        "REJECTED": "“{title}” needs changes",
+        "MOVED": "“{title}” moved to another category"
+      },
+      "REVIEW": {
+        "RECEIVED": "New review after “{title}”: write yours to read it"
+      }
+    },
+    "email": {
+      "title": "Email",
+      "intro": "Choose which emails you get. The bell always shows everything; sign-in and security emails always come.",
+      "DEALS": "Deal steps",
+      "DEALS_hint": "Requests, answers, payments, handover, return, disputes.",
+      "OFFERS": "Price offers",
+      "OFFERS_hint": "Offers you make or get, and the answers.",
+      "LISTINGS": "My items",
+      "LISTINGS_hint": "Moderation results for your listings.",
+      "saved": "Saved.",
+      "failed": "Not saved. Try again."
+    }
   }
 }

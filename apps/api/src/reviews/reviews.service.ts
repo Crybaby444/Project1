@@ -5,6 +5,7 @@ import { BookingRulesService } from '../bookings/booking-rules.service';
 import { CLOCK, type Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
 import type { Prisma } from '../generated/prisma/client';
+import { NotificationsService } from '../notifications/notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 const PAGE_SIZE = 10;
@@ -46,6 +47,7 @@ export class ReviewsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly rules: BookingRulesService,
+    private readonly notifications: NotificationsService,
     @Inject(CLOCK) private readonly clock: Clock,
   ) {}
 
@@ -115,6 +117,7 @@ export class ReviewsService {
         },
         include: REVIEW_INCLUDE,
       });
+      await this.notifications.notify([row.subjectId], { kind: 'REVIEW', event: 'RECEIVED', bookingId, listingId: booking.listingId, title: row.listing?.title ?? '' });
       return toPublic(row);
     } catch (error) {
       if ((error as { code?: string }).code === 'P2002') {

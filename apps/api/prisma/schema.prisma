@@ -72,6 +72,9 @@ model User {
   conversationsAsOwner  Conversation[] @relation("ConversationOwner")
   messages         Message[]
   reviewsReceived  Review[]  @relation("ReviewSubject")
+  /// Email topics they turned off (EMAIL_TOPICS of @yoyo/shared); account and security mail always goes.
+  emailOff         String[]         @default([])
+  notifications    Notification[]
 }
 
 /// One refresh token of a session. Rotation chains tokens of the same family; reuse revokes the family.
@@ -746,6 +749,14 @@ model Review {
   @@index([listingId, createdAt])
 }
 
+/// What a bell notification is about (plan 9, spec §4.7).
+enum NotificationKind {
+  DEAL
+  OFFER
+  LISTING
+  REVIEW
+}
+
 enum MessageKind {
   TEXT
   SYSTEM
@@ -790,4 +801,22 @@ model Message {
   author       User?        @relation(fields: [authorId], references: [id], onDelete: Restrict)
 
   @@index([conversationId, createdAt])
+}
+
+/// A bell notification: what happened (`kind` + `event`, a template name the site words in the reader's
+/// language), to what (the deal or the item, and its title as it was), and whether it was read.
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  kind      NotificationKind
+  event     String
+  bookingId String?
+  listingId String?
+  title     String           @default("")
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
 }

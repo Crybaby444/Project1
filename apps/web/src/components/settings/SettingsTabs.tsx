@@ -6,9 +6,10 @@ import { Link, usePathname } from '@/i18n/navigation';
 const TABS = [
   { href: '/settings', key: 'profile' },
   { href: '/settings/security', key: 'security' },
+  { href: '/settings/notifications', key: 'notifications' },
 ] as const;
 
-/** Profile / Security as one segmented pill row (the same on a phone, where it fills the width). */
+/** Profile / Security / Email as one segmented pill row (the same on a phone, where it fills the width). */
 export function SettingsTabs() {
   const t = useTranslations('settings');
   const pathname = usePathname();
@@ -23,7 +24,7 @@ export function SettingsTabs() {
               <Link
                 href={href}
                 aria-current={active ? 'page' : undefined}
-                className={`rounded-pill ease-yoyo flex min-h-10 items-center justify-center px-5 text-[13px] font-bold tracking-[0.03em] uppercase transition-[background-color,color,transform] duration-200 active:scale-[0.96] ${
+                className={`rounded-pill ease-yoyo flex min-h-10 items-center justify-center px-3 text-[13px] sm:px-5 font-bold tracking-[0.03em] uppercase transition-[background-color,color,transform] duration-200 active:scale-[0.96] ${
                   active ? 'bg-cta text-cta-fg' : 'hover:bg-mist'
                 }`}
               >

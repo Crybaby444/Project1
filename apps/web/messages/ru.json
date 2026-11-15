@@ -319,7 +319,8 @@
     "title": "Настройки",
     "tabs": {
       "profile": "Профиль",
-      "security": "Безопасность"
+      "security": "Безопасность",
+      "notifications": "Почта"
     },
     "profile": {
       "title": "Профиль",

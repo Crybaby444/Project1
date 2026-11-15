@@ -19,3 +19,4 @@ export * from './slug';
 export * from './reviews';
 export * from './chat';
 export * from './admin-overview';
+export * from './notifications';

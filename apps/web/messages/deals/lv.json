@@ -468,5 +468,61 @@
       "EXPIRED": "Pieprasījuma termiņš beidzās",
       "CANCELLED": "Darījums atcelts"
     }
+  },
+  "notifications": {
+    "title": "Paziņojumi",
+    "bell": "Paziņojumi",
+    "unread": "{count, plural, zero {# nelasītu} one {# nelasīts} other {# nelasīti}}",
+    "empty": "Vēl nekā jauna. Šeit parādīsies darījumu soļi, piedāvājumi un atsauksmes.",
+    "markAll": "Atzīmēt visu kā izlasītu",
+    "seeAll": "Visi paziņojumi",
+    "loadFailed": "Paziņojumi neielādējās.",
+    "retry": "Mēģināt vēlreiz",
+    "fallback": "“{title}”: kaut kas mainījās",
+    "event": {
+      "DEAL": {
+        "REQUESTED": "Nomas pieprasījums: “{title}”",
+        "ACCEPTED": "“{title}”: pieprasījums pieņemts",
+        "DECLINED": "“{title}”: pieprasījums noraidīts",
+        "EXPIRED": "“{title}”: pieprasījuma termiņš beidzās",
+        "SIGNED": "“{title}”: līgums parakstīts",
+        "PAID": "“{title}”: samaksāts, drošības nauda iesaldēta",
+        "CANCELLED": "“{title}”: darījums atcelts",
+        "HANDED_OVER": "“{title}”: nodots",
+        "RECEIVED": "“{title}”: saņemts",
+        "RETURNED": "“{title}”: atnests atpakaļ",
+        "RECEIVED_BACK": "“{title}”: saņemts atpakaļ, notiek pārbaude",
+        "ALL_FINE": "“{title}”: viss kārtībā, darījums pabeigts",
+        "DAMAGE_REPORTED": "“{title}”: ziņots par bojājumu",
+        "DAMAGE_ACCEPTED": "“{title}”: bojājums atzīts",
+        "DISPUTE_OPENED": "“{title}”: atvērts strīds",
+        "DISPUTE_RESOLVED": "“{title}”: strīds izlemts"
+      },
+      "OFFER": {
+        "OFFER_MADE": "Jauns cenas piedāvājums par “{title}”",
+        "OFFER_ACCEPTED": "Tavs piedāvājums par “{title}” pieņemts",
+        "OFFER_DECLINED": "Tavs piedāvājums par “{title}” noraidīts"
+      },
+      "LISTING": {
+        "APPROVED": "“{title}” ir publicēts",
+        "REJECTED": "“{title}” jālabo",
+        "MOVED": "“{title}” pārvietots uz citu kategoriju"
+      },
+      "REVIEW": {
+        "RECEIVED": "Jauna atsauksme pēc “{title}”: uzraksti savu, lai to izlasītu"
+      }
+    },
+    "email": {
+      "title": "E-pasts",
+      "intro": "Izvēlies, kādus e-pastus saņemt. Zvaniņš vienmēr rāda visu; pieteikšanās un drošības e-pasti pienāk vienmēr.",
+      "DEALS": "Darījumu soļi",
+      "DEALS_hint": "Pieprasījumi, atbildes, maksājumi, nodošana, atgriešana, strīdi.",
+      "OFFERS": "Cenas piedāvājumi",
+      "OFFERS_hint": "Tavi un tev izteiktie piedāvājumi un atbildes.",
+      "LISTINGS": "Manas lietas",
+      "LISTINGS_hint": "Sludinājumu moderācijas rezultāti.",
+      "saved": "Saglabāts.",
+      "failed": "Nesaglabājās. Mēģini vēlreiz."
+    }
   }
 }

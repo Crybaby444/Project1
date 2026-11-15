@@ -28,6 +28,7 @@ import { AdminDealsModule } from './admin-deals/admin-deals.module';
 import { SettingsModule } from './settings/settings.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { ChatModule } from './chat/chat.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Global()
 @Module({
@@ -47,6 +48,7 @@ class EnvModule {}
     SettingsModule,
     ReviewsModule,
     ChatModule,
+    NotificationsModule,
     AuthModule,
     MeModule,
     AdminModule,

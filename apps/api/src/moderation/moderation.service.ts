@@ -10,6 +10,7 @@ import { nextStatus } from '../listings/listing-status';
 import { serializeListing, type ListingWithRelations } from '../listings/listing.serializer';
 import { invalidStatus, ListingsService } from '../listings/listings.service';
 import { MailService } from '../mail/mail.service';
+import { NotificationsService, wantsEmail } from '../notifications/notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 /** `https://site` + `/lv` (no prefix for English) + path, the site's URL scheme. */
@@ -27,6 +28,7 @@ export class ModerationService {
     private readonly listings: ListingsService,
     private readonly categories: CategoriesService,
     private readonly mail: MailService,
+    private readonly notifications: NotificationsService,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(ENV) private readonly env: Pick<Env, 'WEB_ORIGIN'>,
   ) {}
@@ -105,6 +107,9 @@ export class ModerationService {
     if (moved.count === 0) throw this.listings.stale(listing.version + 1);
     const category = await this.prisma.category.findUniqueOrThrow({ where: { id: target.id }, select: { names: true } });
     if (listing.owner.deletedAt === null) {
+      void this.notifications.notify([listing.owner.id], { kind: 'LISTING', event: 'MOVED', listingId: listing.id, title: listing.title });
+    }
+    if (listing.owner.deletedAt === null && wantsEmail(listing.owner, 'LISTINGS')) {
       void this.mail.sendListingMoved(listing.owner, {
         title: listing.title ?? '',
         category: category.names as LocalizedText,
@@ -118,6 +123,13 @@ export class ModerationService {
   private notify(listing: Listing, owner: User, decision: Decision): void {
     if (owner.deletedAt !== null) return;
     const title = listing.title ?? '';
+    void this.notifications.notify([owner.id], {
+      kind: 'LISTING',
+      event: decision.action === 'approve' ? 'APPROVED' : 'REJECTED',
+      listingId: listing.id,
+      title,
+    });
+    if (!wantsEmail(owner, 'LISTINGS')) return;
     if (decision.action === 'approve') {
       // The item's own address: in the language it is written in (its canonical page, plan 7).
       void this.mail.sendListingApproved(owner, {

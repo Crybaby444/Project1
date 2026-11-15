@@ -21,7 +21,7 @@ export class DataExportService {
 
   async export(userId: string): Promise<Record<string, unknown>> {
     const now = this.clock.now();
-    const [user, oauth, sessions, listings, deals, written, favorites, payments, payouts, wallet, entries, conversations] = await Promise.all([
+    const [user, oauth, sessions, listings, deals, written, favorites, payments, payouts, wallet, entries, conversations, notifications] = await Promise.all([
       this.prisma.user.findUniqueOrThrow({ where: { id: userId } }),
       this.prisma.oAuthAccount.findMany({ where: { userId }, select: { provider: true, createdAt: true } }),
       this.prisma.refreshToken.findMany({
@@ -51,6 +51,7 @@ export class DataExportService {
         },
         orderBy: { createdAt: 'asc' },
       }),
+      this.prisma.notification.findMany({ where: { userId }, orderBy: { createdAt: 'asc' } }),
     ]);
 
     // Reviews about them: every public page (the blind rule decides what is public).
@@ -162,6 +163,8 @@ export class DataExportService {
           ),
         };
       }),
+      notifications: notifications.map((n) => ({ kind: n.kind, event: n.event, item: n.title, deal: n.bookingId, at: iso(n.createdAt), readAt: iso(n.readAt) })),
+      emailTopicsOff: user.emailOff,
       favourites: favorites.map((f) => ({ listing: f.listing.id, title: f.listing.title, addedAt: iso(f.createdAt) })),
       wallet: {
         balanceCents: wallet?.balance ?? 0,

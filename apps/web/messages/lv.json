@@ -319,7 +319,8 @@
     "title": "Iestatījumi",
     "tabs": {
       "profile": "Profils",
-      "security": "Drošība"
+      "security": "Drošība",
+      "notifications": "E-pasts"
     },
     "profile": {
       "title": "Profils",

@@ -7,6 +7,7 @@ import type { User } from '../generated/prisma/client';
 import { MailService } from '../mail/mail.service';
 import { dealRole } from '../mail/templates/deal-texts';
 import { sitePath } from '../moderation/moderation.service';
+import { NotificationsService, wantsEmail } from '../notifications/notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { dayOf } from './booking.store';
 import type { DealNotice } from './effects.executor';
@@ -29,6 +30,7 @@ export class DealNotifier {
   constructor(
     private readonly prisma: PrismaService,
     private readonly mail: MailService,
+    private readonly notifications: NotificationsService,
     @Inject(ENV) private readonly env: Pick<Env, 'WEB_ORIGIN'>,
   ) {}
 
@@ -44,7 +46,11 @@ export class DealNotifier {
       const title = booking.listing.title ?? '';
       for (const notice of notices) {
         const recipients = await this.recipients(notice.to, booking.renter, booking.owner);
-        for (const user of recipients) {
+        await this.notifications.notify(
+          recipients.map((user) => user.id),
+          { kind: 'DEAL', event: notice.template, bookingId: booking.id, listingId: booking.listingId, title },
+        );
+        for (const user of recipients.filter((u) => wantsEmail(u, 'DEALS'))) {
           const other = user.id === booking.renterId ? booking.owner.name : booking.renter.name;
           const path = notice.to === 'ADMINS' ? `/admin/disputes/${booking.id}` : `/bookings/${booking.id}`;
           void this.mail.sendDealEvent(user, {
@@ -82,6 +88,8 @@ export class DealNotifier {
       const toOwner = template === 'OFFER_MADE';
       const user = toOwner ? offer.owner : offer.renter;
       if (user.deletedAt !== null) return;
+      await this.notifications.notify([user.id], { kind: 'OFFER', event: template, listingId: offer.listingId, title: offer.listing.title });
+      if (!wantsEmail(user, 'OFFERS')) return;
       const start = dayOf(offer.start);
       const end = dayOf(offer.end);
       const title = offer.listing.title ?? '';
