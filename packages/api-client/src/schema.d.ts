@@ -2264,6 +2264,14 @@ export interface components {
                 } | null;
                 actions: ("ACCEPT" | "DECLINE" | "WITHDRAW" | "SIGN" | "PAY" | "CANCEL" | "MARK_HANDED_OVER" | "CONFIRM_RECEIVED" | "REPORT_NOT_RECEIVED" | "MARK_RETURNED" | "CONFIRM_RETURNED" | "REPORT_NOT_RETURNED" | "ALL_FINE" | "REPORT_DAMAGE" | "ACCEPT_DAMAGE" | "REJECT_DAMAGE" | "RESOLVE")[];
                 hasContract: boolean;
+                signatures: {
+                    /** @enum {string} */
+                    side: "RENTER" | "OWNER";
+                    fullName: string;
+                    /** Format: date-time */
+                    signedAt: string;
+                    method: string;
+                }[];
                 version: number;
                 /** Format: date-time */
                 createdAt: string;
@@ -2288,6 +2296,9 @@ export interface components {
             } | {
                 /** @enum {string} */
                 type: "SIGN";
+                fullName?: string;
+                /** @enum {boolean} */
+                consent?: true;
             } | {
                 /** @enum {string} */
                 type: "PAY";
@@ -2444,6 +2455,14 @@ export interface components {
                 } | null;
                 actions: ("ACCEPT" | "DECLINE" | "WITHDRAW" | "SIGN" | "PAY" | "CANCEL" | "MARK_HANDED_OVER" | "CONFIRM_RECEIVED" | "REPORT_NOT_RECEIVED" | "MARK_RETURNED" | "CONFIRM_RETURNED" | "REPORT_NOT_RETURNED" | "ALL_FINE" | "REPORT_DAMAGE" | "ACCEPT_DAMAGE" | "REJECT_DAMAGE" | "RESOLVE")[];
                 hasContract: boolean;
+                signatures: {
+                    /** @enum {string} */
+                    side: "RENTER" | "OWNER";
+                    fullName: string;
+                    /** Format: date-time */
+                    signedAt: string;
+                    method: string;
+                }[];
                 version: number;
                 /** Format: date-time */
                 createdAt: string;
@@ -4014,6 +4033,14 @@ export interface components {
                 } | null;
                 actions: ("ACCEPT" | "DECLINE" | "WITHDRAW" | "SIGN" | "PAY" | "CANCEL" | "MARK_HANDED_OVER" | "CONFIRM_RECEIVED" | "REPORT_NOT_RECEIVED" | "MARK_RETURNED" | "CONFIRM_RETURNED" | "REPORT_NOT_RETURNED" | "ALL_FINE" | "REPORT_DAMAGE" | "ACCEPT_DAMAGE" | "REJECT_DAMAGE" | "RESOLVE")[];
                 hasContract: boolean;
+                signatures: {
+                    /** @enum {string} */
+                    side: "RENTER" | "OWNER";
+                    fullName: string;
+                    /** Format: date-time */
+                    signedAt: string;
+                    method: string;
+                }[];
                 version: number;
                 /** Format: date-time */
                 createdAt: string;
@@ -4120,6 +4147,14 @@ export interface components {
                 } | null;
                 actions: ("ACCEPT" | "DECLINE" | "WITHDRAW" | "SIGN" | "PAY" | "CANCEL" | "MARK_HANDED_OVER" | "CONFIRM_RECEIVED" | "REPORT_NOT_RECEIVED" | "MARK_RETURNED" | "CONFIRM_RETURNED" | "REPORT_NOT_RETURNED" | "ALL_FINE" | "REPORT_DAMAGE" | "ACCEPT_DAMAGE" | "REJECT_DAMAGE" | "RESOLVE")[];
                 hasContract: boolean;
+                signatures: {
+                    /** @enum {string} */
+                    side: "RENTER" | "OWNER";
+                    fullName: string;
+                    /** Format: date-time */
+                    signedAt: string;
+                    method: string;
+                }[];
                 version: number;
                 /** Format: date-time */
                 createdAt: string;

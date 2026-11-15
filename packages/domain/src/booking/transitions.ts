@@ -316,10 +316,16 @@ export const TRANSITIONS: readonly Transition[] = [
     by: ['RENTER', 'OWNER'],
     to: 'ACCEPTED',
     idempotent: (s, actor) => (side(actor) === 'RENTER' ? s.renterSignedAt : s.ownerSignedAt) !== undefined,
-    run: (_s, actor, _event, ctx) => ({
-      patch: side(actor) === 'RENTER' ? { renterSignedAt: ctx.now } : { ownerSignedAt: ctx.now },
-      effects: [message('SIGNED')],
-    }),
+    // The renter signs first and the signed contract goes to the owner, who countersigns (owner, 2026-11-15).
+    guard(s, actor) {
+      if (side(actor) === 'OWNER' && s.renterSignedAt === undefined) {
+        throw new DomainError('CONTRACT_NOT_SIGNED', { renterSigned: false, ownerSigned: false, why: 'RENTER_SIGNS_FIRST' });
+      }
+    },
+    run: (_s, actor, _event, ctx) =>
+      side(actor) === 'RENTER'
+        ? { patch: { renterSignedAt: ctx.now }, effects: [message('SIGNED'), notify('OWNER', 'RENTER_SIGNED')] }
+        : { patch: { ownerSignedAt: ctx.now }, effects: [message('SIGNED'), notify('RENTER', 'CONTRACT_SIGNED')] },
   }),
   row({
     from: 'ACCEPTED',

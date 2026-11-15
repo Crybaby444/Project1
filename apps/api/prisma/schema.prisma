@@ -535,7 +535,36 @@ model Contract {
   termsHash String
   createdAt DateTime @default(now())
 
-  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  booking    Booking             @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  signatures ContractSignature[]
+}
+
+enum SignatureSide {
+  RENTER
+  OWNER
+}
+
+/**
+ * One side's electronic signature of the contract (a simple electronic signature, eIDAS Art. 25): who,
+ * when, the name they typed, the terms' fingerprint they signed, and from where. The renter signs first,
+ * then the owner; the payment checks both against the contract. `method` SIMULATED until a signing
+ * provider is connected (like the simulated money).
+ */
+model ContractSignature {
+  id        String        @id @default(cuid())
+  bookingId String
+  side      SignatureSide
+  userId    String
+  fullName  String
+  termsHash String
+  ip        String
+  userAgent String
+  method    String        @default("SIMULATED")
+  createdAt DateTime
+
+  contract Contract @relation(fields: [bookingId], references: [bookingId], onDelete: Cascade)
+
+  @@unique([bookingId, side])
 }
 
 enum BookingPhotoKind {

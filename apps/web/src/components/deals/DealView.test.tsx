@@ -68,6 +68,26 @@ describe('DealView', () => {
     expect(actionButtons()).toEqual(actions);
   });
 
+  it('signs with a typed name and a consent tick (the renter first, an electronic signature)', async () => {
+    const user = userEvent.setup();
+    const { calls } = setup(testBooking({ status: 'ACCEPTED', hasContract: true, actions: ['SIGN', 'CANCEL'], version: 1 }), {
+      [`POST ${path}/events`]: { status: 200, body: { booking: testBooking({ status: 'ACCEPTED', hasContract: true, renterSignedAt: '2026-11-06T12:00:00.000Z', actions: ['CANCEL'], version: 2 }) } },
+    });
+    await user.click(await screen.findByRole('button', { name: 'Sign the contract' }));
+    const dialog = screen.getByRole('dialog', { name: 'Sign the contract' });
+    const name = within(dialog).getByLabelText('Your full name as signature');
+    await user.clear(name);
+    await user.type(name, 'Anna Bērziņa');
+    await user.click(within(dialog).getByRole('button', { name: 'Sign' }));
+    expect(within(dialog).getByRole('alert')).toHaveTextContent('Tick the box to sign.');
+    expect(calls.some((c) => c.path.endsWith('/events'))).toBe(false);
+    await user.click(within(dialog).getByRole('checkbox'));
+    await user.click(within(dialog).getByRole('button', { name: 'Sign' }));
+    await waitFor(() =>
+      expect(calls.find((c) => c.path.endsWith('/events'))?.body).toEqual({ version: 1, event: { type: 'SIGN', fullName: 'Anna Bērziņa', consent: true } }),
+    );
+  });
+
   it('declines with a reason, sending the version and an Idempotency-Key', async () => {
     const user = userEvent.setup();
     const { calls } = setup(testBooking({ viewerRole: 'OWNER', actions: ['ACCEPT', 'DECLINE'], version: 2 }), {

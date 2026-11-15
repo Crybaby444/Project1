@@ -36,8 +36,8 @@ async function paidDeal(listingId: string) {
   await topUp(renter, 20_000);
   const booking = await requestBooking(t, renter, listingId, 1, 3);
   await step(owner, booking.id, { type: 'ACCEPT' });
-  await step(owner, booking.id, { type: 'SIGN' });
   await step(renter, booking.id, { type: 'SIGN' });
+  await step(owner, booking.id, { type: 'SIGN' });
   return step(renter, booking.id, { type: 'PAY', method: 'WALLET' });
 }
 
@@ -158,8 +158,8 @@ describe('GET /wallet', () => {
     const listing = await published();
     const booking = await requestBooking(t, renter, listing.id, 1, 2);
     await step(owner, booking.id, { type: 'ACCEPT' });
-    await step(owner, booking.id, { type: 'SIGN' });
     await step(renter, booking.id, { type: 'SIGN' });
+    await step(owner, booking.id, { type: 'SIGN' });
     const token = await cardToken(renter);
     await step(renter, booking.id, { type: 'PAY', method: 'CARD', cardToken: token });
     expect((await renter.get('/wallet').expect(200)).body).toMatchObject({ heldCents: 0, depositsCents: 5_000 });

@@ -244,6 +244,22 @@
         "heading": "Piedāvājums noraidīts",
         "body": "{other} noraidīja {price} dienā par “{title}”. Joprojām varat to nomāt par sludinājuma cenu."
       }
+    },
+    "RENTER_SIGNED": {
+      "owner": {
+        "subject": "{other} parakstīja līgumu par “{title}”: jūsu kārta",
+        "preview": "Pārbaudiet līgumu un parakstiet to.",
+        "heading": "Jūsu kārta parakstīt",
+        "body": "{other} parakstīja nomas līgumu par “{title}” no {start} līdz {end} un nosūtīja to jums. Atveriet darījumu, izlasiet līgumu un parakstiet to; tad {other} varēs samaksāt."
+      }
+    },
+    "CONTRACT_SIGNED": {
+      "renter": {
+        "subject": "Līgums par “{title}” ir parakstīts: samaksājiet, lai apstiprinātu",
+        "preview": "Abas puses ir parakstījušas. Samaksājiet, lai apstiprinātu rezervāciju.",
+        "heading": "Līgums ir parakstīts",
+        "body": "{other} parakstīja nomas līgumu par “{title}” no {start} līdz {end}. Samaksājiet {total} (ieskaitot drošības naudu {deposit}), lai apstiprinātu rezervāciju."
+      }
     }
   },
   "listingMoved": {

@@ -95,8 +95,8 @@ describe('the launch offer on the service fee', () => {
     await setting('fees.promoServiceUntil', '');
     owner = await again(t, owner);
     renter = await again(t, renter);
-    await step(owner, booking.id, { type: 'SIGN' });
     await step(renter, booking.id, { type: 'SIGN' });
+    await step(owner, booking.id, { type: 'SIGN' });
     const paid = await step(renter, booking.id, { type: 'PAY', method: 'CARD', cardToken: await cardToken(renter) });
     expect(paid).toMatchObject({ status: 'PAID', quote: { servicePercent: 0, serviceFeeCents: 0, totalCents: 4_500 + 5_000, servicePromoUntil: booking.quote.servicePromoUntil } });
     const revenue = await t.prisma.ledgerAccount.findUnique({ where: { id: 'platform:revenue' } });

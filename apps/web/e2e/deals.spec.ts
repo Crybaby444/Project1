@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { administrator, person, publishedListing, reloadDeal, returnedDealByApi, rigaDay, takeStep } from './support/deals';
+import { administrator, person, publishedListing, reloadDeal, returnedDealByApi, rigaDay, signContract, takeStep } from './support/deals';
 import { fixture, serveBlankMapTiles } from './support/listings';
 
 /**
@@ -45,17 +45,27 @@ test('owner lists, renter books, pays, handover, return, deposit released', asyn
   await expect(o.getByText('Could I pick it up after 18:00?')).toBeVisible();
   await takeStep(o, 'Accept', false);
   await expect(o.locator('[data-deal][data-deal-status="ACCEPTED"]')).toBeVisible();
-  await takeStep(o, 'Sign the contract', false);
-  await expect(o.locator('[data-contract]')).toContainText('Signed');
+  // The owner can't sign yet: the renter signs first.
+  await expect(o.getByRole('button', { name: 'Sign the contract', exact: true })).toHaveCount(0);
+  await expect(o.locator('[data-contract]')).toContainText('Waiting for the renter to sign first');
+
+  // The renter signs first (typed name and consent)…
+  await reloadDeal(r);
+  await signContract(r);
+  await expect(r.locator('[data-contract]')).toContainText('Sent to the owner to countersign');
+
+  // …then the owner countersigns.
+  await reloadDeal(o);
+  await signContract(o);
+  await expect(o.locator('[data-contract]')).not.toContainText('Not signed yet');
 
   // The contract PDF downloads.
   const download = o.waitForEvent('download');
   await o.locator('[data-download-contract]').click();
   expect((await download).suggestedFilename()).toMatch(/^yoyo-contract-.+\.pdf$/);
 
-  // The renter signs and pays: a declined card first, then a good one.
+  // The renter pays: a declined card first, then a good one.
   await reloadDeal(r);
-  await takeStep(r, 'Sign the contract', false);
   await r.getByRole('button', { name: 'Pay', exact: true }).click();
   const checkout = r.getByRole('dialog', { name: 'Pay for the booking' });
   await expect(checkout.getByRole('heading', { name: 'Test mode' })).toBeVisible();

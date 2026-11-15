@@ -138,7 +138,7 @@ const TABLE: readonly Row[] = [
     actor: renter,
     event: { type: 'SIGN' },
     status: 'ACCEPTED',
-    effects: ['SYSTEM_MESSAGE SIGNED'],
+    effects: ['SYSTEM_MESSAGE SIGNED', 'NOTIFY OWNER RENTER_SIGNED'],
   },
   {
     name: 'ACCEPTED → SIGN by the owner → ACCEPTED',
@@ -146,7 +146,7 @@ const TABLE: readonly Row[] = [
     actor: owner,
     event: { type: 'SIGN' },
     status: 'ACCEPTED',
-    effects: ['SYSTEM_MESSAGE SIGNED'],
+    effects: ['SYSTEM_MESSAGE SIGNED', 'NOTIFY RENTER CONTRACT_SIGNED'],
   },
   {
     name: 'ACCEPTED → PAY by card → PAID',
@@ -906,6 +906,15 @@ describe('conditions of a transition', () => {
     expect(() => decide(notHandedOver, admin, resolve('DEPOSIT_TO_OWNER'), ctx)).toThrow(
       code('TRANSITION_NOT_ALLOWED'),
     );
+  });
+
+  it('the owner signs only after the renter (the renter signs first and sends it back)', () => {
+    const accepted = given('ACCEPTED');
+    expect(() => decide(accepted, owner, { type: 'SIGN' }, later(ctx, 1))).toThrow(code('CONTRACT_NOT_SIGNED'));
+    expect(availableActions(accepted, owner, later(ctx, 1))).not.toContain('SIGN');
+    const renterSigned = step(accepted, renter, { type: 'SIGN' });
+    expect(availableActions(renterSigned, owner, later(ctx, 1))).toContain('SIGN');
+    expect(availableActions(renterSigned, renter, later(ctx, 1))).not.toContain('PAY');
   });
 
   it('signing again changes nothing and says nothing', () => {

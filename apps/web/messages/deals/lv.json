@@ -113,7 +113,7 @@
     },
     "contract": {
       "title": "Nomas līgums",
-      "body": "Līgums nosaka lietu, dienas, cenu, drošības naudu un noteikumus. Abas puses to paraksta pirms apmaksas.",
+      "body": "Līgums nosaka lietu, dienas, cenu, drošības naudu un noteikumus. Vispirms paraksta nomnieks, tad īpašnieks; samaksa atveras, kad abi ir parakstījuši.",
       "signed": "Parakstīts {when}",
       "notSigned": "Vēl nav parakstīts",
       "renter": "Nomnieks",
@@ -121,7 +121,11 @@
       "sign": "Parakstīt līgumu",
       "download": "Lejupielādēt PDF",
       "language": "Līguma valoda",
-      "notYet": "Līgums parādīsies, kad īpašnieks pieņems pieprasījumu."
+      "notYet": "Līgums parādīsies, kad īpašnieks pieņems pieprasījumu.",
+      "waitingRenter": "Gaida, kad nomnieks parakstīs pirmais",
+      "waitingOwner": "Nosūtīts īpašniekam parakstīšanai",
+      "typed": "Parakstīts kā “{name}”",
+      "simulated": "simulēts paraksts"
     },
     "damage": {
       "title": "Ziņots par bojājumu",
@@ -213,7 +217,19 @@
     "submit": "Nosūtīt",
     "keep": "Atpakaļ",
     "confirmYes": "Jā, apstiprināt",
-    "required": "Uzraksti dažus vārdus."
+    "required": "Uzraksti dažus vārdus.",
+    "sign": {
+      "lead": "Jūs parakstāt pirmais; parakstītais līgums tad nonāk pie īpašnieka, kurš to paraksta. Jūs maksājat tikai pēc tam, kad abi ir parakstījuši.",
+      "leadOwner": "Nomnieks ir parakstījis. Parakstiet to pašu līgumu; tad nomnieks varēs samaksāt.",
+      "read": "Izlasīt līgumu (PDF)",
+      "name": "Jūsu vārds un uzvārds kā paraksts",
+      "nameHint": "Ierakstiet savu vārdu un uzvārdu. Tas ir jūsu elektroniskais paraksts.",
+      "consent": "Esmu izlasījis līgumu un piekrītu to parakstīt elektroniski.",
+      "consentMissing": "Atzīmējiet, lai parakstītu.",
+      "nameMissing": "Ierakstiet vārdu un uzvārdu.",
+      "submit": "Parakstīt",
+      "testMode": "Testa režīms: parakstīšana ir simulēta, tāpat kā maksājumi."
+    }
   },
   "myDeals": {
     "title": "Mani darījumi",
@@ -496,7 +512,9 @@
         "DAMAGE_REPORTED": "“{title}”: ziņots par bojājumu",
         "DAMAGE_ACCEPTED": "“{title}”: bojājums atzīts",
         "DISPUTE_OPENED": "“{title}”: atvērts strīds",
-        "DISPUTE_RESOLVED": "“{title}”: strīds izlemts"
+        "DISPUTE_RESOLVED": "“{title}”: strīds izlemts",
+        "RENTER_SIGNED": "“{title}”: nomnieks parakstīja — jūsu kārta",
+        "CONTRACT_SIGNED": "“{title}”: līgums parakstīts — varat maksāt"
       },
       "OFFER": {
         "OFFER_MADE": "Jauns cenas piedāvājums par “{title}”",

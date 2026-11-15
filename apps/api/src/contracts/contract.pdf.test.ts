@@ -40,8 +40,7 @@ const terms: ContractInput['terms'] = {
 const input = (locale: 'en' | 'lv' | 'ru'): ContractInput => ({
   terms,
   termsHash: 'a'.repeat(64),
-  renterSignedAt: new Date('2027-03-01T10:00:00Z'),
-  ownerSignedAt: null,
+  signatures: [{ id: 'sig1', side: 'RENTER', fullName: 'Rita Bērziņa', termsHash: 'a'.repeat(64), method: 'SIMULATED', createdAt: new Date('2027-03-01T10:00:00Z') }],
   locale,
   now: new Date('2027-03-01T12:00:00Z'),
 });

@@ -90,8 +90,8 @@ export async function returnedDealByApi(renter: APIRequestContext, owner: APIReq
   expect(res.status(), await res.text()).toBe(201);
   const { booking } = (await res.json()) as { booking: Booking };
   await stepByApi(owner, booking.id, { type: 'ACCEPT' });
-  await stepByApi(owner, booking.id, { type: 'SIGN' });
   await stepByApi(renter, booking.id, { type: 'SIGN' });
+  await stepByApi(owner, booking.id, { type: 'SIGN' });
   await stepByApi(renter, booking.id, { type: 'PAY', method: 'WALLET' });
   await stepByApi(owner, booking.id, { type: 'MARK_HANDED_OVER' });
   await stepByApi(renter, booking.id, { type: 'CONFIRM_RECEIVED' });
@@ -104,6 +104,15 @@ export async function returnedDealByApi(renter: APIRequestContext, owner: APIReq
 export async function takeStep(page: Page, label: string | RegExp, confirm = true): Promise<void> {
   await page.getByRole('button', { name: label, exact: typeof label === 'string' }).click();
   if (confirm) await page.getByRole('dialog').getByRole('button', { name: 'Yes, confirm' }).click();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+}
+
+/** Signs in the signing dialog: the typed name is filled in, tick the consent, press Sign. */
+export async function signContract(page: Page): Promise<void> {
+  await page.getByRole('button', { name: 'Sign the contract', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: 'Sign the contract' });
+  await dialog.getByRole('checkbox').check();
+  await dialog.getByRole('button', { name: 'Sign', exact: true }).click();
   await expect(page.getByRole('dialog')).toHaveCount(0);
 }
 

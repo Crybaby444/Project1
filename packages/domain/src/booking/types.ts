@@ -154,6 +154,10 @@ export const BOOKING_TEMPLATES = [
   'DECLINED',
   'EXPIRED',
   'SIGNED',
+  /** To the owner: the renter signed, now it is your turn. */
+  'RENTER_SIGNED',
+  /** To the renter: both signed, now pay. */
+  'CONTRACT_SIGNED',
   'PAID',
   'CANCELLED',
   'HANDED_OVER',

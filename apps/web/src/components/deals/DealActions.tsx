@@ -7,8 +7,12 @@ import { Button } from '@/components/ui/Button';
 import { Dialog } from '@/components/ui/Dialog';
 import { Field } from '@/components/ui/Field';
 import { TEXTAREA_CLASS } from '@/components/ui/inputs';
+import { useLocale } from 'next-intl';
 import { useToast } from '@/components/ui/Toast';
 import { useDealAction } from '@/lib/deals/queries';
+import { useSession } from '@/lib/session/SessionProvider';
+import { downloadContract } from './ContractCard';
+import { INPUT_CLASS } from '@/components/ui/inputs';
 import { CheckoutDialog } from './CheckoutDialog';
 import { DamagePhotos } from './DealPhotos';
 
@@ -46,6 +50,8 @@ export function eventFor(action: BookingAction, text: string, photoIds: string[]
       return { type: action, note: words };
     case 'REPORT_DAMAGE':
       return { type: 'REPORT_DAMAGE', description: words, photoIds };
+    case 'SIGN':
+      return words ? { type: 'SIGN', fullName: words, consent: true } : { type: 'SIGN' };
     case 'PAY':
     case 'RESOLVE':
       return null;
@@ -72,6 +78,9 @@ export function DealActions({ booking, onError }: { booking: BookingView; onErro
   const [tried, setTried] = useState(false);
   const [running, setRunning] = useState<BookingAction | null>(null);
   const actions = booking.actions.filter((a) => a !== 'RESOLVE');
+  const { user } = useSession();
+  const locale = useLocale();
+  const [consent, setConsent] = useState(false);
 
   async function take(kind: BookingAction) {
     const event = eventFor(kind, text, photoIds);
@@ -93,7 +102,13 @@ export function DealActions({ booking, onError }: { booking: BookingView; onErro
   }
 
   function press(kind: BookingAction) {
-    if (kind === 'PAY' || kind in NEEDS_TEXT || kind === 'REPORT_DAMAGE' || CONFIRM.has(kind)) {
+    if (kind === 'SIGN') {
+      // Signing is a deliberate act: read the contract, type your name, agree (eIDAS simple e-signature).
+      setText(user?.name ?? '');
+      setConsent(false);
+      setTried(false);
+      setOpen(kind);
+    } else if (kind === 'PAY' || kind in NEEDS_TEXT || kind === 'REPORT_DAMAGE' || CONFIRM.has(kind)) {
       setText('');
       setTried(false);
       setOpen(kind);
@@ -106,6 +121,7 @@ export function DealActions({ booking, onError }: { booking: BookingView; onErro
   const need = textKind ? NEEDS_TEXT[textKind] : null;
   const textMissing = (need !== null && need !== 'optional' && text.trim() === '') || (open === 'REPORT_DAMAGE' && text.trim().length < BOOKING_LIMITS.damageDescription.min);
   const photosMissing = open === 'REPORT_DAMAGE' && photoIds.length === 0;
+  const signMissing = open === 'SIGN' && (text.trim().length < 2 || !consent);
 
   return (
     <div className="flex flex-col gap-3" data-deal-actions="">
@@ -140,11 +156,21 @@ export function DealActions({ booking, onError }: { booking: BookingView; onErro
             onSubmit={(event) => {
               event.preventDefault();
               setTried(true);
-              if (textMissing || photosMissing) return;
+              if (textMissing || photosMissing || signMissing) return;
               void take(open);
             }}
           >
-            {textKind || open === 'REPORT_DAMAGE' ? (
+            {open === 'SIGN' ? (
+              <SignFields
+                booking={booking}
+                name={text}
+                onName={setText}
+                consent={consent}
+                onConsent={setConsent}
+                tried={tried}
+                locale={locale}
+              />
+            ) : textKind || open === 'REPORT_DAMAGE' ? (
               <p>{t(`lead.${open as TextAction}`)}</p>
             ) : (
               <p>{t(`confirm.${open as 'WITHDRAW'}`)}</p>
@@ -172,12 +198,59 @@ export function DealActions({ booking, onError }: { booking: BookingView; onErro
                 {t('keep')}
               </Button>
               <Button type="submit" loading={running === open} data-confirm={open}>
-                {textKind || open === 'REPORT_DAMAGE' ? t('submit') : t('confirmYes')}
+                {open === 'SIGN' ? t('sign.submit') : textKind || open === 'REPORT_DAMAGE' ? t('submit') : t('confirmYes')}
               </Button>
             </div>
           </form>
         </Dialog>
       )}
+    </div>
+  );
+}
+
+/** The signing step: the order explained, the contract to read, the typed name and the consent. */
+function SignFields({
+  booking,
+  name,
+  onName,
+  consent,
+  onConsent,
+  tried,
+  locale,
+}: {
+  booking: BookingView;
+  name: string;
+  onName(v: string): void;
+  consent: boolean;
+  onConsent(v: boolean): void;
+  tried: boolean;
+  locale: string;
+}) {
+  const t = useTranslations('dealActions.sign');
+  const owner = booking.viewerRole === 'OWNER';
+  return (
+    <div className="flex flex-col gap-4">
+      <p>{owner ? t('leadOwner') : t('lead')}</p>
+      <button
+        type="button"
+        onClick={() => void downloadContract(booking.id, (['en', 'lv', 'ru'].includes(locale) ? locale : 'en') as 'en')}
+        className="self-start font-bold underline decoration-1 underline-offset-4"
+      >
+        {t('read')}
+      </button>
+      <Field label={t('name')} hint={t('nameHint')} error={tried && name.trim().length < 2 ? t('nameMissing') : undefined}>
+        <input value={name} onChange={(e) => onName(e.target.value)} maxLength={120} autoComplete="name" className={`${INPUT_CLASS} font-display text-[1.5rem] italic`} />
+      </Field>
+      <label className="flex items-start gap-3">
+        <input type="checkbox" checked={consent} onChange={(e) => onConsent(e.target.checked)} className="accent-ink mt-1 size-5 shrink-0" />
+        <span>{t('consent')}</span>
+      </label>
+      {tried && !consent && (
+        <p role="alert" className="-mt-2 text-sm font-bold">
+          {t('consentMissing')}
+        </p>
+      )}
+      <p className="text-ink/70 text-[13px]">{t('testMode')}</p>
     </div>
   );
 }

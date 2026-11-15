@@ -244,6 +244,22 @@
         "heading": "Your offer was declined",
         "body": "{other} declined {price} a day for “{title}”. You can still book it at the listed price."
       }
+    },
+    "RENTER_SIGNED": {
+      "owner": {
+        "subject": "{other} signed the contract for “{title}”: your turn",
+        "preview": "Check the contract and countersign it.",
+        "heading": "Your turn to sign",
+        "body": "{other} signed the rental contract for “{title}” from {start} to {end} and sent it to you. Open the deal, read the contract and sign it; then {other} can pay."
+      }
+    },
+    "CONTRACT_SIGNED": {
+      "renter": {
+        "subject": "The contract for “{title}” is signed: pay to confirm",
+        "preview": "Both sides signed. Pay to confirm the booking.",
+        "heading": "The contract is signed",
+        "body": "{other} countersigned the rental contract for “{title}” from {start} to {end}. Pay {total} (deposit {deposit} included) to confirm the booking."
+      }
     }
   },
   "listingMoved": {
