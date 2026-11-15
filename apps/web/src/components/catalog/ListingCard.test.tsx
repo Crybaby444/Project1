@@ -29,6 +29,12 @@ describe('ListingCard', () => {
     expect(photo).toHaveAttribute('height', '480');
   });
 
+  it('with dates chosen, also says what the rent comes to for them, the weekly discount included', async () => {
+    const api = fakeApi(meRoute(null));
+    renderWithSession(<ListingCard item={catalogItem({ dailyCents: 1000, weeklyDiscountPercent: 10 })} days={7} />, { client: api.client, hasSession: false });
+    expect(await screen.findByText('€63 for 7 days')).toBeInTheDocument();
+  });
+
   it('puts the heart on the card, above the link (not below it)', async () => {
     const api = fakeApi(meRoute(null));
     renderWithSession(<ListingCard item={catalogItem()} />, { client: api.client, hasSession: false });

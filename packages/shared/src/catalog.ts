@@ -192,6 +192,8 @@ export const OwnerSummarySchema = z.object({
   rating: z.number().nullable(),
   /** How many public reviews are about them. */
   reviewCount: z.number().int(),
+  /** How long they usually take to answer a message (median minutes, last 90 days), or null with too few answers. */
+  responseMinutes: z.number().int().nullable(),
 });
 
 export type OwnerSummary = z.infer<typeof OwnerSummarySchema>;

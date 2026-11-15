@@ -38,6 +38,7 @@ export function availableItem(overrides: Partial<AvailableItem['listing']> = {})
       listingCount: 1,
       rating: null,
       reviewCount: 0,
+      responseMinutes: null,
     },
     rating: null,
     reviewCount: 0,

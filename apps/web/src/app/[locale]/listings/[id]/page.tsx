@@ -3,7 +3,9 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Breadcrumbs, type Crumb } from '@/components/catalog/Breadcrumbs';
+import { ShareButton } from '@/components/catalog/ShareButton';
 import { HeartButton } from '@/components/catalog/HeartButton';
+import { formatEuros } from '@/lib/listings/money';
 import { ListingCard } from '@/components/catalog/ListingCard';
 import { BookingPanel } from '@/components/item/BookingPanel';
 import { ContentLanguage } from '@/components/item/ContentLanguage';
@@ -147,8 +149,20 @@ async function Available({ item, title, category, locale }: { item: AvailableIte
             <h1 className="font-display min-w-0 text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]" lang={listing.contentLocale}>
               {title}
             </h1>
-            <HeartButton listingId={listing.id} title={title} className="shrink-0" />
+            <div className="flex shrink-0 gap-2">
+              <ShareButton title={title} />
+              <HeartButton listingId={listing.id} title={title} className="shrink-0" />
+            </div>
           </div>
+          {/* Phones: the price is far below (after the story and the facts); say it here and lead to it. */}
+          <a href="#booking" className="-mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1 lg:hidden">
+            <span className="font-display text-[1.9rem] leading-none font-black uppercase tabular-nums">
+              {t('booking.perDay', { price: formatEuros(listing.dailyCents ?? 0, locale) })}
+            </span>
+            <span className="text-sm font-semibold">
+              {listing.depositCents > 0 ? t('booking.deposit', { amount: formatEuros(listing.depositCents, locale) }) : t('booking.noDeposit')}
+            </span>
+          </a>
           {category && (
             <p className="-mt-5 text-sm">
               {t.rich('inCategory', { name: categoryName(category, locale), b: (chunks) => <span className="font-bold">{chunks}</span> })}

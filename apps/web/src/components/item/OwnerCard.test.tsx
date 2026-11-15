@@ -18,6 +18,16 @@ describe('OwnerCard', () => {
     expect(container.textContent).not.toMatch(/@|\+371/);
   });
 
+  it('says how fast they usually answer, in plain steps, and nothing when slow or unknown', () => {
+    const at = (responseMinutes: number | null) => renderWithIntl(<OwnerCard owner={{ ...availableItem().owner, responseMinutes }} />);
+    at(25);
+    expect(screen.getByText('Usually answers within an hour')).toBeInTheDocument();
+    at(150).unmount();
+    at(60 * 30).unmount();
+    expect(screen.queryByText(/within a day/)).toBeNull();
+    at(null).unmount();
+  });
+
   it('makes initials of up to two words', () => {
     expect(initials('anna bērziņa kalniņa')).toBe('AB');
     expect(initials('Ēriks')).toBe('Ē');

@@ -756,7 +756,8 @@
       "perDay": "{price} / day",
       "deposit": "Deposit {amount}",
       "noDeposit": "No deposit",
-      "unavailable": "Not for rent right now"
+      "unavailable": "Not for rent right now",
+      "forDays": "{amount} for {days, plural, one {# day} other {# days}}"
     },
     "search": {
       "label": "Search the catalog",
@@ -914,7 +915,12 @@
       "items": "{count, plural, one {# item} other {# items}}",
       "noReviews": "No reviews yet.",
       "rating": "Rated {rating} of 5",
-      "profile": "More from {name}"
+      "profile": "More from {name}",
+      "answers": {
+        "hour": "Usually answers within an hour",
+        "hours": "Usually answers within a few hours",
+        "day": "Usually answers within a day"
+      }
     },
     "away": {
       "badge": "Away for now",
@@ -927,6 +933,11 @@
       "body": "Its owner removed it, so it is no longer for rent. Plenty of other things are.",
       "catalog": "Open the catalog",
       "search": "Search"
+    },
+    "share": {
+      "label": "Share this item",
+      "copied": "Link copied",
+      "failed": "Could not copy the link"
     }
   },
   "profile": {
