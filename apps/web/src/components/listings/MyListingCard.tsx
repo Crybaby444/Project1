@@ -69,7 +69,7 @@ export function MyListingCard({
             </Button>
           )}
           {listing.status === 'PUBLISHED' && <BookingLinkButton listingId={listing.id} />}
-          <ListingActions listing={listing} perform={perform} />
+          <ListingActions listing={listing} perform={perform} menuLabel={t('more', { title: listing.title ?? t('untitled') })} />
         </div>
       </article>
     </div>

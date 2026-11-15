@@ -98,14 +98,16 @@ describe('MyListings', () => {
     expect(await screen.findByText(m.emptyFilter)).toBeVisible();
   });
 
-  it('hides a published listing', async () => {
+  it('hides a published listing from its "more" menu (hide and delete stay out of the main row)', async () => {
     const user = userEvent.setup();
     const live = summary({ status: 'PUBLISHED', publishedAt: '2026-11-03T10:00:00.000Z' });
     const calls = renderMine({
       'GET /api/v1/me/listings': { status: 200, body: { items: [live] } },
       'POST /api/v1/listings/l1/hide': { status: 200, body: { listing: {} } },
     });
-    await user.click(await screen.findByRole('button', { name: en.listingActions.hide }));
+    expect(screen.queryByRole('button', { name: en.listingActions.hide })).toBeNull();
+    await user.click(await screen.findByRole('button', { name: 'More actions for Bosch drill' }));
+    await user.click(screen.getByRole('menuitem', { name: en.listingActions.hide }));
     await waitFor(() => expect(calls.some((c) => c.path === '/api/v1/listings/l1/hide')).toBe(true));
     expect(await screen.findByText(en.listingActions.hidden)).toBeVisible();
   });

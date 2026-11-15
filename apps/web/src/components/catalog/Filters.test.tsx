@@ -26,6 +26,19 @@ function ui(query: string) {
 }
 
 describe('Filters', () => {
+  it('keeps the calendar folded behind a dates button that names the chosen period', async () => {
+    const { unmount } = render(ui(''));
+    const toggle = screen.getAllByRole('button', { name: en.catalog.filters.pickDates })[0]!;
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryAllByRole('grid')).toHaveLength(0);
+    await userEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getAllByRole('grid').length).toBeGreaterThan(0);
+    unmount();
+    render(ui('from=2026-11-17&to=2026-11-23'));
+    expect(screen.getAllByRole('button', { name: /17.*23/ })[0]).toHaveAttribute('aria-expanded', 'false');
+  });
+
   it('keeps the typed "to" price when the "from" price lands in the address', async () => {
     const user = userEvent.setup();
     const { rerender } = render(ui('q=drill'));

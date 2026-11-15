@@ -1,7 +1,7 @@
 'use client';
 
 import type { PlacesResponse } from '@yoyo/shared';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useId, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Dialog } from '@/components/ui/Dialog';
@@ -11,6 +11,7 @@ import { INPUT_CLASS } from '@/components/ui/inputs';
 import { catalogSearch, filterCount, type CatalogParams } from '@/lib/catalog/params';
 import type { Range } from '@/lib/catalog/range';
 import { useCatalogNavigation } from './CatalogShell';
+import { formatPeriod } from '@/lib/deals/dates';
 import { RangeCalendar } from './RangeCalendar';
 
 type FiltersProps = {
@@ -33,6 +34,9 @@ function FilterFields({ params, districts, today }: Omit<FiltersProps, 'total'>)
   const [max, setMax] = useState(params.priceMax?.toString() ?? '');
   const [priceError, setPriceError] = useState<string | undefined>();
   const [range, setRange] = useState<Range | null>(params.from && params.to ? { start: params.from, end: params.to } : null);
+  // The calendar is folded behind a button (audit 2026-11-14: it filled the whole column).
+  const [datesOpen, setDatesOpen] = useState(false);
+  const locale = useLocale();
 
   // The address changes from elsewhere too (a removed chip, Back): the fields follow it, during the
   // render (React's "adjusting state when a prop changes"), so there is no frame with stale values.
@@ -61,7 +65,10 @@ function FilterFields({ params, districts, today }: Omit<FiltersProps, 'total'>)
 
   function pickRange(next: Range) {
     setRange(next);
-    if (next.end !== null) navigate(catalogSearch(params, { from: next.start, to: next.end }));
+    if (next.end !== null) {
+      navigate(catalogSearch(params, { from: next.start, to: next.end }));
+      setDatesOpen(false);
+    }
   }
 
   return (
@@ -103,10 +110,26 @@ function FilterFields({ params, districts, today }: Omit<FiltersProps, 'total'>)
 
       <fieldset className="flex flex-col gap-3">
         <legend className="mb-1 text-[13px] font-bold tracking-[0.03em] uppercase">{t('dates')}</legend>
-        <p id={ids.dates} className="text-sm">
-          {t('datesHint')}
-        </p>
-        <RangeCalendar value={range} onChange={pickRange} today={today} twoMonths={false} />
+        <button
+          type="button"
+          aria-expanded={datesOpen}
+          aria-controls={ids.dates}
+          onClick={() => setDatesOpen((open) => !open)}
+          className={`${INPUT_CLASS} flex items-center justify-between gap-3 text-left`}
+        >
+          <span className={range?.end ? 'font-semibold tabular-nums' : 'text-ink/70'}>
+            {range?.end ? formatPeriod(range.start, range.end, locale) : t('pickDates')}
+          </span>
+          <svg viewBox="0 0 24 24" aria-hidden="true" className={`size-4 shrink-0 transition-transform duration-200 ${datesOpen ? 'rotate-180' : ''}`}>
+            <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+        {datesOpen && (
+          <div id={ids.dates} className="flex flex-col gap-3">
+            <p className="text-sm">{t('datesHint')}</p>
+            <RangeCalendar value={range} onChange={pickRange} today={today} twoMonths={false} />
+          </div>
+        )}
         {range && (
           <Button
             variant="ghost"
