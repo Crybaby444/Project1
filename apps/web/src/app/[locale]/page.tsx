@@ -1,17 +1,18 @@
 import type { CatalogQuery, Locale } from '@yoyo/shared';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { CategoryIndex } from '@/components/catalog/CategoryIndex';
 import { ListingCard } from '@/components/catalog/ListingCard';
 import { RecentlyViewed } from '@/components/catalog/RecentlyViewed';
 import { HomeSearch } from '@/components/market/HomeSearch';
 import { LendCalculator } from '@/components/market/LendCalculator';
-import { LoopBand } from '@/components/market/LoopBand';
+import { BackUp } from '@/components/market/BackUp';
+import { LoopScene } from '@/components/market/LoopScene';
 import { TagString } from '@/components/market/TagString';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { Button } from '@/components/ui/Button';
 import { Link } from '@/i18n/navigation';
-import { loadCategories, loadCategoryCounts, loadPlaces, loadSearch } from '@/lib/catalog/server-api';
+import { loadPlaces, loadSearch } from '@/lib/catalog/server-api';
+import { cents, formatMoney } from '@yoyo/domain';
 import { pageMetadata } from '@/lib/seo';
 import { CONTACT_EMAIL, SITE_URL } from '@/lib/site';
 
@@ -51,18 +52,23 @@ function structuredData(description: string) {
 }
 
 /**
- * The home (owner, 2026-11-16): the marketplace itself. The search in its working form and the newest real
- * items hanging as price tags on the yo-yo's string; then every category, the loop of a rental on the night
- * ground, what is new, what your things could earn, and a close. The cinematic introduction is /what-is-yoyo.
+ * The home (owner, 2026-11-16) is one throw of a yo-yo — out and back. Out: the search in its working form
+ * and the newest real items hanging as price tags on the string (the hand pushes them). The loop: a held
+ * night scene where the yo-yo runs through the four stops of a rental and the deposit comes back. Then
+ * what is new, and back: what your things could earn, and a close that reels you to the top. The catalog
+ * lives in the navigation; the cinematic introduction is /what-is-yoyo.
  */
 export default async function HomePage({ params }: Params) {
   const { locale } = (await params) as { locale: Locale };
   setRequestLocale(locale);
   const [meta, t] = await Promise.all([getTranslations('pages.home'), getTranslations('market')]);
-  const [tree, counts, newest, places] = await Promise.all([loadCategories(), loadCategoryCounts(), loadSearch({ sort: 'new', page: 1 } as CatalogQuery), loadPlaces()]);
+  const [newest, places] = await Promise.all([loadSearch({ sort: 'new', page: 1 } as CatalogQuery), loadPlaces()]);
   const items = newest.ok ? newest.data.items : [];
   const districts = places.ok ? places.data.districts : [];
   const today = new Date().toISOString().slice(0, 10);
+  // The loop ends with a real deposit coming back: the newest item's, or a round example.
+  const depositCents = items[0]?.depositCents ?? 5000;
+  const deposit = formatMoney(cents(depositCents), locale).replace(/[\u00a0\u202f]/g, ' ').replace(/[.,]00(?=\D*$)/, '');
 
   return (
     <main className="flex flex-1 flex-col" data-market-home="">
@@ -80,21 +86,7 @@ export default async function HomePage({ params }: Params) {
 
       <TagString items={items} />
 
-      {tree.ok && (
-        <section aria-labelledby="home-categories" className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-16 sm:px-8 sm:py-20">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <h2 id="home-categories" className="font-display text-[clamp(2.4rem,5vw,4.4rem)] leading-[0.88] font-black uppercase">
-              {t('categories.title')}
-            </h2>
-            <Link href="/c" className="text-[15px] font-bold underline decoration-1 underline-offset-4">
-              {t('categories.all')}
-            </Link>
-          </div>
-          <CategoryIndex roots={tree.data} locale={locale} counts={counts} />
-        </section>
-      )}
-
-      <LoopBand />
+      <LoopScene deposit={deposit} />
 
       {items.length > 0 && (
         <section aria-labelledby="home-fresh" className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-16 sm:px-8 sm:py-20">
@@ -126,13 +118,14 @@ export default async function HomePage({ params }: Params) {
           <h2 id="home-close" className="font-display text-[clamp(3rem,9vw,6rem)] leading-[0.84] font-black uppercase">
             {t('close.title')}
           </h2>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
             <Button href="/c" size="lg">
               {t('close.rent')}
             </Button>
             <Button href="/listings/new" size="lg" variant="ghost">
               {t('close.lend')}
             </Button>
+            <BackUp />
           </div>
         </div>
       </section>

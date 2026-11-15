@@ -51,6 +51,8 @@
   --animate-marquee: marquee 30s linear infinite;
   --animate-toast-in: toast-in 250ms var(--ease-yoyo);
   --animate-pop-in: pop-in 150ms var(--ease-yoyo);
+  --animate-sheet-drop: sheet-drop 260ms var(--ease-yoyo);
+  --animate-sheet-up: sheet-up 320ms var(--ease-yoyo);
   --animate-step-in: step-in 250ms var(--ease-yoyo);
   --animate-heart-pop: heart-pop 450ms var(--ease-yoyo);
   --animate-spark: spark 450ms var(--ease-yoyo);
@@ -95,10 +97,23 @@
   @keyframes yoyo-sway {
     0%,
     100% {
-      transform: rotate(var(--tilt, 0deg));
+      rotate: var(--tilt, 0deg);
     }
     50% {
-      transform: rotate(calc(var(--tilt, 0deg) * -0.55));
+      rotate: calc(var(--tilt, 0deg) * -0.55);
+    }
+  }
+  /* Panels under the floating bar drop a little and settle. */
+  @keyframes sheet-drop {
+    from {
+      transform: translateY(-8px) scale(0.985);
+      opacity: 0;
+    }
+  }
+  /* The phone's bottom sheet rises from the bottom edge. */
+  @keyframes sheet-up {
+    from {
+      transform: translateY(100%);
     }
   }
   /* The phone menu slides in from the left edge. */
@@ -589,7 +604,9 @@ html:has([data-home-root]) [data-theme-control] {
 /* Home: tags on the string (see TagString). */
 .yoyo-sway {
   position: relative;
-  transform: rotate(var(--tilt, 0deg));
+  rotate: var(--tilt, 0deg);
+  /* The hand's push (SwingRow) adds to the idle sway. */
+  transform: rotate(var(--swing, 0deg));
   animation: yoyo-sway 6.5s ease-in-out infinite;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -613,5 +630,15 @@ html:has([data-home-root]) [data-theme-control] {
 @keyframes loop-draw {
   to {
     stroke-dashoffset: 0;
+  }
+}
+
+/* The cinematic page runs under the floating bar: no spacer there. Phones keep room for the tab bar. */
+html:has([data-home-root]) [data-header-spacer] {
+  display: none;
+}
+@media (max-width: 1023px) {
+  body:has([data-tab-bar]) {
+    padding-bottom: calc(96px + env(safe-area-inset-bottom));
   }
 }

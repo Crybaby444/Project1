@@ -1098,7 +1098,9 @@
     "homeLabel": "Yoyo, sākumlapa",
     "main": "Galvenā",
     "allCategoriesPage": "Visas kategorijas vienā lapā",
-    "newest": "Jaunās lietas"
+    "newest": "Jaunās lietas",
+    "you": "Tu",
+    "tabs": "Ātrās cilnes"
   },
   "market": {
     "hero": {
@@ -1146,7 +1148,8 @@
           "title": "Atpakaļ",
           "body": "Atdod lietu; drošības nauda atgriežas."
         }
-      }
+      },
+      "returned": "{amount} drošības nauda — atpakaļ pie tevis"
     },
     "fresh": {
       "title": "Tikko pievienots",
@@ -1160,12 +1163,22 @@
       "days": "Nomas dienas mēnesī",
       "daysValue": "{count, plural, zero {# dienu} one {# diena} other {# dienas}}",
       "month": "Mēnesī varētu nopelnīt",
-      "note": "Tu paturi visu nomas maksu; servisa maksu maksā nomnieks."
+      "note": "Tu paturi visu nomas maksu; servisa maksu maksā nomnieks.",
+      "examples": "Piemēram",
+      "year": "Gadā",
+      "example": {
+        "drill": "Urbjmašīna",
+        "tent": "Telts",
+        "projector": "Projektors",
+        "bike": "Velosipēds",
+        "camera": "Kamera"
+      }
     },
     "close": {
       "title": "Tas vienmēr atgriežas.",
       "rent": "Atrast lietu",
-      "lend": "Izīrēt lietu"
+      "lend": "Izīrēt lietu",
+      "backUp": "Atpakaļ augšā"
     }
   }
 }

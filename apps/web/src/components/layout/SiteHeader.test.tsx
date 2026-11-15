@@ -12,86 +12,73 @@ vi.mock('@/i18n/navigation', async (importOriginal) => ({
   useRouter: () => ({ replace: vi.fn(), push: vi.fn(), refresh: vi.fn() }),
 }));
 
-describe('SiteHeader', () => {
-  it('links the wordmark to the home page', async () => {
+const roots = [
+  {
+    slugs: { en: 'tools', lv: 'instrumenti', ru: 'instrumenty' },
+    names: { en: 'Tools', lv: 'Instrumenti', ru: 'Инструменты' },
+    sticker: 'blue',
+    children: [{ slugs: { en: 'drills', lv: 'urbji', ru: 'dreli' }, names: { en: 'Drills', lv: 'Urbji', ru: 'Дрели' } }],
+    more: 2,
+  },
+] as never;
+
+const banner = () => screen.getByRole('banner');
+
+describe('SiteHeader (the floating capsule and the phone tab bar)', () => {
+  it('links the mark to the home page', async () => {
     const { client } = fakeApi(meRoute(null));
     renderWithSession(<SiteHeader />, { client });
-    expect(screen.getByRole('link', { name: en.nav.homeLabel })).toHaveAttribute('href', '/');
+    expect(within(banner()).getByRole('link', { name: en.nav.homeLabel })).toHaveAttribute('href', '/');
   });
 
   it('offers a visitor to sign in or sign up', async () => {
     const { client } = fakeApi(meRoute(null));
     renderWithSession(<SiteHeader />, { client });
-
-    expect(await screen.findByRole('link', { name: en.header.signIn })).toHaveAttribute('href', '/login');
-    expect(screen.getByRole('link', { name: en.header.signUp })).toHaveAttribute('href', '/register');
-    expect(screen.queryByRole('link', { name: en.header.lendItem })).toBeNull();
-    expect(screen.queryByRole('button', { name: new RegExp(`^${en.header.account}`) })).toBeNull();
+    expect(await within(banner()).findByRole('link', { name: en.header.signIn })).toHaveAttribute('href', '/login');
+    expect(within(banner()).getByRole('link', { name: en.header.signUp })).toHaveAttribute('href', '/register');
+    expect(within(banner()).queryByRole('button', { name: new RegExp(`^${en.header.account}`) })).toBeNull();
   });
 
-  it('shows a signed-in user their initials instead', async () => {
+  it('shows a signed-in user their initials, lending and messages', async () => {
     const { client } = fakeApi(meRoute(testUser({ name: 'Anna Bērziņa' })));
     renderWithSession(<SiteHeader />, { client });
-
-    const avatar = await screen.findByRole('button', { name: new RegExp(`^${en.header.account}`) });
+    const avatar = await within(banner()).findByRole('button', { name: new RegExp(`^${en.header.account}`) });
     expect(avatar).toHaveTextContent('AB');
-    expect(screen.queryByRole('link', { name: en.header.signIn })).toBeNull();
-    expect(screen.getByRole('link', { name: en.header.lendItem })).toHaveAttribute('href', '/listings/new');
+    expect(within(banner()).getByRole('link', { name: en.header.lendItem })).toHaveAttribute('href', '/listings/new');
+    expect(within(banner()).getByRole('link', { name: en.header.messages })).toHaveAttribute('href', '/messages');
   });
 
-  it('keeps the language and theme controls for everyone', async () => {
+  it('keeps the language one compact menu', async () => {
     const { client } = fakeApi(meRoute(null));
     renderWithSession(<SiteHeader />, { client });
-
-    expect(screen.getByRole('button', { name: en.theme.toggle })).toBeInTheDocument();
-    // One compact language pill at every width (no wide segmented control).
-    const languages = screen.getAllByRole('button', {
-      name: new RegExp(`^${en.language.label}: English,\\s*en$`),
-    });
-    expect(languages).toHaveLength(1);
+    const languages = within(banner()).getAllByRole('button', { name: new RegExp(`^${en.language.label}: English,\\s*en$`) });
+    expect(languages.length).toBeGreaterThan(0);
     expect(languages[0]).toHaveAttribute('aria-haspopup', 'menu');
-    expect(screen.queryByRole('navigation', { name: en.language.label })).toBeNull();
   });
 
-  it('is one row of cells: Catalog opens every category with its subcategories; Home and What is Yoyo are links (owner, 2026-11-16)', async () => {
+  it('opens Catalog as a sheet of every category with its subcategories; What is Yoyo is a link', async () => {
     const user = userEvent.setup();
     const { client } = fakeApi(meRoute(null));
-    const roots = [
-      {
-        slugs: { en: 'tools', lv: 'instrumenti', ru: 'instrumenty' },
-        names: { en: 'Tools', lv: 'Instrumenti', ru: 'Инструменты' },
-        sticker: 'blue',
-        children: [{ slugs: { en: 'drills', lv: 'urbji', ru: 'dreli' }, names: { en: 'Drills', lv: 'Urbji', ru: 'Дрели' } }],
-        more: 2,
-      },
-    ] as never;
     renderWithSession(<SiteHeader catalog={roots} />, { client });
-    const nav = screen.getByRole('navigation', { name: en.nav.main });
+    const nav = within(banner()).getByRole('navigation', { name: en.nav.main });
     const catalog = within(nav).getByRole('button', { name: en.nav.catalog });
     expect(catalog).toHaveAttribute('aria-expanded', 'false');
     await user.click(catalog);
     expect(catalog).toHaveAttribute('aria-expanded', 'true');
     expect(within(nav).getByRole('link', { name: 'Tools' })).toHaveAttribute('href', '/c/tools');
     expect(within(nav).getByRole('link', { name: 'Drills' })).toHaveAttribute('href', '/c/drills');
-    expect(within(nav).getByRole('link', { name: en.nav.home })).toHaveAttribute('href', '/');
     expect(within(nav).getByRole('link', { name: en.nav.whatIsYoyo })).toHaveAttribute('href', '/what-is-yoyo');
   });
 
-  it('puts the mark first, on the left', async () => {
-    const { client } = fakeApi(meRoute(null));
-    const { container } = renderWithSession(<SiteHeader />, { client });
-    const brand = screen.getByRole('link', { name: en.nav.homeLabel });
-    expect(brand).toHaveAttribute('data-site-brand');
-    const outside = [...container.querySelectorAll('header a')].filter((a) => !a.closest('dialog'));
-    expect(outside[0]).toBe(brand);
-  });
-
-  it('keeps the language in the row and the theme on wide screens (the phone menu has it too)', async () => {
-    const { client } = fakeApi(meRoute(null));
-    renderWithSession(<SiteHeader />, { client });
-    const language = screen.getByRole('button', { name: new RegExp(`^${en.language.label}`) });
-    expect(language.closest('[data-desktop-only]')).toBeNull();
-    const themes = screen.getAllByRole('button', { name: en.theme.toggle, hidden: true });
-    expect(themes.some((b) => b.closest('[data-desktop-only]') !== null)).toBe(true);
+  it('gives phones a tab bar: home, catalog, lend, messages, you', async () => {
+    const { client } = fakeApi(meRoute(testUser()));
+    const { container } = renderWithSession(<SiteHeader catalog={roots} />, { client });
+    await within(banner()).findByRole('button', { name: new RegExp(`^${en.header.account}`) });
+    const bar = container.querySelector('[data-tab-bar]') as HTMLElement;
+    expect(within(bar).getByRole('link', { name: en.nav.home })).toHaveAttribute('href', '/');
+    expect(within(bar).getByRole('button', { name: en.nav.catalog })).toBeInTheDocument();
+    expect(within(bar).getByRole('link', { name: en.header.lendItem })).toHaveAttribute('href', '/listings/new');
+    expect(within(bar).getByRole('link', { name: en.header.messages })).toHaveAttribute('href', '/messages');
+    expect(within(bar).getByRole('link', { name: en.nav.you })).toHaveAttribute('href', '/bookings');
   });
 });

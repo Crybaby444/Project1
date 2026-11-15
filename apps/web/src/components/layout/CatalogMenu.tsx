@@ -13,13 +13,14 @@ import { categoryPath } from '@/lib/seo';
  * full-width panel under the bar with every category and its subcategories (a disclosure of plain links),
  * and the way to all categories. Escape, a click outside or following a link closes it.
  */
-export function CatalogMenu({ roots, className = '' }: { roots: MenuRoot[]; className?: string }) {
+export function CatalogMenu({ roots, className = '', onOpenChange }: { roots: MenuRoot[]; className?: string; onOpenChange?(open: boolean): void }) {
   const t = useTranslations('nav');
   const locale = useLocale() as Locale;
   const [open, setOpen] = useState(false);
   const panel = useId();
   const root = useRef<HTMLDivElement>(null);
 
+  useEffect(() => onOpenChange?.(open), [open, onOpenChange]);
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
@@ -33,14 +34,14 @@ export function CatalogMenu({ roots, className = '' }: { roots: MenuRoot[]; clas
   }, [open]);
 
   return (
-    <div ref={root} className={`static flex ${className}`} onClick={(e) => (e.target as HTMLElement).closest('a') && setOpen(false)}>
+    <div ref={root} className={`flex ${className}`} onClick={(e) => (e.target as HTMLElement).closest('a') && setOpen(false)}>
       <button
         type="button"
         aria-expanded={open}
         aria-controls={panel}
         onClick={() => setOpen((v) => !v)}
-        data-nav-cell=""
-        className={`ease-yoyo flex h-full items-center gap-2.5 px-6 text-[15px] font-semibold whitespace-nowrap transition-colors duration-150 ${open ? 'bg-ink text-canvas' : 'hover:bg-ink/[0.05]'}`}
+        data-nav-item=""
+        className={`rounded-pill ease-yoyo relative z-10 flex h-10 items-center gap-2 px-4 text-[14.5px] font-semibold whitespace-nowrap transition-colors duration-200 ${open ? 'bg-ink text-canvas' : 'hover:text-ink'}`}
       >
         <svg viewBox="0 0 16 16" aria-hidden="true" className="size-4">
           <path d="M2 2.5h5v5H2zM9 2.5h5v5H9zM2 9.5h5v5H2zM9 9.5h5v5H9z" fill="none" stroke="currentColor" strokeWidth="1.4" />
@@ -50,8 +51,8 @@ export function CatalogMenu({ roots, className = '' }: { roots: MenuRoot[]; clas
           <path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
-      <div id={panel} hidden={!open} className="border-ink/15 bg-canvas animate-pop-in absolute inset-x-0 top-full z-40 max-h-[calc(100dvh-72px)] overflow-y-auto border-b shadow-[0_30px_60px_-40px_rgba(10,11,14,0.55)]">
-        <div className="mx-auto grid max-w-[1600px] grid-cols-3 gap-x-10 gap-y-9 px-10 py-10 xl:grid-cols-4 2xl:grid-cols-5">
+      <div id={panel} hidden={!open} className="border-ink/10 bg-canvas animate-sheet-drop fixed top-[84px] left-1/2 z-40 max-h-[calc(100dvh-110px)] w-[min(1280px,calc(100vw-40px))] -translate-x-1/2 overflow-y-auto rounded-[32px] border shadow-[0_40px_80px_-30px_rgba(10,11,14,0.45),0_2px_6px_rgba(10,11,14,0.06)]">
+        <div className="grid grid-cols-3 gap-x-10 gap-y-9 px-10 pt-10 pb-8 xl:grid-cols-4">
           {roots.map((r) => (
             <div key={r.slugs.en} className="flex min-w-0 flex-col gap-2.5">
               <Link href={categoryPath(r.slugs[locale])} className="font-display text-[1.55rem] leading-none font-black uppercase [overflow-wrap:anywhere] hover:underline">
@@ -76,7 +77,7 @@ export function CatalogMenu({ roots, className = '' }: { roots: MenuRoot[]; clas
             </div>
           ))}
         </div>
-        <div className="border-ink/15 mx-auto flex max-w-[1600px] flex-wrap items-center gap-x-6 gap-y-2 border-t px-10 py-5 text-[15px] font-semibold">
+        <div className="border-ink/10 bg-ink/[0.03] flex flex-wrap items-center gap-x-6 gap-y-2 border-t px-10 py-5 text-[15px] font-semibold">
           <Link href="/c" className="underline decoration-1 underline-offset-4">
             {t('allCategoriesPage')}
           </Link>

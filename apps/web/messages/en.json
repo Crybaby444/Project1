@@ -1098,7 +1098,9 @@
     "homeLabel": "Yoyo, the home page",
     "main": "Main",
     "allCategoriesPage": "All categories on one page",
-    "newest": "New items"
+    "newest": "New items",
+    "you": "You",
+    "tabs": "Quick tabs"
   },
   "market": {
     "hero": {
@@ -1146,7 +1148,8 @@
           "title": "Back",
           "body": "Return it; the deposit comes back to you."
         }
-      }
+      },
+      "returned": "{amount} deposit — back to you"
     },
     "fresh": {
       "title": "Just added",
@@ -1160,12 +1163,22 @@
       "days": "Days rented a month",
       "daysValue": "{count, plural, one {# day} other {# days}}",
       "month": "A month could bring",
-      "note": "You keep the whole rent; the service fee is paid by the renter."
+      "note": "You keep the whole rent; the service fee is paid by the renter.",
+      "examples": "For example",
+      "year": "A year",
+      "example": {
+        "drill": "Drill",
+        "tent": "Tent",
+        "projector": "Projector",
+        "bike": "Bike",
+        "camera": "Camera"
+      }
     },
     "close": {
       "title": "It always comes back.",
       "rent": "Find something",
-      "lend": "Lend something"
+      "lend": "Lend something",
+      "backUp": "Back up"
     }
   }
 }

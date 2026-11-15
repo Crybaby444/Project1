@@ -4,6 +4,7 @@ import { Mark } from '@/components/brand/Mark';
 import { Link } from '@/i18n/navigation';
 import { cents, formatMoney } from '@yoyo/domain';
 import { listingPath } from '@/lib/seo';
+import { SwingRow } from './SwingRow';
 
 /** Each tag hangs on its own length of thread and leans a little its own way. */
 const THREADS = [34, 58, 22, 46, 30, 62, 26, 50] as const;
@@ -37,20 +38,20 @@ export async function TagString({ items }: { items: CatalogItem[] }) {
           <Mark size={30} />
         </span>
       </div>
-      <ul className="flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pt-3 pb-10 [scrollbar-width:none] sm:gap-6 sm:px-8 min-[1560px]:justify-center [&::-webkit-scrollbar]:hidden">
+      <SwingRow className="flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pt-3 pb-12 [scrollbar-width:none] sm:gap-6 sm:px-8 min-[1560px]:justify-center [&::-webkit-scrollbar]:hidden">
         {items.slice(0, 6).map((item, i) => (
           <li key={item.id} className="w-[212px] shrink-0 snap-start" style={{ paddingTop: `${thread(i)}px` }}>
             <div
-              className="yoyo-sway origin-[50%_-40px] motion-reduce:animate-none"
+              className="yoyo-sway origin-[50%_-40px] drop-shadow-[0_18px_22px_rgba(10,11,14,0.22)] motion-reduce:animate-none"
               style={{ '--tilt': `${tilt(i)}deg`, animationDelay: `${i * -0.7}s` } as React.CSSProperties}
             >
               {/* The thread from the string down to the tag's hole. */}
               <span aria-hidden="true" className="bg-ink/55 absolute left-1/2 w-px -translate-x-1/2" style={{ bottom: '100%', height: `${thread(i) + 14}px` }} />
               <Link
                 href={listingPath(item.id, item.title)}
-                className="group border-ink/15 bg-surface relative flex flex-col overflow-hidden rounded-[22px] border shadow-[0_18px_30px_-22px_rgba(10,11,14,0.55)] transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_26px_40px_-24px_rgba(10,11,14,0.6)]"
+                className="group bg-surface relative flex flex-col overflow-hidden rounded-b-[18px] transition-transform duration-300 [clip-path:polygon(22px_0,calc(100%-22px)_0,100%_22px,100%_100%,0_100%,0_22px)] hover:-translate-y-1"
               >
-                <span aria-hidden="true" className="border-ink/30 bg-canvas absolute top-2.5 left-1/2 z-10 size-3.5 -translate-x-1/2 rounded-full border" />
+                <span aria-hidden="true" className="bg-canvas absolute top-3 left-1/2 z-10 size-4 -translate-x-1/2 rounded-full shadow-[inset_0_1px_2px_rgba(10,11,14,0.35)]" />
                 <span className="bg-mist relative block aspect-[4/3] overflow-hidden">
                   {item.cover ? (
                     // eslint-disable-next-line @next/next/no-img-element -- the API's sized photo
@@ -72,7 +73,7 @@ export async function TagString({ items }: { items: CatalogItem[] }) {
             </div>
           </li>
         ))}
-      </ul>
+      </SwingRow>
     </section>
   );
 }
