@@ -299,7 +299,12 @@
         "SETTINGS_CHANGED": "Iestatījumi mainīti",
         "CATEGORY_CHANGED": "Kategorija mainīta",
         "STAFF_CHANGED": "Mainīta komandas loma",
-        "TWO_FACTOR_RESET": "Divpakāpju ieeja atiestatīta"
+        "TWO_FACTOR_RESET": "Divpakāpju ieeja atiestatīta",
+        "CATEGORY_CREATED": "Kategorija pievienota",
+        "CATEGORY_DELETED": "Kategorija dzēsta",
+        "USER_CREATED": "Cilvēks pievienots",
+        "USER_EDITED": "Cilvēka dati laboti",
+        "USER_DELETED": "Cilvēks dzēsts"
       }
     },
     "settings": {
@@ -449,7 +454,8 @@
       "cancel": "Atpakaļ",
       "done": "Saglabāts.",
       "failed": "Nesaglabājās.",
-      "renameTitle": "Pārdēvēt “{name}”"
+      "renameTitle": "Pārdēvēt “{name}”",
+      "custom": "Pievienota šeit"
     },
     "staff": {
       "title": "Komanda",
@@ -496,6 +502,52 @@
     },
     "security": {
       "title": "Jūsu divpakāpju ieeja"
+    },
+    "crud": {
+      "addPerson": "Pievienot cilvēku",
+      "add": "Pievienot",
+      "cancel": "Atcelt",
+      "save": "Saglabāt",
+      "edit": "Labot",
+      "delete": "Dzēst",
+      "deleteYes": "Jā, dzēst",
+      "name": "Vārds",
+      "email": "E-pasts",
+      "password": "Parole (nav obligāta)",
+      "passwordHint": "Atstājiet tukšu, un viņš saņems e-pastā saiti paroles izvēlei.",
+      "language": "Valoda",
+      "city": "Pilsēta",
+      "about": "Par sevi",
+      "added": "Pievienots",
+      "addedLink": "Pievienots; e-pastā nosūtīta saite paroles iestatīšanai",
+      "saved": "Saglabāts",
+      "deleted": "Dzēsts",
+      "failed": "Neizdevās",
+      "invalid": "Pārbaudiet laukus",
+      "emailTaken": "Šim e-pastam jau ir konts",
+      "editPerson": "Labot: {name}",
+      "deletePerson": "Dzēst {name}?",
+      "deletePersonBody": "Konts un personas dati tiks dzēsti; sludinājumi pazudīs no kataloga. Pabeigtie darījumi paliek uzskaitē. To nevar atsaukt.",
+      "addRoot": "Pievienot kategoriju",
+      "addSub": "Jauna apakškategorija: {name}",
+      "addSubShort": "+ Apakš",
+      "allNames": "Ierakstiet nosaukumu visās trīs valodās",
+      "categoryHint": "Adreses katrā valodā tiek veidotas no nosaukumiem. Vietnē tā parādīsies piecu minūšu laikā.",
+      "deleteCategory": "Dzēst “{name}”?",
+      "deleteCategoryEmpty": "Tajā nav sludinājumu. No vietnes tā pazudīs piecu minūšu laikā.",
+      "deleteCategoryMove": "Tajā ir {count, plural, zero {# sludinājumu} one {# sludinājums} other {# sludinājumi}}. Izvēlieties, kur tos pārvietot.",
+      "moveTo": "Pārvietot sludinājumus uz",
+      "choose": "Izvēlieties…",
+      "chooseTarget": "Izvēlieties, kur pārvietot sludinājumus",
+      "why": {
+        "SELF": "Sev to darīt nevar",
+        "STAFF": "Vispirms izņemiet viņu no komandas (Komanda)",
+        "OPEN_DEALS": "Viņam ir atvērti darījumi: vispirms tos pabeidziet vai atceliet",
+        "WALLET_NOT_EMPTY": "Makā vēl ir nauda: vispirms to izmaksājiet",
+        "HAS_CHILDREN": "Vispirms dzēsiet apakškategorijas",
+        "HAS_LISTINGS": "Izvēlieties, kur pārvietot sludinājumus",
+        "TOO_DEEP": "Katalogā ir divi līmeņi"
+      }
     }
   }
 }

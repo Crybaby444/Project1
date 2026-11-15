@@ -9,6 +9,7 @@ import { INPUT_CLASS } from '@/components/ui/inputs';
 import { useToast } from '@/components/ui/Toast';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useAdminUsers, useBlockUser } from '@/lib/admin/queries';
+import { AddPersonButton } from './AdminCrud';
 import { AdminPageHeader, Pager, TABLE_CLASS, TD, TH } from './parts';
 
 /**
@@ -63,7 +64,7 @@ export function AdminUsers({ search, page }: { search: string; page: number }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <AdminPageHeader title={t('users.title')} note={users.data ? t('common.total', { count: total }) : undefined} />
+      <AdminPageHeader title={t('users.title')} note={users.data ? t('common.total', { count: total }) : undefined} action={<AddPersonButton />} />
 
       <input
         type="search"

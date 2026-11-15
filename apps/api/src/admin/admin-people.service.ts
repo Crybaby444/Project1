@@ -57,6 +57,7 @@ export class AdminPeopleService {
         role: user.role,
         locale: user.locale,
         city: user.city || null,
+        about: user.about || null,
         emailVerified: user.emailVerifiedAt !== null,
         phoneVerified: user.phoneVerifiedAt !== null,
         createdAt: user.createdAt.toISOString(),

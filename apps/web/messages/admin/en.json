@@ -299,7 +299,12 @@
         "SETTINGS_CHANGED": "Settings changed",
         "CATEGORY_CHANGED": "Category changed",
         "STAFF_CHANGED": "Staff role changed",
-        "TWO_FACTOR_RESET": "Two-step sign-in reset"
+        "TWO_FACTOR_RESET": "Two-step sign-in reset",
+        "CATEGORY_CREATED": "Category added",
+        "CATEGORY_DELETED": "Category deleted",
+        "USER_CREATED": "Person added",
+        "USER_EDITED": "Person edited",
+        "USER_DELETED": "Person deleted"
       }
     },
     "settings": {
@@ -449,7 +454,8 @@
       "cancel": "Back",
       "done": "Saved.",
       "failed": "Not saved.",
-      "renameTitle": "Rename “{name}”"
+      "renameTitle": "Rename “{name}”",
+      "custom": "Added here"
     },
     "staff": {
       "title": "Staff",
@@ -496,6 +502,52 @@
     },
     "security": {
       "title": "Your two-step sign-in"
+    },
+    "crud": {
+      "addPerson": "Add a person",
+      "add": "Add",
+      "cancel": "Cancel",
+      "save": "Save",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteYes": "Yes, delete",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password (optional)",
+      "passwordHint": "Leave empty and they get an email link to choose one.",
+      "language": "Language",
+      "city": "City",
+      "about": "About",
+      "added": "Added",
+      "addedLink": "Added; a link to set a password was emailed",
+      "saved": "Saved",
+      "deleted": "Deleted",
+      "failed": "Couldn’t do that",
+      "invalid": "Check the fields",
+      "emailTaken": "This email already has an account",
+      "editPerson": "Edit {name}",
+      "deletePerson": "Delete {name}?",
+      "deletePersonBody": "Their account and personal data go; listings leave the catalog. Finished deals stay on record. This can’t be undone.",
+      "addRoot": "Add a category",
+      "addSub": "New subcategory in {name}",
+      "addSubShort": "+ Sub",
+      "allNames": "Fill in the name in all three languages",
+      "categoryHint": "The addresses in each language are made from the names. It appears on the site within five minutes.",
+      "deleteCategory": "Delete “{name}”?",
+      "deleteCategoryEmpty": "It has no listings. It disappears from the site within five minutes.",
+      "deleteCategoryMove": "It has {count, plural, one {# listing} other {# listings}}. Choose where they move.",
+      "moveTo": "Move listings to",
+      "choose": "Choose…",
+      "chooseTarget": "Choose where the listings go",
+      "why": {
+        "SELF": "You can’t do this to yourself",
+        "STAFF": "Take them out of the staff first (Staff)",
+        "OPEN_DEALS": "They have open deals: finish or cancel them first",
+        "WALLET_NOT_EMPTY": "Their wallet still holds money: pay it out first",
+        "HAS_CHILDREN": "Delete its subcategories first",
+        "HAS_LISTINGS": "Choose where its listings go",
+        "TOO_DEEP": "The catalog has two levels"
+      }
     }
   }
 }

@@ -58,6 +58,11 @@ export class MeService {
     if (user.passwordHash !== null && !(password && (await this.passwords.verify(user.passwordHash, password)))) {
       throw invalidCredentials();
     }
+    await this.erase(userId);
+  }
+
+  /** The deletion itself, without the password check: the person's own request, or an administrator's (audited there). */
+  async erase(userId: string): Promise<void> {
     const now = this.clock.now();
     const photoKeys = await this.prisma.$transaction(async (tx) => {
       await assertNothingHeld(tx, userId);

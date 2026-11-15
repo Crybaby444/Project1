@@ -8,9 +8,11 @@ import { Dialog } from '@/components/ui/Dialog';
 import { INPUT_CLASS } from '@/components/ui/inputs';
 import { useToast } from '@/components/ui/Toast';
 import { useAdminCategories, useChangeAdminCategory } from '@/lib/admin/queries';
+import { AddCategoryButton, DeleteCategoryButton } from './AdminCrud';
 import { AdminPageHeader } from './parts';
 
 type Leaf = Omit<AdminCategory, 'children'>;
+type Target = { id: string; label: string };
 type Lang = 'en' | 'lv' | 'ru';
 
 /**
@@ -23,10 +25,15 @@ export function AdminCategories() {
   const tc = useTranslations('admin.categories');
   const categories = useAdminCategories();
   const [renaming, setRenaming] = useState<Leaf | null>(null);
+  const locale = useLocale() as Lang;
+  // Where a deleted category's listings can go: subcategories, and roots without any.
+  const targets: Target[] = (categories.data ?? []).flatMap((root) =>
+    root.children.length > 0 ? root.children.map((c) => ({ id: c.id, label: `${root.names[locale]} → ${c.names[locale]}` })) : [{ id: root.id, label: root.names[locale] }],
+  );
 
   return (
     <div className="flex max-w-5xl flex-col gap-6">
-      <AdminPageHeader title={tc('title')} note={tc('intro')} />
+      <AdminPageHeader title={tc('title')} note={tc('intro')} action={<AddCategoryButton />} />
       {categories.isPending ? (
         <div aria-busy="true" className="bg-mist rounded-media h-96" />
       ) : categories.isError ? (
@@ -40,12 +47,12 @@ export function AdminCategories() {
         <ol className="flex flex-col gap-3">
           {categories.data.map((root, i) => (
             <li key={root.id} className="border-ink/15 rounded-media overflow-hidden border">
-              <Row category={root} first={i === 0} last={i === categories.data.length - 1} root onRename={setRenaming} />
+              <Row category={root} first={i === 0} last={i === categories.data.length - 1} root onRename={setRenaming} targets={targets} />
               {root.children.length > 0 && (
                 <ol className="border-ink/10 divide-ink/10 divide-y border-t">
                   {root.children.map((child, j) => (
                     <li key={child.id}>
-                      <Row category={child} first={j === 0} last={j === root.children.length - 1} onRename={setRenaming} />
+                      <Row category={child} first={j === 0} last={j === root.children.length - 1} onRename={setRenaming} targets={targets} />
                     </li>
                   ))}
                 </ol>
@@ -59,7 +66,7 @@ export function AdminCategories() {
   );
 }
 
-function Row({ category: c, first, last, root = false, onRename }: { category: Leaf; first: boolean; last: boolean; root?: boolean; onRename(c: Leaf): void }) {
+function Row({ category: c, first, last, root = false, onRename, targets }: { category: Leaf; first: boolean; last: boolean; root?: boolean; onRename(c: Leaf): void; targets: Target[] }) {
   const tc = useTranslations('admin.categories');
   const locale = useLocale() as Lang;
   const toast = useToast();
@@ -75,6 +82,7 @@ function Row({ category: c, first, last, root = false, onRename }: { category: L
           {tc('items', { count: c.items })}
           {c.renamed && <span className="bg-ink text-canvas rounded-pill ml-2 px-2 py-0.5 text-[11px] font-bold">{tc('renamed')}</span>}
           {c.hidden && <span className="border-ink/30 rounded-pill ml-2 border px-2 py-0.5 text-[11px] font-bold">{tc('hidden')}</span>}
+          {c.custom && <span className="border-ink/30 rounded-pill ml-2 border px-2 py-0.5 text-[11px] font-bold">{tc('custom')}</span>}
         </p>
       </div>
       <div className="flex items-center gap-1.5">
@@ -94,6 +102,8 @@ function Row({ category: c, first, last, root = false, onRename }: { category: L
         <button type="button" onClick={() => act({ hidden: !c.hidden })} disabled={change.isPending} className="border-ink/25 hover:border-ink rounded-pill min-h-9 border px-3 text-[12px] font-bold uppercase">
           {c.hidden ? tc('show') : tc('hide')}
         </button>
+        {root && <AddCategoryButton parent={c} />}
+        <DeleteCategoryButton category={c} targets={targets} />
       </div>
     </div>
   );
