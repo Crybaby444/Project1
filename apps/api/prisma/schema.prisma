@@ -75,6 +75,7 @@ model User {
   /// Email topics they turned off (EMAIL_TOPICS of @yoyo/shared); account and security mail always goes.
   emailOff         String[]         @default([])
   notifications    Notification[]
+  savedSearches    SavedSearch[]
 }
 
 /// One refresh token of a session. Rotation chains tokens of the same family; reuse revokes the family.
@@ -755,6 +756,7 @@ enum NotificationKind {
   OFFER
   LISTING
   REVIEW
+  SEARCH
 }
 
 enum MessageKind {
@@ -819,4 +821,17 @@ model Notification {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
+}
+
+/// A search someone saved to hear about new items (owner, 2026-11-15: like the big classifieds): the
+/// catalog filters it keeps (`query`, CatalogQuery fields), checked against each item when it is published.
+model SavedSearch {
+  id        String   @id @default(cuid())
+  userId    String
+  query     Json
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

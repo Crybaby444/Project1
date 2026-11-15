@@ -12,6 +12,7 @@ import { invalidStatus, ListingsService } from '../listings/listings.service';
 import { MailService } from '../mail/mail.service';
 import { NotificationsService, wantsEmail } from '../notifications/notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { SavedSearchesService } from '../saved-searches/saved-searches.service';
 
 /** `https://site` + `/lv` (no prefix for English) + path, the site's URL scheme. */
 export function sitePath(origin: string, locale: string, path: string): string {
@@ -29,6 +30,7 @@ export class ModerationService {
     private readonly categories: CategoriesService,
     private readonly mail: MailService,
     private readonly notifications: NotificationsService,
+    private readonly savedSearches: SavedSearchesService,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(ENV) private readonly env: Pick<Env, 'WEB_ORIGIN'>,
   ) {}
@@ -79,6 +81,8 @@ export class ModerationService {
         : { rejectionReason: decision.reason }),
     });
     this.notify(listing, listing.owner, decision);
+    // Saved searches are checked before answering (it never throws), so the bell is up to date.
+    if (decision.action === 'approve') await this.savedSearches.listingPublished(listing.id);
 
     const fresh = await this.prisma.listing.findUniqueOrThrow({ where: { id }, include: { photos: true, unavailability: true, owner: true } });
     return this.toAdmin(fresh, fresh.owner);

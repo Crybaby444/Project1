@@ -510,6 +510,9 @@
       },
       "REVIEW": {
         "RECEIVED": "New review after “{title}”: write yours to read it"
+      },
+      "SEARCH": {
+        "MATCH": "New for your saved search: “{title}”"
       }
     },
     "email": {
@@ -523,6 +526,12 @@
       "LISTINGS_hint": "Moderation results for your listings.",
       "saved": "Saved.",
       "failed": "Not saved. Try again."
+    },
+    "searches": {
+      "title": "Saved searches",
+      "empty": "None yet. In the catalog, press “Tell me about new items” and we will ring the bell when something matching appears.",
+      "upTo": "up to {price}",
+      "remove": "Stop this saved search"
     }
   }
 }

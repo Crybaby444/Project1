@@ -510,6 +510,9 @@
       },
       "REVIEW": {
         "RECEIVED": "Jauna atsauksme pēc “{title}”: uzraksti savu, lai to izlasītu"
+      },
+      "SEARCH": {
+        "MATCH": "Jauns tavam saglabātajam meklējumam: “{title}”"
       }
     },
     "email": {
@@ -523,6 +526,12 @@
       "LISTINGS_hint": "Sludinājumu moderācijas rezultāti.",
       "saved": "Saglabāts.",
       "failed": "Nesaglabājās. Mēģini vēlreiz."
+    },
+    "searches": {
+      "title": "Saglabātie meklējumi",
+      "empty": "Vēl nav. Katalogā nospied “Paziņot par jaunām lietām”, un zvaniņš iezvanīsies, kad parādīsies kas atbilstošs.",
+      "upTo": "līdz {price}",
+      "remove": "Pārtraukt šo meklējumu"
     }
   }
 }
