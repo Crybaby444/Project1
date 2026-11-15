@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { useSession } from '@/lib/session/SessionProvider';
 import { useAdminOverview } from '@/lib/admin/queries';
+import { CommandPalette, OPEN_PALETTE } from './CommandPalette';
 
 type Section = 'overview' | 'traffic' | 'seo' | 'moderation' | 'deals' | 'reports' | 'users' | 'money' | 'audit' | 'settings';
 
@@ -121,8 +122,33 @@ export function AdminShell({ children }: { children: ReactNode }) {
         <p className="font-display hidden px-6 pt-7 pb-6 text-[1.9rem] leading-none font-black uppercase lg:block">
           Yoyo <span className="text-canvas/60">/ {t('brand')}</span>
         </p>
-        <nav aria-label={t('navLabel')} className="overflow-x-auto lg:flex-1 lg:overflow-visible">
+        <div className="hidden px-3 pb-4 lg:block">
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE))}
+            className="bg-canvas/10 hover:bg-canvas/15 text-canvas/80 flex min-h-11 w-full items-center gap-3 rounded-[14px] px-3.5 text-[14px] font-semibold"
+          >
+            <Icon>
+              <path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4" />
+            </Icon>
+            <span className="flex-1 text-left">{t('search.open')}</span>
+            <kbd className="border-canvas/25 rounded-[6px] border px-1.5 text-[11px]">{t('search.shortcut')}</kbd>
+          </button>
+        </div>
+        <nav aria-label={t('navLabel')} className="overflow-x-auto lg:flex-1 lg:overflow-y-auto">
           <ul className="flex gap-1 px-3 py-2 lg:flex-col lg:px-3 lg:py-0">
+            <li className="shrink-0 lg:hidden">
+              <button
+                type="button"
+                aria-label={t('search.open')}
+                onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE))}
+                className="text-canvas/80 hover:bg-canvas/10 flex min-h-11 items-center rounded-[14px] px-3.5"
+              >
+                <Icon>
+                  <path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4" />
+                </Icon>
+              </button>
+            </li>
             {SECTIONS.map(({ key, group, href, icon }, index) => {
               const current = key === active;
               const count = waiting[key] ?? 0;
@@ -181,6 +207,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
           </button>
         </div>
       </aside>
+      <CommandPalette />
       <main id="admin-main" className="min-w-0 px-4 py-8 sm:px-8 lg:px-12 lg:py-10">
         {children}
       </main>

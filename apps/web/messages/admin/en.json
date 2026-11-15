@@ -377,6 +377,18 @@
       "cancel": "Back",
       "done": "Done.",
       "failed": "That did not work."
+    },
+    "search": {
+      "open": "Search",
+      "shortcut": "⌘K",
+      "placeholder": "A name, an email, an item or a deal number…",
+      "users": "People",
+      "listings": "Items",
+      "deals": "Deals",
+      "pages": "Sections",
+      "empty": "Nothing found.",
+      "hint": "↑↓ to move, Enter to open, Esc to close",
+      "blocked": "blocked"
     }
   }
 }
