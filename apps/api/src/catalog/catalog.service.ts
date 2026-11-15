@@ -69,6 +69,13 @@ export class CatalogService {
     return { counts: Object.fromEntries(rows.map((r) => [r.id, r.n])) };
   }
 
+  /** Whether a visible item matches a catalog query: the same filters the search uses (saved searches). */
+  async matches(query: CatalogQuery, listingId: string): Promise<boolean> {
+    const where = whereSql(query, await this.context(query));
+    const [row] = await this.prisma.$queryRaw<{ n: number }[]>`SELECT count(*)::int AS n ${VISIBLE_FROM} ${where} AND l."id" = ${listingId}`;
+    return (row?.n ?? 0) > 0;
+  }
+
   async search(query: CatalogQuery): Promise<CatalogPage> {
     const where = whereSql(query, await this.context(query));
     const offset = (query.page - 1) * CATALOG_PAGE_SIZE;

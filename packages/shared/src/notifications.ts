@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 /** What a bell notification is about. */
-export const NOTIFICATION_KINDS = ['DEAL', 'OFFER', 'LISTING', 'REVIEW'] as const;
+export const NOTIFICATION_KINDS = ['DEAL', 'OFFER', 'LISTING', 'REVIEW', 'SEARCH'] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
 
 /**
@@ -32,3 +32,32 @@ export type EmailTopic = (typeof EMAIL_TOPICS)[number];
 
 export const EmailPreferencesSchema = z.object({ off: z.array(z.enum(EMAIL_TOPICS)).max(EMAIL_TOPICS.length) });
 export type EmailPreferences = z.infer<typeof EmailPreferencesSchema>;
+
+/** At most this many saved searches per person. */
+export const SAVED_SEARCH_LIMIT = 20;
+
+const Slug = z.string().max(80).regex(/^[a-z0-9-]+$/);
+
+/** A saved search: the catalog filters to watch (at least one), checked against each newly published item. */
+export const SavedSearchRequestSchema = z
+  .object({
+    q: z.string().trim().min(1).max(100).optional(),
+    category: Slug.optional(),
+    priceMax: z.number().int().min(1).max(10_000_000).optional(),
+    district: Slug.optional(),
+  })
+  .refine((v) => v.q !== undefined || v.category !== undefined || v.priceMax !== undefined || v.district !== undefined, { message: 'Choose at least one filter' });
+export type SavedSearchRequest = z.infer<typeof SavedSearchRequestSchema>;
+
+export const SavedSearchSchema = z.object({
+  id: z.string(),
+  q: z.string().nullable(),
+  category: z.string().nullable(),
+  priceMax: z.number().int().nullable(),
+  district: z.string().nullable(),
+  createdAt: z.iso.datetime(),
+});
+export type SavedSearch = z.infer<typeof SavedSearchSchema>;
+
+export const SavedSearchListSchema = z.object({ items: z.array(SavedSearchSchema) });
+export type SavedSearchList = z.infer<typeof SavedSearchListSchema>;

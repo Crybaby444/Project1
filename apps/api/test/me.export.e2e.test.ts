@@ -52,6 +52,7 @@ describe('GET /me/export — my data, machine-readable (GDPR access and portabil
     expect(Array.isArray(data.sessions)).toBe(true);
     expect(Array.isArray(data.notifications)).toBe(true);
     expect(data.emailTopicsOff).toEqual([]);
+    expect(data.savedSearches).toEqual([]);
     expect(data.exportedAt).toBeTruthy();
   });
 

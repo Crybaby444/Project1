@@ -29,6 +29,7 @@ import { SettingsModule } from './settings/settings.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { ChatModule } from './chat/chat.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { SavedSearchesModule } from './saved-searches/saved-searches.module';
 
 @Global()
 @Module({
@@ -49,6 +50,7 @@ class EnvModule {}
     ReviewsModule,
     ChatModule,
     NotificationsModule,
+    SavedSearchesModule,
     AuthModule,
     MeModule,
     AdminModule,
