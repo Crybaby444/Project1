@@ -9,7 +9,8 @@
       "moderation": "Moderation",
       "deals": "Deals",
       "users": "Users",
-      "money": "Money"
+      "money": "Money",
+      "reports": "Reports"
     },
     "common": {
       "loadFailed": "This did not load.",
@@ -57,7 +58,8 @@
         "LISTING_SUBMITTED": "{who} sent “{title}” for review",
         "DEAL_REQUESTED": "{who} asked to rent “{title}”",
         "DISPUTE_OPENED": "Dispute opened on “{title}”"
-      }
+      },
+      "reportsWaiting": "{count, plural, one {report to look at} other {reports to look at}}"
     },
     "deals": {
       "title": "Deals",
@@ -168,6 +170,25 @@
         "DEPOSIT_TO_OWNER": "Deposit to owner",
         "BOOKING_REFUND": "Deal refund"
       }
+    },
+    "reports": {
+      "title": "Reports",
+      "open": "Open",
+      "resolved": "Resolved",
+      "dismissed": "Dismissed",
+      "empty": "No reports here.",
+      "target": {
+        "LISTING": "Listing",
+        "USER": "Person",
+        "MESSAGE": "Message"
+      },
+      "from": "from {name}",
+      "resolution": "What was done",
+      "resolve": "Resolved",
+      "dismiss": "Nothing to do",
+      "done": "Closed.",
+      "failed": "Not closed.",
+      "viewUser": "Find the person"
     }
   }
 }

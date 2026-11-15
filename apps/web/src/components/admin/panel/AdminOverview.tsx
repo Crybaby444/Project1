@@ -55,6 +55,7 @@ function Body({ data }: { data: Overview }) {
   const waits = [
     { count: data.listings.pendingReview, label: t('toReview', { count: data.listings.pendingReview }), href: '/admin/listings' },
     { count: data.deals.disputed, label: t('disputes', { count: data.deals.disputed }), href: '/admin/deals?view=disputes' },
+    { count: data.reports.open, label: t('reportsWaiting', { count: data.reports.open }), href: '/admin/reports' },
     { count: data.deals.requested, label: t('requests', { count: data.deals.requested }), href: '/admin/deals?status=REQUESTED' },
   ];
   const anything = waits.some((w) => w.count > 0);
@@ -66,7 +67,7 @@ function Body({ data }: { data: Overview }) {
           {t('waiting')}
         </h2>
         {anything ? (
-          <ul className="grid gap-3 sm:grid-cols-3">
+          <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {waits.map((w) => (
               <li key={w.href}>
                 <Link

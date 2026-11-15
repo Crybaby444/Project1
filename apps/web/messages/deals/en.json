@@ -533,5 +533,26 @@
       "upTo": "up to {price}",
       "remove": "Stop this saved search"
     }
+  },
+  "report": {
+    "listing": "Report this listing",
+    "user": "Report this person",
+    "message": "Report this message",
+    "title": "Report",
+    "intro": "Tell us what is wrong. An administrator looks at every report; the person is not told who reported them.",
+    "reason": {
+      "SCAM": "Scam or payment outside Yoyo",
+      "PROHIBITED": "Prohibited or stolen item",
+      "MISLEADING": "Misleading description or photos",
+      "OFFENSIVE": "Rude or offensive",
+      "OTHER": "Something else"
+    },
+    "note": "What happened",
+    "noteHint": "Optional, but it helps. Required for “Something else”.",
+    "send": "Send report",
+    "cancel": "Back",
+    "sent": "Thank you. An administrator will look at it.",
+    "already": "You have already reported this; it is being looked at.",
+    "failed": "The report was not sent. Try again."
   }
 }

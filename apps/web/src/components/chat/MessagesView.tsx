@@ -7,6 +7,7 @@ import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Link } from '@/i18n/navigation';
+import { ReportButton } from '@/components/reports/ReportButton';
 import { useConversations, useMarkRead, useSendMessage, useThread } from '@/lib/chat/queries';
 
 const dayKey = (iso: string) => iso.slice(0, 10);
@@ -228,6 +229,7 @@ function ThreadBody({ data }: { data: ConversationThread }) {
             </Link>
           </span>
         </span>
+        <ReportButton target="USER" id={data.other.id} className="max-sm:hidden" />
         {data.dealId && (
           <Button href={`/bookings/${data.dealId}`} variant="ghost" className="max-sm:hidden">
             {t('openDeal')}

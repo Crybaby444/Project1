@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 import { Link, usePathname } from '@/i18n/navigation';
 import { useAdminOverview } from '@/lib/admin/queries';
 
-type Section = 'overview' | 'moderation' | 'deals' | 'users' | 'money';
+type Section = 'overview' | 'moderation' | 'deals' | 'reports' | 'users' | 'money';
 
 const SECTIONS: { key: Section; href: string; icon: ReactNode }[] = [
   {
@@ -24,6 +24,11 @@ const SECTIONS: { key: Section; href: string; icon: ReactNode }[] = [
     icon: <path d="M7 7h11l-3-3M17 17H6l3 3M18 7v4M6 17v-4" />,
   },
   {
+    key: 'reports',
+    href: '/admin/reports',
+    icon: <path d="M5 21V4m0 0h11l-2 4 2 4H5" />,
+  },
+  {
     key: 'users',
     href: '/admin/users',
     icon: <path d="M16 19v-1a4 4 0 00-4-4H7a4 4 0 00-4 4v1M9.5 10a3 3 0 100-6 3 3 0 000 6zM21 19v-1a4 4 0 00-3-3.9M15.5 4.1a3 3 0 010 5.8" />,
@@ -38,6 +43,7 @@ const SECTIONS: { key: Section; href: string; icon: ReactNode }[] = [
 function activeSection(pathname: string): Section {
   if (pathname.startsWith('/admin/listings')) return 'moderation';
   if (pathname.startsWith('/admin/deals') || pathname.startsWith('/admin/disputes')) return 'deals';
+  if (pathname.startsWith('/admin/reports')) return 'reports';
   if (pathname.startsWith('/admin/users')) return 'users';
   if (pathname.startsWith('/admin/money')) return 'money';
   return 'overview';
@@ -64,6 +70,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const waiting: Partial<Record<Section, number>> = {
     moderation: overview.data?.listings.pendingReview ?? 0,
     deals: overview.data?.deals.disputed ?? 0,
+    reports: overview.data?.reports.open ?? 0,
   };
 
   return (

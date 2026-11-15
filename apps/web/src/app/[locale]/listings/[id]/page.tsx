@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Breadcrumbs, type Crumb } from '@/components/catalog/Breadcrumbs';
 import { ShareButton } from '@/components/catalog/ShareButton';
+import { ReportButton } from '@/components/reports/ReportButton';
 import { RecentlyViewed, RememberViewed } from '@/components/catalog/RecentlyViewed';
 import { HeartButton } from '@/components/catalog/HeartButton';
 import { formatEuros } from '@/lib/listings/money';
@@ -210,6 +211,7 @@ async function Available({ item, title, category, locale }: { item: AvailableIte
         <aside className="flex flex-col gap-6 lg:sticky lg:top-6">
           <BookingPanel item={item} />
           <OwnerCard owner={owner} />
+          <ReportButton target="LISTING" id={listing.id} ownerId={owner.id} className="self-start" />
         </aside>
       </div>
     </>

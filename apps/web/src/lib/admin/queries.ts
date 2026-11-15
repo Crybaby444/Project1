@@ -17,6 +17,7 @@ export const adminKeys = {
   users: (search: string, page: number) => ['admin', 'users', search, page] as const,
   ledger: (kind: LedgerKind | undefined, page: number) => ['admin', 'ledger', kind ?? 'all', page] as const,
   summary: ['admin', 'ledger-summary'] as const,
+  reports: (status: string, page: number) => ['admin', 'reports', status, page] as const,
 };
 
 export type DealFilter = { disputed: boolean; status?: BookingStatus; page: number };
@@ -105,5 +106,24 @@ export function useLedgerOperations(kind: LedgerKind | undefined, page: number) 
     queryKey: adminKeys.ledger(kind, page),
     queryFn: async () => unwrap(client.GET('/api/v1/admin/ledger/operations', { params: { query: { page, ...(kind ? { kind } : {}) } } })),
     placeholderData: keepPreviousData,
+  });
+}
+
+export function useAdminReports(status: 'OPEN' | 'RESOLVED' | 'DISMISSED', page: number) {
+  const client = useApiClient();
+  return useQuery({
+    queryKey: adminKeys.reports(status, page),
+    queryFn: async () => unwrap(client.GET('/api/v1/admin/reports', { params: { query: { status, page } } })),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useCloseReport() {
+  const client = useApiClient();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, status, resolution }: { id: string; status: 'RESOLVED' | 'DISMISSED'; resolution: string }) =>
+      (await unwrap(client.POST('/api/v1/admin/reports/{id}/close', { params: { path: { id } }, body: { status, resolution } }))).report,
+    onSettled: () => void queryClient.invalidateQueries({ queryKey: adminKeys.all }),
   });
 }

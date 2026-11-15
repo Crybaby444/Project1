@@ -9,7 +9,8 @@
       "moderation": "Модерация",
       "deals": "Сделки",
       "users": "Пользователи",
-      "money": "Деньги"
+      "money": "Деньги",
+      "reports": "Жалобы"
     },
     "common": {
       "loadFailed": "Не загрузилось.",
@@ -57,7 +58,8 @@
         "LISTING_SUBMITTED": "На проверку: «{title}» от {who}",
         "DEAL_REQUESTED": "{who} хочет арендовать «{title}»",
         "DISPUTE_OPENED": "Открыт спор по «{title}»"
-      }
+      },
+      "reportsWaiting": "{count, plural, one {жалоба ждёт} few {жалобы ждут} many {жалоб ждут} other {жалобы ждут}}"
     },
     "deals": {
       "title": "Сделки",
@@ -168,6 +170,25 @@
         "DEPOSIT_TO_OWNER": "Залог владельцу",
         "BOOKING_REFUND": "Возврат по сделке"
       }
+    },
+    "reports": {
+      "title": "Жалобы",
+      "open": "Открытые",
+      "resolved": "Решённые",
+      "dismissed": "Отклонённые",
+      "empty": "Жалоб нет.",
+      "target": {
+        "LISTING": "Объявление",
+        "USER": "Пользователь",
+        "MESSAGE": "Сообщение"
+      },
+      "from": "от {name}",
+      "resolution": "Что сделано",
+      "resolve": "Решено",
+      "dismiss": "Ничего не делать",
+      "done": "Закрыто.",
+      "failed": "Не закрылось.",
+      "viewUser": "Найти пользователя"
     }
   }
 }
