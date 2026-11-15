@@ -671,7 +671,8 @@
       "requests": "{count, plural, one {# запрос ждёт} few {# запроса ждут} many {# запросов ждут} other {# запроса ждут}}",
       "next": "Следующая аренда с {date}",
       "earned": "Заработано {amount}"
-    }
+    },
+    "more": "Другие действия: {title}"
   },
   "moderation": {
     "title": "Модерация",
@@ -788,7 +789,8 @@
       "datesHint": "Выберите первый и последний день.",
       "clearDates": "Сбросить даты",
       "district": "Район",
-      "anyDistrict": "Любой район"
+      "anyDistrict": "Любой район",
+      "pickDates": "Выбрать даты"
     },
     "active": {
       "label": "Включённые фильтры",

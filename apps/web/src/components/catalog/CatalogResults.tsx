@@ -90,15 +90,16 @@ export async function CatalogResults({ params: raw, category, related, path, tit
           <SearchBox initialQuery={params.q ?? ''} className="max-w-3xl" />
           {related.length > 0 && (
             <nav aria-label={t('related')}>
-              <ul className="flex flex-wrap gap-2">
+              {/* One row that scrolls sideways (audit: two wrapped rows of chips pushed the results down). */}
+              <ul className="-mx-4 flex snap-x scroll-px-4 gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:-mx-8 sm:scroll-px-8 sm:px-8 [&::-webkit-scrollbar]:hidden">
                 {related.map((link) => (
-                  <li key={link.href}>
+                  <li key={link.href} className="shrink-0 snap-start">
                     <Link
                       href={link.href}
                       aria-current={link.current ? 'page' : undefined}
                       className={`rounded-pill ease-yoyo inline-flex min-h-10 items-center border px-4 text-sm font-bold transition-transform duration-250 active:scale-95 ${link.current ? 'bg-cta text-cta-fg border-cta' : 'border-ink hover:bg-mist bg-transparent'}`}
                     >
-                      <span className="[overflow-wrap:anywhere]">{link.label}</span>
+                      <span className="whitespace-nowrap">{link.label}</span>
                     </Link>
                   </li>
                 ))}

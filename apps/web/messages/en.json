@@ -671,7 +671,8 @@
       "requests": "{count, plural, one {# request waiting} other {# requests waiting}}",
       "next": "Next rental from {date}",
       "earned": "Earned {amount}"
-    }
+    },
+    "more": "More actions for {title}"
   },
   "moderation": {
     "title": "Moderation",
@@ -788,7 +789,8 @@
       "datesHint": "Pick the first and the last day.",
       "clearDates": "Clear the dates",
       "district": "District",
-      "anyDistrict": "Any district"
+      "anyDistrict": "Any district",
+      "pickDates": "Choose dates"
     },
     "active": {
       "label": "Active filters",

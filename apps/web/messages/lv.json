@@ -671,7 +671,8 @@
       "requests": "{count, plural, zero {# pieprasījumu gaida} one {# pieprasījums gaida} other {# pieprasījumi gaida}}",
       "next": "Nākamā noma no {date}",
       "earned": "Nopelnīts {amount}"
-    }
+    },
+    "more": "Citas darbības: {title}"
   },
   "moderation": {
     "title": "Moderācija",
@@ -788,7 +789,8 @@
       "datesHint": "Izvēlies pirmo un pēdējo dienu.",
       "clearDates": "Notīrīt datumus",
       "district": "Apkaime",
-      "anyDistrict": "Jebkura apkaime"
+      "anyDistrict": "Jebkura apkaime",
+      "pickDates": "Izvēlēties datumus"
     },
     "active": {
       "label": "Aktīvie filtri",
