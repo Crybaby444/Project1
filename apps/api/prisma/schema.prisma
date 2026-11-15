@@ -76,6 +76,7 @@ model User {
   emailOff         String[]         @default([])
   notifications    Notification[]
   savedSearches    SavedSearch[]
+  reports          Report[]         @relation("ReportReporter")
 }
 
 /// One refresh token of a session. Rotation chains tokens of the same family; reuse revokes the family.
@@ -834,4 +835,47 @@ model SavedSearch {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+enum ReportTarget {
+  LISTING
+  USER
+  MESSAGE
+}
+
+enum ReportReason {
+  SCAM
+  PROHIBITED
+  MISLEADING
+  OFFENSIVE
+  OTHER
+}
+
+enum ReportStatus {
+  OPEN
+  RESOLVED
+  DISMISSED
+}
+
+/// A complaint about an item, a person or a chat message (spec §5): an administrator looks at it and
+/// either acts (and marks it resolved) or dismisses it. One open complaint per reporter and target.
+model Report {
+  id           String       @id @default(cuid())
+  reporterId   String
+  target       ReportTarget
+  listingId    String?
+  userId       String?
+  messageId    String?
+  reason       ReportReason
+  note         String       @default("")
+  status       ReportStatus @default(OPEN)
+  resolvedById String?
+  resolution   String?
+  resolvedAt   DateTime?
+  createdAt    DateTime     @default(now())
+
+  reporter User @relation("ReportReporter", fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
+  @@index([reporterId, target, listingId, userId, messageId])
 }

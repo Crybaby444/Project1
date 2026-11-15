@@ -804,6 +804,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ReportsController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminReportsController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/reports/{id}/close": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminReportsController_close"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/me/export": {
         parameters: {
             query?: never;
@@ -2566,6 +2614,73 @@ export interface components {
         CategoriesResponseDto_Output: {
             categories: components["schemas"]["CategoryNode_Output"][];
         };
+        ReportRequestDto: {
+            /** @enum {string} */
+            target: "LISTING" | "USER" | "MESSAGE";
+            id: string;
+            /** @enum {string} */
+            reason: "SCAM" | "PROHIBITED" | "MISLEADING" | "OFFENSIVE" | "OTHER";
+            /** @default  */
+            note: string;
+        };
+        AdminReportListDto_Output: {
+            items: {
+                id: string;
+                /** @enum {string} */
+                target: "LISTING" | "USER" | "MESSAGE";
+                /** @enum {string} */
+                reason: "SCAM" | "PROHIBITED" | "MISLEADING" | "OFFENSIVE" | "OTHER";
+                note: string;
+                /** @enum {string} */
+                status: "OPEN" | "RESOLVED" | "DISMISSED";
+                /** Format: date-time */
+                createdAt: string;
+                reporter: {
+                    id: string;
+                    name: string;
+                };
+                subject: {
+                    id: string;
+                    label: string;
+                    userId: string | null;
+                };
+                resolution: string | null;
+                /** Format: date-time */
+                resolvedAt: string | null;
+            }[];
+            total: number;
+        };
+        CloseReportDto: {
+            /** @enum {string} */
+            status: "RESOLVED" | "DISMISSED";
+            resolution: string;
+        };
+        AdminReportResponseDto_Output: {
+            report: {
+                id: string;
+                /** @enum {string} */
+                target: "LISTING" | "USER" | "MESSAGE";
+                /** @enum {string} */
+                reason: "SCAM" | "PROHIBITED" | "MISLEADING" | "OFFENSIVE" | "OTHER";
+                note: string;
+                /** @enum {string} */
+                status: "OPEN" | "RESOLVED" | "DISMISSED";
+                /** Format: date-time */
+                createdAt: string;
+                reporter: {
+                    id: string;
+                    name: string;
+                };
+                subject: {
+                    id: string;
+                    label: string;
+                    userId: string | null;
+                };
+                resolution: string | null;
+                /** Format: date-time */
+                resolvedAt: string | null;
+            };
+        };
         UpdateProfileDto: {
             name?: string;
             city?: string | null;
@@ -3118,6 +3233,9 @@ export interface components {
                 escrowCents: number;
                 depositsCents: number;
                 walletsCents: number;
+            };
+            reports: {
+                open: number;
             };
             ledgerOk: boolean;
             series: {
@@ -5803,6 +5921,187 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CategoriesResponseDto_Output"];
+                };
+            };
+        };
+    };
+    ReportsController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReportRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminReportsController_list: {
+        parameters: {
+            query?: {
+                status?: "OPEN" | "RESOLVED" | "DISMISSED";
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Complaints by status; open ones oldest first */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminReportListDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminReportsController_close: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CloseReportDto"];
+            };
+        };
+        responses: {
+            /** @description Closes a complaint: acted on it, or nothing to do */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminReportResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
         };

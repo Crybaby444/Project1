@@ -20,6 +20,7 @@ export function overview(over: Partial<Overview> = {}): Overview {
     listings: { pendingReview: 3, published: 80, total: 95 },
     deals: { open: 12, requested: 2, disputed: 1, completed30d: 30 },
     money: { turnover30dCents: 1_234_500, revenueCents: 98_000, escrowCents: 40_000, depositsCents: 55_000, walletsCents: 12_000 },
+    reports: { open: 0 },
     ledgerOk: true,
     series: Array.from({ length: 14 }, (_, i) => ({ day: `2026-11-${String(i + 1).padStart(2, '0')}`, users: i % 3, deals: i % 4 })),
     activity: [
