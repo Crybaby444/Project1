@@ -189,6 +189,7 @@
       "done": "Closed.",
       "failed": "Not closed.",
       "viewUser": "Find the person"
-    }
+    },
+    "signOut": "Sign out"
   }
 }

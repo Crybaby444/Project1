@@ -546,7 +546,8 @@ html[data-staged] .home-loader {
 }
 
 /* The admin panel is a tool: no site footer under it (AdminShell). */
-html:has([data-admin-root]) [data-site-footer] {
+html:has([data-admin-root]) [data-site-footer],
+html:has([data-admin-root]) [data-site-header] {
   display: none;
 }
 

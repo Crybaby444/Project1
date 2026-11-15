@@ -2,7 +2,8 @@
 
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
-import { Link, usePathname } from '@/i18n/navigation';
+import { Link, usePathname, useRouter } from '@/i18n/navigation';
+import { useSession } from '@/lib/session/SessionProvider';
 import { useAdminOverview } from '@/lib/admin/queries';
 
 type Section = 'overview' | 'moderation' | 'deals' | 'reports' | 'users' | 'money';
@@ -60,21 +61,28 @@ function Icon({ children }: { children: ReactNode }) {
 /**
  * The admin panel's frame (owner, 2026-11-14): a night sidebar with the sections and what waits in
  * each (listings to review, disputes to decide), the page beside it. On a phone the sections become a
- * row of tabs above the page. The site header stays above, the footer is left out (globals.css).
+ * row of tabs above the page. The site header and footer are left out (globals.css): an administrator's
+ * account is for the panel only (owner, 2026-11-15).
  */
 export function AdminShell({ children }: { children: ReactNode }) {
   const t = useTranslations('admin');
   const pathname = usePathname();
   const active = activeSection(pathname);
   const overview = useAdminOverview();
+  const { user, signOut } = useSession();
+  const router = useRouter();
+  async function leave() {
+    await signOut();
+    router.push('/login');
+  }
   const waiting: Partial<Record<Section, number>> = {
     moderation: overview.data?.listings.pendingReview ?? 0,
     deals: overview.data?.deals.disputed ?? 0,
-    reports: overview.data?.reports.open ?? 0,
+    reports: overview.data?.reports?.open ?? 0,
   };
 
   return (
-    <div data-admin-root className="-mx-4 grid min-h-[calc(100svh-4rem)] grid-cols-[minmax(0,1fr)] sm:-mx-8 lg:grid-cols-[248px_minmax(0,1fr)] lg:bg-[linear-gradient(to_right,var(--ink)_248px,transparent_248px)]">
+    <div data-admin-root className="-mx-4 grid min-h-svh grid-cols-[minmax(0,1fr)] sm:-mx-8 lg:grid-cols-[248px_minmax(0,1fr)] lg:bg-[linear-gradient(to_right,var(--ink)_248px,transparent_248px)]">
       <aside className="bg-ink text-canvas min-w-0 lg:sticky lg:top-0 lg:flex lg:h-svh lg:flex-col">
         <p className="font-display hidden px-6 pt-7 pb-6 text-[1.9rem] leading-none font-black uppercase lg:block">
           Yoyo <span className="text-canvas/60">/ {t('brand')}</span>
@@ -108,18 +116,29 @@ export function AdminShell({ children }: { children: ReactNode }) {
                 </li>
               );
             })}
+            <li className="shrink-0 lg:hidden">
+              <button
+                type="button"
+                onClick={() => void leave()}
+                className="text-canvas/80 hover:bg-canvas/10 flex min-h-11 items-center gap-3 rounded-[14px] px-3.5 text-[15px] font-semibold whitespace-nowrap"
+              >
+                {t('signOut')}
+              </button>
+            </li>
           </ul>
         </nav>
         <div className="border-canvas/15 hidden border-t px-3 py-4 lg:block">
-          <Link
-            href="/"
-            className="text-canvas/70 hover:bg-canvas/10 hover:text-canvas flex min-h-11 items-center gap-3 rounded-[14px] px-3.5 text-[14px] font-semibold"
+          {user && <p className="text-canvas/70 truncate px-3.5 pb-2 text-[13px]">{user.email}</p>}
+          <button
+            type="button"
+            onClick={() => void leave()}
+            className="text-canvas/80 hover:bg-canvas/10 hover:text-canvas flex min-h-11 w-full items-center gap-3 rounded-[14px] px-3.5 text-[14px] font-semibold"
           >
             <Icon>
-              <path d="M15 18l-6-6 6-6" />
+              <path d="M15 17l5-5-5-5M20 12H9M12 20H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7" />
             </Icon>
-            {t('toSite')}
-          </Link>
+            {t('signOut')}
+          </button>
         </div>
       </aside>
       <main id="admin-main" className="min-w-0 px-4 py-8 sm:px-8 lg:px-12 lg:py-10">

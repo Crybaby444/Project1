@@ -1,3 +1,4 @@
+import { AdminOnly } from '@/lib/session/AdminOnly';
 import { LOCALES, parseThemePreference, THEME_COOKIE, type Locale } from '@yoyo/shared';
 import type { Metadata } from 'next';
 import { cookies, headers } from 'next/headers';
@@ -80,6 +81,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
                   <div lang={locale} className="contents">
                     <SiteFooter />
                   </div>
+                  <AdminOnly />
                   <DropCursor />
                   <LanguageSuggestion />
                   <ConsentBanner gaId={validGaId(process.env.NEXT_PUBLIC_GA_ID) ?? ''} />
