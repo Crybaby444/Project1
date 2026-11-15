@@ -22,7 +22,7 @@ test.describe('accounts through the site’s /api proxy', () => {
 
     const me = await page.request.get('/api/v1/me');
     expect(me.status()).toBe(200);
-    expect((await me.json()).user.name).toBe('E2E');
+    expect((await me.json()).user.name).toBe('E2E Tester');
 
     // A real page: its own fetches carry the HttpOnly cookie, and the API accepts the site's Origin.
     await page.goto('/styleguide');

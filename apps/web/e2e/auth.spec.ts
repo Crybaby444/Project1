@@ -20,7 +20,12 @@ test.describe('sign-up', () => {
     const email = uniqueEmail();
     await page.goto('/register?next=/styleguide');
 
-    await page.getByLabel(en.auth.fields.name).fill('Anna Bērziņa');
+    await page.getByLabel(en.auth.fields.fullName).fill('Anna Bērziņa');
+    await page.getByLabel(en.auth.fields.username).fill(`anna${Date.now().toString(36)}`);
+    await page.getByLabel(en.identity.day).fill('1');
+    await page.getByRole('combobox', { name: en.identity.month }).click();
+    await page.getByRole('option').nth(4).click();
+    await page.getByLabel(en.identity.year).fill('1990');
     await page.getByLabel(en.auth.fields.email).fill(email);
     await page.getByLabel(en.auth.fields.password, { exact: true }).fill(PASSWORD);
     await page.getByRole('button', { name: en.auth.register.submit }).click();

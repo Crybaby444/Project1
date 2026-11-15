@@ -19,7 +19,7 @@ test.describe('profile', () => {
     await registerByApi(page.request, { name: 'Anna' });
     await page.goto('/settings');
 
-    await page.getByLabel(en.settings.profile.name).fill('Jānis Ozols');
+    await page.getByLabel(en.settings.profile.name, { exact: true }).fill('Jānis Ozols');
     await page.getByRole('button', { name: en.settings.profile.save }).click();
     await expect(page.getByRole('status').filter({ hasText: en.settings.profile.saved })).toBeVisible();
 
@@ -27,7 +27,7 @@ test.describe('profile', () => {
     await page.getByRole('button', { name: new RegExp(`^${en.header.account}`) }).click();
     await expect(page.getByRole('menu').locator('..').getByText('Jānis Ozols')).toBeVisible();
     await page.reload();
-    await expect(page.getByLabel(en.settings.profile.name)).toHaveValue('Jānis Ozols');
+    await expect(page.getByLabel(en.settings.profile.name, { exact: true })).toHaveValue('Jānis Ozols');
   });
 
   test('choosing Latvian moves the page to /lv/settings, in Latvian', async ({ page }) => {
