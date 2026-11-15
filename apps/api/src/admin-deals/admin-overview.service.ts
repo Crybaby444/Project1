@@ -27,7 +27,7 @@ export class AdminOverviewService {
     const p = this.prisma;
     const [
       usersTotal, usersNew, usersBlocked, pending, published, listingsTotal,
-      open, requested, disputed, completed, turnover, ledger, newUsers, newDeals, activity,
+      open, requested, disputed, completed, turnover, ledger, newUsers, newDeals, activity, reportsOpen,
     ] = await Promise.all([
       p.user.count({ where: { deletedAt: null } }),
       p.user.count({ where: { deletedAt: null, createdAt: { gte: weekAgo } } }),
@@ -44,6 +44,7 @@ export class AdminOverviewService {
       p.user.findMany({ where: { createdAt: { gte: seriesFrom } }, select: { createdAt: true } }),
       p.booking.findMany({ where: { createdAt: { gte: seriesFrom } }, select: { createdAt: true } }),
       this.activity(),
+      p.report.count({ where: { status: 'OPEN' } }),
     ]);
 
     const series = Array.from({ length: SERIES_DAYS }, (_, i) => ({
@@ -73,6 +74,7 @@ export class AdminOverviewService {
         depositsCents: ledger.depositsCents,
         walletsCents: ledger.walletsCents,
       },
+      reports: { open: reportsOpen },
       ledgerOk: audit.sumOfAll === 0 && audit.mismatched.length === 0 && audit.unbalancedOperations.length === 0 && audit.negative.length === 0,
       series,
       activity,

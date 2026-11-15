@@ -1,3 +1,4 @@
+import { ReportButton } from '@/components/reports/ReportButton';
 import type { Locale } from '@yoyo/shared';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -50,6 +51,7 @@ export default async function ProfilePage({ params }: Props) {
         )}
       </div>
       <ProfileTabs listings={listings} name={user.name} userId={user.id} />
+      <ReportButton target="USER" id={user.id} ownerId={user.id} className="self-start" />
     </main>
   );
 }

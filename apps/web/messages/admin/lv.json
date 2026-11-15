@@ -9,7 +9,8 @@
       "moderation": "Moderācija",
       "deals": "Darījumi",
       "users": "Lietotāji",
-      "money": "Nauda"
+      "money": "Nauda",
+      "reports": "Ziņojumi"
     },
     "common": {
       "loadFailed": "Neizdevās ielādēt.",
@@ -57,7 +58,8 @@
         "LISTING_SUBMITTED": "{who} iesniedza pārbaudei “{title}”",
         "DEAL_REQUESTED": "{who} vēlas nomāt “{title}”",
         "DISPUTE_OPENED": "Atvērts strīds par “{title}”"
-      }
+      },
+      "reportsWaiting": "{count, plural, zero {ziņojumu jāizskata} one {ziņojums jāizskata} other {ziņojumi jāizskata}}"
     },
     "deals": {
       "title": "Darījumi",
@@ -168,6 +170,25 @@
         "DEPOSIT_TO_OWNER": "Drošības nauda īpašniekam",
         "BOOKING_REFUND": "Darījuma atmaksa"
       }
+    },
+    "reports": {
+      "title": "Ziņojumi",
+      "open": "Atvērtie",
+      "resolved": "Atrisinātie",
+      "dismissed": "Noraidītie",
+      "empty": "Ziņojumu nav.",
+      "target": {
+        "LISTING": "Sludinājums",
+        "USER": "Lietotājs",
+        "MESSAGE": "Ziņa"
+      },
+      "from": "no {name}",
+      "resolution": "Kas izdarīts",
+      "resolve": "Atrisināts",
+      "dismiss": "Nav ko darīt",
+      "done": "Aizvērts.",
+      "failed": "Neaizvērās.",
+      "viewUser": "Atrast lietotāju"
     }
   }
 }

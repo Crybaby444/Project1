@@ -38,6 +38,8 @@ export const AdminOverviewSchema = z.object({
     depositsCents: z.number().int(),
     walletsCents: z.number().int(),
   }),
+  /** Complaints waiting for an administrator. */
+  reports: z.object({ open: z.number().int() }),
   /** The ledger audit found nothing wrong. */
   ledgerOk: z.boolean(),
   series: z.array(z.object({ day: z.string(), users: z.number().int(), deals: z.number().int() })),

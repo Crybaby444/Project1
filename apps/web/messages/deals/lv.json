@@ -533,5 +533,26 @@
       "upTo": "līdz {price}",
       "remove": "Pārtraukt šo meklējumu"
     }
+  },
+  "report": {
+    "listing": "Ziņot par sludinājumu",
+    "user": "Ziņot par lietotāju",
+    "message": "Ziņot par ziņu",
+    "title": "Ziņot",
+    "intro": "Pastāsti, kas nav kārtībā. Administrators izskata katru ziņojumu; lietotājam netiek pateikts, kas ziņoja.",
+    "reason": {
+      "SCAM": "Krāpšana vai maksājums ārpus Yoyo",
+      "PROHIBITED": "Aizliegta vai zagta lieta",
+      "MISLEADING": "Maldinošs apraksts vai foto",
+      "OFFENSIVE": "Rupjš vai aizskarošs",
+      "OTHER": "Kas cits"
+    },
+    "note": "Kas notika",
+    "noteHint": "Nav obligāti, bet palīdz. Obligāti, ja izvēlēts “Kas cits”.",
+    "send": "Nosūtīt ziņojumu",
+    "cancel": "Atpakaļ",
+    "sent": "Paldies. Administrators to izskatīs.",
+    "already": "Tu jau ziņoji par šo; tas tiek izskatīts.",
+    "failed": "Ziņojums netika nosūtīts. Mēģini vēlreiz."
   }
 }
