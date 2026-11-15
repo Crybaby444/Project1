@@ -8,7 +8,7 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { useAdminDeals } from '@/lib/admin/queries';
 import { formatPeriod } from '@/lib/deals/dates';
 import { useMoney } from '@/lib/deals/money';
-import { AdminPageHeader, Pager, SELECT_CLASS, TABLE_CLASS, TD, TH } from './parts';
+import { AdminPageHeader, AdminSelect, Pager, TABLE_CLASS, TD, TH } from './parts';
 
 export type DealsView = { disputed: boolean; status?: BookingStatus; page: number };
 
@@ -56,17 +56,12 @@ export function AdminDeals({ view }: { view: DealsView }) {
           ))}
         </nav>
         {!view.disputed && (
-          <label className="flex items-center gap-2 text-sm font-semibold">
-            <span>{t('deals.status')}</span>
-            <select value={view.status ?? ''} onChange={(e) => go({ status: (e.target.value || undefined) as BookingStatus | undefined })} className={SELECT_CLASS}>
-              <option value="">{t('deals.anyStatus')}</option>
-              {BOOKING_STATUSES.map((s) => (
-                <option key={s} value={s}>
-                  {ts(s)}
-                </option>
-              ))}
-            </select>
-          </label>
+          <AdminSelect
+            label={t('deals.status')}
+            value={view.status ?? ''}
+            onChange={(v) => go({ status: (v || undefined) as BookingStatus | undefined })}
+            options={[{ value: '', label: t('deals.anyStatus') }, ...BOOKING_STATUSES.map((s) => ({ value: s, label: ts(s) }))]}
+          />
         )}
       </div>
 

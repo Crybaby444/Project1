@@ -1,13 +1,13 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import type { ReactNode } from 'react';
+import { useId, type ReactNode } from 'react';
+import { Select, type SelectOption } from '@/components/ui/Select';
 
 /** Admin tables: hairline rows, small caps headers, numbers in tabular figures. */
 export const TABLE_CLASS = 'w-full min-w-[720px] border-collapse text-left text-[15px]';
 export const TH = 'border-ink/15 text-ink/70 border-b px-4 py-3 text-[12px] font-bold tracking-[0.04em] uppercase';
 export const TD = 'border-ink/10 border-b px-4 py-3 align-middle';
-export const SELECT_CLASS = 'border-ink bg-surface text-ink rounded-pill min-h-10 border px-3 text-[15px]';
 
 export function AdminPageHeader({ title, note, action }: { title: string; note?: string; action?: ReactNode }) {
   return (
@@ -46,5 +46,37 @@ export function Panel({ title, children, className = '' }: { title: string; chil
       <h2 className="text-ink/70 text-[13px] font-bold tracking-[0.04em] uppercase">{title}</h2>
       {children}
     </section>
+  );
+}
+
+/**
+ * The admin panel's dropdown: the site's own Select (owner, 2026-11-16: no browser-native lists), with a
+ * visible or screen-reader-only label.
+ */
+export function AdminSelect({
+  label,
+  hideLabel = false,
+  value,
+  options,
+  onChange,
+  disabled,
+  className = 'min-w-48',
+}: {
+  label: string;
+  hideLabel?: boolean;
+  value: string;
+  options: SelectOption[];
+  onChange(value: string): void;
+  disabled?: boolean;
+  className?: string;
+}) {
+  const id = useId();
+  return (
+    <div className="flex items-center gap-2 text-sm font-semibold">
+      <label htmlFor={id} className={hideLabel ? 'sr-only' : undefined}>
+        {label}
+      </label>
+      <Select id={id} value={value} options={options} onChange={onChange} disabled={disabled} className={className} />
+    </div>
   );
 }

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useLedgerOperations, useLedgerSummary } from '@/lib/admin/queries';
 import { useMoney } from '@/lib/deals/money';
-import { AdminPageHeader, Pager, Panel, SELECT_CLASS, TABLE_CLASS, TD, TH } from './parts';
+import { AdminPageHeader, AdminSelect, Pager, Panel, TABLE_CLASS, TD, TH } from './parts';
 
 /**
  * The platform's books: what it holds by kind of account, the audit of the whole journal (balances
@@ -104,17 +104,12 @@ export function AdminMoney({ kind, page }: { kind?: LedgerKind; page: number }) 
       <section className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="font-display text-[2rem] leading-none font-black uppercase">{tm('operations')}</h2>
-          <label className="flex items-center gap-2 text-sm font-semibold">
-            <span>{tm('kindLabel')}</span>
-            <select value={kind ?? ''} onChange={(e) => go({ kind: (e.target.value || undefined) as LedgerKind | undefined })} className={SELECT_CLASS}>
-              <option value="">{tm('anyKind')}</option>
-              {LEDGER_KINDS.map((k) => (
-                <option key={k} value={k}>
-                  {tm(`kind.${k}`)}
-                </option>
-              ))}
-            </select>
-          </label>
+          <AdminSelect
+            label={tm('kindLabel')}
+            value={kind ?? ''}
+            onChange={(v) => go({ kind: (v || undefined) as LedgerKind | undefined })}
+            options={[{ value: '', label: tm('anyKind') }, ...LEDGER_KINDS.map((k) => ({ value: k, label: tm(`kind.${k}`) }))]}
+          />
         </div>
         {ops.isPending ? (
           <div aria-busy="true" className="bg-mist rounded-media h-72" />

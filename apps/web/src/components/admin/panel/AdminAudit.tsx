@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Link } from '@/i18n/navigation';
 import { useAdminAudit } from '@/lib/admin/queries';
-import { AdminPageHeader, Pager, SELECT_CLASS } from './parts';
+import { AdminPageHeader, AdminSelect, Pager } from './parts';
 
 /** Where an entry's object lives in the panel or on the site. */
 function targetHref(e: AuditEntry): string | null {
@@ -42,24 +42,19 @@ export function AdminAudit() {
   return (
     <div className="flex flex-col gap-6">
       <AdminPageHeader title={ta('title')} note={ta('intro')} />
-      <label className="flex items-center gap-2 self-start text-sm font-semibold">
-        <span className="sr-only">{ta('all')}</span>
-        <select
+      <div className="self-start">
+        <AdminSelect
+          label={ta('all')}
+          hideLabel
+          className="min-w-64"
           value={action}
-          onChange={(e) => {
-            setAction(e.target.value);
+          onChange={(v) => {
+            setAction(v);
             setPage(1);
           }}
-          className={SELECT_CLASS}
-        >
-          <option value="">{ta('all')}</option>
-          {AUDIT_ACTIONS.map((a) => (
-            <option key={a} value={a}>
-              {ta(`action.${a}`)}
-            </option>
-          ))}
-        </select>
-      </label>
+          options={[{ value: '', label: ta('all') }, ...AUDIT_ACTIONS.map((a) => ({ value: a, label: ta(`action.${a}`) }))]}
+        />
+      </div>
       {log.isPending ? (
         <div aria-busy="true" className="bg-mist rounded-media h-64" />
       ) : log.isError ? (
