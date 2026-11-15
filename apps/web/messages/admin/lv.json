@@ -12,7 +12,9 @@
       "money": "Nauda",
       "reports": "Ziņojumi",
       "traffic": "Trafiks",
-      "seo": "SEO"
+      "seo": "SEO",
+      "audit": "Darbību žurnāls",
+      "settings": "Iestatījumi"
     },
     "common": {
       "loadFailed": "Neizdevās ielādēt.",
@@ -261,6 +263,78 @@
       "console": "Google Search Console",
       "consoleHint": "Pievieno yoyo.rent kā īpašumu Google Search Console un iesniedz vietnes karti: tur redzams, ko cilvēki meklē Google pirms atnākšanas, un indeksēšanas problēmas. Vajadzīgs īpašnieka Google konts.",
       "open": "Atvērt"
+    },
+    "groups": {
+      "insight": "Analītika",
+      "work": "Darbs",
+      "money": "Nauda",
+      "system": "Sistēma"
+    },
+    "audit": {
+      "title": "Darbību žurnāls",
+      "intro": "Katra administratora darbība: kas, ko, ar kuru objektu un kas mainījās.",
+      "all": "Visas darbības",
+      "empty": "Vēl nekā nav.",
+      "before": "Pirms",
+      "after": "Pēc",
+      "by": "veica {name}",
+      "open": "Atvērt",
+      "action": {
+        "LISTING_APPROVED": "Sludinājums apstiprināts",
+        "LISTING_REJECTED": "Sludinājums noraidīts",
+        "LISTING_MOVED": "Sludinājums pārvietots",
+        "LISTING_HIDDEN": "Sludinājums paslēpts",
+        "LISTING_SHOWN": "Sludinājums atkal redzams",
+        "DISPUTE_RESOLVED": "Strīds izlemts",
+        "USER_BLOCKED": "Lietotājs bloķēts",
+        "USER_UNBLOCKED": "Lietotājs atbloķēts",
+        "USER_NOTE": "Piezīme par lietotāju",
+        "REPORT_CLOSED": "Ziņojums aizvērts",
+        "REVIEW_HIDDEN": "Atsauksme paslēpta",
+        "REVIEW_SHOWN": "Atsauksme atkal redzama",
+        "SETTINGS_CHANGED": "Iestatījumi mainīti",
+        "CATEGORY_CHANGED": "Kategorija mainīta"
+      }
+    },
+    "settings": {
+      "title": "Iestatījumi",
+      "intro": "Noteikumi, pēc kuriem notiek katrs darījums, un servisa maksa. Izmaiņas uzreiz attiecas uz jauniem soļiem un tiek ierakstītas žurnālā; darījumi saglabā maksu, ar kādu tie pieprasīti.",
+      "save": "Saglabāt izmaiņas",
+      "saved": "Saglabāts.",
+      "failed": "Nesaglabājās: {reason}",
+      "default": "Noklusējums {value}",
+      "changed": "Mainīts",
+      "reset": "Atjaunot noklusējumu",
+      "unsaved": "Nesaglabātas izmaiņas",
+      "group": {
+        "fees": "Maksa",
+        "deals": "Darījumu termiņi",
+        "other": "Citi"
+      },
+      "key": {
+        "fees": {
+          "servicePercent": "Servisa maksa, %",
+          "promoServicePercent": "Sākuma piedāvājuma maksa, %",
+          "promoServiceUntil": "Sākuma piedāvājums līdz"
+        },
+        "booking": {
+          "requestTtlHours": "Īpašnieks atbild uz pieprasījumu, stundās",
+          "paymentTtlHours": "Īrnieks samaksā, stundās",
+          "handoverConfirmHours": "Īrnieks var iebilst pret nodošanu, stundās",
+          "returnConfirmHours": "Īpašnieks var iebilst pret atdošanu, stundās",
+          "inspectionHours": "Īpašnieks pārbauda atdoto lietu, stundās",
+          "damageReplyHours": "Īrnieks atbild uz bojājuma ziņojumu, stundās",
+          "maxAdvanceDays": "Nomu var sākt ne vēlāk kā pēc, dienām"
+        },
+        "review": {
+          "windowDays": "Atsauksmes var rakstīt, dienās"
+        }
+      },
+      "hint": {
+        "fees": {
+          "promoServiceUntil": "Tukšs: sākuma piedāvājuma nav."
+        }
+      }
     }
   }
 }

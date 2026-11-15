@@ -20,13 +20,15 @@ export class AdminSettingsService {
   ) {}
 
   async list(): Promise<AdminSettings> {
-    const [current, rows] = await Promise.all([this.rules.settings(), this.prisma.setting.findMany()]);
+    const current = await this.rules.settings();
     const defaults = this.rules.defaults();
-    const changed = new Set(rows.map((r) => r.key));
     return {
       items: SETTING_KEYS.map((key) => {
         const field = FIELD_OF[key];
-        return { key, value: stored(field, current[field]) as number | string, default: stored(field, defaults[field]) as number | string, changed: changed.has(key) };
+        const value = stored(field, current[field]) as number | string;
+        const fallback = stored(field, defaults[field]) as number | string;
+        // "Changed" means it differs from the default (the seed stores every default as a row).
+        return { key, value, default: fallback, changed: value !== fallback };
       }),
     };
   }
