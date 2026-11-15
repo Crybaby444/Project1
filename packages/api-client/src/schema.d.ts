@@ -2157,6 +2157,11 @@ export interface components {
                 /** Format: date-time */
                 updatedAt: string;
                 version: number;
+                activity: {
+                    requests: number;
+                    nextStart: string | null;
+                    earnedCents: number;
+                };
             }[];
         };
         ListingDraftDto: {

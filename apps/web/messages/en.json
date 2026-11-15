@@ -666,7 +666,12 @@
     "view": "View",
     "loadFailed": "We could not load your items.",
     "retry": "Try again",
-    "count": "{count, plural, one {# item} other {# items}}"
+    "count": "{count, plural, one {# item} other {# items}}",
+    "activity": {
+      "requests": "{count, plural, one {# request waiting} other {# requests waiting}}",
+      "next": "Next rental from {date}",
+      "earned": "Earned {amount}"
+    }
   },
   "moderation": {
     "title": "Moderation",

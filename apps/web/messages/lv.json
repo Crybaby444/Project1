@@ -666,7 +666,12 @@
     "view": "Skatīt",
     "loadFailed": "Neizdevās ielādēt tavas lietas.",
     "retry": "Mēģināt vēlreiz",
-    "count": "{count, plural, zero {# lietas} one {# lieta} other {# lietas}}"
+    "count": "{count, plural, zero {# lietas} one {# lieta} other {# lietas}}",
+    "activity": {
+      "requests": "{count, plural, zero {# pieprasījumu gaida} one {# pieprasījums gaida} other {# pieprasījumi gaida}}",
+      "next": "Nākamā noma no {date}",
+      "earned": "Nopelnīts {amount}"
+    }
   },
   "moderation": {
     "title": "Moderācija",

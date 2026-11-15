@@ -271,6 +271,12 @@ export const OwnerListingSummarySchema = z.object({
   publishedAt: z.iso.datetime().nullable(),
   updatedAt: z.iso.datetime(),
   version: z.number().int(),
+  /** What is going on with it: requests waiting for the owner, the next paid rental's first day, what it earned. */
+  activity: z.object({
+    requests: z.number().int().min(0),
+    nextStart: LocalDateSchema.nullable(),
+    earnedCents: z.number().int().min(0),
+  }),
 });
 
 export type OwnerListingSummary = z.infer<typeof OwnerListingSummarySchema>;
