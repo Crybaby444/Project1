@@ -42,10 +42,13 @@ export function SiteHeader(_props: { catalog?: MenuRoot[] }) {
             <Wordmark className="text-[26px] sm:text-[28px]" />
           </Link>
 
-          <div className="col-start-3 flex min-w-0 items-center justify-self-end gap-0.5 sm:gap-2">
+          <div className="col-start-3 flex min-w-0 items-center gap-0.5 justify-self-end sm:gap-2">
             {/* On a phone the language moves to the empty left corner (it must stay one tap away); the theme
                 steps aside to the footer. On wider screens both sit here, on the right. */}
-            <div data-phone-left className="max-sm:absolute max-sm:top-1/2 max-sm:left-4 max-sm:-translate-y-1/2">
+            <div
+              data-phone-left
+              className="max-sm:absolute max-sm:top-1/2 max-sm:left-4 max-sm:-translate-y-1/2"
+            >
               <LanguageSwitcher className="shrink-0" />
             </div>
             <div data-desktop-only data-theme-control className="flex items-center max-sm:hidden">
@@ -53,29 +56,33 @@ export function SiteHeader(_props: { catalog?: MenuRoot[] }) {
             </div>
             {status === 'authenticated' && user ? (
               <>
-                <Link
-                  href="/listings/new"
-                  className="group border-cta bg-cta text-cta-fg rounded-pill ease-yoyo inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center gap-1.5 border px-2.5 text-[13px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96] sm:px-4"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                    className="ease-yoyo size-4 transition-transform duration-250 group-hover:rotate-90"
+                {user.role !== 'ADMIN' && (
+                  <Link
+                    href="/listings/new"
+                    className="group border-cta bg-cta text-cta-fg rounded-pill ease-yoyo inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center gap-1.5 border px-2.5 text-[13px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96] sm:px-4"
                   >
-                    <path
-                      d="M12 5v14M5 12h14"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.25"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  {/* On a phone only the "+" shows; the name stays for assistive tech. */}
-                  <span className="sr-only sm:not-sr-only">{t('lendItem')}</span>
-                </Link>
-                <div className="shrink-0">
-                  <NotificationBell />
-                </div>
+                    <svg
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                      className="ease-yoyo size-4 transition-transform duration-250 group-hover:rotate-90"
+                    >
+                      <path
+                        d="M12 5v14M5 12h14"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.25"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    {/* On a phone only the "+" shows; the name stays for assistive tech. */}
+                    <span className="sr-only sm:not-sr-only">{t('lendItem')}</span>
+                  </Link>
+                )}
+                {user.role !== 'ADMIN' && (
+                  <div className="shrink-0">
+                    <NotificationBell />
+                  </div>
+                )}
                 <div className="shrink-0">
                   <UserMenu user={user} />
                 </div>

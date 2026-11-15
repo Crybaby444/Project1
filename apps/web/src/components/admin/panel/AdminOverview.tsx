@@ -55,7 +55,8 @@ function Body({ data }: { data: Overview }) {
   const waits = [
     { count: data.listings.pendingReview, label: t('toReview', { count: data.listings.pendingReview }), href: '/admin/listings' },
     { count: data.deals.disputed, label: t('disputes', { count: data.deals.disputed }), href: '/admin/deals?view=disputes' },
-    { count: data.reports.open, label: t('reportsWaiting', { count: data.reports.open }), href: '/admin/reports' },
+    // `?.`: an API one release behind has no complaints yet (the site may deploy first).
+    { count: data.reports?.open ?? 0, label: t('reportsWaiting', { count: data.reports?.open ?? 0 }), href: '/admin/reports' },
     { count: data.deals.requested, label: t('requests', { count: data.deals.requested }), href: '/admin/deals?status=REQUESTED' },
   ];
   const anything = waits.some((w) => w.count > 0);

@@ -43,6 +43,8 @@ export function UserMenu({ user }: { user: PublicUser }) {
   const tc = useTranslations('chat');
   const unread = useUnreadCount().data ?? 0;
   const { signOut } = useSession();
+  // An administrator's account is for the admin panel only (owner, 2026-11-15).
+  const isAdmin = user.role === 'ADMIN';
   const router = useRouter();
   const toast = useToast();
   const [open, setOpen] = useState(false);
@@ -117,7 +119,7 @@ export function UserMenu({ user }: { user: PublicUser }) {
         aria-controls={open ? menuId : undefined}
         onClick={() => (open ? close({ refocus: false }) : openAt('first'))}
         onKeyDown={onButtonKeyDown}
-        style={{ backgroundColor: 'var(--ink)', color: 'var(--canvas)' }}   // v16: one ink disc for everyone
+        style={{ backgroundColor: 'var(--ink)', color: 'var(--canvas)' }} // v16: one ink disc for everyone
         className="border-ink rounded-pill ease-yoyo relative inline-grid size-10 place-items-center border text-[13px] font-bold tracking-[0.03em] [filter:drop-shadow(0_0_0.6px_var(--sticker-edge))] transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96]"
       >
         {/* The name says what the button is and still contains the visible initials (WCAG 2.5.3). */}
@@ -133,82 +135,91 @@ export function UserMenu({ user }: { user: PublicUser }) {
       {open && (
         <div className="border-ink/15 bg-surface text-ink animate-pop-in rounded-media absolute top-full right-0 z-40 mt-2 w-80 max-w-[calc(100vw-2rem)] origin-top-right overflow-hidden border p-2 shadow-[0_24px_48px_-28px_rgba(10,11,14,0.5)]">
           <div className="border-ink/15 flex items-center gap-3 border-b px-3 pt-2 pb-4">
-            <span aria-hidden="true" className="bg-ink text-canvas font-display grid size-11 shrink-0 place-items-center rounded-full text-lg font-black">
+            <span
+              aria-hidden="true"
+              className="bg-ink text-canvas font-display grid size-11 shrink-0 place-items-center rounded-full text-lg font-black"
+            >
               {initials(user.name)}
             </span>
             <span className="min-w-0">
-              <span className="font-display block truncate text-[1.5rem] leading-none font-black uppercase">{user.name}</span>
+              <span className="font-display block truncate text-[1.5rem] leading-none font-black uppercase">
+                {user.name}
+              </span>
               <span className="text-ink/75 block truncate text-sm">{user.email}</span>
             </span>
           </div>
           <ul ref={menuRef} id={menuId} role="menu" aria-label={t('account')} onKeyDown={onMenuKeyDown}>
-            <li role="none">
-              <Link
-                href="/bookings"
-                role="menuitem"
-                tabIndex={-1}
-                onClick={() => close({ refocus: false })}
-                className={ITEM}
-              >
-                <span>{td('myDeals')}</span>
-                {waiting > 0 && (
-                  <span className="rounded-pill bg-ink text-canvas animate-pop-in font-sans inline-flex min-h-6 min-w-6 items-center justify-center px-2 text-[12px] tabular-nums">
-                    <span aria-hidden="true">{waiting}</span>
-                    <span className="sr-only">{td('waiting', { count: waiting })}</span>
-                  </span>
-                )}
-              </Link>
-            </li>
-            <li role="none">
-              <Link
-                href="/messages"
-                role="menuitem"
-                tabIndex={-1}
-                onClick={() => close({ refocus: false })}
-                className={ITEM}
-              >
-                <span>{tc('menu')}</span>
-                {unread > 0 && (
-                  <span className="rounded-pill bg-ink text-canvas animate-pop-in font-sans inline-flex min-h-6 min-w-6 items-center justify-center px-2 text-[12px] tabular-nums">
-                    <span aria-hidden="true">{unread}</span>
-                    <span className="sr-only">{tc('unread', { count: unread })}</span>
-                  </span>
-                )}
-              </Link>
-            </li>
-            <li role="none">
-              <Link
-                href="/wallet"
-                role="menuitem"
-                tabIndex={-1}
-                onClick={() => close({ refocus: false })}
-                className={ITEM}
-              >
-                {td('wallet')}
-              </Link>
-            </li>
-            <li role="none">
-              <Link
-                href="/dashboard/lending"
-                role="menuitem"
-                tabIndex={-1}
-                onClick={() => close({ refocus: false })}
-                className={ITEM}
-              >
-                {t('myListings')}
-              </Link>
-            </li>
-            <li role="none">
-              <Link
-                href="/dashboard/favorites"
-                role="menuitem"
-                tabIndex={-1}
-                onClick={() => close({ refocus: false })}
-                className={ITEM}
-              >
-                {t('favorites')}
-              </Link>
-            </li>
+            {!isAdmin && (
+              <>
+                <li role="none">
+                  <Link
+                    href="/bookings"
+                    role="menuitem"
+                    tabIndex={-1}
+                    onClick={() => close({ refocus: false })}
+                    className={ITEM}
+                  >
+                    <span>{td('myDeals')}</span>
+                    {waiting > 0 && (
+                      <span className="rounded-pill bg-ink text-canvas animate-pop-in inline-flex min-h-6 min-w-6 items-center justify-center px-2 font-sans text-[12px] tabular-nums">
+                        <span aria-hidden="true">{waiting}</span>
+                        <span className="sr-only">{td('waiting', { count: waiting })}</span>
+                      </span>
+                    )}
+                  </Link>
+                </li>
+                <li role="none">
+                  <Link
+                    href="/messages"
+                    role="menuitem"
+                    tabIndex={-1}
+                    onClick={() => close({ refocus: false })}
+                    className={ITEM}
+                  >
+                    <span>{tc('menu')}</span>
+                    {unread > 0 && (
+                      <span className="rounded-pill bg-ink text-canvas animate-pop-in inline-flex min-h-6 min-w-6 items-center justify-center px-2 font-sans text-[12px] tabular-nums">
+                        <span aria-hidden="true">{unread}</span>
+                        <span className="sr-only">{tc('unread', { count: unread })}</span>
+                      </span>
+                    )}
+                  </Link>
+                </li>
+                <li role="none">
+                  <Link
+                    href="/wallet"
+                    role="menuitem"
+                    tabIndex={-1}
+                    onClick={() => close({ refocus: false })}
+                    className={ITEM}
+                  >
+                    {td('wallet')}
+                  </Link>
+                </li>
+                <li role="none">
+                  <Link
+                    href="/dashboard/lending"
+                    role="menuitem"
+                    tabIndex={-1}
+                    onClick={() => close({ refocus: false })}
+                    className={ITEM}
+                  >
+                    {t('myListings')}
+                  </Link>
+                </li>
+                <li role="none">
+                  <Link
+                    href="/dashboard/favorites"
+                    role="menuitem"
+                    tabIndex={-1}
+                    onClick={() => close({ refocus: false })}
+                    className={ITEM}
+                  >
+                    {t('favorites')}
+                  </Link>
+                </li>
+              </>
+            )}
             {user.role === 'ADMIN' && (
               <li role="none">
                 <Link
@@ -222,19 +233,27 @@ export function UserMenu({ user }: { user: PublicUser }) {
                 </Link>
               </li>
             )}
+            {!isAdmin && (
+              <li role="none">
+                <Link
+                  href="/settings"
+                  role="menuitem"
+                  tabIndex={-1}
+                  onClick={() => close({ refocus: false })}
+                  className={ITEM}
+                >
+                  {t('settings')}
+                </Link>
+              </li>
+            )}
             <li role="none">
-              <Link
-                href="/settings"
+              <button
+                type="button"
                 role="menuitem"
                 tabIndex={-1}
-                onClick={() => close({ refocus: false })}
-                className={ITEM}
+                onClick={onSignOut}
+                className={`${QUIET_ITEM} mt-1`}
               >
-                {t('settings')}
-              </Link>
-            </li>
-            <li role="none">
-              <button type="button" role="menuitem" tabIndex={-1} onClick={onSignOut} className={`${QUIET_ITEM} mt-1`}>
                 {t('signOut')}
               </button>
             </li>
