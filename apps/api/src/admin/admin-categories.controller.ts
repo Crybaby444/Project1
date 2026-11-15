@@ -2,7 +2,6 @@ import { Body, Controller, Get, HttpCode, Param, Patch, UseGuards } from '@nestj
 import { ApiTags } from '@nestjs/swagger';
 import { AdminCategoriesSchema, AdminCategoryChangeSchema, type AdminCategory, type PublicUser } from '@yoyo/shared';
 import { createZodDto, ZodResponse } from 'nestjs-zod';
-import { z } from 'zod';
 import { AuditService } from '../audit/audit.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
