@@ -8,7 +8,7 @@ import { Link } from '@/i18n/navigation';
 import { useAdminStaff, useChangeStaffRole, useResetTwoFactor } from '@/lib/admin/queries';
 import { ApiError } from '@/lib/session/api-error';
 import { useSession } from '@/lib/session/SessionProvider';
-import { AdminPageHeader, Panel, SELECT_CLASS } from './parts';
+import { AdminPageHeader, AdminSelect, Panel } from './parts';
 
 /**
  * The role picker used on the staff page and on a person's page: a role, or "not staff". The API refuses
@@ -27,14 +27,16 @@ export function StaffRoleSelect({
   const toast = useToast();
   const change = useChangeStaffRole();
   return (
-    <label className="flex items-center gap-2">
-      <span className="sr-only">{label}</span>
-      <select
-        value={value ?? ''}
-        disabled={change.isPending}
-        onChange={(e) =>
+    <AdminSelect
+      label={label}
+      hideLabel
+      className="min-w-44"
+      value={value ?? ''}
+      disabled={change.isPending}
+      options={[{ value: '', label: ts('none') }, ...STAFF_ROLES.map((r) => ({ value: r, label: ts(`roles.${r}`) }))]}
+      onChange={(v) =>
           change.mutate(
-            { id, staffRole: (e.target.value || null) as StaffRole | null },
+            { id, staffRole: (v || null) as StaffRole | null },
             {
               onSuccess: () => toast.show(ts('changed')),
               onError: (err) => {
@@ -48,16 +50,7 @@ export function StaffRoleSelect({
             },
           )
         }
-        className={SELECT_CLASS}
-      >
-        <option value="">{ts('none')}</option>
-        {STAFF_ROLES.map((r) => (
-          <option key={r} value={r}>
-            {ts(`roles.${r}`)}
-          </option>
-        ))}
-      </select>
-    </label>
+    />
   );
 }
 
