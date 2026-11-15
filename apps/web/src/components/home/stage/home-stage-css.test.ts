@@ -26,4 +26,19 @@ describe('home-stage.css', () => {
     const globals = readFileSync(join(__dirname, '../../../app/globals.css'), 'utf8');
     expect(globals).toMatch(/\[data-theme-control\][^{]*\{[^}]*display:\s*none/);
   });
+
+  it('sizes the chin to the screen: as wide as the header content at most, corners and gaps that scale', () => {
+    const at = css.indexOf('html[data-staged] [data-site-header] {');
+    const rule = css.slice(at, css.indexOf('}', at));
+    expect(rule).toMatch(/inset-inline:\s*max\(/);
+    expect(rule).toMatch(/border-radius:\s*0 0 clamp\(/);
+  });
+
+  it('leaves no text selection or tap flash on the home scenes', () => {
+    const at = css.indexOf('[data-home-root] {');
+    expect(at).toBeGreaterThan(-1);
+    const rule = css.slice(at, css.indexOf('}', at));
+    expect(rule).toMatch(/user-select:\s*none/);
+    expect(rule).toMatch(/-webkit-tap-highlight-color:\s*transparent/);
+  });
 });

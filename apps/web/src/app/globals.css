@@ -450,6 +450,13 @@ html[data-page-switch]::view-transition-new(site-header) {
   body.has-cursor summary {
     cursor: none;
   }
+  /* A modal dialog sits in the top layer, above the drop: the native cursor comes back inside it. */
+  body.has-cursor dialog[open] {
+    cursor: auto;
+  }
+  body.has-cursor dialog[open] :is(a, button, [role='button'], label, summary) {
+    cursor: pointer;
+  }
 }
 
 /* The night rows of the home: each track is two identical halves and slides by one, endlessly. */

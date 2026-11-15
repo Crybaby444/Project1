@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { hoverTarget, spring, stepSpring, stepTail, stretch, type HoverTarget, type Point } from './cursor-physics';
-import { moved } from './drop-cursor';
+import { moved, stepsAside } from './drop-cursor';
 import { useReducedMotion } from './hooks';
 
 const TAIL = 6;
@@ -15,8 +15,6 @@ function subscribeFine(onChange: () => void): () => void {
 const subscribeNone = () => () => {};
 const CLICKABLE =
   'a[href], button:not([disabled]), [role="button"], [role="combobox"], [role="option"]:not([aria-disabled="true"]), [role="tab"], summary, label[for]';
-/** Over these the native caret shows and the drop steps aside. */
-const TYPING = 'input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]), textarea, [contenteditable="true"]';
 
 const VERT = 'attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }';
 // One signed-distance field: the stretched drop melted (smooth-min) into its tapering tail, morphing into the
@@ -126,7 +124,7 @@ export function DropCursor() {
     };
     const pick = (node: EventTarget | null) => {
       const e = node instanceof Element ? node : null;
-      typing = !!e?.closest(TYPING);
+      typing = stepsAside(e);
       const next = typing ? null : (e?.closest(CLICKABLE) ?? null);
       if (next !== el) {
         el = next;

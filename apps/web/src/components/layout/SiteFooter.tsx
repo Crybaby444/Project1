@@ -133,7 +133,19 @@ export function SiteFooter() {
           </ul>
         </nav>
       </div>
-      <div className="border-ink/15 mt-10 border-y">
+      {/* The sign-off: only the top half of the wordmark shows, cut off by the bottom bar below it (owner, 2026-11-14). */}
+      <div className="@container mx-auto mt-10 max-w-[1440px] px-4 sm:px-8">
+        <div className="h-[21cqw] overflow-hidden">
+          <p
+            data-footer-wordmark
+            aria-hidden="true"
+            className="font-display pointer-events-none m-0 pt-[0.04em] text-center text-[59cqw] leading-[0.72] font-black tracking-[-0.02em] uppercase select-none"
+          >
+            YOYO
+          </p>
+        </div>
+      </div>
+      <div className="border-ink/15 border-t">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-4 sm:px-8">
           <p className="text-ink/75 m-0 text-[13px] font-medium">{t('copyright', { year: new Date().getFullYear() })}</p>
           <div className="-mx-3 flex flex-wrap items-center gap-x-6 gap-y-1">
@@ -143,18 +155,6 @@ export function SiteFooter() {
               <ThemeSelect compact />
             </div>
           </div>
-        </div>
-      </div>
-      {/* The sign-off: only the top half of the wordmark shows; the rest runs off the page's bottom edge. */}
-      <div className="@container mx-auto max-w-[1440px] px-4 sm:px-8">
-        <div className="h-[21cqw] overflow-hidden">
-          <p
-            data-footer-wordmark
-            aria-hidden="true"
-            className="font-display pointer-events-none m-0 pt-[0.04em] text-center text-[59cqw] leading-[0.72] font-black tracking-[-0.02em] uppercase select-none"
-          >
-            YOYO
-          </p>
         </div>
       </div>
     </footer>
