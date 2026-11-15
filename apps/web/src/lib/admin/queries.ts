@@ -141,3 +141,28 @@ export function useAdminSeo() {
   const client = useApiClient();
   return useQuery({ queryKey: ['admin', 'seo'] as const, queryFn: async () => unwrap(client.GET('/api/v1/admin/seo')) });
 }
+
+export function useAdminAudit(action: string | undefined, page: number) {
+  const client = useApiClient();
+  return useQuery({
+    queryKey: ['admin', 'audit', action ?? 'all', page] as const,
+    queryFn: async () =>
+      unwrap(client.GET('/api/v1/admin/audit', { params: { query: { page, ...(action ? { action: action as never } : {}) } } })),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useAdminSettings() {
+  const client = useApiClient();
+  return useQuery({ queryKey: ['admin', 'settings'] as const, queryFn: async () => unwrap(client.GET('/api/v1/admin/settings')) });
+}
+
+export function useSaveAdminSettings() {
+  const client = useApiClient();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (change: Record<string, number | string>) => unwrap(client.PUT('/api/v1/admin/settings', { body: change as never })),
+    onSuccess: (data) => queryClient.setQueryData(['admin', 'settings'], data),
+    onSettled: () => void queryClient.invalidateQueries({ queryKey: ['admin', 'audit'] }),
+  });
+}

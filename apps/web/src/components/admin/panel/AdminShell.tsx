@@ -6,48 +6,68 @@ import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { useSession } from '@/lib/session/SessionProvider';
 import { useAdminOverview } from '@/lib/admin/queries';
 
-type Section = 'overview' | 'traffic' | 'seo' | 'moderation' | 'deals' | 'reports' | 'users' | 'money';
+type Section = 'overview' | 'traffic' | 'seo' | 'moderation' | 'deals' | 'reports' | 'users' | 'money' | 'audit' | 'settings';
 
-const SECTIONS: { key: Section; href: string; icon: ReactNode }[] = [
+const SECTIONS: { key: Section; group: 'insight' | 'work' | 'money' | 'system'; href: string; icon: ReactNode }[] = [
   {
     key: 'overview',
+    group: 'insight',
     href: '/admin',
     icon: <path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-3H4zM14 7h6V4h-6z" />,
   },
   {
     key: 'traffic',
+    group: 'insight',
     href: '/admin/traffic',
     icon: <path d="M4 19h16M7 15l3-4 3 3 5-7" />,
   },
   {
     key: 'seo',
+    group: 'insight',
     href: '/admin/seo',
     icon: <path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4M8 11h6M11 8v6" />,
   },
   {
     key: 'moderation',
+    group: 'work',
     href: '/admin/listings',
     icon: <path d="M9 12l2 2 4-4M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z" />,
   },
   {
     key: 'deals',
+    group: 'work',
     href: '/admin/deals',
     icon: <path d="M7 7h11l-3-3M17 17H6l3 3M18 7v4M6 17v-4" />,
   },
   {
     key: 'reports',
+    group: 'work',
     href: '/admin/reports',
     icon: <path d="M5 21V4m0 0h11l-2 4 2 4H5" />,
   },
   {
     key: 'users',
+    group: 'work',
     href: '/admin/users',
     icon: <path d="M16 19v-1a4 4 0 00-4-4H7a4 4 0 00-4 4v1M9.5 10a3 3 0 100-6 3 3 0 000 6zM21 19v-1a4 4 0 00-3-3.9M15.5 4.1a3 3 0 010 5.8" />,
   },
   {
     key: 'money',
+    group: 'money',
     href: '/admin/money',
     icon: <path d="M3 7h18v10H3zM12 14.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM6.5 10v.01M17.5 14v.01" />,
+  },
+  {
+    key: 'audit',
+    group: 'system',
+    href: '/admin/audit',
+    icon: <path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" />,
+  },
+  {
+    key: 'settings',
+    group: 'system',
+    href: '/admin/settings',
+    icon: <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" />,
   },
 ];
 
@@ -59,6 +79,8 @@ function activeSection(pathname: string): Section {
   if (pathname.startsWith('/admin/reports')) return 'reports';
   if (pathname.startsWith('/admin/users')) return 'users';
   if (pathname.startsWith('/admin/money')) return 'money';
+  if (pathname.startsWith('/admin/audit')) return 'audit';
+  if (pathname.startsWith('/admin/settings')) return 'settings';
   return 'overview';
 }
 
@@ -101,11 +123,17 @@ export function AdminShell({ children }: { children: ReactNode }) {
         </p>
         <nav aria-label={t('navLabel')} className="overflow-x-auto lg:flex-1 lg:overflow-visible">
           <ul className="flex gap-1 px-3 py-2 lg:flex-col lg:px-3 lg:py-0">
-            {SECTIONS.map(({ key, href, icon }) => {
+            {SECTIONS.map(({ key, group, href, icon }, index) => {
               const current = key === active;
               const count = waiting[key] ?? 0;
+              const firstOfGroup = index === 0 || SECTIONS[index - 1]!.group !== group;
               return (
                 <li key={key} className="shrink-0">
+                  {firstOfGroup && (
+                    <p className={`text-canvas/65 hidden px-3.5 pb-1 text-[11px] font-bold tracking-[0.08em] uppercase lg:block ${index === 0 ? '' : 'pt-4'}`}>
+                      {t(`groups.${group}`)}
+                    </p>
+                  )}
                   <Link
                     href={href}
                     aria-current={current ? 'page' : undefined}

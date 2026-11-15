@@ -12,7 +12,9 @@
       "money": "Money",
       "reports": "Reports",
       "traffic": "Traffic",
-      "seo": "SEO"
+      "seo": "SEO",
+      "audit": "Audit log",
+      "settings": "Settings"
     },
     "common": {
       "loadFailed": "This did not load.",
@@ -261,6 +263,78 @@
       "console": "Google Search Console",
       "consoleHint": "Add yoyo.rent as a property in Google Search Console and submit the sitemap: it shows what people search on Google before they come, and any indexing problems. It needs the owner's Google account.",
       "open": "Open"
+    },
+    "groups": {
+      "insight": "Insight",
+      "work": "Work",
+      "money": "Money",
+      "system": "System"
+    },
+    "audit": {
+      "title": "Audit log",
+      "intro": "Every administrator action: who, what, on which object, and what changed.",
+      "all": "All actions",
+      "empty": "Nothing yet.",
+      "before": "Before",
+      "after": "After",
+      "by": "by {name}",
+      "open": "Open",
+      "action": {
+        "LISTING_APPROVED": "Listing approved",
+        "LISTING_REJECTED": "Listing rejected",
+        "LISTING_MOVED": "Listing moved",
+        "LISTING_HIDDEN": "Listing hidden",
+        "LISTING_SHOWN": "Listing shown again",
+        "DISPUTE_RESOLVED": "Dispute decided",
+        "USER_BLOCKED": "Person blocked",
+        "USER_UNBLOCKED": "Person unblocked",
+        "USER_NOTE": "Note on a person",
+        "REPORT_CLOSED": "Report closed",
+        "REVIEW_HIDDEN": "Review hidden",
+        "REVIEW_SHOWN": "Review shown again",
+        "SETTINGS_CHANGED": "Settings changed",
+        "CATEGORY_CHANGED": "Category changed"
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "intro": "The rules every deal follows and the fee. A change applies to new steps at once and is written to the audit log; deals keep the fee they were requested with.",
+      "save": "Save changes",
+      "saved": "Saved.",
+      "failed": "Not saved: {reason}",
+      "default": "Default {value}",
+      "changed": "Changed",
+      "reset": "Back to default",
+      "unsaved": "Unsaved changes",
+      "group": {
+        "fees": "Fee",
+        "deals": "Deal deadlines",
+        "other": "Other"
+      },
+      "key": {
+        "fees": {
+          "servicePercent": "Service fee, %",
+          "promoServicePercent": "Launch offer fee, %",
+          "promoServiceUntil": "Launch offer until"
+        },
+        "booking": {
+          "requestTtlHours": "Owner answers a request within, hours",
+          "paymentTtlHours": "Renter pays within, hours",
+          "handoverConfirmHours": "Renter can object to the handover within, hours",
+          "returnConfirmHours": "Owner can object to the return within, hours",
+          "inspectionHours": "Owner inspects the returned item within, hours",
+          "damageReplyHours": "Renter answers a damage claim within, hours",
+          "maxAdvanceDays": "Rentals can start up to, days ahead"
+        },
+        "review": {
+          "windowDays": "Reviews can be written within, days"
+        }
+      },
+      "hint": {
+        "fees": {
+          "promoServiceUntil": "Empty: no launch offer."
+        }
+      }
     }
   }
 }

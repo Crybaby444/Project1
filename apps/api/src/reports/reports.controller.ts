@@ -10,6 +10,7 @@ import { ApiErrors } from '../common/api-errors';
 import { RateLimiter } from '../common/rate-limiter';
 import { RATE_LIMITS } from '../common/rate-limits';
 import { ReportsService } from './reports.service';
+import { AuditService } from '../audit/audit.service';
 
 class ReportRequestDto extends createZodDto(ReportRequestSchema) {}
 class AdminReportsQueryDto extends createZodDto(AdminReportsQuerySchema) {}
@@ -40,7 +41,10 @@ export class ReportsController {
 @UseGuards(AuthGuard, RolesGuard)
 @Roles('ADMIN')
 export class AdminReportsController {
-  constructor(private readonly reports: ReportsService) {}
+  constructor(
+    private readonly reports: ReportsService,
+    private readonly audit: AuditService,
+  ) {}
 
   @Get()
   @ZodResponse({ status: 200, type: AdminReportListDto, description: 'Complaints by status; open ones oldest first' })
@@ -54,6 +58,8 @@ export class AdminReportsController {
   @ZodResponse({ status: 200, type: AdminReportResponseDto, description: 'Closes a complaint: acted on it, or nothing to do' })
   @ApiErrors(400, 401, 403, 404, 409)
   async close(@CurrentUser() admin: PublicUser, @Param('id') id: string, @Body() body: CloseReportDto): Promise<{ report: AdminReport }> {
-    return { report: await this.reports.close(admin.id, id, body) };
+    const report = await this.reports.close(admin.id, id, body);
+    await this.audit.record(admin, { action: 'REPORT_CLOSED', targetType: 'REPORT', targetId: id, summary: `${body.status}: ${report.subject.label}`, after: body });
+    return { report };
   }
 }

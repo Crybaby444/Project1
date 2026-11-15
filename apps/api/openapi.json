@@ -4723,6 +4723,202 @@
         ]
       }
     },
+    "/api/v1/admin/audit": {
+      "get": {
+        "operationId": "AdminAuditController_list",
+        "parameters": [
+          {
+            "name": "action",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "LISTING_APPROVED",
+                "LISTING_REJECTED",
+                "LISTING_MOVED",
+                "LISTING_HIDDEN",
+                "LISTING_SHOWN",
+                "DISPUTE_RESOLVED",
+                "USER_BLOCKED",
+                "USER_UNBLOCKED",
+                "USER_NOTE",
+                "REPORT_CLOSED",
+                "REVIEW_HIDDEN",
+                "REVIEW_SHOWN",
+                "SETTINGS_CHANGED",
+                "CATEGORY_CHANGED"
+              ]
+            }
+          },
+          {
+            "name": "targetId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 64,
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 10000,
+              "default": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Every administrator action, newest first",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminAuditListDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/settings": {
+      "get": {
+        "operationId": "AdminAuditController_getSettings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Every deal rule and fee, with its default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminSettingsDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "admin"
+        ]
+      },
+      "put": {
+        "operationId": "AdminAuditController_setSettings",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminSettingsChangeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Changes settings within the deal rules; logged with before and after",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminSettingsDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "admin"
+        ]
+      }
+    },
     "/api/v1/listings/{id}/photos": {
       "post": {
         "operationId": "PhotosController_upload",
@@ -13883,6 +14079,208 @@
           "user"
         ],
         "additionalProperties": false
+      },
+      "AdminAuditListDto_Output": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "admin": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "nullable": true
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name"
+                  ],
+                  "additionalProperties": false
+                },
+                "action": {
+                  "type": "string",
+                  "enum": [
+                    "LISTING_APPROVED",
+                    "LISTING_REJECTED",
+                    "LISTING_MOVED",
+                    "LISTING_HIDDEN",
+                    "LISTING_SHOWN",
+                    "DISPUTE_RESOLVED",
+                    "USER_BLOCKED",
+                    "USER_UNBLOCKED",
+                    "USER_NOTE",
+                    "REPORT_CLOSED",
+                    "REVIEW_HIDDEN",
+                    "REVIEW_SHOWN",
+                    "SETTINGS_CHANGED",
+                    "CATEGORY_CHANGED"
+                  ]
+                },
+                "targetType": {
+                  "type": "string"
+                },
+                "targetId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "nullable": true
+                },
+                "summary": {
+                  "type": "string"
+                },
+                "before": {},
+                "after": {},
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                }
+              },
+              "required": [
+                "id",
+                "admin",
+                "action",
+                "targetType",
+                "targetId",
+                "summary",
+                "before",
+                "after",
+                "createdAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "additionalProperties": false
+      },
+      "AdminSettingsDto_Output": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": [
+                    "number",
+                    "string"
+                  ]
+                },
+                "default": {
+                  "type": [
+                    "number",
+                    "string"
+                  ]
+                },
+                "changed": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "key",
+                "value",
+                "default",
+                "changed"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "AdminSettingsChangeDto": {
+        "type": "object",
+        "properties": {
+          "booking.requestTtlHours": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 720
+          },
+          "booking.paymentTtlHours": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 720
+          },
+          "booking.handoverConfirmHours": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 720
+          },
+          "booking.returnConfirmHours": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 720
+          },
+          "booking.inspectionHours": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 720
+          },
+          "booking.damageReplyHours": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 720
+          },
+          "booking.maxAdvanceDays": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 730
+          },
+          "review.windowDays": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 90
+          },
+          "fees.servicePercent": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 50
+          },
+          "fees.promoServicePercent": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 50
+          },
+          "fees.promoServiceUntil": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": ""
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              }
+            ]
+          }
+        }
       },
       "PhotoUploadResponseDto_Output": {
         "type": "object",

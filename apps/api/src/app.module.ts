@@ -32,6 +32,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { SavedSearchesModule } from './saved-searches/saved-searches.module';
 import { ReportsModule } from './reports/reports.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { AuditCoreModule } from './audit/audit-core.module';
 
 @Global()
 @Module({
@@ -55,6 +56,7 @@ class EnvModule {}
     SavedSearchesModule,
     ReportsModule,
     AnalyticsModule,
+    AuditCoreModule,
     AuthModule,
     MeModule,
     AdminModule,

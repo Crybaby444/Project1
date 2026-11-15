@@ -22,3 +22,4 @@ export * from './admin-overview';
 export * from './notifications';
 export * from './reports';
 export * from './analytics';
+export * from './admin-audit';
