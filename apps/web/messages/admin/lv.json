@@ -377,6 +377,18 @@
       "cancel": "Atpakaļ",
       "done": "Izdarīts.",
       "failed": "Neizdevās."
+    },
+    "search": {
+      "open": "Meklēt",
+      "shortcut": "⌘K",
+      "placeholder": "Vārds, e-pasts, lieta vai darījuma numurs…",
+      "users": "Lietotāji",
+      "listings": "Lietas",
+      "deals": "Darījumi",
+      "pages": "Sadaļas",
+      "empty": "Nekas nav atrasts.",
+      "hint": "↑↓ pārvietoties, Enter atvērt, Esc aizvērt",
+      "blocked": "bloķēts"
     }
   }
 }

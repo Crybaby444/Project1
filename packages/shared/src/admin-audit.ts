@@ -115,3 +115,11 @@ export type AdminUserDetail = z.infer<typeof AdminUserDetailSchema>;
 export const AdminNoteRequestSchema = z.object({ text: z.string().trim().min(1).max(2000) });
 /** Taking a listing down or hiding a review needs a reason (the owner is told it, the log keeps it). */
 export const AdminReasonSchema = z.object({ reason: z.string().trim().min(3).max(1000) });
+
+/** Admin search (⌘K): people, items and deals matching a few letters, an email or an id. */
+export const AdminSearchSchema = z.object({
+  users: z.array(z.object({ id: z.string(), name: z.string(), email: z.string(), blocked: z.boolean() })),
+  listings: z.array(z.object({ id: z.string(), title: z.string(), status: z.string(), owner: z.string() })),
+  deals: z.array(z.object({ id: z.string(), title: z.string(), status: z.string(), renter: z.string(), owner: z.string() })),
+});
+export type AdminSearch = z.infer<typeof AdminSearchSchema>;

@@ -9,11 +9,12 @@ import { BookingsModule } from '../bookings/bookings.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { ReviewsModule } from '../reviews/reviews.module';
 import { AdminPeopleController } from './admin-people.controller';
+import { AdminSearchController } from './admin-search';
 import { AdminPeopleService } from './admin-people.service';
 
 @Module({
   imports: [AuthModule, BookingsModule, NotificationsModule, ReviewsModule],
-  controllers: [AdminController, AdminAuditController, AdminPeopleController],
+  controllers: [AdminController, AdminAuditController, AdminPeopleController, AdminSearchController],
   providers: [AdminBootstrap, RolesGuard, AdminSettingsService, AdminPeopleService],
 })
 export class AdminModule {}
