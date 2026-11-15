@@ -5,7 +5,7 @@ import { createZodDto, ZodResponse } from 'nestjs-zod';
 import { AuditService } from '../audit/audit.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
-import { Roles, RolesGuard } from '../auth/roles.guard';
+import { Roles, RolesGuard, Section } from '../auth/roles.guard';
 import { CATALOG_VISIBLE_WHERE } from '../catalog/visibility';
 import { effectiveOrder, namesOf } from '../categories/categories.service';
 import { ApiErrors } from '../common/api-errors';
@@ -25,6 +25,7 @@ type Names = { en: string; lv: string; ru: string };
 @Controller('admin/categories')
 @UseGuards(AuthGuard, RolesGuard)
 @Roles('ADMIN')
+@Section('categories')
 export class AdminCategoriesController {
   constructor(
     private readonly prisma: PrismaService,

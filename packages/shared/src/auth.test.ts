@@ -49,6 +49,7 @@ describe('PublicUserSchema', () => {
       locale: 'lv',
       theme: 'system',
       role: 'USER',
+      staffRole: null,
       emailVerified: false,
       hasPassword: true,
       phone: null,

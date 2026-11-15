@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { PasswordService } from '../../src/auth/password.service';
-import type { Role, User } from '../../src/generated/prisma/client';
+import type { Role, StaffRole, User } from '../../src/generated/prisma/client';
 import type { TestApp } from './test-app';
 
 export interface SeedUser {
@@ -10,6 +10,7 @@ export interface SeedUser {
   name?: string;
   locale?: string;
   role?: Role;
+  staffRole?: StaffRole;
   emailVerified?: boolean;
 }
 
@@ -26,6 +27,7 @@ export async function seedUser(
       name: seed.name ?? 'Anna',
       locale: seed.locale ?? 'en',
       role: seed.role ?? 'USER',
+      staffRole: seed.staffRole ?? null,
       passwordHash: password === null ? null : await t.app.get(PasswordService).hash(password),
       emailVerifiedAt: seed.emailVerified ? t.clock.now() : null,
       createdAt: t.clock.now(),

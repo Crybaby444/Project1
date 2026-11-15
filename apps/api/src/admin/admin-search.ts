@@ -4,7 +4,7 @@ import { AdminSearchSchema, type AdminSearch } from '@yoyo/shared';
 import { createZodDto, ZodResponse } from 'nestjs-zod';
 import { z } from 'zod';
 import { AuthGuard } from '../auth/auth.guard';
-import { Roles, RolesGuard } from '../auth/roles.guard';
+import { Roles, RolesGuard, Section } from '../auth/roles.guard';
 import { escapeLike } from '../catalog/catalog-query';
 import { ApiErrors } from '../common/api-errors';
 import { PrismaService } from '../prisma/prisma.service';
@@ -25,6 +25,7 @@ const LIMIT = 6;
 export class AdminSearchController {
   constructor(private readonly prisma: PrismaService) {}
 
+  @Section('overview')
   @Get('search')
   @ZodResponse({ status: 200, type: AdminSearchDto, description: 'People, items and deals matching the words, an email or an id' })
   @ApiErrors(400, 401, 403)

@@ -1,7 +1,7 @@
 'use client';
 
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { BookingStatus, LedgerKind, RESOLVE_DECISIONS } from '@yoyo/shared';
+import type { BookingStatus, LedgerKind, RESOLVE_DECISIONS, StaffRole } from '@yoyo/shared';
 
 export type ResolveDecision = (typeof RESOLVE_DECISIONS)[number];
 import { newIdempotencyKey } from '@/lib/deals/idempotency';
@@ -225,6 +225,23 @@ export function useChangeAdminCategory() {
   return useMutation({
     mutationFn: async ({ id, change }: { id: string; change: { names?: { en: string; lv: string; ru: string } | null; move?: 'up' | 'down'; hidden?: boolean } }) => {
       await unwrap(client.PATCH('/api/v1/admin/categories/{id}', { params: { path: { id } }, body: change as never }));
+    },
+    onSettled: () => void queryClient.invalidateQueries({ queryKey: ['admin'] }),
+  });
+}
+
+export function useAdminStaff(enabled = true) {
+  const client = useApiClient();
+  return useQuery({ queryKey: ['admin', 'staff'] as const, queryFn: async () => (await unwrap(client.GET('/api/v1/admin/staff'))).items, enabled });
+}
+
+/** Give someone a staff role, change it, or (null) take them out of the panel. */
+export function useChangeStaffRole() {
+  const client = useApiClient();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, staffRole }: { id: string; staffRole: StaffRole | null }) => {
+      await unwrap(client.PUT('/api/v1/admin/users/{id}/staff', { params: { path: { id } }, body: { staffRole } }));
     },
     onSettled: () => void queryClient.invalidateQueries({ queryKey: ['admin'] }),
   });

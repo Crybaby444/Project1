@@ -16,7 +16,8 @@
       "audit": "Darbību žurnāls",
       "settings": "Iestatījumi",
       "system": "Sistēma",
-      "categories": "Kategorijas"
+      "categories": "Kategorijas",
+      "staff": "Komanda"
     },
     "common": {
       "loadFailed": "Neizdevās ielādēt.",
@@ -295,7 +296,8 @@
         "REVIEW_HIDDEN": "Atsauksme paslēpta",
         "REVIEW_SHOWN": "Atsauksme atkal redzama",
         "SETTINGS_CHANGED": "Iestatījumi mainīti",
-        "CATEGORY_CHANGED": "Kategorija mainīta"
+        "CATEGORY_CHANGED": "Kategorija mainīta",
+        "STAFF_CHANGED": "Mainīta komandas loma"
       }
     },
     "settings": {
@@ -378,7 +380,8 @@
       "none": "Šeit nekā nav.",
       "cancel": "Atpakaļ",
       "done": "Izdarīts.",
-      "failed": "Neizdevās."
+      "failed": "Neizdevās.",
+      "staffRole": "Loma panelī"
     },
     "search": {
       "open": "Meklēt",
@@ -445,6 +448,47 @@
       "done": "Saglabāts.",
       "failed": "Nesaglabājās.",
       "renameTitle": "Pārdēvēt “{name}”"
+    },
+    "staff": {
+      "title": "Komanda",
+      "intro": "Kas strādā administrēšanas panelī un ko katrs drīkst atvērt. Lai pievienotu cilvēku, atrodiet viņu sadaļā “Lietotāji” un piešķiriet lomu viņa lapā.",
+      "name": "Cilvēks",
+      "role": "Loma",
+      "twoFactor": "Divpakāpju ieeja",
+      "on": "Ieslēgta",
+      "off": "Izslēgta",
+      "lastSeen": "Pēdējā ieeja",
+      "never": "Nekad",
+      "you": "Jūs",
+      "none": "Nav komandā",
+      "remove": "Izņemt no paneļa",
+      "changed": "Loma mainīta",
+      "failed": "Neizdevās mainīt lomu",
+      "why": {
+        "SELF": "Savu lomu mainīt nevar",
+        "LAST_OWNER": "Pēdējais īpašnieks paliek īpašnieks",
+        "BLOCKED": "Vispirms atbloķējiet"
+      },
+      "roles": {
+        "OWNER": "Īpašnieks",
+        "MODERATOR": "Moderators",
+        "SUPPORT": "Atbalsts",
+        "FINANCE": "Grāmatvedis",
+        "EDITOR": "Redaktors"
+      },
+      "may": {
+        "OWNER": "Viss, arī komanda un iestatījumi",
+        "MODERATOR": "Moderācija, sūdzības, kategorijas, lietotāji",
+        "SUPPORT": "Lietotāji, darījumi, sūdzības",
+        "FINANCE": "Darījumi, nauda, sistēma un eksports",
+        "EDITOR": "Datplūsma, SEO, saturs, kategorijas"
+      },
+      "access": "Var atvērt"
+    },
+    "noAccess": {
+      "title": "Šī nav jūsu paneļa daļa",
+      "body": "Jūsu loma šo sadaļu neatver. Ja tā vajadzīga, jautājiet īpašniekam.",
+      "back": "Uz pārskatu"
     }
   }
 }

@@ -24,7 +24,7 @@ import {
 import { createZodDto, ZodResponse } from 'nestjs-zod';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
-import { Roles, RolesGuard } from '../auth/roles.guard';
+import { Roles, RolesGuard, Section } from '../auth/roles.guard';
 import { ApiErrors } from '../common/api-errors';
 import { Idempotent } from '../idempotency/idempotent.decorator';
 import { BookingsService } from '../bookings/bookings.service';
@@ -57,6 +57,7 @@ export class AdminDealsController {
     private readonly audit: AuditService,
   ) {}
 
+  @Section('overview')
   @Get('overview')
   @ZodResponse({ status: 200, type: AdminOverviewDto, description: 'The first screen of the admin panel: what waits, totals, money, 14 days and the newest activity' })
   @ApiErrors(401, 403)
@@ -64,6 +65,7 @@ export class AdminDealsController {
     return this.overviews.overview();
   }
 
+  @Section('deals')
   @Get('bookings')
   @ZodResponse({ status: 200, type: AdminBookingsResponseDto, description: 'Deals, 50 a page; `disputed=true` for the dispute queue' })
   @ApiErrors(400, 401, 403)
@@ -71,6 +73,7 @@ export class AdminDealsController {
     return this.deals.list(admin, query);
   }
 
+  @Section('deals')
   @Get('bookings/:id')
   @ZodResponse({ status: 200, type: AdminBookingDetailDto, description: 'A deal with its journal, ledger operations, card payments and photos' })
   @ApiErrors(401, 403, 404)
@@ -78,6 +81,7 @@ export class AdminDealsController {
     return this.deals.detail(admin, id);
   }
 
+  @Section('deals')
   @Post('bookings/:id/resolve')
   @HttpCode(200)
   @Idempotent({ required: true })
@@ -89,6 +93,7 @@ export class AdminDealsController {
     return { booking };
   }
 
+  @Section('money')
   @Get('ledger/operations')
   @ZodResponse({ status: 200, type: AdminLedgerResponseDto, description: 'Ledger operations with their postings, newest first' })
   @ApiErrors(400, 401, 403)
@@ -96,6 +101,7 @@ export class AdminDealsController {
     return this.deals.operations(query);
   }
 
+  @Section('money')
   @Get('ledger/accounts')
   @ZodResponse({ status: 200, type: AdminAccountsResponseDto, description: 'Account balances' })
   @ApiErrors(400, 401, 403)
@@ -103,6 +109,7 @@ export class AdminDealsController {
     return this.deals.accounts(query);
   }
 
+  @Section('money')
   @Get('ledger/summary')
   @ZodResponse({ status: 200, type: LedgerSummaryDto, description: 'Totals by kind of account and a check of the whole journal' })
   @ApiErrors(401, 403)

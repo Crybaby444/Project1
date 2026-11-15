@@ -4,7 +4,7 @@ import { AdminNoteRequestSchema, AdminReasonSchema, AdminUserDetailSchema, type 
 import { createZodDto, ZodResponse } from 'nestjs-zod';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
-import { Roles, RolesGuard } from '../auth/roles.guard';
+import { Roles, RolesGuard, Section } from '../auth/roles.guard';
 import { ApiErrors } from '../common/api-errors';
 import { AdminPeopleService } from './admin-people.service';
 
@@ -19,6 +19,7 @@ class AdminReasonDto extends createZodDto(AdminReasonSchema) {}
 export class AdminPeopleController {
   constructor(private readonly people: AdminPeopleService) {}
 
+  @Section('users')
   @Get('users/:id')
   @ZodResponse({ status: 200, type: AdminUserDetailDto, description: 'A person in full: items, deals, reviews, complaints, notes' })
   @ApiErrors(401, 403, 404)
@@ -26,6 +27,7 @@ export class AdminPeopleController {
     return this.people.detail(id);
   }
 
+  @Section('users')
   @Post('users/:id/notes')
   @HttpCode(201)
   @ApiErrors(400, 401, 403, 404)
@@ -33,6 +35,7 @@ export class AdminPeopleController {
     await this.people.addNote(admin, id, body.text);
   }
 
+  @Section('moderation')
   @Post('listings/:id/takedown')
   @HttpCode(200)
   @ApiErrors(400, 401, 403, 404, 409)
@@ -40,6 +43,7 @@ export class AdminPeopleController {
     await this.people.takedown(admin, id, body.reason);
   }
 
+  @Section('moderation')
   @Post('reviews/:id/hide')
   @HttpCode(200)
   @ApiErrors(400, 401, 403, 404)
@@ -47,6 +51,7 @@ export class AdminPeopleController {
     await this.people.setReviewHidden(admin, id, body.reason);
   }
 
+  @Section('moderation')
   @Post('reviews/:id/show')
   @HttpCode(200)
   @ApiErrors(401, 403, 404)

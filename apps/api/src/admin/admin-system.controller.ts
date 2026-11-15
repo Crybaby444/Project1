@@ -4,7 +4,7 @@ import { ADMIN_EXPORTS, AdminSystemSchema, type AdminExport, type AdminSystem } 
 import type { Response } from 'express';
 import { createZodDto, ZodResponse } from 'nestjs-zod';
 import { AuthGuard } from '../auth/auth.guard';
-import { Roles, RolesGuard } from '../auth/roles.guard';
+import { Roles, RolesGuard, Section } from '../auth/roles.guard';
 import { CLOCK, type Clock } from '../clock/clock';
 import { ApiErrors } from '../common/api-errors';
 import { AppError } from '../common/app-error';
@@ -30,6 +30,7 @@ const csv = (head: string[], rows: unknown[][]) => [head.join(','), ...rows.map(
 @Controller('admin')
 @UseGuards(AuthGuard, RolesGuard)
 @Roles('ADMIN')
+@Section('system')
 export class AdminSystemController {
   constructor(
     private readonly prisma: PrismaService,

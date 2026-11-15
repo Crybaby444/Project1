@@ -1,27 +1,30 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { staffMay, type AdminSection } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useRouter } from '@/i18n/navigation';
 import { unwrap } from '@/lib/session/api-error';
-import { useApiClient } from '@/lib/session/SessionProvider';
+import { panelRole } from '@/lib/admin/staff';
+import { useApiClient, useSession } from '@/lib/session/SessionProvider';
 
 type Hit = { key: string; group: 'pages' | 'users' | 'listings' | 'deals'; label: string; detail: string; href: string };
 
-const PAGES: { key: string; href: string }[] = [
-  { key: 'overview', href: '/admin' },
-  { key: 'traffic', href: '/admin/traffic' },
-  { key: 'seo', href: '/admin/seo' },
-  { key: 'moderation', href: '/admin/listings' },
-  { key: 'deals', href: '/admin/deals' },
-  { key: 'reports', href: '/admin/reports' },
-  { key: 'categories', href: '/admin/categories' },
-  { key: 'users', href: '/admin/users' },
-  { key: 'money', href: '/admin/money' },
-  { key: 'audit', href: '/admin/audit' },
-  { key: 'settings', href: '/admin/settings' },
-  { key: 'system', href: '/admin/system' },
+const PAGES: { key: string; section: AdminSection; href: string }[] = [
+  { key: 'overview', section: 'overview', href: '/admin' },
+  { key: 'traffic', section: 'traffic', href: '/admin/traffic' },
+  { key: 'seo', section: 'seo', href: '/admin/seo' },
+  { key: 'moderation', section: 'moderation', href: '/admin/listings' },
+  { key: 'deals', section: 'deals', href: '/admin/deals' },
+  { key: 'reports', section: 'reports', href: '/admin/reports' },
+  { key: 'categories', section: 'categories', href: '/admin/categories' },
+  { key: 'users', section: 'users', href: '/admin/users' },
+  { key: 'money', section: 'money', href: '/admin/money' },
+  { key: 'audit', section: 'audit', href: '/admin/audit' },
+  { key: 'settings', section: 'settings', href: '/admin/settings' },
+  { key: 'system', section: 'system', href: '/admin/system' },
+  { key: 'staff', section: 'staff', href: '/admin/staff' },
 ];
 
 /** Opens the palette from anywhere in the panel (the sidebar's search button sends this event). */
@@ -35,6 +38,7 @@ export const OPEN_PALETTE = 'yoyo-admin-palette';
 export function CommandPalette() {
   const t = useTranslations('admin');
   const client = useApiClient();
+  const { user } = useSession();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState('');
@@ -85,7 +89,7 @@ export function CommandPalette() {
 
   const hits = useMemo<Hit[]>(() => {
     const needle = q.trim().toLowerCase();
-    const pages = PAGES.filter((p) => !needle || t(`nav.${p.key}`).toLowerCase().includes(needle)).map<Hit>((p) => ({
+    const pages = PAGES.filter((p) => staffMay(panelRole(user), p.section)).filter((p) => !needle || t(`nav.${p.key}`).toLowerCase().includes(needle)).map<Hit>((p) => ({
       key: `p-${p.key}`,
       group: 'pages',
       label: t(`nav.${p.key}`),
@@ -99,7 +103,7 @@ export function CommandPalette() {
       ...(data?.deals ?? []).map<Hit>((d) => ({ key: `d-${d.id}`, group: 'deals', label: d.title || d.id, detail: `${d.renter} → ${d.owner} · ${d.status}`, href: `/admin/deals/${d.id}` })),
       ...pages,
     ];
-  }, [q, debounced, search.data, t]);
+  }, [q, debounced, search.data, t, user]);
 
   function go(hit: Hit | undefined) {
     if (!hit) return;

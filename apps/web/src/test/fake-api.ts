@@ -58,6 +58,7 @@ export function testUser(overrides: Partial<PublicUser> = {}): PublicUser {
     locale: 'en',
     theme: 'system',
     role: 'USER',
+    staffRole: null,
     emailVerified: true,
     hasPassword: true,
     phone: null,

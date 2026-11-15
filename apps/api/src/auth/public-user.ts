@@ -12,6 +12,8 @@ export function toPublicUser(user: User): PublicUser {
     locale: user.locale as PublicUser['locale'],
     theme: user.theme as PublicUser['theme'],
     role: user.role,
+    // An administrator from before staff roles counts as the owner.
+    staffRole: user.role === 'ADMIN' ? (user.staffRole ?? 'OWNER') : null,
     emailVerified: user.emailVerifiedAt !== null,
     hasPassword: user.passwordHash !== null,
     phone: user.phone,

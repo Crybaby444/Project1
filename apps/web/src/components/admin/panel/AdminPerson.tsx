@@ -1,6 +1,6 @@
 'use client';
 
-import type { AdminUserDetail } from '@yoyo/shared';
+import { staffMay, type AdminUserDetail } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState, type ReactNode } from 'react';
 import { DealStatusBadge } from '@/components/deals/DealStatusBadge';
@@ -11,7 +11,10 @@ import { Dialog } from '@/components/ui/Dialog';
 import { TEXTAREA_CLASS } from '@/components/ui/inputs';
 import { useToast } from '@/components/ui/Toast';
 import { Link } from '@/i18n/navigation';
-import { useAdminPerson, useAdminPersonAction, useBlockUser } from '@/lib/admin/queries';
+import { useAdminPerson, useAdminPersonAction, useAdminStaff, useBlockUser } from '@/lib/admin/queries';
+import { panelRole } from '@/lib/admin/staff';
+import { useSession } from '@/lib/session/SessionProvider';
+import { StaffRoleSelect } from './AdminStaff';
 import { useMoney } from '@/lib/deals/money';
 import { Panel } from './parts';
 
@@ -55,6 +58,9 @@ function Body({ d }: { d: AdminUserDetail }) {
   const money = useMoney();
   const toast = useToast();
   const block = useBlockUser();
+  const { user: viewer } = useSession();
+  const managesStaff = staffMay(panelRole(viewer), 'staff');
+  const staff = useAdminStaff(managesStaff);
   const act = useAdminPersonAction();
   const [ask, setAsk] = useState<Ask>(null);
   const [reason, setReason] = useState('');
@@ -81,7 +87,11 @@ function Body({ d }: { d: AdminUserDetail }) {
             {d.user.lastSeenAt ? t('lastSeen', { date: moment.format(new Date(d.user.lastSeenAt)) }) : t('never')}
           </p>
         </div>
-        {d.user.role !== 'ADMIN' && !d.user.deletedAt && (
+        <div className="flex flex-wrap items-center gap-2">
+          {managesStaff && viewer?.id !== d.user.id && !d.user.deletedAt && staff.data && (
+            <StaffRoleSelect id={d.user.id} value={staff.data.find((m) => m.id === d.user.id)?.staffRole ?? null} label={t('staffRole')} />
+          )}
+          {d.user.role !== 'ADMIN' && !d.user.deletedAt && (
           <Button
             variant={d.user.blockedAt ? 'primary' : 'ghost'}
             loading={block.isPending}
@@ -89,7 +99,8 @@ function Body({ d }: { d: AdminUserDetail }) {
           >
             {d.user.blockedAt ? tu('unblock') : tu('block')}
           </Button>
-        )}
+          )}
+        </div>
       </header>
 
       <dl className="border-ink/15 grid grid-cols-2 border-y sm:grid-cols-4 xl:grid-cols-8">
