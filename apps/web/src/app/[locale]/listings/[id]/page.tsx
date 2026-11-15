@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Breadcrumbs, type Crumb } from '@/components/catalog/Breadcrumbs';
 import { ShareButton } from '@/components/catalog/ShareButton';
+import { RecentlyViewed, RememberViewed } from '@/components/catalog/RecentlyViewed';
 import { HeartButton } from '@/components/catalog/HeartButton';
 import { formatEuros } from '@/lib/listings/money';
 import { ListingCard } from '@/components/catalog/ListingCard';
@@ -130,6 +131,7 @@ export default async function ItemPage({ params }: Props) {
           </ul>
         </section>
       )}
+      <RecentlyViewed except={detail.listing.id} />
     </main>
   );
 }
@@ -142,6 +144,25 @@ async function Available({ item, title, category, locale }: { item: AvailableIte
   return (
     <>
       <JsonLd data={itemJsonLd(item, siteOrigin(), seo.canonical)} />
+      <RememberViewed
+        item={{
+          id: listing.id,
+          title,
+          dailyCents: listing.dailyCents ?? 0,
+          weeklyDiscountPercent: listing.weeklyDiscountPercent,
+          depositCents: listing.depositCents,
+          condition: listing.condition,
+          city: listing.city,
+          district: listing.district,
+          categoryId: listing.categoryId,
+          cover: listing.photos[0]?.urls ?? null,
+          ownerId: owner.id,
+          contentLocale: listing.contentLocale,
+          publishedAt: listing.publishedAt,
+          rating: item.rating,
+          reviewCount: item.reviewCount,
+        }}
+      />
       <div className="grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-start xl:gap-12">
         <div className="flex min-w-0 flex-col gap-8">
           <Gallery listingId={listing.id} title={title} photos={listing.photos} />

@@ -5,6 +5,7 @@ import { Breadcrumbs } from '@/components/catalog/Breadcrumbs';
 import { CategoryIndex } from '@/components/catalog/CategoryIndex';
 import { SearchBox } from '@/components/catalog/SearchBox';
 import { ListingCard } from '@/components/catalog/ListingCard';
+import { RecentlyViewed } from '@/components/catalog/RecentlyViewed';
 import { loadCategories, loadCategoryCounts, loadSearch } from '@/lib/catalog/server-api';
 import { displayFit } from '@/lib/display-fit';
 import { Link } from '@/i18n/navigation';
@@ -45,6 +46,7 @@ export default async function CategoriesPage({ params }: Props) {
         </p>
       ) : (
         <>
+          <RecentlyViewed />
           {fresh.length > 0 && (
             <section aria-labelledby="catalog-fresh" className="flex flex-col gap-4">
               <div className="flex items-baseline justify-between gap-4">
