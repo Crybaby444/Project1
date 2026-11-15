@@ -317,3 +317,36 @@ export const FollowFeedSchema = z.object({
 });
 export type FollowFeed = z.infer<typeof FollowFeedSchema>;
 export const FollowFeedQuerySchema = z.object({ page: z.coerce.number().int().min(1).max(100).default(1) });
+
+/** A shop: a person's collection of their own items under a name (owner, 2026-11-16). */
+export const SHOP_LIMITS = { perUser: 20, items: 100, name: 60, about: 500 } as const;
+export const ShopSummarySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  about: z.string().nullable(),
+  categoryId: z.string().min(1).nullable(),
+  /** Items in it that the catalog shows. */
+  itemCount: z.number().int(),
+  /** Up to three cover photos of its items. */
+  covers: z.array(z.string()),
+});
+export type ShopSummary = z.infer<typeof ShopSummarySchema>;
+export const ShopsResponseSchema = z.object({ items: z.array(ShopSummarySchema) });
+export const ShopResponseSchema = z.object({
+  shop: ShopSummarySchema,
+  owner: z.object({ id: z.string(), name: z.string(), username: z.string().min(1).nullable() }),
+  items: z.array(CatalogItemSchema),
+});
+export type ShopResponse = z.infer<typeof ShopResponseSchema>;
+/** My shop, for editing: every item id in it, in order (whatever their status). */
+export const MyShopSchema = ShopSummarySchema.extend({ listingIds: z.array(z.string()) });
+export type MyShop = z.infer<typeof MyShopSchema>;
+export const MyShopsResponseSchema = z.object({ items: z.array(MyShopSchema) });
+export const ShopInputSchema = z.object({
+  name: z.string().trim().min(2).max(SHOP_LIMITS.name),
+  about: z.string().trim().max(SHOP_LIMITS.about).nullable().optional(),
+  categoryId: z.string().min(1).nullable().optional(),
+  /** My own items, in the order the shop shows them. */
+  listingIds: z.array(z.string().min(1)).max(SHOP_LIMITS.items).optional(),
+});
+export type ShopInput = z.infer<typeof ShopInputSchema>;

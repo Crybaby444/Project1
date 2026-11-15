@@ -16,12 +16,13 @@ export const chatKeys = {
 export const THREAD_POLL_MS = 3_000;
 export const UNREAD_POLL_MS = 10_000;
 
+/** Messages = personal conversations only (owner, 2026-11-16); a deal's conversation lives in the deal. */
 export function useConversations() {
   const client = useApiClient();
   const { status } = useSession();
   return useQuery({
     queryKey: chatKeys.list,
-    queryFn: async () => (await unwrap(client.GET('/api/v1/me/conversations'))).items,
+    queryFn: async () => (await unwrap(client.GET('/api/v1/me/conversations', { params: { query: { kind: 'direct' } } }))).items,
     enabled: status === 'authenticated',
     refetchInterval: UNREAD_POLL_MS,
   });
@@ -33,7 +34,7 @@ export function useUnreadCount() {
   const { status } = useSession();
   return useQuery({
     queryKey: chatKeys.unread,
-    queryFn: async () => (await unwrap(client.GET('/api/v1/me/conversations/unread'))).count,
+    queryFn: async () => (await unwrap(client.GET('/api/v1/me/conversations/unread', { params: { query: { kind: 'direct' } } }))).count,
     enabled: status === 'authenticated',
     refetchInterval: UNREAD_POLL_MS,
     staleTime: 10_000,
@@ -75,11 +76,23 @@ export function useMarkRead(id: string) {
   });
 }
 
-/** Starts (or finds) my conversation about an item; answers its id. */
-export function useOpenConversation() {
+/** Starts (or finds) my personal conversation with someone; answers it. */
+export function useOpenDirect() {
   const client = useApiClient();
   return useMutation({
-    mutationFn: async (listingId: string) =>
-      (await unwrap(client.POST('/api/v1/listings/{id}/conversation', { params: { path: { id: listingId } } }))).conversation,
+    mutationFn: async (userId: string) =>
+      (await unwrap(client.POST('/api/v1/users/{id}/conversation', { params: { path: { id: userId } } }))).conversation,
+  });
+}
+
+/** The conversation of a deal (its two sides), shown inside the deal. */
+export function useDealConversation(bookingId: string, enabled = true) {
+  const client = useApiClient();
+  const { status } = useSession();
+  return useQuery({
+    queryKey: ['chat', 'deal', bookingId] as const,
+    queryFn: async () => (await unwrap(client.GET('/api/v1/bookings/{id}/conversation', { params: { path: { id: bookingId } } }))).conversation,
+    enabled: enabled && status === 'authenticated',
+    staleTime: Infinity,
   });
 }

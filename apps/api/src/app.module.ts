@@ -11,6 +11,7 @@ import { FavoritesModule } from './favorites/favorites.module';
 import { ClockModule } from './clock/clock';
 import { OriginGuard } from './common/origin.guard';
 import { FollowsModule } from './follows/follows.module';
+import { ShopsModule } from './shops/shops.module';
 import { RateLimiterModule } from './common/rate-limiter';
 import { ENV, loadEnv } from './config/env';
 import { GeoModule } from './geo/geo.module';
@@ -56,6 +57,7 @@ class EnvModule {}
     NotificationsModule,
     SavedSearchesModule,
     FollowsModule,
+    ShopsModule,
     ReportsModule,
     AnalyticsModule,
     AuditCoreModule,

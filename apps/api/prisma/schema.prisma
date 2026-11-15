@@ -47,9 +47,9 @@ model User {
   passwordHash    String?
   name            String
   /// How people find them (`@olga.k`): lowercase, unique; null only until a pre-2026-11-16 account picks one.
-  username         String?          @unique
+  username        String?   @unique
   /// YYYY-MM-DD; Yoyo is for adults (18+). Null until given (older accounts, Google sign-ups).
-  birthDate        DateTime?        @db.Date
+  birthDate       DateTime? @db.Date
   city            String?
   about           String?
   /// Interface and email language: en | lv | ru.
@@ -67,39 +67,40 @@ model User {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
-  refreshTokens    RefreshToken[]
-  emailTokens      EmailToken[]
-  oauthAccounts    OAuthAccount[]
-  phoneCodes       PhoneCode[]
-  listings         Listing[]      @relation("ListingOwner")
-  reviewedListings Listing[]      @relation("ListingReviewer")
-  rentals          Booking[]      @relation("BookingRenter")
-  lendings         Booking[]      @relation("BookingOwner")
-  offersMade       Offer[]        @relation("OfferRenter")
-  offersReceived   Offer[]        @relation("OfferOwner")
-  payments         Payment[]
-  payouts          Payout[]
-  favorites        Favorite[]
-  reviewsWritten   Review[]  @relation("ReviewAuthor")
+  refreshTokens         RefreshToken[]
+  emailTokens           EmailToken[]
+  oauthAccounts         OAuthAccount[]
+  phoneCodes            PhoneCode[]
+  listings              Listing[]      @relation("ListingOwner")
+  reviewedListings      Listing[]      @relation("ListingReviewer")
+  rentals               Booking[]      @relation("BookingRenter")
+  lendings              Booking[]      @relation("BookingOwner")
+  offersMade            Offer[]        @relation("OfferRenter")
+  offersReceived        Offer[]        @relation("OfferOwner")
+  payments              Payment[]
+  payouts               Payout[]
+  favorites             Favorite[]
+  reviewsWritten        Review[]       @relation("ReviewAuthor")
   conversationsAsRenter Conversation[] @relation("ConversationRenter")
   conversationsAsOwner  Conversation[] @relation("ConversationOwner")
-  messages         Message[]
-  reviewsReceived  Review[]  @relation("ReviewSubject")
+  messages              Message[]
+  reviewsReceived       Review[]       @relation("ReviewSubject")
   /// Email topics they turned off (EMAIL_TOPICS of @yoyo/shared); account and security mail always goes.
-  emailOff         String[]         @default([])
-  notifications    Notification[]
-  savedSearches    SavedSearch[]
-  reports          Report[]         @relation("ReportReporter")
-  adminNotes       AdminNote[]      @relation("AdminNotes")
-  following        Follow[]         @relation("Following")
-  followers        Follow[]         @relation("Followers")
+  emailOff              String[]       @default([])
+  notifications         Notification[]
+  savedSearches         SavedSearch[]
+  reports               Report[]       @relation("ReportReporter")
+  adminNotes            AdminNote[]    @relation("AdminNotes")
+  following             Follow[]       @relation("Following")
+  shops                 Shop[]
+  followers             Follow[]       @relation("Followers")
   /// For role ADMIN: which part of the panel they work in (null for everyone else).
-  staffRole        StaffRole?
+  staffRole             StaffRole?
   /// Two-factor sign-in (TOTP): the secret, encrypted with the server key, and when it was turned on.
-  totpSecret       String?
-  totpEnabledAt    DateTime?
+  totpSecret            String?
+  totpEnabledAt         DateTime?
   /// The 30-second step of the last code accepted: a code works once.
-  totpLastStep     Int?
+  totpLastStep          Int?
 }
 
 /// One refresh token of a session. Rotation chains tokens of the same family; reuse revokes the family.
@@ -189,35 +190,36 @@ enum AttributeType {
 /// The category tree. Reference data from src/categories/catalog-data.ts, kept in sync on every start
 /// (ensureCategories); a category that leaves the catalog is deactivated, never deleted.
 model Category {
-  id        String   @id @default(cuid())
-  slug      String   @unique
-  parentId  String?
-  sortOrder Int      @default(0)
-  sticker   Sticker
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  parentId       String?
+  sortOrder      Int      @default(0)
+  sticker        Sticker
   /// Icon name the site maps to a drawing.
-  icon      String
+  icon           String
   /// { en, lv, ru }
-  names     Json
+  names          Json
   /// The category's address on each language's site, { en, lv, ru } (`/c/tools`, `/lv/c/instrumenti`).
   /// `slug` stays the stable key; these may change with the sitemap. Written by ensureCategories.
-  slugs     Json     @default("{}")
-  active    Boolean  @default(true)
+  slugs          Json     @default("{}")
+  active         Boolean  @default(true)
   /// An administrator's own names over `names` ({ en?, lv?, ru? }), order and hiding; the catalog sync
   /// from code (ensureCategories) never touches these.
   adminNames     Json?
   adminSortOrder Int?
-  adminHidden    Boolean @default(false)
+  adminHidden    Boolean  @default(false)
   /// Made in Admin → Categories (not in the code catalog): the catalog sync never retires it.
-  adminCreated   Boolean @default(false)
+  adminCreated   Boolean  @default(false)
   /// Deleted in Admin → Categories: kept inactive (listings moved away); the catalog sync never brings it back.
-  adminDeleted   Boolean @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  adminDeleted   Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   parent     Category?           @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
   children   Category[]          @relation("CategoryTree")
   attributes CategoryAttribute[]
   listings   Listing[]
+  shops      Shop[]
 
   @@index([parentId])
 }
@@ -305,13 +307,14 @@ model Listing {
   bookings       Booking[]
   offers         Offer[]
   favoritedBy    Favorite[]
+  reviews        Review[]
+  conversations  Conversation[]
+  shopItems      ShopItem[]
 
   @@index([ownerId])
   @@index([status, categoryId])
   /// The catalog's default order. Trigram indexes on yoyo_fold(title…) live in migration `catalog` only.
   @@index([status, publishedAt(sort: Desc), id(sort: Desc)], map: "Listing_catalog_idx")
-  reviews               Review[]
-  conversations         Conversation[]
 }
 
 /// A photo of a listing; the file lives in the storage provider under `storageKey` (random, never the
@@ -371,7 +374,9 @@ model GeoCache {
 
 // ---- Deals and wallet (plan 8) ------------------------------------------------------------------
 
-/** BOOKING_STATUSES of @yoyo/domain. */
+/**
+ * BOOKING_STATUSES of @yoyo/domain.
+ */
 enum BookingStatus {
   REQUESTED
   ACCEPTED
@@ -386,7 +391,9 @@ enum BookingStatus {
   CANCELLED
 }
 
-/** TIMER_KINDS of @yoyo/domain. */
+/**
+ * TIMER_KINDS of @yoyo/domain.
+ */
 enum TimerKind {
   REQUEST_EXPIRY
   PAYMENT_EXPIRY
@@ -461,7 +468,7 @@ model Booking {
   servicePercent      Int
   serviceFeeCents     Int
   /// The launch offer's last day when the percent came from it; null for the regular fee.
-  servicePromoUntil   DateTime?           @db.Date
+  servicePromoUntil   DateTime?                 @db.Date
   depositCents        Int
   totalCents          Int
   ownerPayoutCents    Int
@@ -515,7 +522,9 @@ model Booking {
   @@index([status])
 }
 
-/** Every change of a booking, never edited: who did what, from which status to which. */
+/**
+ * Every change of a booking, never edited: who did what, from which status to which.
+ */
 model BookingEvent {
   id         String         @id @default(cuid())
   bookingId  String
@@ -537,7 +546,9 @@ model BookingEvent {
   @@index([bookingId, createdAt])
 }
 
-/** The rental contract's terms, frozen when the owner accepts; the PDF is drawn from them in any language. */
+/**
+ * The rental contract's terms, frozen when the owner accepts; the PDF is drawn from them in any language.
+ */
 model Contract {
   bookingId String   @id
   terms     Json
@@ -583,7 +594,9 @@ enum BookingPhotoKind {
   DAMAGE
 }
 
-/** A photo of the item's condition at handover, at return, or of damage (spec §6 HandoverPhoto). */
+/**
+ * A photo of the item's condition at handover, at return, or of damage (spec §6 HandoverPhoto).
+ */
 model BookingPhoto {
   id         String           @id @default(cuid())
   bookingId  String
@@ -610,7 +623,9 @@ enum OfferStatus {
   USED
 }
 
-/** A renter's own daily price for given days (spec §4.6); an accepted one is used by one booking request. */
+/**
+ * A renter's own daily price for given days (spec §4.6); an accepted one is used by one booking request.
+ */
 model Offer {
   id         String      @id @default(cuid())
   listingId  String
@@ -634,7 +649,9 @@ model Offer {
   @@index([status, expiresAt])
 }
 
-/** OperationKind of @yoyo/domain. */
+/**
+ * OperationKind of @yoyo/domain.
+ */
 enum LedgerKind {
   TOP_UP
   WITHDRAWAL
@@ -664,7 +681,9 @@ model LedgerOperation {
   @@index([createdAt])
 }
 
-/** A posting: whole cents into (+) or out of (−) an account (`wallet:<userId>`, `escrow:<bookingId>`…). */
+/**
+ * A posting: whole cents into (+) or out of (−) an account (`wallet:<userId>`, `escrow:<bookingId>`…).
+ */
 model LedgerEntry {
   id          BigInt @id @default(autoincrement())
   operationId String
@@ -698,7 +717,9 @@ enum MoneyJobStatus {
   FAILED
 }
 
-/** Money taken from a card through the PaymentProvider. Only the brand and last 4 digits are kept. */
+/**
+ * Money taken from a card through the PaymentProvider. Only the brand and last 4 digits are kept.
+ */
 model Payment {
   id            String         @id @default(cuid())
   userId        String
@@ -719,7 +740,9 @@ model Payment {
   @@index([bookingId])
 }
 
-/** Money going back to a card. Written with the ledger operation, sent to the provider after commit. */
+/**
+ * Money going back to a card. Written with the ledger operation, sent to the provider after commit.
+ */
 model PaymentRefund {
   id          String         @id @default(cuid())
   paymentId   String
@@ -736,7 +759,9 @@ model PaymentRefund {
   @@index([status, createdAt])
 }
 
-/** A withdrawal to a card (spec §6 Payout): the wallet is debited at once, the provider pays out after. */
+/**
+ * A withdrawal to a card (spec §6 Payout): the wallet is debited at once, the provider pays out after.
+ */
 model Payout {
   id               String         @id @default(cuid())
   userId           String
@@ -765,7 +790,9 @@ enum IdempotencyState {
   DONE
 }
 
-/** A client's Idempotency-Key and the answer it got, kept 24 hours; the same request again gets that answer. */
+/**
+ * A client's Idempotency-Key and the answer it got, kept 24 hours; the same request again gets that answer.
+ */
 model IdempotencyKey {
   userId      String
   key         String
@@ -791,16 +818,16 @@ enum ReviewRole {
 /// renter also scores the item. One per side per deal. Shown blind: only once both sides wrote, or the
 /// review window closed (@yoyo/domain reviewIsPublic). Stars are 1–5 (CHECK constraints in the migration).
 model Review {
-  id         String     @id @default(cuid())
-  bookingId  String
-  authorId   String
-  subjectId  String
-  listingId  String
-  authorRole ReviewRole
-  rating     Int
-  itemRating Int?
-  text       String
-  createdAt  DateTime   @default(now())
+  id           String     @id @default(cuid())
+  bookingId    String
+  authorId     String
+  subjectId    String
+  listingId    String
+  authorRole   ReviewRole
+  rating       Int
+  itemRating   Int?
+  text         String
+  createdAt    DateTime   @default(now())
   /// Hidden by an administrator (abuse, personal data): out of every public list and rating.
   hiddenAt     DateTime?
   hiddenReason String?
@@ -834,16 +861,20 @@ enum MessageKind {
 /// renter). Each side's lastReadAt marks what they have read; unread = their counterpart's messages
 /// after it, plus system messages after it.
 model Conversation {
-  id              String    @id @default(cuid())
-  listingId       String
-  renterId        String
-  ownerId         String
+  id               String    @id @default(cuid())
+  /// The item it is about; null for a direct conversation started from a profile (owner, 2026-11-16).
+  listingId        String?
+  /// Direct conversations only: the two user ids sorted and joined by ':' — one conversation per pair.
+  /// There `renterId` is the one who started it and `ownerId` the profile they wrote to.
+  directKey        String?   @unique
+  renterId         String
+  ownerId          String
   renterLastReadAt DateTime?
   ownerLastReadAt  DateTime?
-  lastMessageAt   DateTime  @default(now())
-  createdAt       DateTime  @default(now())
+  lastMessageAt    DateTime  @default(now())
+  createdAt        DateTime  @default(now())
 
-  listing  Listing   @relation(fields: [listingId], references: [id], onDelete: Restrict)
+  listing  Listing?  @relation(fields: [listingId], references: [id], onDelete: Restrict)
   renter   User      @relation("ConversationRenter", fields: [renterId], references: [id], onDelete: Restrict)
   owner    User      @relation("ConversationOwner", fields: [ownerId], references: [id], onDelete: Restrict)
   messages Message[]
@@ -1002,7 +1033,9 @@ model AdminNote {
   @@index([userId, createdAt])
 }
 
-/** Someone follows someone (owner, 2026-11-16): their new items reach the follower's bell and feed. */
+/**
+ * Someone follows someone (owner, 2026-11-16): their new items reach the follower's bell and feed.
+ */
 model Follow {
   followerId String
   followeeId String
@@ -1013,4 +1046,37 @@ model Follow {
 
   @@id([followerId, followeeId])
   @@index([followeeId])
+}
+
+/**
+ * A shop: a person's own collection of their items under a name (owner, 2026-11-16: "not posts but
+ * shops with a collection"), optionally under one category. Shown on their profile.
+ */
+model Shop {
+  id         String   @id @default(cuid())
+  ownerId    String
+  name       String
+  about      String?
+  categoryId String?
+  sortOrder  Int      @default(0)
+  createdAt  DateTime
+  updatedAt  DateTime @updatedAt
+
+  owner    User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  category Category?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  items    ShopItem[]
+
+  @@index([ownerId, sortOrder])
+}
+
+model ShopItem {
+  shopId    String
+  listingId String
+  sortOrder Int
+
+  shop    Shop    @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@id([shopId, listingId])
+  @@index([listingId])
 }

@@ -161,7 +161,8 @@
       "search": "Meklēt",
       "more": "Vēl {count} kategorijā {name}"
     },
-    "following": "Sekoju"
+    "following": "Sekoju",
+    "shops": "Mani veikali"
   },
   "banner": {
     "verifyEmail": {
@@ -982,7 +983,9 @@
     "reviews": "Atsauksmes",
     "noItems": "{name} pašlaik neko neiznomā.",
     "noReviewsTitle": "Vēl nav atsauksmju",
-    "noReviewsBody": "Atsauksmes parādās šeit pēc pabeigtiem darījumiem."
+    "noReviewsBody": "Atsauksmes parādās šeit pēc pabeigtiem darījumiem.",
+    "shops": "Veikali",
+    "noShops": "{name} vēl nav veikalu"
   },
   "consent": {
     "label": "Sīkdatņu izvēle",
@@ -1029,7 +1032,8 @@
     "browse": "Skatīt katalogu",
     "newItems": "Jaunākais no viņiem",
     "noNewItems": "Pagaidām nekā jauna.",
-    "youFollow": "Jūs sekojat: {count}"
+    "youFollow": "Jūs sekojat: {count}",
+    "write": "Rakstīt ziņu"
   },
   "identity": {
     "birthDate": "Dzimšanas datums",
@@ -1043,5 +1047,37 @@
     "usernameTaken": "Šis lietotājvārds ir aizņemts",
     "complete": "Pabeidziet profilu: pievienojiet lietotājvārdu un dzimšanas datumu, lai nomātu un izīrētu.",
     "completeLink": "Pievienot"
+  },
+  "shops": {
+    "itemCount": "{count, plural, zero {# lietu} one {# lieta} other {# lietas}}",
+    "write": "Rakstīt ziņu",
+    "notFound": "Šī veikala nav",
+    "emptyShop": "Šajā veikalā pašlaik nav lietu",
+    "pageTitle": "Veikals",
+    "mineTitle": "Mani veikali",
+    "mineIntro": "Sagrupējiet savas lietas veikalos — piemēram, “Darbnīca” vai “Kempings” — kādā kategorijā. Visi tos redz jūsu profilā.",
+    "seeProfile": "Mans profils",
+    "create": "Jauns veikals",
+    "noShops": "Veikalu vēl nav",
+    "noShopsBody": "Izveidojiet vienu un ielieciet tajā savas lietas.",
+    "edit": "Labot",
+    "editTitle": "Labot “{name}”",
+    "name": "Nosaukums",
+    "about": "Par veikalu",
+    "category": "Kategorija",
+    "noCategory": "Bez kategorijas",
+    "items": "Lietas tajā",
+    "noItemsYet": "Vispirms pievienojiet lietu: jūsu lietas parādīsies šeit.",
+    "untitled": "Bez nosaukuma",
+    "order": "Secība",
+    "up": "Pārvietot “{title}” augstāk",
+    "down": "Pārvietot “{title}” zemāk",
+    "nameMissing": "Dodiet veikalam nosaukumu",
+    "saved": "Saglabāts",
+    "deleted": "Veikals dzēsts",
+    "failed": "Neizdevās saglabāt veikalu",
+    "delete": "Dzēst veikalu",
+    "cancel": "Atcelt",
+    "save": "Saglabāt"
   }
 }

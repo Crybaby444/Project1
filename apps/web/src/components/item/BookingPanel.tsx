@@ -42,7 +42,7 @@ export function BookingPanel({ item }: { item: AvailableItem }) {
           </ul>
         </div>
         <DealBookingPanel listingId={listing.id} layout="stacked" />
-        <MessageOwnerButton listingId={listing.id} ownerId={item.owner.id} />
+        <MessageOwnerButton ownerId={item.owner.id} about={{ id: listing.id, title: listing.title ?? '' }} />
       </section>
 
       {/* Phones: the way to the panel stays at hand while the photos and the description scroll by. */}

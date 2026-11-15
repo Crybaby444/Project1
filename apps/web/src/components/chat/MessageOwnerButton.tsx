@@ -3,25 +3,27 @@
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { usePathname, useRouter } from '@/i18n/navigation';
-import { useOpenConversation } from '@/lib/chat/queries';
+import { useOpenDirect } from '@/lib/chat/queries';
 import { useSession } from '@/lib/session/SessionProvider';
 
 /**
- * "Message the owner" on an item page: opens (or finds) my conversation about the item and goes to it.
- * A visitor signs in first and comes back here; the owner does not see it on their own item.
+ * "Write a message" to a person (an item's owner, or anyone from their profile): opens the personal
+ * conversation with them in Messages (owner, 2026-11-16: Messages are personal; a deal has its own chat).
+ * `about` is an item to mention: the message box starts with its link. A visitor signs in first.
  */
-export function MessageOwnerButton({ listingId, ownerId }: { listingId: string; ownerId: string }) {
+export function MessageOwnerButton({ ownerId, about, label, size = 'lg' }: { ownerId: string; about?: { id: string; title: string } | undefined; label?: string; size?: 'lg' | 'md' }) {
   const t = useTranslations('chat');
   const { status, user } = useSession();
   const router = useRouter();
   const pathname = usePathname();
-  const open = useOpenConversation();
+  const open = useOpenDirect();
+  const text = label ?? t('messageOwner');
 
   if (user?.id === ownerId) return null;
   if (status !== 'authenticated') {
     return (
-      <Button variant="ghost" size="lg" href={`/login?next=${encodeURIComponent(pathname)}`}>
-        {t('messageOwner')}
+      <Button variant="ghost" size={size} href={`/login?next=${encodeURIComponent(pathname)}`}>
+        {text}
       </Button>
     );
   }
@@ -29,11 +31,11 @@ export function MessageOwnerButton({ listingId, ownerId }: { listingId: string; 
     <div className="flex flex-col gap-2">
       <Button
         variant="ghost"
-        size="lg"
+        size={size}
         loading={open.isPending || open.isSuccess}
-        onClick={() => open.mutate(listingId, { onSuccess: (c) => router.push(`/messages/${c.id}`) })}
+        onClick={() => open.mutate(ownerId, { onSuccess: (c) => router.push(about ? `/messages/${c.id}?about=${encodeURIComponent(about.id)}` : `/messages/${c.id}`) })}
       >
-        {t('messageOwner')}
+        {text}
       </Button>
       {open.isError && (
         <p role="alert" className="text-sm font-semibold">

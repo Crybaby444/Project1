@@ -2,6 +2,7 @@ import { Body, Controller, Get, HttpCode, Param, Post, Query, UseGuards } from '
 import { ApiTags } from '@nestjs/swagger';
 import {
   ChatMessageSchema,
+  ConversationKindQuerySchema,
   ConversationListSchema,
   ConversationSummarySchema,
   ConversationThreadSchema,
@@ -29,6 +30,7 @@ class ConversationResponseDto extends createZodDto(z.object({ conversation: Conv
 class ConversationListDto extends createZodDto(ConversationListSchema) {}
 class ConversationThreadDto extends createZodDto(ConversationThreadSchema) {}
 class UnreadCountDto extends createZodDto(UnreadCountSchema) {}
+class ConversationKindQueryDto extends createZodDto(ConversationKindQuerySchema) {}
 class ThreadQueryDto extends createZodDto(z.object({ after: z.iso.datetime().optional() })) {}
 
 @ApiTags('chat')
@@ -49,18 +51,34 @@ export class ChatController {
     return { conversation: await this.chat.open(user.id, id) };
   }
 
+  @Post('users/:id/conversation')
+  @HttpCode(200)
+  @ZodResponse({ status: 200, type: ConversationResponseDto, description: 'My direct conversation with this person, started when there is none' })
+  @ApiErrors(401, 404, 409, 429)
+  async openDirect(@CurrentUser() user: PublicUser, @Param('id') id: string): Promise<{ conversation: ConversationSummary }> {
+    this.limiter.hit(RATE_LIMITS.chatOpen(user.id));
+    return { conversation: await this.chat.openDirect(user.id, id) };
+  }
+
+  @Get('bookings/:id/conversation')
+  @ZodResponse({ status: 200, type: ConversationResponseDto, description: "The deal's conversation (its two sides), started when there is none" })
+  @ApiErrors(401, 404)
+  async forDeal(@CurrentUser() user: PublicUser, @Param('id') id: string): Promise<{ conversation: ConversationSummary }> {
+    return { conversation: await this.chat.forDeal(user.id, id) };
+  }
+
   @Get('me/conversations')
   @ZodResponse({ status: 200, type: ConversationListDto, description: 'My conversations, newest activity first' })
   @ApiErrors(401)
-  list(@CurrentUser() user: PublicUser): Promise<ConversationList> {
-    return this.chat.list(user.id);
+  list(@CurrentUser() user: PublicUser, @Query() query: ConversationKindQueryDto): Promise<ConversationList> {
+    return this.chat.list(user.id, query.kind);
   }
 
   @Get('me/conversations/unread')
   @ZodResponse({ status: 200, type: UnreadCountDto, description: 'How many lines I have not read, over all conversations' })
   @ApiErrors(401)
-  async unread(@CurrentUser() user: PublicUser): Promise<UnreadCount> {
-    return { count: await this.chat.unreadCount(user.id) };
+  async unread(@CurrentUser() user: PublicUser, @Query() query: ConversationKindQueryDto): Promise<UnreadCount> {
+    return { count: await this.chat.unreadCount(user.id, query.kind) };
   }
 
   @Get('conversations/:id')

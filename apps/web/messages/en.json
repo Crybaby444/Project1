@@ -161,7 +161,8 @@
       "search": "Search",
       "more": "{count} more in {name}"
     },
-    "following": "Following"
+    "following": "Following",
+    "shops": "My shops"
   },
   "banner": {
     "verifyEmail": {
@@ -982,7 +983,9 @@
     "reviews": "Reviews",
     "noItems": "{name} has nothing for rent right now.",
     "noReviewsTitle": "No reviews yet",
-    "noReviewsBody": "Reviews appear here after finished deals."
+    "noReviewsBody": "Reviews appear here after finished deals.",
+    "shops": "Shops",
+    "noShops": "{name} has no shops yet"
   },
   "consent": {
     "label": "Cookie choice",
@@ -1029,7 +1032,8 @@
     "browse": "Browse the catalog",
     "newItems": "New from them",
     "noNewItems": "Nothing new yet.",
-    "youFollow": "You follow {count}"
+    "youFollow": "You follow {count}",
+    "write": "Write a message"
   },
   "identity": {
     "birthDate": "Date of birth",
@@ -1043,5 +1047,37 @@
     "usernameTaken": "This username is taken",
     "complete": "Finish your profile: add your username and date of birth to rent and lend.",
     "completeLink": "Add them"
+  },
+  "shops": {
+    "itemCount": "{count, plural, one {# item} other {# items}}",
+    "write": "Write a message",
+    "notFound": "This shop is not here",
+    "emptyShop": "No items in this shop right now",
+    "pageTitle": "Shop",
+    "mineTitle": "My shops",
+    "mineIntro": "Group your items into shops — like “Workshop” or “Camping” — under a category. Everyone sees them on your profile.",
+    "seeProfile": "My profile",
+    "create": "New shop",
+    "noShops": "No shops yet",
+    "noShopsBody": "Make one and put your items in it.",
+    "edit": "Edit",
+    "editTitle": "Edit “{name}”",
+    "name": "Name",
+    "about": "About the shop",
+    "category": "Category",
+    "noCategory": "No category",
+    "items": "Items in it",
+    "noItemsYet": "Add an item first: your items appear here.",
+    "untitled": "Untitled",
+    "order": "Order",
+    "up": "Move “{title}” up",
+    "down": "Move “{title}” down",
+    "nameMissing": "Give the shop a name",
+    "saved": "Saved",
+    "deleted": "Shop deleted",
+    "failed": "Couldn’t save the shop",
+    "delete": "Delete shop",
+    "cancel": "Cancel",
+    "save": "Save"
   }
 }

@@ -612,6 +612,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/users/{id}/conversation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ChatController_openDirect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/bookings/{id}/conversation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ChatController_forDeal"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/me/conversations": {
         parameters: {
             query?: never;
@@ -962,6 +994,70 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/api/v1/users/{id}/shops": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ShopsPublicController_ofUser"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/shops/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ShopsPublicController_one"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/shops": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MyShopsController_list"];
+        put?: never;
+        post: operations["MyShopsController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/shops/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["MyShopsController_remove"];
+        options?: never;
+        head?: never;
+        patch: operations["MyShopsController_update"];
         trace?: never;
     };
     "/api/v1/reports": {
@@ -2674,7 +2770,7 @@ export interface components {
                     id: string;
                     title: string;
                     photoUrl: string | null;
-                };
+                } | null;
                 other: {
                     id: string;
                     name: string;
@@ -2705,7 +2801,7 @@ export interface components {
                     id: string;
                     title: string;
                     photoUrl: string | null;
-                };
+                } | null;
                 other: {
                     id: string;
                     name: string;
@@ -2738,7 +2834,7 @@ export interface components {
                 id: string;
                 title: string;
                 photoUrl: string | null;
-            };
+            } | null;
             other: {
                 id: string;
                 name: string;
@@ -3156,6 +3252,87 @@ export interface components {
                 };
             }[];
             total: number;
+        };
+        ShopsDto_Output: {
+            items: {
+                id: string;
+                name: string;
+                about: string | null;
+                categoryId: string | null;
+                itemCount: number;
+                covers: string[];
+            }[];
+        };
+        ShopDto_Output: {
+            shop: {
+                id: string;
+                name: string;
+                about: string | null;
+                categoryId: string | null;
+                itemCount: number;
+                covers: string[];
+            };
+            owner: {
+                id: string;
+                name: string;
+                username: string | null;
+            };
+            items: {
+                id: string;
+                title: string;
+                dailyCents: number;
+                weeklyDiscountPercent: number;
+                depositCents: number;
+                /** @enum {string|null} */
+                condition: "NEW" | "LIKE_NEW" | "GOOD" | "FAIR" | null;
+                city: string | null;
+                district: string | null;
+                categoryId: string | null;
+                cover: {
+                    thumb: string;
+                    card: string;
+                    full: string;
+                } | null;
+                ownerId: string;
+                /** @enum {string} */
+                contentLocale: "en" | "lv" | "ru";
+                /** Format: date-time */
+                publishedAt: string | null;
+                rating: number | null;
+                reviewCount: number;
+            }[];
+        };
+        MyShopsDto_Output: {
+            items: {
+                id: string;
+                name: string;
+                about: string | null;
+                categoryId: string | null;
+                itemCount: number;
+                covers: string[];
+                listingIds: string[];
+            }[];
+        };
+        ShopInputDto: {
+            name: string;
+            about?: string | null;
+            categoryId?: string | null;
+            listingIds?: string[];
+        };
+        MyShopDto_Output: {
+            id: string;
+            name: string;
+            about: string[];
+            categoryId: string | null;
+            itemCount: number;
+            covers: string[];
+            listingIds: string[];
+        };
+        ShopPatchDto: {
+            name?: string;
+            about?: string | null;
+            categoryId?: string | null;
+            listingIds?: string[];
         };
         ReportRequestDto: {
             /** @enum {string} */
@@ -6401,9 +6578,109 @@ export interface operations {
             };
         };
     };
-    ChatController_list: {
+    ChatController_openDirect: {
         parameters: {
             query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description My direct conversation with this person, started when there is none */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationResponseDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ChatController_forDeal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The deal's conversation (its two sides), started when there is none */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationResponseDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ChatController_list: {
+        parameters: {
+            query?: {
+                kind?: "direct" | "deal";
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -6432,7 +6709,9 @@ export interface operations {
     };
     ChatController_unread: {
         parameters: {
-            query?: never;
+            query?: {
+                kind?: "direct" | "deal";
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -7197,6 +7476,223 @@ export interface operations {
             };
             /** @description Not signed in or wrong credentials */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ShopsPublicController_ofUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A person's shops with items in the catalog */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShopsDto_Output"];
+                };
+            };
+        };
+    };
+    ShopsPublicController_one: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A shop and its items in the catalog */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShopDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    MyShopsController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description My shops with every item in them */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyShopsDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    MyShopsController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ShopInputDto"];
+            };
+        };
+        responses: {
+            /** @description Made */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyShopDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    MyShopsController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    MyShopsController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ShopPatchDto"];
+            };
+        };
+        responses: {
+            /** @description Saved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyShopDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

@@ -19,6 +19,9 @@ const CONVERSATION_INCLUDE = {
 
 type ConversationRow = Prisma.ConversationGetPayload<{ include: typeof CONVERSATION_INCLUDE }>;
 
+/** Direct (no item) or about an item. */
+const kindWhere = (kind?: 'direct' | 'deal'): Prisma.ConversationWhereInput => (kind === 'direct' ? { listingId: null } : kind === 'deal' ? { listingId: { not: null } } : {});
+
 const notFound = () => new AppError('NOT_FOUND', 404, 'Conversation not found');
 
 /**
@@ -51,9 +54,28 @@ export class ChatService {
     return this.summary(row, userId);
   }
 
-  async list(userId: string): Promise<ConversationList> {
+  /**
+   * A direct conversation with someone, from their profile (owner, 2026-11-16): one per pair, whoever
+   * starts it. Only people with a public profile; not yourself.
+   */
+  async openDirect(userId: string, otherId: string): Promise<ConversationSummary> {
+    if (otherId === userId) throw new AppError('ACTION_NOT_ALLOWED', 409, 'You cannot write to yourself', undefined, { why: 'SELF' });
+    const other = await this.prisma.user.findUnique({ where: { id: otherId }, select: { blockedAt: true, deletedAt: true, role: true } });
+    if (!other || other.blockedAt !== null || other.deletedAt !== null || other.role === 'ADMIN') throw new AppError('NOT_FOUND', 404, 'User not found');
+    const directKey = [userId, otherId].sort().join(':');
+    const now = this.clock.now();
+    const row = await this.prisma.conversation.upsert({
+      where: { directKey },
+      create: { directKey, renterId: userId, ownerId: otherId, lastMessageAt: now, createdAt: now },
+      update: {},
+      include: CONVERSATION_INCLUDE,
+    });
+    return this.summary(row, userId);
+  }
+
+  async list(userId: string, kind?: 'direct' | 'deal'): Promise<ConversationList> {
     const rows = await this.prisma.conversation.findMany({
-      where: { OR: [{ renterId: userId }, { ownerId: userId }] },
+      where: { OR: [{ renterId: userId }, { ownerId: userId }], ...kindWhere(kind) },
       include: CONVERSATION_INCLUDE,
       orderBy: { lastMessageAt: 'desc' },
       take: LIST_LIMIT,
@@ -62,9 +84,9 @@ export class ChatService {
   }
 
   /** How many lines from the other side (and deal steps) I have not read, over all my conversations. */
-  async unreadCount(userId: string): Promise<number> {
+  async unreadCount(userId: string, kind?: 'direct' | 'deal'): Promise<number> {
     const rows = await this.prisma.conversation.findMany({
-      where: { OR: [{ renterId: userId }, { ownerId: userId }] },
+      where: { OR: [{ renterId: userId }, { ownerId: userId }], ...kindWhere(kind) },
       select: { id: true, renterId: true, renterLastReadAt: true, ownerLastReadAt: true },
     });
     if (rows.length === 0) return 0;
@@ -78,6 +100,20 @@ export class ChatService {
     });
   }
 
+  /** The conversation of a deal, for its two sides (started when there is none): the deal page shows it. */
+  async forDeal(userId: string, bookingId: string): Promise<ConversationSummary> {
+    const booking = await this.prisma.booking.findUnique({ where: { id: bookingId }, select: { listingId: true, renterId: true, ownerId: true } });
+    if (!booking || (booking.renterId !== userId && booking.ownerId !== userId)) throw new AppError('NOT_FOUND', 404, 'Deal not found');
+    const now = this.clock.now();
+    const row = await this.prisma.conversation.upsert({
+      where: { listingId_renterId: { listingId: booking.listingId, renterId: booking.renterId } },
+      create: { listingId: booking.listingId, renterId: booking.renterId, ownerId: booking.ownerId, lastMessageAt: now, createdAt: now },
+      update: {},
+      include: CONVERSATION_INCLUDE,
+    });
+    return this.summary(row, userId);
+  }
+
   async thread(userId: string, id: string, after?: Date): Promise<ConversationThread> {
     const row = await this.mine(userId, id);
     const messages = await this.prisma.message.findMany({
@@ -85,11 +121,14 @@ export class ChatService {
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       take: THREAD_LIMIT,
     });
-    const deal = await this.prisma.booking.findFirst({
-      where: { listingId: row.listingId, renterId: row.renterId },
-      orderBy: { createdAt: 'desc' },
-      select: { id: true },
-    });
+    const deal =
+      row.listingId === null
+        ? null
+        : await this.prisma.booking.findFirst({
+            where: { listingId: row.listingId, renterId: row.renterId },
+            orderBy: { createdAt: 'desc' },
+            select: { id: true },
+          });
     const asRenter = row.renterId === userId;
     const otherReadAt = asRenter ? row.ownerLastReadAt : row.renterLastReadAt;
     return {
@@ -143,11 +182,11 @@ export class ChatService {
       this.prisma.message.findFirst({ where: { conversationId: row.id }, orderBy: [{ createdAt: 'desc' }, { id: 'desc' }] }),
       this.prisma.message.count({ where: { conversationId: row.id, ...this.unseenBy(userId, readAt) } }),
     ]);
-    const cover = row.listing.photos[0];
+    const cover = row.listing?.photos[0];
     return {
       id: row.id,
       role,
-      listing: { id: row.listing.id, title: row.listing.title ?? '', photoUrl: cover ? this.storage.url(cover.storageKey, 'thumb') : null },
+      listing: row.listing ? { id: row.listing.id, title: row.listing.title ?? '', photoUrl: cover ? this.storage.url(cover.storageKey, 'thumb') : null } : null,
       other: { id: other.id, name: other.name },
       lastMessage: last ? this.message(last, userId) : null,
       lastMessageAt: row.lastMessageAt.toISOString(),

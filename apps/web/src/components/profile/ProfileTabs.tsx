@@ -6,8 +6,9 @@ import { useId, useRef, useState, type KeyboardEvent } from 'react';
 import { ListingCard } from '@/components/catalog/ListingCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ReviewsFeed } from '@/components/reviews/ReviewsFeed';
+import { ShopsGrid } from '@/components/shops/ShopCard';
 
-const TABS = ['items', 'reviews'] as const;
+const TABS = ['items', 'shops', 'reviews'] as const;
 type Tab = (typeof TABS)[number];
 
 /**
@@ -18,7 +19,7 @@ export function ProfileTabs({ listings, name, userId }: { listings: CatalogItem[
   const t = useTranslations('profile');
   const base = useId();
   const [tab, setTab] = useState<Tab>('items');
-  const buttons = useRef<Record<Tab, HTMLButtonElement | null>>({ items: null, reviews: null });
+  const buttons = useRef<Record<Tab, HTMLButtonElement | null>>({ items: null, shops: null, reviews: null });
 
   function onKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
     if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft' && event.key !== 'Home' && event.key !== 'End') return;
@@ -51,7 +52,7 @@ export function ProfileTabs({ listings, name, userId }: { listings: CatalogItem[
               tab === key ? 'bg-cta text-cta-fg border-cta' : 'border-ink bg-surface text-ink'
             }`}
           >
-            {key === 'items' ? t('items', { count: listings.length }) : t('reviews')}
+            {key === 'items' ? t('items', { count: listings.length }) : key === 'shops' ? t('shops') : t('reviews')}
           </button>
         ))}
       </div>
@@ -67,6 +68,9 @@ export function ProfileTabs({ listings, name, userId }: { listings: CatalogItem[
             ))}
           </ul>
         )}
+      </div>
+      <div role="tabpanel" id={`${base}-shops`} aria-labelledby={`${base}-shops-tab`} hidden={tab !== 'shops'}>
+        {tab === 'shops' && <ShopsGrid userId={userId} empty={<EmptyState headingLevel={3} title={t('noShops', { name })} />} />}
       </div>
       <div role="tabpanel" id={`${base}-reviews`} aria-labelledby={`${base}-reviews-tab`} hidden={tab !== 'reviews'}>
         <ReviewsFeed source={{ kind: 'user', id: userId }} empty={<EmptyState headingLevel={3} title={t('noReviewsTitle')} body={t('noReviewsBody')} />} />

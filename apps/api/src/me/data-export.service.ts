@@ -153,7 +153,7 @@ export class DataExportService {
       conversations: conversations.map((c) => {
         const asRenter = c.renterId === userId;
         return {
-          item: c.listing.title ?? '',
+          item: c.listing?.title ?? '',
           role: asRenter ? 'RENTER' : 'OWNER',
           with: asRenter ? c.owner.name : c.renter.name,
           startedAt: iso(c.createdAt),
