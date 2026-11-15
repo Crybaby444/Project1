@@ -62,7 +62,7 @@ export function SiteHeader({ catalog = [] }: { catalog?: MenuRoot[] }) {
         data-site-header
         className={`pointer-events-none fixed inset-x-0 top-0 z-30 px-3 pt-3 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-5 ${hidden ? '-translate-y-[calc(100%+8px)]' : ''}`}
       >
-        <div className="border-ink/10 bg-canvas/85 pointer-events-auto relative mx-auto flex h-14 max-w-[1280px] items-center gap-2 rounded-full border pr-2 pl-4 shadow-[0_16px_40px_-22px_rgba(10,11,14,0.45),0_1px_0_rgba(255,255,255,0.6)_inset] backdrop-blur-xl lg:h-[60px] lg:gap-3 lg:pl-5">
+        <div className="border-ink/10 bg-canvas pointer-events-auto relative mx-auto flex h-14 max-w-[1280px] items-center gap-2 rounded-full border pr-2 pl-4 shadow-[0_16px_40px_-22px_rgba(10,11,14,0.45),0_1px_0_rgba(255,255,255,0.6)_inset] backdrop-blur-xl lg:h-[60px] lg:gap-3 lg:pl-5">
           <Link href="/" data-site-brand aria-label={tn('homeLabel')} className="rounded-pill flex shrink-0 items-center gap-2 pr-1">
             <Mark size={22} />
             <Wordmark className="text-[24px] lg:text-[26px]" />
