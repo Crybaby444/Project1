@@ -844,7 +844,11 @@
     "inCategory": "{count, plural, =0 {No items yet} one {# item} other {# items}}",
     "fresh": "New in the catalog",
     "freshAll": "See all",
-    "allCategories": "All categories"
+    "allCategories": "All categories",
+    "recent": {
+      "title": "Recently viewed",
+      "clear": "Clear"
+    }
   },
   "rangeCalendar": {
     "keys": "Arrow keys move by a day or a week, Page Up and Page Down by a month. Enter picks a day.",

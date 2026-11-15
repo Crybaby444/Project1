@@ -844,7 +844,11 @@
     "inCategory": "{count, plural, =0 {Пока нет вещей} one {# вещь} few {# вещи} many {# вещей} other {# вещи}}",
     "fresh": "Новое в каталоге",
     "freshAll": "Смотреть все",
-    "allCategories": "Все категории"
+    "allCategories": "Все категории",
+    "recent": {
+      "title": "Недавно смотрели",
+      "clear": "Очистить"
+    }
   },
   "rangeCalendar": {
     "keys": "Стрелки двигают на день или неделю, Page Up и Page Down — на месяц. Enter выбирает день.",
