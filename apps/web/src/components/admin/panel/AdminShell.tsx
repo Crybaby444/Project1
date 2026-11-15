@@ -6,13 +6,23 @@ import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { useSession } from '@/lib/session/SessionProvider';
 import { useAdminOverview } from '@/lib/admin/queries';
 
-type Section = 'overview' | 'moderation' | 'deals' | 'reports' | 'users' | 'money';
+type Section = 'overview' | 'traffic' | 'seo' | 'moderation' | 'deals' | 'reports' | 'users' | 'money';
 
 const SECTIONS: { key: Section; href: string; icon: ReactNode }[] = [
   {
     key: 'overview',
     href: '/admin',
     icon: <path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-3H4zM14 7h6V4h-6z" />,
+  },
+  {
+    key: 'traffic',
+    href: '/admin/traffic',
+    icon: <path d="M4 19h16M7 15l3-4 3 3 5-7" />,
+  },
+  {
+    key: 'seo',
+    href: '/admin/seo',
+    icon: <path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4M8 11h6M11 8v6" />,
   },
   {
     key: 'moderation',
@@ -42,6 +52,8 @@ const SECTIONS: { key: Section; href: string; icon: ReactNode }[] = [
 ];
 
 function activeSection(pathname: string): Section {
+  if (pathname.startsWith('/admin/traffic')) return 'traffic';
+  if (pathname.startsWith('/admin/seo')) return 'seo';
   if (pathname.startsWith('/admin/listings')) return 'moderation';
   if (pathname.startsWith('/admin/deals') || pathname.startsWith('/admin/disputes')) return 'deals';
   if (pathname.startsWith('/admin/reports')) return 'reports';

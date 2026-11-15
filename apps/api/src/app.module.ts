@@ -31,6 +31,7 @@ import { ChatModule } from './chat/chat.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { SavedSearchesModule } from './saved-searches/saved-searches.module';
 import { ReportsModule } from './reports/reports.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 
 @Global()
 @Module({
@@ -53,6 +54,7 @@ class EnvModule {}
     NotificationsModule,
     SavedSearchesModule,
     ReportsModule,
+    AnalyticsModule,
     AuthModule,
     MeModule,
     AdminModule,

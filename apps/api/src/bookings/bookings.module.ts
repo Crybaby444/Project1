@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { AnalyticsCoreModule } from '../analytics/analytics-core.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { AuthModule } from '../auth/auth.module';
 import { ContractService } from '../contracts/contract.service';
@@ -12,7 +13,7 @@ import { BookingsService } from './bookings.service';
 import { EffectsExecutor } from './effects.executor';
 
 @Module({
-  imports: [AuthModule, StorageModule, MailModule, NotificationsModule],
+  imports: [AuthModule, StorageModule, MailModule, NotificationsModule, AnalyticsCoreModule],
   controllers: [BookingsController, MyBookingsController, ListingQuoteController],
   providers: [BookingsService, BookingRulesService, EffectsExecutor, BookingPhotosService, ContractService, DealNotifier],
   exports: [BookingsService, BookingRulesService, BookingPhotosService, DealNotifier],

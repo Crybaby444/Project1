@@ -50,6 +50,7 @@ import { assertDamagePhotos } from './booking-photos.service';
 import { BookingRulesService } from './booking-rules.service';
 import { writeDealLine } from '../chat/deal-lines';
 import { DealNotifier } from './deal-notifier';
+import { AnalyticsService } from '../analytics/analytics.service';
 import { BOOKING_INCLUDE, serializeBooking, type BookingWithParties } from './booking.serializer';
 import { dateOf, snapshotData, toSnapshot } from './booking.store';
 import { EffectsExecutor, nothingAfter, type AfterCommit, type EffectContext } from './effects.executor';
@@ -123,6 +124,7 @@ export class BookingsService {
     private readonly ledger: LedgerService,
     private readonly moneyOut: MoneyOutService,
     private readonly notifier: DealNotifier,
+    private readonly analytics: AnalyticsService,
     @Inject(PAYMENT_PROVIDER) private readonly payments: PaymentProvider,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider,
@@ -268,6 +270,7 @@ export class BookingsService {
       return { id: next.id, after: done.after };
     });
     await this.afterCommit(after);
+    await this.analytics.count('FUNNEL', 'REQUEST');
     return this.view(id, renter);
   }
 

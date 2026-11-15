@@ -53,11 +53,15 @@ const en: LegalDoc = {
                 'As these features open: booking requests, contracts and their signatures, handover photos, chat messages, reports, disputes and reviews.',
               ],
               ['Server logs', 'Technical records kept by our hosting providers: IP address, time, the address requested and errors.'],
+              [
+                'Visit statistics',
+                'Counted by us, without cookies: how many times a day each page was opened, the website a visit came from, the kind of device (phone, tablet or computer), the language and the words searched in the catalog. No IP address or anything else that identifies you or your device is kept.',
+              ],
             ],
           },
         },
         {
-          p: 'We do not use analytics, advertising or tracking tools, and we do not buy data about you from anyone.',
+          p: 'We do not use advertising or tracking tools (the visit statistics above are counted by us, without cookies), and we do not buy data about you from anyone.',
         },
       ],
     },
@@ -284,11 +288,15 @@ const lv: LegalDoc = {
                 'Kad šīs iespējas tiks atvērtas: rezervāciju pieprasījumi, līgumi un to paraksti, nodošanas foto, sarakste, ziņojumi, strīdi un atsauksmes.',
               ],
               ['Servera žurnāli', 'Mitināšanas pakalpojumu sniedzēju tehniskie ieraksti: IP adrese, laiks, pieprasītā adrese un kļūdas.'],
+              [
+                'Apmeklējumu statistika',
+                'To skaitām paši, bez sīkdatnēm: cik reizes dienā atvērta katra lapa, no kuras vietnes nāca apmeklējums, ierīces veids (tālrunis, planšete vai dators), valoda un katalogā meklētie vārdi. IP adrese vai kas cits, kas identificē jūs vai jūsu ierīci, netiek glabāts.',
+              ],
             ],
           },
         },
         {
-          p: 'Mēs neizmantojam analītikas, reklāmas vai izsekošanas rīkus un nepērkam datus par jums ne no viena.',
+          p: 'Mēs neizmantojam reklāmas vai izsekošanas rīkus (iepriekš minēto apmeklējumu statistiku skaitām paši, bez sīkdatnēm) un nepērkam datus par jums ne no viena.',
         },
       ],
     },
@@ -515,11 +523,15 @@ const ru: LegalDoc = {
                 'По мере запуска этих функций: запросы на бронь, договоры и их подписи, фото при передаче, сообщения в чате, жалобы, споры и отзывы.',
               ],
               ['Журналы сервера', 'Технические записи хостинг-провайдеров: IP-адрес, время, запрошенный адрес и ошибки.'],
+              [
+                'Статистика посещений',
+                'Считаем сами, без cookie: сколько раз в день открывали каждую страницу, с какого сайта пришёл визит, тип устройства (телефон, планшет или компьютер), язык и слова, которые искали в каталоге. IP-адрес и всё, что указывает на вас или ваше устройство, не сохраняются.',
+              ],
             ],
           },
         },
         {
-          p: 'Мы не используем инструменты аналитики, рекламы и слежки и не покупаем данные о вас ни у кого.',
+          p: 'Мы не используем инструменты рекламы и слежки (статистику посещений выше считаем сами, без cookie) и не покупаем данные о вас ни у кого.',
         },
       ],
     },
@@ -706,7 +718,7 @@ const WITH_ANALYTICS: Record<'en' | 'lv' | 'ru', [string, string][]> = {
   en: [
     ['We keep only what the service needs. No advertising, no tracking, no selling of data.', 'We keep only what the service needs. No advertising and no selling of data; visits are counted only if you agree.'],
     [
-      'We do not use analytics, advertising or tracking tools, and we do not buy data about you from anyone.',
+      'We do not use advertising or tracking tools (the visit statistics above are counted by us, without cookies), and we do not buy data about you from anyone.',
       'If you agree in the cookie question, we count visits with Google Analytics 4 (Google Ireland Limited processes it for us) to see which pages help; without your consent it sets no cookies and sends no identifiers. We use no advertising or tracking tools and buy no data about you from anyone. You can withdraw consent under "Cookie settings" at the bottom of every page.',
     ],
     [
@@ -717,7 +729,7 @@ const WITH_ANALYTICS: Record<'en' | 'lv' | 'ru', [string, string][]> = {
   lv: [
     ['Mēs glabājam tikai to, kas vajadzīgs pakalpojumam. Nekādas reklāmas, izsekošanas vai datu pārdošanas.', 'Mēs glabājam tikai to, kas vajadzīgs pakalpojumam. Nekādas reklāmas vai datu pārdošanas; apmeklējumus skaitām tikai ar jūsu piekrišanu.'],
     [
-      'Mēs neizmantojam analītikas, reklāmas vai izsekošanas rīkus un nepērkam datus par jums ne no viena.',
+      'Mēs neizmantojam reklāmas vai izsekošanas rīkus (iepriekš minēto apmeklējumu statistiku skaitām paši, bez sīkdatnēm) un nepērkam datus par jums ne no viena.',
       'Ja piekrītat sīkdatņu jautājumā, mēs skaitām apmeklējumus ar Google Analytics 4 (mūsu vārdā datus apstrādā Google Ireland Limited), lai redzētu, kuras lapas palīdz; bez jūsu piekrišanas tā neiestata sīkdatnes un nesūta identifikatorus. Mēs neizmantojam reklāmas vai izsekošanas rīkus un nepērkam datus par jums ne no viena. Piekrišanu varat atsaukt sadaļā "Sīkdatņu iestatījumi" katras lapas apakšā.',
     ],
     [
@@ -728,7 +740,7 @@ const WITH_ANALYTICS: Record<'en' | 'lv' | 'ru', [string, string][]> = {
   ru: [
     ['Мы храним только то, что нужно сервису. Никакой рекламы, слежки и продажи данных.', 'Мы храним только то, что нужно сервису. Никакой рекламы и продажи данных; посещения считаем только с вашего согласия.'],
     [
-      'Мы не используем инструменты аналитики, рекламы и слежки и не покупаем данные о вас ни у кого.',
+      'Мы не используем инструменты рекламы и слежки (статистику посещений выше считаем сами, без cookie) и не покупаем данные о вас ни у кого.',
       'Если вы согласитесь в вопросе о cookie, мы считаем посещения с помощью Google Analytics 4 (данные по нашему поручению обрабатывает Google Ireland Limited), чтобы видеть, какие страницы помогают; без согласия она не ставит cookie и не отправляет идентификаторы. Мы не используем инструменты рекламы и слежки и не покупаем данные о вас ни у кого. Отозвать согласие можно в «Настройках cookie» внизу каждой страницы.',
     ],
     [

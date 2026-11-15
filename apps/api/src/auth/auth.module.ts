@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { AnalyticsCoreModule } from '../analytics/analytics-core.module';
 import { MailModule } from '../mail/mail.module';
 import { SmsModule } from '../sms/sms.module';
 import { AccessTokenService } from './access-token.service';
@@ -11,7 +12,7 @@ import { PasswordService } from './password.service';
 import { RefreshTokenService } from './refresh-token.service';
 
 @Module({
-  imports: [MailModule, SmsModule],
+  imports: [MailModule, SmsModule, AnalyticsCoreModule],
   controllers: [AuthController],
   providers: [AuthService, AuthGuard, DeviceCookieService, GoogleOAuthService, PasswordService, AccessTokenService, RefreshTokenService],
   exports: [AuthService, AuthGuard, PasswordService, AccessTokenService, RefreshTokenService],

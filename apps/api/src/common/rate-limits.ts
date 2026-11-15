@@ -79,6 +79,8 @@ export const RATE_LIMITS = {
   ],
   /** 30 new conversations an hour per user. */
   chatOpen: (userId: string): RateRule[] => [{ key: `chat-open:user:${userId}`, limit: 30, windowMs: HOUR }],
+  /** 240 page views a minute per address (the site's own counter). */
+  analytics: (ip: string): RateRule[] => [{ key: `analytics:ip:${ip}`, limit: 240, windowMs: MINUTE }],
   /** 20 complaints a day per person. */
   report: (userId: string): RateRule[] => [{ key: `report:user:${userId}`, limit: 20, windowMs: 24 * HOUR }],
   /** 20 price offers a day per renter. */

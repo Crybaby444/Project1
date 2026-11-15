@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+import { PageCounter } from '@/components/analytics/PageCounter';
 import { AdminOnly } from '@/lib/session/AdminOnly';
 import { LOCALES, parseThemePreference, THEME_COOKIE, type Locale } from '@yoyo/shared';
 import type { Metadata } from 'next';
@@ -82,6 +84,9 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
                     <SiteFooter />
                   </div>
                   <AdminOnly />
+                  <Suspense fallback={null}>
+                    <PageCounter />
+                  </Suspense>
                   <DropCursor />
                   <LanguageSuggestion />
                   <ConsentBanner gaId={validGaId(process.env.NEXT_PUBLIC_GA_ID) ?? ''} />
