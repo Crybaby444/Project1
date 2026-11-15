@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, Post, Query, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, Query, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiOkResponse, ApiProduces, ApiTags } from '@nestjs/swagger';
 import {
@@ -27,13 +27,14 @@ import {
   type PublicUser,
   type QuoteResponse,
 } from '@yoyo/shared';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
 import { createZodDto, ZodResponse } from 'nestjs-zod';
 import { z } from 'zod';
 import { ContractService } from '../contracts/contract.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { ApiErrors } from '../common/api-errors';
+import { clientIp } from '../common/request-meta';
 import { AppError } from '../common/app-error';
 import { RateLimiter } from '../common/rate-limiter';
 import { RATE_LIMITS } from '../common/rate-limits';
@@ -119,8 +120,8 @@ export class BookingsController {
   @Idempotent({ required: true })
   @ZodResponse({ status: 200, type: BookingResponseDto, description: 'The step was taken; the deal as it is now' })
   @ApiErrors(400, 401, 402, 403, 404, 409)
-  async act(@CurrentUser() user: PublicUser, @Param('id') id: string, @Body() body: BookingActionRequestDto): Promise<BookingResponse> {
-    return { booking: await this.bookings.act(id, user, body.version, body.event) };
+  async act(@CurrentUser() user: PublicUser, @Param('id') id: string, @Body() body: BookingActionRequestDto, @Req() req: Request): Promise<BookingResponse> {
+    return { booking: await this.bookings.act(id, user, body.version, body.event, { ip: clientIp(req), userAgent: req.get('user-agent') ?? 'unknown' }) };
   }
 
   @Get(':id/history')

@@ -29,8 +29,8 @@ test('deal, lists, wallet, booking and checkout: accessible in both themes, fit 
   const res = await renter.page.request.post('/api/v1/bookings', { data: { listingId, start: rigaDay(5), end: rigaDay(6) } });
   const { booking } = (await res.json()) as { booking: { id: string } };
   await stepByApi(owner.page.request, booking.id, { type: 'ACCEPT' });
-  await stepByApi(owner.page.request, booking.id, { type: 'SIGN' });
   await stepByApi(renter.page.request, booking.id, { type: 'SIGN' });
+  await stepByApi(owner.page.request, booking.id, { type: 'SIGN' });
   await topUpByApi(renter.page.request, 1_000);
 
   const page = renter.page;

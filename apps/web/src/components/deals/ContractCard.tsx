@@ -27,7 +27,7 @@ export async function downloadContract(bookingId: string, lang: Locale, fetcher:
   setTimeout(() => URL.revokeObjectURL(url), 10_000);
 }
 
-function Signature({ who, at, timeZone }: { who: string; at: string | null; timeZone: string }) {
+function Signature({ who, at, timeZone, typed, waiting }: { who: string; at: string | null; timeZone: string; typed?: { name: string; simulated: boolean } | undefined; waiting?: string | undefined }) {
   const t = useTranslations('deal.contract');
   const locale = useLocale();
   return (
@@ -45,7 +45,13 @@ function Signature({ who, at, timeZone }: { who: string; at: string | null; time
       </span>
       <p className="flex flex-col">
         <span className="text-[13px] font-bold tracking-[0.03em] uppercase">{who}</span>
-        <span className="text-sm">{at ? t('signed', { when: formatMoment(at, locale, timeZone) }) : t('notSigned')}</span>
+        <span className="text-sm">{at ? t('signed', { when: formatMoment(at, locale, timeZone) }) : (waiting ?? t('notSigned'))}</span>
+        {typed && (
+          <span className="text-ink/70 text-[13px]">
+            {t('typed', { name: typed.name })}
+            {typed.simulated && ` · ${t('simulated')}`}
+          </span>
+        )}
       </p>
     </div>
   );
@@ -64,6 +70,10 @@ export function ContractCard({ booking }: { booking: BookingView }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const selectId = useId();
+  const typed = (side: 'RENTER' | 'OWNER') => {
+    const sig = (booking.signatures ?? []).find((x) => x.side === side);
+    return sig ? { name: sig.fullName, simulated: sig.method === 'SIMULATED' } : undefined;
+  };
 
   async function download() {
     setBusy(true);
@@ -88,8 +98,15 @@ export function ContractCard({ booking }: { booking: BookingView }) {
       {booking.hasContract && (
         <>
           <div className="grid gap-3 sm:grid-cols-2">
-            <Signature who={t('renter')} at={booking.renterSignedAt} timeZone={booking.timeZone} />
-            <Signature who={t('owner')} at={booking.ownerSignedAt} timeZone={booking.timeZone} />
+            {/* The renter signs first, then the owner countersigns (owner, 2026-11-15). */}
+            <Signature who={`1 · ${t('renter')}`} at={booking.renterSignedAt} timeZone={booking.timeZone} typed={typed('RENTER')} />
+            <Signature
+              who={`2 · ${t('owner')}`}
+              at={booking.ownerSignedAt}
+              timeZone={booking.timeZone}
+              typed={typed('OWNER')}
+              waiting={booking.renterSignedAt ? t('waitingOwner') : t('waitingRenter')}
+            />
           </div>
           <div className="flex flex-wrap items-end gap-3">
             <div className="flex flex-col gap-1.5">

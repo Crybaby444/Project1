@@ -26,8 +26,8 @@ export function loadFonts(): Promise<Record<(typeof FONT_FILES)[number], Buffer>
 export interface ContractInput {
   terms: ContractTerms;
   termsHash: string;
-  renterSignedAt: Date | null;
-  ownerSignedAt: Date | null;
+  /** The recorded signatures, renter first. */
+  signatures: readonly { id: string; side: 'RENTER' | 'OWNER'; fullName: string; termsHash: string; method: string; createdAt: Date }[];
   locale: Locale;
   /** When the PDF is drawn (printed at the bottom). */
   now: Date;
@@ -203,10 +203,28 @@ export async function renderContract(input: ContractInput): Promise<Buffer> {
   if (rules.length === 0) w.text(t.noRules, { indent: 8 });
   for (const rule of rules) w.text(`• ${rule}`, { indent: 8 });
 
+  w.heading(t.care);
+  for (const paragraph of t.careText) w.text(paragraph, { indent: 8, after: 3 });
+  w.heading(t.data);
+  for (const paragraph of t.dataText) w.text(paragraph, { indent: 8, after: 3 });
+  w.heading(t.law);
+  for (const paragraph of t.lawText) w.text(paragraph, { indent: 8, after: 3 });
+  w.heading(t.electronic);
+  for (const paragraph of t.electronicText) w.text(paragraph, { indent: 8, after: 3 });
+
   w.heading(t.signatures);
-  const signed = (at: Date | null) => (at === null ? t.notSigned : fill(t.signedAt, { date: moment(at) }));
-  w.text(`${t.owner}: ${terms.owner.name} — ${signed(input.ownerSignedAt)}`, { indent: 8 });
-  w.text(`${t.renter}: ${terms.renter.name} — ${signed(input.renterSignedAt)}`, { indent: 8 });
+  for (const [side, role, name] of [['RENTER', t.renter, terms.renter.name], ['OWNER', t.owner, terms.owner.name]] as const) {
+    const sig = input.signatures.find((x) => x.side === side);
+    if (!sig) {
+      w.text(`${role}: ${name} — ${t.notSigned}`, { indent: 8, after: 4 });
+      continue;
+    }
+    const method = t.methods[sig.method === 'SIMULATED' || sig.method === 'LEGACY' ? sig.method : 'OTHER'];
+    w.text(fill(t.signatureLine, { role, name, date: moment(sig.createdAt) }), { indent: 8, bold: true });
+    w.text(fill(t.typedName, { name: sig.fullName, method, id: sig.id }), { indent: 16, size: 9, color: MUTED });
+    w.text(sig.termsHash === input.termsHash ? t.termsMatch : fill(t.termsDiffer, { hash: sig.termsHash }), { indent: 16, size: 9, color: MUTED, after: 4 });
+  }
+  if (input.signatures.some((x) => x.method === 'SIMULATED')) w.text(t.testMode, { bold: true, size: 9, after: 2 });
 
   w.gap(16);
   w.text(fill(t.hash, { hash: input.termsHash }), { size: 8, color: MUTED });

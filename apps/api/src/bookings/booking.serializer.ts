@@ -1,20 +1,20 @@
 import type { BookingEventType, BookingSnapshot, TimerKind } from '@yoyo/domain';
 import type { BookingAction, BookingView } from '@yoyo/shared';
-import type { Booking, Listing, ListingPhoto, User } from '../generated/prisma/client';
+import type { Booking, ContractSignature, Listing, ListingPhoto, User } from '../generated/prisma/client';
 import type { UrlFor } from '../listings/listing.serializer';
 
 export type BookingWithParties = Booking & {
   listing: Listing & { photos: ListingPhoto[] };
   renter: User;
   owner: User;
-  contract: { bookingId: string } | null;
+  contract: { bookingId: string; signatures?: ContractSignature[] } | null;
 };
 
 export const BOOKING_INCLUDE = {
   listing: { include: { photos: true } },
   renter: true,
   owner: true,
-  contract: { select: { bookingId: true } },
+  contract: { select: { bookingId: true, signatures: { orderBy: { createdAt: 'asc' } } } },
 } as const;
 
 const iso = (date: Date | undefined | null) => date?.toISOString() ?? null;
@@ -72,6 +72,7 @@ export function serializeBooking(
     deadline: timer ? { timer: timer[0], dueAt: timer[1].toISOString() } : null,
     actions: actions.filter((a): a is BookingAction => a !== 'TIMEOUT'),
     hasContract: row.contract !== null,
+    signatures: (row.contract?.signatures ?? []).map((sig) => ({ side: sig.side, fullName: sig.fullName, signedAt: sig.createdAt.toISOString(), method: sig.method })),
     version: row.version,
     createdAt: s.createdAt.toISOString(),
     updatedAt: s.updatedAt.toISOString(),

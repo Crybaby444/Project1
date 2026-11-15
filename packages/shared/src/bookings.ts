@@ -167,6 +167,8 @@ export const BookingViewSchema = z.object({
   actions: z.array(z.enum(BOOKING_ACTIONS)),
   /** The contract PDF exists (from ACCEPTED on). */
   hasContract: z.boolean(),
+  /** The electronic signatures on file, renter first: the typed name, when, and how (SIMULATED until a provider is connected). */
+  signatures: z.array(z.object({ side: z.enum(['RENTER', 'OWNER']), fullName: z.string().min(1), signedAt: z.iso.datetime(), method: z.string().min(1) })),
   /** Send it back with every action (optimistic locking). */
   version: z.number().int(),
   createdAt: z.iso.datetime(),
@@ -269,7 +271,11 @@ export const BookingEventInputSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('ACCEPT') }),
   z.object({ type: z.literal('DECLINE'), reason: reason.optional() }),
   z.object({ type: z.literal('WITHDRAW') }),
-  z.object({ type: z.literal('SIGN') }),
+  /**
+   * The renter signs first, then the owner. `fullName` is the name they type as their signature and
+   * `consent` their agreement to sign electronically; both optional for older clients (the account name).
+   */
+  z.object({ type: z.literal('SIGN'), fullName: Text(2, 120).optional(), consent: z.literal(true).optional() }),
   /** From the wallet, or by card with a token from POST /payments/card-tokens. */
   z
     .object({

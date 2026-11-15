@@ -40,7 +40,9 @@ describe('deal steps before payment', () => {
   it('ACCEPT reserves the days, freezes the contract and starts the payment deadline', async () => {
     const { booking } = await requested();
     const accepted = await step(owner, booking.id, { type: 'ACCEPT' });
-    expect(accepted).toMatchObject({ status: 'ACCEPTED', version: 1, hasContract: true, deadline: { timer: 'PAYMENT_EXPIRY' }, actions: ['SIGN', 'CANCEL'] });
+    expect(accepted).toMatchObject({ status: 'ACCEPTED', version: 1, hasContract: true, deadline: { timer: 'PAYMENT_EXPIRY' }, actions: ['CANCEL'], signatures: [] });
+    // The renter signs first: only they have the button now.
+    expect((await renter.get(`/bookings/${booking.id}`)).body.booking.actions).toEqual(['SIGN', 'CANCEL']);
     expect(await reserved(booking.id)).toBe(`[${day(t, 2)},${day(t, 5)})`);
     const contract = await t.prisma.contract.findUniqueOrThrow({ where: { bookingId: booking.id } });
     expect(contract.termsHash).toMatch(/^[0-9a-f]{64}$/);
@@ -56,6 +58,50 @@ describe('deal steps before payment', () => {
       ['REQUEST', null, 'REQUESTED', 'RENTER'],
       ['ACCEPT', 'REQUESTED', 'ACCEPTED', 'OWNER'],
     ]);
+  });
+
+  it('the renter signs first, then the owner; each signature is kept with the terms it covers', async () => {
+    const { booking } = await requested();
+    await step(owner, booking.id, { type: 'ACCEPT' });
+    const early = await act(owner, booking.id, { type: 'SIGN' }, 1);
+    expect(early.status).toBe(409);
+    expect(early.body.error?.code).toBe('CONTRACT_NOT_SIGNED');
+    await renter
+      .post(`/bookings/${booking.id}/events`)
+      .set('Idempotency-Key', 'sign-renter-1')
+      .set('User-Agent', 'test-browser')
+      .send({ version: 1, event: { type: 'SIGN', fullName: 'Anna Ozola', consent: true } })
+      .expect(200);
+    const view = (await owner.get(`/bookings/${booking.id}`)).body.booking;
+    expect(view.actions).toEqual(['SIGN', 'CANCEL']);
+    expect(view.signatures).toEqual([{ side: 'RENTER', fullName: 'Anna Ozola', signedAt: expect.any(String), method: 'SIMULATED' }]);
+    await step(owner, booking.id, { type: 'SIGN' });
+    const contract = await t.prisma.contract.findUniqueOrThrow({ where: { bookingId: booking.id }, include: { signatures: true } });
+    expect(contract.signatures.map((s) => [s.side, s.termsHash === contract.termsHash, s.userAgent])).toEqual(
+      expect.arrayContaining([
+        ['RENTER', true, 'test-browser'],
+        ['OWNER', true, expect.any(String)],
+      ]),
+    );
+    const notices = await t.prisma.notification.findMany({ where: { bookingId: booking.id } });
+    expect(notices.map((n) => [n.userId === owner.user.id ? 'owner' : 'renter', n.event])).toEqual(
+      expect.arrayContaining([
+        ['owner', 'RENTER_SIGNED'],
+        ['renter', 'CONTRACT_SIGNED'],
+      ]),
+    );
+  });
+
+  it('payment checks the recorded signatures, not only the dates', async () => {
+    const { booking } = await requested();
+    await step(owner, booking.id, { type: 'ACCEPT' });
+    await step(renter, booking.id, { type: 'SIGN' });
+    await step(owner, booking.id, { type: 'SIGN' });
+    // Someone tampers with the terms after signing: the fingerprints no longer match.
+    await t.prisma.contract.update({ where: { bookingId: booking.id }, data: { termsHash: 'f'.repeat(64) } });
+    const pay = await act(renter, booking.id, { type: 'PAY', method: 'WALLET' }, 3);
+    expect(pay.status).toBe(409);
+    expect(pay.body.error).toMatchObject({ code: 'CONTRACT_NOT_SIGNED', details: { renterSigned: false, ownerSigned: false } });
   });
 
   it('both sides sign; signing again changes nothing', async () => {

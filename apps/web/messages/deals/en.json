@@ -113,7 +113,7 @@
     },
     "contract": {
       "title": "Rental contract",
-      "body": "The contract fixes the item, the days, the price, the deposit and the rules. Both sides sign it before paying.",
+      "body": "The contract fixes the item, the days, the price, the deposit and the rules. The renter signs first, then the owner; payment opens once both have signed.",
       "signed": "Signed {when}",
       "notSigned": "Not signed yet",
       "renter": "Renter",
@@ -121,7 +121,11 @@
       "sign": "Sign the contract",
       "download": "Download PDF",
       "language": "Contract language",
-      "notYet": "The contract appears once the owner accepts the request."
+      "notYet": "The contract appears once the owner accepts the request.",
+      "waitingRenter": "Waiting for the renter to sign first",
+      "waitingOwner": "Sent to the owner to countersign",
+      "typed": "Signed as “{name}”",
+      "simulated": "simulated signature"
     },
     "damage": {
       "title": "Damage reported",
@@ -213,7 +217,19 @@
     "submit": "Send",
     "keep": "Go back",
     "confirmYes": "Yes, confirm",
-    "required": "Write a few words."
+    "required": "Write a few words.",
+    "sign": {
+      "lead": "You sign first; the signed contract then goes to the owner, who countersigns. You pay only after both have signed.",
+      "leadOwner": "The renter has signed. Countersign the same contract; then the renter can pay.",
+      "read": "Read the contract (PDF)",
+      "name": "Your full name as signature",
+      "nameHint": "Type your first and last name. This is your electronic signature.",
+      "consent": "I have read the contract and agree to sign it electronically.",
+      "consentMissing": "Tick the box to sign.",
+      "nameMissing": "Type your full name.",
+      "submit": "Sign",
+      "testMode": "Test mode: signing is simulated, like payments."
+    }
   },
   "myDeals": {
     "title": "My deals",
@@ -496,7 +512,9 @@
         "DAMAGE_REPORTED": "“{title}”: damage reported",
         "DAMAGE_ACCEPTED": "“{title}”: the damage was accepted",
         "DISPUTE_OPENED": "“{title}”: a dispute was opened",
-        "DISPUTE_RESOLVED": "“{title}”: the dispute was decided"
+        "DISPUTE_RESOLVED": "“{title}”: the dispute was decided",
+        "RENTER_SIGNED": "“{title}”: the renter signed — your turn to sign",
+        "CONTRACT_SIGNED": "“{title}”: the contract is signed — you can pay"
       },
       "OFFER": {
         "OFFER_MADE": "New price offer for “{title}”",

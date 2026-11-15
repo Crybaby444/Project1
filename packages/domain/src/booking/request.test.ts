@@ -72,7 +72,7 @@ describe('createRequest', () => {
       const raised = { ...promo, servicePercent: 25, promoServiceUntil: null };
       const accepted = decide(requested, owner, { type: 'ACCEPT' }, { ...later(ctx, 20), settings: raised, blocked: [] }).next;
       const afterWindow = { ...later(ctx, 40), settings: raised };
-      const signed = decide(decide(accepted, owner, { type: 'SIGN' }, afterWindow).next, renter, { type: 'SIGN' }, afterWindow).next;
+      const signed = decide(decide(accepted, renter, { type: 'SIGN' }, afterWindow).next, owner, { type: 'SIGN' }, afterWindow).next;
       const { next: paid, effects } = decide(signed, renter, { type: 'PAY', method: 'CARD' }, afterWindow);
       expect(paid.quote).toEqual(requested.quote);
       expect(effects).toContainEqual(

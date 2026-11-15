@@ -83,7 +83,43 @@ function journalData(event: BookingEvent): Prisma.InputJsonObject {
 /** The domain's event for a side's input (the card token is not part of it). */
 export function toDomainEvent(input: BookingEventInput): BookingEvent {
   if (input.type === 'PAY') return { type: 'PAY', method: input.method };
+  if (input.type === 'SIGN') return { type: 'SIGN' };
   return input as BookingEvent;
+}
+
+/** Where a signature came from: kept with it as evidence. */
+export interface SigningClient {
+  ip: string;
+  userAgent: string;
+}
+const UNKNOWN_CLIENT: SigningClient = { ip: 'unknown', userAgent: 'unknown' };
+
+/**
+ * One side's signature of the contract (simulated signing provider, like the simulated money): the typed
+ * name, the moment, the client, and the fingerprint of the terms it covers.
+ */
+async function recordSignature(
+  tx: Prisma.TransactionClient,
+  bookingId: string,
+  side: 'RENTER' | 'OWNER',
+  user: PublicUser,
+  fullName: string,
+  client: SigningClient,
+  now: Date,
+): Promise<void> {
+  const contract = await tx.contract.findUniqueOrThrow({ where: { bookingId } });
+  await tx.contractSignature.create({
+    data: { bookingId, side, userId: user.id, fullName, termsHash: contract.termsHash, ip: client.ip.slice(0, 64), userAgent: client.userAgent.slice(0, 300), createdAt: now },
+  });
+}
+
+/** Before payment: the renter's and then the owner's signature are on file, both for the contract's current terms. */
+async function assertBothSigned(tx: Prisma.TransactionClient, bookingId: string): Promise<void> {
+  const contract = await tx.contract.findUnique({ where: { bookingId }, include: { signatures: true } });
+  const ok = (side: 'RENTER' | 'OWNER') => contract?.signatures.some((sig) => sig.side === side && sig.termsHash === contract.termsHash) ?? false;
+  const renter = ok('RENTER');
+  const owner = ok('OWNER');
+  if (!renter || !owner) throw new AppError('CONTRACT_NOT_SIGNED', 409, undefined, undefined, { renterSigned: renter, ownerSigned: owner });
 }
 
 /** Nobody pays a deal whose owner was blocked or left (review of PR #3). */
@@ -279,7 +315,7 @@ export class BookingsService {
    * must be the current one, the domain decides, and the answer is saved with its effects. When a
    * deadline passed first, its TIMEOUT is saved instead and the step answers 409 DEADLINE_PASSED.
    */
-  async act(id: string, user: PublicUser, version: number, input: BookingEventInput): Promise<BookingView> {
+  async act(id: string, user: PublicUser, version: number, input: BookingEventInput, client: SigningClient = UNKNOWN_CLIENT): Promise<BookingView> {
     const now = this.clock.now();
     const settings = await this.rules.settings();
     const event = toDomainEvent(input);
@@ -301,8 +337,14 @@ export class BookingsService {
           row,
           ...(charge && { charge }),
         };
+        // The site checks the signatures, not just the dates: both are recorded, for these very terms.
+        if (event.type === 'PAY') await assertBothSigned(tx, row.id);
         try {
-          return { overdue: null, saved: await this.decideAndSave(tx, row, actor, event, ctx) };
+          const saved = await this.decideAndSave(tx, row, actor, event, ctx);
+          if (input.type === 'SIGN' && saved.changed && actor.kind !== 'SYSTEM' && actor.kind !== 'ADMIN') {
+            await recordSignature(tx, row.id, actor.kind, user, input.fullName ?? user.name, client, now);
+          }
+          return { overdue: null, saved };
         } catch (error) {
           const timer =
             error instanceof DomainError
