@@ -35,6 +35,13 @@ describe('ListingCard', () => {
     expect(await screen.findByText('€63 for 7 days')).toBeInTheDocument();
   });
 
+  it('gives the heart a touch area wider than its circle, so a near miss does not open the item', async () => {
+    const api = fakeApi(meRoute(null));
+    renderWithSession(<ListingCard item={catalogItem()} />, { client: api.client, hasSession: false });
+    const heart = await screen.findByRole('button', { name: /favourites/i });
+    expect(heart.className).toMatch(/before:-inset-/);
+  });
+
   it('puts the heart on the card, above the link (not below it)', async () => {
     const api = fakeApi(meRoute(null));
     renderWithSession(<ListingCard item={catalogItem()} />, { client: api.client, hasSession: false });
