@@ -33,7 +33,9 @@ test('a draft shows up and can be deleted for good', async ({ page }) => {
   const card = page.getByRole('article').filter({ hasText: 'Garden ladder' });
   await expect(card.getByText(en.listingStatus.DRAFT)).toBeVisible();
 
-  await card.getByRole('button', { name: en.listingActions.delete }).click();
+  // Hide and Delete live in the card's "…" menu.
+  await card.getByRole('button', { name: en.myListings.more.replace('{title}', 'Garden ladder') }).click();
+  await page.getByRole('menuitem', { name: en.listingActions.delete }).click();
   const dialog = page.getByRole('dialog', { name: en.listingActions.deleteTitle });
   await expect(dialog).toContainText(en.listingActions.deleteDraft);
   await dialog.getByRole('button', { name: en.listingActions.deleteConfirm }).click();
@@ -54,11 +56,13 @@ test('a published listing can be hidden and shown again', async ({ page, browser
   await page.goto('/dashboard/lending');
   const card = page.getByRole('article').filter({ hasText: 'Kayak for two people' });
   await expect(card.getByText(en.listingStatus.PUBLISHED)).toBeVisible();
-  await card.getByRole('button', { name: en.listingActions.hide }).click();
+  await card.getByRole('button', { name: en.myListings.more.replace('{title}', 'Kayak for two people') }).click();
+  await page.getByRole('menuitem', { name: en.listingActions.hide }).click();
   await expect(card.getByText(en.listingStatus.HIDDEN)).toBeVisible();
 
   await page.getByRole('button', { name: m.filter.HIDDEN }).click();
   await expect(page).toHaveURL(/status=HIDDEN/);
-  await card.getByRole('button', { name: en.listingActions.unhide }).click();
+  await card.getByRole('button', { name: en.myListings.more.replace('{title}', 'Kayak for two people') }).click();
+  await page.getByRole('menuitem', { name: en.listingActions.unhide }).click();
   await expect(page.getByText(m.emptyFilter)).toBeVisible();
 });
