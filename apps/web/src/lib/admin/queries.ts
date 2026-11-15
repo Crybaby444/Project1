@@ -213,3 +213,19 @@ export function useAdminSystem() {
     refetchInterval: 30_000,
   });
 }
+
+export function useAdminCategories() {
+  const client = useApiClient();
+  return useQuery({ queryKey: ['admin', 'categories'] as const, queryFn: async () => (await unwrap(client.GET('/api/v1/admin/categories'))).categories });
+}
+
+export function useChangeAdminCategory() {
+  const client = useApiClient();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, change }: { id: string; change: { names?: { en: string; lv: string; ru: string } | null; move?: 'up' | 'down'; hidden?: boolean } }) => {
+      await unwrap(client.PATCH('/api/v1/admin/categories/{id}', { params: { path: { id } }, body: change as never }));
+    },
+    onSettled: () => void queryClient.invalidateQueries({ queryKey: ['admin'] }),
+  });
+}

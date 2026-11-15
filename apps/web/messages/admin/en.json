@@ -15,7 +15,8 @@
       "seo": "SEO",
       "audit": "Audit log",
       "settings": "Settings",
-      "system": "System"
+      "system": "System",
+      "categories": "Categories"
     },
     "common": {
       "loadFailed": "This did not load.",
@@ -425,6 +426,25 @@
         "ledger": "Ledger entries"
       },
       "download": "Download"
+    },
+    "categories": {
+      "title": "Categories",
+      "intro": "The catalog's categories with how many items each holds. Rename one in all three languages, move it up or down, or hide it from the catalog; changes reach the site within five minutes and go to the audit log.",
+      "items": "{count} items",
+      "rename": "Rename",
+      "renamed": "Renamed",
+      "hidden": "Hidden",
+      "hide": "Hide",
+      "show": "Show",
+      "up": "Move up",
+      "down": "Move down",
+      "original": "Catalog name: {name}",
+      "save": "Save",
+      "reset": "Back to the catalog's names",
+      "cancel": "Back",
+      "done": "Saved.",
+      "failed": "Not saved.",
+      "renameTitle": "Rename “{name}”"
     }
   }
 }

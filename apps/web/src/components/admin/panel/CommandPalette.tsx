@@ -16,6 +16,7 @@ const PAGES: { key: string; href: string }[] = [
   { key: 'moderation', href: '/admin/listings' },
   { key: 'deals', href: '/admin/deals' },
   { key: 'reports', href: '/admin/reports' },
+  { key: 'categories', href: '/admin/categories' },
   { key: 'users', href: '/admin/users' },
   { key: 'money', href: '/admin/money' },
   { key: 'audit', href: '/admin/audit' },

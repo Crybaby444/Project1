@@ -7,7 +7,7 @@ import { useSession } from '@/lib/session/SessionProvider';
 import { useAdminOverview } from '@/lib/admin/queries';
 import { CommandPalette, OPEN_PALETTE } from './CommandPalette';
 
-type Section = 'overview' | 'traffic' | 'seo' | 'moderation' | 'deals' | 'reports' | 'users' | 'money' | 'audit' | 'settings' | 'system';
+type Section = 'overview' | 'traffic' | 'seo' | 'moderation' | 'deals' | 'reports' | 'users' | 'money' | 'audit' | 'settings' | 'system' | 'categories';
 
 const SECTIONS: { key: Section; group: 'insight' | 'work' | 'money' | 'system'; href: string; icon: ReactNode }[] = [
   {
@@ -39,6 +39,12 @@ const SECTIONS: { key: Section; group: 'insight' | 'work' | 'money' | 'system'; 
     group: 'work',
     href: '/admin/deals',
     icon: <path d="M7 7h11l-3-3M17 17H6l3 3M18 7v4M6 17v-4" />,
+  },
+  {
+    key: 'categories',
+    group: 'work',
+    href: '/admin/categories',
+    icon: <path d="M4 5h7v7H4zM13 5h7v7h-7zM4 14h7v5H4zM13 14h7v5h-7z" />,
   },
   {
     key: 'reports',
@@ -84,6 +90,7 @@ function activeSection(pathname: string): Section {
   if (pathname.startsWith('/admin/listings')) return 'moderation';
   if (pathname.startsWith('/admin/deals') || pathname.startsWith('/admin/disputes')) return 'deals';
   if (pathname.startsWith('/admin/reports')) return 'reports';
+  if (pathname.startsWith('/admin/categories')) return 'categories';
   if (pathname.startsWith('/admin/users')) return 'users';
   if (pathname.startsWith('/admin/money')) return 'money';
   if (pathname.startsWith('/admin/audit')) return 'audit';
