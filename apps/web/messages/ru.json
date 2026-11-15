@@ -666,7 +666,12 @@
     "view": "Открыть",
     "loadFailed": "Не удалось загрузить ваши вещи.",
     "retry": "Попробовать снова",
-    "count": "{count, plural, one {# вещь} few {# вещи} many {# вещей} other {# вещи}}"
+    "count": "{count, plural, one {# вещь} few {# вещи} many {# вещей} other {# вещи}}",
+    "activity": {
+      "requests": "{count, plural, one {# запрос ждёт} few {# запроса ждут} many {# запросов ждут} other {# запроса ждут}}",
+      "next": "Следующая аренда с {date}",
+      "earned": "Заработано {amount}"
+    }
   },
   "moderation": {
     "title": "Модерация",

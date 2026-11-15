@@ -87,7 +87,11 @@ export function serializeListing(listing: ListingWithRelations, viewer: ListingV
   };
 }
 
-export function serializeSummary(listing: Listing & { photos: ListingPhoto[] }, urlFor: UrlFor): OwnerListingSummary {
+export function serializeSummary(
+  listing: Listing & { photos: ListingPhoto[] },
+  urlFor: UrlFor,
+  activity: OwnerListingSummary['activity'] = { requests: 0, nextStart: null, earnedCents: 0 },
+): OwnerListingSummary {
   const cover = [...listing.photos].sort(byPosition)[0];
   return {
     id: listing.id,
@@ -102,5 +106,6 @@ export function serializeSummary(listing: Listing & { photos: ListingPhoto[] }, 
     publishedAt: iso(listing.publishedAt),
     updatedAt: listing.updatedAt.toISOString(),
     version: listing.version,
+    activity,
   };
 }

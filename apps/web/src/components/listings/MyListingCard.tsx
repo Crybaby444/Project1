@@ -3,6 +3,7 @@
 import type { OwnerListingSummary } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
+import { Link } from '@/i18n/navigation';
 import { BookingLinkButton } from '@/components/deals/BookingLinkButton';
 import { formatEuros } from '@/lib/listings/money';
 import { ListingActions, type ListingAction } from './ListingActions';
@@ -48,7 +49,8 @@ export function MyListingCard({
               ? t('perDay', { price: formatEuros(listing.dailyCents, locale) })
               : t('noPrice')}
           </p>
-          <p className="text-sm">{t('changed', { date: changed })}</p>
+          {listing.status === 'PUBLISHED' && <Activity activity={listing.activity} />}
+          <p className="text-ink/75 text-sm">{t('changed', { date: changed })}</p>
           {listing.status === 'REJECTED' && listing.rejectionReason && (
             <div className="mt-2 flex flex-col gap-1">
               <p className="text-[13px] font-bold tracking-[0.03em] uppercase">{t('reason')}</p>
@@ -71,5 +73,27 @@ export function MyListingCard({
         </div>
       </article>
     </div>
+  );
+}
+
+/** A published item's pulse: requests waiting (a way to answer them), the next paid rental, what it earned. */
+function Activity({ activity }: { activity: OwnerListingSummary['activity'] }) {
+  const t = useTranslations('myListings.activity');
+  const locale = useLocale();
+  const day = (d: string) => new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(`${d}T00:00:00Z`));
+  return (
+    <ul className="my-1 flex flex-wrap gap-1.5 text-[13px] font-semibold">
+      {activity.requests > 0 && (
+        <li>
+          <Link href="/bookings?role=owner" className="bg-ink text-canvas rounded-pill inline-flex min-h-7 items-center gap-1.5 px-2.5 before:size-1.5 before:rounded-full before:bg-current before:content-['']">
+            {t('requests', { count: activity.requests })}
+          </Link>
+        </li>
+      )}
+      {activity.nextStart && <li className="border-ink/25 rounded-pill inline-flex min-h-7 items-center border px-2.5">{t('next', { date: day(activity.nextStart) })}</li>}
+      {activity.earnedCents > 0 && (
+        <li className="border-ink/25 rounded-pill inline-flex min-h-7 items-center border px-2.5">{t('earned', { amount: formatEuros(activity.earnedCents, locale) })}</li>
+      )}
+    </ul>
   );
 }
