@@ -13,7 +13,7 @@ export function resolveSiteUrl(configured: string | undefined): string {
 export const SITE_URL = resolveSiteUrl(process.env.SITE_ORIGIN);
 
 /** Public pages that search engines may index, in the order of the sitemap. */
-export const PAGES = ['/', '/how-it-works', '/faq', '/terms', '/privacy', '/cookies'] as const;
+export const PAGES = ['/', '/what-is-yoyo', '/how-it-works', '/faq', '/terms', '/privacy', '/cookies'] as const;
 
 export type SitePage = (typeof PAGES)[number];
 

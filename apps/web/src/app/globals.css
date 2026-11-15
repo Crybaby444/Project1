@@ -8,6 +8,7 @@
   --color-surface: var(--surface);
   --color-band: var(--band);
   --color-mist: var(--mist);
+  --color-night: var(--night);
   --color-ink: var(--ink);
   --color-cta: var(--cta-bg);
   --color-cta-fg: var(--cta-fg);
@@ -88,6 +89,22 @@
     from {
       transform: scale(0.96);
       opacity: 0;
+    }
+  }
+  /* The home's price tags sway on their threads, each around its own lean (--tilt). */
+  @keyframes yoyo-sway {
+    0%,
+    100% {
+      transform: rotate(var(--tilt, 0deg));
+    }
+    50% {
+      transform: rotate(calc(var(--tilt, 0deg) * -0.55));
+    }
+  }
+  /* The phone menu slides in from the left edge. */
+  @keyframes sheet-in {
+    from {
+      transform: translateX(-100%);
     }
   }
 
@@ -567,4 +584,34 @@ html:has([data-home-root]) [data-theme-control] {
 }
 @media (prefers-reduced-motion: reduce) {
   [class*='animate-[bell-ring'] { animation: none !important; }
+}
+
+/* Home: tags on the string (see TagString). */
+.yoyo-sway {
+  position: relative;
+  transform: rotate(var(--tilt, 0deg));
+  animation: yoyo-sway 6.5s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .yoyo-sway {
+    animation: none;
+  }
+}
+
+/* Home: the loop's string draws itself as its band scrolls in (where supported). */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .loop-draw {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      animation: loop-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 45%;
+    }
+  }
+}
+@keyframes loop-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
 }

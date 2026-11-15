@@ -162,7 +162,9 @@
       "more": "{count} more in {name}"
     },
     "following": "Following",
-    "shops": "My shops"
+    "shops": "My shops",
+    "messages": "Messages",
+    "messagesUnread": "Messages, {count} unread"
   },
   "banner": {
     "verifyEmail": {
@@ -1079,5 +1081,85 @@
     "delete": "Delete shop",
     "cancel": "Cancel",
     "save": "Save"
+  },
+  "nav": {
+    "categories": "Categories",
+    "allIn": "All {count} in this category",
+    "all": "See all",
+    "whatIsYoyo": "What is Yoyo",
+    "howItWorks": "How it works",
+    "faq": "Questions",
+    "menu": "Menu",
+    "close": "Close the menu",
+    "allCategories": "All categories",
+    "more": "+{count} more"
+  },
+  "market": {
+    "hero": {
+      "title": "Rent it nearby. It comes back.",
+      "lead": "Things for a day or a week from people around you — with a contract before you pay and a deposit that returns."
+    },
+    "search": {
+      "what": "What",
+      "whatPlaceholder": "What do you need?",
+      "where": "Where",
+      "anywhere": "All of Riga",
+      "when": "When",
+      "anyDays": "Any days",
+      "clearDays": "Clear the days",
+      "submit": "Search"
+    },
+    "tags": {
+      "label": "New on Yoyo",
+      "perDay": "/ day",
+      "depositBack": "{amount} deposit, back to you"
+    },
+    "categories": {
+      "title": "Everything, by category",
+      "all": "All categories"
+    },
+    "loop": {
+      "title": "Out and back. Like a yo-yo.",
+      "lead": "Every rental on Yoyo runs the same loop. Yoyo holds the money in between, so neither side has to trust a stranger’s word.",
+      "whatIs": "What is Yoyo",
+      "how": "How it works",
+      "steps": {
+        "find": {
+          "title": "Find",
+          "body": "Search by name, place and days."
+        },
+        "book": {
+          "title": "Book & sign",
+          "body": "The owner accepts; you both sign the contract."
+        },
+        "use": {
+          "title": "Use",
+          "body": "Meet, take it, use it for your days."
+        },
+        "back": {
+          "title": "Back",
+          "body": "Return it; the deposit comes back to you."
+        }
+      }
+    },
+    "fresh": {
+      "title": "Just added",
+      "all": "See everything new"
+    },
+    "lend": {
+      "title": "Your things can earn",
+      "lead": "The drill in the cupboard, the tent from last summer. Put them on Yoyo, set your price and days, and keep the whole rent.",
+      "cta": "Lend an item",
+      "price": "Price per day",
+      "days": "Days rented a month",
+      "daysValue": "{count, plural, one {# day} other {# days}}",
+      "month": "A month could bring",
+      "note": "You keep the whole rent; the service fee is paid by the renter."
+    },
+    "close": {
+      "title": "It always comes back.",
+      "rent": "Find something",
+      "lend": "Lend something"
+    }
   }
 }

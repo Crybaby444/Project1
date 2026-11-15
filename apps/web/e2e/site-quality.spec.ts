@@ -7,7 +7,7 @@ import { overflows } from './support/layout';
  * The landing and service pages, everywhere they are read: three languages, both themes, the smallest
  * phones and a desktop. Nothing sticks out, axe finds nothing serious, the console stays clean.
  */
-const PAGES = ['/', '/how-it-works', '/faq', '/terms', '/privacy', '/cookies'];
+const PAGES = ['/', '/what-is-yoyo', '/how-it-works', '/faq', '/terms', '/privacy', '/cookies'];
 const PREFIXES = ['', '/lv', '/ru'];
 const at = (prefix: string, path: string) => (path === '/' ? prefix || '/' : `${prefix}${path}`);
 
@@ -69,7 +69,7 @@ test.describe('reduced motion', () => {
   test.use({ contextOptions: { reducedMotion: 'reduce' } });
 
   test('nothing moves on the landing page, even after scrolling to the end', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/what-is-yoyo');
     await page.waitForLoadState('networkidle');
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await page.waitForTimeout(300);
@@ -87,7 +87,7 @@ test.describe('reduced motion', () => {
         }) as typeof document.startViewTransition;
       }
     });
-    await page.goto('/');
+    await page.goto('/what-is-yoyo');
     await page.getByRole('contentinfo').getByRole('link', { name: en.footer.links.terms }).click();
     await expect(page).toHaveURL(/\/terms$/);
     expect(await page.evaluate(() => (window as unknown as { __vt: number }).__vt)).toBe(0);
@@ -103,14 +103,14 @@ test('moving between pages is one View Transition that cleans up after itself, a
       return original(update);
     }) as typeof document.startViewTransition;
   });
-  await page.goto('/');
+  await page.goto('/what-is-yoyo');
   await page.getByRole('contentinfo').getByRole('link', { name: en.footer.links.faq }).click();
   await expect(page).toHaveURL(/\/faq$/);
   await expect(page.getByRole('heading', { level: 1, name: en.faq.title })).toBeVisible();
   expect(await page.evaluate(() => (window as unknown as { __vt: number }).__vt)).toBe(1);
   await expect(page.locator('html')).not.toHaveAttribute('data-page-switch');
   await page.goBack();
-  await expect(page).toHaveURL(/\/$/);
+  await expect(page).toHaveURL(/\/what-is-yoyo$/);
   await expect(page.getByRole('heading', { level: 1, name: 'Yoyo' })).toBeVisible();
 });
 
@@ -128,7 +128,7 @@ for (const viewport of [
         }
       }).observe({ type: 'layout-shift', buffered: true });
     });
-    await page.goto('/');
+    await page.goto('/what-is-yoyo');
     await page.waitForLoadState('networkidle');
     for (let y = 0; y < 12; y += 1) {
       await page.mouse.wheel(0, 700);

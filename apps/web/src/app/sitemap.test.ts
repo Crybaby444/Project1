@@ -20,7 +20,7 @@ describe('sitemap.xml', () => {
 describe('sitemap-pages.xml', () => {
   it('lists every public page in every language, each with its language alternates', () => {
     const urls = pageUrls(SITE);
-    expect(urls).toHaveLength(18);
+    expect(urls).toHaveLength(21);
     expect(urls.map((url) => url.loc)).toEqual(expect.arrayContaining([SITE, `${SITE}/lv`, `${SITE}/ru/privacy`]));
     expect(urls.find((url) => url.loc === `${SITE}/lv/faq`)?.alternates).toEqual({
       en: `${SITE}/faq`,

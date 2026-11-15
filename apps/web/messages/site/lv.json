@@ -23,6 +23,10 @@
     "cookies": {
       "title": "Sīkdatnes",
       "description": "Yoyo izmanto tikai tās sīkdatnes, bez kurām vietne nedarbojas: ne reklāmu, ne izsekošanu. Šeit ir pilns saraksts."
+    },
+    "whatIs": {
+      "title": "Kas ir Yoyo",
+      "description": "Yoyo ir vieta, kur nomāt lietas no cilvēkiem tuvumā: atrodi, rezervē dienas, paraksti līgumu, lieto un atdod — un drošības nauda atgriežas."
     }
   },
   "footer": {

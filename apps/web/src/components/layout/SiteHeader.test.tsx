@@ -1,4 +1,5 @@
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import en from '../../../messages/en.json';
 import { fakeApi, meRoute, testUser } from '@/test/fake-api';
@@ -52,29 +53,45 @@ describe('SiteHeader', () => {
     expect(screen.queryByRole('navigation', { name: en.language.label })).toBeNull();
   });
 
-  it('has no catalog in the header: the catalog lives on the home page and in the footer (owner, 2026-11-13)', async () => {
+  it('shows every category with its subcategories in the navigation row (owner, 2026-11-16)', async () => {
+    const user = userEvent.setup();
     const { client } = fakeApi(meRoute(null));
-    renderWithSession(<SiteHeader catalog={[{ id: 'c1', slug: 'tools', name: 'Tools', children: [] } as never]} />, { client });
-    expect(screen.queryByRole('button', { name: new RegExp(en.header.catalog.button) })).toBeNull();
+    const roots = [
+      {
+        slugs: { en: 'tools', lv: 'instrumenti', ru: 'instrumenty' },
+        names: { en: 'Tools', lv: 'Instrumenti', ru: 'Инструменты' },
+        sticker: 'blue',
+        children: [{ slugs: { en: 'drills', lv: 'urbji', ru: 'dreli' }, names: { en: 'Drills', lv: 'Urbji', ru: 'Дрели' } }],
+        more: 2,
+      },
+    ] as never;
+    renderWithSession(<SiteHeader catalog={roots} />, { client });
+    const nav = screen.getByRole('navigation', { name: en.nav.categories });
+    const tools = within(nav).getByRole('button', { name: 'Tools' });
+    expect(tools).toHaveAttribute('aria-expanded', 'false');
+    await user.click(tools);
+    expect(tools).toHaveAttribute('aria-expanded', 'true');
+    expect(within(nav).getAllByRole('link', { name: 'Drills' })[0]).toHaveAttribute('href', '/c/drills');
+    await user.click(within(nav).getByRole('button', { name: en.nav.allCategories }));
+    expect(within(nav).getByRole('link', { name: 'Tools' })).toHaveAttribute('href', '/c/tools');
+    expect(within(nav).getByRole('link', { name: en.nav.whatIsYoyo })).toHaveAttribute('href', '/what-is-yoyo');
   });
 
-  it('keeps the mark dead centre, whatever is beside it', async () => {
+  it('puts the mark first, on the left', async () => {
     const { client } = fakeApi(meRoute(null));
-    renderWithSession(<SiteHeader />, { client });
+    const { container } = renderWithSession(<SiteHeader />, { client });
     const brand = screen.getByRole('link', { name: 'Yoyo' });
     expect(brand).toHaveAttribute('data-site-brand');
-    expect(brand.className).toMatch(/\babsolute\b/);
-    expect(brand.className).toMatch(/left-1\/2/);
-    expect(brand.className).toMatch(/-translate-x-1\/2/);
+    const outside = [...container.querySelectorAll('header a')].filter((a) => !a.closest('dialog'));
+    expect(outside[0]).toBe(brand);
   });
 
-  it('on a phone keeps the language in the header (in the empty left corner) and lets the theme step aside', async () => {
+  it('keeps the language in the row and the theme on wide screens (the phone menu has it too)', async () => {
     const { client } = fakeApi(meRoute(null));
     renderWithSession(<SiteHeader />, { client });
     const language = screen.getByRole('button', { name: new RegExp(`^${en.language.label}`) });
-    const theme = screen.getByRole('button', { name: en.theme.toggle });
     expect(language.closest('[data-desktop-only]')).toBeNull();
-    expect(language.closest('[data-phone-left]')).not.toBeNull();
-    expect(theme.closest('[data-desktop-only]')).not.toBeNull();
+    const themes = screen.getAllByRole('button', { name: en.theme.toggle, hidden: true });
+    expect(themes.some((b) => b.closest('[data-desktop-only]') !== null)).toBe(true);
   });
 });

@@ -6,31 +6,31 @@ import siteEn from '../messages/site/en.json' with { type: 'json' };
 import siteLv from '../messages/site/lv.json' with { type: 'json' };
 
 test.describe('home page in three languages', () => {
-  test('English is served at / without a prefix', async ({ page }) => {
-    await page.goto('/');
+  test('English is served without a prefix', async ({ page }) => {
+    await page.goto('/what-is-yoyo');
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
     await expect(page.getByText(en.home.tagline)).toBeVisible();
     await expect(page.getByRole('heading', { level: 1, name: 'Yoyo' })).toBeVisible();
   });
 
   test('Latvian is served at /lv', async ({ page }) => {
-    await page.goto('/lv');
+    await page.goto('/lv/what-is-yoyo');
     await expect(page.locator('html')).toHaveAttribute('lang', 'lv');
     await expect(page.getByText(lv.home.tagline)).toBeVisible();
   });
 
   test('Russian is served at /ru', async ({ page }) => {
-    await page.goto('/ru');
+    await page.goto('/ru/what-is-yoyo');
     await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
     await expect(page.getByText(ru.home.tagline)).toBeVisible();
   });
 
   test('the language switcher moves between locales', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/what-is-yoyo');
     const header = page.getByRole('banner');
     await header.getByRole('button', { name: /^Language: English/ }).click();
     await header.getByRole('menuitemradio', { name: 'Русский' }).click();
-    await expect(page).toHaveURL(/\/ru$/);
+    await expect(page).toHaveURL(/\/ru\/what-is-yoyo$/);
     await expect(page.getByText(ru.home.tagline)).toBeVisible();
     await header.getByRole('button', { name: /^Язык: Русский/ }).click();
     await header.getByRole('menuitemradio', { name: 'English' }).click();
