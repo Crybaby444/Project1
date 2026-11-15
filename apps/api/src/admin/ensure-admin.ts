@@ -32,6 +32,7 @@ export async function ensureAdmin(
         where: { id: existing.id },
         data: {
           role: 'ADMIN',
+        staffRole: 'OWNER',
           // A Google-only account gets a password to sign in with; a real one is never replaced.
           ...(existing.passwordHash === null && { passwordHash: await passwords.hash(password) }),
         },
@@ -42,7 +43,7 @@ export async function ensureAdmin(
     await prisma.$transaction([
       prisma.user.update({
         where: { id: existing.id },
-        data: { role: 'ADMIN', emailVerifiedAt: now, passwordHash },
+        data: { role: 'ADMIN', staffRole: 'OWNER', emailVerifiedAt: now, passwordHash },
       }),
       prisma.refreshToken.deleteMany({ where: { userId: existing.id } }),
       prisma.oAuthAccount.deleteMany({ where: { userId: existing.id } }),
@@ -62,6 +63,7 @@ export async function ensureAdmin(
         email,
         name: 'Admin',
         role: 'ADMIN',
+        staffRole: 'OWNER',
         passwordHash: await passwords.hash(password),
         emailVerifiedAt: now,
         createdAt: now,

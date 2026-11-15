@@ -99,6 +99,8 @@ export const PublicUserSchema = z.object({
   locale: z.enum(LOCALES),
   theme: z.enum(THEME_PREFERENCES),
   role: z.enum(ROLES),
+  /** For an administrator: their staff role (what part of the admin panel they work in); null otherwise. */
+  staffRole: z.enum(['OWNER', 'MODERATOR', 'SUPPORT', 'FINANCE', 'EDITOR']).nullable(),
   emailVerified: z.boolean(),
   /** False for accounts that only sign in with Google: no password to change or to confirm a deletion with. */
   hasPassword: z.boolean(),

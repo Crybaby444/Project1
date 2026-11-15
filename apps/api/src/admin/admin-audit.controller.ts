@@ -5,7 +5,7 @@ import { createZodDto, ZodResponse } from 'nestjs-zod';
 import { AuditService } from '../audit/audit.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
-import { Roles, RolesGuard } from '../auth/roles.guard';
+import { Roles, RolesGuard, Section } from '../auth/roles.guard';
 import { ApiErrors } from '../common/api-errors';
 import { AdminSettingsService } from './admin-settings.service';
 
@@ -24,6 +24,7 @@ export class AdminAuditController {
     private readonly settings: AdminSettingsService,
   ) {}
 
+  @Section('audit')
   @Get('audit')
   @ZodResponse({ status: 200, type: AdminAuditListDto, description: 'Every administrator action, newest first' })
   @ApiErrors(400, 401, 403)
@@ -31,6 +32,7 @@ export class AdminAuditController {
     return this.audit.list(query);
   }
 
+  @Section('settings')
   @Get('settings')
   @ZodResponse({ status: 200, type: AdminSettingsDto, description: 'Every deal rule and fee, with its default' })
   @ApiErrors(401, 403)
@@ -38,6 +40,7 @@ export class AdminAuditController {
     return this.settings.list();
   }
 
+  @Section('settings')
   @Put('settings')
   @ZodResponse({ status: 200, type: AdminSettingsDto, description: 'Changes settings within the deal rules; logged with before and after' })
   @ApiErrors(400, 401, 403)

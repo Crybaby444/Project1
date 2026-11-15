@@ -19,6 +19,15 @@ model Setting {
   updatedAt DateTime @updatedAt
 }
 
+/// An administrator's part of the admin panel (@yoyo/shared STAFF_PERMISSIONS).
+enum StaffRole {
+  OWNER
+  MODERATOR
+  SUPPORT
+  FINANCE
+  EDITOR
+}
+
 enum Role {
   USER
   ADMIN
@@ -78,6 +87,11 @@ model User {
   savedSearches    SavedSearch[]
   reports          Report[]         @relation("ReportReporter")
   adminNotes       AdminNote[]      @relation("AdminNotes")
+  /// For role ADMIN: which part of the panel they work in (null for everyone else).
+  staffRole        StaffRole?
+  /// Two-factor sign-in (TOTP): the secret, encrypted with the server key, and when it was turned on.
+  totpSecret       String?
+  totpEnabledAt    DateTime?
 }
 
 /// One refresh token of a session. Rotation chains tokens of the same family; reuse revokes the family.

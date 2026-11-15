@@ -4747,7 +4747,8 @@
                 "REVIEW_HIDDEN",
                 "REVIEW_SHOWN",
                 "SETTINGS_CHANGED",
-                "CATEGORY_CHANGED"
+                "CATEGORY_CHANGED",
+                "STAFF_CHANGED"
               ]
             }
           },
@@ -5499,6 +5500,127 @@
           },
           "404": {
             "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/staff": {
+      "get": {
+        "operationId": "AdminStaffController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Everyone who works in the admin panel, with their role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffListDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/users/{id}/staff": {
+      "put": {
+        "operationId": "AdminStaffController_change",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StaffChangeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion)",
             "content": {
               "application/json": {
                 "schema": {
@@ -8100,6 +8222,18 @@
                   "ADMIN"
                 ]
               },
+              "staffRole": {
+                "type": "string",
+                "enum": [
+                  "OWNER",
+                  "MODERATOR",
+                  "SUPPORT",
+                  "FINANCE",
+                  "EDITOR",
+                  null
+                ],
+                "nullable": true
+              },
               "emailVerified": {
                 "type": "boolean"
               },
@@ -8130,6 +8264,7 @@
               "locale",
               "theme",
               "role",
+              "staffRole",
               "emailVerified",
               "hasPassword",
               "phone",
@@ -8264,6 +8399,18 @@
                   "ADMIN"
                 ]
               },
+              "staffRole": {
+                "type": "string",
+                "enum": [
+                  "OWNER",
+                  "MODERATOR",
+                  "SUPPORT",
+                  "FINANCE",
+                  "EDITOR",
+                  null
+                ],
+                "nullable": true
+              },
               "emailVerified": {
                 "type": "boolean"
               },
@@ -8294,6 +8441,7 @@
               "locale",
               "theme",
               "role",
+              "staffRole",
               "emailVerified",
               "hasPassword",
               "phone",
@@ -14501,6 +14649,18 @@
                     "ADMIN"
                   ]
                 },
+                "staffRole": {
+                  "type": "string",
+                  "enum": [
+                    "OWNER",
+                    "MODERATOR",
+                    "SUPPORT",
+                    "FINANCE",
+                    "EDITOR",
+                    null
+                  ],
+                  "nullable": true
+                },
                 "emailVerified": {
                   "type": "boolean"
                 },
@@ -14543,6 +14703,7 @@
                 "locale",
                 "theme",
                 "role",
+                "staffRole",
                 "emailVerified",
                 "hasPassword",
                 "phone",
@@ -14616,6 +14777,18 @@
                   "ADMIN"
                 ]
               },
+              "staffRole": {
+                "type": "string",
+                "enum": [
+                  "OWNER",
+                  "MODERATOR",
+                  "SUPPORT",
+                  "FINANCE",
+                  "EDITOR",
+                  null
+                ],
+                "nullable": true
+              },
               "emailVerified": {
                 "type": "boolean"
               },
@@ -14658,6 +14831,7 @@
               "locale",
               "theme",
               "role",
+              "staffRole",
               "emailVerified",
               "hasPassword",
               "phone",
@@ -14719,7 +14893,8 @@
                     "REVIEW_HIDDEN",
                     "REVIEW_SHOWN",
                     "SETTINGS_CHANGED",
-                    "CATEGORY_CHANGED"
+                    "CATEGORY_CHANGED",
+                    "STAFF_CHANGED"
                   ]
                 },
                 "targetType": {
@@ -15640,6 +15815,80 @@
             "type": "boolean"
           }
         }
+      },
+      "StaffListDto_Output": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "staffRole": {
+                  "type": "string",
+                  "enum": [
+                    "OWNER",
+                    "MODERATOR",
+                    "SUPPORT",
+                    "FINANCE",
+                    "EDITOR"
+                  ]
+                },
+                "twoFactor": {
+                  "type": "boolean"
+                },
+                "lastSeenAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "nullable": true
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "email",
+                "staffRole",
+                "twoFactor",
+                "lastSeenAt"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "StaffChangeDto": {
+        "type": "object",
+        "properties": {
+          "staffRole": {
+            "type": "string",
+            "enum": [
+              "OWNER",
+              "MODERATOR",
+              "SUPPORT",
+              "FINANCE",
+              "EDITOR",
+              null
+            ],
+            "nullable": true
+          }
+        },
+        "required": [
+          "staffRole"
+        ]
       },
       "PhotoUploadResponseDto_Output": {
         "type": "object",

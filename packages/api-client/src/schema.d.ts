@@ -1332,6 +1332,38 @@ export interface paths {
         patch: operations["AdminCategoriesController_change"];
         trace?: never;
     };
+    "/api/v1/admin/staff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminStaffController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{id}/staff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["AdminStaffController_change"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/listings/{id}/photos": {
         parameters: {
             query?: never;
@@ -1859,6 +1891,8 @@ export interface components {
                 theme: "system" | "light" | "dark";
                 /** @enum {string} */
                 role: "USER" | "ADMIN";
+                /** @enum {string|null} */
+                staffRole: "OWNER" | "MODERATOR" | "SUPPORT" | "FINANCE" | "EDITOR" | null;
                 emailVerified: boolean;
                 hasPassword: boolean;
                 phone: string | null;
@@ -1897,6 +1931,8 @@ export interface components {
                 theme: "system" | "light" | "dark";
                 /** @enum {string} */
                 role: "USER" | "ADMIN";
+                /** @enum {string|null} */
+                staffRole: "OWNER" | "MODERATOR" | "SUPPORT" | "FINANCE" | "EDITOR" | null;
                 emailVerified: boolean;
                 hasPassword: boolean;
                 phone: string | null;
@@ -3181,6 +3217,8 @@ export interface components {
                 theme: "system" | "light" | "dark";
                 /** @enum {string} */
                 role: "USER" | "ADMIN";
+                /** @enum {string|null} */
+                staffRole: "OWNER" | "MODERATOR" | "SUPPORT" | "FINANCE" | "EDITOR" | null;
                 emailVerified: boolean;
                 hasPassword: boolean;
                 phone: string | null;
@@ -3207,6 +3245,8 @@ export interface components {
                 theme: "system" | "light" | "dark";
                 /** @enum {string} */
                 role: "USER" | "ADMIN";
+                /** @enum {string|null} */
+                staffRole: "OWNER" | "MODERATOR" | "SUPPORT" | "FINANCE" | "EDITOR" | null;
                 emailVerified: boolean;
                 hasPassword: boolean;
                 phone: string | null;
@@ -3227,7 +3267,7 @@ export interface components {
                     name: string;
                 };
                 /** @enum {string} */
-                action: "LISTING_APPROVED" | "LISTING_REJECTED" | "LISTING_MOVED" | "LISTING_HIDDEN" | "LISTING_SHOWN" | "DISPUTE_RESOLVED" | "USER_BLOCKED" | "USER_UNBLOCKED" | "USER_NOTE" | "REPORT_CLOSED" | "REVIEW_HIDDEN" | "REVIEW_SHOWN" | "SETTINGS_CHANGED" | "CATEGORY_CHANGED";
+                action: "LISTING_APPROVED" | "LISTING_REJECTED" | "LISTING_MOVED" | "LISTING_HIDDEN" | "LISTING_SHOWN" | "DISPUTE_RESOLVED" | "USER_BLOCKED" | "USER_UNBLOCKED" | "USER_NOTE" | "REPORT_CLOSED" | "REVIEW_HIDDEN" | "REVIEW_SHOWN" | "SETTINGS_CHANGED" | "CATEGORY_CHANGED" | "STAFF_CHANGED";
                 targetType: string;
                 targetId: string | null;
                 summary: string;
@@ -3427,6 +3467,22 @@ export interface components {
             /** @enum {string} */
             move?: "up" | "down";
             hidden?: boolean;
+        };
+        StaffListDto_Output: {
+            items: {
+                id: string;
+                name: string;
+                email: string;
+                /** @enum {string} */
+                staffRole: "OWNER" | "MODERATOR" | "SUPPORT" | "FINANCE" | "EDITOR";
+                twoFactor: boolean;
+                /** Format: date-time */
+                lastSeenAt: string | null;
+            }[];
+        };
+        StaffChangeDto: {
+            /** @enum {string|null} */
+            staffRole: "OWNER" | "MODERATOR" | "SUPPORT" | "FINANCE" | "EDITOR" | null;
         };
         PhotoUploadResponseDto_Output: {
             photo: {
@@ -7840,7 +7896,7 @@ export interface operations {
     AdminAuditController_list: {
         parameters: {
             query?: {
-                action?: "LISTING_APPROVED" | "LISTING_REJECTED" | "LISTING_MOVED" | "LISTING_HIDDEN" | "LISTING_SHOWN" | "DISPUTE_RESOLVED" | "USER_BLOCKED" | "USER_UNBLOCKED" | "USER_NOTE" | "REPORT_CLOSED" | "REVIEW_HIDDEN" | "REVIEW_SHOWN" | "SETTINGS_CHANGED" | "CATEGORY_CHANGED";
+                action?: "LISTING_APPROVED" | "LISTING_REJECTED" | "LISTING_MOVED" | "LISTING_HIDDEN" | "LISTING_SHOWN" | "DISPUTE_RESOLVED" | "USER_BLOCKED" | "USER_UNBLOCKED" | "USER_NOTE" | "REPORT_CLOSED" | "REVIEW_HIDDEN" | "REVIEW_SHOWN" | "SETTINGS_CHANGED" | "CATEGORY_CHANGED" | "STAFF_CHANGED";
                 targetId?: string;
                 page?: number;
             };
@@ -8443,6 +8499,106 @@ export interface operations {
             };
             /** @description Not found or not available */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminStaffController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Everyone who works in the admin panel, with their role */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffListDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminStaffController_change: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StaffChangeDto"];
+            };
+        };
+        responses: {
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };

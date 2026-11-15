@@ -16,7 +16,8 @@
       "audit": "Audit log",
       "settings": "Settings",
       "system": "System",
-      "categories": "Categories"
+      "categories": "Categories",
+      "staff": "Staff"
     },
     "common": {
       "loadFailed": "This did not load.",
@@ -295,7 +296,8 @@
         "REVIEW_HIDDEN": "Review hidden",
         "REVIEW_SHOWN": "Review shown again",
         "SETTINGS_CHANGED": "Settings changed",
-        "CATEGORY_CHANGED": "Category changed"
+        "CATEGORY_CHANGED": "Category changed",
+        "STAFF_CHANGED": "Staff role changed"
       }
     },
     "settings": {
@@ -378,7 +380,8 @@
       "none": "Nothing here.",
       "cancel": "Back",
       "done": "Done.",
-      "failed": "That did not work."
+      "failed": "That did not work.",
+      "staffRole": "Admin panel role"
     },
     "search": {
       "open": "Search",
@@ -445,6 +448,47 @@
       "done": "Saved.",
       "failed": "Not saved.",
       "renameTitle": "Rename “{name}”"
+    },
+    "staff": {
+      "title": "Staff",
+      "intro": "Who works in the admin panel and what each of them may open. To add someone, find them in Users and give them a role on their page.",
+      "name": "Person",
+      "role": "Role",
+      "twoFactor": "Two-step sign-in",
+      "on": "On",
+      "off": "Off",
+      "lastSeen": "Last signed in",
+      "never": "Never",
+      "you": "You",
+      "none": "Not staff",
+      "remove": "Take out of the panel",
+      "changed": "Role changed",
+      "failed": "Couldn't change the role",
+      "why": {
+        "SELF": "You can't change your own role",
+        "LAST_OWNER": "The last owner stays an owner",
+        "BLOCKED": "Unblock them first"
+      },
+      "roles": {
+        "OWNER": "Owner",
+        "MODERATOR": "Moderator",
+        "SUPPORT": "Support",
+        "FINANCE": "Accountant",
+        "EDITOR": "Editor"
+      },
+      "may": {
+        "OWNER": "Everything, including staff and settings",
+        "MODERATOR": "Moderation, reports, categories, users",
+        "SUPPORT": "Users, deals, reports",
+        "FINANCE": "Deals, money, system and exports",
+        "EDITOR": "Traffic, SEO, content, categories"
+      },
+      "access": "Can open"
+    },
+    "noAccess": {
+      "title": "Not in your part of the panel",
+      "body": "Your role doesn’t open this section. Ask the owner if you need it.",
+      "back": "To the overview"
     }
   }
 }

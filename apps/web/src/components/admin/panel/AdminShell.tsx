@@ -1,13 +1,15 @@
 'use client';
 
+import { staffMay, type AdminSection } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
+import { panelRole } from '@/lib/admin/staff';
 import { useSession } from '@/lib/session/SessionProvider';
 import { useAdminOverview } from '@/lib/admin/queries';
 import { CommandPalette, OPEN_PALETTE } from './CommandPalette';
 
-type Section = 'overview' | 'traffic' | 'seo' | 'moderation' | 'deals' | 'reports' | 'users' | 'money' | 'audit' | 'settings' | 'system' | 'categories';
+type Section = Exclude<AdminSection, 'content'>;
 
 const SECTIONS: { key: Section; group: 'insight' | 'work' | 'money' | 'system'; href: string; icon: ReactNode }[] = [
   {
@@ -77,6 +79,12 @@ const SECTIONS: { key: Section; group: 'insight' | 'work' | 'money' | 'system'; 
     icon: <path d="M4 6h16v10H4zM8 20h8M12 16v4M7 10l2 2 2-3 2 2 2-1" />,
   },
   {
+    key: 'staff',
+    group: 'system',
+    href: '/admin/staff',
+    icon: <path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6zM12 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM8.5 15.5a4 4 0 0 1 7 0" />,
+  },
+  {
     key: 'settings',
     group: 'system',
     href: '/admin/settings',
@@ -96,6 +104,7 @@ function activeSection(pathname: string): Section {
   if (pathname.startsWith('/admin/audit')) return 'audit';
   if (pathname.startsWith('/admin/settings')) return 'settings';
   if (pathname.startsWith('/admin/system')) return 'system';
+  if (pathname.startsWith('/admin/staff')) return 'staff';
   return 'overview';
 }
 
@@ -124,6 +133,9 @@ export function AdminShell({ children }: { children: ReactNode }) {
     await signOut();
     router.push('/login');
   }
+  // Each staff role sees only its part of the panel (STAFF_PERMISSIONS; the API checks the same table).
+  const sections = SECTIONS.filter((s) => staffMay(panelRole(user), s.key));
+  const allowed = staffMay(panelRole(user), active);
   const waiting: Partial<Record<Section, number>> = {
     moderation: overview.data?.listings.pendingReview ?? 0,
     deals: overview.data?.deals.disputed ?? 0,
@@ -163,10 +175,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
                 </Icon>
               </button>
             </li>
-            {SECTIONS.map(({ key, group, href, icon }, index) => {
+            {sections.map(({ key, group, href, icon }, index) => {
               const current = key === active;
               const count = waiting[key] ?? 0;
-              const firstOfGroup = index === 0 || SECTIONS[index - 1]!.group !== group;
+              const firstOfGroup = index === 0 || sections[index - 1]!.group !== group;
               return (
                 <li key={key} className="shrink-0">
                   {firstOfGroup && (
@@ -223,8 +235,22 @@ export function AdminShell({ children }: { children: ReactNode }) {
       </aside>
       <CommandPalette />
       <main id="admin-main" className="min-w-0 px-4 py-8 sm:px-8 lg:px-12 lg:py-10">
-        {children}
+        {allowed ? children : <NoAccess />}
       </main>
+    </div>
+  );
+}
+
+/** A section the signed-in staff role doesn't open: say so instead of a page of 403s. */
+function NoAccess() {
+  const t = useTranslations('admin.noAccess');
+  return (
+    <div role="alert" className="flex max-w-xl flex-col items-start gap-4 py-10">
+      <h1 className="font-display text-[clamp(2.2rem,4vw,3.2rem)] leading-[0.95] font-black uppercase">{t('title')}</h1>
+      <p className="text-ink/80">{t('body')}</p>
+      <Link href="/admin" className="font-bold underline decoration-1 underline-offset-4">
+        {t('back')}
+      </Link>
     </div>
   );
 }

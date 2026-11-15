@@ -16,7 +16,7 @@ import type { Request } from 'express';
 import { createZodDto, ZodResponse } from 'nestjs-zod';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
-import { Roles, RolesGuard } from '../auth/roles.guard';
+import { Roles, RolesGuard, Section } from '../auth/roles.guard';
 import { ApiErrors } from '../common/api-errors';
 import { parseOptionalBody } from '../common/parse-body';
 import { ModerationService } from './moderation.service';
@@ -33,6 +33,7 @@ class MoveListingCategoryDto extends createZodDto(MoveListingCategoryRequestSche
 @Controller('admin/listings')
 @UseGuards(AuthGuard, RolesGuard)
 @Roles('ADMIN')
+@Section('moderation')
 export class ModerationController {
   constructor(private readonly moderation: ModerationService) {}
 

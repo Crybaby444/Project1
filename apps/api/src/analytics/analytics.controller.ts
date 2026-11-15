@@ -5,7 +5,7 @@ import type { Request } from 'express';
 import { createZodDto, ZodResponse } from 'nestjs-zod';
 import { z } from 'zod';
 import { AuthGuard } from '../auth/auth.guard';
-import { Roles, RolesGuard } from '../auth/roles.guard';
+import { Roles, RolesGuard, Section } from '../auth/roles.guard';
 import { ApiErrors } from '../common/api-errors';
 import { RateLimiter } from '../common/rate-limiter';
 import { RATE_LIMITS } from '../common/rate-limits';
@@ -42,6 +42,7 @@ export class AnalyticsController {
 export class AdminAnalyticsController {
   constructor(private readonly analytics: AnalyticsService) {}
 
+  @Section('traffic')
   @Get('analytics')
   @ZodResponse({ status: 200, type: AdminAnalyticsDto, description: 'Traffic over the last 7, 30 or 90 days (first-party, cookieless counters)' })
   @ApiErrors(400, 401, 403)
@@ -49,6 +50,7 @@ export class AdminAnalyticsController {
     return this.analytics.report(query.days);
   }
 
+  @Section('seo')
   @Get('seo')
   @ZodResponse({ status: 200, type: AdminSeoDto, description: 'What holds published items back in search engines, worst first' })
   @ApiErrors(401, 403)

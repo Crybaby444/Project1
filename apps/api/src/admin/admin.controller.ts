@@ -14,7 +14,7 @@ import { createZodDto, ZodResponse } from 'nestjs-zod';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { toPublicUser } from '../auth/public-user';
-import { Roles, RolesGuard } from '../auth/roles.guard';
+import { Roles, RolesGuard, Section } from '../auth/roles.guard';
 import { ApiErrors } from '../common/api-errors';
 import { AppError } from '../common/app-error';
 import { CLOCK, type Clock } from '../clock/clock';
@@ -39,6 +39,7 @@ function toAdminUser(user: User): AdminUser {
 @Controller('admin')
 @UseGuards(AuthGuard, RolesGuard)
 @Roles('ADMIN')
+@Section('users')
 export class AdminController {
   constructor(
     private readonly prisma: PrismaService,

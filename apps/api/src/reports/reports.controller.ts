@@ -5,7 +5,7 @@ import { createZodDto, ZodResponse } from 'nestjs-zod';
 import { z } from 'zod';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
-import { Roles, RolesGuard } from '../auth/roles.guard';
+import { Roles, RolesGuard, Section } from '../auth/roles.guard';
 import { ApiErrors } from '../common/api-errors';
 import { RateLimiter } from '../common/rate-limiter';
 import { RATE_LIMITS } from '../common/rate-limits';
@@ -40,6 +40,7 @@ export class ReportsController {
 @Controller('admin/reports')
 @UseGuards(AuthGuard, RolesGuard)
 @Roles('ADMIN')
+@Section('reports')
 export class AdminReportsController {
   constructor(
     private readonly reports: ReportsService,
