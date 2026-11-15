@@ -12,6 +12,7 @@ import { invalidStatus, ListingsService } from '../listings/listings.service';
 import { MailService } from '../mail/mail.service';
 import { NotificationsService, wantsEmail } from '../notifications/notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { SavedSearchesService } from '../saved-searches/saved-searches.service';
 
 /** `https://site` + `/lv` (no prefix for English) + path, the site's URL scheme. */
@@ -31,6 +32,7 @@ export class ModerationService {
     private readonly mail: MailService,
     private readonly notifications: NotificationsService,
     private readonly savedSearches: SavedSearchesService,
+    private readonly audit: AuditService,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(ENV) private readonly env: Pick<Env, 'WEB_ORIGIN'>,
   ) {}
@@ -81,6 +83,14 @@ export class ModerationService {
         : { rejectionReason: decision.reason }),
     });
     this.notify(listing, listing.owner, decision);
+    await this.audit.record(admin, {
+      action: decision.action === 'approve' ? 'LISTING_APPROVED' : 'LISTING_REJECTED',
+      targetType: 'LISTING',
+      targetId: listing.id,
+      summary: listing.title ?? '',
+      before: { status: listing.status },
+      after: decision.action === 'approve' ? { status: 'PUBLISHED' } : { status: 'REJECTED', reason: decision.reason },
+    });
     // Saved searches are checked before answering (it never throws), so the bell is up to date.
     if (decision.action === 'approve') await this.savedSearches.listingPublished(listing.id);
 
@@ -110,6 +120,7 @@ export class ModerationService {
     });
     if (moved.count === 0) throw this.listings.stale(listing.version + 1);
     const category = await this.prisma.category.findUniqueOrThrow({ where: { id: target.id }, select: { names: true } });
+    await this.audit.record(admin, { action: 'LISTING_MOVED', targetType: 'LISTING', targetId: listing.id, summary: listing.title ?? '', before: { categoryId: listing.categoryId }, after: { categoryId: target.id } });
     if (listing.owner.deletedAt === null) {
       void this.notifications.notify([listing.owner.id], { kind: 'LISTING', event: 'MOVED', listingId: listing.id, title: listing.title });
     }

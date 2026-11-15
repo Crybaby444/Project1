@@ -1140,6 +1140,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/audit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminAuditController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminAuditController_getSettings"];
+        put: operations["AdminAuditController_setSettings"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/listings/{id}/photos": {
         parameters: {
             query?: never;
@@ -3026,6 +3058,46 @@ export interface components {
                 /** Format: date-time */
                 deletedAt: string | null;
             };
+        };
+        AdminAuditListDto_Output: {
+            items: {
+                id: string;
+                admin: {
+                    id: string | null;
+                    name: string;
+                };
+                /** @enum {string} */
+                action: "LISTING_APPROVED" | "LISTING_REJECTED" | "LISTING_MOVED" | "LISTING_HIDDEN" | "LISTING_SHOWN" | "DISPUTE_RESOLVED" | "USER_BLOCKED" | "USER_UNBLOCKED" | "USER_NOTE" | "REPORT_CLOSED" | "REVIEW_HIDDEN" | "REVIEW_SHOWN" | "SETTINGS_CHANGED" | "CATEGORY_CHANGED";
+                targetType: string;
+                targetId: string | null;
+                summary: string;
+                before: unknown;
+                after: unknown;
+                /** Format: date-time */
+                createdAt: string;
+            }[];
+            total: number;
+        };
+        AdminSettingsDto_Output: {
+            items: {
+                key: string;
+                value: number | string;
+                default: number | string;
+                changed: boolean;
+            }[];
+        };
+        AdminSettingsChangeDto: {
+            "booking.requestTtlHours"?: number;
+            "booking.paymentTtlHours"?: number;
+            "booking.handoverConfirmHours"?: number;
+            "booking.returnConfirmHours"?: number;
+            "booking.inspectionHours"?: number;
+            "booking.damageReplyHours"?: number;
+            "booking.maxAdvanceDays"?: number;
+            "review.windowDays"?: number;
+            "fees.servicePercent"?: number;
+            "fees.promoServicePercent"?: number;
+            "fees.promoServiceUntil"?: "" | string;
         };
         PhotoUploadResponseDto_Output: {
             photo: {
@@ -7427,6 +7499,146 @@ export interface operations {
             };
             /** @description Not found or not available */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminAuditController_list: {
+        parameters: {
+            query?: {
+                action?: "LISTING_APPROVED" | "LISTING_REJECTED" | "LISTING_MOVED" | "LISTING_HIDDEN" | "LISTING_SHOWN" | "DISPUTE_RESOLVED" | "USER_BLOCKED" | "USER_UNBLOCKED" | "USER_NOTE" | "REPORT_CLOSED" | "REVIEW_HIDDEN" | "REVIEW_SHOWN" | "SETTINGS_CHANGED" | "CATEGORY_CHANGED";
+                targetId?: string;
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Every administrator action, newest first */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminAuditListDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminAuditController_getSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Every deal rule and fee, with its default */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSettingsDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminAuditController_setSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdminSettingsChangeDto"];
+            };
+        };
+        responses: {
+            /** @description Changes settings within the deal rules; logged with before and after */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSettingsDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };

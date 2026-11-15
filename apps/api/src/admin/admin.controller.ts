@@ -20,6 +20,7 @@ import { AppError } from '../common/app-error';
 import { CLOCK, type Clock } from '../clock/clock';
 import type { Prisma, User } from '../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 
 class AdminUsersQueryDto extends createZodDto(AdminUsersQuerySchema) {}
 class AdminUsersResponseDto extends createZodDto(AdminUsersResponseSchema) {}
@@ -41,6 +42,7 @@ function toAdminUser(user: User): AdminUser {
 export class AdminController {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly audit: AuditService,
     @Inject(CLOCK) private readonly clock: Clock,
   ) {}
 
@@ -88,6 +90,7 @@ export class AdminController {
       this.prisma.user.update({ where: { id }, data: { blockedAt: user.blockedAt ?? now } }),
       this.prisma.refreshToken.updateMany({ where: { userId: id, revokedAt: null }, data: { revokedAt: now } }),
     ]);
+    await this.audit.record(admin, { action: 'USER_BLOCKED', targetType: 'USER', targetId: id, summary: user.email });
     return { user: toAdminUser(updated) };
   }
 
@@ -95,9 +98,11 @@ export class AdminController {
   @HttpCode(200)
   @ZodResponse({ status: 200, type: AdminUserResponseDto, description: 'The account may sign in again' })
   @ApiErrors(401, 403, 404)
-  async unblock(@Param('id') id: string): Promise<AdminUserResponse> {
-    await this.target(id);
-    return { user: toAdminUser(await this.prisma.user.update({ where: { id }, data: { blockedAt: null } })) };
+  async unblock(@CurrentUser() admin: PublicUser, @Param('id') id: string): Promise<AdminUserResponse> {
+    const user = await this.target(id);
+    const updated = await this.prisma.user.update({ where: { id }, data: { blockedAt: null } });
+    await this.audit.record(admin, { action: 'USER_UNBLOCKED', targetType: 'USER', targetId: id, summary: user.email });
+    return { user: toAdminUser(updated) };
   }
 
   private async target(id: string): Promise<User> {

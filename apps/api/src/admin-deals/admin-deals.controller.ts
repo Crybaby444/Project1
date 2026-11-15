@@ -29,6 +29,7 @@ import { ApiErrors } from '../common/api-errors';
 import { Idempotent } from '../idempotency/idempotent.decorator';
 import { BookingsService } from '../bookings/bookings.service';
 import { AdminDealsService } from './admin-deals.service';
+import { AuditService } from '../audit/audit.service';
 import { AdminOverviewService } from './admin-overview.service';
 
 class AdminBookingsQueryDto extends createZodDto(AdminBookingsQuerySchema) {}
@@ -53,6 +54,7 @@ export class AdminDealsController {
     private readonly deals: AdminDealsService,
     private readonly bookings: BookingsService,
     private readonly overviews: AdminOverviewService,
+    private readonly audit: AuditService,
   ) {}
 
   @Get('overview')
@@ -82,7 +84,9 @@ export class AdminDealsController {
   @ZodResponse({ status: 200, type: BookingResponseDto, description: 'The dispute is decided; both sides are told' })
   @ApiErrors(400, 401, 403, 404, 409)
   async resolve(@CurrentUser() admin: PublicUser, @Param('id') id: string, @Body() body: ResolveRequestDto): Promise<BookingResponse> {
-    return { booking: await this.bookings.resolve(id, admin, body.version, body.decision, body.comment) };
+    const booking = await this.bookings.resolve(id, admin, body.version, body.decision, body.comment);
+    await this.audit.record(admin, { action: 'DISPUTE_RESOLVED', targetType: 'BOOKING', targetId: id, summary: booking.listing.title, after: { decision: body.decision, comment: body.comment } });
+    return { booking };
   }
 
   @Get('ledger/operations')

@@ -22,6 +22,11 @@ export class BookingRulesService {
     validateBookingSettings(this.base);
   }
 
+  /** The values without stored settings: the domain defaults with the fee from the environment. */
+  defaults(): BookingSettings {
+    return this.base;
+  }
+
   async settings(): Promise<BookingSettings> {
     const rows = await this.prisma.setting.findMany({ where: { key: { in: Object.values(SETTING_KEY_OF) } } });
     const { settings, invalid } = bookingSettingsFrom(new Map(rows.map((row) => [row.key, row.value])), this.base);

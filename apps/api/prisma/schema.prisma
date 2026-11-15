@@ -903,3 +903,22 @@ model AnalyticsCounter {
   @@id([day, metric, key])
   @@index([metric, day])
 }
+
+/// Every administrator action, attributed and with what changed (spec §6 AdminAuditLog): who, what, on
+/// which object, the state before and after. Kept when the administrator's account goes.
+model AdminAuditLog {
+  id         String   @id @default(cuid())
+  adminId    String?
+  adminName  String   @default("")
+  action     String
+  targetType String
+  targetId   String?
+  summary    String   @default("")
+  before     Json?
+  after      Json?
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([targetType, targetId])
+  @@index([action, createdAt])
+}
