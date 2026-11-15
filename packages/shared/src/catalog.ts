@@ -283,3 +283,7 @@ export type SitemapResponse = z.infer<typeof SitemapResponseSchema>;
 
 /** A category page is indexed only once it holds at least this many items (owner's SEO rule). */
 export const CATEGORY_INDEX_MIN_ITEMS = 3;
+
+/** How many visible items each category holds (only categories with any), for the catalog index. */
+export const CategoryCountsSchema = z.object({ counts: z.record(z.string(), z.number().int().min(0)) });
+export type CategoryCounts = z.infer<typeof CategoryCountsSchema>;

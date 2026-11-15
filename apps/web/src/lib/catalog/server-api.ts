@@ -59,6 +59,12 @@ export const loadCategories = cache(async (): Promise<Loaded<CategoryNode[]>> =>
   return isCurrentTree(loaded.data.categories) ? { ok: true, data: loaded.data.categories } : { ok: false, status: 502 };
 });
 
+/** Visible items per category for the catalog index; a minute old at most. An API without it: no counts. */
+export const loadCategoryCounts = cache(async (): Promise<Record<string, number> | undefined> => {
+  const loaded = await load(() => client(60).GET('/api/v1/catalog/category-counts'));
+  return loaded.ok ? loaded.data.counts : undefined;
+});
+
 export const loadItem = cache(async (id: string): Promise<Loaded<ItemDetail>> => {
   const loaded = await load(() => client().GET('/api/v1/catalog/listings/{id}', { params: { path: { id } } }));
   return loaded.ok ? { ok: true, data: loaded.data.item } : loaded;
