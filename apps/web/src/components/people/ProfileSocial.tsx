@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import { MessageOwnerButton } from '@/components/chat/MessageOwnerButton';
 import { FollowButton } from './FollowButton';
 
 /** The profile's social row: followers, following, reviews, and the Follow button (the count follows the press). */
@@ -21,7 +22,10 @@ export function ProfileSocial({ userId, name, followers, following, reviews }: {
         {stat(following, t('followingCount'))}
         {stat(reviews, t('reviews', { count: reviews }))}
       </dl>
-      <FollowButton userId={userId} name={name} onChange={(on) => setDelta((d) => d + (on ? 1 : -1))} />
+      <div className="flex flex-wrap gap-2">
+        <FollowButton userId={userId} name={name} onChange={(on) => setDelta((d) => d + (on ? 1 : -1))} />
+        <MessageOwnerButton ownerId={userId} label={t('write')} size="md" />
+      </div>
     </div>
   );
 }

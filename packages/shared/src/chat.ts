@@ -34,7 +34,8 @@ const ChatListingSchema = z.object({ id: z.string(), title: z.string(), photoUrl
 export const ConversationSummarySchema = z.object({
   id: z.string(),
   role: z.enum(CHAT_ROLES),
-  listing: ChatListingSchema,
+  /** The item it is about, or null for a direct conversation started from a profile. */
+  listing: ChatListingSchema.nullable(),
   other: z.object({ id: z.string(), name: z.string() }),
   lastMessage: ChatMessageSchema.nullable(),
   lastMessageAt: z.iso.datetime(),
@@ -58,6 +59,12 @@ export const ConversationThreadSchema = z.object({
   messages: z.array(ChatMessageSchema),
 });
 export type ConversationThread = z.infer<typeof ConversationThreadSchema>;
+
+/**
+ * Owner, 2026-11-16: Messages are personal conversations only; a deal's conversation lives in the deal.
+ * `direct` = started from a profile (no item); `deal` = about an item; omitted = both.
+ */
+export const ConversationKindQuerySchema = z.object({ kind: z.enum(['direct', 'deal']).optional() });
 
 export const UnreadCountSchema = z.object({ count: z.number().int().min(0) });
 export type UnreadCount = z.infer<typeof UnreadCountSchema>;

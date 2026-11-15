@@ -112,7 +112,7 @@ function ConversationList({ items, activeId }: { items: ConversationSummary[]; a
               aria-current={active ? 'page' : undefined}
               className={`ease-yoyo flex gap-3 px-4 py-4 transition-colors duration-150 ${active ? 'bg-ink text-canvas' : 'hover:bg-ink/[0.04]'}`}
             >
-              <Thumb url={c.listing.photoUrl} />
+              {c.listing ? <Thumb url={c.listing.photoUrl} /> : <Initials name={c.other.name} />}
               <span className="min-w-0 flex-1">
                 <span className="flex items-baseline justify-between gap-2">
                   <span className={`truncate ${c.unread > 0 ? 'font-bold' : 'font-semibold'}`}>
@@ -124,9 +124,11 @@ function ConversationList({ items, activeId }: { items: ConversationSummary[]; a
                     {stamp(c.lastMessageAt)}
                   </span>
                 </span>
-                <span className={`block truncate text-sm ${active ? 'text-canvas/75' : 'text-ink/65'}`}>
-                  {c.listing.title}
-                </span>
+                {c.listing && (
+                  <span className={`block truncate text-sm ${active ? 'text-canvas/75' : 'text-ink/65'}`}>
+                    {c.listing.title}
+                  </span>
+                )}
                 <span className="mt-1 flex items-center justify-between gap-2">
                   <span
                     className={`truncate text-sm ${c.unread > 0 ? 'font-semibold' : active ? 'text-canvas/75' : 'text-ink/65'}`}
@@ -150,6 +152,20 @@ function ConversationList({ items, activeId }: { items: ConversationSummary[]; a
         );
       })}
     </ul>
+  );
+}
+
+/** A personal conversation has no item photo: the other person's initials instead. */
+function Initials({ name }: { name: string }) {
+  const letters = name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? '')
+    .join('');
+  return (
+    <span aria-hidden="true" className="bg-ink text-canvas font-display grid size-12 shrink-0 place-items-center rounded-full text-[1.2rem] font-black">
+      {letters}
+    </span>
   );
 }
 
@@ -229,17 +245,19 @@ function ThreadBody({ data, inDeal }: { data: ConversationThread; inDeal: boolea
           <span aria-hidden="true">←</span>
           <span className="sr-only">{t('back')}</span>
         </Link>}
-        <Thumb url={data.listing.photoUrl} />
+        {data.listing ? <Thumb url={data.listing.photoUrl} /> : <Initials name={data.other.name} />}
         <span className="min-w-0 flex-1">
-          <span className="font-display block truncate text-[1.6rem] leading-none font-black uppercase">
+          <Link href={`/u/${data.other.id}`} className="font-display block truncate text-[1.6rem] leading-none font-black uppercase hover:underline">
             {data.other.name}
-          </span>
-          <span className="text-ink/65 block truncate text-sm">
-            {data.role === 'RENTER' ? t('withOwner') : t('withRenter')} ·{' '}
-            <Link href={`/items/${data.listing.id}`} className="underline decoration-1 underline-offset-2">
-              {data.listing.title}
-            </Link>
-          </span>
+          </Link>
+          {data.listing && (
+            <span className="text-ink/65 block truncate text-sm">
+              {data.role === 'RENTER' ? t('withOwner') : t('withRenter')} ·{' '}
+              <Link href={`/items/${data.listing.id}`} className="underline decoration-1 underline-offset-2">
+                {data.listing.title}
+              </Link>
+            </span>
+          )}
         </span>
         <ReportButton target="USER" id={data.other.id} className="max-sm:hidden" />
       </header>
@@ -307,7 +325,12 @@ function ThreadBody({ data, inDeal }: { data: ConversationThread; inDeal: boolea
 function Composer({ id }: { id: string }) {
   const t = useTranslations('chat');
   const send = useSendMessage(id);
-  const [draft, setDraft] = useState('');
+  // Opened from an item ("Write to the owner"): the box starts with the item's link.
+  const [draft, setDraft] = useState(() => {
+    if (typeof window === 'undefined') return '';
+    const about = new URLSearchParams(window.location.search).get('about');
+    return about && /^[\w-]{1,64}$/.test(about) ? `${window.location.origin}/listings/${about}\n` : '';
+  });
   const ready = draft.trim().length > 0 && !send.isPending;
 
   function submit(event?: FormEvent) {

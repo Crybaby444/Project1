@@ -18,6 +18,7 @@ describe('ProfileTabs', () => {
     const user = userEvent.setup();
     const api = fakeApi({
       ...meRoute(null),
+      'GET /api/v1/users/owner-1/shops': { status: 200, body: { items: [] } },
       'GET /api/v1/users/owner-1/reviews': { status: 200, body: { items: [], total: 0, page: 1, pageSize: 10, average: 0 } },
     });
     renderWithSession(<ProfileTabs listings={[catalogItem()]} name="Jānis" userId="owner-1" />, { client: api.client, hasSession: false });
@@ -25,6 +26,10 @@ describe('ProfileTabs', () => {
     expect(items).toHaveAttribute('aria-selected', 'true');
     expect(screen.getByRole('link', { name: 'Cordless drill' })).toBeVisible();
     items.focus();
+    await user.keyboard('{ArrowRight}');
+    const shops = screen.getByRole('tab', { name: en.profile.shops });
+    expect(shops).toHaveFocus();
+    expect(await screen.findByText(en.profile.noShops.replace('{name}', 'Jānis'))).toBeVisible();
     await user.keyboard('{ArrowRight}');
     const reviews = screen.getByRole('tab', { name: en.profile.reviews });
     expect(reviews).toHaveFocus();

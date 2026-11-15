@@ -229,6 +229,17 @@ export function UserMenu({ user }: { user: PublicUser }) {
                     {t('following')}
                   </Link>
                 </li>
+                <li role="none">
+                  <Link
+                    href="/dashboard/shops"
+                    role="menuitem"
+                    tabIndex={-1}
+                    onClick={() => close({ refocus: false })}
+                    className={ITEM}
+                  >
+                    {t('shops')}
+                  </Link>
+                </li>
               </>
             )}
             {user.role === 'ADMIN' && (
