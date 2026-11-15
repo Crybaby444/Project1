@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { NotificationList } from '@/components/notifications/NotificationList';
+import { SavedSearches } from '@/components/notifications/SavedSearches';
 import { RequireSession } from '@/lib/session/RequireSession';
 
 type Props = { params: Promise<{ locale: string }> };
@@ -21,6 +22,7 @@ export default async function NotificationsPage({ params }: Props) {
       <h1 className="font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase">{t('title')}</h1>
       <RequireSession>
         <NotificationList />
+        <SavedSearches />
       </RequireSession>
     </main>
   );

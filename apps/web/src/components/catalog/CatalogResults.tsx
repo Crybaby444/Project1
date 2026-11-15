@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import { Link } from '@/i18n/navigation';
 import { catalogSearch, type CatalogParams, toApiQuery } from '@/lib/catalog/params';
+import { SaveSearchButton } from './SaveSearchButton';
 import { daysBetween } from '@/lib/deals/dates';
 import { loadMap, loadPlaces, loadSearch } from '@/lib/catalog/server-api';
 import { displayFit } from '@/lib/display-fit';
@@ -115,6 +116,7 @@ export async function CatalogResults({ params: raw, category, related, path, tit
           <div className="flex min-w-0 flex-col gap-5">
             <Toolbar params={params} />
             <ActiveFilters params={params} districts={districts} />
+            <SaveSearchButton query={{ q: params.q, category: category?.slug, priceMax: params.priceMax, district: params.district }} />
             <ResultsRegion status={status}>
               <div className="flex flex-col gap-6">
                 {params.view === 'map' && map?.ok && <CatalogMapLoader pins={map.data.pins} truncated={map.data.truncated} />}

@@ -851,6 +851,10 @@
     "recent": {
       "title": "Recently viewed",
       "clear": "Clear"
+    },
+    "saveSearch": {
+      "save": "Tell me about new items",
+      "saved": "Saved: we will tell you about new items"
     }
   },
   "rangeCalendar": {

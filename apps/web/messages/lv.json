@@ -851,6 +851,10 @@
     "recent": {
       "title": "Nesen skatītās",
       "clear": "Notīrīt"
+    },
+    "saveSearch": {
+      "save": "Paziņot par jaunām lietām",
+      "saved": "Saglabāts: paziņosim par jaunām lietām"
     }
   },
   "rangeCalendar": {
