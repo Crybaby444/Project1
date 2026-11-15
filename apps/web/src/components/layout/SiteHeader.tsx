@@ -10,6 +10,7 @@ import { Link } from '@/i18n/navigation';
 import { useSession } from '@/lib/session/SessionProvider';
 import type { MenuRoot } from '@/lib/catalog/menu';
 import { UserMenu } from './UserMenu';
+import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { VerifyEmailBanner } from './VerifyEmailBanner';
 
 /**
@@ -72,6 +73,9 @@ export function SiteHeader(_props: { catalog?: MenuRoot[] }) {
                   {/* On a phone only the "+" shows; the name stays for assistive tech. */}
                   <span className="sr-only sm:not-sr-only">{t('lendItem')}</span>
                 </Link>
+                <div className="shrink-0">
+                  <NotificationBell />
+                </div>
                 <div className="shrink-0">
                   <UserMenu user={user} />
                 </div>

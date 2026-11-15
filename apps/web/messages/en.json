@@ -319,7 +319,8 @@
     "title": "Settings",
     "tabs": {
       "profile": "Profile",
-      "security": "Security"
+      "security": "Security",
+      "notifications": "Email"
     },
     "profile": {
       "title": "Profile",
