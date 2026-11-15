@@ -10,7 +10,9 @@
       "deals": "Deals",
       "users": "Users",
       "money": "Money",
-      "reports": "Reports"
+      "reports": "Reports",
+      "traffic": "Traffic",
+      "seo": "SEO"
     },
     "common": {
       "loadFailed": "This did not load.",
@@ -190,6 +192,75 @@
       "failed": "Not closed.",
       "viewUser": "Find the person"
     },
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "traffic": {
+      "title": "Traffic",
+      "period": "Period",
+      "days": "{days} days",
+      "views": "Page views",
+      "visits": "Visits",
+      "perVisit": "{count} pages a visit",
+      "chart": "Views and visits by day",
+      "pages": "Most opened pages",
+      "sources": "Where visits come from",
+      "direct": "Typed in or a bookmark",
+      "devices": "Devices",
+      "device": {
+        "mobile": "Phone",
+        "tablet": "Tablet",
+        "desktop": "Computer"
+      },
+      "locales": "Languages",
+      "searches": "What people search",
+      "empty": "Searches that found nothing",
+      "emptyHint": "Demand without supply: items worth inviting owners to list.",
+      "funnel": "From viewing to renting",
+      "itemViews": "Item views",
+      "requests": "Booking requests",
+      "signups": "Sign-ups",
+      "rate": "{rate}% of item views",
+      "none": "No data yet.",
+      "privacy": "Counted by Yoyo itself, without cookies: no person, address or device is kept. Bots and administrators are not counted.",
+      "pageNames": {
+        "/": "Home",
+        "/c": "Catalog",
+        "/search": "Search",
+        "/listings/:id": "Item page",
+        "/items/:id/book": "Booking",
+        "/bookings": "My deals",
+        "/bookings/:id": "Deal page",
+        "/messages": "Messages",
+        "/messages/:id": "Conversation",
+        "/u/:id": "Profile",
+        "/how-it-works": "How it works",
+        "/faq": "Questions",
+        "/login": "Sign in",
+        "/register": "Sign up",
+        "/listings/new": "New listing",
+        "/wallet": "Wallet"
+      }
+    },
+    "seo": {
+      "title": "SEO",
+      "published": "Published items",
+      "healthy": "In good shape",
+      "score": "Score",
+      "issue": {
+        "SHORT_TITLE": "Title too short (under 15 characters)",
+        "LONG_TITLE": "Title too long (over 70 characters)",
+        "SHORT_DESCRIPTION": "Description under 120 characters",
+        "FEW_PHOTOS": "Fewer than 3 photos",
+        "NO_DISTRICT": "No district"
+      },
+      "issues": "What holds items back",
+      "worst": "Items to improve first",
+      "allGood": "Every published item is in good shape.",
+      "checks": "Site checks",
+      "sitemap": "Sitemap",
+      "robots": "Robots rules",
+      "console": "Google Search Console",
+      "consoleHint": "Add yoyo.rent as a property in Google Search Console and submit the sitemap: it shows what people search on Google before they come, and any indexing problems. It needs the owner's Google account.",
+      "open": "Open"
+    }
   }
 }

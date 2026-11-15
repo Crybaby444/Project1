@@ -116,6 +116,7 @@ export async function CatalogResults({ params: raw, category, related, path, tit
           <div className="flex min-w-0 flex-col gap-5">
             <Toolbar params={params} />
             <ActiveFilters params={params} districts={districts} />
+            {params.q && <span hidden data-search-q={params.q} data-search-results={total} />}
             <SaveSearchButton query={{ q: params.q, category: category?.slug, priceMax: params.priceMax, district: params.district }} />
             <ResultsRegion status={status}>
               <div className="flex flex-col gap-6">

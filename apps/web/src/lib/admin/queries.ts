@@ -127,3 +127,17 @@ export function useCloseReport() {
     onSettled: () => void queryClient.invalidateQueries({ queryKey: adminKeys.all }),
   });
 }
+
+export function useAdminAnalytics(days: 7 | 30 | 90) {
+  const client = useApiClient();
+  return useQuery({
+    queryKey: ['admin', 'analytics', days] as const,
+    queryFn: async () => unwrap(client.GET('/api/v1/admin/analytics', { params: { query: { days } } })),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useAdminSeo() {
+  const client = useApiClient();
+  return useQuery({ queryKey: ['admin', 'seo'] as const, queryFn: async () => unwrap(client.GET('/api/v1/admin/seo')) });
+}

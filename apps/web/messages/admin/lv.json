@@ -10,7 +10,9 @@
       "deals": "Darījumi",
       "users": "Lietotāji",
       "money": "Nauda",
-      "reports": "Ziņojumi"
+      "reports": "Ziņojumi",
+      "traffic": "Trafiks",
+      "seo": "SEO"
     },
     "common": {
       "loadFailed": "Neizdevās ielādēt.",
@@ -190,6 +192,75 @@
       "failed": "Neaizvērās.",
       "viewUser": "Atrast lietotāju"
     },
-    "signOut": "Iziet"
+    "signOut": "Iziet",
+    "traffic": {
+      "title": "Trafiks",
+      "period": "Periods",
+      "days": "{days} dienas",
+      "views": "Lapu skatījumi",
+      "visits": "Apmeklējumi",
+      "perVisit": "{count} lapas vienā apmeklējumā",
+      "chart": "Skatījumi un apmeklējumi pa dienām",
+      "pages": "Visvairāk atvērtās lapas",
+      "sources": "No kurienes nāk apmeklējumi",
+      "direct": "Ierakstīts vai grāmatzīme",
+      "devices": "Ierīces",
+      "device": {
+        "mobile": "Tālrunis",
+        "tablet": "Planšete",
+        "desktop": "Dators"
+      },
+      "locales": "Valodas",
+      "searches": "Ko cilvēki meklē",
+      "empty": "Meklējumi bez rezultātiem",
+      "emptyHint": "Pieprasījums bez piedāvājuma: šādas lietas vērts aicināt izīrēt.",
+      "funnel": "No skatīšanās līdz nomai",
+      "itemViews": "Lietu skatījumi",
+      "requests": "Nomas pieprasījumi",
+      "signups": "Reģistrācijas",
+      "rate": "{rate}% no lietu skatījumiem",
+      "none": "Datu vēl nav.",
+      "privacy": "Skaita pati Yoyo, bez sīkdatnēm: netiek glabāta neviena persona, adrese vai ierīce. Boti un administratori netiek skaitīti.",
+      "pageNames": {
+        "/": "Sākums",
+        "/c": "Katalogs",
+        "/search": "Meklēšana",
+        "/listings/:id": "Lietas lapa",
+        "/items/:id/book": "Rezervēšana",
+        "/bookings": "Mani darījumi",
+        "/bookings/:id": "Darījuma lapa",
+        "/messages": "Ziņas",
+        "/messages/:id": "Saruna",
+        "/u/:id": "Profils",
+        "/how-it-works": "Kā tas strādā",
+        "/faq": "Jautājumi",
+        "/login": "Pieteikšanās",
+        "/register": "Reģistrācija",
+        "/listings/new": "Jauns sludinājums",
+        "/wallet": "Maks"
+      }
+    },
+    "seo": {
+      "title": "SEO",
+      "published": "Publicētās lietas",
+      "healthy": "Labā stāvoklī",
+      "score": "Vērtējums",
+      "issue": {
+        "SHORT_TITLE": "Pārāk īss nosaukums (mazāk par 15 zīmēm)",
+        "LONG_TITLE": "Pārāk garš nosaukums (vairāk par 70 zīmēm)",
+        "SHORT_DESCRIPTION": "Apraksts īsāks par 120 zīmēm",
+        "FEW_PHOTOS": "Mazāk par 3 foto",
+        "NO_DISTRICT": "Nav norādīta apkaime"
+      },
+      "issues": "Kas traucē lietām",
+      "worst": "Lietas, ko uzlabot vispirms",
+      "allGood": "Visas publicētās lietas ir labā stāvoklī.",
+      "checks": "Vietnes pārbaudes",
+      "sitemap": "Vietnes karte",
+      "robots": "Robotu noteikumi",
+      "console": "Google Search Console",
+      "consoleHint": "Pievieno yoyo.rent kā īpašumu Google Search Console un iesniedz vietnes karti: tur redzams, ko cilvēki meklē Google pirms atnākšanas, un indeksēšanas problēmas. Vajadzīgs īpašnieka Google konts.",
+      "open": "Atvērt"
+    }
   }
 }
