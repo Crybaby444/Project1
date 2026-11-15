@@ -15,7 +15,8 @@
       "seo": "SEO",
       "audit": "Darbību žurnāls",
       "settings": "Iestatījumi",
-      "system": "Sistēma"
+      "system": "Sistēma",
+      "categories": "Kategorijas"
     },
     "common": {
       "loadFailed": "Neizdevās ielādēt.",
@@ -425,6 +426,25 @@
         "ledger": "Virsgrāmatas ieraksti"
       },
       "download": "Lejupielādēt"
+    },
+    "categories": {
+      "title": "Kategorijas",
+      "intro": "Kataloga kategorijas un cik lietu katrā. Pārdēvē kategoriju visās trīs valodās, pārvieto augšup vai lejup vai paslēp no kataloga; izmaiņas vietnē parādās piecu minūšu laikā un tiek ierakstītas žurnālā.",
+      "items": "{count} lietas",
+      "rename": "Pārdēvēt",
+      "renamed": "Pārdēvēta",
+      "hidden": "Paslēpta",
+      "hide": "Paslēpt",
+      "show": "Rādīt",
+      "up": "Uz augšu",
+      "down": "Uz leju",
+      "original": "Kataloga nosaukums: {name}",
+      "save": "Saglabāt",
+      "reset": "Atjaunot kataloga nosaukumus",
+      "cancel": "Atpakaļ",
+      "done": "Saglabāts.",
+      "failed": "Nesaglabājās.",
+      "renameTitle": "Pārdēvēt “{name}”"
     }
   }
 }

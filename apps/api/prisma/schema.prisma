@@ -180,6 +180,11 @@ model Category {
   /// `slug` stays the stable key; these may change with the sitemap. Written by ensureCategories.
   slugs     Json     @default("{}")
   active    Boolean  @default(true)
+  /// An administrator's own names over `names` ({ en?, lv?, ru? }), order and hiding; the catalog sync
+  /// from code (ensureCategories) never touches these.
+  adminNames     Json?
+  adminSortOrder Int?
+  adminHidden    Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

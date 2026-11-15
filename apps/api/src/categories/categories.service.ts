@@ -24,17 +24,29 @@ export interface CategoryForListing {
 
 type CategoryRow = Category & { attributes: CategoryAttribute[] };
 
+/** Where a category stands among its siblings: the administrator's place, else the catalog's. */
+export const effectiveOrder = (row: { sortOrder: number; adminSortOrder: number | null }) => row.adminSortOrder ?? row.sortOrder;
+
+/** The names shown: the administrator's over the catalog's, language by language. */
+export function namesOf(row: { names: unknown; adminNames: unknown }): LocalizedText {
+  const base = row.names as LocalizedText;
+  const own = (row.adminNames ?? {}) as Partial<LocalizedText>;
+  return { en: own.en || base.en, lv: own.lv || base.lv, ru: own.ru || base.ru };
+}
+
 @Injectable()
 export class CategoriesService {
   constructor(private readonly prisma: PrismaService) {}
 
   /** Active categories as a tree, in catalog order. A category under an inactive parent is left out too. */
   async tree(): Promise<CategoryNode[]> {
-    const rows: CategoryRow[] = await this.prisma.category.findMany({
-      where: { active: true },
+    const found: CategoryRow[] = await this.prisma.category.findMany({
+      where: { active: true, adminHidden: false },
       include: { attributes: { orderBy: { sortOrder: 'asc' } } },
       orderBy: [{ sortOrder: 'asc' }, { slug: 'asc' }],
     });
+    // An administrator's order and names go over the catalog's (admin → Categories).
+    const rows = [...found].sort((a, b) => effectiveOrder(a) - effectiveOrder(b) || a.slug.localeCompare(b.slug));
     const byParent = new Map<string | null, CategoryRow[]>();
     for (const row of rows) byParent.set(row.parentId, [...(byParent.get(row.parentId) ?? []), row]);
     const build = (parentId: string | null): CategoryNode[] =>
@@ -43,7 +55,7 @@ export class CategoriesService {
         slug: row.slug,
         sticker: row.sticker as StickerColor,
         icon: row.icon,
-        names: row.names as LocalizedText,
+        names: namesOf(row),
         slugs: row.slugs as LocalizedText,
         attributes: row.attributes.map(toAttributeDef),
         children: build(row.id),
