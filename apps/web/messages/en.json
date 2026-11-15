@@ -160,7 +160,8 @@
       "all": "All categories",
       "search": "Search",
       "more": "{count} more in {name}"
-    }
+    },
+    "following": "Following"
   },
   "banner": {
     "verifyEmail": {
@@ -211,7 +212,10 @@
     "retryIn": "Too many attempts. Try again in {seconds} s.",
     "LISTING_GONE": "This item has been removed and is no longer for rent.",
     "AUTH_CODE_REQUIRED": "This account uses two-step sign-in: sign in with your email, password and the code from your authenticator app.",
-    "AUTH_CODE_INVALID": "That code is wrong or already used. Enter the newest code from the app."
+    "AUTH_CODE_INVALID": "That code is wrong or already used. Enter the newest code from the app.",
+    "USERNAME_TAKEN": "This username is taken. Try another one.",
+    "UNDERAGE": "Yoyo is for people aged 18 and over.",
+    "PROFILE_INCOMPLETE": "Add your username and date of birth in Settings → Profile first."
   },
   "validation": {
     "required": "Fill in this field.",
@@ -219,7 +223,11 @@
     "tooLong": "At most {max, plural, one {# character} other {# characters}}.",
     "email": "Enter an email address like name@example.com.",
     "passwordMismatch": "The passwords do not match.",
-    "invalid": "Check this field."
+    "invalid": "Check this field.",
+    "fullName": "Write your first and last name.",
+    "username": "3–20 of a–z, 0–9, dot and underscore; start and end with a letter or digit.",
+    "usernameReserved": "This username is reserved.",
+    "birthDate": "Enter a real date: day, month and year."
   },
   "auth": {
     "fields": {
@@ -228,7 +236,9 @@
       "password": "Password",
       "newPassword": "New password",
       "repeatPassword": "Repeat the new password",
-      "currentPassword": "Current password"
+      "currentPassword": "Current password",
+      "fullName": "Full name",
+      "username": "Username"
     },
     "password": {
       "show": "Show password"
@@ -259,7 +269,9 @@
       "passwordHint": "At least 8 characters. A few words in a row work well.",
       "submit": "Create account",
       "haveAccount": "Already have an account?",
-      "signIn": "Sign in"
+      "signIn": "Sign in",
+      "fullNameHint": "As in your documents: it goes on rental contracts.",
+      "usernameHint": "People find and follow you by it: @username."
     },
     "verify": {
       "title": "Email confirmation",
@@ -999,5 +1011,37 @@
     "turnedOn": "Two-step sign-in is on",
     "turnedOff": "Two-step sign-in is off",
     "needPassword": "Your account signs in with Google. Set a password first (Forgot password on the sign-in page), then turn this on."
+  },
+  "people": {
+    "follow": "Follow",
+    "following": "Following",
+    "followName": "Follow {name}",
+    "unfollowName": "Unfollow {name}",
+    "followers": "{count, plural, one {follower} other {followers}}",
+    "followingCount": "following",
+    "reviews": "{count, plural, one {review} other {reviews}}",
+    "itemsCount": "{count, plural, one {# item} other {# items}}",
+    "searchTitle": "People",
+    "feedTitle": "Following",
+    "feedIntro": "New items from the people you follow. When they publish something, you hear it in the bell.",
+    "nobody": "You don’t follow anyone yet",
+    "nobodyHint": "Open someone’s profile — from an item or by searching their username — and press Follow.",
+    "browse": "Browse the catalog",
+    "newItems": "New from them",
+    "noNewItems": "Nothing new yet.",
+    "youFollow": "You follow {count}"
+  },
+  "identity": {
+    "birthDate": "Date of birth",
+    "day": "Day",
+    "month": "Month",
+    "year": "Year",
+    "dayPlaceholder": "DD",
+    "yearPlaceholder": "YYYY",
+    "birthHint": "Yoyo is for people aged 18 and over. Other people don’t see it.",
+    "usernameFree": "@{username} is free",
+    "usernameTaken": "This username is taken",
+    "complete": "Finish your profile: add your username and date of birth to rent and lend.",
+    "completeLink": "Add them"
   }
 }

@@ -52,6 +52,7 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
           >
             {owner.name}
           </Heading>
+          {owner.username && <p className="text-[15px] font-bold" data-username="">@{owner.username}</p>}
           <p className="text-sm">{owner.city ? t('sinceIn', { since, city: owner.city }) : t('since', { since })}</p>
         </div>
       </div>

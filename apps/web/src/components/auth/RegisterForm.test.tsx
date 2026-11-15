@@ -29,6 +29,17 @@ function renderRegister(
   return calls;
 }
 
+
+/** The full name, a username and a birth date (1 May 1990), as sign-up asks since 2026-11-16. */
+async function fillIdentity(user: ReturnType<typeof userEvent.setup>, m: typeof en) {
+  await user.type(screen.getByLabelText(m.auth.fields.fullName), 'Anna Bērziņa');
+  await user.type(screen.getByLabelText(m.auth.fields.username), 'anna.b');
+  await user.type(screen.getByLabelText(m.identity.day), '1');
+  await user.click(screen.getByRole('combobox', { name: m.identity.month }));
+  await user.click(screen.getAllByRole('option')[4]!);
+  await user.type(screen.getByLabelText(m.identity.year), '1990');
+}
+
 describe('RegisterForm', () => {
   beforeEach(() => replace.mockClear());
 
@@ -40,14 +51,16 @@ describe('RegisterForm', () => {
       '/settings',
     );
 
-    await user.type(screen.getByLabelText(lv.auth.fields.name), 'Anna');
+    await fillIdentity(user, lv);
     await user.type(screen.getByLabelText(lv.auth.fields.email), 'anna@mail.lv');
     await user.type(screen.getByLabelText(lv.auth.fields.password), 'correct horse battery');
     await user.click(screen.getByRole('button', { name: lv.auth.register.submit }));
 
     await waitFor(() => expect(replace).toHaveBeenCalledWith('/settings'));
     expect(calls.find((c) => c.path === '/api/v1/auth/register')?.body).toEqual({
-      name: 'Anna',
+      name: 'Anna Bērziņa',
+      username: 'anna.b',
+      birthDate: '1990-05-01',
       email: 'anna@mail.lv',
       password: 'correct horse battery',
       locale: 'lv',
@@ -58,7 +71,7 @@ describe('RegisterForm', () => {
     const user = userEvent.setup();
     const calls = renderRegister({});
 
-    await user.type(screen.getByLabelText(en.auth.fields.name), 'Anna');
+    await fillIdentity(user, en);
     await user.type(screen.getByLabelText(en.auth.fields.email), 'anna@mail.lv');
     await user.type(screen.getByLabelText(en.auth.fields.password), 'short');
     await user.click(screen.getByRole('button', { name: en.auth.register.submit }));
@@ -77,7 +90,7 @@ describe('RegisterForm', () => {
       }),
     });
 
-    await user.type(screen.getByLabelText(en.auth.fields.name), 'Anna');
+    await fillIdentity(user, en);
     await user.type(screen.getByLabelText(en.auth.fields.email), 'anna@mail.lv');
     await user.type(screen.getByLabelText(en.auth.fields.password), 'correct horse battery');
     await user.click(screen.getByRole('button', { name: en.auth.register.submit }));
@@ -92,7 +105,7 @@ describe('RegisterForm', () => {
     const user = userEvent.setup();
     renderRegister({ 'POST /api/v1/auth/register': apiError(409, 'AUTH_EMAIL_TAKEN') });
 
-    await user.type(screen.getByLabelText(en.auth.fields.name), 'Anna');
+    await fillIdentity(user, en);
     await user.type(screen.getByLabelText(en.auth.fields.email), 'anna@mail.lv');
     await user.type(screen.getByLabelText(en.auth.fields.password), 'correct horse battery');
     await user.click(screen.getByRole('button', { name: en.auth.register.submit }));
@@ -124,7 +137,7 @@ describe('RegisterForm', () => {
       'dark',
     );
 
-    await user.type(screen.getByLabelText(en.auth.fields.name), 'Anna');
+    await fillIdentity(user, en);
     await user.type(screen.getByLabelText(en.auth.fields.email), 'anna@mail.lv');
     await user.type(screen.getByLabelText(en.auth.fields.password), 'correct horse battery');
     await user.click(screen.getByRole('button', { name: en.auth.register.submit }));
@@ -140,7 +153,7 @@ describe('RegisterForm', () => {
     const calls = renderRegister({
       'POST /api/v1/auth/register': { status: 201, body: { user: testUser() } },
     });
-    await user.type(screen.getByLabelText(en.auth.fields.name), 'Anna');
+    await fillIdentity(user, en);
     await user.type(screen.getByLabelText(en.auth.fields.email), 'anna@mail.lv');
     await user.type(screen.getByLabelText(en.auth.fields.password), 'correct horse battery');
     await user.click(screen.getByRole('button', { name: en.auth.register.submit }));

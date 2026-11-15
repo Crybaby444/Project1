@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { OwnerCard } from '@/components/item/OwnerCard';
 import { ProfileTabs } from '@/components/profile/ProfileTabs';
+import { ProfileSocial } from '@/components/people/ProfileSocial';
 import { loadProfile } from '@/lib/catalog/server-api';
 import { profileSeo, seoMetadata } from '@/lib/seo';
 
@@ -40,7 +41,10 @@ export default async function ProfilePage({ params }: Props) {
   return (
     <main className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-10 sm:px-8">
       <div className="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-start">
-        <OwnerCard owner={user} heading="h1" />
+        <div className="flex flex-col gap-6">
+          <OwnerCard owner={user} heading="h1" />
+          <ProfileSocial userId={user.id} name={user.name} followers={user.followers ?? 0} following={user.following ?? 0} reviews={user.reviewCount} />
+        </div>
         {user.about && (
           <section aria-labelledby="profile-about" className="flex flex-col gap-2">
             <h2 id="profile-about" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">

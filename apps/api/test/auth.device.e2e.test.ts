@@ -6,7 +6,7 @@ import { AccessTokenService } from '../src/auth/access-token.service';
 import { RefreshTokenService } from '../src/auth/refresh-token.service';
 import { resetAccounts } from './support/db';
 import { cookieLine, cookieValue, createTestApp, type TestApp } from './support/test-app';
-import { seedUser } from './support/users';
+import { seedUser, withIdentity } from './support/users';
 
 const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;
@@ -60,7 +60,7 @@ describe('device cookies keep the owner able to sign in', () => {
 
     const registered = await request(t.server)
       .post('/api/v1/auth/register')
-      .send({ email: 'new@mail.lv', password: 'correct horse', name: 'New' });
+      .send(withIdentity({ email: 'new@mail.lv', password: 'correct horse', name: 'New' }));
     expect(registered.status).toBe(201);
     expect(cookieValue(registered.headers['set-cookie'], 'yoyo_dev')).toBeTruthy();
   });

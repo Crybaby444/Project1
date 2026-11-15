@@ -36,7 +36,11 @@ export class ProfilesService {
         take: PROFILE_ITEMS,
       }),
     ]);
-    const ratings = await this.reviews.ratingsOfListings(listings.map((l) => l.id));
-    return { user: { ...summary, about: user.about }, listings: listings.map((l) => serializeCatalogItem(l, this.urlFor, ratings.get(l.id))) };
+    const [ratings, followers, following] = await Promise.all([
+      this.reviews.ratingsOfListings(listings.map((l) => l.id)),
+      this.prisma.follow.count({ where: { followeeId: id, follower: { deletedAt: null, blockedAt: null } } }),
+      this.prisma.follow.count({ where: { followerId: id, followee: { deletedAt: null, blockedAt: null } } }),
+    ]);
+    return { user: { ...summary, about: user.about, followers, following }, listings: listings.map((l) => serializeCatalogItem(l, this.urlFor, ratings.get(l.id))) };
   }
 }

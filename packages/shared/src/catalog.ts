@@ -179,6 +179,7 @@ export type PlacesResponse = z.infer<typeof PlacesResponseSchema>;
 export const OwnerSummarySchema = z.object({
   id: z.string(),
   name: z.string(),
+  username: z.string().min(1).nullable(),
   city: z.string().nullable(),
   /** When the account was made (the site shows the month). */
   memberSince: z.iso.datetime(),
@@ -253,7 +254,7 @@ export const ItemAddressSchema = z.object({
 export type ItemAddress = z.infer<typeof ItemAddressSchema>;
 
 export const PublicProfileSchema = z.object({
-  user: OwnerSummarySchema.extend({ about: z.string().nullable() }),
+  user: OwnerSummarySchema.extend({ about: z.string().nullable(), followers: z.number().int(), following: z.number().int() }),
   listings: z.array(CatalogItemSchema),
 });
 
@@ -289,3 +290,30 @@ export const CATEGORY_INDEX_MIN_ITEMS = 3;
 /** How many visible items each category holds (only categories with any), for the catalog index. */
 export const CategoryCountsSchema = z.object({ counts: z.record(z.string(), z.number().int().min(0)) });
 export type CategoryCounts = z.infer<typeof CategoryCountsSchema>;
+
+/** A person in search results and follow lists: enough for a card that leads to their profile. */
+export const PersonCardSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  username: z.string().min(1).nullable(),
+  city: z.string().nullable(),
+  listingCount: z.number().int(),
+  followers: z.number().int(),
+  rating: z.number().nullable(),
+  reviewCount: z.number().int(),
+});
+export type PersonCard = z.infer<typeof PersonCardSchema>;
+export const PeopleResponseSchema = z.object({ items: z.array(PersonCardSchema) });
+export type PeopleResponse = z.infer<typeof PeopleResponseSchema>;
+export const PeopleSearchQuerySchema = z.object({ q: z.string().trim().transform((v) => v.replace(/^@/, '')).pipe(z.string().min(2).max(60)) });
+
+/** Ids of the people the signed-in person follows (for the Follow buttons). */
+export const FollowingIdsSchema = z.object({ ids: z.array(z.string()) });
+
+/** New items from the people you follow, newest first. */
+export const FollowFeedSchema = z.object({
+  items: z.array(CatalogItemSchema.extend({ owner: z.object({ id: z.string(), name: z.string() }) })),
+  total: z.number().int(),
+});
+export type FollowFeed = z.infer<typeof FollowFeedSchema>;
+export const FollowFeedQuerySchema = z.object({ page: z.coerce.number().int().min(1).max(100).default(1) });

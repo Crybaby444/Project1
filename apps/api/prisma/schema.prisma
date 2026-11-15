@@ -46,6 +46,10 @@ model User {
   /// argon2id; null for accounts that only sign in with Google.
   passwordHash    String?
   name            String
+  /// How people find them (`@olga.k`): lowercase, unique; null only until a pre-2026-11-16 account picks one.
+  username         String?          @unique
+  /// YYYY-MM-DD; Yoyo is for adults (18+). Null until given (older accounts, Google sign-ups).
+  birthDate        DateTime?        @db.Date
   city            String?
   about           String?
   /// Interface and email language: en | lv | ru.
@@ -87,6 +91,8 @@ model User {
   savedSearches    SavedSearch[]
   reports          Report[]         @relation("ReportReporter")
   adminNotes       AdminNote[]      @relation("AdminNotes")
+  following        Follow[]         @relation("Following")
+  followers        Follow[]         @relation("Followers")
   /// For role ADMIN: which part of the panel they work in (null for everyone else).
   staffRole        StaffRole?
   /// Two-factor sign-in (TOTP): the secret, encrypted with the server key, and when it was turned on.
@@ -816,6 +822,7 @@ enum NotificationKind {
   LISTING
   REVIEW
   SEARCH
+  FOLLOW
 }
 
 enum MessageKind {
@@ -993,4 +1000,17 @@ model AdminNote {
   user User @relation("AdminNotes", fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
+}
+
+/** Someone follows someone (owner, 2026-11-16): their new items reach the follower's bell and feed. */
+model Follow {
+  followerId String
+  followeeId String
+  createdAt  DateTime
+
+  follower User @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
+  followee User @relation("Followers", fields: [followeeId], references: [id], onDelete: Cascade)
+
+  @@id([followerId, followeeId])
+  @@index([followeeId])
 }

@@ -219,6 +219,7 @@ export class CatalogService {
     return {
       id: user.id,
       name: user.name,
+      username: user.username,
       city: user.city,
       memberSince: user.createdAt.toISOString(),
       emailVerified: user.emailVerifiedAt !== null,

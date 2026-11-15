@@ -5,6 +5,7 @@ import { createZodDto, ZodResponse } from 'nestjs-zod';
 import { AuditService } from '../audit/audit.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { AuthService } from '../auth/auth.service';
+import { generateUsername } from '../auth/identity';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { PasswordService } from '../auth/password.service';
 import { Roles, RolesGuard, Section } from '../auth/roles.guard';
@@ -54,6 +55,7 @@ export class AdminUsersCrudController {
         data: {
           email: body.email,
           name: body.name,
+          username: await generateUsername(this.prisma, body.email.split('@')[0] ?? body.name),
           locale: body.locale,
           passwordHash: body.password ? await this.passwords.hash(body.password) : null,
           emailVerifiedAt: now,

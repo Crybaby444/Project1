@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { PageCounter } from '@/components/analytics/PageCounter';
 import { AdminOnly } from '@/lib/session/AdminOnly';
 import { LOCALES, parseThemePreference, THEME_COOKIE, type Locale } from '@yoyo/shared';
+import { ProfileIncompleteBanner } from '@/components/auth/ProfileIncompleteBanner';
 import type { Metadata } from 'next';
 import { cookies, headers } from 'next/headers';
 import { notFound } from 'next/navigation';
@@ -76,6 +77,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
                   <SyncThemeWithProfile />
                   <div lang={locale} className="contents">
                     <SiteHeader catalog={catalog} />
+                    <ProfileIncompleteBanner />
                   </div>
                   <div lang={locale} className="flex flex-1 flex-col *:w-full">
                     {children}

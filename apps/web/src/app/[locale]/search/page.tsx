@@ -2,6 +2,7 @@ import type { Locale } from '@yoyo/shared';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { CatalogResults } from '@/components/catalog/CatalogResults';
+import { PeopleResults } from '@/components/people/PeopleResults';
 import { parseCatalogParams } from '@/lib/catalog/params';
 import { searchSeo, seoMetadata } from '@/lib/seo';
 
@@ -27,6 +28,8 @@ export default async function SearchPage({ params, searchParams }: Props) {
   const t = await getTranslations('catalog');
   const query = parseCatalogParams(await searchParams);
   return (
+    <>
+    {query.q && <PeopleResults q={query.q} />}
     <CatalogResults
       locale={locale}
       params={query}
@@ -40,5 +43,6 @@ export default async function SearchPage({ params, searchParams }: Props) {
         { label: t('breadcrumbs.search') },
       ]}
     />
+    </>
   );
 }

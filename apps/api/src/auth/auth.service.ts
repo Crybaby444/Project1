@@ -15,6 +15,7 @@ import type { SessionTokens } from './cookies';
 import type { GoogleIdentity } from './google-oauth.service';
 import { PasswordService } from './password.service';
 import { TwoFactorService } from './two-factor.service';
+import { assertAdult, assertUsernameFree, generateUsername } from './identity';
 import { hashToken, RefreshTokenService, type SessionMeta } from './refresh-token.service';
 
 const HOUR = 3_600_000;
@@ -67,6 +68,8 @@ export class AuthService {
     if (await this.prisma.user.findUnique({ where: { email: input.email }, select: { id: true } })) {
       throw emailTaken();
     }
+    assertAdult(input.birthDate, this.clock.now());
+    await assertUsernameFree(this.prisma, input.username);
     const passwordHash = await this.passwords.hash(input.password);
     let user: User;
     try {
@@ -75,13 +78,18 @@ export class AuthService {
           email: input.email,
           passwordHash,
           name: input.name,
+          username: input.username,
+          birthDate: new Date(`${input.birthDate}T00:00:00Z`),
           locale: input.locale ?? DEFAULT_LOCALE,
           createdAt: this.clock.now(),
         },
       });
     } catch (error) {
-      // Two registrations raced past the check above: the unique index decides.
-      if (isUniqueViolation(error)) throw emailTaken();
+      // Two registrations raced past the checks above: the unique index decides which.
+      if (isUniqueViolation(error)) {
+        if ((await this.prisma.user.findUnique({ where: { username: input.username }, select: { id: true } })) !== null) await assertUsernameFree(this.prisma, input.username);
+        throw emailTaken();
+      }
       throw error;
     }
     const session = await this.startSession(user, meta);
@@ -193,6 +201,8 @@ export class AuthService {
       data: {
         email: identity.email,
         name,
+        // A username from the email; the birth date is asked before renting or lending.
+        username: await generateUsername(this.prisma, identity.email.split('@')[0] ?? name),
         locale,
         emailVerifiedAt: now,
         createdAt: now,

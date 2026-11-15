@@ -1,6 +1,6 @@
 'use client';
 
-import { LOCALES, NameSchema, type Locale, type PublicUser } from '@yoyo/shared';
+import { BirthDateSchema, LOCALES, NameSchema, UsernameSchema, type Locale, type PublicUser } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { z } from 'zod';
 import { FormError } from '@/components/auth/FormError';
@@ -16,12 +16,16 @@ import { useApiForm } from '@/lib/forms/use-api-form';
 import { unwrap } from '@/lib/session/api-error';
 import { useApiClient, useSession } from '@/lib/session/SessionProvider';
 import { SettingsSection } from './SettingsSection';
+import { BirthDateField, UsernameStatus } from '@/components/auth/IdentityFields';
 
 const ABOUT_MAX = 500;
 
 /** The editable profile (the API turns an empty city or about into "none"). */
 const ProfileFormSchema = z.object({
   name: NameSchema,
+  username: UsernameSchema,
+  /** Asked once: empty while the account has none, then sent; never sent again after that. */
+  birthDate: z.union([z.literal(''), BirthDateSchema]),
   city: z.string().trim().max(60),
   about: z.string().trim().max(ABOUT_MAX),
   locale: z.enum(LOCALES),
@@ -30,6 +34,7 @@ const ProfileFormSchema = z.object({
 /** Settings → Profile: name, city, about, language (PATCH /me), and the theme. */
 export function ProfileForm({ user }: { user: PublicUser }) {
   const t = useTranslations('settings.profile');
+  const tAuth = useTranslations('auth');
   const tLanguage = useTranslations('language');
   const pageLocale = useLocale();
   const client = useApiClient();
@@ -41,13 +46,21 @@ export function ProfileForm({ user }: { user: PublicUser }) {
   const { form, submit, formError, retryInSeconds, busy, disabled, fieldError } = useApiForm(
     ProfileFormSchema,
     {
-      defaultValues: { name: user.name, city: user.city ?? '', about: user.about ?? '', locale: user.locale },
-      onSubmit: async (body) => {
-        const languageChanged = body.locale !== form.formState.defaultValues?.locale;
+      defaultValues: { name: user.name, username: user.username ?? '', birthDate: '', city: user.city ?? '', about: user.about ?? '', locale: user.locale },
+      onSubmit: async (values) => {
+        const languageChanged = values.locale !== form.formState.defaultValues?.locale;
+        const { birthDate, username, ...rest } = values;
+        const body = {
+          ...rest,
+          ...(username !== (user.username ?? '') ? { username } : {}),
+          ...(birthDate && !user.birthDate ? { birthDate } : {}),
+        };
         const { user: saved } = await unwrap(client.PATCH('/api/v1/me', { body }));
         setUser(saved);
         form.reset({
           name: saved.name,
+          username: saved.username ?? '',
+          birthDate: '',
           city: saved.city ?? '',
           about: saved.about ?? '',
           locale: saved.locale,
@@ -77,6 +90,19 @@ export function ProfileForm({ user }: { user: PublicUser }) {
               {...form.register('name')}
             />
           </Field>
+          <div className="flex flex-col gap-1.5">
+            <Field label={tAuth('fields.username')} hint={tAuth('register.usernameHint')} error={fieldError('username')}>
+              <input type="text" autoComplete="username" autoCapitalize="none" spellCheck={false} maxLength={21} className={INPUT_CLASS} {...form.register('username')} />
+            </Field>
+            <UsernameStatus username={form.watch('username') ?? ''} current={user.username} />
+          </div>
+          {user.birthDate ? null : (
+            <BirthDateField
+              value={form.watch('birthDate') ?? ''}
+              onChange={(v) => form.setValue('birthDate', v, { shouldValidate: form.formState.submitCount > 0 })}
+              error={fieldError('birthDate')}
+            />
+          )}
           <Field label={t('city')} hint={t('cityHint')} error={fieldError('city')}>
             <input
               type="text"

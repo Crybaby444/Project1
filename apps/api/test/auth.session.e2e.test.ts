@@ -3,7 +3,7 @@ import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { resetAccounts } from './support/db';
 import { cookieLine, cookieValue, createTestApp, type TestApp } from './support/test-app';
-import { seedUser } from './support/users';
+import { seedUser, withIdentity } from './support/users';
 
 const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;
@@ -275,7 +275,7 @@ describe('sessions: login, refresh, logout and the auth guard', () => {
       const agent = request.agent(t.server);
       await agent
         .post('/api/v1/auth/register')
-        .send({ email: 'daily@mail.lv', password: 'correct horse', name: 'Daily' })
+        .send(withIdentity({ email: 'daily@mail.lv', password: 'correct horse', name: 'Daily' }))
         .expect(201);
       for (let i = 1; i <= 4; i++) {
         t.clock.advance(MINUTE);
@@ -340,7 +340,7 @@ describe('the global daily mail budget (MAIL_DAILY_LIMIT)', () => {
     try {
       await resetAccounts(t.prisma);
       const register = (email: string) =>
-        request(t.server).post('/api/v1/auth/register').send({ email, password: 'correct horse', name: 'New' });
+        request(t.server).post('/api/v1/auth/register').send(withIdentity({ email, password: 'correct horse', name: 'New' }));
       expect((await register('first@mail.lv')).status).toBe(201);
       expect((await register('second@mail.lv')).status).toBe(201);
       expect((await request(t.server).post('/api/v1/auth/forgot-password').send({ email: 'first@mail.lv' })).status).toBe(202);

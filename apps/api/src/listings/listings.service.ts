@@ -1,4 +1,5 @@
 import { isDeepStrictEqual } from 'node:util';
+import { assertProfileComplete } from '../auth/identity';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { compareDates, diffDays, DomainError, localDate, localDateIn, period, type LocalDate, type Period } from '@yoyo/domain';
 import {
@@ -217,6 +218,7 @@ export class ListingsService {
   /** A complete draft or rejected listing goes to review; the old rejection reason is cleared. */
   async submit(id: string, ownerId: string): Promise<OwnerListing> {
     const listing = await this.owned(id, ownerId);
+    await assertProfileComplete(this.prisma, ownerId);
     const status = nextStatus(listing.status, 'submit');
     if (status === null || status === 'REMOVED') throw invalidStatus(listing.status);
     await this.assertComplete(listing, listing.photos.length);

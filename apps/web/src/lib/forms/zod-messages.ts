@@ -1,11 +1,11 @@
 import type { z } from 'zod';
 
-type ValidationKey = 'required' | 'tooShort' | 'tooLong' | 'email' | 'passwordMismatch' | 'invalid';
+type ValidationKey = 'required' | 'tooShort' | 'tooLong' | 'email' | 'passwordMismatch' | 'invalid' | 'fullName' | 'username' | 'usernameReserved' | 'birthDate';
 /** next-intl's `t` for the `validation` messages (useTranslations('validation') or createTranslator). */
 type ValidationTranslator = (key: ValidationKey, values?: { min?: number; max?: number }) => string;
 
 /** Keys a schema may name with `{ params: { messageKey } }` (e.g. a refine that compares two fields). */
-export type ValidationMessageKey = 'passwordMismatch' | 'required' | 'invalid';
+export type ValidationMessageKey = 'passwordMismatch' | 'required' | 'invalid' | 'fullName' | 'username' | 'usernameReserved' | 'birthDate';
 
 type Issue = Parameters<z.core.$ZodErrorMap>[0];
 
