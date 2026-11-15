@@ -17,6 +17,11 @@ export const AUDIT_ACTIONS = [
   'REVIEW_SHOWN',
   'SETTINGS_CHANGED',
   'CATEGORY_CHANGED',
+  'CATEGORY_CREATED',
+  'CATEGORY_DELETED',
+  'USER_CREATED',
+  'USER_EDITED',
+  'USER_DELETED',
   'STAFF_CHANGED',
   'TWO_FACTOR_RESET',
 ] as const;
@@ -86,6 +91,7 @@ export const AdminUserDetailSchema = z.object({
     role: z.enum(['USER', 'ADMIN']),
     locale: z.string(),
     city: z.string().min(1).nullable(),
+    about: z.string().min(1).nullable(),
     emailVerified: z.boolean(),
     phoneVerified: z.boolean(),
     createdAt: z.iso.datetime(),
@@ -154,6 +160,10 @@ const AdminCategoryLeafSchema = z.object({
   renamed: z.boolean(),
   hidden: z.boolean(),
   items: z.number().int(),
+  /** Made in the admin panel (not in the code catalog). */
+  custom: z.boolean(),
+  /** Every listing in it, drafts included (what a deletion would move). */
+  allListings: z.number().int(),
 });
 /** The catalog has two levels: a root and its subcategories. */
 export const AdminCategorySchema = AdminCategoryLeafSchema.extend({ children: z.array(AdminCategoryLeafSchema) });
@@ -169,3 +179,34 @@ export const AdminCategoryChangeSchema = z
   })
   .refine((v) => v.names !== undefined || v.move !== undefined || v.hidden !== undefined, { message: 'Nothing to change' });
 export type AdminCategoryChange = z.infer<typeof AdminCategoryChangeSchema>;
+
+const CategoryNames = z.object({ en: z.string().trim().min(1).max(60), lv: z.string().trim().min(1).max(60), ru: z.string().trim().min(1).max(60) });
+
+/** A new category: a root (parentId null) or a subcategory of a root. */
+export const AdminCategoryCreateSchema = z.object({ names: CategoryNames, parentId: z.string().min(1).nullable() });
+export type AdminCategoryCreate = z.infer<typeof AdminCategoryCreateSchema>;
+export const AdminCategoryCreatedSchema = z.object({ id: z.string() });
+
+/** Deleting a category that has listings: where they go (a subcategory that takes listings). */
+export const AdminCategoryDeleteQuerySchema = z.object({ moveTo: z.string().min(1).optional() });
+
+/** A person the administrator adds: a confirmed account; without a password they get a link to set one. */
+export const AdminUserCreateSchema = z.object({
+  name: z.string().trim().min(1).max(60),
+  email: z.string().trim().toLowerCase().pipe(z.email().max(254)),
+  password: z.string().min(8).max(128).optional(),
+  locale: z.enum(['en', 'lv', 'ru']).default('en'),
+});
+export type AdminUserCreate = z.infer<typeof AdminUserCreateSchema>;
+export const AdminUserCreatedSchema = z.object({ id: z.string(), passwordLinkSent: z.boolean() });
+
+/** An administrator's correction of a person's profile. */
+export const AdminUserEditSchema = z
+  .object({
+    name: z.string().trim().min(1).max(60).optional(),
+    email: z.string().trim().toLowerCase().pipe(z.email().max(254)).optional(),
+    city: z.string().trim().max(60).nullable().optional(),
+    about: z.string().trim().max(500).nullable().optional(),
+  })
+  .refine((v) => Object.values(v).some((x) => x !== undefined), { message: 'Nothing to change' });
+export type AdminUserEdit = z.infer<typeof AdminUserEditSchema>;

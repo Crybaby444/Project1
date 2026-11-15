@@ -201,6 +201,10 @@ model Category {
   adminNames     Json?
   adminSortOrder Int?
   adminHidden    Boolean @default(false)
+  /// Made in Admin → Categories (not in the code catalog): the catalog sync never retires it.
+  adminCreated   Boolean @default(false)
+  /// Deleted in Admin → Categories: kept inactive (listings moved away); the catalog sync never brings it back.
+  adminDeleted   Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

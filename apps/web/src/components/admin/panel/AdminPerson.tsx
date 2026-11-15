@@ -15,6 +15,7 @@ import { useAdminPerson, useAdminPersonAction, useAdminStaff, useBlockUser } fro
 import { panelRole } from '@/lib/admin/staff';
 import { useSession } from '@/lib/session/SessionProvider';
 import { StaffRoleSelect } from './AdminStaff';
+import { DeletePersonButton, EditPersonButton } from './AdminCrud';
 import { useMoney } from '@/lib/deals/money';
 import { Panel } from './parts';
 
@@ -100,6 +101,8 @@ function Body({ d }: { d: AdminUserDetail }) {
             {d.user.blockedAt ? tu('unblock') : tu('block')}
           </Button>
           )}
+          {!d.user.deletedAt && <EditPersonButton user={d.user} />}
+          {d.user.role !== 'ADMIN' && !d.user.deletedAt && <DeletePersonButton user={d.user} />}
         </div>
       </header>
 

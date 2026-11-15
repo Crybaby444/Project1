@@ -20,6 +20,8 @@ interface ExistingCategory {
   names: Prisma.JsonValue;
   slugs: Prisma.JsonValue;
   active: boolean;
+  adminCreated: boolean;
+  adminDeleted: boolean;
 }
 
 async function syncAttributes(tx: Tx, categoryId: string, category: CatalogCategory, existing: CategoryAttribute[]): Promise<void> {
@@ -137,8 +139,10 @@ export async function ensureCategories(
         for (const [sortOrder, category] of categories.entries()) {
           seen.add(category.slug);
           const slugs = slugsOf.get(category.slug)!;
-          const data = { parentId, sortOrder, sticker: category.sticker, icon: category.icon, names: category.names, slugs, active: true };
           const current = bySlug.get(category.slug);
+          // A category the administrator deleted stays deleted (inactive) whatever the code says.
+          const active = !(current?.adminDeleted ?? false);
+          const data = { parentId, sortOrder, sticker: category.sticker, icon: category.icon, names: category.names, slugs, active };
           let id: string;
           if (!current) {
             id = (await tx.category.create({ data: { slug: category.slug, ...data } })).id;
@@ -149,7 +153,7 @@ export async function ensureCategories(
               current.sortOrder === sortOrder &&
               current.sticker === category.sticker &&
               current.icon === category.icon &&
-              current.active &&
+              current.active === active &&
               isDeepStrictEqual(current.names, category.names) &&
               isDeepStrictEqual(current.slugs, slugs);
             if (!same) await tx.category.update({ where: { id }, data });
@@ -161,7 +165,7 @@ export async function ensureCategories(
       await sync(catalog, null);
       await moveLegacyListings(tx, migration);
 
-      const retired = existing.filter((category) => category.active && !seen.has(category.slug)).map((category) => category.id);
+      const retired = existing.filter((category) => category.active && !category.adminCreated && !seen.has(category.slug)).map((category) => category.id);
       if (retired.length > 0) await tx.category.updateMany({ where: { id: { in: retired } }, data: { active: false } });
     },
     { maxWait: 30_000, timeout: 60_000 },

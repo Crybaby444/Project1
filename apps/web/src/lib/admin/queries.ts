@@ -258,3 +258,38 @@ export function useResetTwoFactor() {
     onSettled: () => void queryClient.invalidateQueries({ queryKey: ['admin'] }),
   });
 }
+
+/** Admin → Users and Categories: add, edit, delete (owner, 2026-11-16). Every change refreshes the panel. */
+export function useAdminCrud() {
+  const client = useApiClient();
+  const queryClient = useQueryClient();
+  const settle = () => void queryClient.invalidateQueries({ queryKey: ['admin'] });
+  return {
+    addPerson: useMutation({
+      mutationFn: async (body: { name: string; email: string; password?: string; locale: 'en' | 'lv' | 'ru' }) => unwrap(client.POST('/api/v1/admin/users', { body })),
+      onSettled: settle,
+    }),
+    editPerson: useMutation({
+      mutationFn: async ({ id, ...body }: { id: string; name?: string; email?: string; city?: string | null; about?: string | null }) => {
+        await unwrap(client.PATCH('/api/v1/admin/users/{id}', { params: { path: { id } }, body }));
+      },
+      onSettled: settle,
+    }),
+    deletePerson: useMutation({
+      mutationFn: async (id: string) => {
+        await unwrap(client.DELETE('/api/v1/admin/users/{id}', { params: { path: { id } } }));
+      },
+      onSettled: settle,
+    }),
+    addCategory: useMutation({
+      mutationFn: async (body: { names: { en: string; lv: string; ru: string }; parentId: string | null }) => unwrap(client.POST('/api/v1/admin/categories', { body })),
+      onSettled: settle,
+    }),
+    deleteCategory: useMutation({
+      mutationFn: async ({ id, moveTo }: { id: string; moveTo?: string }) => {
+        await unwrap(client.DELETE('/api/v1/admin/categories/{id}', { params: { path: { id }, query: moveTo ? { moveTo } : {} } }));
+      },
+      onSettled: settle,
+    }),
+  };
+}

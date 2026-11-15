@@ -12,5 +12,6 @@ import { DataExportService } from './data-export.service';
   imports: [AuthModule, ListingsModule, SmsModule, ReviewsModule],
   controllers: [MeController],
   providers: [MeService, PhoneService, DataExportService],
+  exports: [MeService],
 })
 export class MeModule {}

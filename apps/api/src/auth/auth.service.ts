@@ -201,6 +201,13 @@ export class AuthService {
     });
   }
 
+  /** For an account an administrator made without a password: the link to choose one (the reset link). */
+  async sendSetPasswordLink(userId: string): Promise<void> {
+    const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId } });
+    const token = await this.issueEmailToken(user.id, 'RESET_PASSWORD', PASSWORD_RESET_TTL_MS);
+    void this.mail.sendPasswordReset(user, webLink(this.env.WEB_ORIGIN, user.locale, '/reset-password', token));
+  }
+
   /** Emails a reset link if the account exists. Callers answer 202 either way (no account enumeration). */
   async forgotPassword(email: string): Promise<void> {
     const user = await this.prisma.user.findUnique({ where: { email } });
