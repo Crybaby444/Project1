@@ -14,7 +14,8 @@
       "traffic": "Trafiks",
       "seo": "SEO",
       "audit": "Darbību žurnāls",
-      "settings": "Iestatījumi"
+      "settings": "Iestatījumi",
+      "system": "Sistēma"
     },
     "common": {
       "loadFailed": "Neizdevās ielādēt.",
@@ -389,6 +390,41 @@
       "empty": "Nekas nav atrasts.",
       "hint": "↑↓ pārvietoties, Enter atvērt, Esc aizvērt",
       "blocked": "bloķēts"
+    },
+    "system": {
+      "title": "Sistēma",
+      "intro": "Vai viss darbojas un cik tuvu robežām.",
+      "ok": "Darbojas",
+      "down": "Neatbild",
+      "database": "Datubāze",
+      "latency": "Atbild {ms} ms",
+      "mail": "E-pasti 24 stundās",
+      "mailHint": "Virs robežas paziņojumi gaida; pieteikšanās e-pastiem ir rezerve.",
+      "timers": "Nokavēti darījumu termiņi",
+      "timersOk": "Termiņu darbs neatpaliek.",
+      "timersBad": "Termiņu darbs atpaliek: pārbaudi ieplānoto darbu serverī.",
+      "version": "Versija",
+      "uptime": "Darbojas {hours} h",
+      "providers": "Pakalpojumi",
+      "storage": "Foto",
+      "payments": "Maksājumi",
+      "records": "Ieraksti",
+      "counts": {
+        "users": "Lietotāji",
+        "listings": "Lietas",
+        "bookings": "Darījumi",
+        "messages": "Ziņas",
+        "reviews": "Atsauksmes"
+      },
+      "exports": "Eksports (CSV)",
+      "exportsHint": "Atveras izklājlapā. Šūnas ir aizsargātas no formulām.",
+      "export": {
+        "users": "Lietotāji",
+        "listings": "Lietas",
+        "deals": "Darījumi",
+        "ledger": "Virsgrāmatas ieraksti"
+      },
+      "download": "Lejupielādēt"
     }
   }
 }
