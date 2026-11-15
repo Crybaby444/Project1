@@ -30,6 +30,7 @@ export function availableItem(overrides: Partial<AvailableItem['listing']> = {})
     owner: {
       id: 'owner-1',
       name: 'Jānis Ozols',
+      username: 'janis.o',
       city: 'Rīga',
       memberSince: '2026-03-01T10:00:00.000Z',
       emailVerified: true,

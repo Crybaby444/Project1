@@ -1,3 +1,5 @@
+import { createZodDto as zodDto } from 'nestjs-zod';
+import { PrismaService } from '../prisma/prisma.service';
 import { Body, Controller, Get, HttpCode, Inject, Logger, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { ApiAcceptedResponse, ApiBody, ApiFoundResponse, ApiNoContentResponse, ApiTags } from '@nestjs/swagger';
 import {
@@ -9,6 +11,10 @@ import {
   type PublicUser,
   type RefreshResponse,
   type UserResponse,
+  UsernameCheckQuerySchema,
+  UsernameCheckSchema,
+  UsernameSchema,
+  type UsernameCheck,
 } from '@yoyo/shared';
 import type { Request, Response } from 'express';
 import { ZodResponse } from 'nestjs-zod';
@@ -67,6 +73,9 @@ export function splitLocalePrefix(returnTo: string): { prefix: string; path: str
 }
 const googleDisabled = () => new AppError('AUTH_PROVIDER_DISABLED', 404, 'Sign-in with Google is not available');
 
+class UsernameCheckDto extends zodDto(UsernameCheckSchema) {}
+class UsernameCheckQueryDto extends zodDto(UsernameCheckQuerySchema) {}
+
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -77,6 +86,7 @@ export class AuthController {
     private readonly google: GoogleOAuthService,
     private readonly limiter: RateLimiter,
     private readonly devices: DeviceCookieService,
+    private readonly prisma: PrismaService,
     @Inject(ENV) private readonly env: Pick<Env, 'NODE_ENV' | 'WEB_ORIGIN' | 'REGISTRATION_HOURLY_CAP' | 'LOGIN_EMAIL_HOURLY_CAP'>,
     @Inject(SMS_PROVIDER) private readonly sms: SmsProvider | null,
   ) {}
@@ -97,6 +107,16 @@ export class AuthController {
     const previous = await this.devices.read(readCookie(req, DEVICE_COOKIE));
     const deviceId = previous?.userId === userId ? previous.deviceId : undefined;
     setDeviceCookie(res, await this.devices.issue(userId, deviceId), this.secureCookies);
+  }
+
+  /** Is this username free? (the registration and profile forms ask as you type) */
+  @Get('username-available')
+  @ZodResponse({ status: 200, type: UsernameCheckDto, description: 'Whether the username is free' })
+  async usernameAvailable(@Query() query: UsernameCheckQueryDto): Promise<UsernameCheck> {
+    const parsed = UsernameSchema.safeParse(query.username);
+    if (!parsed.success) return { available: false, reason: 'INVALID' };
+    const taken = await this.prisma.user.findUnique({ where: { username: parsed.data }, select: { id: true } });
+    return { available: taken === null, reason: taken ? 'TAKEN' : null };
   }
 
   @Get('providers')

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 /** What a bell notification is about. */
-export const NOTIFICATION_KINDS = ['DEAL', 'OFFER', 'LISTING', 'REVIEW', 'SEARCH'] as const;
+export const NOTIFICATION_KINDS = ['DEAL', 'OFFER', 'LISTING', 'REVIEW', 'SEARCH', 'FOLLOW'] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
 
 /**

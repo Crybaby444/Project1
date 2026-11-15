@@ -532,6 +532,9 @@
       },
       "SEARCH": {
         "MATCH": "New for your saved search: “{title}”"
+      },
+      "FOLLOW": {
+        "NEW_LISTING": "New from someone you follow: “{title}”"
       }
     },
     "email": {

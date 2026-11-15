@@ -14,6 +14,7 @@ import { NotificationsService, wantsEmail } from '../notifications/notifications
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { SavedSearchesService } from '../saved-searches/saved-searches.service';
+import { FollowsService } from '../follows/follows.service';
 
 /** `https://site` + `/lv` (no prefix for English) + path, the site's URL scheme. */
 export function sitePath(origin: string, locale: string, path: string): string {
@@ -32,6 +33,7 @@ export class ModerationService {
     private readonly mail: MailService,
     private readonly notifications: NotificationsService,
     private readonly savedSearches: SavedSearchesService,
+    private readonly follows: FollowsService,
     private readonly audit: AuditService,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(ENV) private readonly env: Pick<Env, 'WEB_ORIGIN'>,
@@ -92,7 +94,10 @@ export class ModerationService {
       after: decision.action === 'approve' ? { status: 'PUBLISHED' } : { status: 'REJECTED', reason: decision.reason },
     });
     // Saved searches are checked before answering (it never throws), so the bell is up to date.
-    if (decision.action === 'approve') await this.savedSearches.listingPublished(listing.id);
+    if (decision.action === 'approve') {
+      await this.savedSearches.listingPublished(listing.id);
+      await this.follows.listingPublished(listing.id);
+    }
 
     const fresh = await this.prisma.listing.findUniqueOrThrow({ where: { id }, include: { photos: true, unavailability: true, owner: true } });
     return this.toAdmin(fresh, fresh.owner);

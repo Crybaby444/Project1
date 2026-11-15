@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { BirthDateSchema, FullNameSchema, UsernameSchema } from './identity';
 import { LOCALES } from './locale';
 import { THEME_PREFERENCES } from './theme';
 
@@ -14,10 +15,13 @@ export const PasswordSchema = z.string().min(8).max(128);
 
 export const NameSchema = z.string().trim().min(1).max(60);
 
+/** Owner, 2026-11-16: the full name, a username (people are found by it) and the birth date (18 or older). */
 export const RegisterRequestSchema = z.object({
   email: EmailSchema,
   password: PasswordSchema,
-  name: NameSchema,
+  name: FullNameSchema,
+  username: UsernameSchema,
+  birthDate: BirthDateSchema,
   locale: z.enum(LOCALES).optional(),
 });
 
@@ -61,6 +65,10 @@ const ProfileText = (max: number) =>
 /** Only these fields can change here; anything else in the body is ignored. */
 export const UpdateProfileRequestSchema = z.object({
   name: NameSchema.optional(),
+  /** Change your username (unique). */
+  username: UsernameSchema.optional(),
+  /** Set once, for accounts made before it was asked (or through Google); 18 or older. */
+  birthDate: BirthDateSchema.optional(),
   city: ProfileText(60),
   about: ProfileText(500),
   locale: z.enum(LOCALES).optional(),
@@ -96,6 +104,10 @@ export const PublicUserSchema = z.object({
   id: z.string(),
   email: z.string(),
   name: z.string(),
+  /** How people find you (`@username`); null only for accounts that have not chosen one yet. */
+  username: z.string().min(1).nullable(),
+  /** Your birth date (YYYY-MM-DD), or null until you add it: renting and lending need it. */
+  birthDate: z.string().min(1).nullable(),
   city: z.string().nullable(),
   about: z.string().nullable(),
   locale: z.enum(LOCALES),

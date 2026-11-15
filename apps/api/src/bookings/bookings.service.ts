@@ -49,6 +49,7 @@ import { bookingNotFound, staleBooking } from './booking-errors';
 import { assertDamagePhotos } from './booking-photos.service';
 import { BookingRulesService } from './booking-rules.service';
 import { writeDealLine } from '../chat/deal-lines';
+import { assertProfileComplete } from '../auth/identity';
 import { DealNotifier } from './deal-notifier';
 import { AnalyticsService } from '../analytics/analytics.service';
 import { BOOKING_INCLUDE, serializeBooking, type BookingWithParties } from './booking.serializer';
@@ -223,6 +224,7 @@ export class BookingsService {
 
   /** Step 1: the renter asks for days, optionally at an accepted offer's price. */
   async create(renter: PublicUser, input: BookingRequest): Promise<BookingView> {
+    await assertProfileComplete(this.prisma, renter.id);
     const now = this.clock.now();
     const settings = await this.rules.settings();
     const { id, after } = await this.prisma.$transaction(async (tx) => {

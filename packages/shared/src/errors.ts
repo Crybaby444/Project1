@@ -8,6 +8,12 @@ export const ERROR_CODES = [
   'VALIDATION_FAILED',
   'AUTH_INVALID_CREDENTIALS',
   'AUTH_EMAIL_TAKEN',
+  /** Someone already has this username. */
+  'USERNAME_TAKEN',
+  /** Under 18: Yoyo is for adults. */
+  'UNDERAGE',
+  /** Renting and lending need the birth date (and a username): add them in Settings → Profile. */
+  'PROFILE_INCOMPLETE',
   'AUTH_UNAUTHENTICATED',
   'AUTH_FORBIDDEN',
   'AUTH_BLOCKED',

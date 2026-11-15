@@ -15,7 +15,9 @@ describe('OwnerCard', () => {
     expect(screen.getByText('2 deals')).toBeInTheDocument();
     expect(screen.getByText(en.item.owner.noReviews)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'More from Jānis Ozols' })).toHaveAttribute('href', '/u/owner-1');
-    expect(container.textContent).not.toMatch(/@|\+371/);
+    // No email or phone (the public @username is fine).
+    expect((container.textContent ?? '').replace('@janis.o', '')).not.toMatch(/@|\+371/);
+    expect(container.textContent).toContain('@janis.o');
   });
 
   it('says how fast they usually answer, in plain steps, and nothing when slow or unknown', () => {

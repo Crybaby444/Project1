@@ -39,6 +39,7 @@ describe('UserMenu', () => {
       deals.dealsMenu.wallet,
       en.header.myListings,
       en.header.favorites,
+      en.header.following,
       en.header.settings,
       en.header.signOut,
     ]);
@@ -47,7 +48,7 @@ describe('UserMenu', () => {
     await user.keyboard('{ArrowDown}');
     expect(items[1]).toHaveFocus();
     await user.keyboard('{End}');
-    expect(items[6]).toHaveFocus();
+    expect(items[7]).toHaveFocus();
     await user.keyboard('{ArrowDown}');
     expect(items[0]).toHaveFocus(); // wraps around
 

@@ -8,7 +8,7 @@ import { resetAccounts } from './support/db';
 import { cookieLine, cookieValue, createTestApp, tokenFrom, type TestApp } from './support/test-app';
 
 const HOUR = 3_600_000;
-const anna = { email: '  Anna@Mail.LV ', password: 'correct horse', name: 'Anna', locale: 'lv' };
+const anna = { email: '  Anna@Mail.LV ', password: 'correct horse', name: 'Anna Ozola', username: 'anna.ozola', birthDate: '1990-05-01', locale: 'lv' };
 
 describe('registration and email verification', () => {
   let t: TestApp;
@@ -34,9 +34,9 @@ describe('registration and email verification', () => {
     const res = await register(anna);
 
     expect(res.status).toBe(201);
-    expect(res.body.user).toMatchObject({ email: 'anna@mail.lv', name: 'Anna', locale: 'lv', emailVerified: false });
+    expect(res.body.user).toMatchObject({ email: 'anna@mail.lv', name: 'Anna Ozola', username: 'anna.ozola', birthDate: '1990-05-01', locale: 'lv', emailVerified: false });
     expect(Object.keys(res.body.user).sort()).toEqual(
-      ['about', 'city', 'createdAt', 'email', 'emailVerified', 'hasPassword', 'id', 'locale', 'name', 'phone', 'phoneVerified', 'role', 'staffRole', 'theme'],
+      ['about', 'birthDate', 'city', 'createdAt', 'email', 'emailVerified', 'hasPassword', 'id', 'locale', 'name', 'phone', 'phoneVerified', 'role', 'staffRole', 'theme', 'username'],
     );
     expect(JSON.stringify(res.body)).not.toContain('passwordHash');
 
@@ -67,11 +67,29 @@ describe('registration and email verification', () => {
     expect(await t.prisma.user.count({ where: { email: 'anna@mail.lv' } })).toBe(1);
   });
 
+  it('refuses someone under 18 and a taken username', async () => {
+    const today = t.clock.now();
+    const yearsAgo = (years: number, days = 0) => {
+      const d = new Date(Date.UTC(today.getUTCFullYear() - years, today.getUTCMonth(), today.getUTCDate() + days));
+      return d.toISOString().slice(0, 10);
+    };
+    const young = await register({ ...anna, birthDate: yearsAgo(18, 1) });
+    expect(young.status).toBe(400);
+    expect(young.body.error.code).toBe('UNDERAGE');
+    await register({ ...anna, birthDate: yearsAgo(18, -1) }).expect(201);
+    const taken = await register({ ...anna, email: 'other@mail.lv' });
+    expect(taken.status).toBe(409);
+    expect(taken.body.error.code).toBe('USERNAME_TAKEN');
+    expect((await request(t.server).get('/api/v1/auth/username-available?username=Anna.Ozola')).body).toEqual({ available: false, reason: 'TAKEN' });
+    expect((await request(t.server).get('/api/v1/auth/username-available?username=free.one')).body).toEqual({ available: true, reason: null });
+    expect((await request(t.server).get('/api/v1/auth/username-available?username=admin')).body).toEqual({ available: false, reason: 'INVALID' });
+  });
+
   it('names the invalid fields', async () => {
     const res = await register({ email: 'nope', password: 'short', name: '', locale: 'de' });
     expect(res.status).toBe(400);
     expect(res.body.error.code).toBe('VALIDATION_FAILED');
-    expect(Object.keys(res.body.error.fields).sort()).toEqual(['email', 'locale', 'name', 'password']);
+    expect(Object.keys(res.body.error.fields).sort()).toEqual(['birthDate', 'email', 'locale', 'name', 'password', 'username']);
     expect(await t.prisma.user.count()).toBe(0);
   });
 
@@ -94,7 +112,7 @@ describe('registration and email verification', () => {
   });
 
   it('links English users to the site without a language prefix', async () => {
-    await register({ ...anna, email: 'eve@mail.lv', locale: undefined }).expect(201);
+    await register({ ...anna, email: 'eve@mail.lv', username: 'eve', locale: undefined }).expect(201);
     await t.mailSent();
     expect(t.mail.to('eve@mail.lv')[0]!.text).toMatch(/http:\/\/localhost:3000\/verify-email\?token=/);
   });
@@ -118,9 +136,9 @@ describe('registration and email verification', () => {
   });
 
   it('allows 10 registrations a minute from one address and answers the 11th with 429', async () => {
-    for (let i = 0; i < 10; i++) await register({ ...anna, email: `user${i}@mail.lv` }).expect(201);
+    for (let i = 0; i < 10; i++) await register({ ...anna, email: `user${i}@mail.lv`, username: `user${i}` }).expect(201);
 
-    const eleventh = await register({ ...anna, email: 'user10@mail.lv' });
+    const eleventh = await register({ ...anna, email: 'user10@mail.lv', username: 'user10' });
 
     expect(eleventh.status).toBe(429);
     expect(eleventh.body.error.code).toBe('RATE_LIMITED');

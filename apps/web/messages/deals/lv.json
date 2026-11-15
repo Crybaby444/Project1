@@ -532,6 +532,9 @@
       },
       "SEARCH": {
         "MATCH": "Jauns tavam saglabātajam meklējumam: “{title}”"
+      },
+      "FOLLOW": {
+        "NEW_LISTING": "Jaunums no cilvēka, kuram sekojat: “{title}”"
       }
     },
     "email": {

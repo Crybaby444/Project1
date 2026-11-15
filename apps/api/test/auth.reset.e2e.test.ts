@@ -4,7 +4,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import ru from '../src/mail/i18n/ru.json';
 import { resetAccounts } from './support/db';
 import { createTestApp, tokenFrom, type TestApp } from './support/test-app';
-import { seedUser } from './support/users';
+import { seedUser, withIdentity } from './support/users';
 
 const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;
@@ -106,7 +106,7 @@ describe('password reset by email', () => {
 
     expect((await reset(token, 'short')).body.error.fields.password).toEqual(expect.any(String));
 
-    await request(t.server).post('/api/v1/auth/register').send({ email: 'eve@mail.lv', password: 'correct horse', name: 'Eve' });
+    await request(t.server).post('/api/v1/auth/register').send(withIdentity({ email: 'eve@mail.lv', password: 'correct horse', name: 'Eve' }));
     await t.mailSent();
     const verifyToken = tokenFrom(t.mail.to('eve@mail.lv')[0]!.text);
     expect((await reset(verifyToken, 'new correct horse')).status).toBe(400);

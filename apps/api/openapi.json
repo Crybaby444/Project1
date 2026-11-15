@@ -103,6 +103,38 @@
         ]
       }
     },
+    "/api/v1/auth/username-available": {
+      "get": {
+        "operationId": "AuthController_usernameAvailable",
+        "parameters": [
+          {
+            "name": "username",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 40,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Whether the username is free",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameCheckDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
     "/api/v1/auth/providers": {
       "get": {
         "operationId": "AuthController_providers",
@@ -3240,6 +3272,229 @@
         },
         "tags": [
           "categories"
+        ]
+      }
+    },
+    "/api/v1/people": {
+      "get": {
+        "operationId": "PeopleController_search",
+        "parameters": [
+          {
+            "name": "q",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "People whose name matches, most followed first",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeopleDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "people"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/follow": {
+      "post": {
+        "operationId": "FollowsController_follow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "people"
+        ]
+      },
+      "delete": {
+        "operationId": "FollowsController_unfollow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "people"
+        ]
+      }
+    },
+    "/api/v1/me/following/ids": {
+      "get": {
+        "operationId": "FollowsController_ids",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Who you follow (ids)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FollowingIdsDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "people"
+        ]
+      }
+    },
+    "/api/v1/me/following": {
+      "get": {
+        "operationId": "FollowsController_following",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The people you follow",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeopleDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "people"
+        ]
+      }
+    },
+    "/api/v1/me/following/feed": {
+      "get": {
+        "operationId": "FollowsController_feed",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "New items from the people you follow",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FollowFeedDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "people"
         ]
       }
     },
@@ -8684,6 +8939,9 @@
                   "VALIDATION_FAILED",
                   "AUTH_INVALID_CREDENTIALS",
                   "AUTH_EMAIL_TAKEN",
+                  "USERNAME_TAKEN",
+                  "UNDERAGE",
+                  "PROFILE_INCOMPLETE",
                   "AUTH_UNAUTHENTICATED",
                   "AUTH_FORBIDDEN",
                   "AUTH_BLOCKED",
@@ -8748,6 +9006,28 @@
         ],
         "additionalProperties": false
       },
+      "UsernameCheckDto_Output": {
+        "type": "object",
+        "properties": {
+          "available": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "TAKEN",
+              "INVALID",
+              null
+            ],
+            "nullable": true
+          }
+        },
+        "required": [
+          "available",
+          "reason"
+        ],
+        "additionalProperties": false
+      },
       "ProvidersResponseDto_Output": {
         "type": "object",
         "properties": {
@@ -8777,8 +9057,14 @@
           },
           "name": {
             "type": "string",
-            "minLength": 1,
+            "minLength": 3,
             "maxLength": 60
+          },
+          "username": {
+            "type": "string"
+          },
+          "birthDate": {
+            "type": "string"
           },
           "locale": {
             "type": "string",
@@ -8792,7 +9078,9 @@
         "required": [
           "email",
           "password",
-          "name"
+          "name",
+          "username",
+          "birthDate"
         ]
       },
       "UserResponseDto_Output": {
@@ -8809,6 +9097,16 @@
               },
               "name": {
                 "type": "string"
+              },
+              "username": {
+                "type": "string",
+                "minLength": 1,
+                "nullable": true
+              },
+              "birthDate": {
+                "type": "string",
+                "minLength": 1,
+                "nullable": true
               },
               "city": {
                 "type": [
@@ -8882,6 +9180,8 @@
               "id",
               "email",
               "name",
+              "username",
+              "birthDate",
               "city",
               "about",
               "locale",
@@ -8991,6 +9291,16 @@
               "name": {
                 "type": "string"
               },
+              "username": {
+                "type": "string",
+                "minLength": 1,
+                "nullable": true
+              },
+              "birthDate": {
+                "type": "string",
+                "minLength": 1,
+                "nullable": true
+              },
               "city": {
                 "type": [
                   "string",
@@ -9063,6 +9373,8 @@
               "id",
               "email",
               "name",
+              "username",
+              "birthDate",
               "city",
               "about",
               "locale",
@@ -11555,7 +11867,8 @@
                     "OFFER",
                     "LISTING",
                     "REVIEW",
-                    "SEARCH"
+                    "SEARCH",
+                    "FOLLOW"
                   ]
                 },
                 "event": {
@@ -13228,6 +13541,11 @@
                       "name": {
                         "type": "string"
                       },
+                      "username": {
+                        "type": "string",
+                        "minLength": 1,
+                        "nullable": true
+                      },
                       "city": {
                         "type": [
                           "string",
@@ -13276,6 +13594,7 @@
                     "required": [
                       "id",
                       "name",
+                      "username",
                       "city",
                       "memberSince",
                       "emailVerified",
@@ -13424,6 +13743,11 @@
               "name": {
                 "type": "string"
               },
+              "username": {
+                "type": "string",
+                "minLength": 1,
+                "nullable": true
+              },
               "city": {
                 "type": [
                   "string",
@@ -13473,11 +13797,22 @@
                   "string",
                   "null"
                 ]
+              },
+              "followers": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "following": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
               }
             },
             "required": [
               "id",
               "name",
+              "username",
               "city",
               "memberSince",
               "emailVerified",
@@ -13487,7 +13822,9 @@
               "rating",
               "reviewCount",
               "responseMinutes",
-              "about"
+              "about",
+              "followers",
+              "following"
             ],
             "additionalProperties": false
           },
@@ -13812,6 +14149,244 @@
         },
         "required": [
           "categories"
+        ],
+        "additionalProperties": false
+      },
+      "PeopleDto_Output": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string",
+                  "minLength": 1,
+                  "nullable": true
+                },
+                "city": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "listingCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "followers": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "rating": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "reviewCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "username",
+                "city",
+                "listingCount",
+                "followers",
+                "rating",
+                "reviewCount"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "FollowingIdsDto_Output": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "ids"
+        ],
+        "additionalProperties": false
+      },
+      "FollowFeedDto_Output": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "dailyCents": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "weeklyDiscountPercent": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "depositCents": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "condition": {
+                  "type": "string",
+                  "enum": [
+                    "NEW",
+                    "LIKE_NEW",
+                    "GOOD",
+                    "FAIR",
+                    null
+                  ],
+                  "nullable": true
+                },
+                "city": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "district": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "categoryId": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "cover": {
+                  "type": "object",
+                  "properties": {
+                    "thumb": {
+                      "type": "string"
+                    },
+                    "card": {
+                      "type": "string"
+                    },
+                    "full": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "thumb",
+                    "card",
+                    "full"
+                  ],
+                  "additionalProperties": false,
+                  "nullable": true
+                },
+                "ownerId": {
+                  "type": "string"
+                },
+                "contentLocale": {
+                  "type": "string",
+                  "enum": [
+                    "en",
+                    "lv",
+                    "ru"
+                  ]
+                },
+                "publishedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "nullable": true
+                },
+                "rating": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "reviewCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "owner": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "dailyCents",
+                "weeklyDiscountPercent",
+                "depositCents",
+                "condition",
+                "city",
+                "district",
+                "categoryId",
+                "cover",
+                "ownerId",
+                "contentLocale",
+                "publishedAt",
+                "rating",
+                "reviewCount",
+                "owner"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "items",
+          "total"
         ],
         "additionalProperties": false
       },
@@ -14474,6 +15049,12 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 60
+          },
+          "username": {
+            "type": "string"
+          },
+          "birthDate": {
+            "type": "string"
           },
           "city": {
             "type": "string",
@@ -15365,6 +15946,16 @@
                 "name": {
                   "type": "string"
                 },
+                "username": {
+                  "type": "string",
+                  "minLength": 1,
+                  "nullable": true
+                },
+                "birthDate": {
+                  "type": "string",
+                  "minLength": 1,
+                  "nullable": true
+                },
                 "city": {
                   "type": [
                     "string",
@@ -15449,6 +16040,8 @@
                 "id",
                 "email",
                 "name",
+                "username",
+                "birthDate",
                 "city",
                 "about",
                 "locale",
@@ -15492,6 +16085,16 @@
               },
               "name": {
                 "type": "string"
+              },
+              "username": {
+                "type": "string",
+                "minLength": 1,
+                "nullable": true
+              },
+              "birthDate": {
+                "type": "string",
+                "minLength": 1,
+                "nullable": true
               },
               "city": {
                 "type": [
@@ -15577,6 +16180,8 @@
               "id",
               "email",
               "name",
+              "username",
+              "birthDate",
               "city",
               "about",
               "locale",

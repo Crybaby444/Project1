@@ -160,7 +160,8 @@
       "all": "Visas kategorijas",
       "search": "Meklēt",
       "more": "Vēl {count} kategorijā {name}"
-    }
+    },
+    "following": "Sekoju"
   },
   "banner": {
     "verifyEmail": {
@@ -211,7 +212,10 @@
     "retryIn": "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc {seconds} s.",
     "LISTING_GONE": "Šī lieta ir noņemta un vairs netiek izīrēta.",
     "AUTH_CODE_REQUIRED": "Šim kontam ir divpakāpju ieeja: ienāciet ar e-pastu, paroli un kodu no autentifikatora lietotnes.",
-    "AUTH_CODE_INVALID": "Kods nav pareizs vai jau izmantots. Ievadiet jaunāko kodu no lietotnes."
+    "AUTH_CODE_INVALID": "Kods nav pareizs vai jau izmantots. Ievadiet jaunāko kodu no lietotnes.",
+    "USERNAME_TAKEN": "Šis lietotājvārds ir aizņemts. Pamēģiniet citu.",
+    "UNDERAGE": "Yoyo ir cilvēkiem no 18 gadu vecuma.",
+    "PROFILE_INCOMPLETE": "Vispirms pievienojiet lietotājvārdu un dzimšanas datumu sadaļā Iestatījumi → Profils."
   },
   "validation": {
     "required": "Aizpildiet šo lauku.",
@@ -219,7 +223,11 @@
     "tooLong": "Ne vairāk kā {max} rakstzīmes.",
     "email": "Ievadiet e-pasta adresi, piemēram, vards@example.com.",
     "passwordMismatch": "Paroles nesakrīt.",
-    "invalid": "Pārbaudiet šo lauku."
+    "invalid": "Pārbaudiet šo lauku.",
+    "fullName": "Ierakstiet vārdu un uzvārdu.",
+    "username": "3–20 simboli: a–z, 0–9, punkts un pasvītra; sākumā un beigās — burts vai cipars.",
+    "usernameReserved": "Šis lietotājvārds ir rezervēts.",
+    "birthDate": "Ievadiet īstu datumu: diena, mēnesis un gads."
   },
   "auth": {
     "fields": {
@@ -228,7 +236,9 @@
       "password": "Parole",
       "newPassword": "Jaunā parole",
       "repeatPassword": "Atkārtojiet jauno paroli",
-      "currentPassword": "Pašreizējā parole"
+      "currentPassword": "Pašreizējā parole",
+      "fullName": "Vārds un uzvārds",
+      "username": "Lietotājvārds"
     },
     "password": {
       "show": "Rādīt paroli"
@@ -259,7 +269,9 @@
       "passwordHint": "Vismaz 8 rakstzīmes. Labi der daži vārdi pēc kārtas.",
       "submit": "Izveidot kontu",
       "haveAccount": "Jau ir konts?",
-      "signIn": "Pieteikties"
+      "signIn": "Pieteikties",
+      "fullNameHint": "Kā dokumentos: tas tiek ierakstīts nomas līgumos.",
+      "usernameHint": "Pēc tā jūs atrod un jums seko: @lietotājvārds."
     },
     "verify": {
       "title": "E-pasta apstiprināšana",
@@ -999,5 +1011,37 @@
     "turnedOn": "Divpakāpju ieeja ieslēgta",
     "turnedOff": "Divpakāpju ieeja izslēgta",
     "needPassword": "Jūsu konts ienāk ar Google. Vispirms iestatiet paroli (“Aizmirsi paroli?” ieejas lapā), tad ieslēdziet šo."
+  },
+  "people": {
+    "follow": "Sekot",
+    "following": "Sekoju",
+    "followName": "Sekot: {name}",
+    "unfollowName": "Pārtraukt sekot: {name}",
+    "followers": "{count, plural, zero {sekotāju} one {sekotājs} other {sekotāji}}",
+    "followingCount": "seko",
+    "reviews": "{count, plural, zero {atsauksmju} one {atsauksme} other {atsauksmes}}",
+    "itemsCount": "{count, plural, zero {# lietu} one {# lieta} other {# lietas}}",
+    "searchTitle": "Cilvēki",
+    "feedTitle": "Sekoju",
+    "feedIntro": "Jaunas lietas no cilvēkiem, kuriem sekojat. Kad viņi kaut ko publicē, to redzēsiet zvaniņā.",
+    "nobody": "Jūs vēl nevienam nesekojat",
+    "nobodyHint": "Atveriet kāda profilu — no lietas vai meklējot pēc lietotājvārda — un nospiediet “Sekot”.",
+    "browse": "Skatīt katalogu",
+    "newItems": "Jaunākais no viņiem",
+    "noNewItems": "Pagaidām nekā jauna.",
+    "youFollow": "Jūs sekojat: {count}"
+  },
+  "identity": {
+    "birthDate": "Dzimšanas datums",
+    "day": "Diena",
+    "month": "Mēnesis",
+    "year": "Gads",
+    "dayPlaceholder": "DD",
+    "yearPlaceholder": "GGGG",
+    "birthHint": "Yoyo ir cilvēkiem no 18 gadu vecuma. Citi to neredz.",
+    "usernameFree": "@{username} ir brīvs",
+    "usernameTaken": "Šis lietotājvārds ir aizņemts",
+    "complete": "Pabeidziet profilu: pievienojiet lietotājvārdu un dzimšanas datumu, lai nomātu un izīrētu.",
+    "completeLink": "Pievienot"
   }
 }

@@ -24,3 +24,4 @@ export * from './reports';
 export * from './analytics';
 export * from './admin-audit';
 export * from './staff';
+export * from './identity';

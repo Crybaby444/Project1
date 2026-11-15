@@ -23,7 +23,7 @@ describe('PasswordSchema', () => {
 });
 
 describe('RegisterRequestSchema', () => {
-  const anna = { email: 'anna@mail.lv', password: 'correct horse', name: 'Anna' };
+  const anna = { email: 'anna@mail.lv', password: 'correct horse', name: 'Anna Ozola', username: 'anna.o', birthDate: '1990-05-01' };
 
   it('makes the language optional and accepts only supported ones', () => {
     expect(RegisterRequestSchema.parse(anna)).toEqual(anna);
@@ -31,9 +31,12 @@ describe('RegisterRequestSchema', () => {
     expect(RegisterRequestSchema.safeParse({ ...anna, locale: 'de' }).success).toBe(false);
   });
 
-  it('needs a name of 1 to 60 characters after trimming', () => {
-    expect(RegisterRequestSchema.parse({ ...anna, name: '  Anna  ' }).name).toBe('Anna');
+  it('needs a full name (first and last) of up to 60 characters after trimming, a username and a birth date', () => {
+    expect(RegisterRequestSchema.parse({ ...anna, name: '  Anna Ozola  ' }).name).toBe('Anna Ozola');
+    expect(RegisterRequestSchema.safeParse({ ...anna, name: 'Anna' }).success).toBe(false);
     expect(RegisterRequestSchema.safeParse({ ...anna, name: '   ' }).success).toBe(false);
+    expect(RegisterRequestSchema.safeParse({ ...anna, username: undefined }).success).toBe(false);
+    expect(RegisterRequestSchema.safeParse({ ...anna, birthDate: undefined }).success).toBe(false);
     expect(RegisterRequestSchema.safeParse({ ...anna, name: 'x'.repeat(61) }).success).toBe(false);
   });
 });
@@ -44,6 +47,8 @@ describe('PublicUserSchema', () => {
       id: 'u1',
       email: 'anna@mail.lv',
       name: 'Anna',
+      username: 'anna',
+      birthDate: '1990-05-01',
       city: null,
       about: null,
       locale: 'lv',

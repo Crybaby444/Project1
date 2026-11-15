@@ -14,6 +14,7 @@ import { useApiClient, useSession } from '@/lib/session/SessionProvider';
 import { AuthCard, TEXT_LINK } from './AuthCard';
 import { FormError } from './FormError';
 import { GoogleButton } from './GoogleButton';
+import { BirthDateField, UsernameStatus } from './IdentityFields';
 import { useLeaveWhenSignedIn, withNext } from './LoginForm';
 import { PasswordField } from './PasswordField';
 import { RetryAfterNotice } from './RetryAfterNotice';
@@ -71,7 +72,7 @@ export function RegisterForm({ next }: { next: string | null }) {
   const { form, submit, formError, retryInSeconds, busy, disabled, fieldError } = useApiForm(
     RegisterFormSchema,
     {
-      defaultValues: { name: '', email: '', password: '' },
+      defaultValues: { name: '', username: '', birthDate: '', email: '', password: '' },
       onSubmit: async (values) => {
         const body = { ...values, locale: locale as 'en' | 'lv' | 'ru' };
         let { user } = await unwrap(client.POST('/api/v1/auth/register', { body }));
@@ -90,6 +91,8 @@ export function RegisterForm({ next }: { next: string | null }) {
     },
   );
   const password = form.watch('password') ?? '';
+  const username = form.watch('username') ?? '';
+  const birthDate = form.watch('birthDate') ?? '';
 
   return (
     <AuthCard
@@ -108,9 +111,29 @@ export function RegisterForm({ next }: { next: string | null }) {
       <form noValidate onSubmit={submit} className="flex flex-col gap-5">
         <FormError message={formError} />
         <RetryAfterNotice seconds={retryInSeconds} />
-        <Field label={t('fields.name')} hint={t('register.nameHint')} error={fieldError('name')}>
+        <Field label={t('fields.fullName')} hint={t('register.fullNameHint')} error={fieldError('name')}>
           <input type="text" autoComplete="name" className={INPUT_CLASS} {...form.register('name')} />
         </Field>
+        <div className="flex flex-col gap-1.5">
+          <Field label={t('fields.username')} hint={t('register.usernameHint')} error={fieldError('username')}>
+            <input
+              type="text"
+              autoComplete="username"
+              autoCapitalize="none"
+              spellCheck={false}
+              maxLength={21}
+              placeholder="olga.k"
+              className={INPUT_CLASS}
+              {...form.register('username')}
+            />
+          </Field>
+          <UsernameStatus username={username} />
+        </div>
+        <BirthDateField
+          value={birthDate}
+          onChange={(v) => form.setValue('birthDate', v, { shouldValidate: form.formState.submitCount > 0 })}
+          error={fieldError('birthDate')}
+        />
         <Field label={t('fields.email')} error={fieldError('email')}>
           <input
             type="email"

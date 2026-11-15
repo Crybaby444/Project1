@@ -11,7 +11,7 @@ import { resetAccounts } from './support/db';
 import { testImages } from './support/images';
 import { seedListing } from './support/listings';
 import { cookieLine, cookieValue, createTestApp, type TestApp } from './support/test-app';
-import { seedUser } from './support/users';
+import { seedUser, withIdentity } from './support/users';
 
 const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;
@@ -157,7 +157,7 @@ describe('my account', () => {
       expect(await t.prisma.oAuthAccount.count({ where: { userId: user.id } })).toBe(0);
       expect((await agent.get('/api/v1/me')).status).toBe(401);
       expect((await request(t.server).post('/api/v1/auth/login').send({ email, password })).status).toBe(401);
-      const again = await request(t.server).post('/api/v1/auth/register').send({ email, password, name: 'Anna again' });
+      const again = await request(t.server).post('/api/v1/auth/register').send(withIdentity({ email, password, name: 'Anna again' }));
       expect(again.status).toBe(201);
     });
 

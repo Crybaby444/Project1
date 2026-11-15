@@ -22,9 +22,12 @@ export async function registerByApi(
   request: APIRequestContext,
   { email = uniqueEmail(), password = PASSWORD, name = 'Anna Bērziņa', locale = 'en' } = {},
 ): Promise<{ email: string; password: string; name: string }> {
-  const res = await request.post('/api/v1/auth/register', { data: { email, password, name, locale } });
+  // A unique username from the email, and an adult's birth date (sign-up asks both since 2026-11-16).
+  const username = `e${email.split('@')[0]!.replace(/[^a-z0-9]/gi, '').toLowerCase()}`.slice(-20);
+  const fullName = name.trim().includes(' ') ? name : `${name} Tester`;
+  const res = await request.post('/api/v1/auth/register', { data: { email, password, name: fullName, username, birthDate: '1990-01-01', locale } });
   if (res.status() !== 201) throw new Error(`registration failed: ${res.status()} ${await res.text()}`);
-  return { email, password, name };
+  return { email, password, name: fullName };
 }
 
 /** Fills and sends the sign-in form. */

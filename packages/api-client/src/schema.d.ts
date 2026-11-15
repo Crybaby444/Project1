@@ -36,6 +36,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/username-available": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AuthController_usernameAvailable"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/providers": {
         parameters: {
             query?: never;
@@ -860,6 +876,86 @@ export interface paths {
             cookie?: never;
         };
         get: operations["CategoriesController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/people": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PeopleController_search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/users/{id}/follow": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["FollowsController_follow"];
+        delete: operations["FollowsController_unfollow"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/following/ids": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["FollowsController_ids"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/following": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["FollowsController_following"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/following/feed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["FollowsController_feed"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1937,7 +2033,7 @@ export interface components {
         ApiErrorDto_Output: {
             error: {
                 /** @enum {string} */
-                code: "VALIDATION_FAILED" | "AUTH_INVALID_CREDENTIALS" | "AUTH_EMAIL_TAKEN" | "AUTH_UNAUTHENTICATED" | "AUTH_FORBIDDEN" | "AUTH_BLOCKED" | "AUTH_PROVIDER_DISABLED" | "AUTH_CODE_REQUIRED" | "AUTH_CODE_INVALID" | "TOKEN_EXPIRED" | "TOKEN_USED" | "RATE_LIMITED" | "OAUTH_CANCELLED" | "OAUTH_STATE_INVALID" | "OAUTH_FAILED" | "ORIGIN_FORBIDDEN" | "NOT_FOUND" | "INTERNAL" | "INVALID_STATUS" | "UNSUPPORTED_MEDIA" | "PAYLOAD_TOO_LARGE" | "PHOTO_LIMIT" | "STORAGE_DISABLED" | "LISTING_INCOMPLETE" | "GEO_UNAVAILABLE" | "DATES_UNAVAILABLE" | "CANNOT_RENT_OWN" | "LISTING_UNAVAILABLE" | "INSUFFICIENT_FUNDS" | "PAYMENT_DECLINED" | "CONTRACT_NOT_SIGNED" | "ACTION_NOT_ALLOWED" | "DEADLINE_PASSED" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_IN_PROGRESS" | "OFFER_UNAVAILABLE" | "WALLET_LIMIT" | "LISTING_GONE";
+                code: "VALIDATION_FAILED" | "AUTH_INVALID_CREDENTIALS" | "AUTH_EMAIL_TAKEN" | "USERNAME_TAKEN" | "UNDERAGE" | "PROFILE_INCOMPLETE" | "AUTH_UNAUTHENTICATED" | "AUTH_FORBIDDEN" | "AUTH_BLOCKED" | "AUTH_PROVIDER_DISABLED" | "AUTH_CODE_REQUIRED" | "AUTH_CODE_INVALID" | "TOKEN_EXPIRED" | "TOKEN_USED" | "RATE_LIMITED" | "OAUTH_CANCELLED" | "OAUTH_STATE_INVALID" | "OAUTH_FAILED" | "ORIGIN_FORBIDDEN" | "NOT_FOUND" | "INTERNAL" | "INVALID_STATUS" | "UNSUPPORTED_MEDIA" | "PAYLOAD_TOO_LARGE" | "PHOTO_LIMIT" | "STORAGE_DISABLED" | "LISTING_INCOMPLETE" | "GEO_UNAVAILABLE" | "DATES_UNAVAILABLE" | "CANNOT_RENT_OWN" | "LISTING_UNAVAILABLE" | "INSUFFICIENT_FUNDS" | "PAYMENT_DECLINED" | "CONTRACT_NOT_SIGNED" | "ACTION_NOT_ALLOWED" | "DEADLINE_PASSED" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_IN_PROGRESS" | "OFFER_UNAVAILABLE" | "WALLET_LIMIT" | "LISTING_GONE";
                 message: string;
                 fields?: {
                     [key: string]: string;
@@ -1947,6 +2043,11 @@ export interface components {
                 };
             };
         };
+        UsernameCheckDto_Output: {
+            available: boolean;
+            /** @enum {string|null} */
+            reason: "TAKEN" | "INVALID" | null;
+        };
         ProvidersResponseDto_Output: {
             google: boolean;
             phone: boolean;
@@ -1955,6 +2056,8 @@ export interface components {
             email: string;
             password: string;
             name: string;
+            username: string;
+            birthDate: string;
             /** @enum {string} */
             locale?: "en" | "lv" | "ru";
         };
@@ -1963,6 +2066,8 @@ export interface components {
                 id: string;
                 email: string;
                 name: string;
+                username: string | null;
+                birthDate: string | null;
                 city: string | null;
                 about: string | null;
                 /** @enum {string} */
@@ -2004,6 +2109,8 @@ export interface components {
                 id: string;
                 email: string;
                 name: string;
+                username: string | null;
+                birthDate: string | null;
                 city: string | null;
                 about: string | null;
                 /** @enum {string} */
@@ -2538,7 +2645,7 @@ export interface components {
             items: {
                 id: string;
                 /** @enum {string} */
-                kind: "DEAL" | "OFFER" | "LISTING" | "REVIEW" | "SEARCH";
+                kind: "DEAL" | "OFFER" | "LISTING" | "REVIEW" | "SEARCH" | "FOLLOW";
                 event: string;
                 bookingId: string | null;
                 listingId: string | null;
@@ -2884,6 +2991,7 @@ export interface components {
                 owner: {
                     id: string;
                     name: string;
+                    username: string | null;
                     city: string | null;
                     /** Format: date-time */
                     memberSince: string;
@@ -2922,6 +3030,7 @@ export interface components {
             user: {
                 id: string;
                 name: string;
+                username: string | null;
                 city: string | null;
                 /** Format: date-time */
                 memberSince: string;
@@ -2933,6 +3042,8 @@ export interface components {
                 reviewCount: number;
                 responseMinutes: number | null;
                 about: string | null;
+                followers: number;
+                following: number;
             };
             listings: {
                 id: string;
@@ -2999,6 +3110,52 @@ export interface components {
         };
         CategoriesResponseDto_Output: {
             categories: components["schemas"]["CategoryNode_Output"][];
+        };
+        PeopleDto_Output: {
+            items: {
+                id: string;
+                name: string;
+                username: string | null;
+                city: string | null;
+                listingCount: number;
+                followers: number;
+                rating: number | null;
+                reviewCount: number;
+            }[];
+        };
+        FollowingIdsDto_Output: {
+            ids: string[];
+        };
+        FollowFeedDto_Output: {
+            items: {
+                id: string;
+                title: string;
+                dailyCents: number;
+                weeklyDiscountPercent: number;
+                depositCents: number;
+                /** @enum {string|null} */
+                condition: "NEW" | "LIKE_NEW" | "GOOD" | "FAIR" | null;
+                city: string | null;
+                district: string | null;
+                categoryId: string | null;
+                cover: {
+                    thumb: string;
+                    card: string;
+                    full: string;
+                } | null;
+                ownerId: string;
+                /** @enum {string} */
+                contentLocale: "en" | "lv" | "ru";
+                /** Format: date-time */
+                publishedAt: string | null;
+                rating: number | null;
+                reviewCount: number;
+                owner: {
+                    id: string;
+                    name: string;
+                };
+            }[];
+            total: number;
         };
         ReportRequestDto: {
             /** @enum {string} */
@@ -3138,6 +3295,8 @@ export interface components {
         };
         UpdateProfileDto: {
             name?: string;
+            username?: string;
+            birthDate?: string;
             city?: string | null;
             about?: string | null;
             /** @enum {string} */
@@ -3319,6 +3478,8 @@ export interface components {
                 id: string;
                 email: string;
                 name: string;
+                username: string | null;
+                birthDate: string | null;
                 city: string | null;
                 about: string | null;
                 /** @enum {string} */
@@ -3347,6 +3508,8 @@ export interface components {
                 id: string;
                 email: string;
                 name: string;
+                username: string | null;
+                birthDate: string | null;
                 city: string | null;
                 about: string | null;
                 /** @enum {string} */
@@ -4431,6 +4594,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AuthController_usernameAvailable: {
+        parameters: {
+            query: {
+                username: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Whether the username is free */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsernameCheckDto_Output"];
                 };
             };
         };
@@ -6835,6 +7020,188 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CategoriesResponseDto_Output"];
+                };
+            };
+        };
+    };
+    PeopleController_search: {
+        parameters: {
+            query: {
+                q: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description People whose name matches, most followed first */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PeopleDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    FollowsController_follow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    FollowsController_unfollow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    FollowsController_ids: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Who you follow (ids) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FollowingIdsDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    FollowsController_following: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The people you follow */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PeopleDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    FollowsController_feed: {
+        parameters: {
+            query?: {
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description New items from the people you follow */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FollowFeedDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
         };

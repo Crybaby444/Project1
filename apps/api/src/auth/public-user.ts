@@ -7,6 +7,8 @@ export function toPublicUser(user: User): PublicUser {
     id: user.id,
     email: user.email,
     name: user.name,
+    username: user.username,
+    birthDate: user.birthDate ? user.birthDate.toISOString().slice(0, 10) : null,
     city: user.city,
     about: user.about,
     locale: user.locale as PublicUser['locale'],
