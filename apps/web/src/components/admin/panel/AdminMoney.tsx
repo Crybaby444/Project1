@@ -128,7 +128,7 @@ export function AdminMoney({ kind, page }: { kind?: LedgerKind; page: number }) 
         ) : ops.data.items.length === 0 ? (
           <p className="border-ink/15 rounded-media border px-5 py-10 text-center">{t('common.empty')}</p>
         ) : (
-          <div className="border-ink/15 rounded-media overflow-x-auto border" tabIndex={0} role="region" aria-label={tm('operations')}>
+          <div className="border-ink/15 rounded-media relative overflow-x-auto border" tabIndex={0} role="region" aria-label={tm('operations')}>
             <table className={TABLE_CLASS}>
               <thead>
                 <tr>

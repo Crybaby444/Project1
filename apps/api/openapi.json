@@ -5603,6 +5603,27 @@
         ]
       }
     },
+    "/api/v1/catalog/category-counts": {
+      "get": {
+        "operationId": "CatalogController_categoryCounts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Visible items per category, for the catalog index",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryCountsDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
     "/api/v1/catalog/listings": {
       "get": {
         "operationId": "CatalogController_search",
@@ -14236,6 +14257,23 @@
           "walletsCents",
           "externalCents",
           "audit"
+        ],
+        "additionalProperties": false
+      },
+      "CategoryCountsDto_Output": {
+        "type": "object",
+        "properties": {
+          "counts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "required": [
+          "counts"
         ],
         "additionalProperties": false
       },

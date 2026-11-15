@@ -219,8 +219,10 @@ export function DealView({ id }: { id: string }) {
           )}
         </div>
 
-        <aside className="flex flex-col gap-6 lg:sticky lg:top-24">
-          <section aria-label={myTurn ? t('yourTurn') : t('theirTurn')} className="border-ink flex flex-col gap-3 border-t-2 pt-5">
+        {/* On a phone the step to take comes first, right under the header (audit 2026-11-14): the aside
+            dissolves into the grid and its first panel moves to the top; the rest follows the timeline. */}
+        <aside className="flex flex-col gap-6 max-lg:contents lg:sticky lg:top-24">
+          <section aria-label={myTurn ? t('yourTurn') : t('theirTurn')} className="border-ink flex flex-col gap-3 border-t-2 pt-5 max-lg:order-first">
             {notice && (
               <p role="alert" className="rounded-media border-ink/15 flex items-start gap-2 border p-3 text-sm font-bold">
                 <span aria-hidden="true" className="bg-ink text-canvas mt-0.5 inline-block size-4 shrink-0 rounded-full border border-ink/15" />

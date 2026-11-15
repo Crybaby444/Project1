@@ -1,4 +1,5 @@
 import {
+  CategoryCountsSchema,
   CatalogPageSchema,
   CatalogQuerySchema,
   ItemAddressSchema,
@@ -14,6 +15,7 @@ import { createZodDto } from 'nestjs-zod';
 
 export class CatalogQueryDto extends createZodDto(CatalogQuerySchema) {}
 export class CatalogPageDto extends createZodDto(CatalogPageSchema) {}
+export class CategoryCountsDto extends createZodDto(CategoryCountsSchema) {}
 export class MapResponseDto extends createZodDto(MapResponseSchema) {}
 export class SuggestQueryDto extends createZodDto(SuggestQuerySchema) {}
 export class SuggestResponseDto extends createZodDto(SuggestResponseSchema) {}

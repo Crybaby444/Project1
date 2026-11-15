@@ -37,6 +37,17 @@ describe('catalog search', () => {
     await t.close();
   });
 
+  it('counts the visible items of each category, for the catalog index', async () => {
+    const drills = await categoryId(t, 'drills-drivers');
+    await live();
+    await live();
+    await live({ status: 'DRAFT' });
+    await seedListing(t, boris.user, { status: 'PUBLISHED' });
+    await t.prisma.user.update({ where: { id: boris.user.id }, data: { blockedAt: new Date() } });
+    const body = (await request(t.server).get('/api/v1/catalog/category-counts').expect(200)).body;
+    expect(body.counts).toEqual({ [drills]: 2 });
+  });
+
   it('shows only published items of owners who are still here (Review Focus 1)', async () => {
     const shown = await live();
     await seedListing(t, anna.user, { status: 'DRAFT' });

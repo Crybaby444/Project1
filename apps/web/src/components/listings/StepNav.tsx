@@ -42,7 +42,7 @@ export function StepNav({ current, onSelect }: { current: BuilderStep; onSelect(
                   event.preventDefault();
                   onSelect(step);
                 }}
-                className={`group relative flex min-h-11 items-center gap-2.5 py-3 whitespace-nowrap transition-colors duration-300 lg:grid lg:grid-cols-[2.2em_1fr_18px] lg:py-3.5 ${
+                className={`group relative flex min-h-11 items-center gap-2.5 py-3 whitespace-nowrap transition-colors duration-300 lg:whitespace-normal lg:grid lg:grid-cols-[2.2em_1fr_18px] lg:py-3.5 ${
                   isCurrent
                     ? 'text-ink after:bg-ink after:absolute after:inset-x-0 after:-bottom-px after:h-[2px] lg:after:hidden'
                     : 'text-ink/65 hover:text-ink'

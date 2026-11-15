@@ -82,7 +82,7 @@ export function AdminDeals({ view }: { view: DealsView }) {
       ) : deals.data.items.length === 0 ? (
         <p className="border-ink/15 rounded-media border px-5 py-10 text-center">{t('deals.empty')}</p>
       ) : (
-        <div className="border-ink/15 rounded-media overflow-x-auto border" tabIndex={0} role="region" aria-label={t('deals.title')}>
+        <div className="border-ink/15 rounded-media relative overflow-x-auto border" tabIndex={0} role="region" aria-label={t('deals.title')}>
           <table className={TABLE_CLASS}>
             <thead>
               <tr>

@@ -31,6 +31,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { fold, orderSql, textMatchSql, VISIBLE_FROM, whereSql, type FilterContext } from './catalog-query';
 import { serializeCatalogItem } from './catalog.serializer';
 import { CATALOG_VISIBLE_SQL, CATALOG_VISIBLE_WHERE, catalogState } from './visibility';
+import type { CategoryCounts } from '@yoyo/shared';
 
 /** Owners and rentals are counted in the item's own zone; every listing is in Riga for now. */
 const CATALOG_TIME_ZONE = 'Europe/Riga';
@@ -59,6 +60,13 @@ export class CatalogService {
 
   private today(): LocalDate {
     return localDateIn(this.clock.now(), CATALOG_TIME_ZONE);
+  }
+
+  /** Visible items per category (leaf ids; the site adds them up for the parents). */
+  async categoryCounts(): Promise<CategoryCounts> {
+    const rows = await this.prisma.$queryRaw<{ id: string; n: number }[]>`
+      SELECT l."categoryId" AS id, count(*)::int AS n ${VISIBLE_FROM} WHERE ${CATALOG_VISIBLE_SQL} AND l."categoryId" IS NOT NULL GROUP BY l."categoryId"`;
+    return { counts: Object.fromEntries(rows.map((r) => [r.id, r.n])) };
   }
 
   async search(query: CatalogQuery): Promise<CatalogPage> {

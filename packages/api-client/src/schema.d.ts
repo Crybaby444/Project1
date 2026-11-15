@@ -1204,6 +1204,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/catalog/category-counts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CatalogController_categoryCounts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/catalog/listings": {
         parameters: {
             query?: never;
@@ -3018,6 +3034,11 @@ export interface components {
                 }[];
                 unbalancedOperations: string[];
                 negative: string[];
+            };
+        };
+        CategoryCountsDto_Output: {
+            counts: {
+                [key: string]: number;
             };
         };
         CatalogPageDto_Output: {
@@ -7692,6 +7713,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    CatalogController_categoryCounts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Visible items per category, for the catalog index */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryCountsDto_Output"];
                 };
             };
         };

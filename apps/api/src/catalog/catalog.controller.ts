@@ -11,6 +11,7 @@ import type {
   PublicProfile,
   SitemapResponse,
   SuggestResponse,
+  CategoryCounts,
 } from '@yoyo/shared';
 import type { Request } from 'express';
 import { ZodResponse } from 'nestjs-zod';
@@ -21,6 +22,7 @@ import { clientIp } from '../common/request-meta';
 import {
   CatalogPageDto,
   CatalogQueryDto,
+  CategoryCountsDto,
   ItemAddressDto,
   ItemResponseDto,
   MapResponseDto,
@@ -44,6 +46,12 @@ export class CatalogController {
     private readonly catalog: CatalogService,
     private readonly limiter: RateLimiter,
   ) {}
+
+  @Get('category-counts')
+  @ZodResponse({ status: 200, type: CategoryCountsDto, description: 'Visible items per category, for the catalog index' })
+  categoryCounts(): Promise<CategoryCounts> {
+    return this.catalog.categoryCounts();
+  }
 
   @Get('listings')
   @ZodResponse({ status: 200, type: CatalogPageDto, description: 'One page of visible items matching the query' })

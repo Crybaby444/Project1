@@ -16,6 +16,15 @@ const roots: CategoryNode[] = [
 ];
 
 describe('CategoryIndex', () => {
+  it('says how many items each root holds (its subcategories added up) and quiets the empty ones', () => {
+    const counts = { [`${root.id}-c1`]: 2, [`${root.id}-c3`]: 1 };
+    renderWithIntl(<CategoryIndex roots={roots} locale="en" counts={counts} />);
+    const [full, empty] = screen.getAllByRole('link');
+    expect(full).toHaveTextContent('3 items');
+    expect(empty).toHaveTextContent('No items yet');
+    expect(empty).toHaveAttribute('data-empty', 'true');
+  });
+
   it('lists every root as one numbered row linking to its page in the language', () => {
     renderWithIntl(<CategoryIndex roots={roots} locale="lv" />, 'lv');
     const rows = screen.getAllByRole('link');

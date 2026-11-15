@@ -834,7 +834,11 @@
       "more": "{count, plural, one {and # more} other {and # more}}",
       "truncated": "The map shows the first 500 items. Narrow the search to see the rest.",
       "approximate": "Places are approximate: the owner shares the exact address after a booking."
-    }
+    },
+    "inCategory": "{count, plural, =0 {No items yet} one {# item} other {# items}}",
+    "fresh": "New in the catalog",
+    "freshAll": "See all",
+    "allCategories": "All categories"
   },
   "rangeCalendar": {
     "keys": "Arrow keys move by a day or a week, Page Up and Page Down by a month. Enter picks a day.",
