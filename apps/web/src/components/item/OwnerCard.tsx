@@ -29,6 +29,7 @@ function Check() {
  */
 export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; heading?: 'h2' | 'h1' }) {
   const t = useTranslations('item.owner');
+  const answers = answerSpeed(owner.responseMinutes);
   const tr = useTranslations('reviews');
   const locale = useLocale();
   const Heading = heading;
@@ -67,6 +68,11 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
             {t('phoneVerified')}
           </li>
         )}
+        {answers && (
+          <li className="bg-ink text-canvas rounded-pill inline-flex items-center gap-1.5 px-2.5 py-0.5 before:size-1.5 before:rounded-full before:bg-current before:content-['']">
+            {t(`answers.${answers}`)}
+          </li>
+        )}
         <li className="border-ink rounded-pill border px-2.5 py-0.5">{t('deals', { count: owner.completedDeals })}</li>
         <li className="border-ink rounded-pill border px-2.5 py-0.5">{t('items', { count: owner.listingCount })}</li>
       </ul>
@@ -88,4 +94,13 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
       )}
     </div>
   );
+}
+
+/** Their usual answer time in plain steps (Airbnb-style); slower than a day is not advertised. */
+export function answerSpeed(minutes: number | null): 'hour' | 'hours' | 'day' | null {
+  if (minutes === null) return null;
+  if (minutes <= 60) return 'hour';
+  if (minutes <= 180) return 'hours';
+  if (minutes <= 1440) return 'day';
+  return null;
 }

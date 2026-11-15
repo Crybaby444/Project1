@@ -3217,6 +3217,7 @@ export interface components {
                     listingCount: number;
                     rating: number | null;
                     reviewCount: number;
+                    responseMinutes: number | null;
                 };
                 rating: number | null;
                 reviewCount: number;
@@ -3254,6 +3255,7 @@ export interface components {
                 listingCount: number;
                 rating: number | null;
                 reviewCount: number;
+                responseMinutes: number | null;
                 about: string | null;
             };
             listings: {

@@ -202,10 +202,11 @@ export class CatalogService {
 
   /** Someone as everyone may see them, with their rating from public reviews. */
   async ownerSummary(user: User): Promise<OwnerSummary> {
-    const [completedDeals, listingCount, ratings] = await Promise.all([
+    const [completedDeals, listingCount, ratings, responseMinutes] = await Promise.all([
       this.prisma.booking.count({ where: { status: 'COMPLETED', OR: [{ ownerId: user.id }, { renterId: user.id }] } }),
       this.prisma.listing.count({ where: { ...CATALOG_VISIBLE_WHERE, ownerId: user.id } }),
       this.reviews.ratingsOfUsers([user.id]),
+      this.responseMinutes(user.id),
     ]);
     const rating = ratings.get(user.id) ?? { rating: null, reviewCount: 0 };
     return {
@@ -219,7 +220,37 @@ export class CatalogService {
       listingCount,
       rating: rating.rating,
       reviewCount: rating.reviewCount,
+      responseMinutes,
     };
+  }
+
+  /**
+   * How long someone usually takes to answer (a trust signal on their items): for every run of messages
+   * from the other side in their conversations over the last 90 days, the time from the run's first
+   * message to their next one; the median, in whole minutes, once there are at least two answers.
+   */
+  private async responseMinutes(userId: string): Promise<number | null> {
+    const since = new Date(this.clock.now().getTime() - 90 * 86_400_000);
+    const [row] = await this.prisma.$queryRaw<{ median: number | null; n: number }[]>`
+      WITH talk AS (
+        SELECT m."conversationId", m."authorId", m."createdAt",
+               lag(m."authorId") OVER (PARTITION BY m."conversationId" ORDER BY m."createdAt", m."id") AS prev
+        FROM "Message" m JOIN "Conversation" c ON c."id" = m."conversationId"
+        WHERE m."kind" = 'TEXT' AND (c."ownerId" = ${userId} OR c."renterId" = ${userId}) AND m."createdAt" >= ${since}
+      ),
+      asked AS (
+        SELECT t."conversationId", t."createdAt" FROM talk t
+        WHERE t."authorId" <> ${userId} AND (t.prev IS NULL OR t.prev = ${userId})
+      )
+      SELECT percentile_cont(0.5) WITHIN GROUP (ORDER BY extract(epoch FROM r."createdAt" - a."createdAt") / 60)::float AS median,
+             count(*)::int AS n
+      FROM asked a
+      JOIN LATERAL (
+        SELECT x."createdAt" FROM "Message" x
+        WHERE x."conversationId" = a."conversationId" AND x."authorId" = ${userId} AND x."createdAt" > a."createdAt"
+        ORDER BY x."createdAt" LIMIT 1
+      ) r ON TRUE`;
+    return row && row.n >= 2 && row.median !== null ? Math.round(row.median) : null;
   }
 
   /** Visible items by id, in the order given (ids that are not visible are left out). */

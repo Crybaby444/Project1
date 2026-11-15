@@ -92,4 +92,19 @@ describe('chat (plan 9, spec §4.6)', () => {
     expect(events).toEqual(['REQUESTED', 'ACCEPTED']);
     expect(thread.dealId).toBe(booking.id);
   });
+
+  it("shows on the item how fast the owner usually answers, once they answered at least twice", async () => {
+    const { listing, conversation } = await talk();
+    const base = t.clock.now().getTime();
+    const say = (who: Client, text: string, minutes: number) =>
+      t.prisma.message.create({ data: { conversationId: conversation.id, authorId: who.user.id, kind: 'TEXT', text, createdAt: new Date(base + minutes * 60_000) } });
+    const ownerOnItem = async () => (await request(t.server).get(`/api/v1/catalog/listings/${listing.id}`).expect(200)).body.item.owner;
+    await say(renter, 'Hello, is it free?', -120);
+    await say(owner, 'Yes it is.', -100);
+    expect((await ownerOnItem()).responseMinutes).toBeNull();
+    await say(renter, 'Can I take it at 9?', -95);
+    await say(renter, 'Or at 10?', -94);
+    await say(owner, 'At 10 is fine.', -55);
+    expect((await ownerOnItem()).responseMinutes).toBe(30);
+  });
 });

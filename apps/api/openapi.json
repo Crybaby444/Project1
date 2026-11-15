@@ -15125,6 +15125,12 @@
                         "type": "integer",
                         "minimum": -9007199254740991,
                         "maximum": 9007199254740991
+                      },
+                      "responseMinutes": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991,
+                        "nullable": true
                       }
                     },
                     "required": [
@@ -15137,7 +15143,8 @@
                       "completedDeals",
                       "listingCount",
                       "rating",
-                      "reviewCount"
+                      "reviewCount",
+                      "responseMinutes"
                     ],
                     "additionalProperties": false
                   },
@@ -15315,6 +15322,12 @@
                 "minimum": -9007199254740991,
                 "maximum": 9007199254740991
               },
+              "responseMinutes": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991,
+                "nullable": true
+              },
               "about": {
                 "type": [
                   "string",
@@ -15333,6 +15346,7 @@
               "listingCount",
               "rating",
               "reviewCount",
+              "responseMinutes",
               "about"
             ],
             "additionalProperties": false

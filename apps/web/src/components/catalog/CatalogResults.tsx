@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import { Link } from '@/i18n/navigation';
 import { catalogSearch, type CatalogParams, toApiQuery } from '@/lib/catalog/params';
+import { daysBetween } from '@/lib/deals/dates';
 import { loadMap, loadPlaces, loadSearch } from '@/lib/catalog/server-api';
 import { displayFit } from '@/lib/display-fit';
 import { addDays, todayIn } from '@/lib/listings/calendar';
@@ -53,6 +54,7 @@ export async function CatalogResults({ params: raw, category, related, path, tit
   const t = await getTranslations('catalog');
   const today = todayIn('Europe/Riga');
   const params = usableParams(raw, today);
+  const days = params.from && params.to ? daysBetween(params.from, params.to) : undefined;
   const query = toApiQuery(params, category?.slug);
   const [results, places, map] = await Promise.all([
     loadSearch(query),
@@ -121,7 +123,7 @@ export async function CatalogResults({ params: raw, category, related, path, tit
                   <ul className="grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 xl:grid-cols-3">
                     {items.map((item, index) => (
                       <li key={item.id}>
-                        <ListingCard item={item} eager={index < 3} />
+                        <ListingCard item={item} eager={index < 3} days={days} />
                       </li>
                     ))}
                   </ul>

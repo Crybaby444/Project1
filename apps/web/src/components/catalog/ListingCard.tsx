@@ -1,5 +1,6 @@
 'use client';
 
+import { cents, quote } from '@yoyo/domain';
 import type { CatalogItem } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRef, type CSSProperties } from 'react';
@@ -27,14 +28,18 @@ export function ListingCard({
   item,
   eager = false,
   unavailable = false,
+  days,
 }: {
   item: CatalogItem;
   eager?: boolean;
   unavailable?: boolean;
+  /** The days the search asks for: the card then also says what the rent comes to for them. */
+  days?: number;
 }) {
   const t = useTranslations('catalog.card');
   const locale = useLocale();
   const place = [item.city, item.district].filter(Boolean).join(', ');
+  const rent = days ? rentFor(item, days) : null;
   const photo = useRef<HTMLImageElement>(null);
 
   return (
@@ -85,6 +90,11 @@ export function ListingCard({
               <p className="font-display text-[1.45rem] leading-[0.9] font-black uppercase tabular-nums sm:text-[1.7rem]">
                 {t('perDay', { price: formatEuros(item.dailyCents, locale) })}
               </p>
+              {rent !== null && (
+                <p className="text-[15px] font-bold tabular-nums" data-card-total="">
+                  {t('forDays', { amount: formatEuros(rent, locale), days: days! })}
+                </p>
+              )}
               {item.reviewCount > 0 && item.rating !== null && (
                 <p className="m-0 flex items-center gap-1.5 text-sm" data-card-rating="">
                   <Stars value={item.rating} size={12} />
@@ -117,4 +127,17 @@ export function ListingCard({
       <HeartButton listingId={item.id} title={item.title} className="absolute top-3 right-3 z-10" />
     </div>
   );
+}
+
+/** The rent for `days` days, the weekly discount included (the fee and the deposit come on top). */
+function rentFor(item: CatalogItem, days: number): number | null {
+  try {
+    return quote({
+      pricing: { dailyCents: cents(item.dailyCents), weeklyDiscountPercent: item.weeklyDiscountPercent, depositCents: cents(item.depositCents), minDays: 1, maxDays: days },
+      days,
+      servicePercent: 0,
+    }).rentCents;
+  } catch {
+    return null;
+  }
 }
