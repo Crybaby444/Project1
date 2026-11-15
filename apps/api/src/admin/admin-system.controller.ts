@@ -1,0 +1,125 @@
+import { Controller, Get, Inject, Param, Res, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { ADMIN_EXPORTS, AdminSystemSchema, type AdminExport, type AdminSystem } from '@yoyo/shared';
+import type { Response } from 'express';
+import { createZodDto, ZodResponse } from 'nestjs-zod';
+import { AuthGuard } from '../auth/auth.guard';
+import { Roles, RolesGuard } from '../auth/roles.guard';
+import { CLOCK, type Clock } from '../clock/clock';
+import { ApiErrors } from '../common/api-errors';
+import { AppError } from '../common/app-error';
+import { ENV, type Env } from '../config/env';
+import { MailService } from '../mail/mail.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { API_VERSION } from '../version';
+
+class AdminSystemDto extends createZodDto(AdminSystemSchema) {}
+
+const STARTED = Date.now();
+
+/** One CSV cell: quoted when needed, and never read as a formula by a spreadsheet (CSV injection). */
+export function csvCell(value: unknown): string {
+  let text = value === null || value === undefined ? '' : value instanceof Date ? value.toISOString() : String(value);
+  if (/^[=+\-@\t\r]/.test(text)) text = `'${text}`;
+  return /[",\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+}
+const csv = (head: string[], rows: unknown[][]) => [head.join(','), ...rows.map((r) => r.map(csvCell).join(','))].join('\n') + '\n';
+
+/** Admin → System: health, limits and CSV exports of people, items, deals and the ledger. */
+@ApiTags('admin')
+@Controller('admin')
+@UseGuards(AuthGuard, RolesGuard)
+@Roles('ADMIN')
+export class AdminSystemController {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly mail: MailService,
+    @Inject(CLOCK) private readonly clock: Clock,
+    @Inject(ENV) private readonly env: Pick<Env, 'STORAGE' | 'PAYMENTS'>,
+  ) {}
+
+  @Get('system')
+  @ZodResponse({ status: 200, type: AdminSystemDto, description: 'Is everything running, and how close to the limits' })
+  @ApiErrors(401, 403)
+  async system(): Promise<AdminSystem> {
+    const started = Date.now();
+    let ok = true;
+    try {
+      await this.prisma.$queryRaw`SELECT 1`;
+    } catch {
+      ok = false;
+    }
+    const latencyMs = Date.now() - started;
+    const now = this.clock.now();
+    const [overdueTimers, users, listings, bookings, messages, reviews] = await Promise.all([
+      this.prisma.booking.count({ where: { timerKind: { not: null }, timerDueAt: { lt: new Date(now.getTime() - 15 * 60_000) } } }),
+      this.prisma.user.count({ where: { deletedAt: null } }),
+      this.prisma.listing.count({ where: { status: { not: 'ARCHIVED' } } }),
+      this.prisma.booking.count(),
+      this.prisma.message.count(),
+      this.prisma.review.count(),
+    ]);
+    return {
+      version: API_VERSION,
+      uptimeSeconds: Math.round((Date.now() - STARTED) / 1000),
+      database: { ok, latencyMs },
+      mail: this.mail.budget(),
+      overdueTimers,
+      storage: String(this.env.STORAGE ?? 'none'),
+      payments: String(this.env.PAYMENTS ?? 'none'),
+      counts: { users, listings, bookings, messages, reviews },
+    };
+  }
+
+  @Get('export/:file')
+  @ApiErrors(401, 403, 404)
+  async export(@Param('file') file: string, @Res({ passthrough: true }) res: Response): Promise<string> {
+    const kind = file.replace(/\.csv$/, '') as AdminExport;
+    if (!file.endsWith('.csv') || !(ADMIN_EXPORTS as readonly string[]).includes(kind)) throw new AppError('NOT_FOUND', 404, 'No such export');
+    const day = this.clock.now().toISOString().slice(0, 10);
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="yoyo-${kind}-${day}.csv"`);
+    res.setHeader('Cache-Control', 'no-store');
+    return this.build(kind);
+  }
+
+  private async build(kind: AdminExport): Promise<string> {
+    const p = this.prisma;
+    switch (kind) {
+      case 'users': {
+        const rows = await p.user.findMany({ orderBy: { createdAt: 'asc' } });
+        return csv(
+          ['id', 'name', 'email', 'role', 'status', 'email_verified', 'created_at'],
+          rows.map((u) => [u.id, u.name, u.email, u.role, u.deletedAt ? 'deleted' : u.blockedAt ? 'blocked' : 'active', u.emailVerifiedAt ? 'yes' : 'no', u.createdAt]),
+        );
+      }
+      case 'listings': {
+        const rows = await p.listing.findMany({ orderBy: { createdAt: 'asc' }, include: { owner: { select: { email: true } } } });
+        return csv(
+          ['id', 'title', 'status', 'owner_email', 'daily_eur', 'deposit_eur', 'city', 'district', 'created_at', 'published_at'],
+          rows.map((l) => [l.id, l.title, l.status, l.owner.email, l.dailyCents === null ? '' : (l.dailyCents / 100).toFixed(2), (l.depositCents / 100).toFixed(2), l.city, l.district, l.createdAt, l.publishedAt]),
+        );
+      }
+      case 'deals': {
+        const rows = await p.booking.findMany({
+          orderBy: { createdAt: 'asc' },
+          include: { listing: { select: { title: true } }, renter: { select: { email: true } }, owner: { select: { email: true } } },
+        });
+        return csv(
+          ['id', 'item', 'status', 'renter_email', 'owner_email', 'start', 'end', 'rent_eur', 'fee_eur', 'deposit_eur', 'total_eur', 'created_at', 'completed_at'],
+          rows.map((b) => [
+            b.id, b.listing.title, b.status, b.renter.email, b.owner.email, b.start.toISOString().slice(0, 10), b.end.toISOString().slice(0, 10),
+            (b.rentCents / 100).toFixed(2), (b.serviceFeeCents / 100).toFixed(2), (b.depositCents / 100).toFixed(2), (b.totalCents / 100).toFixed(2), b.createdAt, b.completedAt,
+          ]),
+        );
+      }
+      case 'ledger': {
+        const rows = await p.ledgerEntry.findMany({ orderBy: { id: 'asc' }, include: { operation: true } });
+        return csv(
+          ['operation', 'kind', 'deal', 'account', 'amount_eur', 'at'],
+          rows.map((e) => [e.operationId, e.operation.kind, e.operation.bookingId, e.account, (e.amount / 100).toFixed(2), e.operation.createdAt]),
+        );
+      }
+    }
+  }
+}

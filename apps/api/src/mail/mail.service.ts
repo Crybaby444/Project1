@@ -126,6 +126,12 @@ export class MailService implements OnApplicationShutdown {
     );
   }
 
+  /** The 24-hour mail budget as it stands (admin → System). */
+  budget(): { sent: number; limit: number } {
+    const now = this.clock.now().getTime();
+    return { sent: this.sentAt.filter((at) => at > now - DAY).length, limit: this.env.MAIL_DAILY_LIMIT };
+  }
+
   /** Resolves when every mail handed over so far has been sent or has failed. */
   async idle(): Promise<void> {
     while (this.inFlight.size > 0) await Promise.all([...this.inFlight]);

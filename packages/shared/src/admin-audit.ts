@@ -123,3 +123,20 @@ export const AdminSearchSchema = z.object({
   deals: z.array(z.object({ id: z.string(), title: z.string(), status: z.string(), renter: z.string(), owner: z.string() })),
 });
 export type AdminSearch = z.infer<typeof AdminSearchSchema>;
+
+/** Admin → System: is everything running, and how close to the limits. */
+export const AdminSystemSchema = z.object({
+  version: z.string(),
+  uptimeSeconds: z.number().int(),
+  database: z.object({ ok: z.boolean(), latencyMs: z.number().int() }),
+  mail: z.object({ sent: z.number().int(), limit: z.number().int() }),
+  /** Deal deadlines past due that nobody ran yet (should be 0; more means the timer job is not running). */
+  overdueTimers: z.number().int(),
+  storage: z.string(),
+  payments: z.string(),
+  counts: z.object({ users: z.number().int(), listings: z.number().int(), bookings: z.number().int(), messages: z.number().int(), reviews: z.number().int() }),
+});
+export type AdminSystem = z.infer<typeof AdminSystemSchema>;
+
+export const ADMIN_EXPORTS = ['users', 'listings', 'deals', 'ledger'] as const;
+export type AdminExport = (typeof ADMIN_EXPORTS)[number];
