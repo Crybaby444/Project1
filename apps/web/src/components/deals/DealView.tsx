@@ -1,6 +1,6 @@
 'use client';
 
-import { DealChatLink } from '@/components/chat/DealChatLink';
+import { DealChat } from '@/components/chat/DealChat';
 import type { BookingView } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -174,6 +174,7 @@ export function DealView({ id }: { id: string }) {
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_24rem]">
         <div className="flex min-w-0 flex-col gap-6">
           <DealTimeline booking={booking} history={history.data ?? []} onDeadline={reload} />
+          <DealChat booking={booking} />
           {booking.message && (
             <Panel title={t('message')}>
               <p className="[overflow-wrap:anywhere] whitespace-pre-line">{booking.message}</p>
@@ -240,13 +241,6 @@ export function DealView({ id }: { id: string }) {
               <p className="text-sm">{t('nothingToDo')}</p>
             )}
           </section>
-          {booking.viewerRole !== 'ADMIN' && (
-            <DealChatLink
-              listingId={booking.listing.id}
-              otherId={booking.viewerRole === 'RENTER' ? booking.owner.id : booking.renter.id}
-              role={booking.viewerRole}
-            />
-          )}
           <ContractCard booking={booking} />
           <DealSummary booking={booking} />
         </aside>

@@ -483,7 +483,8 @@
       "DECLINED": "The owner declined the request",
       "EXPIRED": "The request expired",
       "CANCELLED": "The deal was cancelled"
-    }
+    },
+    "inDealTitle": "Chat"
   },
   "notifications": {
     "title": "Notifications",

@@ -483,7 +483,8 @@
       "DECLINED": "Īpašnieks noraidīja pieprasījumu",
       "EXPIRED": "Pieprasījuma termiņš beidzās",
       "CANCELLED": "Darījums atcelts"
-    }
+    },
+    "inDealTitle": "Sarakste"
   },
   "notifications": {
     "title": "Paziņojumi",

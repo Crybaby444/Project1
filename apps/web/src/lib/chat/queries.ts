@@ -13,8 +13,8 @@ export const chatKeys = {
 };
 
 /** How often an open conversation asks for new lines, and the menu for the unread count. */
-export const THREAD_POLL_MS = 4_000;
-export const UNREAD_POLL_MS = 30_000;
+export const THREAD_POLL_MS = 3_000;
+export const UNREAD_POLL_MS = 10_000;
 
 export function useConversations() {
   const client = useApiClient();

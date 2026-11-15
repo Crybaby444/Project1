@@ -8,7 +8,10 @@ import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Link } from '@/i18n/navigation';
 import { ReportButton } from '@/components/reports/ReportButton';
+import { DealStrip } from './DealStrip';
 import { useConversations, useMarkRead, useSendMessage, useThread } from '@/lib/chat/queries';
+import { dealKeys } from '@/lib/deals/queries';
+import { useQueryClient } from '@tanstack/react-query';
 
 const dayKey = (iso: string) => iso.slice(0, 10);
 
@@ -165,12 +168,21 @@ function Thumb({ url }: { url: string | null }) {
   );
 }
 
-function Thread({ id }: { id: string }) {
+/** One conversation; `inDeal` when shown inside its deal's page (no back link, no 'open the deal'). */
+export function Thread({ id, inDeal = false }: { id: string; inDeal?: boolean }) {
   const t = useTranslations('chat');
   const thread = useThread(id);
   const markRead = useMarkRead(id);
   const unread = thread.data?.unread ?? 0;
   const lastId = thread.data?.messages.at(-1)?.id;
+
+  // A deal step shows up as a system line: refresh the deal too, so its buttons are current.
+  const queryClient = useQueryClient();
+  const lastSystem = thread.data?.messages.filter((m) => m.kind === 'SYSTEM').at(-1)?.id;
+  const dealId = thread.data?.dealId;
+  useEffect(() => {
+    if (lastSystem && dealId) void queryClient.invalidateQueries({ queryKey: dealKeys.one(dealId) });
+  }, [lastSystem, dealId, queryClient]);
 
   // Reading the thread marks it read; again whenever new lines from the other side arrive.
   const { mutate } = markRead;
@@ -189,10 +201,10 @@ function Thread({ id }: { id: string }) {
       </div>
     );
   }
-  return <ThreadBody data={thread.data} />;
+  return <ThreadBody data={thread.data} inDeal={inDeal} />;
 }
 
-function ThreadBody({ data }: { data: ConversationThread }) {
+function ThreadBody({ data, inDeal }: { data: ConversationThread; inDeal: boolean }) {
   const t = useTranslations('chat');
   const text = useLineText();
   const { time, day } = useFormats();
@@ -210,13 +222,13 @@ function ThreadBody({ data }: { data: ConversationThread }) {
   return (
     <>
       <header className="border-ink/15 flex items-center gap-3 border-b px-4 py-3">
-        <Link
+        {!inDeal && <Link
           href="/messages"
           className="rounded-pill hover:bg-ink/[0.06] -ml-1 inline-grid size-10 place-items-center lg:hidden"
         >
           <span aria-hidden="true">←</span>
           <span className="sr-only">{t('back')}</span>
-        </Link>
+        </Link>}
         <Thumb url={data.listing.photoUrl} />
         <span className="min-w-0 flex-1">
           <span className="font-display block truncate text-[1.6rem] leading-none font-black uppercase">
@@ -230,12 +242,9 @@ function ThreadBody({ data }: { data: ConversationThread }) {
           </span>
         </span>
         <ReportButton target="USER" id={data.other.id} className="max-sm:hidden" />
-        {data.dealId && (
-          <Button href={`/bookings/${data.dealId}`} variant="ghost" className="max-sm:hidden">
-            {t('openDeal')}
-          </Button>
-        )}
       </header>
+      {/* The deal and the chat are one place (owner, 2026-11-16): its status and the next step sit in the chat. */}
+      {data.dealId && !inDeal && <DealStrip id={data.dealId} />}
 
       <div
         ref={logRef}

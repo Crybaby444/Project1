@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import type { ChatMessage, ConversationSummary } from '@yoyo/shared';
 import { describe, expect, it, vi } from 'vitest';
 import deals from '../../../messages/deals/en.json';
+import { testBooking } from '@/test/deals';
 import { fakeApi, meRoute, testUser } from '@/test/fake-api';
 import { renderWithSession } from '@/test/render';
 import { MessagesView } from './MessagesView';
@@ -68,13 +69,16 @@ describe('MessagesView', () => {
       'POST /api/v1/conversations/c1/read': { status: 204 },
       'POST /api/v1/conversations/c1/messages': (body) => ({ status: 201, body: { message: line({ id: 'm3', text: (body as { text: string }).text, mine: true }) } }),
       'GET /api/v1/me/conversations/unread': { status: 200, body: { count: 0 } },
+      'GET /api/v1/bookings/b1': { status: 200, body: { booking: testBooking({ id: 'b1', status: 'ACCEPTED', hasContract: true, actions: ['SIGN', 'CANCEL'] }) } },
     });
     renderWithSession(<MessagesView activeId="c1" />, { client: api.client });
     const log = await screen.findByRole('log');
     expect(within(log).getByText(t.system.REQUESTED)).toBeInTheDocument();
     expect(within(log).getByText('<b>hi</b>')).toBeInTheDocument(); // text, never HTML
     expect(within(log).getByText(t.seen)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: t.openDeal })).toHaveAttribute('href', '/bookings/b1');
+    // The deal lives in the chat: its link and the next step's button, right here.
+    expect(await screen.findByRole('link', { name: t.openDeal })).toHaveAttribute('href', '/bookings/b1');
+    expect(screen.getByRole('button', { name: deals.dealActions.SIGN })).toBeInTheDocument();
     await waitFor(() => expect(api.calls.some((c) => c.method === 'POST' && c.path.endsWith('/read'))).toBe(true));
 
     await userEvent.type(screen.getByRole('textbox', { name: t.placeholder }), 'See you then');
