@@ -65,7 +65,7 @@ describe('deal steps before payment', () => {
     await step(owner, booking.id, { type: 'ACCEPT' });
     const early = await act(owner, booking.id, { type: 'SIGN' }, 1);
     expect(early.status).toBe(409);
-    expect(early.body.error.code).toBe('CONTRACT_NOT_SIGNED');
+    expect(early.body.error?.code).toBe('CONTRACT_NOT_SIGNED');
     await renter
       .post(`/bookings/${booking.id}/events`)
       .set('Idempotency-Key', 'sign-renter-1')
