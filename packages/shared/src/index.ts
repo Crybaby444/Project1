@@ -21,3 +21,4 @@ export * from './chat';
 export * from './admin-overview';
 export * from './notifications';
 export * from './reports';
+export * from './analytics';

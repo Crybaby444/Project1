@@ -8,6 +8,7 @@ import { RATE_LIMITS } from '../common/rate-limits';
 import { ENV, type Env } from '../config/env';
 import { type EmailToken, type EmailTokenType, Prisma, type User } from '../generated/prisma/client';
 import { MailService } from '../mail/mail.service';
+import { AnalyticsService } from '../analytics/analytics.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { AccessTokenService } from './access-token.service';
 import type { SessionTokens } from './cookies';
@@ -54,6 +55,7 @@ export class AuthService {
     private readonly refreshTokens: RefreshTokenService,
     private readonly mail: MailService,
     private readonly limiter: RateLimiter,
+    private readonly analytics: AnalyticsService,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(ENV) private readonly env: Pick<Env, 'WEB_ORIGIN'>,
   ) {}
@@ -82,6 +84,7 @@ export class AuthService {
     }
     const session = await this.startSession(user, meta);
     await this.sendVerification(user);
+    await this.analytics.count('FUNNEL', 'SIGNUP');
     return { user, session };
   }
 

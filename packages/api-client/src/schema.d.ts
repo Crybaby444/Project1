@@ -852,6 +852,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/analytics/hit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AnalyticsController_hit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/analytics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminAnalyticsController_report"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/seo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminAnalyticsController_seo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/me/export": {
         parameters: {
             query?: never;
@@ -2680,6 +2728,75 @@ export interface components {
                 /** Format: date-time */
                 resolvedAt: string | null;
             };
+        };
+        AnalyticsHitDto: {
+            path: string;
+            /** @default false */
+            entry: boolean;
+            /** @default  */
+            referrer: string;
+            /** @default  */
+            locale: string;
+            search?: {
+                q: string;
+                results: number;
+            };
+        };
+        AdminAnalyticsDto_Output: {
+            days: number;
+            totals: {
+                views: number;
+                visits: number;
+            };
+            series: {
+                day: string;
+                views: number;
+                visits: number;
+            }[];
+            pages: {
+                key: string;
+                value: number;
+            }[];
+            sources: {
+                key: string;
+                value: number;
+            }[];
+            devices: {
+                key: string;
+                value: number;
+            }[];
+            locales: {
+                key: string;
+                value: number;
+            }[];
+            searches: {
+                key: string;
+                value: number;
+            }[];
+            emptySearches: {
+                key: string;
+                value: number;
+            }[];
+            funnel: {
+                itemViews: number;
+                requests: number;
+                signups: number;
+            };
+        };
+        AdminSeoDto_Output: {
+            published: number;
+            healthy: number;
+            issues: {
+                /** @enum {string} */
+                key: "SHORT_TITLE" | "LONG_TITLE" | "SHORT_DESCRIPTION" | "FEW_PHOTOS" | "NO_DISTRICT";
+                value: number;
+            }[];
+            listings: {
+                id: string;
+                title: string;
+                score: number;
+                issues: ("SHORT_TITLE" | "LONG_TITLE" | "SHORT_DESCRIPTION" | "FEW_PHOTOS" | "NO_DISTRICT")[];
+            }[];
         };
         UpdateProfileDto: {
             name?: string;
@@ -6097,6 +6214,126 @@ export interface operations {
             };
             /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AnalyticsController_hit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AnalyticsHitDto"];
+            };
+        };
+        responses: {
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminAnalyticsController_report: {
+        parameters: {
+            query?: {
+                days?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Traffic over the last 7, 30 or 90 days (first-party, cookieless counters) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminAnalyticsDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminAnalyticsController_seo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description What holds published items back in search engines, worst first */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSeoDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };

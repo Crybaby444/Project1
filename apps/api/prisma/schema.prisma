@@ -879,3 +879,27 @@ model Report {
   @@index([status, createdAt])
   @@index([reporterId, target, listingId, userId, messageId])
 }
+
+/// What a first-party analytics counter counts (admin panel → Traffic).
+enum AnalyticsMetric {
+  VIEW
+  ENTRY
+  DEVICE
+  LOCALE
+  SEARCH
+  SEARCH_EMPTY
+  FUNNEL
+}
+
+/// First-party, cookieless statistics (owner, 2026-11-15): only daily counters, never a person, an
+/// address or a device id. `key` is a page path, a source host, a device class, a language, a search or
+/// a funnel step, depending on `metric`.
+model AnalyticsCounter {
+  day    DateTime        @db.Date
+  metric AnalyticsMetric
+  key    String
+  value  Int             @default(0)
+
+  @@id([day, metric, key])
+  @@index([metric, day])
+}
