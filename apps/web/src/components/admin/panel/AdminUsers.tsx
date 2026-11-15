@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { Dialog } from '@/components/ui/Dialog';
 import { INPUT_CLASS } from '@/components/ui/inputs';
 import { useToast } from '@/components/ui/Toast';
-import { useRouter } from '@/i18n/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 import { useAdminUsers, useBlockUser } from '@/lib/admin/queries';
 import { AdminPageHeader, Pager, TABLE_CLASS, TD, TH } from './parts';
 
@@ -105,7 +105,11 @@ export function AdminUsers({ search, page }: { search: string; page: number }) {
                 const state = u.deletedAt ? 'deleted' : u.blockedAt ? 'blocked' : 'active';
                 return (
                   <tr key={u.id} className="hover:bg-ink/[0.03]">
-                    <td className={`${TD} font-semibold`}>{u.name}</td>
+                    <td className={`${TD} font-semibold`}>
+                      <Link href={`/admin/users/${u.id}`} className="underline decoration-1 underline-offset-2">
+                        {u.name}
+                      </Link>
+                    </td>
                     <td className={TD}>
                       <span className="block max-w-[16rem] truncate">{u.email}</span>
                       <span className="text-ink/70 text-[12px]">{u.emailVerified ? t('users.verified') : t('users.unverified')}</span>

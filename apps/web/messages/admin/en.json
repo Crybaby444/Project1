@@ -335,6 +335,48 @@
           "promoServiceUntil": "Empty: no launch offer."
         }
       }
+    },
+    "person": {
+      "back": "All users",
+      "joined": "Joined {date}",
+      "lastSeen": "Last signed in {date}",
+      "never": "Never signed in",
+      "stats": {
+        "listings": "Items",
+        "dealsAsRenter": "Rented",
+        "dealsAsOwner": "Lent out",
+        "completed": "Completed",
+        "rating": "Rating",
+        "wallet": "Wallet",
+        "earned": "Earned",
+        "reportsAgainst": "Complaints"
+      },
+      "listings": "Items",
+      "deals": "Deals",
+      "reviews": "Reviews about them",
+      "reports": "Complaints about them",
+      "notes": "Private notes",
+      "notesHint": "Only administrators see these.",
+      "addNote": "Add note",
+      "notePlaceholder": "What happened, what was agreed…",
+      "takedown": "Take down",
+      "takedownTitle": "Take “{title}” down?",
+      "takedownBody": "It leaves the catalog and the owner is told the reason; they can fix it and send it for review again.",
+      "reason": "Reason",
+      "confirm": "Take down",
+      "hide": "Hide",
+      "show": "Show again",
+      "hideTitle": "Hide this review?",
+      "hideBody": "It leaves every public list and rating. It can be shown again.",
+      "hidden": "Hidden",
+      "role": {
+        "RENTER": "as renter",
+        "OWNER": "as owner"
+      },
+      "none": "Nothing here.",
+      "cancel": "Back",
+      "done": "Done.",
+      "failed": "That did not work."
     }
   }
 }
