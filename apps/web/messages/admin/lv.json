@@ -335,6 +335,48 @@
           "promoServiceUntil": "Tukšs: sākuma piedāvājuma nav."
         }
       }
+    },
+    "person": {
+      "back": "Visi lietotāji",
+      "joined": "Pievienojās {date}",
+      "lastSeen": "Pēdējoreiz pieteicās {date}",
+      "never": "Nekad nav pieteicies",
+      "stats": {
+        "listings": "Lietas",
+        "dealsAsRenter": "Nomāja",
+        "dealsAsOwner": "Izīrēja",
+        "completed": "Pabeigti",
+        "rating": "Vērtējums",
+        "wallet": "Maks",
+        "earned": "Nopelnīts",
+        "reportsAgainst": "Ziņojumi"
+      },
+      "listings": "Lietas",
+      "deals": "Darījumi",
+      "reviews": "Atsauksmes par lietotāju",
+      "reports": "Ziņojumi par lietotāju",
+      "notes": "Privātas piezīmes",
+      "notesHint": "Tās redz tikai administratori.",
+      "addNote": "Pievienot piezīmi",
+      "notePlaceholder": "Kas notika, par ko vienojāmies…",
+      "takedown": "Noņemt",
+      "takedownTitle": "Noņemt “{title}”?",
+      "takedownBody": "Tas pazudīs no kataloga, un īpašnieks uzzinās iemeslu; to var izlabot un iesniegt vēlreiz.",
+      "reason": "Iemesls",
+      "confirm": "Noņemt",
+      "hide": "Paslēpt",
+      "show": "Rādīt atkal",
+      "hideTitle": "Paslēpt šo atsauksmi?",
+      "hideBody": "Tā pazudīs no visiem publiskajiem sarakstiem un vērtējumiem. To var atkal parādīt.",
+      "hidden": "Paslēpta",
+      "role": {
+        "RENTER": "kā īrnieks",
+        "OWNER": "kā īpašnieks"
+      },
+      "none": "Šeit nekā nav.",
+      "cancel": "Atpakaļ",
+      "done": "Izdarīts.",
+      "failed": "Neizdevās."
     }
   }
 }

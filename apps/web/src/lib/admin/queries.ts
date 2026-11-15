@@ -166,3 +166,41 @@ export function useSaveAdminSettings() {
     onSettled: () => void queryClient.invalidateQueries({ queryKey: ['admin', 'audit'] }),
   });
 }
+
+export function useAdminPerson(id: string) {
+  const client = useApiClient();
+  return useQuery({
+    queryKey: ['admin', 'person', id] as const,
+    queryFn: async () => unwrap(client.GET('/api/v1/admin/users/{id}', { params: { path: { id } } })),
+  });
+}
+
+/** Notes, takedowns and review visibility for the person page; everything admin is refreshed after. */
+export function useAdminPersonAction() {
+  const client = useApiClient();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      action:
+        | { kind: 'note'; userId: string; text: string }
+        | { kind: 'takedown'; listingId: string; reason: string }
+        | { kind: 'hideReview'; reviewId: string; reason: string }
+        | { kind: 'showReview'; reviewId: string },
+    ) => {
+      switch (action.kind) {
+        case 'note':
+          await unwrap(client.POST('/api/v1/admin/users/{id}/notes', { params: { path: { id: action.userId } }, body: { text: action.text } }));
+          return;
+        case 'takedown':
+          await unwrap(client.POST('/api/v1/admin/listings/{id}/takedown', { params: { path: { id: action.listingId } }, body: { reason: action.reason } }));
+          return;
+        case 'hideReview':
+          await unwrap(client.POST('/api/v1/admin/reviews/{id}/hide', { params: { path: { id: action.reviewId } }, body: { reason: action.reason } }));
+          return;
+        case 'showReview':
+          await unwrap(client.POST('/api/v1/admin/reviews/{id}/show', { params: { path: { id: action.reviewId } } }));
+      }
+    },
+    onSettled: () => void queryClient.invalidateQueries({ queryKey: adminKeys.all }),
+  });
+}

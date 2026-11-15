@@ -77,6 +77,7 @@ model User {
   notifications    Notification[]
   savedSearches    SavedSearch[]
   reports          Report[]         @relation("ReportReporter")
+  adminNotes       AdminNote[]      @relation("AdminNotes")
 }
 
 /// One refresh token of a session. Rotation chains tokens of the same family; reuse revokes the family.
@@ -740,6 +741,9 @@ model Review {
   itemRating Int?
   text       String
   createdAt  DateTime   @default(now())
+  /// Hidden by an administrator (abuse, personal data): out of every public list and rating.
+  hiddenAt     DateTime?
+  hiddenReason String?
 
   booking Booking @relation(fields: [bookingId], references: [id], onDelete: Restrict)
   author  User    @relation("ReviewAuthor", fields: [authorId], references: [id], onDelete: Restrict)
@@ -921,4 +925,18 @@ model AdminAuditLog {
   @@index([createdAt])
   @@index([targetType, targetId])
   @@index([action, createdAt])
+}
+
+/// An administrator's private note about a person (never shown to them).
+model AdminNote {
+  id        String   @id @default(cuid())
+  userId    String
+  adminId   String?
+  adminName String   @default("")
+  text      String
+  createdAt DateTime @default(now())
+
+  user User @relation("AdminNotes", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
 }
