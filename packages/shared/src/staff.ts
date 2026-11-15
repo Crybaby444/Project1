@@ -19,16 +19,18 @@ export const ADMIN_SECTIONS = [
   'settings',
   'system',
   'staff',
+  /** Your own two-step sign-in: everyone in the panel. */
+  'security',
 ] as const;
 export type AdminSection = (typeof ADMIN_SECTIONS)[number];
 
 /** The sections each staff role may open; the API checks the same table. */
 export const STAFF_PERMISSIONS: Record<StaffRole, readonly AdminSection[]> = {
   OWNER: ADMIN_SECTIONS,
-  MODERATOR: ['overview', 'moderation', 'reports', 'categories', 'users'],
-  SUPPORT: ['overview', 'users', 'deals', 'reports'],
-  FINANCE: ['overview', 'deals', 'money', 'system'],
-  EDITOR: ['overview', 'traffic', 'seo', 'content', 'categories'],
+  MODERATOR: ['overview', 'security', 'moderation', 'reports', 'categories', 'users'],
+  SUPPORT: ['overview', 'security', 'users', 'deals', 'reports'],
+  FINANCE: ['overview', 'security', 'deals', 'money', 'system'],
+  EDITOR: ['overview', 'security', 'traffic', 'seo', 'content', 'categories'],
 };
 
 export function staffMay(staffRole: StaffRole | null | undefined, section: AdminSection): boolean {

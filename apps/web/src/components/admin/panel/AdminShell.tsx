@@ -85,6 +85,12 @@ const SECTIONS: { key: Section; group: 'insight' | 'work' | 'money' | 'system'; 
     icon: <path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6zM12 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM8.5 15.5a4 4 0 0 1 7 0" />,
   },
   {
+    key: 'security',
+    group: 'system',
+    href: '/admin/security',
+    icon: <path d="M7 11V8a5 5 0 0 1 10 0v3M5 11h14v10H5zM12 15v2" />,
+  },
+  {
     key: 'settings',
     group: 'system',
     href: '/admin/settings',
@@ -105,6 +111,7 @@ function activeSection(pathname: string): Section {
   if (pathname.startsWith('/admin/settings')) return 'settings';
   if (pathname.startsWith('/admin/system')) return 'system';
   if (pathname.startsWith('/admin/staff')) return 'staff';
+  if (pathname.startsWith('/admin/security')) return 'security';
   return 'overview';
 }
 

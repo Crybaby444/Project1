@@ -12,6 +12,8 @@ export const OAUTH_ERROR_CODES = [
   'OAUTH_STATE_INVALID',
   'OAUTH_FAILED',
   'AUTH_BLOCKED',
+  /** Two-step sign-in is on: Google can't ask for the code, so email, password and code. */
+  'AUTH_CODE_REQUIRED',
 ] as const satisfies readonly ErrorCode[];
 
 export type OAuthErrorCode = (typeof OAUTH_ERROR_CODES)[number];

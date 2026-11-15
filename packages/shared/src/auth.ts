@@ -27,6 +27,8 @@ export type RegisterRequest = z.infer<typeof RegisterRequestSchema>;
 export const LoginRequestSchema = z.object({
   email: EmailSchema,
   password: z.string().min(1).max(128),
+  /** The 6-digit code from the authenticator app, for an account with two-step sign-in. */
+  code: z.string().regex(/^\d{6}$/).optional(),
 });
 
 export type LoginRequest = z.infer<typeof LoginRequestSchema>;
@@ -169,3 +171,10 @@ export const GoogleCallbackQuerySchema = z.object({
   state: z.string().max(256).optional(),
   error: z.string().max(256).optional(),
 });
+
+/** Two-step sign-in set-up: the secret for the authenticator app (as text and as an otpauth:// link for a QR code). */
+export const TwoFactorSetupSchema = z.object({ secret: z.string().min(1), uri: z.string().min(1) });
+export type TwoFactorSetup = z.infer<typeof TwoFactorSetupSchema>;
+export const TwoFactorCodeSchema = z.object({ code: z.string().regex(/^\d{6}$/) });
+export const TwoFactorStatusSchema = z.object({ enabled: z.boolean() });
+export type TwoFactorStatus = z.infer<typeof TwoFactorStatusSchema>;

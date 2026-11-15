@@ -25,6 +25,7 @@ const PAGES: { key: string; section: AdminSection; href: string }[] = [
   { key: 'settings', section: 'settings', href: '/admin/settings' },
   { key: 'system', section: 'system', href: '/admin/system' },
   { key: 'staff', section: 'staff', href: '/admin/staff' },
+  { key: 'security', section: 'security', href: '/admin/security' },
 ];
 
 /** Opens the palette from anywhere in the panel (the sidebar's search button sends this event). */

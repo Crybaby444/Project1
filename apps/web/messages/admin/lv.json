@@ -17,7 +17,8 @@
       "settings": "Iestatījumi",
       "system": "Sistēma",
       "categories": "Kategorijas",
-      "staff": "Komanda"
+      "staff": "Komanda",
+      "security": "Drošība"
     },
     "common": {
       "loadFailed": "Neizdevās ielādēt.",
@@ -297,7 +298,8 @@
         "REVIEW_SHOWN": "Atsauksme atkal redzama",
         "SETTINGS_CHANGED": "Iestatījumi mainīti",
         "CATEGORY_CHANGED": "Kategorija mainīta",
-        "STAFF_CHANGED": "Mainīta komandas loma"
+        "STAFF_CHANGED": "Mainīta komandas loma",
+        "TWO_FACTOR_RESET": "Divpakāpju ieeja atiestatīta"
       }
     },
     "settings": {
@@ -483,12 +485,17 @@
         "FINANCE": "Darījumi, nauda, sistēma un eksports",
         "EDITOR": "Datplūsma, SEO, saturs, kategorijas"
       },
-      "access": "Var atvērt"
+      "access": "Var atvērt",
+      "resetTwoFactor": "Atiestatīt divpakāpju ieeju",
+      "resetDone": "Divpakāpju ieeja atiestatīta: viņš to iestatīs no jauna"
     },
     "noAccess": {
       "title": "Šī nav jūsu paneļa daļa",
       "body": "Jūsu loma šo sadaļu neatver. Ja tā vajadzīga, jautājiet īpašniekam.",
       "back": "Uz pārskatu"
+    },
+    "security": {
+      "title": "Jūsu divpakāpju ieeja"
     }
   }
 }

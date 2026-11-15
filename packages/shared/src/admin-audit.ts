@@ -18,6 +18,7 @@ export const AUDIT_ACTIONS = [
   'SETTINGS_CHANGED',
   'CATEGORY_CHANGED',
   'STAFF_CHANGED',
+  'TWO_FACTOR_RESET',
 ] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 

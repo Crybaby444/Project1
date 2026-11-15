@@ -14,6 +14,7 @@ import { AccessTokenService } from './access-token.service';
 import type { SessionTokens } from './cookies';
 import type { GoogleIdentity } from './google-oauth.service';
 import { PasswordService } from './password.service';
+import { TwoFactorService } from './two-factor.service';
 import { hashToken, RefreshTokenService, type SessionMeta } from './refresh-token.service';
 
 const HOUR = 3_600_000;
@@ -56,6 +57,7 @@ export class AuthService {
     private readonly mail: MailService,
     private readonly limiter: RateLimiter,
     private readonly analytics: AnalyticsService,
+    private readonly twoFactor: TwoFactorService,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(ENV) private readonly env: Pick<Env, 'WEB_ORIGIN'>,
   ) {}
@@ -112,6 +114,7 @@ export class AuthService {
     const passwordOk = await this.passwords.verify(user?.passwordHash ?? null, input.password);
     if (!user || !passwordOk || user.deletedAt !== null) throw invalidCredentials();
     if (user.blockedAt !== null) throw new AppError('AUTH_BLOCKED', 403);
+    await this.twoFactor.checkSignIn(user, input.code);
     return { user, session: await this.startSession(user, meta) };
   }
 
@@ -157,6 +160,8 @@ export class AuthService {
     }
     if (user.deletedAt !== null) throw unauthenticated();
     if (user.blockedAt !== null) throw new AppError('AUTH_BLOCKED', 403);
+    // Google can't ask for the app's code: an account with two-step sign-in uses email, password and code.
+    if (this.twoFactor.enabled(user)) throw new AppError('AUTH_CODE_REQUIRED', 401);
     return user;
   }
 

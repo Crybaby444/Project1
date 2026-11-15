@@ -209,7 +209,9 @@
     "NETWORK": "Nevaram sazināties ar Yoyo. Pārbaudiet savienojumu un mēģiniet vēlreiz.",
     "fieldInvalid": "Pārbaudiet šo lauku.",
     "retryIn": "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc {seconds} s.",
-    "LISTING_GONE": "Šī lieta ir noņemta un vairs netiek izīrēta."
+    "LISTING_GONE": "Šī lieta ir noņemta un vairs netiek izīrēta.",
+    "AUTH_CODE_REQUIRED": "Šim kontam ir divpakāpju ieeja: ienāciet ar e-pastu, paroli un kodu no autentifikatora lietotnes.",
+    "AUTH_CODE_INVALID": "Kods nav pareizs vai jau izmantots. Ievadiet jaunāko kodu no lietotnes."
   },
   "validation": {
     "required": "Aizpildiet šo lauku.",
@@ -245,7 +247,10 @@
       "submit": "Pieteikties",
       "forgot": "Aizmirsāt paroli?",
       "noAccount": "Vēl nav konta?",
-      "register": "Reģistrēties"
+      "register": "Reģistrēties",
+      "codeTitle": "Vēl viens solis",
+      "codeHint": "Atveriet autentifikatora lietotni un ievadiet Yoyo 6 ciparu kodu.",
+      "code": "Kods"
     },
     "register": {
       "title": "Reģistrēties",
@@ -974,5 +979,25 @@
     "decline": "Nepiekrītu",
     "policy": "Sīkdatņu politika",
     "settings": "Sīkdatņu iestatījumi"
+  },
+  "twoFactor": {
+    "title": "Divpakāpju ieeja",
+    "intro": "Pēc paroles — 6 ciparu kods no lietotnes jūsu tālrunī. Pat ja kāds uzzinās paroli, iekļūt viņš nevarēs.",
+    "offIntro": "Izslēgta. Vajadzīga autentifikatora lietotne: Google Authenticator, Microsoft Authenticator, 1Password vai cita.",
+    "turnOn": "Ieslēgt",
+    "step1": "Atveriet autentifikatora lietotni un pievienojiet kontu.",
+    "step2": "Noskenējiet šo QR kodu vai ievadiet atslēgu ar roku.",
+    "step3": "Ievadiet 6 ciparu kodu, ko rāda lietotne.",
+    "qrLabel": "QR kods autentifikatora lietotnei",
+    "keyLabel": "Atslēga",
+    "codeToTurnOn": "Kods no lietotnes",
+    "confirm": "Ieslēgt",
+    "cancel": "Atcelt",
+    "on": "Ieslēgta: ieejot tiek prasīts kods no lietotnes.",
+    "codeToTurnOff": "Kods no lietotnes, lai izslēgtu",
+    "turnOff": "Izslēgt",
+    "turnedOn": "Divpakāpju ieeja ieslēgta",
+    "turnedOff": "Divpakāpju ieeja izslēgta",
+    "needPassword": "Jūsu konts ienāk ar Google. Vispirms iestatiet paroli (“Aizmirsi paroli?” ieejas lapā), tad ieslēdziet šo."
   }
 }
