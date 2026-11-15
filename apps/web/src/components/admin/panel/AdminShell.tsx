@@ -7,7 +7,7 @@ import { useSession } from '@/lib/session/SessionProvider';
 import { useAdminOverview } from '@/lib/admin/queries';
 import { CommandPalette, OPEN_PALETTE } from './CommandPalette';
 
-type Section = 'overview' | 'traffic' | 'seo' | 'moderation' | 'deals' | 'reports' | 'users' | 'money' | 'audit' | 'settings';
+type Section = 'overview' | 'traffic' | 'seo' | 'moderation' | 'deals' | 'reports' | 'users' | 'money' | 'audit' | 'settings' | 'system';
 
 const SECTIONS: { key: Section; group: 'insight' | 'work' | 'money' | 'system'; href: string; icon: ReactNode }[] = [
   {
@@ -65,6 +65,12 @@ const SECTIONS: { key: Section; group: 'insight' | 'work' | 'money' | 'system'; 
     icon: <path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" />,
   },
   {
+    key: 'system',
+    group: 'system',
+    href: '/admin/system',
+    icon: <path d="M4 6h16v10H4zM8 20h8M12 16v4M7 10l2 2 2-3 2 2 2-1" />,
+  },
+  {
     key: 'settings',
     group: 'system',
     href: '/admin/settings',
@@ -82,6 +88,7 @@ function activeSection(pathname: string): Section {
   if (pathname.startsWith('/admin/money')) return 'money';
   if (pathname.startsWith('/admin/audit')) return 'audit';
   if (pathname.startsWith('/admin/settings')) return 'settings';
+  if (pathname.startsWith('/admin/system')) return 'system';
   return 'overview';
 }
 

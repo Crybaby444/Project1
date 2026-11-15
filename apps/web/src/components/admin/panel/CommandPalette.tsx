@@ -20,6 +20,7 @@ const PAGES: { key: string; href: string }[] = [
   { key: 'money', href: '/admin/money' },
   { key: 'audit', href: '/admin/audit' },
   { key: 'settings', href: '/admin/settings' },
+  { key: 'system', href: '/admin/system' },
 ];
 
 /** Opens the palette from anywhere in the panel (the sidebar's search button sends this event). */

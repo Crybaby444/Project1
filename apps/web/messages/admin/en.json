@@ -14,7 +14,8 @@
       "traffic": "Traffic",
       "seo": "SEO",
       "audit": "Audit log",
-      "settings": "Settings"
+      "settings": "Settings",
+      "system": "System"
     },
     "common": {
       "loadFailed": "This did not load.",
@@ -389,6 +390,41 @@
       "empty": "Nothing found.",
       "hint": "↑↓ to move, Enter to open, Esc to close",
       "blocked": "blocked"
+    },
+    "system": {
+      "title": "System",
+      "intro": "Whether everything runs and how close it is to the limits.",
+      "ok": "Working",
+      "down": "Not answering",
+      "database": "Database",
+      "latency": "{ms} ms to answer",
+      "mail": "Emails in 24 hours",
+      "mailHint": "Over the limit, notifications wait; sign-in emails keep a reserve.",
+      "timers": "Deal deadlines past due",
+      "timersOk": "The deadline job keeps up.",
+      "timersBad": "The deadline job is behind: check the scheduled job on the server.",
+      "version": "Version",
+      "uptime": "Running for {hours} h",
+      "providers": "Providers",
+      "storage": "Photos",
+      "payments": "Payments",
+      "records": "Records",
+      "counts": {
+        "users": "People",
+        "listings": "Items",
+        "bookings": "Deals",
+        "messages": "Messages",
+        "reviews": "Reviews"
+      },
+      "exports": "Exports (CSV)",
+      "exportsHint": "Opens in a spreadsheet. Cells are protected from formulas.",
+      "export": {
+        "users": "People",
+        "listings": "Items",
+        "deals": "Deals",
+        "ledger": "Ledger entries"
+      },
+      "download": "Download"
     }
   }
 }

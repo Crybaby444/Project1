@@ -204,3 +204,12 @@ export function useAdminPersonAction() {
     onSettled: () => void queryClient.invalidateQueries({ queryKey: adminKeys.all }),
   });
 }
+
+export function useAdminSystem() {
+  const client = useApiClient();
+  return useQuery({
+    queryKey: ['admin', 'system'] as const,
+    queryFn: async () => unwrap(client.GET('/api/v1/admin/system')),
+    refetchInterval: 30_000,
+  });
+}
