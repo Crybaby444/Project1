@@ -50,6 +50,8 @@ describe('GET /me/export — my data, machine-readable (GDPR access and portabil
     expect(data.wallet).toHaveProperty('balanceCents');
     expect(Array.isArray(data.wallet.history)).toBe(true);
     expect(Array.isArray(data.sessions)).toBe(true);
+    expect(Array.isArray(data.notifications)).toBe(true);
+    expect(data.emailTopicsOff).toEqual([]);
     expect(data.exportedAt).toBeTruthy();
   });
 
