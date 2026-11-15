@@ -14,7 +14,7 @@ import { formatPeriod } from '@/lib/deals/dates';
 import { useDeadline } from '@/lib/deals/deadline';
 import { useMoney } from '@/lib/deals/money';
 import { useDealsSummary, useMyDeals } from '@/lib/deals/queries';
-import { DEAL_GROUPS, DEAL_ROLES, type DealGroup, type DealRole } from '@/lib/deals/status';
+import { DEAL_GROUPS, DEAL_ROLES, isMyTurn, type DealGroup, type DealRole } from '@/lib/deals/status';
 import { useErrorText } from '@/lib/forms/error-text';
 import { useDurationText } from './Countdown';
 import { DealStatusBadge } from './DealStatusBadge';
@@ -27,7 +27,7 @@ export function DealCard({ booking, index }: { booking: BookingView; index: numb
   const locale = useLocale();
   const money = useMoney();
   const duration = useDurationText();
-  const mine = booking.actions.some((a) => a !== 'RESOLVE');
+  const mine = isMyTurn(booking.actions);
   const other = booking.viewerRole === 'OWNER' ? booking.renter.name : booking.owner.name;
   const left = useDeadline(booking.deadline?.dueAt ?? null);
 
@@ -94,7 +94,7 @@ function Page({ role, group, page, onTotal }: { role: DealRole; group: DealGroup
       </li>
     );
   }
-  const items = group === 'action' ? query.data.items.filter((b) => b.actions.some((a) => a !== 'RESOLVE')) : query.data.items;
+  const items = group === 'action' ? query.data.items.filter((b) => isMyTurn(b.actions)) : query.data.items;
   return (
     <>
       {items.map((booking, index) => (

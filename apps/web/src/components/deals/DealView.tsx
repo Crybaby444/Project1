@@ -1,6 +1,7 @@
 'use client';
 
 import { DealChat } from '@/components/chat/DealChat';
+import { isMyTurn } from '@/lib/deals/status';
 import type { BookingView } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -135,7 +136,8 @@ export function DealView({ id }: { id: string }) {
       : booking.viewerRole === 'OWNER'
         ? t('youLend', { name: booking.renter.name })
         : t('adminView', { renter: booking.renter.name, owner: booking.owner.name });
-  const myTurn = booking.actions.some((a) => a !== 'RESOLVE');
+  const myTurn = isMyTurn(booking.actions);
+  const canAct = booking.actions.some((a) => a !== 'RESOLVE');
   const closed = ['COMPLETED', 'DECLINED', 'EXPIRED', 'CANCELLED'].includes(booking.status);
 
   return (
@@ -230,7 +232,7 @@ export function DealView({ id }: { id: string }) {
                 {notice}
               </p>
             )}
-            {myTurn ? (
+            {canAct ? (
               <DealActions
                 booking={booking}
                 onError={(error) => {

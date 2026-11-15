@@ -7,6 +7,7 @@ import { DealStatusBadge } from '@/components/deals/DealStatusBadge';
 import { Link } from '@/i18n/navigation';
 import { formatPeriod } from '@/lib/deals/dates';
 import { useDeal } from '@/lib/deals/queries';
+import { isMyTurn } from '@/lib/deals/status';
 import { useErrorText } from '@/lib/forms/error-text';
 
 /**
@@ -22,7 +23,7 @@ export function DealStrip({ id }: { id: string }) {
   const [error, setError] = useState<string | null>(null);
   if (!deal.data) return null;
   const b = deal.data;
-  const myTurn = b.actions.some((a) => a !== 'RESOLVE');
+  const myTurn = isMyTurn(b.actions);
   const closed = ['COMPLETED', 'DECLINED', 'EXPIRED', 'CANCELLED'].includes(b.status);
 
   return (

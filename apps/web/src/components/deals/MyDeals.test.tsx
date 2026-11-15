@@ -15,7 +15,7 @@ vi.mock('@/i18n/navigation', async (importOriginal) => ({
 
 installIntersectionObserver();
 
-const waiting = testBooking({ id: 'b-wait', actions: ['WITHDRAW'] });
+const waiting = testBooking({ id: 'b-wait', status: 'ACCEPTED', hasContract: true, actions: ['SIGN', 'CANCEL'] });
 const going = testBooking({ id: 'b-go', status: 'PAID', paymentMethod: 'CARD', actions: [], listing: { ...testBooking().listing, title: 'Drill' } });
 
 function setup(routes: FakeRoutes = {}) {
@@ -34,7 +34,7 @@ describe('MyDeals', () => {
     setup();
     const link = await screen.findByRole('link', { name: /PlayStation 5/ });
     expect(link).toHaveAttribute('href', '/bookings/b-wait');
-    expect(within(link).getByText('Requested')).toBeVisible();
+    expect(within(link).getByText('Awaiting payment')).toBeVisible();
     expect(within(link).getByText('Your turn')).toBeVisible();
     const other = screen.getByRole('link', { name: /Drill/ });
     expect(within(other).getByText('Deposit frozen')).toBeVisible();
