@@ -25,7 +25,8 @@ export function HeartButton({ listingId, title, className = '' }: { listingId: s
   const pressed = ids.data?.has(listingId) ?? false;
   const hydrated = useHydrated();
   // The sparks are placed inside the button: it is `relative` unless the caller positions it itself
-  // (two position classes would fight, and the later one in the stylesheet wins).
+  // (two position classes would fight, and the later one in the stylesheet wins). The ::before ring
+  // widens the touch area by 8px all round: a near miss toggles the heart instead of opening the item.
   const position = /(^|\s)(absolute|fixed|sticky)(\s|$)/.test(className) ? '' : 'relative';
 
   function onClick() {
@@ -48,7 +49,7 @@ export function HeartButton({ listingId, title, className = '' }: { listingId: s
       // Until the page is interactive and it is known who is signed in, a press would be lost or would
       // send a signed-in person to sign in; tests and fast fingers wait instead.
       disabled={!hydrated || status === 'loading'}
-      className={`group border-ink bg-surface text-ink ease-yoyo ${position} inline-grid size-11 shrink-0 place-items-center rounded-full border transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.9] ${className}`}
+      className={`group border-ink bg-surface text-ink ease-yoyo ${position} inline-grid size-11 shrink-0 place-items-center rounded-full border transition-transform duration-150 before:absolute before:-inset-2 before:rounded-full before:content-[''] hover:-translate-y-0.5 active:scale-[0.9] ${className}`}
     >
       <svg
         key={burst}

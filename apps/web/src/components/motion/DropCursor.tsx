@@ -140,9 +140,11 @@ export function DropCursor() {
       // Where the drop wants to be: the pointer, drawn a little towards the middle of what it pours into.
       target = el ? hoverTarget(el.getBoundingClientRect(), textRect(el), elRadius) : null;
       let tx = pointer.x, ty = pointer.y;
-      if (target) { tx += (target.cx - pointer.x) * 0.22; ty += (target.cy - pointer.y) * 0.22; }
-      stepSpring(hx, tx, dt, 900, 0.72);
-      stepSpring(hy, ty, dt, 900, 0.72);
+      // A light pull only: the drop must stay over the real click point (owner 2026-11-15: the heart was
+      // hard to hit when the drop looked on it and the pointer was not).
+      if (target) { tx += (target.cx - pointer.x) * 0.08; ty += (target.cy - pointer.y) * 0.08; }
+      stepSpring(hx, tx, dt, 1600, 0.8);
+      stepSpring(hy, ty, dt, 1600, 0.8);
       stepTail(tail, { x: hx.x, y: hy.x }, dt);
 
       stepSpring(alpha, typing ? 0 : alphaTarget, dt, 260, 1);
