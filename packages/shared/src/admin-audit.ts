@@ -74,3 +74,44 @@ export const AdminSettingsChangeSchema = z
   .partial();
 export type AdminSettingsChange = z.infer<typeof AdminSettingsChangeSchema>;
 export const SETTING_KEYS = Object.keys(SETTING_DEFAULTS) as SettingKey[];
+
+/** Everything about one person for an administrator (Admin → Users → a person). */
+export const AdminUserDetailSchema = z.object({
+  user: z.object({
+    id: z.string(),
+    name: z.string(),
+    email: z.string(),
+    role: z.enum(['USER', 'ADMIN']),
+    locale: z.string(),
+    city: z.string().min(1).nullable(),
+    emailVerified: z.boolean(),
+    phoneVerified: z.boolean(),
+    createdAt: z.iso.datetime(),
+    blockedAt: z.iso.datetime().nullable(),
+    deletedAt: z.iso.datetime().nullable(),
+    lastSeenAt: z.iso.datetime().nullable(),
+  }),
+  stats: z.object({
+    listings: z.number().int(),
+    dealsAsRenter: z.number().int(),
+    dealsAsOwner: z.number().int(),
+    completed: z.number().int(),
+    rating: z.number().nullable(),
+    reviews: z.number().int(),
+    walletCents: z.number().int(),
+    earnedCents: z.number().int(),
+    reportsAgainst: z.number().int(),
+  }),
+  listings: z.array(z.object({ id: z.string(), title: z.string(), status: z.string(), dailyCents: z.number().int().nullable(), updatedAt: z.iso.datetime() })),
+  deals: z.array(z.object({ id: z.string(), title: z.string(), status: z.string(), role: z.enum(['RENTER', 'OWNER']), totalCents: z.number().int(), createdAt: z.iso.datetime() })),
+  reviews: z.array(
+    z.object({ id: z.string(), rating: z.number().int(), text: z.string(), author: z.string(), createdAt: z.iso.datetime(), hidden: z.boolean() }),
+  ),
+  reports: z.array(z.object({ id: z.string(), reason: z.string(), note: z.string(), status: z.string(), createdAt: z.iso.datetime() })),
+  notes: z.array(z.object({ id: z.string(), text: z.string(), admin: z.string(), createdAt: z.iso.datetime() })),
+});
+export type AdminUserDetail = z.infer<typeof AdminUserDetailSchema>;
+
+export const AdminNoteRequestSchema = z.object({ text: z.string().trim().min(1).max(2000) });
+/** Taking a listing down or hiding a review needs a reason (the owner is told it, the log keeps it). */
+export const AdminReasonSchema = z.object({ reason: z.string().trim().min(3).max(1000) });

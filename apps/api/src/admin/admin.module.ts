@@ -6,10 +6,14 @@ import { AdminController } from './admin.controller';
 import { AdminAuditController } from './admin-audit.controller';
 import { AdminSettingsService } from './admin-settings.service';
 import { BookingsModule } from '../bookings/bookings.module';
+import { NotificationsModule } from '../notifications/notifications.module';
+import { ReviewsModule } from '../reviews/reviews.module';
+import { AdminPeopleController } from './admin-people.controller';
+import { AdminPeopleService } from './admin-people.service';
 
 @Module({
-  imports: [AuthModule, BookingsModule],
-  controllers: [AdminController, AdminAuditController],
-  providers: [AdminBootstrap, RolesGuard, AdminSettingsService],
+  imports: [AuthModule, BookingsModule, NotificationsModule, ReviewsModule],
+  controllers: [AdminController, AdminAuditController, AdminPeopleController],
+  providers: [AdminBootstrap, RolesGuard, AdminSettingsService, AdminPeopleService],
 })
 export class AdminModule {}

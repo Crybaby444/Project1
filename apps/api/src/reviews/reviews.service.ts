@@ -130,7 +130,8 @@ export class ReviewsService {
   private async publicRows(where: Prisma.ReviewWhereInput): Promise<ReviewRow[]> {
     const windowDays = await this.windowDays();
     const now = this.clock.now();
-    const rows = await this.prisma.review.findMany({ where, include: REVIEW_INCLUDE, orderBy: { createdAt: 'desc' } });
+    // Reviews an administrator hid are out of every public list and rating.
+    const rows = await this.prisma.review.findMany({ where: { ...where, hiddenAt: null }, include: REVIEW_INCLUDE, orderBy: { createdAt: 'desc' } });
     return rows.filter((row) => this.isPublic(row, windowDays, now));
   }
 
