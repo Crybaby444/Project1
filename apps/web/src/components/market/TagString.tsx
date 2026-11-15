@@ -18,6 +18,9 @@ const tilt = (i: number) => TILTS[i % TILTS.length] ?? 0;
  */
 /** Euros in the reader's language (server side; lib/deals/money is a client module). */
 const money = (amount: number, locale: string) => formatMoney(cents(amount), locale as Locale).replace(/[\u00a0\u202f]/g, ' ');
+/** The day's price on a tag: whole euros without the cents (35 €), cents only when there are some. */
+const price = (amount: number, locale: string) =>
+  amount % 100 === 0 ? new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(amount / 100).replace(/[\u00a0\u202f]/g, ' ') : money(amount, locale);
 
 export async function TagString({ items }: { items: CatalogItem[] }) {
   const t = await getTranslations('market.tags');
@@ -34,9 +37,9 @@ export async function TagString({ items }: { items: CatalogItem[] }) {
           <Mark size={30} />
         </span>
       </div>
-      <ul className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pt-3 pb-10 [scrollbar-width:none] sm:gap-6 sm:px-8 lg:justify-center lg:overflow-visible [&::-webkit-scrollbar]:hidden">
+      <ul className="flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pt-3 pb-10 [scrollbar-width:none] sm:gap-6 sm:px-8 min-[1560px]:justify-center [&::-webkit-scrollbar]:hidden">
         {items.slice(0, 6).map((item, i) => (
-          <li key={item.id} className="w-[200px] shrink-0 snap-start sm:w-[210px] lg:w-[min(15vw,220px)]" style={{ paddingTop: `${thread(i)}px` }}>
+          <li key={item.id} className="w-[212px] shrink-0 snap-start" style={{ paddingTop: `${thread(i)}px` }}>
             <div
               className="yoyo-sway origin-[50%_-40px] motion-reduce:animate-none"
               style={{ '--tilt': `${tilt(i)}deg`, animationDelay: `${i * -0.7}s` } as React.CSSProperties}
@@ -57,12 +60,12 @@ export async function TagString({ items }: { items: CatalogItem[] }) {
                 <span className="flex flex-col gap-1.5 p-3.5">
                   <span className="line-clamp-2 min-h-[2.5em] text-[14px] leading-tight font-semibold">{item.title}</span>
                   <span className="flex items-baseline gap-1">
-                    <span className="font-display text-[2rem] leading-none font-black tabular-nums">{money(item.dailyCents, locale)}</span>
+                    <span className="font-display text-[2rem] leading-none font-black tabular-nums">{price(item.dailyCents, locale)}</span>
                     <span className="text-ink/70 text-[12px] font-semibold">{t('perDay')}</span>
                   </span>
                   <span className="text-ink/75 flex items-center gap-1.5 text-[12px] font-semibold">
                     <span aria-hidden="true" className="size-1.5 rounded-full bg-[var(--glow)] ring-1 ring-black/25" />
-                    {t('depositBack', { amount: money(item.depositCents, locale) })}
+                    {t('depositBack', { amount: price(item.depositCents, locale) })}
                   </span>
                 </span>
               </Link>

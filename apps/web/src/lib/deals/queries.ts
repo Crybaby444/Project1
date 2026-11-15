@@ -25,7 +25,7 @@ export const dealKeys = {
   one: (id: string) => ['deals', 'one', id] as const,
   history: (id: string) => ['deals', 'history', id] as const,
   photos: (id: string) => ['deals', 'photos', id] as const,
-  mine: (role: DealRole, group: 'open' | 'closed', page: number) => ['deals', 'mine', role, group, page] as const,
+  mine: (role: DealRole, group: 'open' | 'closed' | 'all', page: number) => ['deals', 'mine', role, group, page] as const,
   summary: ['deals', 'summary'] as const,
   terms: (listingId: string) => ['booking-terms', listingId] as const,
 };
@@ -68,11 +68,12 @@ export function useDealPhotos(id: string) {
 }
 
 /** "My deals" of one side, open or closed, 20 a page, last changed first. */
-export function useMyDeals(role: DealRole, group: 'open' | 'closed', page = 1) {
+/** One side's deals, 20 a page, last changed first: all of them, or only open or closed ones. */
+export function useMyDeals(role: DealRole, group: 'open' | 'closed' | 'all', page = 1) {
   const client = useApiClient();
   return useQuery({
     queryKey: dealKeys.mine(role, group, page),
-    queryFn: async () => unwrap(client.GET('/api/v1/me/bookings', { params: { query: { role, group, page } } })),
+    queryFn: async () => unwrap(client.GET('/api/v1/me/bookings', { params: { query: group === 'all' ? { role, page } : { role, group, page } } })),
     placeholderData: keepPreviousData,
     refetchInterval: LIST_POLL_MS,
   });

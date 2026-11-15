@@ -1092,7 +1092,13 @@
     "menu": "Меню",
     "close": "Закрыть меню",
     "allCategories": "Все категории",
-    "more": "Ещё {count}"
+    "more": "Ещё {count}",
+    "catalog": "Каталог",
+    "home": "Главная",
+    "homeLabel": "Yoyo, главная страница",
+    "main": "Главное меню",
+    "allCategoriesPage": "Все категории на одной странице",
+    "newest": "Новые вещи"
   },
   "market": {
     "hero": {

@@ -25,7 +25,7 @@ function setup(routes: FakeRoutes = {}) {
     'GET /api/v1/me/bookings': { status: 200, body: { items: [waiting, going], total: 2 } },
     ...routes,
   });
-  renderWithSession(<MyDeals initialRole="renter" initialGroup="open" />, { client: api.client });
+  renderWithSession(<MyDeals initialRole="renter" />, { client: api.client });
   return api;
 }
 
@@ -55,21 +55,12 @@ describe('MyDeals', () => {
     await waitFor(() => expect(calls.some((c) => c.path === '/api/v1/me/bookings' && c.query.includes('role=owner'))).toBe(true));
   });
 
-  it('shows only the deals waiting for me in that group', async () => {
-    const user = userEvent.setup();
-    setup();
-    await screen.findByRole('link', { name: /Drill/ });
-    await user.click(screen.getByRole('button', { name: 'Waiting for me' }));
-    await waitFor(() => expect(screen.queryByRole('link', { name: /Drill/ })).toBeNull());
-    expect(screen.getByRole('link', { name: /PlayStation 5/ })).toBeVisible();
-  });
-
-  it('asks for closed deals from the API', async () => {
-    const user = userEvent.setup();
+  it('shows one full list, every deal with its status, and asks the API for all of them', async () => {
     const { calls } = setup();
-    await screen.findByRole('link', { name: /Drill/ });
-    await user.click(screen.getByRole('button', { name: 'Closed' }));
-    await waitFor(() => expect(calls.some((c) => c.query.includes('group=closed'))).toBe(true));
+    expect(await screen.findByRole('link', { name: /Drill/ })).toBeVisible();
+    expect(screen.getByRole('link', { name: /PlayStation 5/ })).toBeVisible();
+    expect(screen.queryByRole('button', { name: 'Closed' })).toBeNull();
+    expect(calls.filter((c) => c.path === '/api/v1/me/bookings').every((c) => !c.query.includes('group='))).toBe(true);
   });
 
   it('has a friendly empty state', async () => {

@@ -1092,7 +1092,13 @@
     "menu": "Menu",
     "close": "Close the menu",
     "allCategories": "All categories",
-    "more": "+{count} more"
+    "more": "+{count} more",
+    "catalog": "Catalog",
+    "home": "Home",
+    "homeLabel": "Yoyo, the home page",
+    "main": "Main",
+    "allCategoriesPage": "All categories on one page",
+    "newest": "New items"
   },
   "market": {
     "hero": {

@@ -16,7 +16,7 @@ describe('SiteHeader', () => {
   it('links the wordmark to the home page', async () => {
     const { client } = fakeApi(meRoute(null));
     renderWithSession(<SiteHeader />, { client });
-    expect(screen.getByRole('link', { name: 'Yoyo' })).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: en.nav.homeLabel })).toHaveAttribute('href', '/');
   });
 
   it('offers a visitor to sign in or sign up', async () => {
@@ -53,7 +53,7 @@ describe('SiteHeader', () => {
     expect(screen.queryByRole('navigation', { name: en.language.label })).toBeNull();
   });
 
-  it('shows every category with its subcategories in the navigation row (owner, 2026-11-16)', async () => {
+  it('is one row of cells: Catalog opens every category with its subcategories; Home and What is Yoyo are links (owner, 2026-11-16)', async () => {
     const user = userEvent.setup();
     const { client } = fakeApi(meRoute(null));
     const roots = [
@@ -66,21 +66,21 @@ describe('SiteHeader', () => {
       },
     ] as never;
     renderWithSession(<SiteHeader catalog={roots} />, { client });
-    const nav = screen.getByRole('navigation', { name: en.nav.categories });
-    const tools = within(nav).getByRole('button', { name: 'Tools' });
-    expect(tools).toHaveAttribute('aria-expanded', 'false');
-    await user.click(tools);
-    expect(tools).toHaveAttribute('aria-expanded', 'true');
-    expect(within(nav).getAllByRole('link', { name: 'Drills' })[0]).toHaveAttribute('href', '/c/drills');
-    await user.click(within(nav).getByRole('button', { name: en.nav.allCategories }));
+    const nav = screen.getByRole('navigation', { name: en.nav.main });
+    const catalog = within(nav).getByRole('button', { name: en.nav.catalog });
+    expect(catalog).toHaveAttribute('aria-expanded', 'false');
+    await user.click(catalog);
+    expect(catalog).toHaveAttribute('aria-expanded', 'true');
     expect(within(nav).getByRole('link', { name: 'Tools' })).toHaveAttribute('href', '/c/tools');
+    expect(within(nav).getByRole('link', { name: 'Drills' })).toHaveAttribute('href', '/c/drills');
+    expect(within(nav).getByRole('link', { name: en.nav.home })).toHaveAttribute('href', '/');
     expect(within(nav).getByRole('link', { name: en.nav.whatIsYoyo })).toHaveAttribute('href', '/what-is-yoyo');
   });
 
   it('puts the mark first, on the left', async () => {
     const { client } = fakeApi(meRoute(null));
     const { container } = renderWithSession(<SiteHeader />, { client });
-    const brand = screen.getByRole('link', { name: 'Yoyo' });
+    const brand = screen.getByRole('link', { name: en.nav.homeLabel });
     expect(brand).toHaveAttribute('data-site-brand');
     const outside = [...container.querySelectorAll('header a')].filter((a) => !a.closest('dialog'));
     expect(outside[0]).toBe(brand);

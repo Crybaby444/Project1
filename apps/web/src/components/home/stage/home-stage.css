@@ -20,10 +20,6 @@ html[data-staged] [data-site-header] {
   background: var(--canvas);
   box-shadow: 0 18px 40px -26px rgba(10, 11, 14, 0.45);
 }
-/* The cinematic page keeps the chin compact: the category row lives on the other pages. */
-html[data-staged] [data-site-header] [data-category-row] {
-  display: none;
-}
 /* While one of its menus is open the header stops blending: a blended group cannot have a solid
    panel (the scene showed through the language list). It turns into a plain bar in the page's own
    colours until the menu closes. */

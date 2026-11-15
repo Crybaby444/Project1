@@ -43,7 +43,7 @@ test('the home is the marketplace: search what, where and when, items on the str
   await expect(page).toHaveURL(/\/search\?q=drill$/);
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1, name: main.market.hero.title })).toBeVisible();
-  await expect(page.getByRole('banner').getByRole('navigation', { name: main.nav.categories })).toBeVisible();
+  await expect(page.getByRole('banner').getByRole('navigation', { name: main.nav.main })).toBeVisible();
   await expect(page.getByRole('banner').getByRole('link', { name: main.nav.whatIsYoyo })).toHaveAttribute('href', '/what-is-yoyo');
 });
 

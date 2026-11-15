@@ -106,8 +106,8 @@ test('owner lists, renter books, pays, handover, return, deposit released', asyn
   await rent.getByRole('link', { name: `Deal: ${title}` }).click();
   await expect(o).toHaveURL(new RegExp(`${dealUrl}$`));
 
-  // Closed deals are in their group.
-  await r.goto('/bookings?group=closed');
+  // Closed deals stay in the one list, with their status.
+  await r.goto('/bookings');
   await expect(r.getByRole('link', { name: new RegExp(title) })).toBeVisible();
 });
 

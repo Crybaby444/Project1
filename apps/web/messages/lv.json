@@ -1092,7 +1092,13 @@
     "menu": "Izvēlne",
     "close": "Aizvērt izvēlni",
     "allCategories": "Visas kategorijas",
-    "more": "+{count} vēl"
+    "more": "+{count} vēl",
+    "catalog": "Katalogs",
+    "home": "Sākums",
+    "homeLabel": "Yoyo, sākumlapa",
+    "main": "Galvenā",
+    "allCategoriesPage": "Visas kategorijas vienā lapā",
+    "newest": "Jaunās lietas"
   },
   "market": {
     "hero": {
