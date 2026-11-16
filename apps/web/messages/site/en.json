@@ -207,11 +207,11 @@
           },
           "s4": {
             "title": "Sign and hand over",
-            "body": "The renter signs first, then you. You meet, hand it over and add photos to the deal chat."
+            "body": "The renter signs first, then you. You meet, hand it over and add photos to the deal chat; once you both confirm the handover, the rent goes to your Yoyo wallet."
           },
           "s5": {
-            "title": "Get it back, get paid",
-            "body": "Check it within 48 hours. The rent goes to your Yoyo wallet; if something is damaged, claim from the deposit with photos."
+            "title": "Get it back and check it",
+            "body": "Check it within 48 hours: press “All good”, or claim damage from the deposit with photos. If you do nothing, the item counts as fine."
           }
         },
         "shield": {
@@ -291,7 +291,7 @@
         },
         "contract": {
           "title": "Sign the contract",
-          "body": "Yoyo prepares a rental contract with both names, the item, the dates, the price, the deposit and the rules. You both sign it before any payment."
+          "body": "Yoyo prepares a rental contract with both names, the item, the dates, the price, the deposit and the rules. You sign it first, then the owner; nothing is paid before both signatures."
         },
         "pay": {
           "title": "Pay the rent and the deposit",

@@ -207,11 +207,11 @@
           },
           "s4": {
             "title": "Paraksti un nodod",
-            "body": "Īrnieks paraksta pirmais, tad tu. Jūs satiekaties, nodod lietu un pievieno foto darījuma čatā."
+            "body": "Īrnieks paraksta pirmais, tad tu. Jūs satiekaties, nodod lietu un pievieno foto darījuma čatā; kad abi apstiprināt nodošanu, īre nonāk tavā Yoyo makā."
           },
           "s5": {
-            "title": "Saņem atpakaļ un samaksu",
-            "body": "Pārbaudi 48 stundu laikā. Īre nonāk tavā Yoyo makā; ja kas bojāts, pieprasi no depozīta ar foto."
+            "title": "Saņem atpakaļ un pārbaudi",
+            "body": "Pārbaudi 48 stundu laikā: nospied “Viss kārtībā” vai pieprasi bojājumu no depozīta ar foto. Ja nedari neko, lieta skaitās kārtībā."
           }
         },
         "shield": {
@@ -291,7 +291,7 @@
         },
         "contract": {
           "title": "Parakstiet līgumu",
-          "body": "Yoyo sagatavo nomas līgumu ar abu pušu vārdiem, lietu, datumiem, cenu, depozītu un noteikumiem. Jūs abi to parakstāt pirms jebkāda maksājuma."
+          "body": "Yoyo sagatavo nomas līgumu ar abu vārdiem, lietu, datumiem, cenu, depozītu un noteikumiem. Vispirms paraksti tu, tad īpašnieks; pirms abiem parakstiem nekas netiek samaksāts."
         },
         "pay": {
           "title": "Samaksājiet nomu un depozītu",
