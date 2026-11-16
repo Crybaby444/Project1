@@ -118,5 +118,5 @@ test('a category page opens with what people rent there and closes with the rule
   await page.goto('/c/tools');
   await expect(page.getByText(site.categoryIntro.roots.tools)).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: 'Renting Tools on Yoyo' })).toBeVisible();
-  await expect(page.getByRole('link', { name: site.categoryIntro.about.more })).toHaveAttribute('href', '/how-it-works');
+  await expect(page.getByRole('link', { name: site.categoryIntro.about.more })).toHaveAttribute('href', '/what-is-yoyo');
 });
