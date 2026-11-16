@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Breadcrumbs, type Crumb } from '@/components/catalog/Breadcrumbs';
+import { RentalRules } from '@/components/catalog/RentalRules';
 import { ShareButton } from '@/components/catalog/ShareButton';
 import { ReportButton } from '@/components/reports/ReportButton';
 import { RecentlyViewed, RememberViewed } from '@/components/catalog/RecentlyViewed';
@@ -121,6 +122,7 @@ export default async function ItemPage({ params }: Props) {
           </Button>
         </section>
       )}
+      {detail.available && <RentalRules name={category ? categoryName(category, locale) : title} />}
       {similar.length > 0 && (
         <section aria-labelledby="similar" className="flex flex-col gap-4">
           <h2 id="similar" className="font-display text-[clamp(1.8rem,3vw,2.8rem)] leading-[0.9] font-black uppercase">

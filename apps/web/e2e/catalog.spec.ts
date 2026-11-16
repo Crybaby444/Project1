@@ -78,6 +78,8 @@ test('catalog → search with suggestions → filter → item → calculator →
 
   await page.getByRole('link', { name: drill.title }).click();
   await expect(page).toHaveURL(new RegExp(`/listings/${drill.id}-${drill.slug}$`));
+  // The rules every rental keeps sit under the item (2026-11-16).
+  await expect(page.getByRole('heading', { level: 2, name: /^Renting .+ on Yoyo$/ })).toBeVisible();
   await expect(page.getByRole('heading', { level: 1, name: drill.title })).toBeVisible();
   await expect(page.locator('[data-range-status]')).toHaveText(book.pickStart);
 

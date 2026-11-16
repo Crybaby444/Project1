@@ -1,6 +1,6 @@
-import { DEFAULT_BOOKING_SETTINGS } from '@yoyo/domain';
 import { CATALOG_PAGE_SIZE, type CategoryNode, type Locale } from '@yoyo/shared';
 import { getTranslations } from 'next-intl/server';
+import { RentalRules } from './RentalRules';
 import type { ReactNode } from 'react';
 import { Link } from '@/i18n/navigation';
 import { catalogSearch, type CatalogParams, toApiQuery } from '@/lib/catalog/params';
@@ -173,42 +173,8 @@ export async function CatalogResults({ params: raw, category, related, path, tit
             </ResultsRegion>
           </div>
         </div>
-        {intro && <CategoryAbout name={intro.name} />}
+        {intro && <RentalRules name={intro.name} />}
       </main>
     </CatalogShell>
-  );
-}
-
-/** What every rental here keeps, under the results of a category (SEO audit 2026-11-16: thin category pages). */
-async function CategoryAbout({ name }: { name: string }) {
-  const t = await getTranslations('categoryIntro.about');
-  return (
-    <section
-      aria-labelledby="category-about"
-      className="border-ink/15 mt-10 grid gap-6 border-t pt-10 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-8"
-    >
-      <h2
-        id="category-about"
-        className="font-display text-[clamp(1.6rem,2.6vw,2.4rem)] leading-[0.92] font-black uppercase"
-      >
-        {t('title', { name })}
-      </h2>
-      <div className="flex flex-col items-start gap-5">
-        <ul className="m-0 grid list-none gap-x-8 gap-y-4 p-0 sm:grid-cols-2">
-          {(['a', 'b', 'c', 'd'] as const).map((k) => (
-            <li key={k} className="flex gap-3 text-[15px] leading-relaxed">
-              <span aria-hidden="true" className="bg-ink mt-[0.6em] size-1.5 flex-none rounded-full" />
-              {t(`points.${k}`, { hours: DEFAULT_BOOKING_SETTINGS.inspectionHours })}
-            </li>
-          ))}
-        </ul>
-        <Link
-          href="/how-it-works"
-          className="text-[15px] font-bold underline decoration-1 underline-offset-4"
-        >
-          {t('more')}
-        </Link>
-      </div>
-    </section>
   );
 }
