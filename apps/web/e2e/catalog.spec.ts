@@ -142,6 +142,8 @@ test('the heart saves an item at once, and Favourites lists it', async ({ page }
   await heart.click();
   await expect(page.getByRole('button', { name: en.favorites.remove.replace('{title}', drill.title) })).toHaveAttribute('aria-pressed', 'true');
 
+  // Reaching the heart scrolled the page down and the bar stepped away; on the way up it comes back.
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.getByRole('button', { name: /^Account menu/ }).click();
   await page.getByRole('menuitem', { name: en.header.favorites }).click();
   await expect(page.getByRole('heading', { level: 1, name: en.favorites.title })).toBeVisible();
