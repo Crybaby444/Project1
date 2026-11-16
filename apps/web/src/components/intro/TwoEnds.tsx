@@ -50,7 +50,7 @@ export function TwoEnds() {
               data-end={side}
             >
               <div className="flex flex-col gap-3 lg:[opacity:var(--s)] lg:[transform:translateY(calc((1-var(--s))*20px))] motion-reduce:lg:[opacity:1] motion-reduce:lg:transform-none" style={{ ['--s' as string]: String(0.2 + 0.8 * shown[i]!) }}>
-                <span className={`text-[13px] font-bold ${i === 0 ? 'text-ink/60' : 'text-[var(--paper)]/60'}`}>{t(`${side}.who`)}</span>
+                <span className={`text-[13px] font-bold ${i === 0 ? 'text-ink/75' : 'text-[var(--paper)]/75'}`}>{t(`${side}.who`)}</span>
                 <h3 className="font-display text-[clamp(2.2rem,4vw,3.8rem)] leading-[0.9] font-black uppercase">{t(`${side}.title`)}</h3>
               </div>
               <ul className="m-0 flex list-none flex-col gap-3 p-0 lg:[opacity:var(--s)] motion-reduce:lg:[opacity:1]" style={{ ['--s' as string]: String(shown[i]!) }}>
