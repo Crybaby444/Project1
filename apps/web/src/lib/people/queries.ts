@@ -75,3 +75,16 @@ export function usePeopleSearch(q: string) {
     staleTime: 30_000,
   });
 }
+
+/** Who follows a person, or whom they follow (public lists, asked for only when opened). */
+export function usePeopleOf(userId: string, list: 'followers' | 'following' | null) {
+  const client = useApiClient();
+  return useQuery({
+    queryKey: ['people-of', userId, list],
+    enabled: list !== null,
+    queryFn: async () =>
+      list === 'followers'
+        ? (await unwrap(client.GET('/api/v1/users/{id}/followers', { params: { path: { id: userId } } }))).items
+        : (await unwrap(client.GET('/api/v1/users/{id}/following', { params: { path: { id: userId } } }))).items,
+  });
+}

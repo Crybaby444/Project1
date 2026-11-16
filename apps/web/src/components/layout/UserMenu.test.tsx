@@ -72,13 +72,13 @@ describe('UserMenu', () => {
     expect(screen.getByRole('menuitem', { name: en.header.settings })).toHaveAttribute('href', '/settings');
   });
 
-  it('links to my profile (my items first), and to moderation for an administrator only', async () => {
+  it('links to my profile page, and to moderation for an administrator only', async () => {
     const user = userEvent.setup();
     const { button } = await renderMenu();
     await user.click(button);
     expect(screen.getByRole('menuitem', { name: en.mySpace.menu })).toHaveAttribute(
       'href',
-      '/dashboard/lending',
+      '/u/user-1',
     );
     expect(screen.queryByRole('menuitem', { name: en.header.moderation })).toBeNull();
   });

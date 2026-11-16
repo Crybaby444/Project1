@@ -33,6 +33,8 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
   const tr = useTranslations('reviews');
   const locale = useLocale();
   const Heading = heading;
+  // On the profile itself (h1) the counts live in the numbers row and the tabs: nothing said twice.
+  const profile = heading === 'h1';
   const since = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(owner.memberSince));
 
   return (
@@ -42,7 +44,7 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
           {initials(owner.name)}
         </span>
         <div className="min-w-0">
-          <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('label')}</p>
+          {!profile && <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('label')}</p>}
           <Heading
             className={
               heading === 'h1'
@@ -52,11 +54,11 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
           >
             {owner.name}
           </Heading>
-          {owner.username && <p className="text-[15px] font-bold" data-username="">@{owner.username}</p>}
+          {owner.username && <p className="text-[15px] font-bold [overflow-wrap:anywhere]" data-username="">@{owner.username}</p>}
           <p className="text-sm">{owner.city ? t('sinceIn', { since, city: owner.city }) : t('since', { since })}</p>
         </div>
       </div>
-      <ul className="flex flex-wrap gap-2 text-xs font-bold">
+      <ul className="flex min-w-0 flex-wrap gap-2 text-xs font-bold">
         {owner.emailVerified && (
           <li className="border-ink/25 rounded-pill inline-flex items-center gap-1 border px-2.5 py-0.5">
             <Check />
@@ -74,18 +76,18 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
             {t(`answers.${answers}`)}
           </li>
         )}
-        <li className="border-ink rounded-pill border px-2.5 py-0.5">{t('deals', { count: owner.completedDeals })}</li>
-        <li className="border-ink rounded-pill border px-2.5 py-0.5">{t('items', { count: owner.listingCount })}</li>
+        {!profile && <li className="border-ink rounded-pill border px-2.5 py-0.5">{t('deals', { count: owner.completedDeals })}</li>}
+        {!profile && <li className="border-ink rounded-pill border px-2.5 py-0.5">{t('items', { count: owner.listingCount })}</li>}
       </ul>
       {owner.rating === null ? (
-        <p className="text-sm">{t('noReviews')}</p>
+        profile ? null : <p className="text-sm">{t('noReviews')}</p>
       ) : (
         <p className="m-0 flex items-center gap-2.5 text-sm" data-owner-rating="">
           <span className="font-display text-[1.6rem] leading-none font-black tabular-nums" aria-hidden="true">
             {formatScore(owner.rating, locale, true)}
           </span>
           <Stars value={owner.rating} />
-          <span className="text-ink/75">{tr('count', { count: owner.reviewCount })}</span>
+          {!profile && <span className="text-ink/75">{tr('count', { count: owner.reviewCount })}</span>}
         </p>
       )}
       {heading === 'h2' && (

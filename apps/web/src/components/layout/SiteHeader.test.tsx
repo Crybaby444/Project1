@@ -79,6 +79,6 @@ describe('SiteHeader (the floating capsule and the phone tab bar)', () => {
     expect(within(bar).getByRole('button', { name: en.nav.catalog })).toBeInTheDocument();
     expect(within(bar).getByRole('link', { name: en.header.lendItem })).toHaveAttribute('href', '/listings/new');
     expect(within(bar).getByRole('link', { name: en.header.messages })).toHaveAttribute('href', '/messages');
-    expect(within(bar).getByRole('link', { name: en.nav.you })).toHaveAttribute('href', '/dashboard/lending');
+    expect(within(bar).getByRole('link', { name: en.nav.you })).toHaveAttribute('href', '/u/user-1');
   });
 });

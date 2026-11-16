@@ -43,7 +43,7 @@ export default async function ProfilePage({ params }: Props) {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-start">
         <div className="flex flex-col gap-6">
           <OwnerCard owner={user} heading="h1" />
-          <ProfileSocial userId={user.id} name={user.name} followers={user.followers ?? 0} following={user.following ?? 0} reviews={user.reviewCount} />
+          <ProfileSocial userId={user.id} name={user.name} followers={user.followers ?? 0} following={user.following ?? 0} reviews={user.reviewCount} deals={user.completedDeals} />
         </div>
         {user.about && (
           <section aria-labelledby="profile-about" className="flex flex-col gap-2">
