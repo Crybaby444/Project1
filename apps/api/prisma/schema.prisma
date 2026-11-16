@@ -856,6 +856,7 @@ enum NotificationKind {
   REVIEW
   SEARCH
   FOLLOW
+  IDENTITY
 }
 
 enum MessageKind {

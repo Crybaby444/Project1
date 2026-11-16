@@ -269,5 +269,20 @@
     "body": "We moved “{title}” to the category “{category}”, where people look for things like it. Everything else stayed the same.",
     "attributes": "Check the details of the new category: some fields may need filling in.",
     "button": "Open the listing"
+  },
+  "identityVerified": {
+    "subject": "Your identity on Yoyo is confirmed",
+    "preview": "You can now lend, rent and sign contracts.",
+    "heading": "You are confirmed",
+    "body": "A moderator has confirmed who you are. You can now lend your things, rent from others and sign deal contracts.",
+    "button": "Open Yoyo"
+  },
+  "identityRejected": {
+    "subject": "Your Yoyo identity check needs new photos",
+    "preview": "See why and send new photos.",
+    "heading": "Please send new photos",
+    "body": "A moderator could not confirm who you are from these photos. Here is why:",
+    "next": "The photos have been deleted. Send new ones whenever you are ready.",
+    "button": "Send new photos"
   }
 }

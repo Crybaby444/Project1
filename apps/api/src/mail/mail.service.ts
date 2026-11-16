@@ -7,6 +7,7 @@ import { render } from 'react-email';
 import { MAIL_PROVIDER, maskEmail, type MailProvider, type MailTemplate } from './mail.provider';
 import { DealEvent } from './templates/DealEvent';
 import type { DealRole } from './templates/deal-texts';
+import { IdentityDecision } from './templates/IdentityDecision';
 import { ListingApproved } from './templates/ListingApproved';
 import { ListingMoved } from './templates/ListingMoved';
 import { ListingRejected } from './templates/ListingRejected';
@@ -80,6 +81,13 @@ export class MailService implements OnApplicationShutdown {
   sendListingMoved(user: MailRecipient, listing: { title: string; category: LocalizedText; link: string }): Promise<void> {
     return this.deliver('listing-moved', user, (t) => t.listingMoved.subject, (t, lang) =>
       createElement(ListingMoved, { t, lang, name: user.name, title: listing.title, category: listing.category[lang as Locale] ?? listing.category.en, link: listing.link }),
+    );
+  }
+
+  /** A moderator's identity decision: confirmed (reason null) or refused with the reason; always sent (account mail). */
+  sendIdentityDecision(user: MailRecipient, decision: { reason: string | null; link: string }): Promise<void> {
+    return this.deliver(decision.reason === null ? 'identity-verified' : 'identity-rejected', user, (t) => (decision.reason === null ? t.identityVerified.subject : t.identityRejected.subject), (t, lang) =>
+      createElement(IdentityDecision, { t, lang, name: user.name, ...decision }),
     );
   }
 

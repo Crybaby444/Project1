@@ -269,5 +269,20 @@
     "body": "Mēs pārcēlām “{title}” uz kategoriju “{category}”, kur cilvēki meklē līdzīgas lietas. Viss pārējais palika kā bija.",
     "attributes": "Pārbaudiet jaunās kategorijas parametrus: dažus laukus, iespējams, vajag aizpildīt.",
     "button": "Atvērt sludinājumu"
+  },
+  "identityVerified": {
+    "subject": "Jūsu identitāte Yoyo ir apstiprināta",
+    "preview": "Tagad varat iznomāt, nomāt un parakstīt līgumus.",
+    "heading": "Jūs esat apstiprināts",
+    "body": "Moderators ir apstiprinājis jūsu identitāti. Tagad varat iznomāt savas lietas, nomāt no citiem un parakstīt darījumu līgumus.",
+    "button": "Atvērt Yoyo"
+  },
+  "identityRejected": {
+    "subject": "Jūsu Yoyo identitātes pārbaudei vajag jaunus fotoattēlus",
+    "preview": "Uzziniet iemeslu un nosūtiet jaunus fotoattēlus.",
+    "heading": "Lūdzu, nosūtiet jaunus fotoattēlus",
+    "body": "Moderators no šiem fotoattēliem nevarēja apstiprināt jūsu identitāti. Iemesls:",
+    "next": "Fotoattēli ir dzēsti. Nosūtiet jaunus, kad esat gatavs.",
+    "button": "Nosūtīt jaunus fotoattēlus"
   }
 }
