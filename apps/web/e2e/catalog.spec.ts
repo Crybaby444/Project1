@@ -181,8 +181,8 @@ test('the catalog is reached from the header and the footer (owner, 2026-11-16)'
   await page.getByRole('contentinfo').getByRole('link', { name: 'Catalog' }).click();
   await expect(page).toHaveURL(/\/c$/);
   // Every root category is a plain link on /c (for search engines and the keyboard).
-  expect(await page.locator('a[href^="/c/"]').count()).toBeGreaterThanOrEqual(13);
-  await page.locator('a[href="/c/tools"]').first().click();
+  expect(await page.getByRole('main').locator('a[href^="/c/"]').count()).toBeGreaterThanOrEqual(13);
+  await page.getByRole('main').locator('a[href="/c/tools"]').first().click();
   await expect(page).toHaveURL(/\/c\/tools$/);
   await expect(page.getByRole('heading', { level: 1, name: 'Tools' })).toBeVisible();
 });
