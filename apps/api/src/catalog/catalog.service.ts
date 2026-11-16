@@ -218,6 +218,7 @@ export class CatalogService {
     const rating = ratings.get(found.id) ?? { rating: null, reviewCount: 0 };
     return {
       available: true,
+      demo: found.demo,
       listing: serializeListing(found, 'public', this.urlFor),
       owner,
       rating: rating.rating,

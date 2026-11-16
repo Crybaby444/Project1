@@ -10038,6 +10038,7 @@
                   "UNDERAGE",
                   "PROFILE_INCOMPLETE",
                   "IDENTITY_REQUIRED",
+                  "DEMO_LISTING",
                   "AUTH_UNAUTHENTICATED",
                   "AUTH_FORBIDDEN",
                   "AUTH_BLOCKED",
@@ -13999,6 +14000,9 @@
                   "type": "integer",
                   "minimum": -9007199254740991,
                   "maximum": 9007199254740991
+                },
+                "demo": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -14017,7 +14021,8 @@
                 "contentLocale",
                 "publishedAt",
                 "rating",
-                "reviewCount"
+                "reviewCount",
+                "demo"
               ],
               "additionalProperties": false
             }
@@ -14487,6 +14492,9 @@
                       true
                     ]
                   },
+                  "demo": {
+                    "type": "boolean"
+                  },
                   "listing": {
                     "type": "object",
                     "properties": {
@@ -14885,6 +14893,7 @@
                 },
                 "required": [
                   "available",
+                  "demo",
                   "listing",
                   "owner",
                   "rating",
@@ -15156,6 +15165,9 @@
                   "type": "integer",
                   "minimum": -9007199254740991,
                   "maximum": 9007199254740991
+                },
+                "demo": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -15174,7 +15186,8 @@
                 "contentLocale",
                 "publishedAt",
                 "rating",
-                "reviewCount"
+                "reviewCount",
+                "demo"
               ],
               "additionalProperties": false
             }
@@ -15572,6 +15585,9 @@
                   "minimum": -9007199254740991,
                   "maximum": 9007199254740991
                 },
+                "demo": {
+                  "type": "boolean"
+                },
                 "owner": {
                   "type": "object",
                   "properties": {
@@ -15606,6 +15622,7 @@
                 "publishedAt",
                 "rating",
                 "reviewCount",
+                "demo",
                 "owner"
               ],
               "additionalProperties": false
@@ -15853,6 +15870,9 @@
                   "type": "integer",
                   "minimum": -9007199254740991,
                   "maximum": 9007199254740991
+                },
+                "demo": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -15871,7 +15891,8 @@
                 "contentLocale",
                 "publishedAt",
                 "rating",
-                "reviewCount"
+                "reviewCount",
+                "demo"
               ],
               "additionalProperties": false
             }
@@ -22795,6 +22816,9 @@
                   "minimum": -9007199254740991,
                   "maximum": 9007199254740991
                 },
+                "demo": {
+                  "type": "boolean"
+                },
                 "available": {
                   "type": "boolean"
                 }
@@ -22816,6 +22840,7 @@
                 "publishedAt",
                 "rating",
                 "reviewCount",
+                "demo",
                 "available"
               ],
               "additionalProperties": false

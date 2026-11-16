@@ -122,6 +122,8 @@ export const CatalogItemSchema = z.object({
   /** The average of the renters' item stars in public reviews (one decimal), or null with none. */
   rating: z.number().nullable(),
   reviewCount: z.number().int(),
+  /** An example listing (owner, 2026-11-16): shown with a mark, cannot be booked. */
+  demo: z.boolean(),
 });
 
 export type CatalogItem = z.infer<typeof CatalogItemSchema>;
@@ -214,6 +216,8 @@ export type OwnerSummary = z.infer<typeof OwnerSummarySchema>;
 /** An item that can be rented now: the whole public listing, its owner and what the calculator needs. */
 export const AvailableItemSchema = z.object({
   available: z.literal(true),
+  /** An example listing: the page shows it as such and offers no booking. */
+  demo: z.boolean(),
   listing: PublicListingSchema,
   owner: OwnerSummarySchema,
   /** The renters' item stars in public reviews (one decimal), or null with none. */

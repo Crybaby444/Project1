@@ -19,6 +19,7 @@ export async function bookableListing(tx: Prisma.TransactionClient, listingId: s
   if (!isCatalogVisible(listing)) {
     throw new AppError('LISTING_UNAVAILABLE', 409);
   }
+  if (listing.demo) throw new AppError('DEMO_LISTING', 409);
   return listing;
 }
 

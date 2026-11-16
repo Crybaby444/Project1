@@ -39,8 +39,9 @@ export class ChatService {
 
   /** The renter's conversation about a published item, started when there is none. */
   async open(userId: string, listingId: string): Promise<ConversationSummary> {
-    const listing = await this.prisma.listing.findUnique({ where: { id: listingId }, select: { id: true, ownerId: true, status: true } });
+    const listing = await this.prisma.listing.findUnique({ where: { id: listingId }, select: { id: true, ownerId: true, status: true, demo: true } });
     if (!listing || listing.status !== 'PUBLISHED') throw new AppError('NOT_FOUND', 404, 'Listing not found');
+    if (listing.demo) throw new AppError('DEMO_LISTING', 409);
     if (listing.ownerId === userId) {
       throw new AppError('ACTION_NOT_ALLOWED', 409, 'This is your own item', undefined, { why: 'OWN_LISTING' });
     }
