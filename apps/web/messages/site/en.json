@@ -36,7 +36,7 @@
     "documents": "Documents",
     "links": {
       "catalog": "Catalog",
-      "howItWorks": "How it works",
+      "whatIsYoyo": "What is Yoyo",
       "faq": "Questions and answers",
       "terms": "Terms of service",
       "privacy": "Privacy policy",
@@ -113,7 +113,8 @@
     },
     "finale": {
       "line1": "It always",
-      "line2": "comes back."
+      "line2": "comes back.",
+      "home": "Back to Yoyo"
     },
     "ends": {
       "title": "Two ends of one string",

@@ -14,27 +14,18 @@ const LANGUAGES = [
 
 for (const { locale, prefix, m } of LANGUAGES) {
   test.describe(`service pages in ${locale}`, () => {
-    test('how it works: the title, both sides, the deposit rule, and links that lead somewhere', async ({ page }) => {
+    test('how it works lives on What is Yoyo: the old address moves there, with both sides, the deposit rule and the real numbers', async ({ page }) => {
       const response = await page.goto(`${prefix}/how-it-works`);
       expect(response?.status()).toBe(200);
+      await expect(page).toHaveURL(new RegExp(`${prefix}/what-is-yoyo$`));
       await expect(page.locator('html')).toHaveAttribute('lang', locale);
-      await expect(page.getByRole('heading', { level: 1, name: m.howItWorks.title })).toBeVisible();
-      for (const heading of [
-        m.howItWorks.renter.heading,
-        m.howItWorks.owner.heading,
-        m.howItWorks.deposit.heading,
-        m.howItWorks.cancel.heading,
-        m.howItWorks.reviews.heading,
-      ]) {
-        await expect(page.getByRole('heading', { level: 2, name: heading })).toBeVisible();
+      await expect(page.getByRole('heading', { level: 2, name: m.howItWorks.title })).toBeAttached();
+      for (const heading of [m.howItWorks.renter.heading, m.howItWorks.owner.heading, m.howItWorks.deposit.heading, m.howItWorks.cancel.heading, m.howItWorks.reviews.heading]) {
+        await expect(page.locator('[data-home="rules"]').getByRole('heading', { level: 3, name: heading, exact: true })).toBeAttached();
       }
       // The facts come from one place and are filled in, never left as {placeholders}.
-      await expect(page.locator('main')).not.toContainText('{');
-      await expect(page.locator('main')).toContainText('10%');
-      await expect(page.getByRole('main').getByRole('link', { name: m.howItWorks.cta.faq })).toHaveAttribute(
-        'href',
-        `${prefix}/faq`,
-      );
+      await expect(page.locator('[data-home="rules"]')).not.toContainText('{');
+      await expect(page.locator('[data-home="rules"]')).toContainText('10%');
     });
   });
 

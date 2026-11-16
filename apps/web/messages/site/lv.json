@@ -36,7 +36,7 @@
     "documents": "Dokumenti",
     "links": {
       "catalog": "Katalogs",
-      "howItWorks": "Kā tas strādā",
+      "whatIsYoyo": "Kas ir Yoyo",
       "faq": "Jautājumi un atbildes",
       "terms": "Lietošanas noteikumi",
       "privacy": "Privātuma politika",
@@ -113,7 +113,8 @@
     },
     "finale": {
       "line1": "Tas vienmēr",
-      "line2": "atgriežas."
+      "line2": "atgriežas.",
+      "home": "Atpakaļ uz Yoyo"
     },
     "ends": {
       "title": "Divi vienas auklas gali",

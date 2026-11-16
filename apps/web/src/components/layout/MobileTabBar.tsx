@@ -154,9 +154,6 @@ export function MobileTabBar({ roots, hidden }: { roots: MenuRoot[]; hidden: boo
               <span aria-hidden="true" className="size-2 rounded-full bg-[var(--glow)] ring-1 ring-black/20" />
               {t('whatIsYoyo')}
             </Link>
-            <Link href="/how-it-works" className="flex min-h-11 items-center">
-              {t('howItWorks')}
-            </Link>
             <Link href="/faq" className="flex min-h-11 items-center">
               {t('faq')}
             </Link>
