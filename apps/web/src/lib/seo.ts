@@ -170,3 +170,18 @@ export function pageMetadata({
     twitter: { card: 'summary_large_image', title, description },
   };
 }
+
+/**
+ * schema.org BreadcrumbList for the crumbs a page shows (W03 §E): each with its absolute address in the
+ * page's language; the last one (the page itself) without a link, as Google allows.
+ */
+export function breadcrumbJsonLd(items: { label: string; href?: string }[], locale: Locale, siteUrl: string = SITE_URL) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((crumb, i) => {
+      const url = crumb.href && i < items.length - 1 ? localizedUrl(crumb.href, locale, siteUrl) : null;
+      return { '@type': 'ListItem', position: i + 1, name: crumb.label, ...(url ? { item: url === siteUrl ? `${siteUrl}/` : url } : {}) };
+    }),
+  };
+}

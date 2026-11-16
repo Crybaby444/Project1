@@ -47,11 +47,9 @@ function structuredData(description: string) {
 }
 
 /**
- * The home (owner, 2026-11-16) is one throw of a yo-yo — out and back. Out: the search in its working form
- * and the newest real items hanging as price tags on the string (the hand pushes them). The loop: a held
- * night scene where the yo-yo runs through the four stops of a rental and the deposit comes back. Then
- * what is new, and back: what your things could earn, and a close that reels you to the top. The catalog
- * lives in the navigation; the cinematic introduction is /what-is-yoyo.
+ * The home (owner, 2026-11-16): the marketplace. The search (what, where, when) with four promises under
+ * it, what is new, what your things could earn, the questions before a first deal, and a door for each end
+ * of the string. The catalog itself lives in the header.
  */
 export default async function HomePage({ params }: Params) {
   const { locale } = (await params) as { locale: Locale };

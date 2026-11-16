@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { parseCatalogParams } from './catalog/params';
 import {
+  breadcrumbJsonLd,
   alternates,
   categoryAlternates,
   categorySeo,
@@ -169,5 +170,35 @@ describe('pageMetadata', () => {
       brand: false,
     });
     expect(meta.title).toBe('Yoyo — rent things from people nearby');
+  });
+});
+
+describe('breadcrumbJsonLd', () => {
+  it('lists every crumb in order with its address in the page language; the page itself has no link', () => {
+    const data = breadcrumbJsonLd(
+      [
+        { label: 'Sākums', href: '/' },
+        { label: 'Katalogs', href: '/c' },
+        { label: 'Instrumenti', href: '/c/instrumenti' },
+        { label: 'Urbis' },
+      ],
+      'lv',
+      'https://yoyo.rent',
+    );
+    expect(data).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Sākums', item: 'https://yoyo.rent/lv' },
+        { '@type': 'ListItem', position: 2, name: 'Katalogs', item: 'https://yoyo.rent/lv/c' },
+        { '@type': 'ListItem', position: 3, name: 'Instrumenti', item: 'https://yoyo.rent/lv/c/instrumenti' },
+        { '@type': 'ListItem', position: 4, name: 'Urbis' },
+      ],
+    });
+  });
+
+  it('English has no prefix, and the home is the bare origin with a slash', () => {
+    const data = breadcrumbJsonLd([{ label: 'Home', href: '/' }, { label: 'Catalog' }], 'en', 'https://yoyo.rent');
+    expect(data.itemListElement[0]).toEqual({ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://yoyo.rent/' });
   });
 });
