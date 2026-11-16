@@ -3,8 +3,11 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ListingCard } from '@/components/catalog/ListingCard';
 import { RecentlyViewed } from '@/components/catalog/RecentlyViewed';
+import { HomeFaq } from '@/components/market/HomeFaq';
 import { HomeSearch } from '@/components/market/HomeSearch';
 import { LendCalculator } from '@/components/market/LendCalculator';
+import { TrustRow } from '@/components/market/TrustRow';
+import { TwoDoors } from '@/components/market/TwoDoors';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { Link } from '@/i18n/navigation';
 import { loadPlaces, loadSearch } from '@/lib/catalog/server-api';
@@ -74,6 +77,7 @@ export default async function HomePage({ params }: Params) {
           <p className="text-ink/80 max-w-[44ch] text-[18px] leading-relaxed lg:pb-2">{t('hero.lead')}</p>
         </div>
         <HomeSearch districts={districts} today={today} />
+        <TrustRow />
       </section>
 
 
@@ -101,6 +105,12 @@ export default async function HomePage({ params }: Params) {
       <div className="border-ink/15 border-t">
         <LendCalculator />
       </div>
+
+      <div className="border-ink/15 border-t">
+        <HomeFaq />
+      </div>
+
+      <TwoDoors />
 
     </main>
   );

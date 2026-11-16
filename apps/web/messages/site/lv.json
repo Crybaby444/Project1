@@ -152,6 +152,127 @@
         "ask": "Vai sestdien ir brīvs?",
         "answer": "Jā, rezervē."
       }
+    },
+    "sides": {
+      "title": "Divas puses. Viens Yoyo.",
+      "lead": "Tas pats darījums, skatīts no katra auklas gala. Izvēlies savu pusi un izej tam cauri.",
+      "switch": "Kura puse",
+      "rent": {
+        "tab": "Man vajag",
+        "cta": "Atrast lietu",
+        "steps": {
+          "s1": {
+            "title": "Atrodi tuvumā",
+            "body": "Meklē pēc nosaukuma, rajona un datumiem. Katrā sludinājumā redzama cena dienā, depozīts un brīvās dienas."
+          },
+          "s2": {
+            "title": "Palūdz dienas",
+            "body": "Izvēlies pirmo un pēdējo dienu. Pilnu cenu, komisiju un depozītu redzi, pirms ko nosūti."
+          },
+          "s3": {
+            "title": "Paraksti pirmais",
+            "body": "Kad īpašnieks piekrīt, tu paraksti līgumu tiešsaistē, tad paraksta īpašnieks. Yoyo pārbauda abus parakstus."
+          },
+          "s4": {
+            "title": "Samaksā un saņem",
+            "body": "Maksā caur Yoyo. Satiec īpašnieku, kopā apskatiet lietu un pievienojiet foto darījuma čatā."
+          },
+          "s5": {
+            "title": "Atdod atpakaļ",
+            "body": "Atdod pēdējā dienā. Kad īpašnieks to pārbaudījis, depozīts atgriežas pie tevis. Tad atstāj atsauksmi."
+          }
+        },
+        "shield": {
+          "title": "Kas tevi sargā",
+          "a": "Nekas netiek iekasēts, pirms abi parakstāt.",
+          "b": "Foto darījumā rāda, kādā stāvoklī lieta aizgāja.",
+          "c": "Ja nevienojaties par bojājumiem, izlemj Yoyo."
+        }
+      },
+      "lend": {
+        "tab": "Man ir",
+        "cta": "Izīrēt lietu",
+        "steps": {
+          "s1": {
+            "title": "Ieliec to Yoyo",
+            "body": "Pievieno foto, cenu dienā, ja gribi — nedēļas atlaidi, depozītu un rajonu. Tas aizņem dažas minūtes."
+          },
+          "s2": {
+            "title": "Cilvēks to pārbauda",
+            "body": "Pirms publicēšanas kāds no Yoyo apskata sludinājumu, lai katalogs paliek godīgs."
+          },
+          "s3": {
+            "title": "Izvēlies, kas īrē",
+            "body": "Pieprasījumi nāk ar paziņojumu. Tu redzi cilvēka profilu un atsauksmes un piekrīti vai atsaki."
+          },
+          "s4": {
+            "title": "Paraksti un nodod",
+            "body": "Īrnieks paraksta pirmais, tad tu. Jūs satiekaties, nodod lietu un pievieno foto darījuma čatā."
+          },
+          "s5": {
+            "title": "Saņem atpakaļ un samaksu",
+            "body": "Pārbaudi 48 stundu laikā. Īre nonāk tavā Yoyo makā; ja kas bojāts, pieprasi no depozīta ar foto."
+          }
+        },
+        "shield": {
+          "title": "Kas tevi sargā",
+          "a": "Tevis noteikts depozīts sargā lietu, kamēr tā ir prom.",
+          "b": "Parakstīts līgums ar īrnieka vārdu.",
+          "c": "Atsauksmes no īstiem darījumiem, pirms kādam piekrīti."
+        }
+      }
+    },
+    "inside": {
+      "title": "Viss iekšā",
+      "lead": "Yoyo ir vairāk nekā lietu saraksts. Šīs daļas ļauj darījumam starp svešiniekiem izdoties.",
+      "contract": {
+        "title": "Līgums katram darījumam",
+        "body": "Sagatavots pēc ES tiesībām, abas puses paraksta tiešsaistē, īrnieks pirmais."
+      },
+      "deposit": {
+        "title": "Depozīts, kas atgriežas",
+        "body": "Tiek turēts darījuma laikā un atdots pēc atgriešanas pārbaudes."
+      },
+      "checked": {
+        "title": "Sludinājumus pārbauda cilvēks",
+        "body": "Nekas netiek publicēts bez mūsu skatiena."
+      },
+      "chat": {
+        "title": "Čats katram darījumam",
+        "body": "Foto, laiki un vietas paliek blakus līgumam. Personīgās ziņas — atsevišķi."
+      },
+      "live": {
+        "title": "Jaunumi uzreiz",
+        "body": "Pieprasījumi, paraksti un ziņas parādās bez lapas pārlādes, ar paziņojumiem."
+      },
+      "map": {
+        "title": "Rajoni un karte",
+        "body": "Meklē pēc rajona un redzi, kur lietu saņemt."
+      },
+      "reviews": {
+        "title": "Atsauksmes no īstiem darījumiem",
+        "body": "Viens otru var novērtēt tikai tie, kas kopā pabeiguši darījumu."
+      },
+      "follow": {
+        "title": "Seko cilvēkiem",
+        "body": "Seko tiem, kuru lietas tev patīk, un redzi, ko viņi pievieno."
+      },
+      "shops": {
+        "title": "Savi veikali",
+        "body": "Sakārto savas lietas kolekcijās, ko citi var apskatīt."
+      },
+      "favorites": {
+        "title": "Izlase",
+        "body": "Saglabā lietas ar sirsniņu un atgriezies pie tām vēlāk."
+      },
+      "wallet": {
+        "title": "Maks",
+        "body": "Nopelnītā īre nonāk tavā Yoyo makā; no tā var arī maksāt."
+      },
+      "languages": {
+        "title": "Trīs valodas",
+        "body": "English, Latviešu un Русский visā vietnē."
+      }
     }
   },
   "howItWorks": {

@@ -1180,6 +1180,43 @@
       "rent": "Find something",
       "lend": "Lend something",
       "backUp": "Back up"
+    },
+    "trust": {
+      "label": "Why it is safe",
+      "contract": {
+        "title": "Contract before you pay",
+        "body": "Both sides sign online."
+      },
+      "deposit": {
+        "title": "Deposit comes back",
+        "body": "Once the return is checked."
+      },
+      "checked": {
+        "title": "Checked by a person",
+        "body": "Every listing, before it goes live."
+      },
+      "reviews": {
+        "title": "Real reviews",
+        "body": "Only from finished deals."
+      }
+    },
+    "doors": {
+      "title": "Which end of the string are you?",
+      "story": "The whole story: What is Yoyo",
+      "need": {
+        "who": "If you need it",
+        "title": "Find something",
+        "body": "Tools, tents, cameras and more, for a day or a week, from people nearby."
+      },
+      "have": {
+        "who": "If you have it",
+        "title": "Lend an item",
+        "body": "Put a thing you rarely use on Yoyo and let it earn while it waits."
+      }
+    },
+    "faq": {
+      "title": "Before your first deal",
+      "all": "All questions and answers"
     }
   }
 }
