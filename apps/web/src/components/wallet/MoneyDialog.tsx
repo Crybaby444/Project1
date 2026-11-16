@@ -1,7 +1,7 @@
 'use client';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { WALLET_LIMITS, type CardToken } from '@yoyo/shared';
+import { IbanSchema, WALLET_LIMITS, type WalletPayKind, type CardToken } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { CardForm, EMPTY_CARD, TestModeNotice } from '@/components/deals/CardForm';
@@ -22,7 +22,11 @@ import { useApiClient, useSession } from '@/lib/session/SessionProvider';
 export type MoneyMode = 'topUp' | 'withdraw';
 
 /** Why an amount does not work, or null: a real amount, within the limits, and for a payout no more than the balance. */
-export function amountProblem(cents: number | null, mode: MoneyMode, balanceCents: number): 'invalid' | 'range' | 'balance' | null {
+export function amountProblem(
+  cents: number | null,
+  mode: MoneyMode,
+  balanceCents: number,
+): 'invalid' | 'range' | 'balance' | null {
   if (cents === null || Number.isNaN(cents)) return 'invalid';
   const limits = mode === 'topUp' ? WALLET_LIMITS.topUp : WALLET_LIMITS.payout;
   if (cents < limits.min || cents > limits.max) return 'range';
@@ -35,7 +39,15 @@ export function amountProblem(cents: number | null, mode: MoneyMode, balanceCent
  * One Idempotency-Key per attempt: a double click or a retry after a lost answer charges or pays out
  * once. The balance changes on screen only when the API has answered.
  */
-export function MoneyDialog({ mode, balanceCents, onClose }: { mode: MoneyMode; balanceCents: number; onClose(): void }) {
+export function MoneyDialog({
+  mode,
+  balanceCents,
+  onClose,
+}: {
+  mode: MoneyMode;
+  balanceCents: number;
+  onClose(): void;
+}) {
   const t = useTranslations('wallet');
   const tc = useTranslations('checkout');
   const locale = useLocale();
@@ -49,6 +61,20 @@ export function MoneyDialog({ mode, balanceCents, onClose }: { mode: MoneyMode; 
   const [card, setCard] = useState<CardFields>(EMPTY_CARD);
   const [token, setToken] = useState<{ for: string; token: CardToken } | null>(null);
   const [tried, setTried] = useState(false);
+  // Owner, 2026-11-16: top up with Apple Pay, Google Pay or a card; pay out to a bank account (IBAN).
+  const [method, setMethod] = useState<'card' | WalletPayKind>('card');
+  const [iban, setIban] = useState('');
+  const [holder, setHolder] = useState(user?.name ?? '');
+  const ibanCheck = IbanSchema.safeParse(iban);
+  const ibanError =
+    tried && mode === 'withdraw' && !ibanCheck.success
+      ? ibanCheck.error.issues[0]?.message === 'Payouts go to accounts in euro-area countries'
+        ? t('ibanCountry')
+        : t('ibanInvalid')
+      : undefined;
+  const holderError =
+    tried && mode === 'withdraw' && holder.trim().length < 2 ? t('holderRequired') : undefined;
+  const usesCard = mode === 'topUp' && method === 'card';
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const cents = parseEuros(amount);
@@ -57,19 +83,33 @@ export function MoneyDialog({ mode, balanceCents, onClose }: { mode: MoneyMode; 
   const limits = mode === 'topUp' ? WALLET_LIMITS.topUp : WALLET_LIMITS.payout;
   const max = mode === 'withdraw' ? Math.min(limits.max, balanceCents) : limits.max;
 
-  const move = useIdempotentMutation<{ amountCents: number; cardToken: string }, { text: string }>({
+  const move = useIdempotentMutation<
+    { amountCents: number; cardToken?: string; iban?: string; holder?: string },
+    { text: string }
+  >({
     intent: (vars) => `${mode}:${JSON.stringify(vars)}`,
     mutate: async (vars, key) => {
       const params = { header: { 'Idempotency-Key': key } };
       if (mode === 'topUp') {
-        await unwrap(client.POST('/api/v1/wallet/top-ups', { params, body: vars }));
+        await unwrap(
+          client.POST('/api/v1/wallet/top-ups', {
+            params,
+            body: { amountCents: vars.amountCents, cardToken: vars.cardToken! },
+          }),
+        );
         return { text: t('toppedUp', { amount: money(vars.amountCents) }) };
       }
       const { payout } = await unwrap(client.POST('/api/v1/wallet/payouts', { params, body: vars }));
       return {
         text:
           payout.status === 'DONE'
-            ? t('withdrawn', { amount: money(vars.amountCents), card: `${payout.brand.toUpperCase()} ·· ${payout.last4}` })
+            ? t('withdrawn', {
+                amount: money(vars.amountCents),
+                card:
+                  payout.brand === 'iban'
+                    ? `IBAN ·· ${payout.last4}`
+                    : `${payout.brand.toUpperCase()} ·· ${payout.last4}`,
+              })
             : t('withdrawPending', { amount: money(vars.amountCents) }),
       };
     },
@@ -78,18 +118,34 @@ export function MoneyDialog({ mode, balanceCents, onClose }: { mode: MoneyMode; 
   async function submit() {
     setTried(true);
     setError(null);
-    if (problem || Object.keys(cardProblems).length > 0 || cents === null) return;
+    if (problem || cents === null) return;
+    if (usesCard && Object.keys(cardProblems).length > 0) return;
+    if (mode === 'withdraw' && (!ibanCheck.success || holder.trim().length < 2)) return;
     setBusy(true);
     try {
-      const fingerprint = JSON.stringify(card);
-      const current = token?.for === fingerprint ? token.token : await tokenizeCard(client, card);
-      setToken({ for: fingerprint, token: current });
-      const result = await move.run({ amountCents: cents, cardToken: current.token });
+      let result: { text: string };
+      if (mode === 'withdraw') {
+        result = await move.run({ amountCents: cents, iban: ibanCheck.data!, holder: holder.trim() });
+      } else if (method !== 'card') {
+        // The phone's wallet hands over a card (test mode: a test card; with the provider: the real sheet).
+        const wallet = await unwrap(
+          client.POST('/api/v1/payments/wallet-tokens', { body: { kind: method } }),
+        );
+        result = await move.run({ amountCents: cents, cardToken: wallet.token });
+      } else {
+        const fingerprint = JSON.stringify(card);
+        const current = token?.for === fingerprint ? token.token : await tokenizeCard(client, card);
+        setToken({ for: fingerprint, token: current });
+        result = await move.run({ amountCents: cents, cardToken: current.token });
+      }
       await queryClient.invalidateQueries({ queryKey: walletKeys.all });
       toast.show(result.text);
       onClose();
     } catch (failure) {
-      const decline = failure instanceof ApiError && failure.code === 'PAYMENT_DECLINED' ? String(failure.details?.['declineCode'] ?? 'card_declined') : null;
+      const decline =
+        failure instanceof ApiError && failure.code === 'PAYMENT_DECLINED'
+          ? String(failure.details?.['declineCode'] ?? 'card_declined')
+          : null;
       if (decline || (failure instanceof ApiError && failure.fields?.['cardToken'])) setToken(null);
       setError(decline && tc.has(`errors.${decline}`) ? tc(`errors.${decline}`) : errorText(failure));
     } finally {
@@ -109,7 +165,12 @@ export function MoneyDialog({ mode, balanceCents, onClose }: { mode: MoneyMode; 
   const shown = cents !== null && !Number.isNaN(cents) ? money(cents) : '';
 
   return (
-    <Dialog open onClose={() => !pending && onClose()} title={mode === 'topUp' ? t('topUpTitle') : t('withdrawTitle')} wide>
+    <Dialog
+      open
+      onClose={() => !pending && onClose()}
+      title={mode === 'topUp' ? t('topUpTitle') : t('withdrawTitle')}
+      wide
+    >
       <form
         className="flex flex-col gap-5"
         data-money-dialog={mode}
@@ -118,7 +179,12 @@ export function MoneyDialog({ mode, balanceCents, onClose }: { mode: MoneyMode; 
           void submit();
         }}
       >
-        <Field label={t('amount')} hint={t('amountHint', { min: money(limits.min), max: money(max) })} error={amountError} suffix="€">
+        <Field
+          label={t('amount')}
+          hint={t('amountHint', { min: money(limits.min), max: money(max) })}
+          error={amountError}
+          suffix="€"
+        >
           <input
             inputMode="decimal"
             autoComplete="off"
@@ -129,11 +195,80 @@ export function MoneyDialog({ mode, balanceCents, onClose }: { mode: MoneyMode; 
             className={`${INPUT_CLASS} pr-16 text-lg font-bold tabular-nums`}
           />
         </Field>
-        <TestModeNotice onUse={(number) => setCard({ number, expiry: '12 / 34', cvc: '123', holder: card.holder || user?.name || '' })} />
-        <CardForm value={card} onChange={setCard} problems={cardProblems} showErrors={tried} disabled={pending} />
+        {mode === 'topUp' && (
+          <div
+            role="radiogroup"
+            aria-label={t('method')}
+            className="grid grid-cols-3 gap-2"
+            data-pay-methods=""
+          >
+            {(['apple_pay', 'google_pay', 'card'] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                role="radio"
+                aria-checked={method === m}
+                onClick={() => setMethod(m)}
+                disabled={pending}
+                className={`rounded-media flex min-h-14 items-center justify-center gap-1.5 border-[1.5px] px-2 text-[15px] font-bold transition-colors ${
+                  method === m ? 'border-ink bg-ink text-canvas' : 'border-ink/20 hover:border-ink'
+                }`}
+              >
+                {m === 'apple_pay' ? 'Apple Pay' : m === 'google_pay' ? 'Google Pay' : t('methodCard')}
+              </button>
+            ))}
+          </div>
+        )}
+        {usesCard && (
+          <>
+            <TestModeNotice
+              onUse={(number) =>
+                setCard({ number, expiry: '12 / 34', cvc: '123', holder: card.holder || user?.name || '' })
+              }
+            />
+            <CardForm
+              value={card}
+              onChange={setCard}
+              problems={cardProblems}
+              showErrors={tried}
+              disabled={pending}
+            />
+          </>
+        )}
+        {mode === 'topUp' && !usesCard && <p className="text-ink/75 text-sm">{t('walletPayTest')}</p>}
+        {mode === 'withdraw' && (
+          <>
+            <Field label={t('iban')} hint={t('ibanHint')} error={ibanError}>
+              <input
+                value={iban}
+                onChange={(event) => setIban(event.target.value)}
+                autoComplete="off"
+                spellCheck={false}
+                placeholder="LV80 BANK 0000 4351 9500 1"
+                disabled={pending}
+                className={`${INPUT_CLASS} font-semibold tracking-wide uppercase`}
+              />
+            </Field>
+            <Field label={t('holder')} error={holderError}>
+              <input
+                value={holder}
+                onChange={(event) => setHolder(event.target.value)}
+                autoComplete="name"
+                disabled={pending}
+                className={INPUT_CLASS}
+              />
+            </Field>
+          </>
+        )}
         {error && (
-          <p role="alert" className="rounded-media border-ink/15 flex items-start gap-2 border p-3 text-sm font-bold">
-            <span aria-hidden="true" className="bg-[var(--danger)] mt-0.5 inline-block size-4 shrink-0 rounded-full border border-ink/15" />
+          <p
+            role="alert"
+            className="rounded-media border-ink/15 flex items-start gap-2 border p-3 text-sm font-bold"
+          >
+            <span
+              aria-hidden="true"
+              className="border-ink/15 mt-0.5 inline-block size-4 shrink-0 rounded-full border bg-[var(--danger)]"
+            />
             {error}
           </p>
         )}

@@ -1,5 +1,5 @@
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
-import type { CardBrand, CardInput, CardToken } from '@yoyo/shared';
+import { IbanSchema, type CardBrand, type CardInput, type CardToken, type WalletPayKind } from '@yoyo/shared';
 import type { Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
 import type { ChargeResult, PaymentProvider } from './payment.provider';
@@ -93,6 +93,12 @@ export class FakeCardProvider implements PaymentProvider {
     return { token: `tok_${body}.${this.sign(body)}`, brand, last4: payload.l, expMonth: card.expMonth, expYear: card.expYear };
   }
 
+  /** The test wallets: Apple Pay hands over a Visa, Google Pay a Mastercard (Stripe's test cards). */
+  tokenizeWallet(kind: WalletPayKind): CardToken {
+    const year = this.clock.now().getUTCFullYear() + 3;
+    return this.tokenize({ number: kind === 'apple_pay' ? '4242424242424242' : '5555555555554444', expMonth: 12, expYear: year, cvc: '123', holder: kind === 'apple_pay' ? 'Apple Pay' : 'Google Pay' });
+  }
+
   async charge(input: { token: string; amountCents: number; idempotencyKey: string; description: string }): Promise<ChargeResult> {
     return this.once(`charge:${input.idempotencyKey}`, () => {
       const card = this.read(input.token, true);
@@ -108,6 +114,11 @@ export class FakeCardProvider implements PaymentProvider {
 
   async payout(input: { token: string; amountCents: number; idempotencyKey: string }): Promise<{ ref: string }> {
     return this.once(`payout:${input.idempotencyKey}`, () => {
+      // A bank account: a SEPA transfer to a valid euro-area IBAN.
+      if (input.token.startsWith('iban:')) {
+        if (!IbanSchema.safeParse(input.token.slice(5).split('|')[0]).success) throw new Error('payout to an invalid IBAN');
+        return { ref: newRef('po') };
+      }
       // A saved destination keeps working after the 15 minutes a token has to pay.
       if (this.read(input.token, false) === null) throw new Error('payout to an unknown card');
       return { ref: newRef('po') };

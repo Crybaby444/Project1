@@ -69,6 +69,6 @@ export class WalletController {
   @ApiErrors(400, 401, 403, 409, 429)
   payout(@CurrentUser() user: PublicUser, @Body() body: PayoutRequestDto): Promise<PayoutResponse> {
     this.limiter.hit(RATE_LIMITS.walletMove(user.id, 'payout'));
-    return this.wallet.payout(user.id, body.amountCents, body.cardToken);
+    return this.wallet.payout(user.id, body.amountCents, body.iban !== undefined ? { iban: body.iban, holder: body.holder! } : { cardToken: body.cardToken! });
   }
 }

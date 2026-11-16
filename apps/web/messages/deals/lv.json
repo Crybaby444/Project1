@@ -378,7 +378,7 @@
     "topUp": "Papildināt",
     "withdraw": "Izņemt",
     "topUpTitle": "Papildināt maku",
-    "withdrawTitle": "Izņemt uz karti",
+    "withdrawTitle": "Izmaksāt uz bankas kontu",
     "amount": "Summa",
     "amountHint": "No {min} līdz {max}.",
     "amountInvalid": "Ievadi summu, piemēram, 25 vai 25,50.",
@@ -400,7 +400,16 @@
     "retry": "Mēģināt vēlreiz",
     "previous": "Jaunāki",
     "next": "Vecāki",
-    "page": "{page}. lapa no {pages}"
+    "page": "{page}. lapa no {pages}",
+    "method": "Kā maksāt",
+    "methodCard": "Karte",
+    "walletPayTest": "Testa režīms: Apple Pay un Google Pay izmanto testa karti; nauda netiek pārskaitīta.",
+    "iban": "Bankas konts (IBAN)",
+    "ibanHint": "Eirozonas konts; pārskaitījums ir SEPA maksājums eiro.",
+    "ibanInvalid": "Šis IBAN nav derīgs. Pārbaudi burtus un ciparus.",
+    "ibanCountry": "Izmaksas notiek uz kontiem eirozonas valstīs.",
+    "holder": "Konta īpašnieks",
+    "holderRequired": "Ieraksti vārdu, uz kuru ir konts."
   },
   "ledgerKind": {
     "TOP_UP": "Papildināts no kartes",

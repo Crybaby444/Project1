@@ -36,6 +36,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/payments/wallet-tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["PaymentsController_walletToken"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/username-available": {
         parameters: {
             query?: never;
@@ -2171,6 +2187,10 @@ export interface components {
                 };
             };
         };
+        WalletPayTokenRequestDto: {
+            /** @enum {string} */
+            kind: "apple_pay" | "google_pay";
+        };
         UsernameCheckDto_Output: {
             available: boolean;
             /** @enum {string|null} */
@@ -4249,7 +4269,9 @@ export interface components {
         };
         PayoutRequestDto: {
             amountCents: number;
-            cardToken: string;
+            cardToken?: string;
+            iban?: string;
+            holder?: string;
         };
         PayoutResponseDto_Output: {
             balanceCents: number;
@@ -4785,6 +4807,66 @@ export interface operations {
         };
         responses: {
             /** @description A card token */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CardTokenDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    PaymentsController_walletToken: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WalletPayTokenRequestDto"];
+            };
+        };
+        responses: {
+            /** @description A card token from Apple Pay or Google Pay */
             201: {
                 headers: {
                     [name: string]: unknown;
