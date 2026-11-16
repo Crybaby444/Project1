@@ -11,6 +11,7 @@ const LANGUAGES = [
 ] as const;
 const PAGES = [
   ['/', 'home'],
+  ['/what-is-yoyo', 'whatIs'],
   ['/how-it-works', 'howItWorks'],
   ['/faq', 'faq'],
   ['/terms', 'terms'],
@@ -27,7 +28,7 @@ for (const { locale, prefix, m } of LANGUAGES) {
     test(`${at(prefix, path)}: title, description, canonical, hreflang and a preview image`, async ({ page, request }) => {
       await page.goto(at(prefix, path));
       const meta = m.pages[key];
-      await expect(page).toHaveTitle(key === 'home' ? meta.title : `${meta.title} · Yoyo`);
+      await expect(page).toHaveTitle(key === 'home' || key === 'whatIs' ? meta.title : `${meta.title} · Yoyo`);
       await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', meta.description);
       await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', abs(prefix, path));
 

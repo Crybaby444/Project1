@@ -154,6 +154,9 @@ export function pageMetadata({
   brand = true,
 }: PageMetadataInput): Metadata {
   const links = alternates(path, locale, siteUrl);
+  // The language's preview card (app/[locale]/opengraph-image.tsx): a page's own openGraph replaces the
+  // inherited one, so it names the image itself or the link would preview without a picture.
+  const image = { url: localizedUrl('/opengraph-image', locale, siteUrl), width: 1200, height: 630, alt: title };
   return {
     title: brand ? `${title} · Yoyo` : title,
     description,
@@ -166,8 +169,9 @@ export function pageMetadata({
       url: links.canonical,
       title,
       description,
+      images: [image],
     },
-    twitter: { card: 'summary_large_image', title, description },
+    twitter: { card: 'summary_large_image', title, description, images: [image.url] },
   };
 }
 

@@ -3,7 +3,7 @@ import { loadCategories } from '@/lib/catalog/server-api';
 import { llmsText } from '@/lib/llms';
 import { siteOrigin } from '@/lib/seo';
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 /** /llms.txt: the site explained for AI assistants; without the API it still says what Yoyo is. */
 export async function GET() {

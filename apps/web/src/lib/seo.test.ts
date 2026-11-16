@@ -160,6 +160,15 @@ describe('pageMetadata', () => {
     expect(meta.twitter).toMatchObject({ card: 'summary_large_image', title: 'Privātums' });
   });
 
+  it('carries the language’s preview image, so a page’s own Open Graph does not drop the inherited one', () => {
+    const lv = pageMetadata({ locale: 'lv', path: '/faq', title: 'J', description: 'd', siteUrl: 'https://yoyo.rent' });
+    const image = { url: 'https://yoyo.rent/lv/opengraph-image', width: 1200, height: 630, alt: 'J' };
+    expect(lv.openGraph?.images).toEqual([image]);
+    expect(lv.twitter?.images).toEqual([image.url]);
+    const en = pageMetadata({ locale: 'en', path: '/faq', title: 'J', description: 'd', siteUrl: 'https://yoyo.rent' });
+    expect(en.openGraph?.images).toEqual([{ ...image, url: 'https://yoyo.rent/opengraph-image' }]);
+  });
+
   it('keeps a title that already names the brand (the home page) as it is', () => {
     const meta = pageMetadata({
       locale: 'en',

@@ -765,7 +765,7 @@
   "catalog": {
     "allTitle": "Catalog",
     "allDescription": "Rent tools, electronics, sports and camping gear and more from people in Riga.",
-    "categoryTitle": "{name} for rent",
+    "categoryTitle": "{name} for rent in Riga",
     "categoryDescription": "Rent {name} from people near you in Riga: daily prices, deposits and free dates.",
     "searchTitle": "Search",
     "searchTitleFor": "“{q}”",
@@ -974,7 +974,9 @@
       "label": "Share this item",
       "copied": "Link copied",
       "failed": "Could not copy the link"
-    }
+    },
+    "metaTitle": "{title} for rent in {place}",
+    "metaTitleNoPlace": "{title} for rent"
   },
   "profile": {
     "title": "{name}",

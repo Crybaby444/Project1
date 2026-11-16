@@ -765,7 +765,7 @@
   "catalog": {
     "allTitle": "Katalogs",
     "allDescription": "Nomā instrumentus, elektroniku, sporta un kempinga piederumus un daudz ko citu no cilvēkiem Rīgā.",
-    "categoryTitle": "{name} nomai",
+    "categoryTitle": "{name} nomai Rīgā",
     "categoryDescription": "Nomā {name} no cilvēkiem tuvumā Rīgā: dienas cenas, drošības naudas un brīvie datumi.",
     "searchTitle": "Meklēšana",
     "searchTitleFor": "“{q}”",
@@ -974,7 +974,9 @@
       "label": "Dalīties ar šo lietu",
       "copied": "Saite nokopēta",
       "failed": "Neizdevās nokopēt saiti"
-    }
+    },
+    "metaTitle": "{title} nomai: {place}",
+    "metaTitleNoPlace": "{title} nomai"
   },
   "profile": {
     "title": "{name}",
