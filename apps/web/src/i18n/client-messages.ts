@@ -3,7 +3,7 @@
  * of texts in its HTML). The admin panel and the style guide get them back through their own provider;
  * the FAQ, How it works, legal and page meta texts are only rendered on the server.
  */
-export const SERVER_OR_SECTION_ONLY = ['admin', 'styleguide', 'faq', 'howItWorks', 'legal', 'pages'] as const;
+export const SERVER_OR_SECTION_ONLY = ['admin', 'styleguide', 'faq', 'howItWorks', 'legal', 'pages', 'categoryIntro'] as const;
 
 const LEFT_OUT = new Set<string>(SERVER_OR_SECTION_ONLY);
 

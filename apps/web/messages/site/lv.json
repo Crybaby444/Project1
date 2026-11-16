@@ -475,5 +475,31 @@
     "contents": "Saturs",
     "effective": "Spēkā no {date}",
     "note": "Šis kopsavilkums palīdz orientēties; spēkā ir pilnais teksts zemāk."
+  },
+  "categoryIntro": {
+    "roots": {
+      "electronics": "Spēļu konsoles nedēļas nogalei, projektors filmu vakaram, klēpjdators, kamēr tavējais ir remontā, droni un rācijas ceļojumam. Īrē elektroniku no cilvēkiem tuvumā uz vajadzīgajām dienām un atdod, kad esi pabeidzis.",
+      "photo-video": "Kameras, objektīvi, sporta kameras, statīvi un studijas gaismas fotosesijai, kāzām vai atvaļinājumam. Izmēģini objektīvu pirms pirkšanas vai paņem visu komplektu vienai nedēļas nogalei.",
+      "tools": "Urbjmašīnas, perforatori, slīpmašīnas, zāģi un tīrīšanas iekārtas darbiem, ko dari reizi vai divas gadā. Īrē instrumentu no kāda savā rajonā, pabeidz darbu un atdod.",
+      "construction": "Blietes, betona maisītāji, flīžu griezēji, ģeneratori, mitruma savācēji, kāpnes un sastatnes remontam. Dārga tehnika, ko reti vajag, uz tik dienām, cik ilgst darbs.",
+      "garden": "Zāles pļāvēji, trimmeri, augstspiediena mazgātāji, motorzāģi, sniega metēji un batuti. Sezonas lietas dārzam un pagalmam, īrētas uz nedēļas nogali, nevis glabātas visu gadu.",
+      "home-kitchen": "Putekļsūcēji, ventilatori, sildītāji un virtuves tehnika pārvākšanās, viesu nedēļas vai lielas gatavošanas dienai. Īrē uz dažām dienām, nevis pērc vēl vienu lietu skapim.",
+      "sports": "Velosipēdi, elektriskie skrejriteņi, skrituļslidas, slēpes, snovborda dēļi un ragavas. Izmēģini sportu pirms ekipējuma pirkšanas vai paņem vajadzīgo vienam braucienam.",
+      "camping": "Teltis, guļammaisi, kempinga mēbeles, plītiņas, mugursomas, laivas un kāpšanas ekipējums. Viss nedēļas nogalei dabā no cilvēkiem tuvumā, kuri savējo pašlaik nelieto.",
+      "kids": "Ratiņi, autosēdeklīši, līdzsvara velosipēdi, rotaļu mājiņas, rotaļlietas un bērnu mēbeles. Bērni ātri izaug: īrē uz tiem mēnešiem, kad der, vai mazbērnu ciemošanās laikam.",
+      "events-party": "Pasākumu teltis, galdi un krēsli, skaņa un gaismas, kostīmi un dekorācijas. Viss dzimšanas dienai, kāzām vai dārza ballītei, īrēts uz vienu dienu.",
+      "music": "Mūzikas instrumenti un DJ aprīkojums koncertam, ballītei vai lai saprastu, vai nodarbības patiks, pirms pērc.",
+      "car-travel": "Jumta kastes, bagāžnieki, velosipēdu turētāji, videoreģistratori un akumulatoru lādētāji ceļojumam ar auto. Īrē uz braucienu un atdod, kad esi mājās."
+    },
+    "about": {
+      "title": "{name} noma Yoyo",
+      "points": {
+        "a": "Katrā sludinājumā redzama cena dienā, depozīts un brīvās dienas.",
+        "b": "Tu un īpašnieks parakstāt līgumu tiešsaistē, pirms kas tiek samaksāts: vispirms tu, tad īpašnieks.",
+        "c": "Depozīts tiek turēts darījuma laikā un atgriežas, kad īpašnieks pārbaudījis atgriešanu ({hours} stundu laikā).",
+        "d": "Katru sludinājumu pirms publicēšanas pārbauda cilvēks, un atsauksmes nāk tikai no pabeigtiem darījumiem."
+      },
+      "more": "Kā notiek noma"
+    }
   }
 }
