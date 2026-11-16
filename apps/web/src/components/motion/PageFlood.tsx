@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { prefersReducedMotion } from '@/lib/motion';
-import { createFlood, shouldFlood } from '@/lib/motion/dot-flood';
+import { createFlood, sectionOf, shouldFlood } from '@/lib/motion/dot-flood';
 
 type Running = { flood: ReturnType<typeof createFlood>; covered: Promise<void>; from: string; fallback: number };
 
@@ -40,6 +40,7 @@ export function PageFlood() {
         plainClick: event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey && !a.target && !a.hasAttribute('download'),
         sameOrigin: url.origin === window.location.origin && !url.pathname.startsWith('/api/'),
         samePage: url.pathname === window.location.pathname,
+        sameSection: sectionOf(url.pathname) === sectionOf(window.location.pathname),
         language: a.hasAttribute('hreflang'),
         optOut: a.closest('[data-no-flood]') !== null,
         reducedMotion: prefersReducedMotion(),

@@ -27,3 +27,4 @@ export * from './staff';
 export * from './identity';
 export * from './countries';
 export * from './identity-check';
+export * from './iban';

@@ -34,6 +34,8 @@ export type ListingValues = {
   maxDays: number;
   city: string;
   district: string;
+  /** Where the item is (ISO code), from the address found; the catalog shows one country at a time. */
+  country: string | null;
   lat: number | null;
   lng: number | null;
   rules: { preset: RulePreset[]; custom: string[] };
@@ -74,6 +76,7 @@ export function emptyValues(contentLocale: Locale = 'en'): ListingValues {
     maxDays: 30,
     city: '',
     district: '',
+    country: null,
     lat: null,
     lng: null,
     rules: { preset: [], custom: [] },
@@ -95,6 +98,7 @@ export function valuesFromListing(listing: OwnerListing): ListingValues {
     maxDays: listing.maxDays,
     city: listing.city ?? '',
     district: listing.district ?? '',
+    country: listing.country,
     lat: listing.lat,
     lng: listing.lng,
     rules: { preset: [...listing.rules.preset], custom: [...listing.rules.custom] },

@@ -103,6 +103,77 @@
         ]
       }
     },
+    "/api/v1/payments/wallet-tokens": {
+      "post": {
+        "operationId": "PaymentsController_walletToken",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalletPayTokenRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "A card token from Apple Pay or Google Pay",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CardTokenDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many attempts (RATE_LIMITED); see Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "payments"
+        ]
+      }
+    },
     "/api/v1/auth/username-available": {
       "get": {
         "operationId": "AuthController_usernameAvailable",
@@ -235,6 +306,74 @@
         "responses": {
           "302": {
             "description": "Signed in (session cookies) and sent to the page the user started from; or, if the sign-in failed, sent to the site’s /login?oauthError=OAUTH_CANCELLED|OAUTH_STATE_INVALID|OAUTH_FAILED|AUTH_BLOCKED|AUTH_CODE_REQUIRED"
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/apple": {
+      "get": {
+        "operationId": "AuthController_appleStart",
+        "parameters": [
+          {
+            "name": "returnTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 2048,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to Apple’s sign-in screen"
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/apple/callback": {
+      "post": {
+        "operationId": "AuthController_appleCallback",
+        "parameters": [],
+        "responses": {
+          "302": {
+            "description": "Signed in and sent back, or sent to /login?oauthError=…"
           },
           "404": {
             "description": "Not found or not available",
@@ -9963,6 +10102,21 @@
         ],
         "additionalProperties": false
       },
+      "WalletPayTokenRequestDto": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "apple_pay",
+              "google_pay"
+            ]
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
       "UsernameCheckDto_Output": {
         "type": "object",
         "properties": {
@@ -9991,12 +10145,16 @@
           "google": {
             "type": "boolean"
           },
+          "apple": {
+            "type": "boolean"
+          },
           "phone": {
             "type": "boolean"
           }
         },
         "required": [
           "google",
+          "apple",
           "phone"
         ],
         "additionalProperties": false
@@ -20252,11 +20410,19 @@
             "minLength": 10,
             "maxLength": 1000,
             "pattern": "^tok_[A-Za-z0-9_.-]+$"
+          },
+          "iban": {
+            "type": "string",
+            "maxLength": 42
+          },
+          "holder": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 70
           }
         },
         "required": [
-          "amountCents",
-          "cardToken"
+          "amountCents"
         ]
       },
       "PayoutResponseDto_Output": {

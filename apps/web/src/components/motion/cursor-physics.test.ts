@@ -72,7 +72,7 @@ describe('hoverTarget', () => {
     expect((t as { hw: number }).hw).toBeLessThan(45);
   });
 
-  it('becomes a ring over something too big to fill (a whole card)', () => {
-    expect(hoverTarget(rect(0, 0, 320, 420), null, 14).kind).toBe('ring');
+  it('stays a plain drop over something too big to fill, a whole card (owner, 2026-11-16: no ring)', () => {
+    expect(hoverTarget(rect(0, 0, 320, 420), null, 14)).toBeNull();
   });
 });

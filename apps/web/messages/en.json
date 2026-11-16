@@ -334,7 +334,8 @@
         "title": "This link does not work",
         "body": "It may be cut short. Open it from the email once more, or ask for a new one."
       }
-    }
+    },
+    "apple": "Continue with Apple"
   },
   "settings": {
     "title": "Settings",
@@ -608,7 +609,8 @@
       "district": "District",
       "placeHint": "Shown on your listing. Filled in from the point; you can change it.",
       "pointSet": "Point set: {place}",
-      "pointSetNoName": "Point set on the map."
+      "pointSetNoName": "Point set on the map.",
+      "outside": "This point is outside the euro area. For now Yoyo works only in euro countries; pick a place there."
     },
     "calendar": {
       "title": "Days it is not available",
@@ -774,9 +776,9 @@
   },
   "catalog": {
     "allTitle": "Catalog",
-    "allDescription": "Rent tools, electronics, sports and camping gear and more from people in Riga.",
-    "categoryTitle": "{name} for rent in Riga",
-    "categoryDescription": "Rent {name} from people near you in Riga: daily prices, deposits and free dates.",
+    "allDescription": "Rent tools, electronics, sports and camping gear and more from people near you.",
+    "categoryTitle": "{name} for rent near you",
+    "categoryDescription": "Rent {name} from people near you: daily prices, deposits and free dates.",
     "searchTitle": "Search",
     "searchTitleFor": "“{q}”",
     "found": "{count, plural, =0 {Nothing found} one {# item} other {# items}}",
@@ -990,7 +992,7 @@
   },
   "profile": {
     "title": "{name}",
-    "description": "{name} on Yoyo: {count, plural, =0 {no items for rent yet} one {# item for rent} other {# items for rent}} in Riga.",
+    "description": "{name} on Yoyo: {count, plural, =0 {no items for rent yet} one {# item for rent} other {# items for rent}}.",
     "about": "About",
     "tabs": "{name}: items and reviews",
     "items": "{count, plural, one {# item} other {# items}}",
@@ -1140,7 +1142,7 @@
       "what": "What",
       "whatPlaceholder": "What do you need?",
       "where": "Where",
-      "anywhere": "All of Riga",
+      "anywhere": "Everywhere in the country",
       "when": "When",
       "anyDays": "Any days",
       "clearDays": "Clear the days",
@@ -1222,6 +1224,11 @@
       "shops": "My shops"
     },
     "menu": "My profile"
+  },
+  "country": {
+    "button": "Country: {name}",
+    "title": "Your country",
+    "lead": "Yoyo shows things for rent in one country at a time, in euros. Pick where you are."
   },
   "dialog": {
     "close": "Close"

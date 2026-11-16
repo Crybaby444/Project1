@@ -64,6 +64,14 @@ const EnvObject = z.object({
   /** 32 bytes as 64 hex characters; without it the key is derived from JWT_SECRET. */
   IDENTITY_PHOTO_KEY: z.preprocess(blankAsUnset, z.string().regex(/^[0-9a-f]{64}$/i).optional()),
   IDENTITY_REQUIRED: z.enum(['true', 'false']).default('true').transform((v) => v === 'true'),
+  // Sign in with Apple: the Services ID, the team, the key id and the .p8 key (PEM; '\n' may stand for line breaks).
+  APPLE_CLIENT_ID: z.preprocess(blankAsUnset, z.string().optional()),
+  APPLE_TEAM_ID: z.preprocess(blankAsUnset, z.string().optional()),
+  APPLE_KEY_ID: z.preprocess(blankAsUnset, z.string().optional()),
+  APPLE_PRIVATE_KEY: z.preprocess(blankAsUnset, z.string().optional()),
+  APPLE_AUTH_URL: z.url().default('https://appleid.apple.com/auth/authorize'),
+  APPLE_TOKEN_URL: z.url().default('https://appleid.apple.com/auth/token'),
+  APPLE_JWKS_URL: z.url().default('https://appleid.apple.com/auth/keys'),
   /**
    * Who delivers phone confirmation codes. `mailbox` only simulates SMS (the code arrives by email,
    * so it proves nothing about the phone): the default outside production, never allowed in it.

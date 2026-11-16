@@ -126,7 +126,10 @@ export function DropCursor() {
     const pick = (node: EventTarget | null) => {
       const e = node instanceof Element ? node : null;
       typing = stepsAside(e);
-      const next = typing ? null : (e?.closest(CLICKABLE) ?? null);
+      const hit = typing ? null : (e?.closest(CLICKABLE) ?? null);
+      // A map marker's own box sits at its anchor, under the price pin it draws: pour into the pin itself
+      // (owner, 2026-11-16: a dark box showed under the price on the map).
+      const next = hit?.classList.contains('leaflet-marker-icon') ? (hit.querySelector<HTMLElement>('.yoyo-map-pin') ?? hit) : hit;
       if (next !== el) {
         el = next;
         elRadius = el ? radiusOf(el) : 0;
@@ -150,7 +153,7 @@ export function DropCursor() {
 
       stepSpring(alpha, typing ? 0 : alphaTarget, dt, 260, 1);
       stepSpring(hover, target?.kind === 'box' ? 1 : 0, dt, 420, 0.62);
-      stepSpring(ring, target?.kind === 'ring' ? 1 : 0, dt, 380, 0.7);
+      stepSpring(ring, 0, dt, 380, 0.7);
       stepSpring(plop, target?.kind === 'box' ? 1 : 0, dt, 520, 0.42);
       stepSpring(squash, 1, dt, 600, 0.32);
       rip.t = Math.min(1, rip.t + dt / 0.5);

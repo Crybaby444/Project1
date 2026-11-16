@@ -168,6 +168,8 @@ export type AdminUsersResponse = z.infer<typeof AdminUsersResponseSchema>;
 /** Which sign-in and confirmation methods this deployment offers. */
 export const ProvidersResponseSchema = z.object({
   google: z.boolean(),
+  /** Sign in with Apple (owner, 2026-11-16), on when the Apple Services ID and key are configured. */
+  apple: z.boolean(),
   /** False until a real SMS provider is configured: a "phone confirmed" mark must mean something. */
   phone: z.boolean(),
 });

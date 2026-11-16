@@ -378,7 +378,7 @@
     "topUp": "Top up",
     "withdraw": "Withdraw",
     "topUpTitle": "Top up the wallet",
-    "withdrawTitle": "Withdraw to a card",
+    "withdrawTitle": "Withdraw to your bank account",
     "amount": "Amount",
     "amountHint": "From {min} to {max}.",
     "amountInvalid": "Enter an amount like 25 or 25,50.",
@@ -400,7 +400,16 @@
     "retry": "Try again",
     "previous": "Newer",
     "next": "Older",
-    "page": "Page {page} of {pages}"
+    "page": "Page {page} of {pages}",
+    "method": "How to pay",
+    "methodCard": "Card",
+    "walletPayTest": "Test mode: Apple Pay and Google Pay use a test card; no money moves.",
+    "iban": "Bank account (IBAN)",
+    "ibanHint": "A euro-area account; the transfer is a SEPA payment in euros.",
+    "ibanInvalid": "This IBAN is not valid. Check the letters and digits.",
+    "ibanCountry": "Payouts go to accounts in euro-area countries.",
+    "holder": "Account holder",
+    "holderRequired": "Write the name the account is in."
   },
   "ledgerKind": {
     "TOP_UP": "Top-up from a card",

@@ -85,12 +85,30 @@ describe('WalletView', () => {
     const user = userEvent.setup();
     const { calls } = setup();
     await user.click(await screen.findByRole('button', { name: 'Withdraw' }));
-    const dialog = screen.getByRole('dialog', { name: 'Withdraw to a card' });
+    const dialog = screen.getByRole('dialog', { name: 'Withdraw to your bank account' });
     await user.type(within(dialog).getByLabelText('Amount'), '80');
-    await user.click(within(dialog).getByRole('button', { name: /Use: 4242/ }));
+    await user.type(within(dialog).getByLabelText('Bank account (IBAN)'), 'LV80BANK0000435195001');
     await user.click(within(dialog).getByRole('button', { name: 'Withdraw €80.00' }));
     expect(within(dialog).getByText('You have €50.00 available.')).toBeVisible();
     expect(calls.some((c) => c.method === 'POST')).toBe(false);
+  });
+
+  it('pays out to an IBAN with the holder’s name, and refuses a wrong one first', async () => {
+    const user = userEvent.setup();
+    const { calls } = setup({
+      'POST /api/v1/wallet/payouts': { status: 201, body: { balanceCents: 3_000, payout: { id: 'p1', amountCents: 2_000, brand: 'iban', last4: '5001', status: 'DONE' } } },
+    });
+    await user.click(await screen.findByRole('button', { name: 'Withdraw' }));
+    const dialog = screen.getByRole('dialog', { name: 'Withdraw to your bank account' });
+    await user.type(within(dialog).getByLabelText('Amount'), '20');
+    await user.type(within(dialog).getByLabelText('Bank account (IBAN)'), 'LV81BANK0000435195001');
+    await user.click(within(dialog).getByRole('button', { name: 'Withdraw €20.00' }));
+    expect(within(dialog).getByText(/This IBAN is not valid/)).toBeVisible();
+    expect(calls.some((c) => c.method === 'POST')).toBe(false);
+    await user.clear(within(dialog).getByLabelText('Bank account (IBAN)'));
+    await user.type(within(dialog).getByLabelText('Bank account (IBAN)'), 'lv80 bank 0000 4351 9500 1');
+    await user.click(within(dialog).getByRole('button', { name: 'Withdraw €20.00' }));
+    await waitFor(() => expect(calls.find((c) => c.method === 'POST')?.body).toMatchObject({ amountCents: 2_000, iban: 'LV80BANK0000435195001' }));
   });
 
   it('says when the wallet limit is reached', async () => {

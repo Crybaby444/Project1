@@ -34,7 +34,7 @@ function isUniqueViolation(error: unknown): boolean {
   return error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002';
 }
 
-const GOOGLE = 'google';
+const GOOGLE = 'google' as const;
 
 /** The site language of a path: `/lv/…` → lv, `/ru` → ru, anything else → en. */
 export function localeFromPath(path: string): Locale {
@@ -157,14 +157,14 @@ export class AuthService {
    * The Yoyo user behind a Google identity: the linked one; else the account with that email, now
    * linked; else a new confirmed account without a password. Blocked accounts get 403.
    */
-  async signInWithGoogle(identity: GoogleIdentity, locale: Locale): Promise<User> {
+  async signInWithGoogle(identity: GoogleIdentity, locale: Locale, provider: 'google' | 'apple' = GOOGLE): Promise<User> {
     let user: User;
     try {
-      user = await this.resolveGoogleUser(identity, locale);
+      user = await this.resolveGoogleUser(identity, locale, provider);
     } catch (error) {
       // A parallel callback for the same person created the link or the account first: use theirs.
       if (!isUniqueViolation(error)) throw error;
-      user = await this.resolveGoogleUser(identity, locale);
+      user = await this.resolveGoogleUser(identity, locale, provider);
     }
     if (user.deletedAt !== null) throw unauthenticated();
     if (user.blockedAt !== null) throw new AppError('AUTH_BLOCKED', 403);
@@ -173,10 +173,11 @@ export class AuthService {
     return user;
   }
 
-  private async resolveGoogleUser(identity: GoogleIdentity, locale: Locale): Promise<User> {
+  /** A Google or Apple identity → its user: the linked one, the one with that confirmed email, or a new one. */
+  private async resolveGoogleUser(identity: GoogleIdentity, locale: Locale, provider: string): Promise<User> {
     const now = this.clock.now();
     const link = await this.prisma.oAuthAccount.findUnique({
-      where: { provider_providerAccountId: { provider: GOOGLE, providerAccountId: identity.sub } },
+      where: { provider_providerAccountId: { provider, providerAccountId: identity.sub } },
       include: { user: true },
     });
     if (link) return link.user;
@@ -186,7 +187,7 @@ export class AuthService {
       const unconfirmed = existing.emailVerifiedAt === null;
       const user = await this.prisma.$transaction(async (tx) => {
         await tx.oAuthAccount.create({
-          data: { userId: existing.id, provider: GOOGLE, providerAccountId: identity.sub, createdAt: now },
+          data: { userId: existing.id, provider, providerAccountId: identity.sub, createdAt: now },
         });
         if (!unconfirmed) return existing;
         // Whoever registered this email never proved the mailbox; Google just did. Their password goes.
@@ -206,7 +207,7 @@ export class AuthService {
         locale,
         emailVerifiedAt: now,
         createdAt: now,
-        oauthAccounts: { create: { provider: GOOGLE, providerAccountId: identity.sub, createdAt: now } },
+        oauthAccounts: { create: { provider, providerAccountId: identity.sub, createdAt: now } },
       },
     });
   }
