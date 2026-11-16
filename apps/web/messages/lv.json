@@ -992,7 +992,16 @@
     "noReviewsTitle": "Vēl nav atsauksmju",
     "noReviewsBody": "Atsauksmes parādās šeit pēc pabeigtiem darījumiem.",
     "shops": "Veikali",
-    "noShops": "{name} vēl nav veikalu"
+    "noShops": "{name} vēl nav veikalu",
+    "edit": "Rediģēt profilu",
+    "manage": "Pārvaldīt manas lietas",
+    "followersOf": "Kas seko {name}",
+    "followingOf": "Kam seko {name}",
+    "loading": "Ielādē…",
+    "noFollowers": "{name} vēl neviens neseko.",
+    "noFollowing": "{name} vēl nevienam neseko.",
+    "favorites": "Izlase",
+    "noFavorites": "Vēl nekas nav saglabāts. Nospied sirsniņu uz lietas, lai to paturētu šeit."
   },
   "consent": {
     "label": "Sīkdatņu izvēle",

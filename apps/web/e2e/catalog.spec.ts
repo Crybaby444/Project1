@@ -149,9 +149,8 @@ test('the heart saves an item at once, and Favourites lists it', async ({ page }
   await page.getByRole('button', { name: /^Account menu/ }).click();
   // Favourites live in My profile (owner, 2026-11-16).
   await page.getByRole('menuitem', { name: en.mySpace.menu }).click();
-  await page.locator('[data-my-space]').getByRole('link', { name: en.mySpace.tabs.favorites }).click();
-  await expect(page.getByRole('heading', { level: 1, name: en.favorites.title })).toBeVisible();
-  await expect(page.getByRole('link', { name: drill.title })).toBeVisible();
+  await page.getByRole('tab', { name: en.profile.favorites }).click();
+  await expect(page.getByRole('tabpanel').getByRole('link', { name: drill.title })).toBeVisible();
 });
 
 test('a visitor who presses the heart is asked to sign in and brought back', async ({ page }) => {

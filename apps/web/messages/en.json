@@ -992,7 +992,16 @@
     "noReviewsTitle": "No reviews yet",
     "noReviewsBody": "Reviews appear here after finished deals.",
     "shops": "Shops",
-    "noShops": "{name} has no shops yet"
+    "noShops": "{name} has no shops yet",
+    "edit": "Edit profile",
+    "manage": "Manage my items",
+    "followersOf": "Who follows {name}",
+    "followingOf": "Whom {name} follows",
+    "loading": "Loading…",
+    "noFollowers": "Nobody follows {name} yet.",
+    "noFollowing": "{name} follows nobody yet.",
+    "favorites": "Favourites",
+    "noFavorites": "Nothing saved yet. Press the heart on an item to keep it here."
   },
   "consent": {
     "label": "Cookie choice",

@@ -149,7 +149,7 @@ export function UserMenu({ user }: { user: PublicUser }) {
               <>
                 <li role="none">
                   <Link
-                    href="/dashboard/lending"
+                    href={`/u/${user.id}`}
                     role="menuitem"
                     tabIndex={-1}
                     onClick={() => close({ refocus: false })}
