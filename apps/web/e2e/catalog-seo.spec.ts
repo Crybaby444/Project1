@@ -36,7 +36,9 @@ test.describe('item pages', () => {
       expect(response?.headers()['link'] ?? '').not.toContain('hreflang');
       await expect(page.locator('html')).toHaveAttribute('lang', 'lv');
       expect(await robots(page)).toBe('index, follow');
-      const product = JSON.parse((await page.locator('script[type="application/ld+json"]').first().textContent()) ?? '{}');
+      // The breadcrumb trail has its own block now; pick the Product.
+      const blocks = await page.locator('script[type="application/ld+json"]').evaluateAll((els) => els.map((e) => JSON.parse(e.textContent ?? '{}')));
+      const product = blocks.find((d) => d['@type'] === 'Product') ?? {};
       expect(product).toMatchObject({ '@type': 'Product', name: latvian.title, url: `${SITE}/lv${path}` });
       expect(product.offers).toMatchObject({ '@type': 'Offer', priceCurrency: 'EUR', price: '15.00' });
     }

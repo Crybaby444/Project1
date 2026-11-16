@@ -54,8 +54,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!detail.available) return { title: `${title} · Yoyo`, ...seoMetadata(seo) };
   const description = detail.listing.description ? shorten(detail.listing.description) : t('metaDescription', { title });
   const cover = detail.listing.photos[0];
+  // What people search for: the thing, "for rent", and where (SEO audit 2026-11-16: titles were the bare name).
+  const place = [detail.listing.city, detail.listing.district].filter(Boolean).join(', ');
+  const searchTitle = place ? t('metaTitle', { title, place }) : t('metaTitleNoPlace', { title });
   return {
-    title: `${title} · Yoyo`,
+    title: `${searchTitle} · Yoyo`,
     description,
     ...seoMetadata(seo),
     openGraph: {

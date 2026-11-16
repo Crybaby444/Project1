@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { setRequestLocale } from 'next-intl/server';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages, setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import { AdminShell } from '@/components/admin/panel/AdminShell';
 import { RequireRole } from '@/lib/session/RequireRole';
@@ -17,9 +18,12 @@ export default async function AdminLayout({ params, children }: Props) {
   setRequestLocale(locale);
   return (
     <div className="w-full px-4 sm:px-8">
-      <RequireRole role="ADMIN">
-        <AdminShell>{children}</AdminShell>
-      </RequireRole>
+      {/* The admin panel's texts are left out of the site-wide provider (i18n/client-messages.ts). */}
+      <NextIntlClientProvider messages={await getMessages()}>
+        <RequireRole role="ADMIN">
+          <AdminShell>{children}</AdminShell>
+        </RequireRole>
+      </NextIntlClientProvider>
     </div>
   );
 }

@@ -76,7 +76,7 @@ describe('robots.txt', () => {
     expect(rule.userAgent).toBe('*');
     expect(rule.allow).toBe('/');
     expect(rule.disallow).toEqual(
-      expect.arrayContaining(['/api/', '/settings', '/lv/settings', '/ru/settings', '/styleguide', '/dashboard', '/ru/dashboard', '/admin', '/listings/new']),
+      expect.arrayContaining(['/api/', '/settings', '/lv/settings', '/ru/settings', '/styleguide', '/dashboard', '/ru/dashboard', '/admin', '/listings/new', '/bookings', '/lv/wallet', '/ru/bookings']),
     );
     expect(rules.sitemap).toBe('https://yoyo.rent/sitemap.xml');
   });

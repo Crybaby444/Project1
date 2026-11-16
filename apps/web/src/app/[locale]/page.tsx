@@ -3,13 +3,16 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ListingCard } from '@/components/catalog/ListingCard';
 import { RecentlyViewed } from '@/components/catalog/RecentlyViewed';
+import { HomeFaq } from '@/components/market/HomeFaq';
 import { HomeSearch } from '@/components/market/HomeSearch';
 import { LendCalculator } from '@/components/market/LendCalculator';
+import { TrustRow } from '@/components/market/TrustRow';
+import { TwoDoors } from '@/components/market/TwoDoors';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { Link } from '@/i18n/navigation';
 import { loadPlaces, loadSearch } from '@/lib/catalog/server-api';
 import { pageMetadata } from '@/lib/seo';
-import { CONTACT_EMAIL, SITE_URL } from '@/lib/site';
+import { CONTACT_EMAIL, LIST_ITEM_HREF, SITE_URL } from '@/lib/site';
 
 type Params = { params: Promise<{ locale: string }> };
 
@@ -47,12 +50,14 @@ function structuredData(description: string) {
 }
 
 /**
- * The home (owner, 2026-11-16) is one throw of a yo-yo — out and back. Out: the search in its working form
- * and the newest real items hanging as price tags on the string (the hand pushes them). The loop: a held
- * night scene where the yo-yo runs through the four stops of a rental and the deposit comes back. Then
- * what is new, and back: what your things could earn, and a close that reels you to the top. The catalog
- * lives in the navigation; the cinematic introduction is /what-is-yoyo.
+ * The home (owner, 2026-11-16): the marketplace. The search (what, where, when) with four promises under
+ * it, what is new, what your things could earn, the questions before a first deal, and a door for each end
+ * of the string. The catalog itself lives in the header.
  */
+/** Static classes for the spot's width (Tailwind sees whole class names only). */
+const SPAN_SM = ['col-span-2', 'col-span-1', 'col-span-2'] as const;
+const SPAN_LG = ['', 'lg:col-span-1', 'lg:col-span-2', 'lg:col-span-3'] as const;
+
 export default async function HomePage({ params }: Params) {
   const { locale } = (await params) as { locale: Locale };
   setRequestLocale(locale);
@@ -61,6 +66,9 @@ export default async function HomePage({ params }: Params) {
   const items = newest.ok ? newest.data.items : [];
   const districts = places.ok ? places.data.districts : [];
   const today = new Date().toISOString().slice(0, 10);
+  const shown = items.slice(0, 8);
+  // Few things yet: the empty places in the last row invite the visitor to put theirs there.
+  const spare = { sm: (2 - (shown.length % 2)) % 2, lg: (4 - (shown.length % 4)) % 4 };
 
   return (
     <main className="flex flex-1 flex-col" data-market-home="">
@@ -74,6 +82,7 @@ export default async function HomePage({ params }: Params) {
           <p className="text-ink/80 max-w-[44ch] text-[18px] leading-relaxed lg:pb-2">{t('hero.lead')}</p>
         </div>
         <HomeSearch districts={districts} today={today} />
+        <TrustRow />
       </section>
 
 
@@ -88,11 +97,29 @@ export default async function HomePage({ params }: Params) {
             </Link>
           </div>
           <ul className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-4 lg:grid-cols-4">
-            {items.slice(0, 8).map((item, i) => (
+            {shown.map((item, i) => (
               <li key={item.id}>
                 <ListingCard item={item} eager={i < 4} />
               </li>
             ))}
+            {LIST_ITEM_HREF && spare.lg > 0 ? (
+              <li className={`${SPAN_SM[spare.sm]} ${SPAN_LG[spare.lg]}`}>
+                <Link
+                  href={LIST_ITEM_HREF}
+                  className="group border-ink/25 hover:border-ink rounded-media flex h-full min-h-[14rem] flex-col justify-between gap-6 border-[1.5px] border-dashed p-6 transition-colors sm:p-8"
+                  data-your-spot=""
+                >
+                  <span aria-hidden="true" className="bg-ink grid size-12 place-items-center rounded-full transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:rotate-180">
+                    <span className="bg-canvas h-[3px] w-6 rounded-full" />
+                  </span>
+                  <span className="flex flex-col gap-2">
+                    <span className="font-display text-[clamp(1.8rem,3vw,2.8rem)] leading-[0.9] font-black uppercase">{t('fresh.spot.title')}</span>
+                    <span className="text-ink/75 max-w-[36ch] text-[15px] leading-relaxed">{t('fresh.spot.body')}</span>
+                    <span className="mt-2 inline-flex items-center gap-2 text-[15px] font-bold underline decoration-1 underline-offset-4">{t('fresh.spot.cta')}</span>
+                  </span>
+                </Link>
+              </li>
+            ) : null}
           </ul>
           <RecentlyViewed />
         </section>
@@ -101,6 +128,12 @@ export default async function HomePage({ params }: Params) {
       <div className="border-ink/15 border-t">
         <LendCalculator />
       </div>
+
+      <div className="border-ink/15 border-t">
+        <HomeFaq />
+      </div>
+
+      <TwoDoors />
 
     </main>
   );

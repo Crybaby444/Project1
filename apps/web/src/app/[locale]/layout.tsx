@@ -7,7 +7,8 @@ import type { Metadata } from 'next';
 import { cookies, headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { clientMessages } from '@/i18n/client-messages';
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import { DropCursor } from '@/components/motion/DropCursor';
 import { loaderCountScript } from '@/components/home/loader-count';
@@ -69,7 +70,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
         <script dangerouslySetInnerHTML={{ __html: themeInitScript + freshLoadScript + NO_LOADER + loaderCountScript }} />
       </head>
       <body className="text-ink flex min-h-dvh flex-col">
-        <NextIntlClientProvider>
+        <NextIntlClientProvider messages={clientMessages(await getMessages())}>
           <QueryProvider>
             <SessionProvider>
               <ThemeProvider initialPreference={preference}>
