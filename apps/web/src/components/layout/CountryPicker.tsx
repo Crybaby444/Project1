@@ -31,7 +31,6 @@ export function CountryPicker({ country }: { country: Country }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        aria-label={t('button', { name: countryName(country, locale) })}
         aria-busy={pending || undefined}
         data-country-picker=""
         className="border-ink/25 hover:border-ink rounded-pill inline-flex h-10 items-center gap-1.5 border px-3 text-[13px] font-bold transition-colors"
@@ -40,6 +39,8 @@ export function CountryPicker({ country }: { country: Country }) {
           <path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z" />
           <circle cx="12" cy="9.5" r="2.5" />
         </svg>
+        {/* The name read out holds the visible code too (WCAG 2.5.3, label in name). */}
+        <span className="sr-only">{t('button', { name: countryName(country, locale) })} </span>
         {country}
       </button>
       <Dialog open={open} onClose={() => setOpen(false)} title={t('title')} wide>

@@ -14,7 +14,7 @@ describe('CountryPicker', () => {
   it('shows the country, lists the euro area by name, and keeps a choice in a cookie', async () => {
     const user = userEvent.setup();
     renderWithIntl(<CountryPicker country="LV" />);
-    await user.click(screen.getByRole('button', { name: 'Country: Latvia' }));
+    await user.click(screen.getByRole('button', { name: /^Country: Latvia\s*LV$/ }));
     const dialog = screen.getByRole('dialog', { name: 'Your country' });
     expect(dialog.querySelectorAll('ul button')).toHaveLength(21);
     expect(screen.getByRole('button', { name: /Latvia/, pressed: true })).toBeInTheDocument();
