@@ -1,4 +1,5 @@
 import { CATALOG_PAGE_SIZE, type CategoryNode, type Locale } from '@yoyo/shared';
+import { currentCountry } from '@/lib/country/server';
 import { getTranslations } from 'next-intl/server';
 import { RentalRules } from './RentalRules';
 import type { ReactNode } from 'react';
@@ -87,7 +88,8 @@ export async function CatalogResults({ params: raw, category, related, path, tit
 
   const { items, total } = results.data;
   const pages = Math.max(1, Math.ceil(total / CATALOG_PAGE_SIZE));
-  const districts = places.ok ? places.data.districts : [];
+  const cities = places.ok ? places.data.cities : [];
+  const country = await currentCountry();
   const status = t('found', { count: total });
 
   return (
@@ -125,18 +127,18 @@ export async function CatalogResults({ params: raw, category, related, path, tit
 
         <div className="grid gap-8 lg:grid-cols-[300px_minmax(0,1fr)]">
           <aside className="flex flex-col gap-4">
-            <Filters params={params} districts={districts} today={today} total={total} />
+            <Filters params={params} cities={cities} country={country} today={today} total={total} />
           </aside>
           <div className="flex min-w-0 flex-col gap-5">
             <Toolbar params={params} />
-            <ActiveFilters params={params} districts={districts} />
+            <ActiveFilters params={params} cities={cities} />
             {params.q && <span hidden data-search-q={params.q} data-search-results={total} />}
             <SaveSearchButton
               query={{
                 q: params.q,
                 category: category?.slug,
                 priceMax: params.priceMax,
-                district: params.district,
+                city: params.city,
               }}
             />
             <ResultsRegion status={status}>

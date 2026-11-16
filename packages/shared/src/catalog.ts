@@ -187,6 +187,14 @@ export const PlacesQuerySchema = z.object({ country: CountrySchema.optional() })
 
 export type PlacesResponse = z.infer<typeof PlacesResponseSchema>;
 
+/** Typing a city (owner, 2026-11-16: every city of the country, not only those with items). */
+export const CitySuggestQuerySchema = z.object({ country: CountrySchema, q: z.string().trim().min(1).max(60) });
+export const CitySuggestResponseSchema = z.object({
+  /** At most 8, best first; `count` is how many items the city has now. */
+  items: z.array(z.object({ name: z.string(), slug: z.string(), count: z.number().int().min(0) })),
+});
+export type CitySuggestResponse = z.infer<typeof CitySuggestResponseSchema>;
+
 /** Someone as everyone may see them: no email, no phone number. */
 export const OwnerSummarySchema = z.object({
   id: z.string(),

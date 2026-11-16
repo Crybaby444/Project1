@@ -825,7 +825,8 @@
       "clearDates": "Clear the dates",
       "district": "District",
       "anyDistrict": "Any district",
-      "pickDates": "Choose dates"
+      "pickDates": "Choose dates",
+      "city": "City"
     },
     "active": {
       "label": "Active filters",
@@ -856,7 +857,8 @@
       "tipDistrict": "look in every district",
       "tipText": "use a shorter or more general word",
       "reset": "Reset the filters",
-      "allCategories": "All categories"
+      "allCategories": "All categories",
+      "tipCity": "Try another city or any city."
     },
     "error": {
       "title": "The catalog did not load",
@@ -1148,11 +1150,12 @@
       "what": "What",
       "whatPlaceholder": "What do you need?",
       "where": "Where",
-      "anywhere": "Everywhere in the country",
+      "anywhere": "Any city",
       "when": "When",
       "anyDays": "Any days",
       "clearDays": "Clear the days",
-      "submit": "Search"
+      "submit": "Search",
+      "cityCount": "{count, plural, one {# item} other {# items}}"
     },
     "fresh": {
       "title": "Just added",

@@ -15,13 +15,14 @@ export type CatalogParams = {
   priceMax?: number;
   from?: string;
   to?: string;
-  district?: string;
+  /** A city of the country, by slug (owner, 2026-11-16: search by city, not by district). */
+  city?: string;
   sort?: Sort;
   view: 'list' | 'map';
 };
 
 /** The order parameters are written in, so one selection has exactly one address. */
-const ORDER = ['q', 'price_min', 'price_max', 'from', 'to', 'district', 'sort', 'view', 'page'] as const;
+const ORDER = ['q', 'price_min', 'price_max', 'from', 'to', 'city', 'sort', 'view', 'page'] as const;
 
 type Raw = Record<string, string | string[] | undefined> | URLSearchParams;
 
@@ -59,8 +60,8 @@ export function parseCatalogParams(raw: Raw): CatalogParams {
       params.to = to;
     }
   }
-  const district = read(raw, 'district');
-  if (district && /^[a-z0-9]+(-[a-z0-9]+)*$/.test(district) && district.length <= CATALOG_LIMITS.place) params.district = district;
+  const city = read(raw, 'city');
+  if (city && /^[a-z0-9]+(-[a-z0-9]+)*$/.test(city) && city.length <= CATALOG_LIMITS.place) params.city = city;
   const sort = read(raw, 'sort');
   if ((SORTS as readonly string[]).includes(sort ?? '')) params.sort = sort as Sort;
   if (read(raw, 'view') === 'map') params.view = 'map';
@@ -78,7 +79,7 @@ export function catalogSearch(params: CatalogParams, patch: Partial<CatalogParam
     price_max: next.priceMax?.toString(),
     from: next.from && next.to ? next.from : undefined,
     to: next.from && next.to ? next.to : undefined,
-    district: next.district,
+    city: next.city,
     sort: next.sort,
     view: next.view === 'map' ? 'map' : undefined,
     page: next.page > 1 ? String(next.page) : undefined,
@@ -99,7 +100,7 @@ export function hasFilters(params: CatalogParams): boolean {
     params.priceMin !== undefined ||
     params.priceMax !== undefined ||
     params.from !== undefined ||
-    params.district !== undefined ||
+    params.city !== undefined ||
     params.sort !== undefined ||
     params.view === 'map'
   );
@@ -110,7 +111,7 @@ export function filterCount(params: CatalogParams): number {
   return [
     params.priceMin !== undefined || params.priceMax !== undefined,
     params.from !== undefined,
-    params.district !== undefined,
+    params.city !== undefined,
   ].filter(Boolean).length;
 }
 
@@ -123,7 +124,7 @@ export function toApiQuery(params: CatalogParams, category?: string): CatalogQue
     ...(params.priceMin !== undefined && { priceMin: params.priceMin * 100 }),
     ...(params.priceMax !== undefined && { priceMax: params.priceMax * 100 }),
     ...(params.from !== undefined && params.to !== undefined && { start: params.from, end: params.to }),
-    ...(params.district !== undefined && { district: params.district }),
+    ...(params.city !== undefined && { city: params.city }),
     ...(params.sort !== undefined && { sort: params.sort }),
   };
 }

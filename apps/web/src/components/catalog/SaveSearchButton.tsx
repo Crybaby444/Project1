@@ -8,7 +8,7 @@ import { unwrap } from '@/lib/session/api-error';
 import { useApiClient, useSession } from '@/lib/session/SessionProvider';
 
 /** The filters a saved search keeps, as the page has them (prices in whole euros). */
-export type SearchToSave = { q?: string; category?: string; priceMax?: number; district?: string };
+export type SearchToSave = { q?: string; category?: string; priceMax?: number; city?: string };
 
 /**
  * "Tell me about new items": saves the page's search (owner, 2026-11-15), so the bell rings when a
@@ -29,13 +29,13 @@ export function SaveSearchButton({ query }: { query: SearchToSave }) {
             ...(query.q && { q: query.q }),
             ...(query.category && { category: query.category }),
             ...(query.priceMax !== undefined && { priceMax: query.priceMax * 100 }),
-            ...(query.district && { district: query.district }),
+            ...(query.city && { city: query.city }),
           },
         }),
       ),
   });
 
-  if (!query.q && !query.category && query.priceMax === undefined && !query.district) return null;
+  if (!query.q && !query.category && query.priceMax === undefined && !query.city) return null;
 
   if (save.isSuccess) {
     return (

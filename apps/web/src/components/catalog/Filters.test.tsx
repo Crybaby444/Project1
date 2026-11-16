@@ -1,6 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { NextIntlClientProvider } from 'next-intl';
+import { SessionProvider } from '@/lib/session/SessionProvider';
+import { fakeApi, meRoute } from '@/test/fake-api';
 import { describe, expect, it, vi } from 'vitest';
 import en from '../../../messages/en.json';
 import { parseCatalogParams } from '@/lib/catalog/params';
@@ -18,9 +21,13 @@ const { Filters } = await import('./Filters');
 function ui(query: string) {
   return (
     <NextIntlClientProvider locale="en" messages={en}>
+      <QueryClientProvider client={new QueryClient()}>
+      <SessionProvider client={fakeApi(meRoute(null)).client} hasSession={() => false}>
       <CatalogShell>
-        <Filters params={parseCatalogParams(new URLSearchParams(query))} districts={[]} today="2026-11-09" total={1} />
+        <Filters params={parseCatalogParams(new URLSearchParams(query))} cities={[]} country="LV" today="2026-11-09" total={1} />
       </CatalogShell>
+      </SessionProvider>
+      </QueryClientProvider>
     </NextIntlClientProvider>
   );
 }

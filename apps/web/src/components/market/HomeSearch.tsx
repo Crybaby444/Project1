@@ -3,21 +3,23 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { RangeCalendar } from '@/components/catalog/RangeCalendar';
-import { Select } from '@/components/ui/Select';
+import { CityInput, type CityChoice } from '@/components/catalog/CityInput';
+import type { Country } from '@yoyo/shared';
 import { useRouter } from '@/i18n/navigation';
 
 import type { Range } from '@/lib/catalog/range';
 
 /**
- * The home's search, in its working form (the action visitors come for): what, where (a district of Riga
- * that has items) and when (a period on the site's own calendar). Sends to /search with q, district, from, to.
+ * The home's search, in its working form (the action visitors come for): what, where (any city of the
+ * visitor's country, typed with suggestions) and when (a period on the site's own calendar). Sends to
+ * /search with q, city, from, to.
  */
-export function HomeSearch({ districts, today }: { districts: { slug: string; district: string; count: number }[]; today: string }) {
+export function HomeSearch({ country, today }: { country: Country; today: string }) {
   const t = useTranslations('market.search');
   const locale = useLocale();
   const router = useRouter();
   const [q, setQ] = useState('');
-  const [district, setDistrict] = useState('');
+  const [city, setCity] = useState<CityChoice | null>(null);
   const [range, setRange] = useState<Range | null>(null);
   const [calendar, setCalendar] = useState(false);
   const ids = { q: useId(), where: useId(), when: useId() };
@@ -41,7 +43,7 @@ export function HomeSearch({ districts, today }: { districts: { slug: string; di
     event.preventDefault();
     const params = new URLSearchParams();
     if (q.trim()) params.set('q', q.trim());
-    if (district) params.set('district', district);
+    if (city) params.set('city', city.slug);
     if (range) {
       params.set('from', range.start);
       params.set('to', range.end ?? range.start);
@@ -72,13 +74,7 @@ export function HomeSearch({ districts, today }: { districts: { slug: string; di
         <label htmlFor={ids.where} className={caption}>
           {t('where')}
         </label>
-        <Select
-          id={ids.where}
-          value={district}
-          onChange={setDistrict}
-          className="[&_button]:min-h-0 [&_button]:border-0 [&_button]:bg-transparent [&_button]:px-0 [&_button]:text-[17px] [&_button]:font-semibold"
-          options={[{ value: '', label: t('anywhere') }, ...districts.map((d) => ({ value: d.slug, label: `${d.district} · ${d.count}` }))]}
-        />
+        <CityInput id={ids.where} country={country} value={city} onChange={setCity} className="text-[17px] font-semibold" />
       </div>
       <div ref={popover} className={`${cell} border-ink/15 relative md:border-l`}>
         <span id={ids.when} aria-hidden="true" className={caption}>

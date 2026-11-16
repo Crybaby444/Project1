@@ -12,7 +12,7 @@ export async function EmptyResults({ params, resetHref }: { params: CatalogParam
   const tips = [
     params.from ? t('tipDates') : null,
     params.priceMin !== undefined || params.priceMax !== undefined ? t('tipPrice') : null,
-    params.district ? t('tipDistrict') : null,
+    params.city ? t('tipCity') : null,
     params.q ? t('tipText') : null,
   ].filter((tip): tip is string => tip !== null);
   return (

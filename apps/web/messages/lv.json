@@ -825,7 +825,8 @@
       "clearDates": "Notīrīt datumus",
       "district": "Apkaime",
       "anyDistrict": "Jebkura apkaime",
-      "pickDates": "Izvēlēties datumus"
+      "pickDates": "Izvēlēties datumus",
+      "city": "Pilsēta"
     },
     "active": {
       "label": "Aktīvie filtri",
@@ -856,7 +857,8 @@
       "tipDistrict": "meklē visās apkaimēs",
       "tipText": "lieto īsāku vai vispārīgāku vārdu",
       "reset": "Atiestatīt filtrus",
-      "allCategories": "Visas kategorijas"
+      "allCategories": "Visas kategorijas",
+      "tipCity": "Izmēģiniet citu pilsētu vai jebkuru pilsētu."
     },
     "error": {
       "title": "Katalogs neielādējās",
@@ -1148,11 +1150,12 @@
       "what": "Ko",
       "whatPlaceholder": "Kas tev vajadzīgs?",
       "where": "Kur",
-      "anywhere": "Visā valstī",
+      "anywhere": "Jebkura pilsēta",
       "when": "Kad",
       "anyDays": "Jebkuras dienas",
       "clearDays": "Notīrīt dienas",
-      "submit": "Meklēt"
+      "submit": "Meklēt",
+      "cityCount": "{count, plural, zero {# lietas} one {# lieta} other {# lietas}}"
     },
     "fresh": {
       "title": "Tikko pievienots",
