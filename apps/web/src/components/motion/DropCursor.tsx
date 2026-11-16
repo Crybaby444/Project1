@@ -153,7 +153,7 @@ export function DropCursor() {
 
       stepSpring(alpha, typing ? 0 : alphaTarget, dt, 260, 1);
       stepSpring(hover, target?.kind === 'box' ? 1 : 0, dt, 420, 0.62);
-      stepSpring(ring, target?.kind === 'ring' ? 1 : 0, dt, 380, 0.7);
+      stepSpring(ring, 0, dt, 380, 0.7);
       stepSpring(plop, target?.kind === 'box' ? 1 : 0, dt, 520, 0.42);
       stepSpring(squash, 1, dt, 600, 0.32);
       rip.t = Math.min(1, rip.t + dt / 0.5);
