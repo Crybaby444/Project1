@@ -49,11 +49,11 @@ export function TwoEnds() {
               className={`relative flex flex-col gap-5 rounded-[32px] p-7 sm:p-10 lg:min-h-[52svh] lg:justify-between ${i === 0 ? 'bg-ink/[0.04] lg:mr-10 lg:rounded-r-[12px]' : 'bg-[var(--night)] text-[var(--paper)] lg:ml-10 lg:rounded-l-[12px]'}`}
               data-end={side}
             >
-              <div className="flex flex-col gap-3 lg:[opacity:var(--s)] lg:[transform:translateY(calc((1-var(--s))*20px))] motion-reduce:lg:[opacity:1] motion-reduce:lg:transform-none" style={{ ['--s' as string]: String(0.2 + 0.8 * shown[i]!) }}>
+              <div className="flex flex-col gap-3 lg:[clip-path:inset(0_0_calc((1-var(--s))*100%)_0)] lg:[transform:translateY(calc((1-var(--s))*24px))] motion-reduce:lg:[clip-path:none] motion-reduce:lg:transform-none" style={{ ['--s' as string]: String(shown[i]!) }}>
                 <span className={`text-[13px] font-bold ${i === 0 ? 'text-ink/75' : 'text-[var(--paper)]/75'}`}>{t(`${side}.who`)}</span>
                 <h3 className="font-display text-[clamp(2.2rem,4vw,3.8rem)] leading-[0.9] font-black uppercase">{t(`${side}.title`)}</h3>
               </div>
-              <ul className="m-0 flex list-none flex-col gap-3 p-0 lg:[opacity:var(--s)] motion-reduce:lg:[opacity:1]" style={{ ['--s' as string]: String(shown[i]!) }}>
+              <ul className="m-0 flex list-none flex-col gap-3 p-0 lg:[clip-path:inset(0_0_calc((1-var(--s))*100%)_0)] motion-reduce:lg:[clip-path:none]" style={{ ['--s' as string]: String(shown[i]!) }}>
                 {(['a', 'b', 'c'] as const).map((k) => (
                   <li key={k} className={`flex gap-3 border-t pt-3 text-[16px] leading-snug ${i === 0 ? 'border-ink/12' : 'border-[var(--paper)]/15'}`}>
                     <span aria-hidden="true" className="mt-[0.45em] size-1.5 flex-none rounded-full bg-current" />
