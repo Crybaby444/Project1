@@ -37,6 +37,22 @@ describe('catalog search', () => {
     await t.close();
   });
 
+  it('shows one country at a time, and its cities; places counts the countries (owner, 2026-11-16)', async () => {
+    const riga = await live();
+    const berlin = await live({ country: 'DE', city: 'Berlin', district: 'Mitte', timeZone: 'Europe/Berlin' });
+    const munich = await live({ country: 'DE', city: 'München', district: 'Altstadt', timeZone: 'Europe/Berlin' });
+    expect(await ids({ country: 'LV' })).toEqual([riga.id]);
+    expect((await ids({ country: 'DE' })).sort()).toEqual([berlin.id, munich.id].sort());
+    expect(await ids({ country: 'DE', city: 'munchen' })).toEqual([munich.id]);
+    expect(await ids({ country: 'LV', city: 'berlin' })).toEqual([]);
+    await get({ country: 'US' }).expect(400); // only the euro area
+    const all = (await request(t.server).get('/api/v1/catalog/places').expect(200)).body;
+    expect(all.countries).toEqual([{ country: 'DE', count: 2 }, { country: 'LV', count: 1 }]);
+    const de = (await request(t.server).get('/api/v1/catalog/places').query({ country: 'DE' }).expect(200)).body;
+    expect(de.cities.map((c: { slug: string }) => c.slug).sort()).toEqual(['berlin', 'munchen']);
+    expect(de.districts.map((d: { slug: string }) => d.slug).sort()).toEqual(['altstadt', 'mitte']);
+  });
+
   it('counts the visible items of each category, for the catalog index', async () => {
     const drills = await categoryId(t, 'drills-drivers');
     await live();
@@ -67,7 +83,7 @@ describe('catalog search', () => {
     expect(res.body).toMatchObject({ total: 1, page: 1, pageSize: 24 });
     const item = res.body.items[0];
     expect(Object.keys(item).sort()).toEqual(
-      ['categoryId', 'city', 'condition', 'contentLocale', 'cover', 'dailyCents', 'depositCents', 'district', 'id', 'ownerId', 'publishedAt', 'rating', 'reviewCount', 'title', 'weeklyDiscountPercent'].sort(),
+      ['categoryId', 'city', 'condition', 'contentLocale', 'country', 'cover', 'dailyCents', 'depositCents', 'district', 'id', 'ownerId', 'publishedAt', 'rating', 'reviewCount', 'title', 'weeklyDiscountPercent'].sort(),
     );
     expect(JSON.stringify(res.body)).not.toMatch(/"lat"|"lng"|version|rejectionReason/);
   });

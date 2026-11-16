@@ -26,6 +26,7 @@ import {
   ItemAddressDto,
   ItemResponseDto,
   MapResponseDto,
+  PlacesQueryDto,
   PlacesResponseDto,
   PublicProfileDto,
   SitemapResponseDto,
@@ -76,9 +77,10 @@ export class CatalogController {
   }
 
   @Get('places')
-  @ZodResponse({ status: 200, type: PlacesResponseDto, description: 'Districts that have items' })
-  places(): Promise<PlacesResponse> {
-    return this.catalog.places();
+  @ZodResponse({ status: 200, type: PlacesResponseDto, description: 'Countries with items, and the cities and districts of one country (or all)' })
+  @ApiErrors(400)
+  places(@Query() query: PlacesQueryDto): Promise<PlacesResponse> {
+    return this.catalog.places(query.country);
   }
 
   @Get('sitemap')

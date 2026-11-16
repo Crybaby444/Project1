@@ -156,6 +156,7 @@ async function Available({ item, title, category, locale }: { item: AvailableIte
           title,
           dailyCents: listing.dailyCents ?? 0,
           weeklyDiscountPercent: listing.weeklyDiscountPercent,
+          country: listing.country,
           depositCents: listing.depositCents,
           condition: listing.condition,
           city: listing.city,

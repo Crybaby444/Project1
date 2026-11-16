@@ -21,14 +21,14 @@ const RIGA_PLACE = {
   lat: '56.9496487',
   lon: '24.1051865',
   display_name: 'Brīvības iela 1, Centrs, Rīga, LV-1010, Latvija',
-  address: { road: 'Brīvības iela', house_number: '1', suburb: 'Centrs', city: 'Rīga', postcode: 'LV-1010', country: 'Latvija' },
+  address: { road: 'Brīvības iela', house_number: '1', suburb: 'Centrs', city: 'Rīga', postcode: 'LV-1010', country: 'Latvija', country_code: 'lv' },
 };
 
 const JURMALA_PLACE = {
   lat: '56.968',
   lon: '23.7703',
   display_name: 'Jomas iela, Majori, Jūrmala, Latvija',
-  address: { road: 'Jomas iela', quarter: 'Majori', town: 'Jūrmala', country: 'Latvija' },
+  address: { road: 'Jomas iela', quarter: 'Majori', town: 'Jūrmala', country: 'Latvija', country_code: 'lv' },
 };
 
 /** A local stand-in for Nominatim's /search and /reverse (jsonv2). */

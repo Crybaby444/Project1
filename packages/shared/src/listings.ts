@@ -1,3 +1,4 @@
+import { CountrySchema } from './countries';
 import { z } from 'zod';
 import { LOCALES } from './locale';
 import { cleanText } from './text';
@@ -94,6 +95,8 @@ const ListingDraftObject = z.object({
   maxDays: DraftInt(1).optional(),
   city: OptionalText(LISTING_LIMITS.place),
   district: OptionalText(LISTING_LIMITS.place),
+  /** Where the item is (owner, 2026-11-16: all of Europe); the catalog shows one country at a time. */
+  country: CountrySchema.nullable().optional(),
   lat: z.number().min(-90).max(90).transform(roundTo6).nullable().optional(),
   lng: z.number().min(-180).max(180).transform(roundTo6).nullable().optional(),
   timeZone: z.string().max(64).refine(isTimeZone, 'Unknown time zone').optional(),
@@ -133,6 +136,7 @@ export const ListingSubmitSchema = z.object({
   dailyCents: z.number(required).int(),
   city: z.string(required).min(1),
   district: z.string(required).min(1),
+  country: CountrySchema,
   lat: z.number(required),
   lng: z.number(required),
 });
@@ -226,6 +230,7 @@ export const PublicListingSchema = z.object({
   maxDays: z.number().int(),
   city: z.string().nullable(),
   district: z.string().nullable(),
+  country: z.string().nullable(),
   timeZone: z.string(),
   /** The language of the texts: the canonical address and <html lang> of the item page use it. */
   contentLocale: z.enum(LOCALES),

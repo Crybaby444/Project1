@@ -1,3 +1,4 @@
+import { Prisma } from '../generated/prisma/client';
 import { Inject, Injectable } from '@nestjs/common';
 import { addDays, compareDates, localDateIn, type LocalDate } from '@yoyo/domain';
 import {
@@ -148,20 +149,39 @@ export class CatalogService {
     return { categories, listings };
   }
 
-  /** Districts with items, most items first; names that read the same as a slug are counted together. */
-  async places(): Promise<PlacesResponse> {
-    const rows = await this.prisma.$queryRaw<{ district: string; count: number }[]>`
-      SELECT l."district" AS district, count(*)::int AS count ${VISIBLE_FROM}
-      WHERE ${CATALOG_VISIBLE_SQL} AND l."district" IS NOT NULL GROUP BY l."district" ORDER BY count(*) DESC, l."district"`;
-    const bySlug = new Map<string, { district: string; slug: string; count: number }>();
-    for (const row of rows) {
-      const slug = slugify(row.district);
-      if (slug === '') continue;
-      const known = bySlug.get(slug);
-      if (known) known.count += row.count;
-      else bySlug.set(slug, { district: row.district, slug, count: row.count });
-    }
-    return { districts: [...bySlug.values()].sort((a, b) => b.count - a.count || a.district.localeCompare(b.district)) };
+  /**
+   * Where there are items: countries (most first), and in the asked country (or everywhere) its cities
+   * and districts, most items first; names that read the same as a slug are counted together.
+   */
+  async places(country?: string): Promise<PlacesResponse> {
+    const inCountry = country ? Prisma.sql`AND l."country" = ${country}` : Prisma.empty;
+    const [countryRows, cityRows, districtRows] = await Promise.all([
+      this.prisma.$queryRaw<{ country: string; count: number }[]>`
+        SELECT l."country" AS country, count(*)::int AS count ${VISIBLE_FROM}
+        WHERE ${CATALOG_VISIBLE_SQL} AND l."country" IS NOT NULL GROUP BY l."country" ORDER BY count(*) DESC, l."country"`,
+      this.prisma.$queryRaw<{ name: string; count: number }[]>`
+        SELECT l."city" AS name, count(*)::int AS count ${VISIBLE_FROM}
+        WHERE ${CATALOG_VISIBLE_SQL} AND l."city" IS NOT NULL ${inCountry} GROUP BY l."city"`,
+      this.prisma.$queryRaw<{ name: string; count: number }[]>`
+        SELECT l."district" AS name, count(*)::int AS count ${VISIBLE_FROM}
+        WHERE ${CATALOG_VISIBLE_SQL} AND l."district" IS NOT NULL ${inCountry} GROUP BY l."district"`,
+    ]);
+    const bySlug = (rows: { name: string; count: number }[]) => {
+      const merged = new Map<string, { name: string; slug: string; count: number }>();
+      for (const row of rows) {
+        const slug = slugify(row.name);
+        if (slug === '') continue;
+        const known = merged.get(slug);
+        if (known) known.count += row.count;
+        else merged.set(slug, { name: row.name, slug, count: row.count });
+      }
+      return [...merged.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+    };
+    return {
+      countries: countryRows,
+      cities: bySlug(cityRows).map(({ name, slug, count }) => ({ city: name, slug, count })),
+      districts: bySlug(districtRows).map(({ name, slug, count }) => ({ district: name, slug, count })),
+    };
   }
 
   /** Where the page of an item lives, or why it does not (W03 §G): 404 never public, 410 removed. */
@@ -327,6 +347,12 @@ export class CatalogService {
         SELECT DISTINCT l."district" AS district ${VISIBLE_FROM} WHERE ${CATALOG_VISIBLE_SQL} AND l."district" IS NOT NULL`;
       districts = rows.map((row) => row.district).filter((name) => slugify(name) === query.district);
     }
-    return { categoryIds, textCategoryIds, districts };
+    let cities: string[] | null = null;
+    if (query.city !== undefined) {
+      const rows = await this.prisma.$queryRaw<{ city: string }[]>`
+        SELECT DISTINCT l."city" AS city ${VISIBLE_FROM} WHERE ${CATALOG_VISIBLE_SQL} AND l."city" IS NOT NULL`;
+      cities = rows.map((row) => row.city).filter((name) => slugify(name) === query.city);
+    }
+    return { categoryIds, textCategoryIds, districts, cities };
   }
 }

@@ -2963,6 +2963,7 @@ export interface components {
                 condition: "NEW" | "LIKE_NEW" | "GOOD" | "FAIR" | null;
                 city: string | null;
                 district: string | null;
+                country: string | null;
                 categoryId: string | null;
                 cover: {
                     thumb: string;
@@ -3027,6 +3028,15 @@ export interface components {
             }[];
         };
         PlacesResponseDto_Output: {
+            countries: {
+                country: string;
+                count: number;
+            }[];
+            cities: {
+                city: string;
+                slug: string;
+                count: number;
+            }[];
             districts: {
                 district: string;
                 slug: string;
@@ -3087,6 +3097,7 @@ export interface components {
                     maxDays: number;
                     city: string | null;
                     district: string | null;
+                    country: string | null;
                     timeZone: string;
                     /** @enum {string} */
                     contentLocale: "en" | "lv" | "ru";
@@ -3183,6 +3194,7 @@ export interface components {
                 condition: "NEW" | "LIKE_NEW" | "GOOD" | "FAIR" | null;
                 city: string | null;
                 district: string | null;
+                country: string | null;
                 categoryId: string | null;
                 cover: {
                     thumb: string;
@@ -3265,6 +3277,7 @@ export interface components {
                 condition: "NEW" | "LIKE_NEW" | "GOOD" | "FAIR" | null;
                 city: string | null;
                 district: string | null;
+                country: string | null;
                 categoryId: string | null;
                 cover: {
                     thumb: string;
@@ -3319,6 +3332,7 @@ export interface components {
                 condition: "NEW" | "LIKE_NEW" | "GOOD" | "FAIR" | null;
                 city: string | null;
                 district: string | null;
+                country: string | null;
                 categoryId: string | null;
                 cover: {
                     thumb: string;
@@ -3571,6 +3585,8 @@ export interface components {
             maxDays?: number;
             city?: string | null;
             district?: string | null;
+            /** @enum {string|null} */
+            country?: "AT" | "BE" | "BG" | "HR" | "CY" | "EE" | "FI" | "FR" | "DE" | "GR" | "IE" | "IT" | "LV" | "LT" | "LU" | "MT" | "NL" | "PT" | "SK" | "SI" | "ES" | null;
             lat?: number | null;
             lng?: number | null;
             timeZone?: string;
@@ -3602,6 +3618,7 @@ export interface components {
                 maxDays: number;
                 city: string | null;
                 district: string | null;
+                country: string | null;
                 timeZone: string;
                 /** @enum {string} */
                 contentLocale: "en" | "lv" | "ru";
@@ -3657,6 +3674,8 @@ export interface components {
             maxDays?: number;
             city?: string | null;
             district?: string | null;
+            /** @enum {string|null} */
+            country?: "AT" | "BE" | "BG" | "HR" | "CY" | "EE" | "FI" | "FR" | "DE" | "GR" | "IE" | "IT" | "LV" | "LT" | "LU" | "MT" | "NL" | "PT" | "SK" | "SI" | "ES" | null;
             lat?: number | null;
             lng?: number | null;
             timeZone?: string;
@@ -4055,6 +4074,7 @@ export interface components {
                 maxDays: number;
                 city: string | null;
                 district: string | null;
+                country: string | null;
                 timeZone: string;
                 /** @enum {string} */
                 contentLocale: "en" | "lv" | "ru";
@@ -4125,6 +4145,7 @@ export interface components {
                 maxDays: number;
                 city: string | null;
                 district: string | null;
+                country: string | null;
                 timeZone: string;
                 /** @enum {string} */
                 contentLocale: "en" | "lv" | "ru";
@@ -4181,6 +4202,7 @@ export interface components {
                 label: string;
                 city: string | null;
                 district: string | null;
+                country: string | null;
                 lat: number;
                 lng: number;
             }[];
@@ -4189,6 +4211,7 @@ export interface components {
         GeoReverseResponseDto_Output: {
             city: string[];
             district: string[];
+            country: string[];
             attribution: string;
         };
         WalletSummaryDto_Output: {
@@ -4690,6 +4713,7 @@ export interface components {
                 condition: "NEW" | "LIKE_NEW" | "GOOD" | "FAIR" | null;
                 city: string | null;
                 district: string | null;
+                country: string | null;
                 categoryId: string | null;
                 cover: {
                     thumb: string;
@@ -7055,6 +7079,8 @@ export interface operations {
                 start?: string;
                 end?: string;
                 district?: string;
+                country?: "AT" | "BE" | "BG" | "HR" | "CY" | "EE" | "FI" | "FR" | "DE" | "GR" | "IE" | "IT" | "LV" | "LT" | "LU" | "MT" | "NL" | "PT" | "SK" | "SI" | "ES";
+                city?: string;
                 sort?: "new" | "price_asc" | "price_desc" | "relevance";
                 page?: number;
             };
@@ -7094,6 +7120,8 @@ export interface operations {
                 start?: string;
                 end?: string;
                 district?: string;
+                country?: "AT" | "BE" | "BG" | "HR" | "CY" | "EE" | "FI" | "FR" | "DE" | "GR" | "IE" | "IT" | "LV" | "LT" | "LU" | "MT" | "NL" | "PT" | "SK" | "SI" | "ES";
+                city?: string;
                 sort?: "new" | "price_asc" | "price_desc" | "relevance";
                 page?: number;
             };
@@ -7166,20 +7194,31 @@ export interface operations {
     };
     CatalogController_places: {
         parameters: {
-            query?: never;
+            query?: {
+                country?: "AT" | "BE" | "BG" | "HR" | "CY" | "EE" | "FI" | "FR" | "DE" | "GR" | "IE" | "IT" | "LV" | "LT" | "LU" | "MT" | "NL" | "PT" | "SK" | "SI" | "ES";
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Districts that have items */
+            /** @description Countries with items, and the cities and districts of one country (or all) */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": components["schemas"]["PlacesResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
         };

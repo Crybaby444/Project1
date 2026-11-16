@@ -35,6 +35,15 @@ describe('submitting, hiding and unavailable dates', () => {
       expect(res.body.listing).toMatchObject({ status: 'PENDING_REVIEW', submittedAt: t.clock.now().toISOString(), version: listing.version + 1 });
     });
 
+    it('a draft from before countries is sent as Latvian, with Riga time; one in Germany keeps Berlin time', async () => {
+      const old = await seedListing(t, anna.user, { country: null });
+      const res = await anna.post(`/listings/${old.id}/submit`).expect(200);
+      expect(res.body.listing).toMatchObject({ country: 'LV', timeZone: 'Europe/Riga' });
+      const german = await seedListing(t, anna.user);
+      const patched = await anna.patch(`/listings/${german.id}`).send({ country: 'DE', version: german.version }).expect(200);
+      expect(patched.body.listing).toMatchObject({ country: 'DE', timeZone: 'Europe/Berlin' });
+    });
+
     it('names what is missing, step by step: photos, the point, required attributes', async () => {
       const listing = await seedListing(t, anna.user, { photos: 0, lat: null, lng: null, attributes: { watts: 750 } });
 

@@ -56,6 +56,7 @@ export async function completeListingData(t: TestApp): Promise<Prisma.ListingUnc
     maxDays: 14,
     city: 'Rīga',
     district: 'Centrs',
+    country: 'LV',
     lat: 56.949651,
     lng: 24.10519,
   };

@@ -15,7 +15,7 @@ describe('catalog query building', () => {
     const sql = whereSql({ q: evil, page: 1, priceMin: 100, start: '2026-12-01', end: '2026-12-03' }, {
       categoryIds: ['c1'],
       textCategoryIds: [],
-      districts: ['Centrs'],
+      districts: ['Centrs'], cities: null,
     });
     expect(sql.sql).not.toContain('DROP');
     expect(sql.sql).not.toContain('Centrs');
@@ -23,7 +23,7 @@ describe('catalog query building', () => {
   });
 
   it('an unknown category or district finds nothing instead of everything', () => {
-    expect(whereSql({ page: 1 }, { categoryIds: [], textCategoryIds: [], districts: null }).sql).toContain('FALSE');
+    expect(whereSql({ page: 1 }, { categoryIds: [], textCategoryIds: [], districts: null, cities: null }).sql).toContain('FALSE');
   });
 
   it('sorts by relevance only when there is a search text', () => {

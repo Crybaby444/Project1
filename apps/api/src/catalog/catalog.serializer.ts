@@ -19,6 +19,7 @@ export function serializeCatalogItem(
     condition: listing.condition,
     city: listing.city,
     district: listing.district,
+    country: listing.country,
     categoryId: listing.categoryId,
     cover: cover ? photoUrls(cover.storageKey, urlFor) : null,
     ownerId: listing.ownerId,
