@@ -2,7 +2,7 @@
 
 import { COUNTRY_CODES, countryName, type Country } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
 import { useState, useTransition } from 'react';
 import { Dialog } from '@/components/ui/Dialog';
 import { countryCookie } from '@/lib/country/country';

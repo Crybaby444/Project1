@@ -125,6 +125,11 @@ export function PlaceStep() {
       <section className="flex flex-col gap-5">
         <AddressSearch onSelect={setPlace} disabled={readOnly} />
         <LocationMap point={point} onPick={(lat, lng) => void pickOnMap(lat, lng)} readOnly={readOnly} />
+        {values.lat !== null && values.country === null && (
+          <p role="status" className="border-ink/25 rounded-media border-[1.5px] border-dashed p-4 text-sm font-bold">
+            {t('outside')}
+          </p>
+        )}
         <p className="bg-mist rounded-media flex items-start gap-2 border border-ink/15 p-4 text-sm font-bold text-ink">
           <svg viewBox="0 0 24 24" aria-hidden="true" className="mt-0.5 size-4 shrink-0">
             <rect
