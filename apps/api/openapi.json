@@ -323,6 +323,74 @@
         ]
       }
     },
+    "/api/v1/auth/apple": {
+      "get": {
+        "operationId": "AuthController_appleStart",
+        "parameters": [
+          {
+            "name": "returnTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 2048,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to Apple’s sign-in screen"
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/apple/callback": {
+      "post": {
+        "operationId": "AuthController_appleCallback",
+        "parameters": [],
+        "responses": {
+          "302": {
+            "description": "Signed in and sent back, or sent to /login?oauthError=…"
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
     "/api/v1/auth/register": {
       "post": {
         "operationId": "AuthController_register",
@@ -9738,12 +9806,16 @@
           "google": {
             "type": "boolean"
           },
+          "apple": {
+            "type": "boolean"
+          },
           "phone": {
             "type": "boolean"
           }
         },
         "required": [
           "google",
+          "apple",
           "phone"
         ],
         "additionalProperties": false

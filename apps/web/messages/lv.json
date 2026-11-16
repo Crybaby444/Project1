@@ -333,7 +333,8 @@
         "title": "Šī saite nedarbojas",
         "body": "Iespējams, tā ir nogriezta. Atveriet to no vēstules vēlreiz vai palūdziet jaunu."
       }
-    }
+    },
+    "apple": "Turpināt ar Apple"
   },
   "settings": {
     "title": "Iestatījumi",

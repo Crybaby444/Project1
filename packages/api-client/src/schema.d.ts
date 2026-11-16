@@ -116,6 +116,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/apple": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AuthController_appleStart"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/apple/callback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_appleCallback"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/register": {
         parameters: {
             query?: never;
@@ -2198,6 +2230,7 @@ export interface components {
         };
         ProvidersResponseDto_Output: {
             google: boolean;
+            apple: boolean;
             phone: boolean;
         };
         RegisterDto: {
@@ -5007,6 +5040,71 @@ export interface operations {
         requestBody?: never;
         responses: {
             /** @description Signed in (session cookies) and sent to the page the user started from; or, if the sign-in failed, sent to the site’s /login?oauthError=OAUTH_CANCELLED|OAUTH_STATE_INVALID|OAUTH_FAILED|AUTH_BLOCKED|AUTH_CODE_REQUIRED */
+            302: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AuthController_appleStart: {
+        parameters: {
+            query?: {
+                returnTo?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Redirect to Apple’s sign-in screen */
+            302: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AuthController_appleCallback: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Signed in and sent back, or sent to /login?oauthError=… */
             302: {
                 headers: {
                     [name: string]: unknown;

@@ -60,6 +60,14 @@ const EnvObject = z.object({
   GOOGLE_AUTH_URL: z.url().default('https://accounts.google.com/o/oauth2/v2/auth'),
   GOOGLE_TOKEN_URL: z.url().default('https://oauth2.googleapis.com/token'),
   GOOGLE_JWKS_URL: z.url().default('https://www.googleapis.com/oauth2/v3/certs'),
+  // Sign in with Apple: the Services ID, the team, the key id and the .p8 key (PEM; '\n' may stand for line breaks).
+  APPLE_CLIENT_ID: z.preprocess(blankAsUnset, z.string().optional()),
+  APPLE_TEAM_ID: z.preprocess(blankAsUnset, z.string().optional()),
+  APPLE_KEY_ID: z.preprocess(blankAsUnset, z.string().optional()),
+  APPLE_PRIVATE_KEY: z.preprocess(blankAsUnset, z.string().optional()),
+  APPLE_AUTH_URL: z.url().default('https://appleid.apple.com/auth/authorize'),
+  APPLE_TOKEN_URL: z.url().default('https://appleid.apple.com/auth/token'),
+  APPLE_JWKS_URL: z.url().default('https://appleid.apple.com/auth/keys'),
   /**
    * Who delivers phone confirmation codes. `mailbox` only simulates SMS (the code arrives by email,
    * so it proves nothing about the phone): the default outside production, never allowed in it.

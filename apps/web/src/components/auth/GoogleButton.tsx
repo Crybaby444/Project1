@@ -35,7 +35,22 @@ function GoogleMark() {
   );
 }
 
-/** "Continue with Google", only where this deployment offers it (GET /auth/providers). */
+function AppleMark() {
+  // Apple's logo, as its sign-in button guidelines ask (white on the black button).
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5" fill="currentColor">
+      <path d="M16.37 12.6c-.02-2.2 1.8-3.26 1.88-3.31-1.03-1.5-2.62-1.7-3.18-1.73-1.35-.14-2.64.8-3.33.8-.69 0-1.74-.78-2.86-.76-1.47.02-2.83.86-3.59 2.17-1.53 2.65-.39 6.57 1.1 8.72.73 1.05 1.6 2.23 2.73 2.19 1.1-.04 1.51-.71 2.84-.71 1.32 0 1.7.71 2.86.69 1.18-.02 1.93-1.07 2.65-2.13.84-1.22 1.18-2.4 1.2-2.46-.03-.01-2.3-.88-2.32-3.49ZM14.2 6.13c.6-.73 1.01-1.75.9-2.76-.87.04-1.92.58-2.54 1.31-.56.64-1.05 1.67-.92 2.66.97.08 1.96-.49 2.56-1.21Z" />
+    </svg>
+  );
+}
+
+const BUTTON =
+  'rounded-pill ease-yoyo inline-flex min-h-12 items-center justify-center gap-3 border px-6 text-[15px] font-bold tracking-[0.03em] transition-[transform,background-color] duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96]';
+
+/**
+ * "Continue with Google" and "Continue with Apple" (owner, 2026-11-16), each only where this deployment
+ * offers it (GET /auth/providers); one "or" line under them before the email form.
+ */
 export function GoogleButton({ next }: { next: string | null }) {
   const t = useTranslations('auth');
   const locale = useLocale();
@@ -45,21 +60,27 @@ export function GoogleButton({ next }: { next: string | null }) {
     queryFn: () => unwrap(client.GET('/api/v1/auth/providers')),
     staleTime: 5 * 60_000,
   });
+  const google = providers.data?.google === true;
+  const apple = providers.data?.apple === true;
+  if (!google && !apple) return null;
 
-  if (!providers.data?.google) return null;
-
-  const href = `/api/v1/auth/google?returnTo=${encodeURIComponent(googleReturnTo(next, locale))}`;
+  const returnTo = encodeURIComponent(googleReturnTo(next, locale));
   return (
-    <div className="flex flex-col gap-4">
-      {/* A plain link: the API answers with a redirect to Google, not with a page. */}
-      <a
-        href={href}
-        className="border-ink bg-surface text-ink hover:bg-mist rounded-pill ease-yoyo inline-flex min-h-12 items-center justify-center gap-3 border px-6 text-[15px] font-bold tracking-[0.03em] transition-[transform,background-color] duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96]"
-      >
-        <GoogleMark />
-        {t('google')}
-      </a>
-      <p className="flex items-center gap-3 text-sm font-bold uppercase" aria-hidden="true">
+    <div className="flex flex-col gap-3">
+      {/* Plain links: the API answers with a redirect to Google or Apple, not with a page. */}
+      {apple && (
+        <a href={`/api/v1/auth/apple?returnTo=${returnTo}`} className={`${BUTTON} border-black bg-black text-white hover:bg-black/85`} data-sign-in="apple">
+          <AppleMark />
+          {t('apple')}
+        </a>
+      )}
+      {google && (
+        <a href={`/api/v1/auth/google?returnTo=${returnTo}`} className={`${BUTTON} border-ink bg-surface text-ink hover:bg-mist`} data-sign-in="google">
+          <GoogleMark />
+          {t('google')}
+        </a>
+      )}
+      <p className="mt-1 flex items-center gap-3 text-sm font-bold uppercase" aria-hidden="true">
         <span className="bg-ink/25 h-px flex-1" />
         {t('or')}
         <span className="bg-ink/25 h-px flex-1" />
