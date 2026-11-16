@@ -2296,6 +2296,7 @@ export interface components {
             google: boolean;
             apple: boolean;
             phone: boolean;
+            identityRequired: boolean;
         };
         RegisterDto: {
             email: string;

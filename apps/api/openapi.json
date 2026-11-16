@@ -10150,12 +10150,16 @@
           },
           "phone": {
             "type": "boolean"
+          },
+          "identityRequired": {
+            "type": "boolean"
           }
         },
         "required": [
           "google",
           "apple",
-          "phone"
+          "phone",
+          "identityRequired"
         ],
         "additionalProperties": false
       },

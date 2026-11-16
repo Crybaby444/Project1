@@ -89,7 +89,7 @@ export class AuthController {
     private readonly limiter: RateLimiter,
     private readonly devices: DeviceCookieService,
     private readonly prisma: PrismaService,
-    @Inject(ENV) private readonly env: Pick<Env, 'NODE_ENV' | 'WEB_ORIGIN' | 'REGISTRATION_HOURLY_CAP' | 'LOGIN_EMAIL_HOURLY_CAP'>,
+    @Inject(ENV) private readonly env: Pick<Env, 'NODE_ENV' | 'WEB_ORIGIN' | 'REGISTRATION_HOURLY_CAP' | 'LOGIN_EMAIL_HOURLY_CAP' | 'IDENTITY_REQUIRED'>,
     @Inject(SMS_PROVIDER) private readonly sms: SmsProvider | null,
   ) {}
 
@@ -124,7 +124,7 @@ export class AuthController {
   @Get('providers')
   @ZodResponse({ status: 200, type: ProvidersResponseDto, description: 'Sign-in methods this deployment offers' })
   providers(): ProvidersResponse {
-    return { google: this.google.enabled, apple: this.apple.enabled, phone: this.sms !== null };
+    return { google: this.google.enabled, apple: this.apple.enabled, phone: this.sms !== null, identityRequired: this.env.IDENTITY_REQUIRED };
   }
 
   @Get('google')

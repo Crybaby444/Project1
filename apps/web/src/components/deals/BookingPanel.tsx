@@ -17,6 +17,7 @@ import { dealKeys, useBookingTerms } from '@/lib/deals/queries';
 import { addDays } from '@/lib/listings/calendar';
 import { ApiError, unwrap } from '@/lib/session/api-error';
 import { useApiClient, useSession } from '@/lib/session/SessionProvider';
+import { IdentityNotice, useDealReadiness } from '@/components/identity/IdentityNotice';
 import { useLocale } from 'next-intl';
 import { crossesTaken, DateRangePicker, type Range } from './DateRangePicker';
 import { PriceSummary } from './PriceSummary';
@@ -58,6 +59,7 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
   const errorText = useErrorText();
   const client = useApiClient();
   const { status, user } = useSession();
+  const readiness = useDealReadiness();
   const router = useRouter();
   const pathname = usePathname();
   const toast = useToast();
@@ -196,7 +198,9 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
                 {error}
               </p>
             )}
-            {status === 'authenticated' ? (
+            {status === 'authenticated' && readiness !== 'ready' && readiness !== 'unknown' ? (
+              <IdentityNotice action="rent" readiness={readiness} />
+            ) : status === 'authenticated' ? (
               <Button size="lg" onClick={() => void submit()} loading={send.pending || sent} disabled={priced.quote === null}>
                 {t('send')}
               </Button>

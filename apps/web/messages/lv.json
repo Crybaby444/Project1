@@ -1275,6 +1275,22 @@
       "consent": "Lai nosūtītu fotoattēlus, nepieciešama jūsu piekrišana.",
       "photo": "Vienu no fotoattēliem neizdevās nolasīt. Izmantojiet JPEG, PNG vai WebP līdz 10 MB.",
       "send": "Fotoattēli netika nosūtīti. Mēģiniet vēlreiz."
+    },
+    "notice": {
+      "profile": {
+        "lend": "Pirms iznomājat: apstipriniet, ka jums ir 18 gadi vai vairāk, un piekrītiet datu apstrādei.",
+        "rent": "Pirms nomājat: apstipriniet, ka jums ir 18 gadi vai vairāk, un piekrītiet datu apstrādei.",
+        "button": "Atvērt profilu"
+      },
+      "identity": {
+        "lend": "Lai nosūtītu lietas pārbaudei, vispirms apstipriniet savu identitāti. Moderators pārbauda dokumenta foto un pašbildi.",
+        "rent": "Lai nomātu, vispirms apstipriniet savu identitāti. Moderators pārbauda dokumenta foto un pašbildi.",
+        "button": "Apstiprināt identitāti"
+      },
+      "pending": {
+        "lend": "Jūsu identitātes pārbaude ir pie moderatora. Lietas pārbaudei varēsiet nosūtīt, kad tā būs apstiprināta.",
+        "rent": "Jūsu identitātes pārbaude ir pie moderatora. Nomāt varēsiet, kad tā būs apstiprināta."
+      }
     }
   }
 }

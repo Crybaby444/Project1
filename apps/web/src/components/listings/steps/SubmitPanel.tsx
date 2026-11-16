@@ -3,6 +3,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { useRef, useState } from 'react';
+import { IdentityNotice, useDealReadiness } from '@/components/identity/IdentityNotice';
 import { Button } from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toast';
 import { useRouter } from '@/i18n/navigation';
@@ -29,6 +30,7 @@ export function SubmitPanel() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const list = useRef<HTMLUListElement>(null);
+  const readiness = useDealReadiness();
   const status = draft.listing?.status ?? 'DRAFT';
   if (status !== 'DRAFT' && status !== 'REJECTED') return null;
 
@@ -117,9 +119,13 @@ export function SubmitPanel() {
           {error}
         </p>
       )}
-      <Button size="lg" className="self-start" onClick={() => void send()} loading={busy} disabled={readOnly}>
-        {t('send')}
-      </Button>
+      {readiness === 'ready' || readiness === 'unknown' ? (
+        <Button size="lg" className="self-start" onClick={() => void send()} loading={busy} disabled={readOnly}>
+          {t('send')}
+        </Button>
+      ) : (
+        <IdentityNotice action="lend" readiness={readiness} />
+      )}
     </section>
   );
 }
