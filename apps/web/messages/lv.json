@@ -218,7 +218,8 @@
     "AUTH_CODE_INVALID": "Kods nav pareizs vai jau izmantots. Ievadiet jaunāko kodu no lietotnes.",
     "USERNAME_TAKEN": "Šis lietotājvārds ir aizņemts. Pamēģiniet citu.",
     "UNDERAGE": "Yoyo ir cilvēkiem no 18 gadu vecuma.",
-    "PROFILE_INCOMPLETE": "Vispirms pievienojiet lietotājvārdu un dzimšanas datumu sadaļā Iestatījumi → Profils."
+    "PROFILE_INCOMPLETE": "Vispirms pievienojiet lietotājvārdu un dzimšanas datumu sadaļā Iestatījumi → Profils.",
+    "IDENTITY_REQUIRED": "Vispirms apstipriniet savu identitāti: Iestatījumi → Profils → Apstipriniet savu identitāti."
   },
   "validation": {
     "required": "Aizpildiet šo lauku.",
@@ -1224,5 +1225,43 @@
   },
   "dialog": {
     "close": "Aizvērt"
+  },
+  "identityCheck": {
+    "title": "Apstipriniet savu identitāti",
+    "intro": "Iznomāt un nomāt Yoyo var, kad moderators ir apstiprinājis jūsu identitāti. To var izdarīt tagad vai vēlāk sadaļā Iestatījumi → Profils.",
+    "skip": "Izlaist pagaidām",
+    "facts": {
+      "why": "Tas vajadzīgs, lai iznomātu, nomātu un parakstītu darījuma līgumu ar savu īsto vārdu.",
+      "who": "Fotoattēlus redz tikai Yoyo moderators, un katra apskate tiek reģistrēta.",
+      "erase": "Fotoattēli tiek dzēsti, tiklīdz moderators pieņem lēmumu; saglabājas tikai rezultāts."
+    },
+    "documentType": "Dokuments",
+    "documents": {
+      "PASSPORT": "Pase",
+      "ID_CARD": "ID karte",
+      "DRIVING_LICENCE": "Vadītāja apliecība"
+    },
+    "document": {
+      "label": "Dokumenta foto",
+      "hint": "Lapa ar jūsu foto un vārdu, ass un pilnībā redzama. Personas kodu drīkst aizklāt."
+    },
+    "selfie": {
+      "label": "Jūsu pašbilde",
+      "hint": "Seja labā apgaismojumā, bez brillēm un cepures."
+    },
+    "consent": "Piekrītu, ka Yoyo apstrādā šos fotoattēlus manas identitātes apstiprināšanai, kā aprakstīts iepriekš un privātuma politikā.",
+    "submit": "Nosūtīt pārbaudei",
+    "pending": "Nosūtīts {date}. Moderators parasti pārbauda dienas laikā; jūs saņemsiet e-pastu.",
+    "verified": "Jūsu identitāte ir apstiprināta ({date}). Varat iznomāt, nomāt un parakstīt līgumus.",
+    "rejected": "Pēdējā pārbaude netika pieņemta: {reason}. Lūdzu, nosūtiet jaunus fotoattēlus.",
+    "loadFailed": "Neizdevās ielādēt pārbaudi. Mēģiniet vēlreiz",
+    "errors": {
+      "documentType": "Izvēlieties dokumentu.",
+      "document": "Pievienojiet dokumenta foto.",
+      "selfie": "Pievienojiet pašbildi.",
+      "consent": "Lai nosūtītu fotoattēlus, nepieciešama jūsu piekrišana.",
+      "photo": "Vienu no fotoattēliem neizdevās nolasīt. Izmantojiet JPEG, PNG vai WebP līdz 10 MB.",
+      "send": "Fotoattēli netika nosūtīti. Mēģiniet vēlreiz."
+    }
   }
 }

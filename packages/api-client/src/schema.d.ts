@@ -1380,6 +1380,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/identity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["IdentityController_state"];
+        put?: never;
+        post: operations["IdentityController_submit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/identity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminIdentityController_queue"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/identity/{id}/{which}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminIdentityController_photo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/identity/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminIdentityController_decide"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/users": {
         parameters: {
             query?: never;
@@ -2161,7 +2225,7 @@ export interface components {
         ApiErrorDto_Output: {
             error: {
                 /** @enum {string} */
-                code: "VALIDATION_FAILED" | "AUTH_INVALID_CREDENTIALS" | "AUTH_EMAIL_TAKEN" | "USERNAME_TAKEN" | "UNDERAGE" | "PROFILE_INCOMPLETE" | "AUTH_UNAUTHENTICATED" | "AUTH_FORBIDDEN" | "AUTH_BLOCKED" | "AUTH_PROVIDER_DISABLED" | "AUTH_CODE_REQUIRED" | "AUTH_CODE_INVALID" | "TOKEN_EXPIRED" | "TOKEN_USED" | "RATE_LIMITED" | "OAUTH_CANCELLED" | "OAUTH_STATE_INVALID" | "OAUTH_FAILED" | "ORIGIN_FORBIDDEN" | "NOT_FOUND" | "INTERNAL" | "INVALID_STATUS" | "UNSUPPORTED_MEDIA" | "PAYLOAD_TOO_LARGE" | "PHOTO_LIMIT" | "STORAGE_DISABLED" | "LISTING_INCOMPLETE" | "GEO_UNAVAILABLE" | "DATES_UNAVAILABLE" | "CANNOT_RENT_OWN" | "LISTING_UNAVAILABLE" | "INSUFFICIENT_FUNDS" | "PAYMENT_DECLINED" | "CONTRACT_NOT_SIGNED" | "ACTION_NOT_ALLOWED" | "DEADLINE_PASSED" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_IN_PROGRESS" | "OFFER_UNAVAILABLE" | "WALLET_LIMIT" | "LISTING_GONE";
+                code: "VALIDATION_FAILED" | "AUTH_INVALID_CREDENTIALS" | "AUTH_EMAIL_TAKEN" | "USERNAME_TAKEN" | "UNDERAGE" | "PROFILE_INCOMPLETE" | "IDENTITY_REQUIRED" | "AUTH_UNAUTHENTICATED" | "AUTH_FORBIDDEN" | "AUTH_BLOCKED" | "AUTH_PROVIDER_DISABLED" | "AUTH_CODE_REQUIRED" | "AUTH_CODE_INVALID" | "TOKEN_EXPIRED" | "TOKEN_USED" | "RATE_LIMITED" | "OAUTH_CANCELLED" | "OAUTH_STATE_INVALID" | "OAUTH_FAILED" | "ORIGIN_FORBIDDEN" | "NOT_FOUND" | "INTERNAL" | "INVALID_STATUS" | "UNSUPPORTED_MEDIA" | "PAYLOAD_TOO_LARGE" | "PHOTO_LIMIT" | "STORAGE_DISABLED" | "LISTING_INCOMPLETE" | "GEO_UNAVAILABLE" | "DATES_UNAVAILABLE" | "CANNOT_RENT_OWN" | "LISTING_UNAVAILABLE" | "INSUFFICIENT_FUNDS" | "PAYMENT_DECLINED" | "CONTRACT_NOT_SIGNED" | "ACTION_NOT_ALLOWED" | "DEADLINE_PASSED" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_IN_PROGRESS" | "OFFER_UNAVAILABLE" | "WALLET_LIMIT" | "LISTING_GONE";
                 message: string;
                 fields?: {
                     [key: string]: string;
@@ -2210,6 +2274,7 @@ export interface components {
                 hasPassword: boolean;
                 phone: string | null;
                 phoneVerified: boolean;
+                identityVerified: boolean;
                 /** Format: date-time */
                 createdAt: string;
             };
@@ -2253,6 +2318,7 @@ export interface components {
                 hasPassword: boolean;
                 phone: string | null;
                 phoneVerified: boolean;
+                identityVerified: boolean;
                 /** Format: date-time */
                 createdAt: string;
             };
@@ -3701,6 +3767,37 @@ export interface components {
             }[];
             version: number;
         };
+        IdentityStateDto_Output: {
+            /** @enum {string} */
+            status: "NONE" | "PENDING" | "VERIFIED" | "REJECTED";
+            /** @enum {string|null} */
+            documentType: "PASSPORT" | "ID_CARD" | "DRIVING_LICENCE" | null;
+            refusal: string | null;
+            /** Format: date-time */
+            submittedAt: string | null;
+            /** Format: date-time */
+            decidedAt: string | null;
+        };
+        AdminIdentityQueueDto_Output: {
+            items: {
+                id: string;
+                user: {
+                    id: string;
+                    name: string;
+                    email: string;
+                    birthDate: string | null;
+                };
+                /** @enum {string} */
+                documentType: "PASSPORT" | "ID_CARD" | "DRIVING_LICENCE";
+                /** Format: date-time */
+                submittedAt: string;
+            }[];
+        };
+        IdentityDecisionDto: {
+            /** @enum {string} */
+            decision: "approve" | "reject";
+            reason?: string;
+        };
         AdminUsersResponseDto_Output: {
             items: {
                 id: string;
@@ -3722,6 +3819,7 @@ export interface components {
                 hasPassword: boolean;
                 phone: string | null;
                 phoneVerified: boolean;
+                identityVerified: boolean;
                 /** Format: date-time */
                 createdAt: string;
                 /** Format: date-time */
@@ -3752,6 +3850,7 @@ export interface components {
                 hasPassword: boolean;
                 phone: string | null;
                 phoneVerified: boolean;
+                identityVerified: boolean;
                 /** Format: date-time */
                 createdAt: string;
                 /** Format: date-time */
@@ -3768,7 +3867,7 @@ export interface components {
                     name: string;
                 };
                 /** @enum {string} */
-                action: "LISTING_APPROVED" | "LISTING_REJECTED" | "LISTING_MOVED" | "LISTING_HIDDEN" | "LISTING_SHOWN" | "DISPUTE_RESOLVED" | "USER_BLOCKED" | "USER_UNBLOCKED" | "USER_NOTE" | "REPORT_CLOSED" | "REVIEW_HIDDEN" | "REVIEW_SHOWN" | "SETTINGS_CHANGED" | "CATEGORY_CHANGED" | "CATEGORY_CREATED" | "CATEGORY_DELETED" | "USER_CREATED" | "USER_EDITED" | "USER_DELETED" | "STAFF_CHANGED" | "TWO_FACTOR_RESET";
+                action: "LISTING_APPROVED" | "LISTING_REJECTED" | "LISTING_MOVED" | "LISTING_HIDDEN" | "LISTING_SHOWN" | "DISPUTE_RESOLVED" | "USER_BLOCKED" | "USER_UNBLOCKED" | "USER_NOTE" | "REPORT_CLOSED" | "REVIEW_HIDDEN" | "REVIEW_SHOWN" | "SETTINGS_CHANGED" | "CATEGORY_CHANGED" | "CATEGORY_CREATED" | "CATEGORY_DELETED" | "USER_CREATED" | "USER_EDITED" | "USER_DELETED" | "STAFF_CHANGED" | "TWO_FACTOR_RESET" | "IDENTITY_VIEWED" | "IDENTITY_APPROVED" | "IDENTITY_REJECTED";
                 targetType: string;
                 targetId: string | null;
                 summary: string;
@@ -9072,6 +9171,277 @@ export interface operations {
             };
         };
     };
+    IdentityController_state: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Where your identity check stands */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IdentityStateDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    IdentityController_submit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    document: string;
+                    /** Format: binary */
+                    selfie: string;
+                    /** @enum {string} */
+                    documentType: "PASSPORT" | "ID_CARD" | "DRIVING_LICENCE";
+                    /** @enum {string} */
+                    consent: "true";
+                };
+            };
+        };
+        responses: {
+            /** @description Sent to a moderator */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IdentityStateDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description File too large (PAYLOAD_TOO_LARGE) */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not a JPEG, PNG or WebP image (UNSUPPORTED_MEDIA) */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminIdentityController_queue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Checks waiting, oldest first */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminIdentityQueueDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminIdentityController_photo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                which: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The decrypted photo; never cached; the look is logged */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/webp": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/webp": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/webp": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminIdentityController_decide: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IdentityDecisionDto"];
+            };
+        };
+        responses: {
+            /** @description Decided; the photos are erased */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
     AdminController_users: {
         parameters: {
             query?: {
@@ -9292,7 +9662,7 @@ export interface operations {
     AdminAuditController_list: {
         parameters: {
             query?: {
-                action?: "LISTING_APPROVED" | "LISTING_REJECTED" | "LISTING_MOVED" | "LISTING_HIDDEN" | "LISTING_SHOWN" | "DISPUTE_RESOLVED" | "USER_BLOCKED" | "USER_UNBLOCKED" | "USER_NOTE" | "REPORT_CLOSED" | "REVIEW_HIDDEN" | "REVIEW_SHOWN" | "SETTINGS_CHANGED" | "CATEGORY_CHANGED" | "CATEGORY_CREATED" | "CATEGORY_DELETED" | "USER_CREATED" | "USER_EDITED" | "USER_DELETED" | "STAFF_CHANGED" | "TWO_FACTOR_RESET";
+                action?: "LISTING_APPROVED" | "LISTING_REJECTED" | "LISTING_MOVED" | "LISTING_HIDDEN" | "LISTING_SHOWN" | "DISPUTE_RESOLVED" | "USER_BLOCKED" | "USER_UNBLOCKED" | "USER_NOTE" | "REPORT_CLOSED" | "REVIEW_HIDDEN" | "REVIEW_SHOWN" | "SETTINGS_CHANGED" | "CATEGORY_CHANGED" | "CATEGORY_CREATED" | "CATEGORY_DELETED" | "USER_CREATED" | "USER_EDITED" | "USER_DELETED" | "STAFF_CHANGED" | "TWO_FACTOR_RESET" | "IDENTITY_VIEWED" | "IDENTITY_APPROVED" | "IDENTITY_REJECTED";
                 targetId?: string;
                 page?: number;
             };

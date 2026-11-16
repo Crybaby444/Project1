@@ -16,6 +16,7 @@ const PAGES: { key: string; section: AdminSection; href: string }[] = [
   { key: 'traffic', section: 'traffic', href: '/admin/traffic' },
   { key: 'seo', section: 'seo', href: '/admin/seo' },
   { key: 'moderation', section: 'moderation', href: '/admin/listings' },
+  { key: 'identity', section: 'identity', href: '/admin/identity' },
   { key: 'deals', section: 'deals', href: '/admin/deals' },
   { key: 'reports', section: 'reports', href: '/admin/reports' },
   { key: 'categories', section: 'categories', href: '/admin/categories' },

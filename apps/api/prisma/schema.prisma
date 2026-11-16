@@ -40,60 +40,62 @@ enum EmailTokenType {
 
 /// An account. Soft-deleted accounts keep their row (deletedAt) with personal data wiped.
 model User {
-  id              String    @id @default(cuid())
+  id                 String    @id @default(cuid())
   /// Always trimmed and lowercase (also enforced by the CHECK constraint User_email_lowercase).
-  email           String    @unique
+  email              String    @unique
   /// argon2id; null for accounts that only sign in with Google.
-  passwordHash    String?
-  name            String
+  passwordHash       String?
+  name               String
   /// How people find them (`@olga.k`): lowercase, unique; null only until a pre-2026-11-16 account picks one.
-  username        String?   @unique
+  username           String?   @unique
   /// YYYY-MM-DD; Yoyo is for adults (18+). Null until given (older accounts, Google sign-ups).
-  birthDate       DateTime? @db.Date
-  city            String?
-  about           String?
+  birthDate          DateTime? @db.Date
+  city               String?
+  about              String?
   /// Interface and email language: en | lv | ru.
-  locale          String    @default("en")
+  locale             String    @default("en")
   /// Theme preference: system | light | dark.
-  theme           String    @default("system")
-  role            Role      @default(USER)
-  emailVerifiedAt DateTime?
+  theme              String    @default("system")
+  role               Role      @default(USER)
+  emailVerifiedAt    DateTime?
   /// The verified phone number (E.164); set only once a code confirmed it.
-  phone           String?
-  phoneVerifiedAt DateTime?
-  blockedAt       DateTime?
-  blockedReason   String?
-  deletedAt       DateTime?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  phone              String?
+  phoneVerifiedAt    DateTime?
+  /// When a moderator confirmed who this is (identity check); needed to sign a deal's contract.
+  identityVerifiedAt DateTime?
+  blockedAt          DateTime?
+  blockedReason      String?
+  deletedAt          DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
   refreshTokens         RefreshToken[]
   emailTokens           EmailToken[]
   oauthAccounts         OAuthAccount[]
   phoneCodes            PhoneCode[]
-  listings              Listing[]      @relation("ListingOwner")
-  reviewedListings      Listing[]      @relation("ListingReviewer")
-  rentals               Booking[]      @relation("BookingRenter")
-  lendings              Booking[]      @relation("BookingOwner")
-  offersMade            Offer[]        @relation("OfferRenter")
-  offersReceived        Offer[]        @relation("OfferOwner")
+  listings              Listing[]       @relation("ListingOwner")
+  reviewedListings      Listing[]       @relation("ListingReviewer")
+  rentals               Booking[]       @relation("BookingRenter")
+  lendings              Booking[]       @relation("BookingOwner")
+  offersMade            Offer[]         @relation("OfferRenter")
+  offersReceived        Offer[]         @relation("OfferOwner")
   payments              Payment[]
   payouts               Payout[]
   favorites             Favorite[]
-  reviewsWritten        Review[]       @relation("ReviewAuthor")
-  conversationsAsRenter Conversation[] @relation("ConversationRenter")
-  conversationsAsOwner  Conversation[] @relation("ConversationOwner")
+  reviewsWritten        Review[]        @relation("ReviewAuthor")
+  conversationsAsRenter Conversation[]  @relation("ConversationRenter")
+  conversationsAsOwner  Conversation[]  @relation("ConversationOwner")
   messages              Message[]
-  reviewsReceived       Review[]       @relation("ReviewSubject")
+  reviewsReceived       Review[]        @relation("ReviewSubject")
   /// Email topics they turned off (EMAIL_TOPICS of @yoyo/shared); account and security mail always goes.
-  emailOff              String[]       @default([])
+  emailOff              String[]        @default([])
   notifications         Notification[]
   savedSearches         SavedSearch[]
-  reports               Report[]       @relation("ReportReporter")
-  adminNotes            AdminNote[]    @relation("AdminNotes")
-  following             Follow[]       @relation("Following")
+  reports               Report[]        @relation("ReportReporter")
+  adminNotes            AdminNote[]     @relation("AdminNotes")
+  following             Follow[]        @relation("Following")
   shops                 Shop[]
-  followers             Follow[]       @relation("Followers")
+  followers             Follow[]        @relation("Followers")
   /// For role ADMIN: which part of the panel they work in (null for everyone else).
   staffRole             StaffRole?
   /// Two-factor sign-in (TOTP): the secret, encrypted with the server key, and when it was turned on.
@@ -101,6 +103,7 @@ model User {
   totpEnabledAt         DateTime?
   /// The 30-second step of the last code accepted: a code works once.
   totpLastStep          Int?
+  identityChecks        IdentityCheck[]
 }
 
 /// One refresh token of a session. Rotation chains tokens of the same family; reuse revokes the family.
@@ -1082,4 +1085,31 @@ model ShopItem {
 
   @@id([shopId, listingId])
   @@index([listingId])
+}
+
+enum IdentityCheckStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+/// One identity check (owner, 2026-11-16): the photos are AES-GCM encrypted and erased at the decision.
+model IdentityCheck {
+  id            String              @id @default(cuid())
+  userId        String
+  status        IdentityCheckStatus @default(PENDING)
+  documentType  String
+  /// Encrypted photos (iv | tag | data); null once decided.
+  documentPhoto Bytes?
+  selfiePhoto   Bytes?
+  consentAt     DateTime
+  submittedAt   DateTime
+  decidedAt     DateTime?
+  decidedById   String?
+  reason        String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status, submittedAt])
+  @@index([userId])
 }

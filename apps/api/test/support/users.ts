@@ -15,6 +15,8 @@ export interface SeedUser {
   /** null: an account from before usernames and birth dates were asked (or a Google sign-up). */
   username?: string | null;
   birthDate?: string | null;
+  /** false: an account whose identity no moderator has checked yet (default: checked). */
+  identityVerified?: boolean;
 }
 
 /** Puts a user straight into the database (no HTTP, so no registration limit or email). */
@@ -35,6 +37,7 @@ export async function seedUser(
       staffRole: seed.staffRole ?? null,
       passwordHash: password === null ? null : await t.app.get(PasswordService).hash(password),
       emailVerifiedAt: seed.emailVerified ? t.clock.now() : null,
+      identityVerifiedAt: seed.identityVerified === false ? null : t.clock.now(),
       createdAt: t.clock.now(),
     },
   });

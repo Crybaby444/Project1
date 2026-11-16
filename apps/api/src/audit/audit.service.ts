@@ -6,7 +6,7 @@ import { PrismaService } from '../prisma/prisma.service';
 
 export interface AuditRecord {
   action: AuditAction;
-  targetType: 'LISTING' | 'USER' | 'BOOKING' | 'REPORT' | 'REVIEW' | 'SETTINGS' | 'CATEGORY';
+  targetType: 'LISTING' | 'USER' | 'BOOKING' | 'REPORT' | 'REVIEW' | 'SETTINGS' | 'CATEGORY' | 'IDENTITY';
   targetId?: string | null;
   summary?: string | null;
   before?: unknown;

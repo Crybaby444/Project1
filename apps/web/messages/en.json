@@ -218,7 +218,8 @@
     "AUTH_CODE_INVALID": "That code is wrong or already used. Enter the newest code from the app.",
     "USERNAME_TAKEN": "This username is taken. Try another one.",
     "UNDERAGE": "Yoyo is for people aged 18 and over.",
-    "PROFILE_INCOMPLETE": "Add your username and date of birth in Settings → Profile first."
+    "PROFILE_INCOMPLETE": "Add your username and date of birth in Settings → Profile first.",
+    "IDENTITY_REQUIRED": "Confirm who you are first: Settings → Profile → Confirm who you are."
   },
   "validation": {
     "required": "Fill in this field.",
@@ -1224,5 +1225,43 @@
   },
   "dialog": {
     "close": "Close"
+  },
+  "identityCheck": {
+    "title": "Confirm who you are",
+    "intro": "Lending and renting on Yoyo start once a moderator has confirmed who you are. You can do it now or later, in Settings → Profile.",
+    "skip": "Skip for now",
+    "facts": {
+      "why": "It is needed to lend, to rent and to sign a deal’s contract with your real name.",
+      "who": "Only a Yoyo moderator sees the photos, and every look is recorded.",
+      "erase": "The photos are erased as soon as the moderator decides; only the result is kept."
+    },
+    "documentType": "Document",
+    "documents": {
+      "PASSPORT": "Passport",
+      "ID_CARD": "ID card",
+      "DRIVING_LICENCE": "Driving licence"
+    },
+    "document": {
+      "label": "Photo of the document",
+      "hint": "The page with your photo and name, sharp and whole. You may cover the personal code."
+    },
+    "selfie": {
+      "label": "Your selfie",
+      "hint": "Your face in good light, no glasses or hat."
+    },
+    "consent": "I agree that Yoyo processes these photos to confirm my identity, as described above and in the privacy policy.",
+    "submit": "Send for a check",
+    "pending": "Sent on {date}. A moderator usually checks within a day; you will get an email.",
+    "verified": "Your identity is confirmed ({date}). You can lend, rent and sign contracts.",
+    "rejected": "The last check was not accepted: {reason}. Please send new photos.",
+    "loadFailed": "We could not load your check. Try again",
+    "errors": {
+      "documentType": "Choose the document.",
+      "document": "Add a photo of the document.",
+      "selfie": "Add a selfie.",
+      "consent": "Your consent is needed to send the photos.",
+      "photo": "One of the photos could not be read. Use a JPEG, PNG or WebP under 10 MB.",
+      "send": "The photos were not sent. Try again."
+    }
   }
 }

@@ -20,6 +20,7 @@ export function toPublicUser(user: User): PublicUser {
     hasPassword: user.passwordHash !== null,
     phone: user.phone,
     phoneVerified: user.phoneVerifiedAt !== null,
+    identityVerified: user.identityVerifiedAt !== null,
     createdAt: user.createdAt.toISOString(),
   };
 }

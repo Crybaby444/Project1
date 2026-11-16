@@ -56,7 +56,8 @@ describe('RegisterForm', () => {
     await user.type(screen.getByLabelText(lv.auth.fields.password), 'correct horse battery');
     await user.click(screen.getByRole('button', { name: lv.auth.register.submit }));
 
-    await waitFor(() => expect(replace).toHaveBeenCalledWith('/settings'));
+    await waitFor(() => expect(replace).toHaveBeenCalledWith('/verify-identity?next=%2Fsettings'));
+    expect(replace).not.toHaveBeenCalledWith('/settings');
     expect(calls.find((c) => c.path === '/api/v1/auth/register')?.body).toEqual({
       name: 'Anna Bērziņa',
       username: 'anna.b',
@@ -142,7 +143,7 @@ describe('RegisterForm', () => {
     await user.type(screen.getByLabelText(en.auth.fields.password), 'correct horse battery');
     await user.click(screen.getByRole('button', { name: en.auth.register.submit }));
 
-    await waitFor(() => expect(replace).toHaveBeenCalledWith('/'));
+    await waitFor(() => expect(replace).toHaveBeenCalledWith('/verify-identity?next=%2F'));
     expect(calls.find((c) => c.method === 'PATCH' && c.path === '/api/v1/me')?.body).toEqual({
       theme: 'dark',
     });
@@ -158,7 +159,7 @@ describe('RegisterForm', () => {
     await user.type(screen.getByLabelText(en.auth.fields.password), 'correct horse battery');
     await user.click(screen.getByRole('button', { name: en.auth.register.submit }));
 
-    await waitFor(() => expect(replace).toHaveBeenCalledWith('/'));
+    await waitFor(() => expect(replace).toHaveBeenCalledWith('/verify-identity?next=%2F'));
     expect(calls.some((c) => c.method === 'PATCH')).toBe(false);
   });
 });

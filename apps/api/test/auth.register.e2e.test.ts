@@ -36,7 +36,7 @@ describe('registration and email verification', () => {
     expect(res.status).toBe(201);
     expect(res.body.user).toMatchObject({ email: 'anna@mail.lv', name: 'Anna Ozola', username: 'anna.ozola', birthDate: '1990-05-01', locale: 'lv', emailVerified: false });
     expect(Object.keys(res.body.user).sort()).toEqual(
-      ['about', 'birthDate', 'city', 'createdAt', 'email', 'emailVerified', 'hasPassword', 'id', 'locale', 'name', 'phone', 'phoneVerified', 'role', 'staffRole', 'theme', 'username'],
+      ['about', 'birthDate', 'city', 'createdAt', 'email', 'emailVerified', 'hasPassword', 'id', 'identityVerified', 'locale', 'name', 'phone', 'phoneVerified', 'role', 'staffRole', 'theme', 'username'],
     );
     expect(JSON.stringify(res.body)).not.toContain('passwordHash');
 

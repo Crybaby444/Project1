@@ -2,11 +2,12 @@
 
 import { RegisterRequestSchema } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
+import { useState } from 'react';
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/Field';
 import { INPUT_CLASS } from '@/components/ui/inputs';
-import { Link, useRouter } from '@/i18n/navigation';
+import { Link } from '@/i18n/navigation';
 import { useApiForm } from '@/lib/forms/use-api-form';
 import { unwrap } from '@/lib/session/api-error';
 import { safeNext } from '@/lib/session/safe-next';
@@ -66,8 +67,10 @@ export function RegisterForm({ next }: { next: string | null }) {
   const client = useApiClient();
   const { setUser } = useSession();
   const { preference: theme } = useTheme();
-  const router = useRouter();
-  useLeaveWhenSignedIn(next);
+  // After signing up: confirm who you are, or skip it (owner, 2026-11-16). The signed-in redirect
+  // below takes the person there, so it never races a second redirect to `next`.
+  const [after, setAfter] = useState<string | null>(next);
+  useLeaveWhenSignedIn(after);
 
   const { form, submit, formError, retryInSeconds, busy, disabled, fieldError } = useApiForm(
     RegisterFormSchema,
@@ -85,8 +88,8 @@ export function RegisterForm({ next }: { next: string | null }) {
             user = { ...user, theme }; // the account exists; the theme can be saved from the settings
           }
         }
+        setAfter(`/verify-identity?next=${encodeURIComponent(safeNext(next))}`);
         setUser(user);
-        router.replace(safeNext(next));
       },
     },
   );

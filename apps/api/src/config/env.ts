@@ -60,6 +60,10 @@ const EnvObject = z.object({
   GOOGLE_AUTH_URL: z.url().default('https://accounts.google.com/o/oauth2/v2/auth'),
   GOOGLE_TOKEN_URL: z.url().default('https://oauth2.googleapis.com/token'),
   GOOGLE_JWKS_URL: z.url().default('https://www.googleapis.com/oauth2/v3/certs'),
+  // Lending and renting need an identity checked by a moderator (owner, 2026-11-16); 'false' only for e2e.
+  /** 32 bytes as 64 hex characters; without it the key is derived from JWT_SECRET. */
+  IDENTITY_PHOTO_KEY: z.preprocess(blankAsUnset, z.string().regex(/^[0-9a-f]{64}$/i).optional()),
+  IDENTITY_REQUIRED: z.enum(['true', 'false']).default('true').transform((v) => v === 'true'),
   /**
    * Who delivers phone confirmation codes. `mailbox` only simulates SMS (the code arrives by email,
    * so it proves nothing about the phone): the default outside production, never allowed in it.

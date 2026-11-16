@@ -24,6 +24,9 @@ export const AUDIT_ACTIONS = [
   'USER_DELETED',
   'STAFF_CHANGED',
   'TWO_FACTOR_RESET',
+  'IDENTITY_VIEWED',
+  'IDENTITY_APPROVED',
+  'IDENTITY_REJECTED',
 ] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 

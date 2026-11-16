@@ -7,6 +7,7 @@ const DEFAULT_MESSAGES: Record<ErrorCode, string> = {
   USERNAME_TAKEN: 'This username is taken',
   UNDERAGE: 'Yoyo is for people aged 18 and over',
   PROFILE_INCOMPLETE: 'Add your birth date in Settings → Profile first',
+  IDENTITY_REQUIRED: 'Confirm who you are first',
   AUTH_UNAUTHENTICATED: 'Sign in to continue',
   AUTH_FORBIDDEN: 'You do not have access to this',
   AUTH_BLOCKED: 'This account is blocked',
