@@ -1154,7 +1154,12 @@
     },
     "fresh": {
       "title": "Tikko pievienots",
-      "all": "Skatīt visus jaunumus"
+      "all": "Skatīt visus jaunumus",
+      "spot": {
+        "title": "Šeit varētu būt tava lieta",
+        "body": "Urbis, telts, projektors. Ieliec to dažās minūtēs ar savu cenu un dienām.",
+        "cta": "Izīrēt lietu"
+      }
     },
     "lend": {
       "title": "Tavas lietas var pelnīt",

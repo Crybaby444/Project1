@@ -1154,7 +1154,12 @@
     },
     "fresh": {
       "title": "Just added",
-      "all": "See everything new"
+      "all": "See everything new",
+      "spot": {
+        "title": "Your thing could be here",
+        "body": "The drill, the tent, the projector. List it in a few minutes, with your price and your days.",
+        "cta": "Lend an item"
+      }
     },
     "lend": {
       "title": "Your things can earn",
