@@ -101,6 +101,13 @@
     }
   }
   /* The phone's bottom sheet rises from the bottom edge. */
+  /* What is Yoyo: the steps of the side you pick rise into place. */
+  @keyframes side-in {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+  }
   @keyframes sheet-up {
     from {
       transform: translateY(100%);

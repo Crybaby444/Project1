@@ -17,7 +17,7 @@ for (const { locale, prefix, m } of LANGUAGES) {
     await page.goto(`${prefix}/what-is-yoyo`);
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
     await expect(page.getByRole('heading', { level: 1, name: 'Yoyo' })).toBeAttached();
-    for (const scene of ['hero', 'night', 'ends', 'what', 'people', 'facts', 'finale']) {
+    for (const scene of ['hero', 'night', 'ends', 'what', 'sides', 'people', 'inside', 'facts', 'finale']) {
       await expect(page.locator(`[data-home="${scene}"]`)).toHaveCount(1);
     }
     await expect(page.getByRole('heading', { level: 2, name: m.landing.ends.title })).toBeAttached();
@@ -29,6 +29,16 @@ for (const { locale, prefix, m } of LANGUAGES) {
     expect(values).toEqual(['0', String(DEFAULT_BOOKING_SETTINGS.inspectionHours), '1', '100', '3']);
   });
 }
+
+test('What is Yoyo walks through both sides: the switch shows the lender’s steps, and both are in the HTML', async ({ page }) => {
+  await page.goto('/what-is-yoyo');
+  const sides = page.locator('[data-home="sides"]');
+  await expect(sides.locator('[data-side]')).toHaveCount(2);
+  await expect(sides.getByRole('heading', { level: 3, name: en.landing.sides.rent.steps.s3.title })).toBeVisible();
+  await sides.getByRole('tab', { name: en.landing.sides.lend.tab }).click();
+  await expect(sides.getByRole('heading', { level: 3, name: en.landing.sides.lend.steps.s2.title })).toBeVisible();
+  await expect(sides.getByRole('heading', { level: 3, name: en.landing.sides.rent.steps.s3.title })).toBeHidden();
+});
 
 test('What is Yoyo leads into the catalog and to lending', async ({ page }) => {
   await page.goto('/what-is-yoyo');
