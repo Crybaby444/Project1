@@ -10178,8 +10178,17 @@
           "username": {
             "type": "string"
           },
-          "birthDate": {
-            "type": "string"
+          "adult": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "dataConsent": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
           },
           "locale": {
             "type": "string",
@@ -10195,7 +10204,8 @@
           "password",
           "name",
           "username",
-          "birthDate"
+          "adult",
+          "dataConsent"
         ]
       },
       "UserResponseDto_Output": {
@@ -10222,6 +10232,12 @@
                 "type": "string",
                 "minLength": 1,
                 "nullable": true
+              },
+              "adultConfirmed": {
+                "type": "boolean"
+              },
+              "dataConsent": {
+                "type": "boolean"
               },
               "city": {
                 "type": [
@@ -10300,6 +10316,8 @@
               "name",
               "username",
               "birthDate",
+              "adultConfirmed",
+              "dataConsent",
               "city",
               "about",
               "locale",
@@ -10420,6 +10438,12 @@
                 "minLength": 1,
                 "nullable": true
               },
+              "adultConfirmed": {
+                "type": "boolean"
+              },
+              "dataConsent": {
+                "type": "boolean"
+              },
               "city": {
                 "type": [
                   "string",
@@ -10497,6 +10521,8 @@
               "name",
               "username",
               "birthDate",
+              "adultConfirmed",
+              "dataConsent",
               "city",
               "about",
               "locale",
@@ -16686,8 +16712,17 @@
           "username": {
             "type": "string"
           },
-          "birthDate": {
-            "type": "string"
+          "adult": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "dataConsent": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
           },
           "city": {
             "type": "string",
@@ -17787,6 +17822,12 @@
                   "minLength": 1,
                   "nullable": true
                 },
+                "adultConfirmed": {
+                  "type": "boolean"
+                },
+                "dataConsent": {
+                  "type": "boolean"
+                },
                 "city": {
                   "type": [
                     "string",
@@ -17876,6 +17917,8 @@
                 "name",
                 "username",
                 "birthDate",
+                "adultConfirmed",
+                "dataConsent",
                 "city",
                 "about",
                 "locale",
@@ -17930,6 +17973,12 @@
                 "type": "string",
                 "minLength": 1,
                 "nullable": true
+              },
+              "adultConfirmed": {
+                "type": "boolean"
+              },
+              "dataConsent": {
+                "type": "boolean"
               },
               "city": {
                 "type": [
@@ -18020,6 +18069,8 @@
               "name",
               "username",
               "birthDate",
+              "adultConfirmed",
+              "dataConsent",
               "city",
               "about",
               "locale",

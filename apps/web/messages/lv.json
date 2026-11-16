@@ -231,7 +231,9 @@
     "fullName": "Ierakstiet vārdu un uzvārdu.",
     "username": "3–20 simboli: a–z, 0–9, punkts un pasvītra; sākumā un beigās — burts vai cipars.",
     "usernameReserved": "Šis lietotājvārds ir rezervēts.",
-    "birthDate": "Ievadiet īstu datumu: diena, mēnesis un gads."
+    "birthDate": "Ievadiet īstu datumu: diena, mēnesis un gads.",
+    "adult": "Yoyo ir paredzēts tikai personām no 18 gadu vecuma.",
+    "dataConsent": "Lai izveidotu kontu, nepieciešama jūsu piekrišana."
   },
   "auth": {
     "fields": {
@@ -1077,8 +1079,12 @@
     "birthHint": "Yoyo ir cilvēkiem no 18 gadu vecuma. Citi to neredz.",
     "usernameFree": "@{username} ir brīvs",
     "usernameTaken": "Šis lietotājvārds ir aizņemts",
-    "complete": "Pabeidziet profilu: pievienojiet lietotājvārdu un dzimšanas datumu, lai nomātu un izīrētu.",
-    "completeLink": "Pievienot"
+    "complete": "Pabeidziet profilu, lai nomātu un iznomātu: apstipriniet, ka jums ir 18+, un piekrītiet datu apstrādei.",
+    "completeLink": "Pabeigt",
+    "adult": "Man ir 18 gadi vai vairāk",
+    "dataConsent": "Piekrītu savu personas datu apstrādei, kā aprakstīts",
+    "privacy": "privātuma politikā",
+    "ticksTitle": "Apstiprinājumi"
   },
   "shops": {
     "itemCount": "{count, plural, zero {# lietu} one {# lieta} other {# lietas}}",

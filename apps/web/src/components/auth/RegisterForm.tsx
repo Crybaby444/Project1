@@ -1,5 +1,6 @@
 'use client';
 
+import { z } from 'zod';
 import { RegisterRequestSchema } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -15,12 +16,14 @@ import { useApiClient, useSession } from '@/lib/session/SessionProvider';
 import { AuthCard, TEXT_LINK } from './AuthCard';
 import { FormError } from './FormError';
 import { GoogleButton } from './GoogleButton';
-import { BirthDateField, UsernameStatus } from './IdentityFields';
+import { ConsentTicks, UsernameStatus } from './IdentityFields';
 import { useLeaveWhenSignedIn, withNext } from './LoginForm';
 import { PasswordField } from './PasswordField';
 import { RetryAfterNotice } from './RetryAfterNotice';
 
-const RegisterFormSchema = RegisterRequestSchema.omit({ locale: true });
+/** The two ticks are checkboxes here (false until ticked); the API takes them as `true`. */
+const Tick = (messageKey: 'adult' | 'dataConsent') => z.boolean().refine(Boolean, { params: { messageKey } });
+const RegisterFormSchema = RegisterRequestSchema.omit({ locale: true }).extend({ adult: Tick('adult'), dataConsent: Tick('dataConsent') });
 
 export type PasswordStrength = 0 | 1 | 2 | 3;
 
@@ -75,9 +78,9 @@ export function RegisterForm({ next }: { next: string | null }) {
   const { form, submit, formError, retryInSeconds, busy, disabled, fieldError } = useApiForm(
     RegisterFormSchema,
     {
-      defaultValues: { name: '', username: '', birthDate: '', email: '', password: '' },
+      defaultValues: { name: '', username: '', adult: false, dataConsent: false, email: '', password: '' },
       onSubmit: async (values) => {
-        const body = { ...values, locale: locale as 'en' | 'lv' | 'ru' };
+        const body = { ...values, adult: true as const, dataConsent: true as const, locale: locale as 'en' | 'lv' | 'ru' };
         let { user } = await unwrap(client.POST('/api/v1/auth/register', { body }));
         // A light or dark theme chosen before signing up becomes the new profile's, rather than the
         // profile's "system" replacing it on screen (SyncThemeWithProfile).
@@ -95,7 +98,6 @@ export function RegisterForm({ next }: { next: string | null }) {
   );
   const password = form.watch('password') ?? '';
   const username = form.watch('username') ?? '';
-  const birthDate = form.watch('birthDate') ?? '';
 
   return (
     <AuthCard
@@ -132,11 +134,6 @@ export function RegisterForm({ next }: { next: string | null }) {
           </Field>
           <UsernameStatus username={username} />
         </div>
-        <BirthDateField
-          value={birthDate}
-          onChange={(v) => form.setValue('birthDate', v, { shouldValidate: form.formState.submitCount > 0 })}
-          error={fieldError('birthDate')}
-        />
         <Field label={t('fields.email')} error={fieldError('email')}>
           <input
             type="email"
@@ -150,6 +147,7 @@ export function RegisterForm({ next }: { next: string | null }) {
           <PasswordField autoComplete="new-password" {...form.register('password')} />
         </Field>
         <StrengthMeter password={password} />
+        <ConsentTicks adult={{ input: form.register('adult'), error: fieldError('adult') }} dataConsent={{ input: form.register('dataConsent'), error: fieldError('dataConsent') }} />
         <Button type="submit" size="lg" loading={busy} disabled={disabled}>
           {t('register.submit')}
         </Button>

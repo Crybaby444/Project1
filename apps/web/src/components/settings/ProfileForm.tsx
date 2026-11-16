@@ -1,6 +1,6 @@
 'use client';
 
-import { BirthDateSchema, LOCALES, NameSchema, UsernameSchema, type Locale, type PublicUser } from '@yoyo/shared';
+import { LOCALES, NameSchema, UsernameSchema, type Locale, type PublicUser } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { z } from 'zod';
 import { FormError } from '@/components/auth/FormError';
@@ -16,7 +16,7 @@ import { useApiForm } from '@/lib/forms/use-api-form';
 import { unwrap } from '@/lib/session/api-error';
 import { useApiClient, useSession } from '@/lib/session/SessionProvider';
 import { SettingsSection } from './SettingsSection';
-import { BirthDateField, UsernameStatus } from '@/components/auth/IdentityFields';
+import { ConsentTicks, UsernameStatus } from '@/components/auth/IdentityFields';
 
 const ABOUT_MAX = 500;
 
@@ -24,8 +24,9 @@ const ABOUT_MAX = 500;
 const ProfileFormSchema = z.object({
   name: NameSchema,
   username: UsernameSchema,
-  /** Asked once: empty while the account has none, then sent; never sent again after that. */
-  birthDate: z.union([z.literal(''), BirthDateSchema]),
+  /** The two ticks, asked once from accounts that have not given them (Google sign-ups, older accounts). */
+  adult: z.boolean(),
+  dataConsent: z.boolean(),
   city: z.string().trim().max(60),
   about: z.string().trim().max(ABOUT_MAX),
   locale: z.enum(LOCALES),
@@ -46,21 +47,23 @@ export function ProfileForm({ user }: { user: PublicUser }) {
   const { form, submit, formError, retryInSeconds, busy, disabled, fieldError } = useApiForm(
     ProfileFormSchema,
     {
-      defaultValues: { name: user.name, username: user.username ?? '', birthDate: '', city: user.city ?? '', about: user.about ?? '', locale: user.locale },
+      defaultValues: { name: user.name, username: user.username ?? '', adult: false, dataConsent: false, city: user.city ?? '', about: user.about ?? '', locale: user.locale },
       onSubmit: async (values) => {
         const languageChanged = values.locale !== form.formState.defaultValues?.locale;
-        const { birthDate, username, ...rest } = values;
+        const { adult, dataConsent, username, ...rest } = values;
         const body = {
           ...rest,
           ...(username !== (user.username ?? '') ? { username } : {}),
-          ...(birthDate && !user.birthDate ? { birthDate } : {}),
+          ...(adult && !user.adultConfirmed ? { adult: true as const } : {}),
+          ...(dataConsent && !user.dataConsent ? { dataConsent: true as const } : {}),
         };
         const { user: saved } = await unwrap(client.PATCH('/api/v1/me', { body }));
         setUser(saved);
         form.reset({
           name: saved.name,
           username: saved.username ?? '',
-          birthDate: '',
+          adult: false,
+          dataConsent: false,
           city: saved.city ?? '',
           about: saved.about ?? '',
           locale: saved.locale,
@@ -96,11 +99,11 @@ export function ProfileForm({ user }: { user: PublicUser }) {
             </Field>
             <UsernameStatus username={form.watch('username') ?? ''} current={user.username} />
           </div>
-          {user.birthDate ? null : (
-            <BirthDateField
-              value={form.watch('birthDate') ?? ''}
-              onChange={(v) => form.setValue('birthDate', v, { shouldValidate: form.formState.submitCount > 0 })}
-              error={fieldError('birthDate')}
+          {user.adultConfirmed && user.dataConsent ? null : (
+            <ConsentTicks
+              show={{ adult: !user.adultConfirmed, dataConsent: !user.dataConsent }}
+              adult={{ input: form.register('adult'), error: fieldError('adult') }}
+              dataConsent={{ input: form.register('dataConsent'), error: fieldError('dataConsent') }}
             />
           )}
           <Field label={t('city')} hint={t('cityHint')} error={fieldError('city')}>

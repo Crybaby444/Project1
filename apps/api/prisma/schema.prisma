@@ -63,6 +63,10 @@ model User {
   phoneVerifiedAt    DateTime?
   /// When a moderator confirmed who this is (identity check); needed to sign a deal's contract.
   identityVerifiedAt DateTime?
+  /// The sign-up tick "I am 18 or older" (owner, 2026-11-16: no birth date asked).
+  adultConfirmedAt   DateTime?
+  /// The sign-up tick "I agree to the processing of my data".
+  dataConsentAt      DateTime?
   blockedAt          DateTime?
   blockedReason      String?
   deletedAt          DateTime?

@@ -15,7 +15,7 @@ import type { SessionTokens } from './cookies';
 import type { GoogleIdentity } from './google-oauth.service';
 import { PasswordService } from './password.service';
 import { TwoFactorService } from './two-factor.service';
-import { assertAdult, assertUsernameFree, generateUsername } from './identity';
+import { assertUsernameFree, generateUsername } from './identity';
 import { hashToken, RefreshTokenService, type SessionMeta } from './refresh-token.service';
 
 const HOUR = 3_600_000;
@@ -68,7 +68,6 @@ export class AuthService {
     if (await this.prisma.user.findUnique({ where: { email: input.email }, select: { id: true } })) {
       throw emailTaken();
     }
-    assertAdult(input.birthDate, this.clock.now());
     await assertUsernameFree(this.prisma, input.username);
     const passwordHash = await this.passwords.hash(input.password);
     let user: User;
@@ -79,7 +78,8 @@ export class AuthService {
           passwordHash,
           name: input.name,
           username: input.username,
-          birthDate: new Date(`${input.birthDate}T00:00:00Z`),
+          adultConfirmedAt: this.clock.now(),
+          dataConsentAt: this.clock.now(),
           locale: input.locale ?? DEFAULT_LOCALE,
           createdAt: this.clock.now(),
         },

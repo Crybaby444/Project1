@@ -8,7 +8,7 @@ import { resetAccounts } from './support/db';
 import { cookieLine, cookieValue, createTestApp, tokenFrom, type TestApp } from './support/test-app';
 
 const HOUR = 3_600_000;
-const anna = { email: '  Anna@Mail.LV ', password: 'correct horse', name: 'Anna Ozola', username: 'anna.ozola', birthDate: '1990-05-01', locale: 'lv' };
+const anna = { email: '  Anna@Mail.LV ', password: 'correct horse', name: 'Anna Ozola', username: 'anna.ozola', adult: true, dataConsent: true, locale: 'lv' };
 
 describe('registration and email verification', () => {
   let t: TestApp;
@@ -34,9 +34,9 @@ describe('registration and email verification', () => {
     const res = await register(anna);
 
     expect(res.status).toBe(201);
-    expect(res.body.user).toMatchObject({ email: 'anna@mail.lv', name: 'Anna Ozola', username: 'anna.ozola', birthDate: '1990-05-01', locale: 'lv', emailVerified: false });
+    expect(res.body.user).toMatchObject({ email: 'anna@mail.lv', name: 'Anna Ozola', username: 'anna.ozola', adultConfirmed: true, dataConsent: true, birthDate: null, locale: 'lv', emailVerified: false });
     expect(Object.keys(res.body.user).sort()).toEqual(
-      ['about', 'birthDate', 'city', 'createdAt', 'email', 'emailVerified', 'hasPassword', 'id', 'identityVerified', 'locale', 'name', 'phone', 'phoneVerified', 'role', 'staffRole', 'theme', 'username'],
+      ['about', 'adultConfirmed', 'birthDate', 'city', 'createdAt', 'dataConsent', 'email', 'emailVerified', 'hasPassword', 'id', 'identityVerified', 'locale', 'name', 'phone', 'phoneVerified', 'role', 'staffRole', 'theme', 'username'],
     );
     expect(JSON.stringify(res.body)).not.toContain('passwordHash');
 
@@ -67,16 +67,18 @@ describe('registration and email verification', () => {
     expect(await t.prisma.user.count({ where: { email: 'anna@mail.lv' } })).toBe(1);
   });
 
-  it('refuses someone under 18 and a taken username', async () => {
-    const today = t.clock.now();
-    const yearsAgo = (years: number, days = 0) => {
-      const d = new Date(Date.UTC(today.getUTCFullYear() - years, today.getUTCMonth(), today.getUTCDate() + days));
-      return d.toISOString().slice(0, 10);
-    };
-    const young = await register({ ...anna, birthDate: yearsAgo(18, 1) });
-    expect(young.status).toBe(400);
-    expect(young.body.error.code).toBe('UNDERAGE');
-    await register({ ...anna, birthDate: yearsAgo(18, -1) }).expect(201);
+  it('needs both ticks, 18 or older and the data consent (owner, 2026-11-16), and a free username', async () => {
+    for (const missing of ['adult', 'dataConsent'] as const) {
+      const { [missing]: _left, ...rest } = anna;
+      const res = await register(rest);
+      expect(res.status).toBe(400);
+      expect(Object.keys(res.body.error.fields)).toEqual([missing]);
+    }
+    expect((await register({ ...anna, adult: false })).status).toBe(400);
+    const saved = await register(anna).expect(201);
+    const row = await t.prisma.user.findUniqueOrThrow({ where: { id: saved.body.user.id } });
+    expect(row.adultConfirmedAt).toEqual(t.clock.now());
+    expect(row.dataConsentAt).toEqual(t.clock.now());
     const taken = await register({ ...anna, email: 'other@mail.lv' });
     expect(taken.status).toBe(409);
     expect(taken.body.error.code).toBe('USERNAME_TAKEN');
@@ -89,7 +91,7 @@ describe('registration and email verification', () => {
     const res = await register({ email: 'nope', password: 'short', name: '', locale: 'de' });
     expect(res.status).toBe(400);
     expect(res.body.error.code).toBe('VALIDATION_FAILED');
-    expect(Object.keys(res.body.error.fields).sort()).toEqual(['birthDate', 'email', 'locale', 'name', 'password', 'username']);
+    expect(Object.keys(res.body.error.fields).sort()).toEqual(['adult', 'dataConsent', 'email', 'locale', 'name', 'password', 'username']);
     expect(await t.prisma.user.count()).toBe(0);
   });
 

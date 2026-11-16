@@ -1,18 +1,9 @@
-import { ageOn, MIN_AGE, RESERVED_USERNAMES, UsernameSchema } from '@yoyo/shared';
+import { RESERVED_USERNAMES, UsernameSchema } from '@yoyo/shared';
 import { AppError } from '../common/app-error';
 import type { Prisma, PrismaClient } from '../generated/prisma/client';
 
 type Db = Pick<PrismaClient | Prisma.TransactionClient, 'user'>;
 
-/** `2008-11-16T…` → `2008-11-16`. */
-export const dayOfDate = (date: Date): string => date.toISOString().slice(0, 10);
-
-/** 400 UNDERAGE unless the birth date makes them 18 or older today (UTC). */
-export function assertAdult(birthDate: string, now: Date): void {
-  if (ageOn(birthDate, dayOfDate(now)) < MIN_AGE) {
-    throw new AppError('UNDERAGE', 400, 'Yoyo is for people aged 18 and over', { birthDate: 'You must be 18 or older' });
-  }
-}
 
 /** 409 USERNAME_TAKEN when someone else has it. */
 export async function assertUsernameFree(db: Db, username: string, exceptUserId?: string): Promise<void> {
@@ -48,9 +39,10 @@ export async function assertIdentityVerified(db: Db, userId: string, required: b
 }
 
 export async function assertProfileComplete(db: Db, userId: string): Promise<void> {
-  const user = await db.user.findUnique({ where: { id: userId }, select: { birthDate: true, username: true, role: true } });
+  const user = await db.user.findUnique({ where: { id: userId }, select: { adultConfirmedAt: true, dataConsentAt: true, username: true, role: true } });
   if (!user || user.role === 'ADMIN') return;
-  if (user.birthDate === null || user.username === null) {
-    throw new AppError('PROFILE_INCOMPLETE', 409, undefined, undefined, { birthDate: user.birthDate !== null, username: user.username !== null });
+  if (user.adultConfirmedAt === null || user.dataConsentAt === null || user.username === null) {
+    const details = { adult: user.adultConfirmedAt !== null, dataConsent: user.dataConsentAt !== null, username: user.username !== null };
+    throw new AppError('PROFILE_INCOMPLETE', 409, undefined, undefined, details);
   }
 }

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { BirthDateSchema, FullNameSchema, UsernameSchema } from './identity';
+import { FullNameSchema, UsernameSchema } from './identity';
 import { LOCALES } from './locale';
 import { THEME_PREFERENCES } from './theme';
 
@@ -15,13 +15,17 @@ export const PasswordSchema = z.string().min(8).max(128);
 
 export const NameSchema = z.string().trim().min(1).max(60);
 
-/** Owner, 2026-11-16: the full name, a username (people are found by it) and the birth date (18 or older). */
+/**
+ * Owner, 2026-11-16: the full name, a username (people are found by it), and two ticks instead of a birth
+ * date: "I am 18 or older" and "I agree to the processing of my data".
+ */
 export const RegisterRequestSchema = z.object({
   email: EmailSchema,
   password: PasswordSchema,
   name: FullNameSchema,
   username: UsernameSchema,
-  birthDate: BirthDateSchema,
+  adult: z.literal(true),
+  dataConsent: z.literal(true),
   locale: z.enum(LOCALES).optional(),
 });
 
@@ -67,8 +71,10 @@ export const UpdateProfileRequestSchema = z.object({
   name: NameSchema.optional(),
   /** Change your username (unique). */
   username: UsernameSchema.optional(),
-  /** Set once, for accounts made before it was asked (or through Google); 18 or older. */
-  birthDate: BirthDateSchema.optional(),
+  /** Given once, by accounts made through Google or before the ticks were asked: 18 or older. */
+  adult: z.literal(true).optional(),
+  /** Given once, the same way: consent to the processing of personal data. */
+  dataConsent: z.literal(true).optional(),
   city: ProfileText(60),
   about: ProfileText(500),
   locale: z.enum(LOCALES).optional(),
@@ -106,8 +112,12 @@ export const PublicUserSchema = z.object({
   name: z.string(),
   /** How people find you (`@username`); null only for accounts that have not chosen one yet. */
   username: z.string().min(1).nullable(),
-  /** Your birth date (YYYY-MM-DD), or null until you add it: renting and lending need it. */
+  /** A birth date given before 2026-11-16 (YYYY-MM-DD), else null; no longer asked. */
   birthDate: z.string().min(1).nullable(),
+  /** Confirmed being 18 or older (the sign-up tick); renting and lending need it. */
+  adultConfirmed: z.boolean(),
+  /** Agreed to the processing of personal data; renting and lending need it. */
+  dataConsent: z.boolean(),
   city: z.string().nullable(),
   about: z.string().nullable(),
   locale: z.enum(LOCALES),

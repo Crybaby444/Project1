@@ -15,6 +15,10 @@ export interface SeedUser {
   /** null: an account from before usernames and birth dates were asked (or a Google sign-up). */
   username?: string | null;
   birthDate?: string | null;
+  /** false: the 18+ tick not given yet (a Google sign-up); default given. */
+  adultConfirmed?: boolean;
+  /** false: the data-processing consent not given yet; default given. */
+  dataConsent?: boolean;
   /** false: an account whose identity no moderator has checked yet (default: checked). */
   identityVerified?: boolean;
 }
@@ -37,6 +41,8 @@ export async function seedUser(
       staffRole: seed.staffRole ?? null,
       passwordHash: password === null ? null : await t.app.get(PasswordService).hash(password),
       emailVerifiedAt: seed.emailVerified ? t.clock.now() : null,
+      adultConfirmedAt: seed.adultConfirmed === false ? null : t.clock.now(),
+      dataConsentAt: seed.dataConsent === false ? null : t.clock.now(),
       identityVerifiedAt: seed.identityVerified === false ? null : t.clock.now(),
       createdAt: t.clock.now(),
     },
@@ -48,8 +54,8 @@ export async function seedUser(
  * A registration body with what sign-up asks since 2026-11-16: a full name, a username (from the email)
  * and an adult's birth date — unless the test sets them itself.
  */
-export function withIdentity<T extends { email?: string; name?: string }>(body: T): T & { username: string; birthDate: string } {
+export function withIdentity<T extends { email?: string; name?: string }>(body: T): T & { username: string; adult: true; dataConsent: true } {
   const local = (body.email ?? 'user').trim().toLowerCase().split('@')[0]!.replace(/[^a-z0-9]/g, '') || 'user';
   const name = body.name && body.name.trim().split(/\s+/).length < 2 && body.name.trim() !== '' ? `${body.name.trim()} Tester` : body.name;
-  return { username: `${local}x`.slice(0, 20), birthDate: '1990-01-01', ...body, name } as T & { username: string; birthDate: string };
+  return { username: `${local}x`.slice(0, 20), adult: true, dataConsent: true, ...body, name } as T & { username: string; adult: true; dataConsent: true };
 }
