@@ -552,7 +552,8 @@
       "dropped": "Photo dropped at position {position} of {total}.",
       "cancelled": "Move cancelled. The photo is back at position {position}.",
       "coverChanged": "The cover is changed.",
-      "removed": "The photo is removed."
+      "removed": "The photo is removed.",
+      "addMore": "Add more"
     },
     "crop": {
       "title": "Crop and rotate",
