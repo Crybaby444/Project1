@@ -4,7 +4,7 @@ import { localizedPath } from '@/lib/seo';
 import { SITE_URL } from '@/lib/site';
 
 /** Screens that only make sense for one person (or for us): not for search results. */
-const PRIVATE = ['/settings', '/styleguide', '/dashboard', '/admin', '/listings/new', '/messages', '/notifications'];
+const PRIVATE = ['/settings', '/styleguide', '/dashboard', '/admin', '/listings/new', '/messages', '/notifications', '/bookings', '/wallet'];
 
 export default function robots(): MetadataRoute.Robots {
   return {

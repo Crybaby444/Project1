@@ -3,8 +3,11 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ListingCard } from '@/components/catalog/ListingCard';
 import { RecentlyViewed } from '@/components/catalog/RecentlyViewed';
+import { HomeFaq } from '@/components/market/HomeFaq';
 import { HomeSearch } from '@/components/market/HomeSearch';
 import { LendCalculator } from '@/components/market/LendCalculator';
+import { TrustRow } from '@/components/market/TrustRow';
+import { TwoDoors } from '@/components/market/TwoDoors';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { Link } from '@/i18n/navigation';
 import { loadPlaces, loadSearch } from '@/lib/catalog/server-api';
@@ -47,11 +50,9 @@ function structuredData(description: string) {
 }
 
 /**
- * The home (owner, 2026-11-16) is one throw of a yo-yo — out and back. Out: the search in its working form
- * and the newest real items hanging as price tags on the string (the hand pushes them). The loop: a held
- * night scene where the yo-yo runs through the four stops of a rental and the deposit comes back. Then
- * what is new, and back: what your things could earn, and a close that reels you to the top. The catalog
- * lives in the navigation; the cinematic introduction is /what-is-yoyo.
+ * The home (owner, 2026-11-16): the marketplace. The search (what, where, when) with four promises under
+ * it, what is new, what your things could earn, the questions before a first deal, and a door for each end
+ * of the string. The catalog itself lives in the header.
  */
 /** Static classes for the spot's width (Tailwind sees whole class names only). */
 const SPAN_SM = ['col-span-2', 'col-span-1', 'col-span-2'] as const;
@@ -81,6 +82,7 @@ export default async function HomePage({ params }: Params) {
           <p className="text-ink/80 max-w-[44ch] text-[18px] leading-relaxed lg:pb-2">{t('hero.lead')}</p>
         </div>
         <HomeSearch districts={districts} today={today} />
+        <TrustRow />
       </section>
 
 
@@ -126,6 +128,12 @@ export default async function HomePage({ params }: Params) {
       <div className="border-ink/15 border-t">
         <LendCalculator />
       </div>
+
+      <div className="border-ink/15 border-t">
+        <HomeFaq />
+      </div>
+
+      <TwoDoors />
 
     </main>
   );

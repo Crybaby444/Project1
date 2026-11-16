@@ -765,7 +765,7 @@
   "catalog": {
     "allTitle": "Catalog",
     "allDescription": "Rent tools, electronics, sports and camping gear and more from people in Riga.",
-    "categoryTitle": "{name} for rent",
+    "categoryTitle": "{name} for rent in Riga",
     "categoryDescription": "Rent {name} from people near you in Riga: daily prices, deposits and free dates.",
     "searchTitle": "Search",
     "searchTitleFor": "“{q}”",
@@ -974,7 +974,9 @@
       "label": "Share this item",
       "copied": "Link copied",
       "failed": "Could not copy the link"
-    }
+    },
+    "metaTitle": "{title} for rent in {place}",
+    "metaTitleNoPlace": "{title} for rent"
   },
   "profile": {
     "title": "{name}",
@@ -1145,6 +1147,43 @@
         "bike": "Bike",
         "camera": "Camera"
       }
+    },
+    "trust": {
+      "label": "Why it is safe",
+      "contract": {
+        "title": "Contract before you pay",
+        "body": "Both sides sign online."
+      },
+      "deposit": {
+        "title": "Deposit comes back",
+        "body": "Once the return is checked."
+      },
+      "checked": {
+        "title": "Checked by a person",
+        "body": "Every listing, before it goes live."
+      },
+      "reviews": {
+        "title": "Real reviews",
+        "body": "Only from finished deals."
+      }
+    },
+    "doors": {
+      "title": "Which end of the string are you?",
+      "story": "The whole story: What is Yoyo",
+      "need": {
+        "who": "If you need it",
+        "title": "Find something",
+        "body": "Tools, tents, cameras and more, for a day or a week, from people nearby."
+      },
+      "have": {
+        "who": "If you have it",
+        "title": "Lend an item",
+        "body": "Put a thing you rarely use on Yoyo and let it earn while it waits."
+      }
+    },
+    "faq": {
+      "title": "Before your first deal",
+      "all": "All questions and answers"
     }
   }
 }

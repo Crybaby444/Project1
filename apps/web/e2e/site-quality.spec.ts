@@ -52,6 +52,8 @@ for (const theme of ['light', 'dark'] as const) {
   }
 
   test(`desktop (1440px), ${theme}: every page fits and passes axe`, async ({ page, context, baseURL }) => {
+    // Every page, each with an axe pass; What is Yoyo and the home grew (2026-11-16).
+    test.setTimeout(90_000);
     await page.setViewportSize({ width: 1440, height: 900 });
     await context.addCookies([{ name: 'yoyo-theme', value: theme, url: baseURL! }]);
     const errors = watchConsole(page);

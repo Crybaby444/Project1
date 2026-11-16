@@ -11,6 +11,7 @@ const LANGUAGES = [
 ] as const;
 const PAGES = [
   ['/', 'home'],
+  ['/what-is-yoyo', 'whatIs'],
   ['/how-it-works', 'howItWorks'],
   ['/faq', 'faq'],
   ['/terms', 'terms'],
@@ -27,7 +28,7 @@ for (const { locale, prefix, m } of LANGUAGES) {
     test(`${at(prefix, path)}: title, description, canonical, hreflang and a preview image`, async ({ page, request }) => {
       await page.goto(at(prefix, path));
       const meta = m.pages[key];
-      await expect(page).toHaveTitle(key === 'home' ? meta.title : `${meta.title} · Yoyo`);
+      await expect(page).toHaveTitle(key === 'home' || key === 'whatIs' ? meta.title : `${meta.title} · Yoyo`);
       await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', meta.description);
       await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', abs(prefix, path));
 
@@ -92,4 +93,23 @@ test('the site has an icon', async ({ page, request }) => {
   await page.goto('/');
   const href = await page.locator('link[rel="icon"]').first().getAttribute('href');
   expect((await request.get(href!)).status()).toBe(200);
+});
+
+test('llms.txt explains Yoyo for AI assistants and lists the categories', async ({ request }) => {
+  const res = await request.get('/llms.txt');
+  expect(res.status()).toBe(200);
+  expect(res.headers()['content-type']).toContain('text/plain');
+  const text = await res.text();
+  expect(text.startsWith('# Yoyo\n')).toBe(true);
+  expect(text).toContain('/what-is-yoyo)');
+  expect(text).toMatch(/## Catalog\n\n- \[/);
+});
+
+test('a category page gives search engines its breadcrumb trail', async ({ page }) => {
+  await page.goto('/c');
+  const trails = await page.locator('script[type="application/ld+json"]').evaluateAll((els) =>
+    els.map((e) => JSON.parse(e.textContent ?? '{}')).filter((d) => d['@type'] === 'BreadcrumbList'),
+  );
+  expect(trails).toHaveLength(1);
+  expect(trails[0].itemListElement.map((i: { name: string }) => i.name)).toEqual(['Home', 'Catalog']);
 });

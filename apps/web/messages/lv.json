@@ -765,7 +765,7 @@
   "catalog": {
     "allTitle": "Katalogs",
     "allDescription": "Nomā instrumentus, elektroniku, sporta un kempinga piederumus un daudz ko citu no cilvēkiem Rīgā.",
-    "categoryTitle": "{name} nomai",
+    "categoryTitle": "{name} nomai Rīgā",
     "categoryDescription": "Nomā {name} no cilvēkiem tuvumā Rīgā: dienas cenas, drošības naudas un brīvie datumi.",
     "searchTitle": "Meklēšana",
     "searchTitleFor": "“{q}”",
@@ -974,7 +974,9 @@
       "label": "Dalīties ar šo lietu",
       "copied": "Saite nokopēta",
       "failed": "Neizdevās nokopēt saiti"
-    }
+    },
+    "metaTitle": "{title} nomai: {place}",
+    "metaTitleNoPlace": "{title} nomai"
   },
   "profile": {
     "title": "{name}",
@@ -1145,6 +1147,43 @@
         "bike": "Velosipēds",
         "camera": "Kamera"
       }
+    },
+    "trust": {
+      "label": "Kāpēc tas ir droši",
+      "contract": {
+        "title": "Līgums pirms maksājuma",
+        "body": "Abas puses paraksta tiešsaistē."
+      },
+      "deposit": {
+        "title": "Depozīts atgriežas",
+        "body": "Kad atgriešana pārbaudīta."
+      },
+      "checked": {
+        "title": "Pārbauda cilvēks",
+        "body": "Katru sludinājumu pirms publicēšanas."
+      },
+      "reviews": {
+        "title": "Īstas atsauksmes",
+        "body": "Tikai no pabeigtiem darījumiem."
+      }
+    },
+    "doors": {
+      "title": "Kurā auklas galā esi tu?",
+      "story": "Viss stāsts: kas ir Yoyo",
+      "need": {
+        "who": "Ja tev vajag",
+        "title": "Atrast lietu",
+        "body": "Instrumenti, teltis, kameras un vēl — uz dienu vai nedēļu no cilvēkiem tuvumā."
+      },
+      "have": {
+        "who": "Ja tev ir",
+        "title": "Izīrēt lietu",
+        "body": "Ieliec Yoyo lietu, ko lieto reti, un ļauj tai pelnīt, kamēr tā gaida."
+      }
+    },
+    "faq": {
+      "title": "Pirms pirmā darījuma",
+      "all": "Visi jautājumi un atbildes"
     }
   }
 }

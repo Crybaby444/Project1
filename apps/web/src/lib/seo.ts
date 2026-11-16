@@ -154,6 +154,9 @@ export function pageMetadata({
   brand = true,
 }: PageMetadataInput): Metadata {
   const links = alternates(path, locale, siteUrl);
+  // The language's preview card (app/[locale]/opengraph-image.tsx): a page's own openGraph replaces the
+  // inherited one, so it names the image itself or the link would preview without a picture.
+  const image = { url: localizedUrl('/opengraph-image', locale, siteUrl), width: 1200, height: 630, alt: title };
   return {
     title: brand ? `${title} · Yoyo` : title,
     description,
@@ -166,7 +169,23 @@ export function pageMetadata({
       url: links.canonical,
       title,
       description,
+      images: [image],
     },
-    twitter: { card: 'summary_large_image', title, description },
+    twitter: { card: 'summary_large_image', title, description, images: [image.url] },
+  };
+}
+
+/**
+ * schema.org BreadcrumbList for the crumbs a page shows (W03 §E): each with its absolute address in the
+ * page's language; the last one (the page itself) without a link, as Google allows.
+ */
+export function breadcrumbJsonLd(items: { label: string; href?: string }[], locale: Locale, siteUrl: string = SITE_URL) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((crumb, i) => {
+      const url = crumb.href && i < items.length - 1 ? localizedUrl(crumb.href, locale, siteUrl) : null;
+      return { '@type': 'ListItem', position: i + 1, name: crumb.label, ...(url ? { item: url === siteUrl ? `${siteUrl}/` : url } : {}) };
+    }),
   };
 }

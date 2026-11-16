@@ -2,7 +2,7 @@
   "pages": {
     "home": {
       "title": "Yoyo — rent things from people nearby",
-      "description": "Borrow what you need for a day or a week from people near you, and earn from the things you rarely use. Clear rules, a contract before paying and a protected deposit."
+      "description": "Rent things for a day or a week from people near you, and earn from what you rarely use. A contract before paying and a deposit that comes back."
     },
     "howItWorks": {
       "title": "How renting works",
@@ -25,8 +25,8 @@
       "description": "Yoyo uses only the cookies the site needs to work: no advertising, no tracking. Here is the full list."
     },
     "whatIs": {
-      "title": "What is Yoyo",
-      "description": "Yoyo is a place to rent things from people nearby: find it, book the days, sign the contract, use it and bring it back — and the deposit comes back too."
+      "title": "What is Yoyo: rent from people nearby, lend what you rarely use",
+      "description": "A marketplace between people in Riga: rent things for a day or a week, or lend yours and earn. A contract signed by both, a deposit that comes back."
     }
   },
   "footer": {
@@ -151,6 +151,127 @@
         "ask": "Is it free on Saturday?",
         "answer": "Yes, book it."
       }
+    },
+    "sides": {
+      "title": "Two sides. One Yoyo.",
+      "lead": "The same deal, seen from each end of the string. Pick your side and walk through it.",
+      "switch": "Whose side",
+      "rent": {
+        "tab": "I need something",
+        "cta": "Find something",
+        "steps": {
+          "s1": {
+            "title": "Find it nearby",
+            "body": "Search by name, district and dates. Every listing shows the price per day, the deposit and the free days."
+          },
+          "s2": {
+            "title": "Ask for the days",
+            "body": "Pick the first and the last day. You see the full price, the fee and the deposit before you send anything."
+          },
+          "s3": {
+            "title": "Sign first",
+            "body": "When the owner accepts, you sign the contract online, then the owner signs. Yoyo checks both signatures."
+          },
+          "s4": {
+            "title": "Pay and pick it up",
+            "body": "Pay through Yoyo. Meet the owner, check the thing together and add photos to the deal’s own chat."
+          },
+          "s5": {
+            "title": "Bring it back",
+            "body": "Hand it back on the last day. When the owner has checked it, the deposit comes back to you. Then leave a review."
+          }
+        },
+        "shield": {
+          "title": "What protects you",
+          "a": "Nothing is charged before both of you sign.",
+          "b": "Photos in the deal show the state it left in.",
+          "c": "If you disagree about damage, Yoyo decides."
+        }
+      },
+      "lend": {
+        "tab": "I have something",
+        "cta": "Lend an item",
+        "steps": {
+          "s1": {
+            "title": "Put it on Yoyo",
+            "body": "Add photos, a price per day, a week discount if you like, a deposit and your district. It takes a few minutes."
+          },
+          "s2": {
+            "title": "A person checks it",
+            "body": "Before it goes live, someone from Yoyo looks at the listing, so the catalog stays honest."
+          },
+          "s3": {
+            "title": "Choose who rents",
+            "body": "Requests come with a notification. You see the person’s profile and reviews, and accept or decline."
+          },
+          "s4": {
+            "title": "Sign and hand over",
+            "body": "The renter signs first, then you. You meet, hand it over and add photos to the deal chat; once you both confirm the handover, the rent goes to your Yoyo wallet."
+          },
+          "s5": {
+            "title": "Get it back and check it",
+            "body": "Check it within 48 hours: press “All good”, or claim damage from the deposit with photos. If you do nothing, the item counts as fine."
+          }
+        },
+        "shield": {
+          "title": "What protects you",
+          "a": "A deposit you set covers the thing while it is out.",
+          "b": "A signed contract with the renter’s name.",
+          "c": "Reviews from real deals, before you accept anyone."
+        }
+      }
+    },
+    "inside": {
+      "title": "Everything inside",
+      "lead": "Yoyo is more than a list of things. These are the parts that make a deal between strangers work.",
+      "contract": {
+        "title": "Contract for every deal",
+        "body": "Written for EU law, signed online by both sides, renter first."
+      },
+      "deposit": {
+        "title": "A deposit that returns",
+        "body": "Held during the deal and released after the return is checked."
+      },
+      "checked": {
+        "title": "Listings checked by a person",
+        "body": "Nothing goes live without a look from us first."
+      },
+      "chat": {
+        "title": "A chat for every deal",
+        "body": "Photos, times and places stay next to the contract. Personal messages live apart."
+      },
+      "live": {
+        "title": "Updates as they happen",
+        "body": "Requests, signatures and messages show up without reloading, with notifications."
+      },
+      "map": {
+        "title": "Districts and a map",
+        "body": "Search by district and see where to pick the thing up."
+      },
+      "reviews": {
+        "title": "Reviews from real deals",
+        "body": "Only people who finished a deal together can review each other."
+      },
+      "follow": {
+        "title": "Follow people",
+        "body": "Follow the lenders you like and see what they add."
+      },
+      "shops": {
+        "title": "Shops of your own",
+        "body": "Gather your things into collections that others can browse."
+      },
+      "favorites": {
+        "title": "Favourites",
+        "body": "Save things with a heart and come back to them later."
+      },
+      "wallet": {
+        "title": "A wallet",
+        "body": "Rent you earn lands in your Yoyo wallet; you can pay from it too."
+      },
+      "languages": {
+        "title": "Three languages",
+        "body": "English, Latviešu and Русский, everywhere on the site."
+      }
     }
   },
   "howItWorks": {
@@ -169,7 +290,7 @@
         },
         "contract": {
           "title": "Sign the contract",
-          "body": "Yoyo prepares a rental contract with both names, the item, the dates, the price, the deposit and the rules. You both sign it before any payment."
+          "body": "Yoyo prepares a rental contract with both names, the item, the dates, the price, the deposit and the rules. You sign it first, then the owner; nothing is paid before both signatures."
         },
         "pay": {
           "title": "Pay the rent and the deposit",
