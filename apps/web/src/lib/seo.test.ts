@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { parseCatalogParams } from './catalog/params';
 import {
+  breadcrumbJsonLd,
   alternates,
   categoryAlternates,
   categorySeo,
@@ -159,6 +160,15 @@ describe('pageMetadata', () => {
     expect(meta.twitter).toMatchObject({ card: 'summary_large_image', title: 'Privātums' });
   });
 
+  it('carries the language’s preview image, so a page’s own Open Graph does not drop the inherited one', () => {
+    const lv = pageMetadata({ locale: 'lv', path: '/faq', title: 'J', description: 'd', siteUrl: 'https://yoyo.rent' });
+    const image = { url: 'https://yoyo.rent/lv/opengraph-image', width: 1200, height: 630, alt: 'J' };
+    expect(lv.openGraph?.images).toEqual([image]);
+    expect(lv.twitter?.images).toEqual([image.url]);
+    const en = pageMetadata({ locale: 'en', path: '/faq', title: 'J', description: 'd', siteUrl: 'https://yoyo.rent' });
+    expect(en.openGraph?.images).toEqual([{ ...image, url: 'https://yoyo.rent/opengraph-image' }]);
+  });
+
   it('keeps a title that already names the brand (the home page) as it is', () => {
     const meta = pageMetadata({
       locale: 'en',
@@ -169,5 +179,35 @@ describe('pageMetadata', () => {
       brand: false,
     });
     expect(meta.title).toBe('Yoyo — rent things from people nearby');
+  });
+});
+
+describe('breadcrumbJsonLd', () => {
+  it('lists every crumb in order with its address in the page language; the page itself has no link', () => {
+    const data = breadcrumbJsonLd(
+      [
+        { label: 'Sākums', href: '/' },
+        { label: 'Katalogs', href: '/c' },
+        { label: 'Instrumenti', href: '/c/instrumenti' },
+        { label: 'Urbis' },
+      ],
+      'lv',
+      'https://yoyo.rent',
+    );
+    expect(data).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Sākums', item: 'https://yoyo.rent/lv' },
+        { '@type': 'ListItem', position: 2, name: 'Katalogs', item: 'https://yoyo.rent/lv/c' },
+        { '@type': 'ListItem', position: 3, name: 'Instrumenti', item: 'https://yoyo.rent/lv/c/instrumenti' },
+        { '@type': 'ListItem', position: 4, name: 'Urbis' },
+      ],
+    });
+  });
+
+  it('English has no prefix, and the home is the bare origin with a slash', () => {
+    const data = breadcrumbJsonLd([{ label: 'Home', href: '/' }, { label: 'Catalog' }], 'en', 'https://yoyo.rent');
+    expect(data.itemListElement[0]).toEqual({ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://yoyo.rent/' });
   });
 });

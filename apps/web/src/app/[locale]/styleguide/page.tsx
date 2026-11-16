@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { ApiStatus } from '@/components/ApiStatus';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 import { Mark } from '@/components/brand/Mark';
@@ -41,7 +42,11 @@ const SAMPLES = [
 function Swatch({ name, token, hex }: { name: string; token: string; hex?: string }) {
   return (
     <div className="flex items-center gap-3">
-      <span aria-hidden="true" className="size-12 shrink-0 rounded-card border border-ink" style={{ background: `var(${token})` }} />
+      <span
+        aria-hidden="true"
+        className="rounded-card border-ink size-12 shrink-0 border"
+        style={{ background: `var(${token})` }}
+      />
       <span className="flex flex-col">
         <span className="font-bold">{name}</span>
         <span className="text-sm">{hex ? `${token} · ${hex}` : token}</span>
@@ -57,84 +62,87 @@ export default async function StyleguidePage({ params }: { params: Promise<{ loc
   const t = await getTranslations('styleguide');
 
   return (
-    <main className="mx-auto flex max-w-[1440px] flex-col gap-14 px-4 pt-12 pb-16 sm:px-8">
-      <header className="@container flex flex-col items-start gap-5">
-        <Mark size={48} />
-        <h1
-          style={displayFit(t('title'), { max: '5rem' })}
-          className="font-display text-display-fit leading-[0.85] font-black uppercase"
-        >
-          {t('title')}
-        </h1>
-        <p className="max-w-[60ch] text-lg leading-relaxed">{t('intro')}</p>
-        <ApiStatus />
-      </header>
+    // The style guide's texts are left out of the site-wide provider (i18n/client-messages.ts).
+    <NextIntlClientProvider messages={await getMessages()}>
+      <main className="mx-auto flex max-w-[1440px] flex-col gap-14 px-4 pt-12 pb-16 sm:px-8">
+        <header className="@container flex flex-col items-start gap-5">
+          <Mark size={48} />
+          <h1
+            style={displayFit(t('title'), { max: '5rem' })}
+            className="font-display text-display-fit leading-[0.85] font-black uppercase"
+          >
+            {t('title')}
+          </h1>
+          <p className="max-w-[60ch] text-lg leading-relaxed">{t('intro')}</p>
+          <ApiStatus />
+        </header>
 
-      <Section title={t('colors')}>
-        <h3 className="text-2xl font-bold">{t('surfaces')}</h3>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {SURFACES.map(([name, token]) => (
-            <Swatch key={token} name={name} token={token} />
-          ))}
-        </div>
-        <h3 className="text-2xl font-bold">{t('stickers')}</h3>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {STICKER_SWATCHES.map(([name, token, hex]) => (
-            <Swatch key={token} name={name} token={token} hex={hex} />
-          ))}
-        </div>
-      </Section>
-
-      <Section title={t('typography')}>
-        <div className="flex flex-col gap-6">
-          <div>
-            <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('display')}</p>
-            <p className="text-[clamp(4rem,18vw,12.5rem)]">
-              <Wordmark />
-            </p>
-          </div>
-          <div>
-            <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('heading')} · 64 / 30 / 24</p>
-            <p className="text-[clamp(2.5rem,8vw,4rem)] leading-none font-bold">{t('headingSample')}</p>
-            <p className="mt-2 text-[30px] leading-tight font-bold">{t('headingSample')}</p>
-            <p className="mt-1 text-2xl leading-tight font-bold">{t('headingSample')}</p>
-          </div>
-          <div>
-            <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('body')} · 16 / 15</p>
-            <p className="max-w-[60ch] text-base leading-relaxed">{t('cardStaticBody')}</p>
-            <p className="max-w-[60ch] text-[15px] leading-relaxed">{t('cardInteractiveBody')}</p>
-          </div>
-          <div>
-            <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('caption')} · 12</p>
-            <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('marqueeItem4')}</p>
-          </div>
-          <div className="flex flex-col gap-3">
-            <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('languages')}</p>
-            {SAMPLES.map(([lang, text]) => (
-              <div key={lang} lang={lang} className="flex flex-col gap-1">
-                <p className="font-display text-2xl leading-tight font-black">{text}</p>
-                <p className="text-base">{text}</p>
-              </div>
+        <Section title={t('colors')}>
+          <h3 className="text-2xl font-bold">{t('surfaces')}</h3>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {SURFACES.map(([name, token]) => (
+              <Swatch key={token} name={name} token={token} />
             ))}
           </div>
-        </div>
-      </Section>
+          <h3 className="text-2xl font-bold">{t('stickers')}</h3>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {STICKER_SWATCHES.map(([name, token, hex]) => (
+              <Swatch key={token} name={name} token={token} hex={hex} />
+            ))}
+          </div>
+        </Section>
 
-      <StyleguideDemos />
+        <Section title={t('typography')}>
+          <div className="flex flex-col gap-6">
+            <div>
+              <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('display')}</p>
+              <p className="text-[clamp(4rem,18vw,12.5rem)]">
+                <Wordmark />
+              </p>
+            </div>
+            <div>
+              <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('heading')} · 64 / 30 / 24</p>
+              <p className="text-[clamp(2.5rem,8vw,4rem)] leading-none font-bold">{t('headingSample')}</p>
+              <p className="mt-2 text-[30px] leading-tight font-bold">{t('headingSample')}</p>
+              <p className="mt-1 text-2xl leading-tight font-bold">{t('headingSample')}</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('body')} · 16 / 15</p>
+              <p className="max-w-[60ch] text-base leading-relaxed">{t('cardStaticBody')}</p>
+              <p className="max-w-[60ch] text-[15px] leading-relaxed">{t('cardInteractiveBody')}</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('caption')} · 12</p>
+              <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('marqueeItem4')}</p>
+            </div>
+            <div className="flex flex-col gap-3">
+              <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('languages')}</p>
+              {SAMPLES.map(([lang, text]) => (
+                <div key={lang} lang={lang} className="flex flex-col gap-1">
+                  <p className="font-display text-2xl leading-tight font-black">{text}</p>
+                  <p className="text-base">{text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Section>
 
-      <MotionDemos />
+        <StyleguideDemos />
 
-      <Section title={t('marquee')}>
-        <div className="-mx-4 sm:-mx-8">
-          <Marquee items={[t('marqueeItem1'), t('marqueeItem2'), t('marqueeItem3'), t('marqueeItem4')]} />
-        </div>
-      </Section>
+        <MotionDemos />
 
-      <Section title={t('language')}>
-        <div className="flex">
-          <LanguageSwitcher />
-        </div>
-      </Section>
-    </main>
+        <Section title={t('marquee')}>
+          <div className="-mx-4 sm:-mx-8">
+            <Marquee items={[t('marqueeItem1'), t('marqueeItem2'), t('marqueeItem3'), t('marqueeItem4')]} />
+          </div>
+        </Section>
+
+        <Section title={t('language')}>
+          <div className="flex">
+            <LanguageSwitcher />
+          </div>
+        </Section>
+      </main>
+    </NextIntlClientProvider>
   );
 }

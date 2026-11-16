@@ -765,7 +765,7 @@
   "catalog": {
     "allTitle": "Каталог",
     "allDescription": "Берите напрокат инструменты, электронику, снаряжение для спорта и кемпинга и многое другое у людей в Риге.",
-    "categoryTitle": "{name}: аренда",
+    "categoryTitle": "{name} в аренду в Риге",
     "categoryDescription": "{name} напрокат у людей рядом с вами в Риге: цены за день, залог и свободные даты.",
     "searchTitle": "Поиск",
     "searchTitleFor": "«{q}»",
@@ -974,7 +974,9 @@
       "label": "Поделиться вещью",
       "copied": "Ссылка скопирована",
       "failed": "Не удалось скопировать ссылку"
-    }
+    },
+    "metaTitle": "{title} в аренду: {place}",
+    "metaTitleNoPlace": "{title} в аренду"
   },
   "profile": {
     "title": "{name}",
