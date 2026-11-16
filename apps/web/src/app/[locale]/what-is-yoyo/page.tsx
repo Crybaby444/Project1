@@ -8,6 +8,8 @@ import { NightScene } from '@/components/home/NightScene';
 import { WhatIsYoyo } from '@/components/home/WhatIsYoyo';
 import { HomeLoader } from '@/components/home/HomeLoader';
 import { HomeStageLoader } from '@/components/home/HomeStageLoader';
+import { PeopleScene } from '@/components/intro/PeopleScene';
+import { TwoEnds } from '@/components/intro/TwoEnds';
 import { pageMetadata } from '@/lib/seo';
 
 type Params = { params: Promise<{ locale: string }> };
@@ -19,14 +21,14 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 
 /**
- * What is Yoyo (owner, 2026-11-16): the cinematic introduction that used to be the home — five scenes that
- * play on scroll and on opening. The home is now the marketplace.
+ * What is Yoyo (owner, 2026-11-16): the introduction to the whole idea. The yo-yo drops in, the night spills
+ * out (take it, lend it, get it back), the two ends of one string (who needs, who has, Yoyo in the middle),
+ * the steps of a deal, the people (profiles, shops, messages), the rules in numbers, and the finale.
  */
 export default async function WhatIsYoyoPage({ params }: Params) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  // v16: five scenes. As plain markup each shows its final state; the home stage (Task 6–7) plays them.
   return (
     <main data-home-root className="flex flex-1 flex-col">
       <HomeLoader />
@@ -34,7 +36,9 @@ export default async function WhatIsYoyoPage({ params }: Params) {
         <Hero />
         <NightScene />
       </div>
+      <TwoEnds />
       <WhatIsYoyo />
+      <PeopleScene />
       <Facts />
       <Finale />
       <HomeStageLoader />

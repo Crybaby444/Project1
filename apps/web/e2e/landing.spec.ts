@@ -17,9 +17,11 @@ for (const { locale, prefix, m } of LANGUAGES) {
     await page.goto(`${prefix}/what-is-yoyo`);
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
     await expect(page.getByRole('heading', { level: 1, name: 'Yoyo' })).toBeAttached();
-    for (const scene of ['hero', 'night', 'what', 'facts', 'finale']) {
+    for (const scene of ['hero', 'night', 'ends', 'what', 'people', 'facts', 'finale']) {
       await expect(page.locator(`[data-home="${scene}"]`)).toHaveCount(1);
     }
+    await expect(page.getByRole('heading', { level: 2, name: m.landing.ends.title })).toBeAttached();
+    await expect(page.getByRole('heading', { level: 2, name: m.landing.people.title })).toBeAttached();
     await expect(page.getByRole('heading', { level: 2, name: m.landing.facts.label })).toBeAttached();
     await expect(page.getByRole('heading', { level: 2, name: new RegExp(m.landing.finale.line1, 'i') })).toBeAttached();
     // The numbers are the rules the deals keep, not typed copy.
