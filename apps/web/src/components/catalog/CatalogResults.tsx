@@ -1,3 +1,4 @@
+import { DEFAULT_BOOKING_SETTINGS } from '@yoyo/domain';
 import { CATALOG_PAGE_SIZE, type CategoryNode, type Locale } from '@yoyo/shared';
 import { getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
@@ -47,12 +48,16 @@ type Props = {
   path: string;
   title: string;
   crumbs: Crumb[];
+  /** The root category's slug and this page's name, for the intro and the rules at the foot (category pages). */
+  intro?: { root: string; name: string };
   children?: ReactNode;
 };
 
 /** Search and category pages: one layout (W03 §B), the results drawn on the server. */
-export async function CatalogResults({ params: raw, category, related, path, title, crumbs }: Props) {
+export async function CatalogResults({ params: raw, category, related, path, title, crumbs, intro }: Props) {
   const t = await getTranslations('catalog');
+  const ti = await getTranslations('categoryIntro');
+  const lead = intro && ti.has(`roots.${intro.root}`) ? ti(`roots.${intro.root}`) : null;
   const today = todayIn('Europe/Riga');
   const params = usableParams(raw, today);
   const days = params.from && params.to ? daysBetween(params.from, params.to) : undefined;
@@ -66,9 +71,14 @@ export async function CatalogResults({ params: raw, category, related, path, tit
   if (!results.ok) {
     return (
       <main className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-4 px-4 py-20 text-center sm:px-8">
-        <h1 className="font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{t('error.title')}</h1>
+        <h1 className="font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black [overflow-wrap:anywhere] hyphens-auto uppercase">
+          {t('error.title')}
+        </h1>
         <p className="max-w-[46ch]">{t('error.body')}</p>
-        <Link href={`${path}${catalogSearch(params)}`} className="bg-cta text-cta-fg border-cta rounded-pill inline-flex min-h-10 items-center border px-5 text-[13px] font-bold tracking-[0.03em] uppercase">
+        <Link
+          href={`${path}${catalogSearch(params)}`}
+          className="bg-cta text-cta-fg border-cta rounded-pill inline-flex min-h-10 items-center border px-5 text-[13px] font-bold tracking-[0.03em] uppercase"
+        >
           {t('error.retry')}
         </Link>
       </main>
@@ -85,14 +95,18 @@ export async function CatalogResults({ params: raw, category, related, path, tit
       <main className="@container mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-8 sm:px-8 sm:py-10">
         <Breadcrumbs items={crumbs} label={t('breadcrumbs.label')} />
         <div className="flex flex-col gap-4">
-          <h1 style={displayFit(title, { min: '1.75rem', max: '3.5rem' })} className="font-display text-display-fit leading-[0.9] font-black uppercase">
+          <h1
+            style={displayFit(title, { min: '1.75rem', max: '3.5rem' })}
+            className="font-display text-display-fit leading-[0.9] font-black uppercase"
+          >
             {title}
           </h1>
+          {lead && <p className="text-ink/80 max-w-[68ch] text-[16px] leading-relaxed">{lead}</p>}
           <SearchBox initialQuery={params.q ?? ''} className="max-w-3xl" />
           {related.length > 0 && (
             <nav aria-label={t('related')}>
               {/* One row that scrolls sideways (audit: two wrapped rows of chips pushed the results down). */}
-              <ul className="-mx-4 flex snap-x scroll-px-4 gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:-mx-8 sm:scroll-px-8 sm:px-8 [&::-webkit-scrollbar]:hidden">
+              <ul className="-mx-4 flex snap-x scroll-px-4 [scrollbar-width:none] gap-2 overflow-x-auto px-4 pb-1 sm:-mx-8 sm:scroll-px-8 sm:px-8 [&::-webkit-scrollbar]:hidden">
                 {related.map((link) => (
                   <li key={link.href} className="shrink-0 snap-start">
                     <Link
@@ -117,12 +131,24 @@ export async function CatalogResults({ params: raw, category, related, path, tit
             <Toolbar params={params} />
             <ActiveFilters params={params} districts={districts} />
             {params.q && <span hidden data-search-q={params.q} data-search-results={total} />}
-            <SaveSearchButton query={{ q: params.q, category: category?.slug, priceMax: params.priceMax, district: params.district }} />
+            <SaveSearchButton
+              query={{
+                q: params.q,
+                category: category?.slug,
+                priceMax: params.priceMax,
+                district: params.district,
+              }}
+            />
             <ResultsRegion status={status}>
               <div className="flex flex-col gap-6">
-                {params.view === 'map' && map?.ok && <CatalogMapLoader pins={map.data.pins} truncated={map.data.truncated} />}
+                {params.view === 'map' && map?.ok && (
+                  <CatalogMapLoader pins={map.data.pins} truncated={map.data.truncated} />
+                )}
                 {items.length === 0 ? (
-                  <EmptyResults params={params} resetHref={params.q ? `${path}?q=${encodeURIComponent(params.q)}` : path} />
+                  <EmptyResults
+                    params={params}
+                    resetHref={params.q ? `${path}?q=${encodeURIComponent(params.q)}` : path}
+                  />
                 ) : (
                   <ul className="grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 xl:grid-cols-3">
                     {items.map((item, index) => (
@@ -136,13 +162,53 @@ export async function CatalogResults({ params: raw, category, related, path, tit
                   page={params.page}
                   pages={pages}
                   hrefFor={(page) => `${path}${catalogSearch(params, { page })}`}
-                  labels={{ nav: t('pagination.label'), previous: t('pagination.previous'), next: t('pagination.next'), status: t('pagination.status', { page: params.page, pages }) }}
+                  labels={{
+                    nav: t('pagination.label'),
+                    previous: t('pagination.previous'),
+                    next: t('pagination.next'),
+                    status: t('pagination.status', { page: params.page, pages }),
+                  }}
                 />
               </div>
             </ResultsRegion>
           </div>
         </div>
+        {intro && <CategoryAbout name={intro.name} />}
       </main>
     </CatalogShell>
+  );
+}
+
+/** What every rental here keeps, under the results of a category (SEO audit 2026-11-16: thin category pages). */
+async function CategoryAbout({ name }: { name: string }) {
+  const t = await getTranslations('categoryIntro.about');
+  return (
+    <section
+      aria-labelledby="category-about"
+      className="border-ink/15 mt-10 grid gap-6 border-t pt-10 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-8"
+    >
+      <h2
+        id="category-about"
+        className="font-display text-[clamp(1.6rem,2.6vw,2.4rem)] leading-[0.92] font-black uppercase"
+      >
+        {t('title', { name })}
+      </h2>
+      <div className="flex flex-col items-start gap-5">
+        <ul className="m-0 grid list-none gap-x-8 gap-y-4 p-0 sm:grid-cols-2">
+          {(['a', 'b', 'c', 'd'] as const).map((k) => (
+            <li key={k} className="flex gap-3 text-[15px] leading-relaxed">
+              <span aria-hidden="true" className="bg-ink mt-[0.6em] size-1.5 flex-none rounded-full" />
+              {t(`points.${k}`, { hours: DEFAULT_BOOKING_SETTINGS.inspectionHours })}
+            </li>
+          ))}
+        </ul>
+        <Link
+          href="/how-it-works"
+          className="text-[15px] font-bold underline decoration-1 underline-offset-4"
+        >
+          {t('more')}
+        </Link>
+      </div>
+    </section>
   );
 }

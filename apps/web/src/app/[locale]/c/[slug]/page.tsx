@@ -57,6 +57,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
       category={node}
       path={categoryLink(node, locale)}
       title={categoryName(node, locale)}
+      intro={{ root: path[0]?.slug ?? node.slug, name: categoryName(node, locale) }}
       related={relatedNodes.map((other) => ({ label: categoryName(other, locale), href: categoryLink(other, locale), current: other.id === node.id }))}
       crumbs={[
         { label: t('breadcrumbs.home'), href: '/' },
