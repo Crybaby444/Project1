@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { useState, useTransition } from 'react';
 import { Dialog } from '@/components/ui/Dialog';
-import { countryCookie } from '@/lib/country/country';
+import { saveCountry } from '@/lib/country/country';
 
 /**
  * The country the catalog shows (owner, 2026-11-16: the euro area, one country at a time; nobody in Riga
@@ -21,7 +21,7 @@ export function CountryPicker({ country }: { country: Country }) {
   const named = COUNTRY_CODES.map((code) => ({ code, name: countryName(code, locale) })).sort((a, b) => a.name.localeCompare(b.name, locale));
 
   function choose(code: Country) {
-    document.cookie = countryCookie(code);
+    saveCountry(code);
     setOpen(false);
     start(() => router.refresh());
   }

@@ -17,3 +17,8 @@ export function pickCountry(chosen: string | null | undefined, fromIp: string | 
 export function countryCookie(country: Country): string {
   return `${COUNTRY_COOKIE}=${country}; Path=/; Max-Age=${60 * 60 * 24 * 365}; SameSite=Lax`;
 }
+
+/** Keeps the choice in this browser (the server reads the same cookie). */
+export function saveCountry(country: Country): void {
+  document.cookie = countryCookie(country);
+}
