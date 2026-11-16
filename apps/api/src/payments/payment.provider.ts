@@ -1,4 +1,4 @@
-import type { CardBrand, CardInput, CardToken } from '@yoyo/shared';
+import type { CardBrand, CardInput, CardToken, WalletPayKind } from '@yoyo/shared';
 
 export type ChargeResult =
   | { status: 'SUCCEEDED'; ref: string; brand: CardBrand; last4: string }
@@ -12,10 +12,12 @@ export type ChargeResult =
 export interface PaymentProvider {
   /** Card details → a token. Invalid details: AppError VALIDATION_FAILED with `fields`. */
   tokenize(card: CardInput): CardToken;
+  /** Apple Pay / Google Pay: the phone's wallet hands over a card; the result is a card token like `tokenize`. */
+  tokenizeWallet(kind: WalletPayKind): CardToken;
   charge(input: { token: string; amountCents: number; idempotencyKey: string; description: string }): Promise<ChargeResult>;
   /** Gives back (part of) a charge to the card it came from. */
   refund(input: { paymentRef: string; amountCents: number; idempotencyKey: string }): Promise<{ ref: string }>;
-  /** Sends money to a card. */
+  /** Sends money to a card token, or to a bank account (`iban:<IBAN>|<holder>`, a SEPA transfer). */
   payout(input: { token: string; amountCents: number; idempotencyKey: string }): Promise<{ ref: string }>;
   /** The brand and last digits of a token, for receipts; null when the token is not one of ours. */
   describe(token: string): { brand: CardBrand; last4: string } | null;

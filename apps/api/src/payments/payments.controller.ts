@@ -1,6 +1,6 @@
 import { Body, Controller, Inject, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { CardInputSchema, CardTokenSchema, type CardToken, type PublicUser } from '@yoyo/shared';
+import { CardInputSchema, CardTokenSchema, WalletPayTokenRequestSchema, type CardToken, type PublicUser } from '@yoyo/shared';
 import { createZodDto, ZodResponse } from 'nestjs-zod';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
@@ -11,6 +11,7 @@ import { PAYMENT_PROVIDER, type PaymentProvider } from './payment.provider';
 
 class CardInputDto extends createZodDto(CardInputSchema) {}
 class CardTokenDto extends createZodDto(CardTokenSchema) {}
+class WalletPayTokenRequestDto extends createZodDto(WalletPayTokenRequestSchema) {}
 
 @ApiTags('payments')
 @Controller('payments')
@@ -31,5 +32,14 @@ export class PaymentsController {
   tokenize(@CurrentUser() user: PublicUser, @Body() card: CardInputDto): CardToken {
     this.limiter.hit(RATE_LIMITS.cardToken(user.id));
     return this.provider.tokenize(card);
+  }
+
+  /** Apple Pay or Google Pay (owner, 2026-11-16): the phone's wallet → a card token to top up with. */
+  @Post('wallet-tokens')
+  @ZodResponse({ status: 201, type: CardTokenDto, description: 'A card token from Apple Pay or Google Pay' })
+  @ApiErrors(400, 401, 403, 429)
+  walletToken(@CurrentUser() user: PublicUser, @Body() body: WalletPayTokenRequestDto): CardToken {
+    this.limiter.hit(RATE_LIMITS.cardToken(user.id));
+    return this.provider.tokenizeWallet(body.kind);
   }
 }

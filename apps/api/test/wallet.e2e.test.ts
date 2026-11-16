@@ -109,6 +109,36 @@ describe('wallet', () => {
     await cleanBooks();
   });
 
+  it('pays out to a bank account (IBAN and the holder), shown masked; a bad IBAN or one outside the euro area is refused', async () => {
+    const anna = await signedInClient(t);
+    await topUp(anna, 5_000);
+    const res = await anna
+      .post('/wallet/payouts')
+      .set('Idempotency-Key', newKey())
+      .send({ amountCents: 2_000, iban: 'lv80 bank 0000 4351 9500 1', holder: 'Anna Bērziņa' })
+      .expect(201);
+    expect(res.body).toMatchObject({ balanceCents: 3_000, payout: { amountCents: 2_000, brand: 'iban', last4: '5001', status: 'DONE' } });
+    const bad = await anna.post('/wallet/payouts').set('Idempotency-Key', newKey()).send({ amountCents: 1_000, iban: 'LV81BANK0000435195001', holder: 'Anna' });
+    expect(bad.status).toBe(400);
+    expect(bad.body.error.fields).toHaveProperty('iban');
+    const uk = await anna.post('/wallet/payouts').set('Idempotency-Key', newKey()).send({ amountCents: 1_000, iban: 'GB29NWBK60161331926819', holder: 'Anna' });
+    expect(uk.status).toBe(400);
+    const noHolder = await anna.post('/wallet/payouts').set('Idempotency-Key', newKey()).send({ amountCents: 1_000, iban: 'LV80BANK0000435195001' });
+    expect(noHolder.body.error.fields).toHaveProperty('holder');
+    await cleanBooks();
+  });
+
+  it('tops up with Apple Pay or Google Pay: the phone’s wallet gives a card token like a typed card', async () => {
+    const anna = await signedInClient(t);
+    for (const kind of ['apple_pay', 'google_pay']) {
+      const { token } = (await anna.post('/payments/wallet-tokens').send({ kind }).expect(201)).body;
+      await anna.post('/wallet/top-ups').set('Idempotency-Key', newKey()).send({ amountCents: 1_000, cardToken: token }).expect(201);
+    }
+    expect((await anna.get('/wallet').expect(200)).body.balanceCents).toBe(2_000);
+    await anna.post('/payments/wallet-tokens').send({ kind: 'paypal' }).expect(400);
+    await cleanBooks();
+  });
+
   it('lets only one of two parallel 80 € payouts through a 100 € wallet', async () => {
     const anna = await signedInClient(t);
     await topUp(anna, 10_000);

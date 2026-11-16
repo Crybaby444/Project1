@@ -1,3 +1,4 @@
+import { IbanSchema } from './iban';
 import { z } from 'zod';
 
 /** Kinds of ledger operations (OperationKind of @yoyo/domain). */
@@ -102,10 +103,31 @@ export const TopUpRequestSchema = z.object({
   cardToken: CardTokenFieldSchema,
 });
 
-export const PayoutRequestSchema = z.object({
-  amountCents: z.number().int().min(WALLET_LIMITS.payout.min).max(WALLET_LIMITS.payout.max),
-  cardToken: CardTokenFieldSchema,
-});
+/**
+ * A payout goes to a bank account (owner, 2026-11-16: IBAN and the holder's name, a SEPA transfer in
+ * euros) or, as before, to a card: exactly one of the two.
+ */
+export const PayoutRequestSchema = z
+  .object({
+    amountCents: z.number().int().min(WALLET_LIMITS.payout.min).max(WALLET_LIMITS.payout.max),
+    cardToken: CardTokenFieldSchema.optional(),
+    iban: IbanSchema.optional(),
+    /** The account holder's name, as the bank has it. */
+    holder: z.string().trim().min(2).max(70).optional(),
+  })
+  .superRefine((body, ctx) => {
+    if ((body.cardToken === undefined) === (body.iban === undefined)) {
+      ctx.addIssue({ code: 'custom', path: ['iban'], message: 'Give a bank account or a card' });
+    }
+    if (body.iban !== undefined && body.holder === undefined) {
+      ctx.addIssue({ code: 'custom', path: ['holder'], message: 'Required' });
+    }
+  });
+
+/** Apple Pay and Google Pay give a card token from the phone's wallet, like a typed card (owner, 2026-11-16). */
+export const WALLET_PAY_KINDS = ['apple_pay', 'google_pay'] as const;
+export type WalletPayKind = (typeof WALLET_PAY_KINDS)[number];
+export const WalletPayTokenRequestSchema = z.object({ kind: z.enum(WALLET_PAY_KINDS) });
 
 export const CardPaymentSchema = z.object({
   id: z.string(),

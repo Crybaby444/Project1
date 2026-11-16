@@ -106,9 +106,18 @@ export class WalletService {
    * the payout (so the money cannot be spent twice); the provider pays out right after, or later by the
    * timers job if it is down.
    */
-  async payout(userId: string, amountCents: number, cardToken: string): Promise<PayoutResponse> {
-    const card = this.provider.describe(cardToken);
-    if (card === null) throw unknownCard();
+  async payout(userId: string, amountCents: number, to: { cardToken: string } | { iban: string; holder: string }): Promise<PayoutResponse> {
+    // A bank account (owner, 2026-11-16) or a card: either way only a mark and the last four are kept for receipts.
+    const destination =
+      'iban' in to
+        ? { brand: 'iban', last4: to.iban.slice(-4), token: `iban:${to.iban}|${to.holder}` }
+        : (() => {
+            const card = this.provider.describe(to.cardToken);
+            if (card === null) throw unknownCard();
+            return { brand: card.brand as string, last4: card.last4, token: to.cardToken };
+          })();
+    const card = { brand: destination.brand, last4: destination.last4 };
+    const cardToken = destination.token;
     const payout = await this.prisma.$transaction(async (tx) => {
       const operationId = await this.ledger.post(withdraw(userId, cents(amountCents)), tx, { userId });
       return tx.payout.create({ data: { userId, amountCents, brand: card.brand, last4: card.last4, destinationToken: cardToken, operationId } });

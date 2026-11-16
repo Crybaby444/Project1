@@ -214,7 +214,7 @@ describe('money in persisted deals (property)', () => {
           if (move) {
             const user = users[move.user]!;
             await expectedRefusal(() =>
-              move.kind === 'topUp' ? wallet.topUp(user.id, move.amount, token('4242424242424242')) : wallet.payout(user.id, move.amount, token('5555555555554444')),
+              move.kind === 'topUp' ? wallet.topUp(user.id, move.amount, token('4242424242424242')) : wallet.payout(user.id, move.amount, { cardToken: token('5555555555554444') }),
             );
             await checkBooks();
           }

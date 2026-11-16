@@ -26,3 +26,4 @@ export * from './admin-audit';
 export * from './staff';
 export * from './identity';
 export * from './countries';
+export * from './iban';
