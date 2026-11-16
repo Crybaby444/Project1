@@ -1,6 +1,9 @@
 import 'reflect-metadata';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import lv from '../src/mail/i18n/lv.json';
+import { SmtpMailProvider } from '../src/mail/smtp-mail.provider';
 import { resetAccounts, resetDeals } from './support/db';
+import { mailbox } from './support/mailbox';
 import { testImages, type TestImages } from './support/images';
 import { resetListings, seedListing, signedInClient, type Client } from './support/listings';
 import { createTestApp, type TestApp } from './support/test-app';
@@ -13,7 +16,7 @@ describe('identity checked by a moderator (owner, 2026-11-16)', () => {
   let moderator: Client;
 
   beforeAll(async () => {
-    t = await createTestApp({ env: { IDENTITY_REQUIRED: 'true' } });
+    t = await createTestApp({ env: { IDENTITY_REQUIRED: 'true' }, mailProvider: new SmtpMailProvider(process.env['SMTP_URL'] ?? 'smtp://localhost:1025', 'Yoyo <no-reply@yoyo.local>') });
     images = await testImages();
   });
 
@@ -75,6 +78,27 @@ describe('identity checked by a moderator (owner, 2026-11-16)', () => {
     expect((await anna.get('/me/identity').expect(200)).body).toMatchObject({ status: 'VERIFIED' });
     expect((await anna.get('/me').expect(200)).body.user).toMatchObject({ identityVerified: true });
     expect(await t.prisma.identityCheck.findUniqueOrThrow({ where: { id: second } })).toMatchObject({ documentPhoto: null, selfiePhoto: null });
+  });
+
+  it('tells the person in the bell and by email, in their language, either way', async () => {
+    const lena = await signedInClient(t, { name: 'Lena', locale: 'lv', identityVerified: false });
+    await submit(lena).expect(201);
+    const id = (await t.prisma.identityCheck.findFirstOrThrow({ where: { userId: lena.user.id } })).id;
+    await moderator.post(`/admin/identity/${id}`).send({ decision: 'reject', reason: 'Neskaidrs foto' }).expect(200);
+    await t.mailSent();
+    let mail = await mailbox.latestTo(lena.email);
+    expect(mail.subject).toBe(lv.identityRejected.subject);
+    expect(mail.text).toContain('Neskaidrs foto');
+    expect(mail.html).toContain(`${t.env.WEB_ORIGIN}/lv/settings#identity`);
+
+    await submit(lena).expect(201);
+    const second = (await t.prisma.identityCheck.findFirstOrThrow({ where: { userId: lena.user.id, status: 'PENDING' } })).id;
+    await moderator.post(`/admin/identity/${second}`).send({ decision: 'approve' }).expect(200);
+    await t.mailSent();
+    mail = await mailbox.latestTo(lena.email);
+    expect(mail.subject).toBe(lv.identityVerified.subject);
+    const bell = (await lena.get('/me/notifications').expect(200)).body.items;
+    expect(bell.map((n: { kind: string; event: string }) => `${n.kind}.${n.event}`)).toEqual(['IDENTITY.VERIFIED', 'IDENTITY.REJECTED']);
   });
 
   it('without a verified identity one can neither lend (submit) nor rent (request) (owner, 2026-11-16)', async () => {

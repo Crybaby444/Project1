@@ -2892,7 +2892,7 @@ export interface components {
             items: {
                 id: string;
                 /** @enum {string} */
-                kind: "DEAL" | "OFFER" | "LISTING" | "REVIEW" | "SEARCH" | "FOLLOW";
+                kind: "DEAL" | "OFFER" | "LISTING" | "REVIEW" | "SEARCH" | "FOLLOW" | "IDENTITY";
                 event: string;
                 bookingId: string | null;
                 listingId: string | null;

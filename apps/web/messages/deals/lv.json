@@ -544,6 +544,10 @@
       },
       "FOLLOW": {
         "NEW_LISTING": "Jaunums no cilvēka, kuram sekojat: “{title}”"
+      },
+      "IDENTITY": {
+        "VERIFIED": "Jūsu identitāte ir apstiprināta: varat iznomāt, nomāt un parakstīt līgumus",
+        "REJECTED": "Identitātes pārbaude: vajag jaunus fotoattēlus ({title})"
       }
     },
     "email": {

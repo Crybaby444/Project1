@@ -544,6 +544,10 @@
       },
       "FOLLOW": {
         "NEW_LISTING": "New from someone you follow: “{title}”"
+      },
+      "IDENTITY": {
+        "VERIFIED": "Your identity is confirmed: you can lend, rent and sign contracts",
+        "REJECTED": "Identity check: new photos needed ({title})"
       }
     },
     "email": {

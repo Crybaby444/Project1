@@ -12991,7 +12991,8 @@
                     "LISTING",
                     "REVIEW",
                     "SEARCH",
-                    "FOLLOW"
+                    "FOLLOW",
+                    "IDENTITY"
                   ]
                 },
                 "event": {
