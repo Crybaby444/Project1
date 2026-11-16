@@ -29,7 +29,7 @@ describe('SiteFooter', () => {
     const links = within(nav).getAllByRole('link');
     expect(links.map((link) => [link.textContent, link.getAttribute('href')])).toEqual([
       [siteLv.footer.links.catalog, '/lv/c'],
-      [siteLv.footer.links.howItWorks, '/lv/how-it-works'],
+      [siteLv.footer.links.whatIsYoyo, '/lv/what-is-yoyo'],
       [siteLv.footer.links.faq, '/lv/faq'],
       [siteLv.footer.links.terms, '/lv/terms'],
       [siteLv.footer.links.privacy, '/lv/privacy'],

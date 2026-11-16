@@ -82,7 +82,6 @@ export function CatalogMenu({ roots, className = '', onOpenChange }: { roots: Me
             {t('allCategoriesPage')}
           </Link>
           <Link href="/search?sort=new">{t('newest')}</Link>
-          <Link href="/how-it-works">{t('howItWorks')}</Link>
           <Link href="/faq">{t('faq')}</Link>
         </div>
       </div>

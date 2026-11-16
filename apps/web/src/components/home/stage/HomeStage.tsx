@@ -75,12 +75,6 @@ export default function HomeStage() {
     const restoration = history.scrollRestoration;
     history.scrollRestoration = 'manual';
     window.scrollTo(0, 0);
-    // Under the loader: the header and the hero's foot wait, and come in after the letters (concept v16).
-    const waiting = [
-      document.querySelector<HTMLElement>('[data-site-header]'),
-      ...root.querySelectorAll<HTMLElement>('[data-home="hero"] [data-reveal], [data-home="hero"] [data-hero-in]'),
-    ].filter((el): el is HTMLElement => el !== null);
-    waiting.forEach((el) => { el.style.opacity = '0'; el.style.visibility = 'hidden'; });
     stage.resize();
     const dom = {
       heroSlot: root.querySelector<HTMLElement>('[data-anchor="hero-slot"]')!,
@@ -111,7 +105,6 @@ export default function HomeStage() {
       stage.dispose();
       delete html.dataset.staged;
       history.scrollRestoration = restoration;
-      waiting.forEach((el) => { el.style.opacity = ''; el.style.visibility = ''; });
       // The loader stays: a remount (React's strict mode in development) floods it away itself, and
       // without a stage it fades away on its own (CSS).
     };

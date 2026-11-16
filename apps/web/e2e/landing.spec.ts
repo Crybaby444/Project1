@@ -17,7 +17,7 @@ for (const { locale, prefix, m } of LANGUAGES) {
     await page.goto(`${prefix}/what-is-yoyo`);
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
     await expect(page.getByRole('heading', { level: 1, name: 'Yoyo' })).toBeAttached();
-    for (const scene of ['hero', 'night', 'ends', 'what', 'sides', 'people', 'inside', 'facts', 'finale']) {
+    for (const scene of ['hero', 'night', 'ends', 'what', 'sides', 'rules', 'people', 'inside', 'facts', 'finale']) {
       await expect(page.locator(`[data-home="${scene}"]`)).toHaveCount(1);
     }
     await expect(page.getByRole('heading', { level: 2, name: m.landing.ends.title })).toBeAttached();
@@ -40,11 +40,12 @@ test('What is Yoyo walks through both sides: the switch shows the lender’s ste
   await expect(sides.getByRole('heading', { level: 3, name: en.landing.sides.rent.steps.s3.title })).toBeHidden();
 });
 
-test('What is Yoyo leads into the catalog and to lending', async ({ page }) => {
+test('What is Yoyo has nothing around it: no header or footer, and the way home is at its very end (owner, 2026-11-16)', async ({ page }) => {
   await page.goto('/what-is-yoyo');
-  const hero = page.locator('[data-home="hero"]');
-  await expect(hero.getByRole('link', { name: en.landing.hero.find })).toHaveAttribute('href', '/c');
-  await expect(hero.getByRole('link', { name: en.landing.hero.lend })).toHaveAttribute('href', '/listings/new');
+  await expect(page.locator('[data-site-header]')).toHaveCount(0);
+  await expect(page.locator('[data-site-footer]')).toHaveCount(0);
+  const back = page.locator('[data-home="finale"]').getByRole('link', { name: en.landing.finale.home });
+  await expect(back).toHaveAttribute('href', '/');
 });
 
 test('the home is the marketplace: search what, where and when, items on the string, categories in the header (owner, 2026-11-16)', async ({ page }) => {
@@ -59,10 +60,10 @@ test('the home is the marketplace: search what, where and when, items on the str
   await expect(page.getByRole('banner').getByRole('link', { name: main.nav.whatIsYoyo })).toHaveAttribute('href', '/what-is-yoyo');
 });
 
-test('a signed-in person sees the account menu and is not asked to sign up', async ({ page, context }) => {
+test('a signed-in person also gets the page without the header', async ({ page, context }) => {
   await asOwnVisitor(context);
   await registerByApi(page.request);
   await page.goto('/what-is-yoyo');
-  await expect(page.getByRole('button', { name: /^Account menu/ })).toBeVisible();
-  await expect(page.getByRole('banner').getByRole('link', { name: 'Sign up' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { level: 1, name: 'Yoyo' })).toBeAttached();
+  await expect(page.getByRole('button', { name: /^Account menu/ })).toHaveCount(0);
 });

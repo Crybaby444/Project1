@@ -14,7 +14,7 @@ describe('llms.txt', () => {
   });
 
   it('links the pages that explain the platform, in every language, and the catalog by category', () => {
-    for (const path of ['/what-is-yoyo', '/how-it-works', '/faq', '/terms', '/lv/what-is-yoyo', '/ru/faq']) {
+    for (const path of ['/what-is-yoyo', '/faq', '/terms', '/lv/what-is-yoyo', '/ru/faq']) {
       expect(text).toContain(`(https://yoyo.rent${path})`);
     }
     expect(text).toContain('- [Tools](https://yoyo.rent/c/tools)');

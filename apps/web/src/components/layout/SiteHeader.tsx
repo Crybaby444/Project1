@@ -54,7 +54,7 @@ export function SiteHeader({ catalog = [] }: { catalog?: MenuRoot[] }) {
   const [catalogOpen, setCatalogOpen] = useState(false);
   const onCatalog = useCallback((open: boolean) => setCatalogOpen(open), []);
   const hidden = useHideOnScroll(catalogOpen);
-  const active = ['/what-is-yoyo', '/how-it-works'].find((p) => pathname.startsWith(p)) ?? null;
+  const active = ['/what-is-yoyo'].find((p) => pathname.startsWith(p)) ?? null;
 
   return (
     <>
@@ -74,7 +74,6 @@ export function SiteHeader({ catalog = [] }: { catalog?: MenuRoot[] }) {
               {(
                 [
                   ['/what-is-yoyo', tn('whatIsYoyo')],
-                  ['/how-it-works', tn('howItWorks')],
                 ] as const
               ).map(([href, label]) => (
                 <Link
@@ -83,7 +82,7 @@ export function SiteHeader({ catalog = [] }: { catalog?: MenuRoot[] }) {
                   data-nav-item=""
                   data-nav-href={href}
                   aria-current={active === href ? 'page' : undefined}
-                  className={`rounded-pill flex h-10 items-center px-4 text-[14.5px] font-semibold whitespace-nowrap transition-colors duration-200 ${href === '/how-it-works' ? 'max-xl:hidden' : ''} ${active === href ? 'text-ink' : 'text-ink/75 hover:text-ink'}`}
+                  className={`rounded-pill flex h-10 items-center px-4 text-[14.5px] font-semibold whitespace-nowrap transition-colors duration-200 ${active === href ? 'text-ink' : 'text-ink/75 hover:text-ink'}`}
                 >
                   {label}
                 </Link>

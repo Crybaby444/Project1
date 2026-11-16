@@ -8,34 +8,42 @@ import siteRu from '../messages/site/ru.json' with { type: 'json' };
 
 test.describe('home page in three languages', () => {
   test('English is served without a prefix', async ({ page }) => {
-    await page.goto('/what-is-yoyo');
+    await page.goto('/');
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-    await expect(page.getByText(siteEn.landing.hero.line)).toBeVisible();
-    await expect(page.getByRole('heading', { level: 1, name: 'Yoyo' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: en.market.hero.title })).toBeVisible();
   });
 
   test('Latvian is served at /lv', async ({ page }) => {
-    await page.goto('/lv/what-is-yoyo');
+    await page.goto('/lv');
     await expect(page.locator('html')).toHaveAttribute('lang', 'lv');
-    await expect(page.getByText(siteLv.landing.hero.line)).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: lv.market.hero.title })).toBeVisible();
   });
 
   test('Russian is served at /ru', async ({ page }) => {
-    await page.goto('/ru/what-is-yoyo');
+    await page.goto('/ru');
     await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
-    await expect(page.getByText(siteRu.landing.hero.line)).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: ru.market.hero.title })).toBeVisible();
   });
 
   test('the language switcher moves between locales', async ({ page }) => {
-    await page.goto('/what-is-yoyo');
+    await page.goto('/faq');
     const header = page.getByRole('banner');
     await header.getByRole('button', { name: /^Language: English/ }).click();
     await header.getByRole('menuitemradio', { name: 'Русский' }).click();
-    await expect(page).toHaveURL(/\/ru\/what-is-yoyo$/);
-    await expect(page.getByText(siteRu.landing.hero.line)).toBeVisible();
+    await expect(page).toHaveURL(/\/ru\/faq$/);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
     await header.getByRole('button', { name: /^Язык: Русский/ }).click();
     await header.getByRole('menuitemradio', { name: 'English' }).click();
-    await expect(page.getByText(siteEn.landing.hero.line)).toBeVisible();
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  });
+
+  test('What is Yoyo opens with only the word and the yo-yo, in every language', async ({ page }) => {
+    for (const [prefix, line] of [['', siteEn.landing.hero.line], ['/lv', siteLv.landing.hero.line], ['/ru', siteRu.landing.hero.line]] as const) {
+      await page.goto(`${prefix}/what-is-yoyo`);
+      await expect(page.getByRole('heading', { level: 1, name: 'Yoyo' })).toBeVisible();
+      await expect(page.locator('[data-home="hero"]').getByText(line)).toHaveCount(0);
+      await expect(page.locator('[data-home="hero"]').getByRole('link')).toHaveCount(0);
+    }
   });
 });
 

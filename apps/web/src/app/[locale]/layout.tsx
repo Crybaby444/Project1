@@ -16,6 +16,7 @@ import { PageFlood } from '@/components/motion/PageFlood';
 import { themeInitScript } from '@/components/theme/theme-script';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { LanguageSuggestion } from '@/components/layout/LanguageSuggestion';
+import { Chrome } from '@/components/layout/Chrome';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SyncThemeWithProfile } from '@/components/theme/use-theme-choice';
@@ -77,14 +78,18 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
                 <ToastProvider>
                   <SyncThemeWithProfile />
                   <div lang={locale} className="contents">
-                    <SiteHeader catalog={catalog} />
-                    <ProfileIncompleteBanner />
+                    <Chrome>
+                      <SiteHeader catalog={catalog} />
+                      <ProfileIncompleteBanner />
+                    </Chrome>
                   </div>
                   <div lang={locale} className="flex flex-1 flex-col *:w-full">
                     {children}
                   </div>
                   <div lang={locale} className="contents">
-                    <SiteFooter />
+                    <Chrome>
+                      <SiteFooter />
+                    </Chrome>
                   </div>
                   <AdminOnly />
                   <Suspense fallback={null}>

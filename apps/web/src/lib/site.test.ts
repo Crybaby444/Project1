@@ -15,7 +15,7 @@ describe('resolveSiteUrl', () => {
 
 describe('site pages', () => {
   it('lists the public pages, home first', () => {
-    expect(PAGES).toEqual(['/', '/what-is-yoyo', '/how-it-works', '/faq', '/terms', '/privacy', '/cookies']);
+    expect(PAGES).toEqual(['/', '/what-is-yoyo', '/faq', '/terms', '/privacy', '/cookies']);
   });
 
   it('has one contact address', () => {
