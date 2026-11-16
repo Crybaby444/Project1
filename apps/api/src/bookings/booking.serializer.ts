@@ -1,4 +1,5 @@
 import type { BookingEventType, BookingSnapshot, TimerKind } from '@yoyo/domain';
+import { publicName } from '../common/public-name';
 import type { BookingAction, BookingView } from '@yoyo/shared';
 import type { Booking, ContractSignature, Listing, ListingPhoto, User } from '../generated/prisma/client';
 import type { UrlFor } from '../listings/listing.serializer';
@@ -20,7 +21,7 @@ export const BOOKING_INCLUDE = {
 const iso = (date: Date | undefined | null) => date?.toISOString() ?? null;
 
 /** What a deleted account shows as (its row keeps no name). */
-const partyName = (user: User) => (user.deletedAt !== null ? 'Deleted user' : user.name);
+const partyName = (user: User) => publicName(user);
 
 export function serializeBooking(
   row: BookingWithParties,

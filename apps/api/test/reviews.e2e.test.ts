@@ -62,7 +62,7 @@ describe('reviews (plan 10)', () => {
     await renter.post(`/bookings/${id}/reviews`).send({ rating: 5, text: GOOD }).expect(400);
     await renter.post(`/bookings/${id}/reviews`).send({ rating: 5, itemRating: 4, text: 'short' }).expect(400);
     const made = (await renter.post(`/bookings/${id}/reviews`).send({ rating: 5, itemRating: 4, text: `  ${GOOD}  ` }).expect(201)).body;
-    expect(made.review).toMatchObject({ rating: 5, itemRating: 4, text: GOOD, authorRole: 'RENTER', author: { name: 'Rita Renter' } });
+    expect(made.review).toMatchObject({ rating: 5, itemRating: 4, text: GOOD, authorRole: 'RENTER', author: { name: `@${renter.user.username}` } });
     await renter.post(`/bookings/${id}/reviews`).send({ rating: 1, itemRating: 1, text: GOOD }).expect(409);
     // The owner's stars are about the renter only: an item score from them is ignored.
     const ownerMade = (await owner.post(`/bookings/${id}/reviews`).send({ rating: 4, itemRating: 1, text: 'Returned on time, clean.' }).expect(201)).body;
