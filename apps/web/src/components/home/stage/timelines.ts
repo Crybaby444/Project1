@@ -69,7 +69,8 @@ export function mountTimelines(stage: Stage, root: HTMLElement, opts: { mobile: 
     const steps = q<HTMLElement>('[data-step]');
     gsap.set(steps, { opacity: 0, y: 50 });
     const wt = gsap.timeline({ scrollTrigger: { trigger: '[data-home="what"]', start: 'top top', end: 'bottom bottom', scrub: 1.4 } });
-    wt.to('[data-home="what"] [data-word]', { opacity: 1, duration: 0.04, ease: 'none', stagger: { amount: 0.34 } }, 0.02);
+    // Without the steps under it (2026-11-16) the statement has the whole scene to light up in.
+    wt.to('[data-home="what"] [data-word]', { opacity: 1, duration: 0.06, ease: 'none', stagger: { amount: steps.length ? 0.34 : 0.78 } }, 0.04);
     steps.forEach((st, i) => {
       const at = 0.4 + i * 0.14;
       if (opts.mobile && i > 0) wt.to(steps[i - 1]!, { opacity: 0, y: -40, duration: 0.1, ease: 'power2.inOut' }, at - 0.04);

@@ -11,8 +11,8 @@ import { clientMessages } from '@/i18n/client-messages';
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import { DropCursor } from '@/components/motion/DropCursor';
-import { loaderCountScript } from '@/components/home/loader-count';
 import { freshLoadScript } from '@/components/motion/fresh-load';
+import { PageFlood } from '@/components/motion/PageFlood';
 import { themeInitScript } from '@/components/theme/theme-script';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { LanguageSuggestion } from '@/components/layout/LanguageSuggestion';
@@ -67,7 +67,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
   return (
     <html lang={htmlLang} className={fontVariables} data-theme={serverTheme} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript + freshLoadScript + NO_LOADER + loaderCountScript }} />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript + freshLoadScript + NO_LOADER }} />
       </head>
       <body className="text-ink flex min-h-dvh flex-col">
         <NextIntlClientProvider messages={clientMessages(await getMessages())}>
@@ -91,6 +91,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
                     <PageCounter />
                   </Suspense>
                   <DropCursor />
+                  <PageFlood />
                   <LanguageSuggestion />
                   <ConsentBanner gaId={validGaId(process.env.NEXT_PUBLIC_GA_ID) ?? ''} />
                   <Analytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
