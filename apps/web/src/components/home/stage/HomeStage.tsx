@@ -91,9 +91,9 @@ export default function HomeStage() {
       rollShadow: root.querySelector<HTMLElement>('[data-roll-shadow]')!,
       letters: Array.from(root.querySelectorAll<HTMLElement>('[data-home="hero"] [data-letter]')),
     };
-    // The loader's count runs in CSS (1.1 s); the set waits for the fonts and at least that long, then the
-    // dots flood the loader away and the intro plays.
-    const minimum = new Promise((r) => setTimeout(r, 1150));
+    // The set waits for the fonts, then the dots flood the loader away and the intro plays.
+    // A short beat of night before the flood, so it reads as a moment and not a flicker.
+    const minimum = new Promise((r) => setTimeout(r, 450));
     Promise.all([document.fonts.ready, minimum]).then(async () => {
       if (!alive) return;
       stage.attach(dom);

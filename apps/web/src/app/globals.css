@@ -493,8 +493,8 @@ html[data-page-switch]::view-transition-new(site-header) {
   100% { transform: translateY(6px); opacity: 0; }
 }
 
-/* The home loader (components/home/HomeLoader): the inverse of the page — night on cream, cream on night.
-   The mark turns, the count runs 0 → 100 (head script, components/home/loader-count.ts); it fades away by itself if no stage takes it over. */
+/* The What is Yoyo loader (components/home/HomeLoader): only the night, which the dot flood takes away.
+   It fades away by itself if no stage takes it over. */
 .home-loader {
   position: fixed;
   inset: 0;
@@ -503,7 +503,6 @@ html[data-page-switch]::view-transition-new(site-header) {
   place-items: center;
   background: var(--ink);
   color: var(--canvas);
-  --mark-cut: var(--ink); /* the slit in the loader's own ground, so the turning shows */
   animation: home-loader-out 0.5s ease 4.5s forwards;
 }
 html[data-no-loader] .home-loader {
@@ -511,32 +510,6 @@ html[data-no-loader] .home-loader {
 }
 html[data-staged] .home-loader {
   animation: none; /* the stage is here: it decides when the loader goes */
-}
-.home-loader-mark {
-  animation: home-loader-turn 1.1s linear infinite;
-}
-.home-loader-count {
-  position: absolute;
-  left: max(16px, 3.4vw);
-  bottom: 22px;
-  font-family: var(--font-display-face), sans-serif;
-  font-size: 64px;
-  line-height: 0.8;
-  font-weight: 900;
-  font-variant-numeric: tabular-nums;
-}
-.home-loader-name {
-  position: absolute;
-  right: max(16px, 3.4vw);
-  bottom: 28px;
-  font-size: 13px;
-  font-weight: 500;
-  opacity: 0.72;
-}
-@keyframes home-loader-turn {
-  to {
-    transform: rotate(360deg);
-  }
 }
 @keyframes home-loader-out {
   to {

@@ -47,10 +47,10 @@ export function TransitionLink({ href, onClick, ...rest }: TransitionLinkProps) 
     void switchPage({
       pathname: target,
       navigate: () => router.push(localized),
-      animate: shouldAnimatePageChange(
-        prefersReducedMotion(),
-        typeof document.startViewTransition === 'function',
-      ),
+      // The dot flood (PageFlood) already carries this move: no View Transition on top of it.
+      animate:
+        !('flooding' in document.documentElement.dataset) &&
+        shouldAnimatePageChange(prefersReducedMotion(), typeof document.startViewTransition === 'function'),
     });
   }
 
