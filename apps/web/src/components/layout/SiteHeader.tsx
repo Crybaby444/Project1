@@ -1,5 +1,7 @@
 'use client';
 
+import { HOME_COUNTRY, type Country } from '@yoyo/shared';
+import { CountryPicker } from './CountryPicker';
 import { useTranslations } from 'next-intl';
 import { useCallback, useState } from 'react';
 import { Mark } from '@/components/brand/Mark';
@@ -45,7 +47,7 @@ function MessagesLink() {
  * goes away while you scroll down and comes back when you scroll up (and at once when the keyboard reaches it). On phones and tablets a slim capsule on
  * top (the mark, the search, you) and a tab bar at the bottom where the thumb is.
  */
-export function SiteHeader({ catalog = [] }: { catalog?: MenuRoot[] }) {
+export function SiteHeader({ catalog = [], country = HOME_COUNTRY }: { catalog?: MenuRoot[]; country?: Country }) {
   const t = useTranslations('header');
   const tn = useTranslations('nav');
   const pathname = usePathname();
@@ -100,6 +102,7 @@ export function SiteHeader({ catalog = [] }: { catalog?: MenuRoot[] }) {
             <div data-desktop-only data-theme-control className="max-lg:hidden">
               <ThemeToggle />
             </div>
+            <CountryPicker country={country} />
             {/* One language menu: on phones a visitor keeps it here; a signed-in person finds it under You. */}
             <div className={signedIn ? 'max-lg:hidden' : ''}>
               <LanguageSwitcher />

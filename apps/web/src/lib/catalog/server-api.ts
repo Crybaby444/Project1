@@ -1,3 +1,4 @@
+import { currentCountry } from '@/lib/country/server';
 import { createApiClient } from '@yoyo/api-client';
 import type {
   CatalogPage,
@@ -81,12 +82,21 @@ const mapByKey = cache(
     load(() => client().GET('/api/v1/catalog/map', { params: { query: toApiSearch(JSON.parse(key) as CatalogQuery) as never } })),
 );
 
-/** One page of the catalog; the same query twice in one render is asked once. */
-export const loadSearch = (query: CatalogQuery) => searchByKey(JSON.stringify(query));
+/** The query in the visitor's country, unless it names one (owner, 2026-11-16: one country at a time). */
+const inCountry = async (query: CatalogQuery): Promise<CatalogQuery> => (query.country ? query : { ...query, country: await currentCountry() });
 
-export const loadMap = (query: CatalogQuery) => mapByKey(JSON.stringify(query));
+/** One page of the catalog, in the visitor's country; the same query twice in one render is asked once. */
+export const loadSearch = async (query: CatalogQuery) => searchByKey(JSON.stringify(await inCountry(query)));
 
-export const loadPlaces = cache(async (): Promise<Loaded<PlacesResponse>> => load(() => client().GET('/api/v1/catalog/places')));
+export const loadMap = async (query: CatalogQuery) => mapByKey(JSON.stringify(await inCountry(query)));
+
+const placesIn = cache(
+  async (country: string): Promise<Loaded<PlacesResponse>> =>
+    load(() => client().GET('/api/v1/catalog/places', { params: { query: { country } as never } })),
+);
+
+/** The countries with items, and the cities and districts of the visitor's country. */
+export const loadPlaces = async (): Promise<Loaded<PlacesResponse>> => placesIn(await currentCountry());
 
 export const loadProfile = cache(
   async (id: string): Promise<Loaded<PublicProfile>> => load(() => client().GET('/api/v1/users/{id}', { params: { path: { id } } })),

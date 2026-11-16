@@ -64,6 +64,7 @@ export function PlaceStep() {
       lng: place.lng,
       city: place.city ?? values.city,
       district: place.district ?? values.district,
+      ...(place.country ? { country: place.country } : {}),
     });
     setAnnouncement(
       t('pointSet', { place: [place.city, place.district].filter(Boolean).join(', ') || place.label }),
@@ -83,6 +84,7 @@ export function PlaceStep() {
         draft.change({
           ...(found.city ? { city: found.city } : {}),
           ...(found.district ? { district: found.district } : {}),
+          ...(found.country ? { country: found.country } : {}),
         });
       }
       const name = [found.city, found.district].filter(Boolean).join(', ');

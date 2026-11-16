@@ -1215,5 +1215,10 @@
       "shops": "Mani veikali"
     },
     "menu": "Mans profils"
+  },
+  "country": {
+    "button": "Valsts: {name}",
+    "title": "Tava valsts",
+    "lead": "Yoyo rāda nomai pieejamās lietas vienā valstī, eiro. Izvēlies, kur tu esi."
   }
 }

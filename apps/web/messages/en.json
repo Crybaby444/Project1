@@ -1215,5 +1215,10 @@
       "shops": "My shops"
     },
     "menu": "My profile"
+  },
+  "country": {
+    "button": "Country: {name}",
+    "title": "Your country",
+    "lead": "Yoyo shows things for rent in one country at a time, in euros. Pick where you are."
   }
 }
