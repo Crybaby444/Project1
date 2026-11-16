@@ -55,11 +55,9 @@ export function stepTail(tail: Point[], head: Point, dt: number): void {
   });
 }
 
-export type HoverTarget =
-  | { kind: 'box'; cx: number; cy: number; hw: number; hh: number; r: number }
-  | { kind: 'ring'; cx: number; cy: number };
+export type HoverTarget = { kind: 'box'; cx: number; cy: number; hw: number; hh: number; r: number };
 
-/** Larger than this the drop does not fill the element; it rings the pointer instead. */
+/** Larger than this the drop does not fill the element; it stays a plain drop. */
 const MAX_W = 380;
 const MAX_H = 120;
 const PAD = 8;
@@ -69,7 +67,7 @@ const PAD = 8;
  * radius); for a wide label or link only its words (`text`, padded); a ring for anything too big to
  * fill, such as a whole card.
  */
-export function hoverTarget(box: DOMRect, text: DOMRect | null, radius: number): HoverTarget {
+export function hoverTarget(box: DOMRect, text: DOMRect | null, radius: number): HoverTarget | null {
   if (box.width <= MAX_W && box.height <= MAX_H) {
     return { kind: 'box', cx: box.left + box.width / 2, cy: box.top + box.height / 2, hw: box.width / 2, hh: box.height / 2, r: Math.min(radius, box.height / 2) };
   }
@@ -77,5 +75,7 @@ export function hoverTarget(box: DOMRect, text: DOMRect | null, radius: number):
     const hh = text.height / 2 + PAD / 2;
     return { kind: 'box', cx: text.left + text.width / 2, cy: text.top + text.height / 2, hw: text.width / 2 + PAD, hh, r: hh };
   }
-  return { kind: 'ring', cx: box.left + box.width / 2, cy: box.top + box.height / 2 };
+  // Too big to pour into (a whole card): the drop stays itself; the element shows its own hover
+  // (owner, 2026-11-16: the ring with a dot over cards did not look right).
+  return null;
 }
