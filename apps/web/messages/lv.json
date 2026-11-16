@@ -1251,7 +1251,7 @@
     },
     "consent": "Piekrītu, ka Yoyo apstrādā šos fotoattēlus manas identitātes apstiprināšanai, kā aprakstīts iepriekš un privātuma politikā.",
     "submit": "Nosūtīt pārbaudei",
-    "pending": "Nosūtīts {date}. Moderators parasti pārbauda dienas laikā; jūs saņemsiet e-pastu.",
+    "pending": "Nosūtīts {date}. Moderators to izskatīs; rezultāts parādīsies šeit.",
     "verified": "Jūsu identitāte ir apstiprināta ({date}). Varat iznomāt, nomāt un parakstīt līgumus.",
     "rejected": "Pēdējā pārbaude netika pieņemta: {reason}. Lūdzu, nosūtiet jaunus fotoattēlus.",
     "loadFailed": "Neizdevās ielādēt pārbaudi. Mēģiniet vēlreiz",

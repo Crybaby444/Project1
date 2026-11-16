@@ -1251,7 +1251,7 @@
     },
     "consent": "I agree that Yoyo processes these photos to confirm my identity, as described above and in the privacy policy.",
     "submit": "Send for a check",
-    "pending": "Sent on {date}. A moderator usually checks within a day; you will get an email.",
+    "pending": "Sent on {date}. A moderator will look at it; the result appears here.",
     "verified": "Your identity is confirmed ({date}). You can lend, rent and sign contracts.",
     "rejected": "The last check was not accepted: {reason}. Please send new photos.",
     "loadFailed": "We could not load your check. Try again",
