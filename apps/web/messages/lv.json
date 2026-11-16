@@ -1001,7 +1001,8 @@
     "noFollowers": "{name} vēl neviens neseko.",
     "noFollowing": "{name} vēl nevienam neseko.",
     "favorites": "Izlase",
-    "noFavorites": "Vēl nekas nav saglabāts. Nospied sirsniņu uz lietas, lai to paturētu šeit."
+    "noFavorites": "Vēl nekas nav saglabāts. Nospied sirsniņu uz lietas, lai to paturētu šeit.",
+    "deals": "{count, plural, zero {darījumu} one {darījums} other {darījumi}}"
   },
   "consent": {
     "label": "Sīkdatņu izvēle",

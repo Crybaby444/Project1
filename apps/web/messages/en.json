@@ -1001,7 +1001,8 @@
     "noFollowers": "Nobody follows {name} yet.",
     "noFollowing": "{name} follows nobody yet.",
     "favorites": "Favourites",
-    "noFavorites": "Nothing saved yet. Press the heart on an item to keep it here."
+    "noFavorites": "Nothing saved yet. Press the heart on an item to keep it here.",
+    "deals": "{count, plural, one {deal} other {deals}}"
   },
   "consent": {
     "label": "Cookie choice",

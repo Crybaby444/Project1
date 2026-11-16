@@ -17,7 +17,7 @@ type List = 'followers' | 'following';
  * lists; reviews jump to the reviews tab. On someone else's profile: Follow and Write. On your own:
  * Edit profile and Manage my items instead.
  */
-export function ProfileSocial({ userId, name, followers, following, reviews }: { userId: string; name: string; followers: number; following: number; reviews: number }) {
+export function ProfileSocial({ userId, name, followers, following, reviews, deals }: { userId: string; name: string; followers: number; following: number; reviews: number; deals: number }) {
   const t = useTranslations('people');
   const tp = useTranslations('profile');
   const { user } = useSession();
@@ -45,6 +45,7 @@ export function ProfileSocial({ userId, name, followers, following, reviews }: {
   return (
     <div className="flex flex-wrap items-center gap-x-8 gap-y-4" data-profile-social="">
       <div className="flex gap-8">
+        {stat(deals, tp('deals', { count: deals }))}
         {stat(followers + delta, t('followers', { count: followers + delta }), () => setOpen('followers'))}
         {stat(following, t('followingCount'), () => setOpen('following'))}
         {stat(reviews, t('reviews', { count: reviews }))}
