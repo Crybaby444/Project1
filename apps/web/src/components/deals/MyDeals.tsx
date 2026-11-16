@@ -8,13 +8,12 @@ import { TransitionLink } from '@/components/motion/TransitionLink';
 import { Reveal } from '@/components/motion/Reveal';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { Chip } from '@/components/ui/Chip';
 import { displayFit } from '@/lib/display-fit';
 import { formatPeriod } from '@/lib/deals/dates';
 import { useDeadline } from '@/lib/deals/deadline';
 import { useMoney } from '@/lib/deals/money';
 import { useDealsSummary, useMyDeals } from '@/lib/deals/queries';
-import { DEAL_GROUPS, DEAL_ROLES, isMyTurn, type DealGroup, type DealRole } from '@/lib/deals/status';
+import { DEAL_ROLES, isMyTurn, type DealRole } from '@/lib/deals/status';
 import { useErrorText } from '@/lib/forms/error-text';
 import { useDurationText } from './Countdown';
 import { DealStatusBadge } from './DealStatusBadge';
@@ -65,10 +64,10 @@ export function DealCard({ booking, index }: { booking: BookingView; index: numb
   );
 }
 
-function Page({ role, group, page, onTotal }: { role: DealRole; group: DealGroup; page: number; onTotal(total: number): void }) {
+function Page({ role, page, onTotal }: { role: DealRole; page: number; onTotal(total: number): void }) {
   const t = useTranslations('myDeals');
   const errorText = useErrorText();
-  const query = useMyDeals(role, group === 'closed' ? 'closed' : 'open', page);
+  const query = useMyDeals(role, 'all', page);
   const total = query.data?.total;
   useEffect(() => {
     if (total !== undefined) onTotal(total);
@@ -94,7 +93,7 @@ function Page({ role, group, page, onTotal }: { role: DealRole; group: DealGroup
       </li>
     );
   }
-  const items = group === 'action' ? query.data.items.filter((b) => isMyTurn(b.actions)) : query.data.items;
+  const items = query.data.items;
   return (
     <>
       {items.map((booking, index) => (
@@ -104,9 +103,8 @@ function Page({ role, group, page, onTotal }: { role: DealRole; group: DealGroup
   );
 }
 
-function Empty({ role, group }: { role: DealRole; group: DealGroup }) {
+function Empty({ role }: { role: DealRole }) {
   const t = useTranslations('myDeals');
-  if (group !== 'open') return <EmptyState title={t(`empty.${group}`)} />;
   return (
     <EmptyState
       title={t(`empty.${role}`)}
@@ -122,27 +120,26 @@ function Empty({ role, group }: { role: DealRole; group: DealGroup }) {
 }
 
 /**
- * "My deals" (spec §4.2): tabs "I rent" / "I lend" with how many deals wait for this person, and
- * groups "Waiting for me" / "Going on" / "Closed". The choice is kept in the address (`?role=&group=`),
+ * "My deals" (spec §4.2): tabs "I rent" / "I lend" with how many deals wait for this person, and one full
+ * list under each — every deal with its status and, when it waits for you, "Your turn" (owner, 2026-11-16:
+ * the groups hid deals and looked empty). The side is kept in the address (`?role=`),
  * so the view can be bookmarked and the back button returns to it from a deal.
  */
-export function MyDeals({ initialRole, initialGroup }: { initialRole: DealRole; initialGroup: DealGroup }) {
+export function MyDeals({ initialRole }: { initialRole: DealRole }) {
   const t = useTranslations('myDeals');
   const summary = useDealsSummary();
   const [role, setRole] = useState<DealRole>(initialRole);
-  const [group, setGroup] = useState<DealGroup>(initialGroup);
   const [pages, setPages] = useState(1);
   const [totals, setTotals] = useState<Record<number, number>>({});
   const tabs = useRef(new Map<DealRole, HTMLButtonElement>());
 
-  function remember(nextRole: DealRole, nextGroup: DealGroup) {
+  function remember(nextRole: DealRole) {
     setRole(nextRole);
-    setGroup(nextGroup);
     setPages(1);
     setTotals({});
     const url = new URL(window.location.href);
     url.searchParams.set('role', nextRole);
-    url.searchParams.set('group', nextGroup);
+    url.searchParams.delete('group');
     window.history.replaceState(window.history.state, '', url);
   }
 
@@ -153,7 +150,7 @@ export function MyDeals({ initialRole, initialGroup }: { initialRole: DealRole; 
     const next =
       event.key === 'Home' ? 0 : event.key === 'End' ? DEAL_ROLES.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + DEAL_ROLES.length) % DEAL_ROLES.length;
     const nextRole = DEAL_ROLES[next]!;
-    remember(nextRole, group);
+    remember(nextRole);
     tabs.current.get(nextRole)?.focus();
   }
 
@@ -185,7 +182,7 @@ export function MyDeals({ initialRole, initialGroup }: { initialRole: DealRole; 
             aria-controls="deals-panel"
             tabIndex={role === r ? 0 : -1}
             aria-describedby={waiting(r) > 0 ? `deals-badge-${r}` : undefined}
-            onClick={() => remember(r, group)}
+            onClick={() => remember(r)}
             onKeyDown={onTabKey}
             className={`rounded-pill ease-yoyo flex min-h-10 flex-1 items-center justify-center gap-2 px-4 text-sm font-bold transition-[background-color,color,transform] duration-250 active:scale-[0.96] ${
               role === r ? 'bg-cta text-cta-fg' : 'hover:bg-mist'
@@ -207,16 +204,8 @@ export function MyDeals({ initialRole, initialGroup }: { initialRole: DealRole; 
       </div>
 
       <div id="deals-panel" role="tabpanel" aria-labelledby={`deals-tab-${role}`} className="flex flex-col gap-6">
-        <div role="group" aria-label={t('groups')} className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
-          {DEAL_GROUPS.map((g, index) => (
-            <Chip key={g} pressed={group === g} onPressedChange={() => remember(role, g)} tilt={index % 2 ? 'right' : 'left'} className="shrink-0">
-              {t(`group.${g}`)}
-            </Chip>
-          ))}
-        </div>
-
         {total === 0 ? (
-          <Empty role={role} group={group} />
+          <Empty role={role} />
         ) : (
           <>
             {total !== undefined && (
@@ -224,20 +213,16 @@ export function MyDeals({ initialRole, initialGroup }: { initialRole: DealRole; 
                 {t('count', { count: total })}
               </p>
             )}
-            <ul className="border-ink/15 grid border-t lg:grid-cols-2 lg:gap-x-[clamp(24px,3vw,56px)]" key={`${role}-${group}`}>
+            <ul className="border-ink/15 grid border-t lg:grid-cols-2 lg:gap-x-[clamp(24px,3vw,56px)]" key={role}>
               {Array.from({ length: pages }, (_, i) => (
                 <Page
                   key={i}
                   role={role}
-                  group={group}
                   page={i + 1}
                   onTotal={(n) => setTotals((old) => (old[i + 1] === n ? old : { ...old, [i + 1]: n }))}
                 />
               ))}
             </ul>
-            {group === 'action' && total !== undefined && waiting(role) === 0 && summary.data && (
-              <EmptyState title={t('empty.action')} />
-            )}
             {!loadedAll && (
               <Button variant="ghost" className="self-center" onClick={() => setPages((p) => p + 1)}>
                 {t('more')}

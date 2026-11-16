@@ -36,7 +36,7 @@ function optionsOf(answer: SuggestResponse | null, locale: Locale): Option[] {
  * cancelling the last. Arrows move through the suggestions, Enter opens one or searches the text, Esc
  * closes the list and a second Esc clears the box.
  */
-export function SearchBox({ initialQuery = '', className = '' }: { initialQuery?: string; className?: string }) {
+export function SearchBox({ initialQuery = '', className = '', compact = false, label }: { initialQuery?: string; className?: string; /** The header's slim box: 40px tall, Enter searches (no button). */ compact?: boolean; /** Its own accessible name, when another search box is on the page. */ label?: string }) {
   const t = useTranslations('catalog.search');
   const locale = useLocale() as Locale;
   const client = useApiClient();
@@ -148,9 +148,9 @@ export function SearchBox({ initialQuery = '', className = '' }: { initialQuery?
   return (
     <form role="search" onSubmit={submit} className={`relative ${className}`}>
       <label htmlFor={ids.input} className="sr-only">
-        {t('label')}
+        {label ?? t('label')}
       </label>
-      <div className="border-ink bg-surface rounded-pill focus-within:outline-ink flex min-h-12 items-center gap-2 border py-1 pr-1 pl-4 focus-within:outline-2 focus-within:outline-offset-3">
+      <div className={`bg-surface rounded-pill focus-within:outline-ink flex items-center gap-2 border pr-1 pl-4 focus-within:outline-2 focus-within:outline-offset-3 ${compact ? 'border-ink/25 hover:border-ink/60 min-h-10 py-0.5 transition-colors' : 'border-ink min-h-12 py-1'}`}>
         <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5 shrink-0">
           <circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" strokeWidth="1.75" />
           <path d="m16 16 4.5 4.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
@@ -174,7 +174,7 @@ export function SearchBox({ initialQuery = '', className = '' }: { initialQuery?
           onFocus={() => setOpen(true)}
           onKeyDown={onKeyDown}
           onBlur={() => setOpen(false)}
-          className="min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-ink/60 [&::-webkit-search-cancel-button]:hidden"
+          className={`min-w-0 flex-1 bg-transparent outline-none placeholder:text-ink/60 [&::-webkit-search-cancel-button]:hidden ${compact ? 'text-[15px]' : 'text-base'}`}
         />
         {text && (
           <button
@@ -191,12 +191,14 @@ export function SearchBox({ initialQuery = '', className = '' }: { initialQuery?
             </svg>
           </button>
         )}
-        <button
-          type="submit"
-          className="bg-cta text-cta-fg border-cta rounded-pill ease-yoyo min-h-10 shrink-0 border px-4 text-[13px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.97]"
-        >
-          {t('submit')}
-        </button>
+        {!compact && (
+          <button
+            type="submit"
+            className="bg-cta text-cta-fg border-cta rounded-pill ease-yoyo min-h-10 shrink-0 border px-4 text-[13px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.97]"
+          >
+            {t('submit')}
+          </button>
+        )}
       </div>
       <p role="status" aria-live="polite" className="sr-only">
         {open && text.trim().length >= 2 && !loading && answer ? (options.length > 0 ? t('count', { count: options.length }) : t('none')) : ''}

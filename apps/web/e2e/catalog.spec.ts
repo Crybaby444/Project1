@@ -142,6 +142,8 @@ test('the heart saves an item at once, and Favourites lists it', async ({ page }
   await heart.click();
   await expect(page.getByRole('button', { name: en.favorites.remove.replace('{title}', drill.title) })).toHaveAttribute('aria-pressed', 'true');
 
+  // Reaching the heart scrolled the page down and the bar stepped away; on the way up it comes back.
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.getByRole('button', { name: /^Account menu/ }).click();
   await page.getByRole('menuitem', { name: en.header.favorites }).click();
   await expect(page.getByRole('heading', { level: 1, name: en.favorites.title })).toBeVisible();
@@ -175,14 +177,14 @@ test('the owner’s public profile lists the item and has no reviews yet', async
   await expect(page.getByRole('tabpanel').getByText(en.profile.noReviewsTitle, { exact: true })).toBeVisible();
 });
 
-test('the catalog is reached from the footer and the home, not the header (owner, 2026-11-13)', async ({ page }) => {
+test('the catalog is reached from the header and the footer (owner, 2026-11-16)', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('banner').getByRole('button', { name: /catalog/i })).toHaveCount(0);
+  await expect(page.getByRole('banner').getByRole('button', { name: 'Catalog' })).toBeVisible();
   await page.getByRole('contentinfo').getByRole('link', { name: 'Catalog' }).click();
   await expect(page).toHaveURL(/\/c$/);
   // Every root category is a plain link on /c (for search engines and the keyboard).
-  expect(await page.locator('a[href^="/c/"]').count()).toBeGreaterThanOrEqual(13);
-  await page.locator('a[href="/c/tools"]').first().click();
+  expect(await page.getByRole('main').locator('a[href^="/c/"]').count()).toBeGreaterThanOrEqual(13);
+  await page.getByRole('main').locator('a[href="/c/tools"]').first().click();
   await expect(page).toHaveURL(/\/c\/tools$/);
   await expect(page.getByRole('heading', { level: 1, name: 'Tools' })).toBeVisible();
 });

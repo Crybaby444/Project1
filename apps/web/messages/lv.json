@@ -162,7 +162,9 @@
       "more": "Vēl {count} kategorijā {name}"
     },
     "following": "Sekoju",
-    "shops": "Mani veikali"
+    "shops": "Mani veikali",
+    "messages": "Ziņas",
+    "messagesUnread": "Ziņas, nelasītas: {count}"
   },
   "banner": {
     "verifyEmail": {
@@ -1079,5 +1081,105 @@
     "delete": "Dzēst veikalu",
     "cancel": "Atcelt",
     "save": "Saglabāt"
+  },
+  "nav": {
+    "categories": "Kategorijas",
+    "allIn": "Visas {count} šajā kategorijā",
+    "all": "Skatīt visu",
+    "whatIsYoyo": "Kas ir Yoyo",
+    "howItWorks": "Kā tas strādā",
+    "faq": "Jautājumi",
+    "menu": "Izvēlne",
+    "close": "Aizvērt izvēlni",
+    "allCategories": "Visas kategorijas",
+    "more": "+{count} vēl",
+    "catalog": "Katalogs",
+    "home": "Sākums",
+    "homeLabel": "Yoyo, sākumlapa",
+    "main": "Galvenā",
+    "allCategoriesPage": "Visas kategorijas vienā lapā",
+    "newest": "Jaunās lietas",
+    "you": "Tu",
+    "tabs": "Ātrās cilnes",
+    "search": "Meklēt Yoyo"
+  },
+  "market": {
+    "hero": {
+      "title": "Nomā tuvumā. Tas atgriežas.",
+      "lead": "Lietas uz dienu vai nedēļu no cilvēkiem tev apkārt — ar līgumu pirms maksājuma un drošības naudu, kas atgriežas."
+    },
+    "search": {
+      "what": "Ko",
+      "whatPlaceholder": "Kas tev vajadzīgs?",
+      "where": "Kur",
+      "anywhere": "Visa Rīga",
+      "when": "Kad",
+      "anyDays": "Jebkuras dienas",
+      "clearDays": "Notīrīt dienas",
+      "submit": "Meklēt"
+    },
+    "tags": {
+      "label": "Jaunumi Yoyo",
+      "perDay": "/ dienā",
+      "depositBack": "{amount} drošības nauda, atgriežas"
+    },
+    "categories": {
+      "title": "Viss, pa kategorijām",
+      "all": "Visas kategorijas"
+    },
+    "loop": {
+      "title": "Turp un atpakaļ. Kā jo-jo.",
+      "lead": "Katra noma Yoyo iet pa to pašu loku. Yoyo glabā naudu pa vidu, tāpēc nevienai pusei nav jāpaļaujas uz svešinieka vārdu.",
+      "whatIs": "Kas ir Yoyo",
+      "how": "Kā tas strādā",
+      "steps": {
+        "find": {
+          "title": "Atrodi",
+          "body": "Meklē pēc nosaukuma, vietas un dienām."
+        },
+        "book": {
+          "title": "Rezervē un paraksti",
+          "body": "Īpašnieks piekrīt; jūs abi parakstāt līgumu."
+        },
+        "use": {
+          "title": "Lieto",
+          "body": "Satiecieties, paņem un lieto savas dienas."
+        },
+        "back": {
+          "title": "Atpakaļ",
+          "body": "Atdod lietu; drošības nauda atgriežas."
+        }
+      },
+      "returned": "{amount} drošības nauda — atpakaļ pie tevis"
+    },
+    "fresh": {
+      "title": "Tikko pievienots",
+      "all": "Skatīt visus jaunumus"
+    },
+    "lend": {
+      "title": "Tavas lietas var pelnīt",
+      "lead": "Urbjmašīna skapī, telts no pagājušās vasaras. Ieliec tās Yoyo, nosaki cenu un dienas un paturi visu nomas maksu.",
+      "cta": "Izīrēt lietu",
+      "price": "Cena dienā",
+      "days": "Nomas dienas mēnesī",
+      "daysValue": "{count, plural, zero {# dienu} one {# diena} other {# dienas}}",
+      "month": "Mēnesī varētu nopelnīt",
+      "note": "Tu paturi visu nomas maksu; servisa maksu maksā nomnieks.",
+      "examples": "Piemēram",
+      "year": "Gadā",
+      "example": {
+        "drill": "Urbjmašīna",
+        "tent": "Telts",
+        "projector": "Projektors",
+        "bike": "Velosipēds",
+        "camera": "Kamera"
+      }
+    },
+    "close": {
+      "title": "Tas vienmēr atgriežas.",
+      "rent": "Atrast lietu",
+      "lend": "Izīrēt lietu",
+      "backUp": "Atpakaļ augšā"
+    }
   }
 }

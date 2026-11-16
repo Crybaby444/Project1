@@ -71,9 +71,9 @@ test.describe('reduced motion', () => {
   });
 });
 
-test('the home always shows the light palette and offers no theme switch (owner, 2026-11-14)', async ({ page, context, baseURL }) => {
+test('What is Yoyo always shows the light palette and offers no theme switch (owner, 2026-11-14)', async ({ page, context, baseURL }) => {
   await context.addCookies([{ name: 'yoyo-theme', value: 'dark', url: baseURL! }]);
-  await page.goto('/');
+  await page.goto('/what-is-yoyo');
   expect(await page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor)).toBe('rgb(244, 241, 230)');
   await expect(page.getByRole('button', { name: en.theme.toggle })).toBeHidden();
   await expect(page.getByRole('contentinfo').getByText(en.theme.dark, { exact: true })).toBeHidden();

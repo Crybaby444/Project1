@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { MyDeals } from '@/components/deals/MyDeals';
-import { DEAL_GROUPS, DEAL_ROLES, type DealGroup, type DealRole } from '@/lib/deals/status';
+import { DEAL_ROLES, type DealRole } from '@/lib/deals/status';
 import { RequireSession } from '@/lib/session/RequireSession';
 
 type Props = {
@@ -23,13 +23,11 @@ export default async function MyDealsPage({ params, searchParams }: Props) {
   setRequestLocale(locale);
   const query = await searchParams;
   const role = first(query['role']);
-  const group = first(query['group']);
   return (
     <main className="mx-auto w-full max-w-[1440px] px-4 py-10 sm:px-8 sm:py-14">
       <RequireSession>
         <MyDeals
           initialRole={(DEAL_ROLES as readonly string[]).includes(role ?? '') ? (role as DealRole) : 'renter'}
-          initialGroup={(DEAL_GROUPS as readonly string[]).includes(group ?? '') ? (group as DealGroup) : 'open'}
         />
       </RequireSession>
     </main>

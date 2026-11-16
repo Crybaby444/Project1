@@ -97,7 +97,7 @@ test.describe('motion on', () => {
 
   test('the hero letters rise in, and the auth card and its title animate in', async ({ page }) => {
     const errors = watchErrors(page);
-    await page.goto('/');
+    await page.goto('/what-is-yoyo');
     await expect(page.getByRole('heading', { level: 1, name: 'Yoyo' })).toBeVisible();
     expect(
       await page
@@ -116,7 +116,7 @@ test.describe('motion on', () => {
     // The WebGL stage skips itself under navigator.webdriver (CI has no GPU); its motion is checked by eye.
     const errors = watchErrors(page);
     await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto('/');
+    await page.goto('/what-is-yoyo');
     for (const scene of ['hero', 'night', 'what', 'facts', 'finale']) {
       await expect(page.locator(`[data-home="${scene}"]`)).toBeVisible();
     }
@@ -219,7 +219,7 @@ test.describe('reduced motion', () => {
 
   test('the home is still: not staged, every word of the statement fully there', async ({ page }) => {
     const errors = watchErrors(page);
-    await page.goto('/');
+    await page.goto('/what-is-yoyo');
     expect(await page.evaluate(() => document.documentElement.hasAttribute('data-staged'))).toBe(false);
     const words = await page
       .locator('[data-home="what"] [data-word]')
@@ -231,7 +231,7 @@ test.describe('reduced motion', () => {
 
   test('home and sign-in render with the letters already in place', async ({ page }) => {
     const errors = watchErrors(page);
-    await page.goto('/');
+    await page.goto('/what-is-yoyo');
     await expect(page.getByRole('heading', { level: 1, name: 'Yoyo' })).toBeVisible();
     expect(
       await page

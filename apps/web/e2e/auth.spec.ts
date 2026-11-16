@@ -108,7 +108,7 @@ test.describe('email confirmation', () => {
     await page.goto(link);
     await expect(page.getByRole('heading', { name: en.auth.verify.done.title })).toBeVisible();
     await page.getByRole('link', { name: en.auth.verify.continue }).click();
-    await expect(page.getByRole('heading', { level: 1, name: 'Yoyo' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: en.market.hero.title })).toBeVisible();
     await expect(page.getByText(en.banner.verifyEmail.title)).toHaveCount(0);
 
     await page.goto(link);

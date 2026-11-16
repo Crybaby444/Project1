@@ -40,7 +40,7 @@ for (const { locale, prefix, m } of LOCALES) {
 
       test('public pages and signed-out auth screens fit', async ({ page }) => {
         await page.goto(`${prefix}/`);
-        await fits(page, 'home', 'Yoyo');
+        await fits(page, 'home', m.market.hero.title);
 
         await page.goto(`${prefix}/no-such-page`);
         await fits(page, 'not found', m.notFound.title);
@@ -142,7 +142,7 @@ for (const { locale, prefix, m } of LOCALES) {
         await page.getByLabel(m.auth.fields.newPassword, { exact: true }).fill('a brand new passphrase');
         await page.getByLabel(m.auth.fields.repeatPassword).fill('a brand new passphrase');
         await page.getByRole('button', { name: m.auth.reset.submit }).click();
-        await fits(page, 'home after the reset', 'Yoyo');
+        await fits(page, 'home after the reset', m.market.hero.title);
 
         await page.goto(resetLink);
         await page.getByLabel(m.auth.fields.newPassword, { exact: true }).fill('yet another passphrase');
