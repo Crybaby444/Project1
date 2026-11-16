@@ -76,10 +76,10 @@ export default async function HomePage({ params }: Params) {
 
       <section aria-labelledby="home-title" className="mx-auto flex w-full max-w-[1440px] flex-col gap-7 px-4 pt-9 pb-4 sm:px-8 sm:pt-12">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:items-end lg:gap-12">
-          <h1 id="home-title" className="font-display text-[clamp(3rem,8.4vw,6rem)] leading-[0.84] font-black text-balance uppercase">
+          <h1 id="home-title" className="font-display text-display-xl leading-[0.84] font-black text-balance uppercase">
             {t('hero.title')}
           </h1>
-          <p className="text-ink/80 max-w-[44ch] text-[18px] leading-relaxed lg:pb-2">{t('hero.lead')}</p>
+          <p className="text-ink/80 max-w-[44ch] text-lg leading-relaxed lg:pb-2">{t('hero.lead')}</p>
         </div>
         <HomeSearch districts={districts} today={today} />
         <TrustRow />
@@ -89,10 +89,10 @@ export default async function HomePage({ params }: Params) {
       {items.length > 0 && (
         <section aria-labelledby="home-fresh" className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-16 sm:px-8 sm:py-20">
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <h2 id="home-fresh" className="font-display text-[clamp(2.4rem,5vw,4.4rem)] leading-[0.88] font-black uppercase">
+            <h2 id="home-fresh" className="font-display text-display-l leading-[0.88] font-black uppercase">
               {t('fresh.title')}
             </h2>
-            <Link href="/search?sort=new" className="text-[15px] font-bold underline decoration-1 underline-offset-4">
+            <Link href="/search?sort=new" className="text-base font-bold underline decoration-1 underline-offset-4">
               {t('fresh.all')}
             </Link>
           </div>
@@ -113,9 +113,9 @@ export default async function HomePage({ params }: Params) {
                     <span className="bg-canvas h-[3px] w-6 rounded-full" />
                   </span>
                   <span className="flex flex-col gap-2">
-                    <span className="font-display text-[clamp(1.8rem,3vw,2.8rem)] leading-[0.9] font-black uppercase">{t('fresh.spot.title')}</span>
-                    <span className="text-ink/75 max-w-[36ch] text-[15px] leading-relaxed">{t('fresh.spot.body')}</span>
-                    <span className="mt-2 inline-flex items-center gap-2 text-[15px] font-bold underline decoration-1 underline-offset-4">{t('fresh.spot.cta')}</span>
+                    <span className="font-display text-display-s leading-[0.9] font-black uppercase">{t('fresh.spot.title')}</span>
+                    <span className="text-ink/75 max-w-[36ch] text-base leading-relaxed">{t('fresh.spot.body')}</span>
+                    <span className="mt-2 inline-flex items-center gap-2 text-base font-bold underline decoration-1 underline-offset-4">{t('fresh.spot.cta')}</span>
                   </span>
                 </Link>
               </li>

@@ -48,13 +48,13 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
           <Heading
             className={
               heading === 'h1'
-                ? 'font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase [overflow-wrap:anywhere]'
+                ? 'font-display text-display-l leading-[0.95] font-black uppercase [overflow-wrap:anywhere]'
                 : 'text-xl leading-tight font-bold [overflow-wrap:anywhere]'
             }
           >
             {owner.name}
           </Heading>
-          {owner.username && <p className="text-[15px] font-bold [overflow-wrap:anywhere]" data-username="">@{owner.username}</p>}
+          {owner.username && <p className="text-base font-bold [overflow-wrap:anywhere]" data-username="">@{owner.username}</p>}
           <p className="text-sm">{owner.city ? t('sinceIn', { since, city: owner.city }) : t('since', { since })}</p>
         </div>
       </div>
@@ -83,7 +83,7 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
         profile ? null : <p className="text-sm">{t('noReviews')}</p>
       ) : (
         <p className="m-0 flex items-center gap-2.5 text-sm" data-owner-rating="">
-          <span className="font-display text-[1.6rem] leading-none font-black tabular-nums" aria-hidden="true">
+          <span className="font-display text-3xl leading-none font-black tabular-nums" aria-hidden="true">
             {formatScore(owner.rating, locale, true)}
           </span>
           <Stars value={owner.rating} />

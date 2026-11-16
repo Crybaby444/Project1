@@ -102,14 +102,14 @@ export default async function StyleguidePage({ params }: { params: Promise<{ loc
             </div>
             <div>
               <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('heading')} · 64 / 30 / 24</p>
-              <p className="text-[clamp(2.5rem,8vw,4rem)] leading-none font-bold">{t('headingSample')}</p>
-              <p className="mt-2 text-[30px] leading-tight font-bold">{t('headingSample')}</p>
+              <p className="text-display-l leading-none font-bold">{t('headingSample')}</p>
+              <p className="mt-2 text-3xl leading-tight font-bold">{t('headingSample')}</p>
               <p className="mt-1 text-2xl leading-tight font-bold">{t('headingSample')}</p>
             </div>
             <div>
               <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('body')} · 16 / 15</p>
               <p className="max-w-[60ch] text-base leading-relaxed">{t('cardStaticBody')}</p>
-              <p className="max-w-[60ch] text-[15px] leading-relaxed">{t('cardInteractiveBody')}</p>
+              <p className="max-w-[60ch] text-base leading-relaxed">{t('cardInteractiveBody')}</p>
             </div>
             <div>
               <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('caption')} · 12</p>

@@ -16,7 +16,7 @@ export function PriceSummary({ quote, title }: { quote: QuoteView | null; title?
 
   return (
     <section aria-labelledby="price-summary" className="flex flex-col gap-3" data-price-summary="">
-      <h3 id="price-summary" className="text-[13px] font-bold tracking-[0.03em] uppercase">
+      <h3 id="price-summary" className="text-sm font-bold tracking-[0.03em] uppercase">
         {title ?? t('title')}
       </h3>
       {quote === null ? (
@@ -25,7 +25,7 @@ export function PriceSummary({ quote, title }: { quote: QuoteView | null; title?
         </p>
       ) : (
         <div aria-live="polite" className="flex min-h-44 flex-col gap-2">
-          <dl className="m-0 flex flex-col gap-2 text-[15px]">
+          <dl className="m-0 flex flex-col gap-2 text-base">
             <div className="flex flex-wrap items-baseline justify-between gap-x-3">
               <dt>
                 {quote.priceSource === 'AGREED'
@@ -55,7 +55,7 @@ export function PriceSummary({ quote, title }: { quote: QuoteView | null; title?
             )}
             <div className="border-ink mt-1 flex flex-wrap items-baseline justify-between gap-x-3 border-t pt-3">
               <dt className="font-bold">{t('total')}</dt>
-              <dd className="font-display text-[2.2rem] leading-none font-black tabular-nums" data-total="">
+              <dd className="font-display text-4xl leading-none font-black tabular-nums" data-total="">
                 {money(quote.totalCents)}
               </dd>
             </div>

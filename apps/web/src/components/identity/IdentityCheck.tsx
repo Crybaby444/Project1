@@ -35,7 +35,7 @@ function PhotoTile({ label, hint, file, onFile, capture, error }: { label: strin
               <path d="M4 8h3l2-3h6l2 3h3v11H4z" />
               <circle cx="12" cy="13" r="3.5" />
             </svg>
-            <span className="text-[15px] font-bold">{label}</span>
+            <span className="text-base font-bold">{label}</span>
           </span>
         )}
         <input
@@ -50,7 +50,7 @@ function PhotoTile({ label, hint, file, onFile, capture, error }: { label: strin
         />
         {file && <span className="sr-only">{label}</span>}
       </label>
-      <p id={`${id}-hint`} className={`text-[13.5px] leading-snug ${error ? 'text-[var(--danger)]' : 'text-ink/70'}`}>
+      <p id={`${id}-hint`} className={`text-sm leading-snug ${error ? 'text-[var(--danger)]' : 'text-ink/70'}`}>
         {error ?? hint}
       </p>
     </div>
@@ -122,7 +122,7 @@ export function IdentityCheck() {
           {t('rejected', { reason })}
         </p>
       )}
-      <ul className="m-0 grid list-none gap-2 p-0 text-[15px] leading-relaxed">
+      <ul className="m-0 grid list-none gap-2 p-0 text-base leading-relaxed">
         {(['why', 'who', 'erase'] as const).map((k) => (
           <li key={k} className="flex gap-3">
             <span aria-hidden="true" className="bg-ink mt-[0.6em] size-1.5 shrink-0 rounded-full" />
@@ -141,11 +141,11 @@ export function IdentityCheck() {
         <PhotoTile label={t('document.label')} hint={t('document.hint')} file={document} onFile={setDocument} capture="environment" error={missing.document} />
         <PhotoTile label={t('selfie.label')} hint={t('selfie.hint')} file={selfie} onFile={setSelfie} capture="user" error={missing.selfie} />
       </div>
-      <label className="flex items-start gap-3 text-[15px] leading-relaxed">
+      <label className="flex items-start gap-3 text-base leading-relaxed">
         <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} aria-invalid={missing.consent ? true : undefined} className="accent-ink mt-1 size-5 shrink-0" />
         <span>
           {t('consent')}
-          {missing.consent && <span className="mt-1 block text-[13.5px] text-[var(--danger)]">{missing.consent}</span>}
+          {missing.consent && <span className="mt-1 block text-sm text-[var(--danger)]">{missing.consent}</span>}
         </span>
       </label>
       {failure && (

@@ -47,7 +47,7 @@ export function DealCover({ booking, size }: { booking: Pick<BookingView, 'id' |
 function Panel({ title, tone = '', children }: { title: string; tone?: string; children: React.ReactNode }) {
   return (
     <section className={`border-ink/15 flex flex-col gap-2 border-t pt-5 ${tone}`}>
-      <h2 className="text-[13px] font-bold tracking-[0.03em] uppercase">{title}</h2>
+      <h2 className="text-sm font-bold tracking-[0.03em] uppercase">{title}</h2>
       {children}
     </section>
   );
@@ -113,7 +113,7 @@ export function DealView({ id }: { id: string }) {
     return missing ? (
       <section role="alert" className="flex flex-col items-center gap-4 px-6 py-14 text-center">
         <Mark size={80} string={false} className="animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
-        <h1 className="font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{t('notFound')}</h1>
+        <h1 className="font-display text-display-l leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{t('notFound')}</h1>
         <p className="max-w-[46ch]">{t('notFoundBody')}</p>
         <Button href="/bookings">{t('back')}</Button>
       </section>
@@ -155,12 +155,12 @@ export function DealView({ id }: { id: string }) {
           <h1 style={displayFit(title, { max: '3rem' })} className="font-display text-display-fit leading-[0.9] font-black uppercase [overflow-wrap:anywhere]">
             {title}
           </h1>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[15px]">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-base">
             <DealStatusBadge status={booking.status} />
             {!closed && (
               <span
                 data-turn={myTurn ? 'mine' : 'theirs'}
-                className={`rounded-pill inline-flex min-h-7 items-center border px-3 text-[13px] font-bold ${myTurn ? 'bg-ink text-canvas border-ink' : 'border-ink/40'}`}
+                className={`rounded-pill inline-flex min-h-7 items-center border px-3 text-sm font-bold ${myTurn ? 'bg-ink text-canvas border-ink' : 'border-ink/40'}`}
               >
                 {myTurn ? t('yourTurn') : t('theirTurn')}
               </span>
@@ -200,7 +200,7 @@ export function DealView({ id }: { id: string }) {
           )}
           {booking.dispute && (
             <section className="flex flex-col gap-2 border-t-2 border-[var(--danger)] pt-5" data-dispute="">
-              <h2 className="text-[13px] font-bold tracking-[0.03em] uppercase">
+              <h2 className="text-sm font-bold tracking-[0.03em] uppercase">
                 {t('dispute.title')} · {t(`dispute.reason.${booking.dispute.reason}`)}
               </h2>
               {booking.dispute.note && <p className="[overflow-wrap:anywhere] whitespace-pre-line">{booking.dispute.note}</p>}

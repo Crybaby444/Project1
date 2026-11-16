@@ -71,7 +71,7 @@ function Uploader({
         type="button"
         onClick={() => input.current?.click()}
         disabled={progress !== null}
-        className="rounded-media ease-yoyo border-ink/15 hover:bg-mist grid aspect-square w-24 place-items-center border border-dashed text-center text-[12px] font-bold transition-[transform,background-color] duration-150 hover:-translate-y-0.5 active:scale-[0.96] disabled:opacity-70"
+        className="rounded-media ease-yoyo border-ink/15 hover:bg-mist grid aspect-square w-24 place-items-center border border-dashed text-center text-xs font-bold transition-[transform,background-color] duration-150 hover:-translate-y-0.5 active:scale-[0.96] disabled:opacity-70"
       >
         {progress !== null ? (
           <span role="status" className="tabular-nums">
@@ -121,7 +121,7 @@ export function DamagePhotos({
   const [photos, setPhotos] = useState<BookingPhoto[]>([]);
   return (
     <fieldset className="flex flex-col gap-2">
-      <legend className="mb-1 text-[13px] font-bold tracking-[0.03em] uppercase">{t('damage.photos')}</legend>
+      <legend className="mb-1 text-sm font-bold tracking-[0.03em] uppercase">{t('damage.photos')}</legend>
       <div className="flex flex-wrap gap-3">
         {photos.map((photo, index) => (
           <Thumb key={photo.id} photo={photo} n={index + 1} kindLabel={t('photos.DAMAGE')} />
@@ -164,14 +164,14 @@ export function DealPhotos({ booking }: { booking: BookingView }) {
   return (
     <section aria-labelledby="deal-photos" className="border-ink/15 flex flex-col gap-4 border-t pt-6">
       <div className="flex flex-col gap-1">
-        <h2 id="deal-photos" className="font-display text-[2rem] leading-[0.95] font-black uppercase">
+        <h2 id="deal-photos" className="font-display text-4xl leading-[0.95] font-black uppercase">
           {t('title')}
         </h2>
         {kinds.length > 0 && <p className="text-sm">{t('hint')}</p>}
       </div>
       {groups.map((group) => (
         <div key={group.kind} className="flex flex-col gap-2">
-          <h3 className="text-[13px] font-bold tracking-[0.03em] uppercase">{t(group.kind)}</h3>
+          <h3 className="text-sm font-bold tracking-[0.03em] uppercase">{t(group.kind)}</h3>
           <div className="flex flex-wrap gap-3">
             {group.items.map((photo, index) => (
               <Thumb key={photo.id} photo={photo} n={index + 1} kindLabel={t(group.kind)} />

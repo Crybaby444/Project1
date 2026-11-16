@@ -44,10 +44,10 @@ function Signature({ who, at, timeZone, typed, waiting }: { who: string; at: str
         )}
       </span>
       <p className="flex flex-col">
-        <span className="text-[13px] font-bold tracking-[0.03em] uppercase">{who}</span>
+        <span className="text-sm font-bold tracking-[0.03em] uppercase">{who}</span>
         <span className="text-sm">{at ? t('signed', { when: formatMoment(at, locale, timeZone) }) : (waiting ?? t('notSigned'))}</span>
         {typed && (
-          <span className="text-ink/70 text-[13px]">
+          <span className="text-ink/70 text-sm">
             {t('typed', { name: typed.name })}
             {typed.simulated && ` · ${t('simulated')}`}
           </span>
@@ -90,7 +90,7 @@ export function ContractCard({ booking }: { booking: BookingView }) {
   return (
     <section aria-labelledby="deal-contract" className="border-ink/15 flex flex-col gap-4 border-t pt-6" data-contract="">
       <div className="flex flex-col gap-1">
-        <h2 id="deal-contract" className="font-display text-[2rem] leading-[0.95] font-black uppercase">
+        <h2 id="deal-contract" className="font-display text-4xl leading-[0.95] font-black uppercase">
           {t('title')}
         </h2>
         <p className="text-sm">{booking.hasContract ? t('body') : t('notYet')}</p>
@@ -110,7 +110,7 @@ export function ContractCard({ booking }: { booking: BookingView }) {
           </div>
           <div className="flex flex-wrap items-end gap-3">
             <div className="flex flex-col gap-1.5">
-              <label htmlFor={selectId} className="text-[13px] font-bold tracking-[0.03em] uppercase">
+              <label htmlFor={selectId} className="text-sm font-bold tracking-[0.03em] uppercase">
                 {t('language')}
               </label>
               <Select

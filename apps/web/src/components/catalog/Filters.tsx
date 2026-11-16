@@ -74,7 +74,7 @@ function FilterFields({ params, districts, today }: Omit<FiltersProps, 'total'>)
   return (
     <div className="flex flex-col gap-6">
       <fieldset className="flex flex-col gap-3" aria-describedby={priceError ? `${ids.price}-error` : undefined}>
-        <legend className="mb-3 text-[13px] font-bold tracking-[0.03em] uppercase">{t('price')}</legend>
+        <legend className="mb-3 text-sm font-bold tracking-[0.03em] uppercase">{t('price')}</legend>
         <div className="grid grid-cols-2 gap-3">
           {(
             [
@@ -109,7 +109,7 @@ function FilterFields({ params, districts, today }: Omit<FiltersProps, 'total'>)
       </fieldset>
 
       <fieldset className="flex flex-col gap-3">
-        <legend className="mb-1 text-[13px] font-bold tracking-[0.03em] uppercase">{t('dates')}</legend>
+        <legend className="mb-1 text-sm font-bold tracking-[0.03em] uppercase">{t('dates')}</legend>
         <button
           type="button"
           aria-expanded={datesOpen}
