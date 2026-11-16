@@ -19,13 +19,15 @@ for (const { locale, prefix, m } of LANGUAGES) {
       expect(response?.status()).toBe(200);
       await expect(page).toHaveURL(new RegExp(`${prefix}/what-is-yoyo$`));
       await expect(page.locator('html')).toHaveAttribute('lang', locale);
-      await expect(page.getByRole('heading', { level: 2, name: m.howItWorks.title })).toBeAttached();
-      for (const heading of [m.howItWorks.renter.heading, m.howItWorks.owner.heading, m.howItWorks.deposit.heading, m.howItWorks.cancel.heading, m.howItWorks.reviews.heading]) {
+      await expect(page.getByRole('heading', { level: 2, name: m.howItWorks.rulesTitle })).toBeAttached();
+      // The steps of both sides are in the Two sides section; the rules each once in the rules section.
+      await expect(page.locator('[data-home="sides"]').getByRole('heading', { level: 3, name: m.howItWorks.renter.steps.request.title })).toBeAttached();
+      for (const heading of [m.howItWorks.deposit.heading, m.howItWorks.cancel.heading, m.howItWorks.reviews.heading]) {
         await expect(page.locator('[data-home="rules"]').getByRole('heading', { level: 3, name: heading, exact: true })).toBeAttached();
       }
       // The facts come from one place and are filled in, never left as {placeholders}.
-      await expect(page.locator('[data-home="rules"]')).not.toContainText('{');
-      await expect(page.locator('[data-home="rules"]')).toContainText('10%');
+      await expect(page.locator('main')).not.toContainText('{');
+      await expect(page.locator('[data-home="sides"]')).toContainText('10%');
     });
   });
 
