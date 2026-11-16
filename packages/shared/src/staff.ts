@@ -10,6 +10,7 @@ export const ADMIN_SECTIONS = [
   'seo',
   'content',
   'moderation',
+  'identity',
   'deals',
   'reports',
   'categories',
@@ -27,8 +28,8 @@ export type AdminSection = (typeof ADMIN_SECTIONS)[number];
 /** The sections each staff role may open; the API checks the same table. */
 export const STAFF_PERMISSIONS: Record<StaffRole, readonly AdminSection[]> = {
   OWNER: ADMIN_SECTIONS,
-  MODERATOR: ['overview', 'security', 'moderation', 'reports', 'categories', 'users'],
-  SUPPORT: ['overview', 'security', 'users', 'deals', 'reports'],
+  MODERATOR: ['overview', 'security', 'moderation', 'identity', 'reports', 'categories', 'users'],
+  SUPPORT: ['overview', 'security', 'identity', 'users', 'deals', 'reports'],
   FINANCE: ['overview', 'security', 'deals', 'money', 'system'],
   EDITOR: ['overview', 'security', 'traffic', 'seo', 'content', 'categories'],
 };

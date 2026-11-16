@@ -18,7 +18,8 @@
       "system": "Sistēma",
       "categories": "Kategorijas",
       "staff": "Komanda",
-      "security": "Drošība"
+      "security": "Drošība",
+      "identity": "Identitātes pārbaudes"
     },
     "common": {
       "loadFailed": "Neizdevās ielādēt.",
@@ -548,6 +549,21 @@
         "HAS_LISTINGS": "Izvēlieties, kur pārvietot sludinājumus",
         "TOO_DEEP": "Katalogā ir divi līmeņi"
       }
+    },
+    "identityCheck": {
+      "intro": "Salīdziniet seju un vārdu dokumentā ar pašbildi un kontu. Katra atvērtā bilde tiek reģistrēta; abas tiek dzēstas, kad pieņemat lēmumu.",
+      "empty": "Neviena pārbaude negaida.",
+      "born": "dzimis {date}",
+      "document": "{name}: dokuments",
+      "selfie": "{name}: pašbilde",
+      "compare": "Tā pati persona, īsts dokuments, vārds sakrīt ar kontu?",
+      "approve": "Apstiprināt",
+      "reject": "Noraidīt",
+      "reason": "Iemesls (persona to redzēs)",
+      "cancel": "Atcelt",
+      "approved": "Identitāte apstiprināta",
+      "rejected": "Pārbaude noraidīta",
+      "failed": "Lēmums netika saglabāts. Mēģiniet vēlreiz."
     }
   }
 }

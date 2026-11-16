@@ -1,6 +1,7 @@
 import { HOME_COUNTRY, timeZoneOf } from '@yoyo/shared';
 import { isDeepStrictEqual } from 'node:util';
-import { assertProfileComplete } from '../auth/identity';
+import { assertIdentityVerified, assertProfileComplete } from '../auth/identity';
+import { ENV, type Env } from '../config/env';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { compareDates, diffDays, DomainError, localDate, localDateIn, period, type LocalDate, type Period } from '@yoyo/domain';
 import {
@@ -108,6 +109,7 @@ export class ListingsService {
     private readonly categories: CategoriesService,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider,
+    @Inject(ENV) private readonly env: Pick<Env, 'IDENTITY_REQUIRED'>,
   ) {}
 
   /** Where each photo size is served. */
@@ -220,6 +222,7 @@ export class ListingsService {
   async submit(id: string, ownerId: string): Promise<OwnerListing> {
     const listing = await this.owned(id, ownerId);
     await assertProfileComplete(this.prisma, ownerId);
+    await assertIdentityVerified(this.prisma, ownerId, this.env.IDENTITY_REQUIRED);
     const status = nextStatus(listing.status, 'submit');
     if (status === null || status === 'REMOVED') throw invalidStatus(listing.status);
     await this.assertComplete(listing, listing.photos.length);

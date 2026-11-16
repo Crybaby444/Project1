@@ -39,6 +39,14 @@ export async function generateUsername(db: Db, from: string): Promise<string> {
 }
 
 /** 409 PROFILE_INCOMPLETE until the person has given a birth date (and has a username): renting and lending need them. */
+/** Lending and renting need a checked identity (owner, 2026-11-16); staff never lend or rent. */
+export async function assertIdentityVerified(db: Db, userId: string, required: boolean): Promise<void> {
+  if (!required) return;
+  const user = await db.user.findUnique({ where: { id: userId }, select: { identityVerifiedAt: true, role: true } });
+  if (!user || user.role === 'ADMIN') return;
+  if (user.identityVerifiedAt === null) throw new AppError('IDENTITY_REQUIRED', 409, 'Confirm who you are first');
+}
+
 export async function assertProfileComplete(db: Db, userId: string): Promise<void> {
   const user = await db.user.findUnique({ where: { id: userId }, select: { birthDate: true, username: true, role: true } });
   if (!user || user.role === 'ADMIN') return;

@@ -14,6 +14,7 @@ export const ERROR_CODES = [
   'UNDERAGE',
   /** Renting and lending need the birth date (and a username): add them in Settings → Profile. */
   'PROFILE_INCOMPLETE',
+  'IDENTITY_REQUIRED',
   'AUTH_UNAUTHENTICATED',
   'AUTH_FORBIDDEN',
   'AUTH_BLOCKED',

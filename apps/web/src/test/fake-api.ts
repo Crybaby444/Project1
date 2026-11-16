@@ -55,6 +55,7 @@ export function testUser(overrides: Partial<PublicUser> = {}): PublicUser {
     name: 'Anna Bērziņa',
     username: 'anna.b',
     birthDate: '1990-05-01',
+    identityVerified: true,
     city: null,
     about: null,
     locale: 'en',

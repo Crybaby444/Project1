@@ -16,7 +16,7 @@ test.beforeEach(async ({ context }) => {
 });
 
 test.describe('sign-up', () => {
-  test('creates the account, goes on to next and shows the confirmation banner', async ({ page }) => {
+  test('creates the account, offers the identity check, goes on to next when skipped and shows the confirmation banner', async ({ page }) => {
     const email = uniqueEmail();
     await page.goto('/register?next=/styleguide');
 
@@ -30,6 +30,10 @@ test.describe('sign-up', () => {
     await page.getByLabel(en.auth.fields.password, { exact: true }).fill(PASSWORD);
     await page.getByRole('button', { name: en.auth.register.submit }).click();
 
+    // Then: confirm who you are, or skip it for now (owner, 2026-11-16).
+    await expect(page).toHaveURL(/\/verify-identity\?next=%2Fstyleguide$/);
+    await expect(page.getByRole('heading', { level: 1, name: en.identityCheck.title })).toBeVisible();
+    await page.getByRole('link', { name: en.identityCheck.skip }).click();
     await expect(page).toHaveURL(/\/styleguide$/);
     await expect(page.getByText(en.banner.verifyEmail.title)).toBeVisible();
     await expect(page.getByRole('button', { name: new RegExp(`^${en.header.account}`) })).toHaveText(/, AB$/);

@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { ENV, type Env } from '../config/env';
 import { Inject, Injectable } from '@nestjs/common';
 import {
   availableActions,
@@ -49,7 +50,7 @@ import { bookingNotFound, staleBooking } from './booking-errors';
 import { assertDamagePhotos } from './booking-photos.service';
 import { BookingRulesService } from './booking-rules.service';
 import { writeDealLine } from '../chat/deal-lines';
-import { assertProfileComplete } from '../auth/identity';
+import { assertIdentityVerified, assertProfileComplete } from '../auth/identity';
 import { DealNotifier } from './deal-notifier';
 import { AnalyticsService } from '../analytics/analytics.service';
 import { BOOKING_INCLUDE, serializeBooking, type BookingWithParties } from './booking.serializer';
@@ -165,6 +166,7 @@ export class BookingsService {
     @Inject(PAYMENT_PROVIDER) private readonly payments: PaymentProvider,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider,
+    @Inject(ENV) private readonly env: Pick<Env, 'IDENTITY_REQUIRED'>,
   ) {}
 
   readonly urlFor: UrlFor = (key, variant) => this.storage.url(key, variant);
@@ -225,6 +227,7 @@ export class BookingsService {
   /** Step 1: the renter asks for days, optionally at an accepted offer's price. */
   async create(renter: PublicUser, input: BookingRequest): Promise<BookingView> {
     await assertProfileComplete(this.prisma, renter.id);
+    await assertIdentityVerified(this.prisma, renter.id, this.env.IDENTITY_REQUIRED);
     const now = this.clock.now();
     const settings = await this.rules.settings();
     const { id, after } = await this.prisma.$transaction(async (tx) => {

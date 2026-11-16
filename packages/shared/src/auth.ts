@@ -121,6 +121,8 @@ export const PublicUserSchema = z.object({
   /** The confirmed phone number (E.164), or null. */
   phone: z.string().nullable(),
   phoneVerified: z.boolean(),
+  /** A moderator has confirmed who this is (identity check); needed to lend, rent and sign. */
+  identityVerified: z.boolean(),
   createdAt: z.iso.datetime(),
 });
 

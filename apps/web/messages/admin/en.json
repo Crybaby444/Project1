@@ -18,7 +18,8 @@
       "system": "System",
       "categories": "Categories",
       "staff": "Staff",
-      "security": "Security"
+      "security": "Security",
+      "identity": "Identity checks"
     },
     "common": {
       "loadFailed": "This did not load.",
@@ -548,6 +549,21 @@
         "HAS_LISTINGS": "Choose where its listings go",
         "TOO_DEEP": "The catalog has two levels"
       }
+    },
+    "identityCheck": {
+      "intro": "Compare the face and the name on the document with the selfie and the account. Each photo you open is logged; both are erased when you decide.",
+      "empty": "No checks are waiting.",
+      "born": "born {date}",
+      "document": "{name}: document",
+      "selfie": "{name}: selfie",
+      "compare": "Same person, a real document, the name matches the account?",
+      "approve": "Confirm",
+      "reject": "Refuse",
+      "reason": "Why (the person sees this)",
+      "cancel": "Cancel",
+      "approved": "Identity confirmed",
+      "rejected": "Check refused",
+      "failed": "The decision was not saved. Try again."
     }
   }
 }

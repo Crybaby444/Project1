@@ -20,6 +20,7 @@ import { LedgerModule } from './ledger/ledger.module';
 import { HealthController } from './health/health.controller';
 import { ListingsModule } from './listings/listings.module';
 import { MediaModule } from './media/media.module';
+import { IdentityModule } from './identity/identity.module';
 import { MeModule } from './me/me.module';
 import { ModerationModule } from './moderation/moderation.module';
 import { PaymentsModule } from './payments/payments.module';
@@ -63,6 +64,7 @@ class EnvModule {}
     AuditCoreModule,
     AuthModule,
     MeModule,
+    IdentityModule,
     AdminModule,
     CategoriesModule,
     ListingsModule,
