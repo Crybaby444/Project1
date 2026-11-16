@@ -89,13 +89,13 @@ describe('MyListings', () => {
     expect(within(drill).getByRole('link', { name: m.edit })).toHaveAttribute('href', '/listings/l1/edit');
   });
 
-  it('asks the API for deleted listings only when that filter is chosen', async () => {
+  it('asks the API for deleted listings only when they are opened at the foot', async () => {
     const user = userEvent.setup();
     const calls = renderMine({ 'GET /api/v1/me/listings': { status: 200, body: { items: [] } } });
-    await user.click(await screen.findByRole('button', { name: m.filter.ARCHIVED }));
+    expect(screen.queryByRole('button', { name: m.filter.ARCHIVED })).toBeNull(); // no row of filters
+    await user.click(await screen.findByRole('button', { name: m.deleted.show }));
     await waitFor(() => expect(calls.some((c) => c.query === 'status=ARCHIVED')).toBe(true));
-    expect(screen.getByRole('button', { name: m.filter.ARCHIVED })).toHaveAttribute('aria-pressed', 'true');
-    expect(await screen.findByText(m.emptyFilter)).toBeVisible();
+    expect(await screen.findByText(m.deleted.none)).toBeVisible();
   });
 
   it('hides a published listing from its "more" menu (hide and delete stay out of the main row)', async () => {

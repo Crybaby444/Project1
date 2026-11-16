@@ -696,7 +696,13 @@
       "next": "Next rental from {date}",
       "earned": "Earned {amount}"
     },
-    "more": "More actions for {title}"
+    "more": "More actions for {title}",
+    "deleted": {
+      "show": "Show deleted items",
+      "hide": "Hide deleted items",
+      "loading": "Loading…",
+      "none": "No deleted items."
+    }
   },
   "moderation": {
     "title": "Moderation",
