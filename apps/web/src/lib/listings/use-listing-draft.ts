@@ -4,6 +4,7 @@ import type { ApiClient } from '@yoyo/api-client';
 import type { CategoryNode, Locale, OwnerListing } from '@yoyo/shared';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ApiError, unwrap } from '@/lib/session/api-error';
+import { clearBackup, readBackup, writeBackup } from './draft-backup';
 import { checkListing, emptyValues, valuesFromListing, type ListingValues } from './listing-checks';
 
 export type SaveState = 'idle' | 'saving' | 'saved' | 'error' | 'invalid' | 'conflict' | 'readonly';
@@ -65,6 +66,8 @@ export type ListingDraft = {
   replace(listing: OwnerListing): void;
   /** Throws away local changes and loads the listing as stored (after a conflict). */
   reload(): Promise<void>;
+  /** Changes this browser kept from a visit that ended before they were sent, now put back and sending. */
+  restored: boolean;
 };
 
 /**
@@ -82,16 +85,19 @@ export function useListingDraft({
   locale = 'en',
 }: Options): ListingDraft {
   const [listing, setListing] = useState<OwnerListing | null>(initial);
-  const [values, setValues] = useState<ListingValues>(() =>
-    initial ? valuesFromListing(initial) : emptyValues(locale),
-  );
-  const [state, setState] = useState<SaveState>(initial?.status === 'ARCHIVED' ? 'readonly' : 'idle');
+  // Changes a previous visit typed but never sent (a crash, a closed tab, no connection) come back.
+  const [backup] = useState(() => (initial?.status === 'ARCHIVED' ? null : readBackup(initial?.id ?? null)));
+  const [values, setValues] = useState<ListingValues>(() => ({
+    ...(initial ? valuesFromListing(initial) : emptyValues(locale)),
+    ...backup,
+  }));
+  const [state, setState] = useState<SaveState>(initial?.status === 'ARCHIVED' ? 'readonly' : backup ? 'saving' : 'idle');
   const [serverErrors, setServerErrors] = useState<Record<string, string>>({});
 
   const live = useRef({
     values,
     listing,
-    dirty: new Set<Field>(),
+    dirty: new Set<Field>(backup ? (Object.keys(backup) as Field[]).map(fieldOf) : []),
     queue: Promise.resolve() as Promise<unknown>,
     saveQueued: null as Promise<void> | null,
     timer: undefined as ReturnType<typeof setTimeout> | undefined,
@@ -104,6 +110,19 @@ export function useListingDraft({
   useEffect(() => {
     callbacks.current = { category, onCreated };
   });
+
+  /** Mirrors what is still unsent to the browser's copy (or clears it when nothing is). */
+  const keepCopy = useCallback(() => {
+    const ref = live.current;
+    const id = ref.listing?.id ?? null;
+    const unsent: Partial<ListingValues> = {};
+    for (const f of ref.dirty) {
+      if (f === 'lat') Object.assign(unsent, { lat: ref.values.lat, lng: ref.values.lng });
+      else Object.assign(unsent, { [f]: ref.values[f] });
+    }
+    writeBackup(id, unsent);
+    if (id) clearBackup(null);
+  }, []);
 
   const showListing = useCallback((next: OwnerListing) => {
     live.current.listing = next;
@@ -148,7 +167,13 @@ export function useListingDraft({
               )
             ).listing
           : // A new draft always says its language: the page's, unless the author picked another.
-            (await unwrap(client.POST('/api/v1/listings', { body: { contentLocale: sent.contentLocale, ...body } as never }))).listing;
+            (
+              await unwrap(
+                client.POST('/api/v1/listings', {
+                  body: { contentLocale: sent.contentLocale, ...body } as never,
+                }),
+              )
+            ).listing;
         // What changed since sending stays dirty; the rest now shows what the API stored (cleaned text).
         const stored = valuesFromListing(saved);
         let next = ref.values;
@@ -166,6 +191,7 @@ export function useListingDraft({
         ref.retries = 0;
         setServerErrors({});
         setState(ref.dirty.size > 0 ? 'invalid' : 'saved');
+        keepCopy();
         if (!current) callbacks.current.onCreated?.(saved);
       } catch (error) {
         if (error instanceof ApiError && error.status === 409) {
@@ -187,7 +213,7 @@ export function useListingDraft({
         if (create) throw error;
       }
     },
-    [client, showListing],
+    [client, showListing, keepCopy],
   );
 
   const save = useCallback((): Promise<void> => {
@@ -213,6 +239,7 @@ export function useListingDraft({
       setValues(ref.values);
       const touched = Object.keys(patch).map((key) => fieldOf(key));
       touched.forEach((field) => ref.dirty.add(field));
+      keepCopy();
       setServerErrors((errors) => {
         const left = Object.entries(errors).filter(([key]) => !touched.includes(fieldOf(key)));
         return left.length === Object.keys(errors).length ? errors : Object.fromEntries(left);
@@ -222,7 +249,7 @@ export function useListingDraft({
       clearTimeout(ref.timer);
       ref.timer = setTimeout(() => void save(), delayMs);
     },
-    [delayMs, save],
+    [delayMs, save, keepCopy],
   );
 
   const flush = useCallback(async () => {
@@ -255,6 +282,7 @@ export function useListingDraft({
     const ref = live.current;
     clearTimeout(ref.timer);
     ref.dirty.clear();
+    clearBackup(fresh.id);
     ref.values = valuesFromListing(fresh);
     ref.stopped = fresh.status === 'ARCHIVED';
     setValues(ref.values);
@@ -262,6 +290,13 @@ export function useListingDraft({
     setServerErrors({});
     setState(ref.stopped ? 'readonly' : 'idle');
   }, [client, showListing]);
+
+  // Restored changes go out as soon as the builder is up.
+  useEffect(() => {
+    if (!backup) return;
+    const timer = setTimeout(() => void saveRef.current(), 0);
+    return () => clearTimeout(timer);
+  }, [backup]);
 
   // Leaving with changes not yet sent: send them when the tab is hidden, warn on closing.
   useEffect(() => {
@@ -285,7 +320,18 @@ export function useListingDraft({
   }, [flush]);
 
   return useMemo(
-    () => ({ listing, values, state, serverErrors, change, flush, withListing, replace, reload }),
-    [listing, values, state, serverErrors, change, flush, withListing, replace, reload],
+    () => ({
+      listing,
+      values,
+      state,
+      serverErrors,
+      change,
+      flush,
+      withListing,
+      replace,
+      reload,
+      restored: backup !== null,
+    }),
+    [listing, values, state, serverErrors, change, flush, withListing, replace, reload, backup],
   );
 }

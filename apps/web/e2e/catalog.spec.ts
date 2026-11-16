@@ -145,7 +145,9 @@ test('the heart saves an item at once, and Favourites lists it', async ({ page }
   // Reaching the heart scrolled the page down and the bar stepped away; on the way up it comes back.
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.getByRole('button', { name: /^Account menu/ }).click();
-  await page.getByRole('menuitem', { name: en.header.favorites }).click();
+  // Favourites live in My profile (owner, 2026-11-16).
+  await page.getByRole('menuitem', { name: en.mySpace.menu }).click();
+  await page.locator('[data-my-space]').getByRole('link', { name: en.mySpace.tabs.favorites }).click();
   await expect(page.getByRole('heading', { level: 1, name: en.favorites.title })).toBeVisible();
   await expect(page.getByRole('link', { name: drill.title })).toBeVisible();
 });

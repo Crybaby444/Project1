@@ -149,3 +149,32 @@ describe('useListingDraft', () => {
     expect(draft().values.title).toBe('');
   });
 });
+
+describe('useListingDraft: a copy in the browser', () => {
+  it('a change the browser lost before sending comes back on the next visit and is sent', async () => {
+    window.localStorage.clear();
+    // The first visit: a change, then the tab dies before the debounce (nothing sent).
+    const first = setup(ownerListing({ id: 'l-1', version: 3 }), { 'PATCH /api/v1/listings/l-1': () => new Promise(() => {}) });
+    act(() => first.draft().change({ title: 'Typed, never sent' }));
+    cleanup();
+
+    const second = setup(ownerListing({ id: 'l-1', version: 3, title: 'Old' }), echoListing(ownerListing({ id: 'l-1', version: 3 })));
+    expect(second.draft().values.title).toBe('Typed, never sent');
+    expect(second.draft().restored).toBe(true);
+    await waitFor(() => expect(second.patches()[0]?.body).toMatchObject({ title: 'Typed, never sent', version: 3 }));
+    await waitFor(() => expect(second.draft().state).toBe('saved'));
+    expect(window.localStorage.getItem('yoyo:draft:l-1')).toBeNull();
+  });
+
+  it('a new listing typed but never created comes back too', async () => {
+    window.localStorage.clear();
+    const created = ownerListing({ id: 'new-9', title: 'Kayak' });
+    const first = setup(null, { 'POST /api/v1/listings': () => new Promise(() => {}) });
+    act(() => first.draft().change({ title: 'Kayak' }));
+    cleanup();
+
+    const second = setup(null, { 'POST /api/v1/listings': { status: 201, body: { listing: created } }, ...echoListing(created) });
+    expect(second.draft().values.title).toBe('Kayak');
+    await waitFor(() => expect(second.calls.find((c) => c.method === 'POST')?.body).toMatchObject({ title: 'Kayak' }));
+  });
+});

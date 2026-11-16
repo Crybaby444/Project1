@@ -10,6 +10,12 @@ import { stubMatchMedia } from './match-media';
 beforeEach(() => {
   stubMatchMedia(false);
   installIntersectionObserver();
+  // The builder keeps unsent changes in the browser (lib/listings/draft-backup): each test starts clean.
+  try {
+    for (const key of Object.keys(window.localStorage)) if (key.startsWith('yoyo:draft:')) window.localStorage.removeItem(key);
+  } catch {
+    // no storage in this environment
+  }
 });
 
 afterEach(() => {

@@ -43,6 +43,7 @@ export function UserMenu({ user }: { user: PublicUser }) {
   const tc = useTranslations('chat');
   const unread = useUnreadCount().data ?? 0;
   const { signOut } = useSession();
+  const tm = useTranslations('mySpace');
   // An administrator's account is for the admin panel only (owner, 2026-11-15).
   const isAdmin = user.role === 'ADMIN';
   const router = useRouter();
@@ -125,11 +126,6 @@ export function UserMenu({ user }: { user: PublicUser }) {
         {/* The name says what the button is and still contains the visible initials (WCAG 2.5.3). */}
         <span className="sr-only">{t('account')}, </span>
         {initials(user.name)}
-        {unread > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 size-3 rounded-full border-2 border-[var(--canvas)] bg-[var(--ink)]">
-            <span className="sr-only">, {tc('unread', { count: unread })}</span>
-          </span>
-        )}
       </button>
 
       {open && (
@@ -153,6 +149,17 @@ export function UserMenu({ user }: { user: PublicUser }) {
               <>
                 <li role="none">
                   <Link
+                    href="/dashboard/lending"
+                    role="menuitem"
+                    tabIndex={-1}
+                    onClick={() => close({ refocus: false })}
+                    className={ITEM}
+                  >
+                    {tm('menu')}
+                  </Link>
+                </li>
+                <li role="none">
+                  <Link
                     href="/bookings"
                     role="menuitem"
                     tabIndex={-1}
@@ -170,23 +177,6 @@ export function UserMenu({ user }: { user: PublicUser }) {
                 </li>
                 <li role="none">
                   <Link
-                    href="/messages"
-                    role="menuitem"
-                    tabIndex={-1}
-                    onClick={() => close({ refocus: false })}
-                    className={ITEM}
-                  >
-                    <span>{tc('menu')}</span>
-                    {unread > 0 && (
-                      <span className="rounded-pill bg-ink text-canvas animate-pop-in inline-flex min-h-6 min-w-6 items-center justify-center px-2 font-sans text-[12px] tabular-nums">
-                        <span aria-hidden="true">{unread}</span>
-                        <span className="sr-only">{tc('unread', { count: unread })}</span>
-                      </span>
-                    )}
-                  </Link>
-                </li>
-                <li role="none">
-                  <Link
                     href="/wallet"
                     role="menuitem"
                     tabIndex={-1}
@@ -194,50 +184,6 @@ export function UserMenu({ user }: { user: PublicUser }) {
                     className={ITEM}
                   >
                     {td('wallet')}
-                  </Link>
-                </li>
-                <li role="none">
-                  <Link
-                    href="/dashboard/lending"
-                    role="menuitem"
-                    tabIndex={-1}
-                    onClick={() => close({ refocus: false })}
-                    className={ITEM}
-                  >
-                    {t('myListings')}
-                  </Link>
-                </li>
-                <li role="none">
-                  <Link
-                    href="/dashboard/favorites"
-                    role="menuitem"
-                    tabIndex={-1}
-                    onClick={() => close({ refocus: false })}
-                    className={ITEM}
-                  >
-                    {t('favorites')}
-                  </Link>
-                </li>
-                <li role="none">
-                  <Link
-                    href="/dashboard/following"
-                    role="menuitem"
-                    tabIndex={-1}
-                    onClick={() => close({ refocus: false })}
-                    className={ITEM}
-                  >
-                    {t('following')}
-                  </Link>
-                </li>
-                <li role="none">
-                  <Link
-                    href="/dashboard/shops"
-                    role="menuitem"
-                    tabIndex={-1}
-                    onClick={() => close({ refocus: false })}
-                    className={ITEM}
-                  >
-                    {t('shops')}
                   </Link>
                 </li>
               </>

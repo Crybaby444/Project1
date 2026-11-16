@@ -13,6 +13,7 @@ import { BUILDER_STEPS, type BuilderStep } from '@/lib/listings/listing-checks';
 import { useCategories } from '@/lib/listings/queries';
 import { useListingDraft } from '@/lib/listings/use-listing-draft';
 import { useApiClient } from '@/lib/session/SessionProvider';
+import { useRouter } from '@/i18n/navigation';
 import { BuilderProvider, useBuilder } from './BuilderContext';
 import { ConflictNotice } from './ConflictNotice';
 import { ListingPreview } from './ListingPreview';
@@ -126,7 +127,19 @@ function BuilderLayout({
   const t = useTranslations('builder');
   const errorText = useErrorText();
   const { draft, goTo } = useBuilder();
+  const router = useRouter();
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [leaving, setLeaving] = useState(false);
+  /** Keep it as a draft and go to My items (the draft is there under Drafts). */
+  async function saveAndLeave() {
+    setLeaving(true);
+    try {
+      await draft.flush();
+      router.push('/dashboard/lending?status=DRAFT');
+    } finally {
+      setLeaving(false);
+    }
+  }
   const index = BUILDER_STEPS.indexOf(step);
   const previous = BUILDER_STEPS[index - 1];
   const next = BUILDER_STEPS[index + 1];
@@ -143,8 +156,29 @@ function BuilderLayout({
           </h1>
           <p className="leading-relaxed">{t('intro')}</p>
         </div>
-        <SaveIndicator state={draft.state} />
+        <div className="flex flex-wrap items-center gap-3">
+          <SaveIndicator state={draft.state} />
+          {draft.state !== 'readonly' && (draft.listing === null || draft.listing.status === 'DRAFT') && (
+            <Button
+              variant="ghost"
+              onClick={() => void saveAndLeave()}
+              loading={leaving}
+              disabled={draft.listing === null && draft.state === 'idle'}
+            >
+              {t('saveDraft')}
+            </Button>
+          )}
+        </div>
       </header>
+      {draft.restored && (
+        <p
+          role="status"
+          className="border-ink/15 bg-surface rounded-media flex items-start gap-3 border p-4 text-[15px] font-semibold"
+        >
+          <span aria-hidden="true" className="bg-ink mt-1.5 size-2 flex-none rounded-full" />
+          {t('restored')}
+        </p>
+      )}
 
       <StatusBanner />
       {draft.state === 'conflict' && <ConflictNotice onReload={draft.reload} />}

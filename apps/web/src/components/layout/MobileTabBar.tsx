@@ -89,7 +89,7 @@ export function MobileTabBar({ roots, hidden }: { roots: MenuRoot[]; hidden: boo
             <path d="M4 5.5h16v10.5H9l-5 4z" />
           </svg>
         </Tab>
-        <Tab href={signedIn ? '/bookings' : '/login'} label={signedIn ? t('you') : th('signIn')} active={at('/bookings') || at('/settings') || at('/login')}>
+        <Tab href={signedIn ? '/dashboard/lending' : '/login'} label={signedIn ? t('you') : th('signIn')} active={at('/dashboard') || at('/bookings') || at('/wallet') || at('/settings') || at('/login')}>
           <svg viewBox="0 0 24 24" aria-hidden="true" className={icon}>
             <circle cx="12" cy="8.5" r="3.6" />
             <path d="M5 20c1.2-3.6 3.8-5.2 7-5.2s5.8 1.6 7 5.2" />
