@@ -140,6 +140,8 @@ for (const viewport of [
 }
 
 test('every link on the new pages leads somewhere', async ({ page, request }) => {
+  // Every page in three languages, and the header's catalog and the tab bar link every category.
+  test.setTimeout(120_000);
   const seen = new Set<string>();
   for (const prefix of PREFIXES) {
     for (const path of PAGES) {
