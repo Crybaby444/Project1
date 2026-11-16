@@ -40,6 +40,14 @@ const en: LegalDoc = {
               ['Sign-in with Google', 'Your Google account identifier and email address. We never see your Google password.'],
               ['Phone', 'When phone confirmation is available: your number and when it was confirmed.'],
               [
+                'Sign-up confirmations',
+                'That you confirmed being 18 or older and agreed to the processing of your data, with the time of each.',
+              ],
+              [
+                'Identity check',
+                'A photo of your passport, ID card or driving licence and a selfie, sent by you so that a moderator can confirm who you are. Stored encrypted, seen only by moderators (every look is recorded) and deleted as soon as the moderator decides. We then keep only the result, its date and, after a refusal, the moderator’s reason.',
+              ],
+              [
                 'Listings',
                 'Photos (with location and camera data removed), title, description, category, prices, deposit, rules, the district, and the exact point you set, which is never shown to anyone else.',
               ],
@@ -86,6 +94,10 @@ const en: LegalDoc = {
                 'Legal obligation, Article 6(1)(c)',
               ],
               ['Answering your messages', 'Contract or legitimate interest, depending on the question'],
+              [
+                'Confirming who you are before you lend, rent or sign a deal’s contract (the identity check)',
+                'Your consent, Article 6(1)(a), given with the tick when you send the photos. You may withdraw it before the decision by writing to us; the photos are then deleted.',
+              ],
             ],
           },
         },
@@ -99,7 +111,7 @@ const en: LegalDoc = {
       heading: '4. Do you have to give us data?',
       blocks: [
         {
-          p: 'To create an account we need your name, an email address and a password (or your Google sign-in); without them we cannot open an account. To list an item we need its photos, description, prices and place. Everything else, such as your city and the “about” text, is up to you.',
+          p: 'To create an account we need your name, a username, an email address and a password (or your Google sign-in), your confirmation that you are 18 or older and your consent to this processing; without them we cannot open an account. To lend or rent, a moderator must also confirm who you are from a document photo and a selfie; until then you can still look around. To list an item we need its photos, description, prices and place. Everything else, such as your city and the “about” text, is up to you.',
         },
       ],
     },
@@ -124,6 +136,14 @@ const en: LegalDoc = {
               ],
               ['Deals, contracts and payment records', 'As long as Latvian accounting and limitation rules require.'],
               ['Server logs', 'Kept by the hosting providers for a short time, usually days to a few weeks.'],
+              [
+                'Identity check photos',
+                'Until a moderator decides (approved or refused), then deleted at once.',
+              ],
+              [
+                'The result of the identity check',
+                'Until you delete your account.',
+              ],
               ['Backups', 'Our database provider keeps restore points for a short window of days; after that, deleted data is gone from them too.'],
             ],
           },
@@ -216,7 +236,7 @@ const en: LegalDoc = {
       heading: '11. Children',
       blocks: [
         {
-          p: 'Yoyo is for people aged 18 and over. We do not knowingly keep data about children; if you think a child has an account, tell us and we will delete it.',
+          p: 'Yoyo is for people aged 18 and over: everyone confirms it when signing up. We do not knowingly keep data about children; if you think a child has an account, tell us and we will delete it.',
         },
       ],
     },
@@ -275,6 +295,14 @@ const lv: LegalDoc = {
               ['Pieteikšanās ar Google', 'Jūsu Google konta identifikators un e-pasta adrese. Jūsu Google paroli mēs nekad neredzam.'],
               ['Tālrunis', 'Kad būs pieejama tālruņa apstiprināšana: jūsu numurs un apstiprināšanas laiks.'],
               [
+                'Apstiprinājumi reģistrējoties',
+                'Ka apstiprinājāt, ka jums ir 18 gadi vai vairāk, un piekritāt savu datu apstrādei, ar katra apstiprinājuma laiku.',
+              ],
+              [
+                'Identitātes pārbaude',
+                'Jūsu pases, ID kartes vai vadītāja apliecības foto un pašbilde, ko nosūtāt, lai moderators apstiprinātu jūsu identitāti. Tie tiek glabāti šifrēti, tos redz tikai moderatori (katra apskate tiek reģistrēta) un tie tiek dzēsti, tiklīdz moderators pieņem lēmumu. Pēc tam glabājam tikai rezultātu, tā datumu un, ja pārbaude noraidīta, moderatora norādīto iemeslu.',
+              ],
+              [
                 'Sludinājumi',
                 'Foto (bez atrašanās vietas un kameras datiem), nosaukums, apraksts, kategorija, cenas, depozīts, noteikumi, rajons un jūsu norādītais precīzais punkts, kas nevienam citam netiek rādīts.',
               ],
@@ -321,6 +349,10 @@ const lv: LegalDoc = {
                 'Juridisks pienākums, 6. panta 1. punkta c) apakšpunkts',
               ],
               ['Atbildes uz jūsu vēstulēm', 'Līgums vai leģitīmās intereses atkarībā no jautājuma'],
+              [
+                'Jūsu identitātes apstiprināšana, pirms iznomājat, nomājat vai parakstāt darījuma līgumu (identitātes pārbaude)',
+                'Jūsu piekrišana, 6. panta 1. punkta a) apakšpunkts, ko sniedzat ar atzīmi, nosūtot fotoattēlus. Līdz lēmumam to varat atsaukt, rakstot mums; tad fotoattēli tiek dzēsti.',
+              ],
             ],
           },
         },
@@ -334,7 +366,7 @@ const lv: LegalDoc = {
       heading: '4. Vai jums dati jāsniedz?',
       blocks: [
         {
-          p: 'Lai izveidotu kontu, mums vajadzīgs jūsu vārds, e-pasta adrese un parole (vai pieteikšanās ar Google); bez tiem kontu atvērt nevaram. Lai izliktu lietu, vajadzīgi tās foto, apraksts, cenas un vieta. Viss pārējais, piemēram, pilsēta un teksts “par mani”, ir pēc jūsu izvēles.',
+          p: 'Lai izveidotu kontu, mums vajadzīgs jūsu vārds, lietotājvārds, e-pasta adrese un parole (vai pieteikšanās ar Google), jūsu apstiprinājums, ka jums ir 18 gadi vai vairāk, un piekrišana šai apstrādei; bez tiem kontu atvērt nevaram. Lai iznomātu vai nomātu, moderatoram arī jāapstiprina jūsu identitāte pēc dokumenta foto un pašbildes; līdz tam varat aplūkot vietni. Lai izliktu lietu, vajadzīgi tās foto, apraksts, cenas un vieta. Viss pārējais, piemēram, pilsēta un teksts “par mani”, ir pēc jūsu izvēles.',
         },
       ],
     },
@@ -359,6 +391,14 @@ const lv: LegalDoc = {
               ],
               ['Darījumi, līgumi un maksājumu ieraksti', 'Tik ilgi, cik to prasa Latvijas grāmatvedības un noilguma noteikumi.'],
               ['Servera žurnāli', 'Mitināšanas pakalpojumu sniedzēji tos glabā īsu laiku, parasti no dažām dienām līdz dažām nedēļām.'],
+              [
+                'Identitātes pārbaudes fotoattēli',
+                'Līdz moderatora lēmumam (apstiprināts vai noraidīts), pēc tam tie tiek nekavējoties dzēsti.',
+              ],
+              [
+                'Identitātes pārbaudes rezultāts',
+                'Līdz konta dzēšanai.',
+              ],
               ['Rezerves kopijas', 'Datubāzes pakalpojumu sniedzējs glabā atjaunošanas punktus dažas dienas; pēc tam dzēstie dati pazūd arī no tiem.'],
             ],
           },
@@ -451,7 +491,7 @@ const lv: LegalDoc = {
       heading: '11. Bērni',
       blocks: [
         {
-          p: 'Yoyo ir paredzēts cilvēkiem no 18 gadu vecuma. Mēs apzināti neglabājam datus par bērniem; ja domājat, ka bērnam ir konts, pasakiet mums, un mēs to izdzēsīsim.',
+          p: 'Yoyo ir paredzēts cilvēkiem no 18 gadu vecuma: to apstiprina ikviens, reģistrējoties. Mēs apzināti neglabājam datus par bērniem; ja domājat, ka bērnam ir konts, pasakiet mums, un mēs to izdzēsīsim.',
         },
       ],
     },
@@ -510,6 +550,14 @@ const ru: LegalDoc = {
               ['Вход через Google', 'Идентификатор вашего аккаунта Google и адрес почты. Ваш пароль от Google мы никогда не видим.'],
               ['Телефон', 'Когда станет доступно подтверждение телефона: ваш номер и время подтверждения.'],
               [
+                'Подтверждения при регистрации',
+                'Что вы подтвердили, что вам есть 18 лет, и согласились на обработку данных, с временем каждого подтверждения.',
+              ],
+              [
+                'Проверка личности',
+                'Фото вашего паспорта, ID-карты или водительских прав и селфи, которые вы отправляете, чтобы модератор подтвердил вашу личность. Хранятся в зашифрованном виде, их видят только модераторы (каждый просмотр записывается), и они удаляются сразу после решения модератора. После этого мы храним только результат, его дату и, при отказе, причину, указанную модератором.',
+              ],
+              [
                 'Объявления',
                 'Фото (без данных о местоположении и камере), название, описание, категория, цены, залог, правила, район и указанная вами точная точка, которую никто другой не видит.',
               ],
@@ -556,6 +604,10 @@ const ru: LegalDoc = {
                 'Юридическая обязанность, статья 6(1)(c)',
               ],
               ['Ответы на ваши письма', 'Договор или законный интерес, в зависимости от вопроса'],
+              [
+                'Подтверждение вашей личности перед тем, как вы сдаёте, берёте в аренду или подписываете договор сделки (проверка личности)',
+                'Ваше согласие, статья 6(1)(a), которое вы даёте галочкой при отправке фото. До решения его можно отозвать, написав нам; тогда фото удаляются.',
+              ],
             ],
           },
         },
@@ -569,7 +621,7 @@ const ru: LegalDoc = {
       heading: '4. Обязательно ли давать нам данные?',
       blocks: [
         {
-          p: 'Чтобы создать аккаунт, нам нужны ваше имя, адрес почты и пароль (или вход через Google); без них открыть аккаунт нельзя. Чтобы выставить вещь, нужны её фото, описание, цены и место. Всё остальное, например город и текст «о себе», — по вашему желанию.',
+          p: 'Чтобы создать аккаунт, нам нужны ваше имя, имя пользователя, адрес почты и пароль (или вход через Google), подтверждение, что вам есть 18 лет, и согласие на эту обработку; без них открыть аккаунт нельзя. Чтобы сдавать или брать в аренду, модератор также должен подтвердить вашу личность по фото документа и селфи; до этого сайт можно просматривать. Чтобы выставить вещь, нужны её фото, описание, цены и место. Всё остальное, например город и текст «о себе», — по вашему желанию.',
         },
       ],
     },
@@ -594,6 +646,14 @@ const ru: LegalDoc = {
               ],
               ['Сделки, договоры и записи о платежах', 'Столько, сколько требуют латвийские правила бухгалтерского учёта и сроки давности.'],
               ['Журналы сервера', 'Хостинг-провайдеры хранят их недолго, обычно от нескольких дней до нескольких недель.'],
+              [
+                'Фото для проверки личности',
+                'До решения модератора (подтверждено или отклонено), затем сразу удаляются.',
+              ],
+              [
+                'Результат проверки личности',
+                'До удаления аккаунта.',
+              ],
               ['Резервные копии', 'Провайдер базы данных хранит точки восстановления несколько дней; после этого удалённые данные исчезают и из них.'],
             ],
           },
@@ -686,7 +746,7 @@ const ru: LegalDoc = {
       heading: '11. Дети',
       blocks: [
         {
-          p: 'Yoyo предназначен для людей от 18 лет. Мы сознательно не храним данные детей; если вы думаете, что у ребёнка есть аккаунт, сообщите нам, и мы его удалим.',
+          p: 'Yoyo предназначен для людей от 18 лет: каждый подтверждает это при регистрации. Мы сознательно не храним данные детей; если вы думаете, что у ребёнка есть аккаунт, сообщите нам, и мы его удалим.',
         },
       ],
     },
