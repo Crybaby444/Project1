@@ -21,7 +21,8 @@ function sharedOwner(browser: Browser) {
   lender ??= (async () => {
     const context = await browser.newContext({ baseURL: 'http://localhost:3000' });
     await asOwnVisitor(context);
-    const { email } = await registerByApi(context.request, { name: 'Jānis Ozols', locale: 'lv' });
+    // Shown as @janis.… everywhere (owner, 2026-11-16: usernames, not full names).
+    const { email } = await registerByApi(context.request, { name: 'Jānis Ozols', locale: 'lv', username: `janis.${Math.random().toString(36).slice(2, 8)}` });
     const { user } = (await (await context.request.get('/api/v1/me')).json()) as { user: { id: string } };
     return { request: context.request, id: user.id, email };
   })();
