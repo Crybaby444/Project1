@@ -40,7 +40,7 @@ describe('price offers', () => {
       dailyCents: 1200,
       listedDailyCents: 1500,
       listing: { id: listing.id, title: 'Bosch cordless drill' },
-      renter: { id: renter.user.id, name: 'Anna' },
+      renter: { id: renter.user.id, name: `@${renter.user.username}` },
     });
     expect((await owner.get('/me/offers?role=owner').expect(200)).body.items).toHaveLength(1);
     const accepted = await owner.post(`/offers/${made.body.offer.id}/accept`).expect(200);

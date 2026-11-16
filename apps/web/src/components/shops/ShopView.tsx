@@ -20,7 +20,7 @@ export function ShopView({ id }: { id: string }) {
       <header className="flex flex-col gap-4">
         <Link href={`/u/${owner.id}`} className="text-[15px] font-bold underline-offset-4 hover:underline">
           {owner.name}
-          {owner.username && <span className="text-ink/70 font-semibold"> · @{owner.username}</span>}
+          {owner.username && owner.name !== `@${owner.username}` && <span className="text-ink/70 font-semibold"> · @{owner.username}</span>}
         </Link>
         <h1 className="font-display text-[clamp(2.8rem,7vw,5.2rem)] leading-[0.9] font-black uppercase [overflow-wrap:anywhere]">{s.name}</h1>
         {s.about && <p className="max-w-[68ch] text-lg leading-relaxed whitespace-pre-line">{s.about}</p>}

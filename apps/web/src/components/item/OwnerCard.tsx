@@ -7,7 +7,9 @@ import { formatScore } from '@/components/reviews/format';
 
 /** "AB" from "Anna Bērziņa", "A" from "Anna". */
 export function initials(name: string): string {
+  // `@olga.k` (owner, 2026-11-16: usernames everywhere) gives "O".
   return name
+    .replace(/^@/, '')
     .trim()
     .split(/\s+/)
     .slice(0, 2)
@@ -54,7 +56,7 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
           >
             {owner.name}
           </Heading>
-          {owner.username && <p className="text-[15px] font-bold [overflow-wrap:anywhere]" data-username="">@{owner.username}</p>}
+          {owner.username && owner.name !== `@${owner.username}` && <p className="text-[15px] font-bold [overflow-wrap:anywhere]" data-username="">@{owner.username}</p>}
           <p className="text-sm">{owner.city ? t('sinceIn', { since, city: owner.city }) : t('since', { since })}</p>
         </div>
       </div>

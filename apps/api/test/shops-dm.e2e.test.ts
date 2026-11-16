@@ -41,7 +41,7 @@ describe('shops and direct messages', () => {
     expect(publicShops).toEqual([expect.objectContaining({ id: shop.id, name: 'Workshop', itemCount: 1 })]);
     const page = (await request(t.server).get(`/api/v1/shops/${shop.id}`).expect(200)).body;
     expect(page.items.map((i: { id: string }) => i.id)).toEqual([drill.id]);
-    expect(page.owner).toMatchObject({ id: olga.user.id, name: 'Olga Kalniņa' });
+    expect(page.owner).toMatchObject({ id: olga.user.id, name: `@${olga.user.username}` });
 
     await janis.patch(`/me/shops/${shop.id}`).send({ name: 'Mine now' }).expect(404);
     await olga.patch(`/me/shops/${shop.id}`).send({ listingIds: [drill.id] }).expect(200);

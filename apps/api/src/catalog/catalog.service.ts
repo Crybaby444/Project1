@@ -1,5 +1,6 @@
 import { Prisma } from '../generated/prisma/client';
 import { CityDirectory } from './city-directory';
+import { publicName } from '../common/public-name';
 import { Inject, Injectable } from '@nestjs/common';
 import { addDays, compareDates, localDateIn, type LocalDate } from '@yoyo/domain';
 import {
@@ -240,7 +241,7 @@ export class CatalogService {
     const rating = ratings.get(user.id) ?? { rating: null, reviewCount: 0 };
     return {
       id: user.id,
-      name: user.name,
+      name: publicName(user),
       username: user.username,
       city: user.city,
       memberSince: user.createdAt.toISOString(),
