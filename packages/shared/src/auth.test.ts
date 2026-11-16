@@ -23,7 +23,7 @@ describe('PasswordSchema', () => {
 });
 
 describe('RegisterRequestSchema', () => {
-  const anna = { email: 'anna@mail.lv', password: 'correct horse', name: 'Anna Ozola', username: 'anna.o', birthDate: '1990-05-01' };
+  const anna = { email: 'anna@mail.lv', password: 'correct horse', name: 'Anna Ozola', username: 'anna.o', adult: true, dataConsent: true };
 
   it('makes the language optional and accepts only supported ones', () => {
     expect(RegisterRequestSchema.parse(anna)).toEqual(anna);
@@ -31,12 +31,14 @@ describe('RegisterRequestSchema', () => {
     expect(RegisterRequestSchema.safeParse({ ...anna, locale: 'de' }).success).toBe(false);
   });
 
-  it('needs a full name (first and last) of up to 60 characters after trimming, a username and a birth date', () => {
+  it('needs a full name (first and last) of up to 60 characters after trimming, a username and both ticks (18+, the data consent)', () => {
     expect(RegisterRequestSchema.parse({ ...anna, name: '  Anna Ozola  ' }).name).toBe('Anna Ozola');
     expect(RegisterRequestSchema.safeParse({ ...anna, name: 'Anna' }).success).toBe(false);
     expect(RegisterRequestSchema.safeParse({ ...anna, name: '   ' }).success).toBe(false);
     expect(RegisterRequestSchema.safeParse({ ...anna, username: undefined }).success).toBe(false);
-    expect(RegisterRequestSchema.safeParse({ ...anna, birthDate: undefined }).success).toBe(false);
+    expect(RegisterRequestSchema.safeParse({ ...anna, adult: undefined }).success).toBe(false);
+    expect(RegisterRequestSchema.safeParse({ ...anna, adult: false }).success).toBe(false);
+    expect(RegisterRequestSchema.safeParse({ ...anna, dataConsent: false }).success).toBe(false);
     expect(RegisterRequestSchema.safeParse({ ...anna, name: 'x'.repeat(61) }).success).toBe(false);
   });
 });
@@ -60,6 +62,8 @@ describe('PublicUserSchema', () => {
       phone: null,
       phoneVerified: false,
       identityVerified: false,
+      adultConfirmed: true,
+      dataConsent: true,
       createdAt: '2026-11-03T10:00:00.000Z',
     };
     expect(PublicUserSchema.parse({ ...user, passwordHash: '$argon2id$…', blockedAt: null })).toEqual(user);

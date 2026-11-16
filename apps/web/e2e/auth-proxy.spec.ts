@@ -8,7 +8,7 @@ test.describe('accounts through the site’s /api proxy', () => {
     const email = `e2e-${Date.now()}-${Math.round(Math.random() * 1e6)}@mail.lv`;
 
     const reg = await page.request.post('/api/v1/auth/register', {
-      data: { email, password: 'correct horse', name: 'E2E Tester', username: `e2e${Date.now().toString(36)}`, birthDate: '1990-01-01', locale: 'en' },
+      data: { email, password: 'correct horse', name: 'E2E Tester', username: `e2e${Date.now().toString(36)}`, adult: true, dataConsent: true, locale: 'en' },
     });
     expect(reg.status()).toBe(201);
 

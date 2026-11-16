@@ -70,7 +70,7 @@ describe('the global registration cap (REGISTRATION_HOURLY_CAP)', () => {
         request(t.server)
           .post('/api/v1/auth/register')
           .set('X-Forwarded-For', `203.0.113.${i}`)
-          .send({ email: `new${i}@mail.lv`, password: 'correct horse', name: 'New Person', username: `new${i}`, birthDate: '1990-01-01' });
+          .send({ email: `new${i}@mail.lv`, password: 'correct horse', name: 'New Person', username: `new${i}`, adult: true, dataConsent: true });
 
       for (let i = 1; i <= 3; i++) expect((await register(i)).status).toBe(201);
       const capped = await register(4);

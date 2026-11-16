@@ -231,7 +231,9 @@
     "fullName": "Write your first and last name.",
     "username": "3–20 of a–z, 0–9, dot and underscore; start and end with a letter or digit.",
     "usernameReserved": "This username is reserved.",
-    "birthDate": "Enter a real date: day, month and year."
+    "birthDate": "Enter a real date: day, month and year.",
+    "adult": "Yoyo is only for people aged 18 and over.",
+    "dataConsent": "Your consent is needed to create an account."
   },
   "auth": {
     "fields": {
@@ -1077,8 +1079,12 @@
     "birthHint": "Yoyo is for people aged 18 and over. Other people don’t see it.",
     "usernameFree": "@{username} is free",
     "usernameTaken": "This username is taken",
-    "complete": "Finish your profile: add your username and date of birth to rent and lend.",
-    "completeLink": "Add them"
+    "complete": "Finish your profile to rent and lend: confirm you are 18+ and agree to the processing of your data.",
+    "completeLink": "Finish it",
+    "adult": "I am 18 or older",
+    "dataConsent": "I agree to the processing of my personal data as described in the",
+    "privacy": "privacy policy",
+    "ticksTitle": "Confirmations"
   },
   "shops": {
     "itemCount": "{count, plural, one {# item} other {# items}}",

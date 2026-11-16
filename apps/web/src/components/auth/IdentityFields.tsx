@@ -2,88 +2,69 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { UsernameSchema } from '@yoyo/shared';
-import { useLocale, useTranslations } from 'next-intl';
-import { useEffect, useId, useState } from 'react';
-import { Select } from '@/components/ui/Select';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
+import { useEffect, useId, useState, type InputHTMLAttributes, type ReactNode } from 'react';
 import { INPUT_CLASS } from '@/components/ui/inputs';
 import { unwrap } from '@/lib/session/api-error';
 import { useApiClient } from '@/lib/session/SessionProvider';
 
-/**
- * The birth date as day, month (the site's own Select) and year — no browser date picker — reported as
- * YYYY-MM-DD once all three make a date, '' until then.
- */
-export function BirthDateField({ value, onChange, error }: { value: string; onChange(v: string): void; error?: string | undefined }) {
-  const t = useTranslations('identity');
-  const locale = useLocale();
+/** One tick with its words; the error under it (aria-describedby), the box first for a long label. */
+function Tick({ label, error, input }: { label: ReactNode; error?: string | undefined; input: InputHTMLAttributes<HTMLInputElement> }) {
   const id = useId();
-  const [y0, m0, d0] = value ? value.split('-') : ['', '', ''];
-  const [day, setDay] = useState(d0 ? String(Number(d0)) : '');
-  const [month, setMonth] = useState(m0 ? String(Number(m0)) : '');
-  const [year, setYear] = useState(y0 ?? '');
-  const months = Array.from({ length: 12 }, (_, i) => ({
-    value: String(i + 1),
-    label: new Intl.DateTimeFormat(locale, { month: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(2000, i, 1))),
-  }));
-  function report(d: string, m: string, y: string) {
-    if (d && m && /^\d{4}$/.test(y)) onChange(`${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`);
-    else onChange('');
-  }
-  const errorId = error ? `${id}-error` : undefined;
   return (
-    <fieldset className="flex flex-col gap-1.5" aria-describedby={errorId}>
-      <legend className="mb-1.5 text-[13px] font-bold tracking-[0.03em] uppercase">{t('birthDate')}</legend>
-      <div className="grid grid-cols-[5rem_minmax(0,1fr)_6.5rem] items-center gap-2">
+    <div className="flex flex-col gap-1">
+      <label htmlFor={id} className="flex cursor-pointer items-start gap-3 text-[15px] leading-relaxed">
         <input
-          aria-label={t('day')}
-          inputMode="numeric"
-          autoComplete="bday-day"
-          placeholder={t('dayPlaceholder')}
-          maxLength={2}
-          value={day}
+          id={id}
+          type="checkbox"
           aria-invalid={error ? true : undefined}
-          onChange={(e) => {
-            const v = e.target.value.replace(/\D/g, '');
-            setDay(v);
-            report(v, month, year);
-          }}
-          className={INPUT_CLASS}
+          aria-describedby={error ? `${id}-error` : undefined}
+          className="accent-ink mt-[3px] size-5 shrink-0 cursor-pointer"
+          {...input}
         />
-        <label htmlFor={`${id}-month`} className="sr-only">
-          {t('month')}
-        </label>
-        <Select
-          id={`${id}-month`}
-          value={month}
-          placeholder={t('month')}
-          aria-invalid={error ? true : undefined}
-          onChange={(v) => {
-            setMonth(v);
-            report(day, v, year);
-          }}
-          options={months}
-        />
-        <input
-          aria-label={t('year')}
-          inputMode="numeric"
-          autoComplete="bday-year"
-          placeholder={t('yearPlaceholder')}
-          maxLength={4}
-          value={year}
-          aria-invalid={error ? true : undefined}
-          onChange={(e) => {
-            const v = e.target.value.replace(/\D/g, '');
-            setYear(v);
-            report(day, month, v);
-          }}
-          className={INPUT_CLASS}
-        />
-      </div>
-      <p className="text-ink/70 text-[13px]">{t('birthHint')}</p>
+        <span>{label}</span>
+      </label>
       {error && (
-        <p id={errorId} className="text-sm font-bold">
+        <p id={`${id}-error`} className="pl-8 text-[13.5px] text-[var(--danger)]">
           {error}
         </p>
+      )}
+    </div>
+  );
+}
+
+/**
+ * The two ticks that replace the birth date (owner, 2026-11-16): "I am 18 or older" and the consent to the
+ * processing of personal data, with a link to the privacy policy. `show` leaves out a tick already given.
+ */
+export function ConsentTicks({
+  adult,
+  dataConsent,
+  show = { adult: true, dataConsent: true },
+}: {
+  adult: { input: InputHTMLAttributes<HTMLInputElement>; error?: string | undefined };
+  dataConsent: { input: InputHTMLAttributes<HTMLInputElement>; error?: string | undefined };
+  show?: { adult: boolean; dataConsent: boolean };
+}) {
+  const t = useTranslations('identity');
+  return (
+    <fieldset className="flex flex-col gap-3">
+      <legend className="sr-only">{t('ticksTitle')}</legend>
+      {show.adult && <Tick label={t('adult')} {...adult} />}
+      {show.dataConsent && (
+        <Tick
+          label={
+            <>
+              {t('dataConsent')}{' '}
+              <Link href="/privacy" target="_blank" className="font-bold underline underline-offset-4">
+                {t('privacy')}
+              </Link>
+              .
+            </>
+          }
+          {...dataConsent}
+        />
       )}
     </fieldset>
   );

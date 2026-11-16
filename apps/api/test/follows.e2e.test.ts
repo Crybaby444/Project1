@@ -84,17 +84,16 @@ describe('following people, their feed and finding people', () => {
     expect(byUsername[0]).toMatchObject({ name: 'Olga Kalniņa', username: 'olga.k' });
   });
 
-  it('renting and lending need a birth date; it can be added once, 18 or older', async () => {
-    const google = await signedInClient(t, { name: 'Gina Google', birthDate: null });
+  it('renting and lending need the two ticks (18 or older, the data consent); given once in the profile', async () => {
+    const google = await signedInClient(t, { name: 'Gina Google', adultConfirmed: false, dataConsent: false });
     const listing = await seedListing(t, olga.user, { status: 'PUBLISHED' });
     const tomorrow = new Date(t.clock.now().getTime() + 3 * 86_400_000).toISOString().slice(0, 10);
     const asked = await google.post('/bookings').set('Idempotency-Key', 'k-incomplete-1').send({ listingId: listing.id, start: tomorrow, end: tomorrow });
     expect(asked.status).toBe(409);
-    expect(asked.body.error).toMatchObject({ code: 'PROFILE_INCOMPLETE', details: { birthDate: false } });
-    const young = new Date(Date.UTC(t.clock.now().getUTCFullYear() - 17, 0, 1)).toISOString().slice(0, 10);
-    expect((await google.patch('/me').send({ birthDate: young }).expect(400)).body.error.code).toBe('UNDERAGE');
-    expect((await google.patch('/me').send({ birthDate: '1991-03-04' }).expect(200)).body.user.birthDate).toBe('1991-03-04');
-    await google.patch('/me').send({ birthDate: '1980-01-01' }).expect(409);
+    expect(asked.body.error).toMatchObject({ code: 'PROFILE_INCOMPLETE', details: { adult: false, dataConsent: false, username: true } });
+    await google.patch('/me').send({ adult: false }).expect(400);
+    const done = (await google.patch('/me').send({ adult: true, dataConsent: true }).expect(200)).body.user;
+    expect(done).toMatchObject({ adultConfirmed: true, dataConsent: true });
     await google.patch('/me').send({ username: 'olga.k' }).expect(409);
     expect((await google.patch('/me').send({ username: 'Gina.G' }).expect(200)).body.user.username).toBe('gina.g');
   });

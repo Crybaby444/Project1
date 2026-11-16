@@ -2302,7 +2302,10 @@ export interface components {
             password: string;
             name: string;
             username: string;
-            birthDate: string;
+            /** @enum {boolean} */
+            adult: true;
+            /** @enum {boolean} */
+            dataConsent: true;
             /** @enum {string} */
             locale?: "en" | "lv" | "ru";
         };
@@ -2313,6 +2316,8 @@ export interface components {
                 name: string;
                 username: string | null;
                 birthDate: string | null;
+                adultConfirmed: boolean;
+                dataConsent: boolean;
                 city: string | null;
                 about: string | null;
                 /** @enum {string} */
@@ -2357,6 +2362,8 @@ export interface components {
                 name: string;
                 username: string | null;
                 birthDate: string | null;
+                adultConfirmed: boolean;
+                dataConsent: boolean;
                 city: string | null;
                 about: string | null;
                 /** @enum {string} */
@@ -3638,7 +3645,10 @@ export interface components {
         UpdateProfileDto: {
             name?: string;
             username?: string;
-            birthDate?: string;
+            /** @enum {boolean} */
+            adult?: true;
+            /** @enum {boolean} */
+            dataConsent?: true;
             city?: string | null;
             about?: string | null;
             /** @enum {string} */
@@ -3858,6 +3868,8 @@ export interface components {
                 name: string;
                 username: string | null;
                 birthDate: string | null;
+                adultConfirmed: boolean;
+                dataConsent: boolean;
                 city: string | null;
                 about: string | null;
                 /** @enum {string} */
@@ -3889,6 +3901,8 @@ export interface components {
                 name: string;
                 username: string | null;
                 birthDate: string | null;
+                adultConfirmed: boolean;
+                dataConsent: boolean;
                 city: string | null;
                 about: string | null;
                 /** @enum {string} */

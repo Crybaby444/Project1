@@ -5,7 +5,7 @@ import type { SessionTokens } from '../auth/cookies';
 import { PasswordService } from '../auth/password.service';
 import { RefreshTokenService, type SessionMeta } from '../auth/refresh-token.service';
 import { CLOCK, type Clock } from '../clock/clock';
-import { assertAdult, assertUsernameFree } from '../auth/identity';
+import { assertUsernameFree } from '../auth/identity';
 import { AppError } from '../common/app-error';
 import { Prisma, type User } from '../generated/prisma/client';
 import { ListingsService } from '../listings/listings.service';
@@ -25,18 +25,17 @@ export class MeService {
   ) {}
 
   async updateProfile(userId: string, patch: UpdateProfileRequest): Promise<User> {
-    const { birthDate, username, ...rest } = patch;
+    const { adult, dataConsent, username, ...rest } = patch;
     const data: Prisma.UserUpdateInput = { ...rest };
     if (username !== undefined) {
       await assertUsernameFree(this.prisma, username, userId);
       data.username = username;
     }
-    if (birthDate !== undefined) {
-      // Given once: a birth date already on file is not changed here (support can correct it).
-      const current = await this.prisma.user.findUniqueOrThrow({ where: { id: userId }, select: { birthDate: true } });
-      if (current.birthDate !== null) throw new AppError('ACTION_NOT_ALLOWED', 409, 'The birth date is already set', { birthDate: 'Already set' }, { why: 'BIRTHDATE_SET' });
-      assertAdult(birthDate, this.clock.now());
-      data.birthDate = new Date(`${birthDate}T00:00:00Z`);
+    if (adult || dataConsent) {
+      // Given once (owner, 2026-11-16): a tick already on file keeps its first date.
+      const current = await this.prisma.user.findUniqueOrThrow({ where: { id: userId }, select: { adultConfirmedAt: true, dataConsentAt: true } });
+      if (adult && current.adultConfirmedAt === null) data.adultConfirmedAt = this.clock.now();
+      if (dataConsent && current.dataConsentAt === null) data.dataConsentAt = this.clock.now();
     }
     try {
       return await this.prisma.user.update({ where: { id: userId }, data });

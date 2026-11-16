@@ -21,6 +21,8 @@ export function toPublicUser(user: User): PublicUser {
     phone: user.phone,
     phoneVerified: user.phoneVerifiedAt !== null,
     identityVerified: user.identityVerifiedAt !== null,
+    adultConfirmed: user.adultConfirmedAt !== null,
+    dataConsent: user.dataConsentAt !== null,
     createdAt: user.createdAt.toISOString(),
   };
 }

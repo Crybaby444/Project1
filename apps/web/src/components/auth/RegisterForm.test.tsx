@@ -30,18 +30,31 @@ function renderRegister(
 }
 
 
-/** The full name, a username and a birth date (1 May 1990), as sign-up asks since 2026-11-16. */
+/** The full name, a username and the two ticks (18+, the data consent), as sign-up asks since 2026-11-16. */
 async function fillIdentity(user: ReturnType<typeof userEvent.setup>, m: typeof en) {
   await user.type(screen.getByLabelText(m.auth.fields.fullName), 'Anna Bērziņa');
   await user.type(screen.getByLabelText(m.auth.fields.username), 'anna.b');
-  await user.type(screen.getByLabelText(m.identity.day), '1');
-  await user.click(screen.getByRole('combobox', { name: m.identity.month }));
-  await user.click(screen.getAllByRole('option')[4]!);
-  await user.type(screen.getByLabelText(m.identity.year), '1990');
+  await user.click(screen.getByRole('checkbox', { name: m.identity.adult }));
+  await user.click(screen.getByRole('checkbox', { name: new RegExp(m.identity.dataConsent.slice(0, 20)) }));
 }
 
 describe('RegisterForm', () => {
   beforeEach(() => replace.mockClear());
+
+  it('asks the two ticks instead of a birth date, and sends nothing until both are given', async () => {
+    const user = userEvent.setup();
+    const calls = renderRegister({});
+    expect(screen.queryByLabelText(en.identity.year)).toBeNull();
+    await user.type(screen.getByLabelText(en.auth.fields.fullName), 'Anna Bērziņa');
+    await user.type(screen.getByLabelText(en.auth.fields.username), 'anna.b');
+    await user.type(screen.getByLabelText(en.auth.fields.email), 'anna@mail.lv');
+    await user.type(screen.getByLabelText(en.auth.fields.password), 'correct horse battery');
+    await user.click(screen.getByRole('button', { name: en.auth.register.submit }));
+    expect(await screen.findByText(en.validation.adult)).toBeInTheDocument();
+    expect(screen.getByText(en.validation.dataConsent)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: en.identity.privacy })).toHaveAttribute('href', '/privacy');
+    expect(calls.some((c) => c.path === '/api/v1/auth/register')).toBe(false);
+  });
 
   it('creates the account in the page language and goes on to next', async () => {
     const user = userEvent.setup();
@@ -61,7 +74,8 @@ describe('RegisterForm', () => {
     expect(calls.find((c) => c.path === '/api/v1/auth/register')?.body).toEqual({
       name: 'Anna Bērziņa',
       username: 'anna.b',
-      birthDate: '1990-05-01',
+      adult: true,
+      dataConsent: true,
       email: 'anna@mail.lv',
       password: 'correct horse battery',
       locale: 'lv',
