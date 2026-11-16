@@ -39,6 +39,7 @@ import {
   ResetPasswordDto,
   UserResponseDto,
 } from './auth.dto';
+import { APPLE_COOKIE, APPLE_STATE_TTL_SECONDS, AppleOAuthService, appleCookieOptions, type AppleAttempt } from './apple-oauth.service';
 import { AuthGuard } from './auth.guard';
 import { AuthService, localeFromPath } from './auth.service';
 import { clearAuthCookies, DEVICE_COOKIE, REFRESH_COOKIE, setAuthCookies, setDeviceCookie } from './cookies';
@@ -84,6 +85,7 @@ export class AuthController {
   constructor(
     private readonly auth: AuthService,
     private readonly google: GoogleOAuthService,
+    private readonly apple: AppleOAuthService,
     private readonly limiter: RateLimiter,
     private readonly devices: DeviceCookieService,
     private readonly prisma: PrismaService,
@@ -122,7 +124,7 @@ export class AuthController {
   @Get('providers')
   @ZodResponse({ status: 200, type: ProvidersResponseDto, description: 'Sign-in methods this deployment offers' })
   providers(): ProvidersResponse {
-    return { google: this.google.enabled, phone: this.sms !== null };
+    return { google: this.google.enabled, apple: this.apple.enabled, phone: this.sms !== null };
   }
 
   @Get('google')
@@ -185,6 +187,52 @@ export class AuthController {
       if (!(error instanceof AppError)) {
         this.logger.error(`Google sign-in failed: ${error instanceof Error ? (error.stack ?? error.message) : String(error)}`);
       }
+      const code = error instanceof AppError && (error.code === 'AUTH_BLOCKED' || error.code === 'AUTH_CODE_REQUIRED') ? error.code : 'OAUTH_FAILED';
+      this.backToLogin(res, code, attempt.returnTo);
+      return;
+    }
+    res.redirect(302, `${this.env.WEB_ORIGIN}${attempt.returnTo}`);
+  }
+
+  /** Sign in with Apple: off unless configured (owner, 2026-11-16). */
+  @Get('apple')
+  @ApiFoundResponse({ description: 'Redirect to Apple’s sign-in screen' })
+  @ApiErrors(400, 404)
+  async appleStart(@Query() query: GoogleStartQueryDto, @Res() res: Response): Promise<void> {
+    if (!this.apple.enabled) throw new AppError('NOT_FOUND', 404, 'Apple sign-in is not configured');
+    const { url, cookie } = await this.apple.start(safeReturnTo(query.returnTo));
+    // Apple comes back with a cross-site POST: only a SameSite=None (and so Secure) cookie travels with it.
+    res.cookie(APPLE_COOKIE, cookie, appleCookieOptions(this.secureCookies, APPLE_STATE_TTL_SECONDS));
+    res.redirect(302, url);
+  }
+
+  /** Apple posts `code`, `state` and, the first time, `user` (the name) here (form_post). */
+  @Post('apple/callback')
+  @HttpCode(302)
+  @ApiFoundResponse({ description: 'Signed in and sent back, or sent to /login?oauthError=…' })
+  @ApiErrors(404)
+  async appleCallback(@Body() body: Record<string, string | undefined>, @Req() req: Request, @Res() res: Response): Promise<void> {
+    if (!this.apple.enabled) throw new AppError('NOT_FOUND', 404, 'Apple sign-in is not configured');
+    res.cookie(APPLE_COOKIE, '', appleCookieOptions(this.secureCookies, 0));
+    let attempt: AppleAttempt;
+    try {
+      attempt = await this.apple.readAttempt(readCookie(req, APPLE_COOKIE), typeof body?.state === 'string' ? body.state : undefined);
+    } catch {
+      const locale = readCookie(req, SITE_LOCALE_COOKIE);
+      this.backToLogin(res, 'OAUTH_STATE_INVALID', locale && isLocale(locale) && locale !== DEFAULT_LOCALE ? `/${locale}` : '/');
+      return;
+    }
+    if (body?.error) {
+      this.backToLogin(res, 'OAUTH_CANCELLED', attempt.returnTo);
+      return;
+    }
+    try {
+      if (typeof body?.code !== 'string') throw new AppError('OAUTH_FAILED', 400, 'Apple sent no code');
+      const identity = await this.apple.identify(body.code, attempt, typeof body.user === 'string' ? body.user : undefined);
+      const user = await this.auth.signInWithGoogle(identity, localeFromPath(attempt.returnTo), 'apple');
+      setAuthCookies(res, await this.auth.startSession(user, sessionMeta(req)), this.secureCookies);
+    } catch (error) {
+      if (!(error instanceof AppError)) this.logger.error(`Apple sign-in failed: ${error instanceof Error ? (error.stack ?? error.message) : String(error)}`);
       const code = error instanceof AppError && (error.code === 'AUTH_BLOCKED' || error.code === 'AUTH_CODE_REQUIRED') ? error.code : 'OAUTH_FAILED';
       this.backToLogin(res, code, attempt.returnTo);
       return;

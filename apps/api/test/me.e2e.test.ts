@@ -276,7 +276,7 @@ describe('my account', () => {
     });
 
     it('reports phone confirmation as available', async () => {
-      expect((await request(t.server).get('/api/v1/auth/providers')).body).toEqual({ google: false, phone: true });
+      expect((await request(t.server).get('/api/v1/auth/providers')).body).toEqual({ google: false, apple: false, phone: true });
     });
   });
 });
@@ -286,7 +286,7 @@ describe('phone confirmation in production without an SMS provider', () => {
     const t = await createTestApp({ env: { NODE_ENV: 'production', WEB_ORIGIN: 'https://yoyo.rent' } });
     try {
       await resetAccounts(t.prisma);
-      expect((await request(t.server).get('/api/v1/auth/providers')).body).toEqual({ google: false, phone: false });
+      expect((await request(t.server).get('/api/v1/auth/providers')).body).toEqual({ google: false, apple: false, phone: false });
       const { email, password } = await seedUser(t);
       // Production cookies are Secure, so this plain-HTTP test signs in like an app, with a Bearer token.
       const login = await request(t.server).post('/api/v1/auth/login').send({ email, password }).expect(200);

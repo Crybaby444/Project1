@@ -9,6 +9,7 @@ import { TwoFactorController } from './two-factor.controller';
 import { TwoFactorService } from './two-factor.service';
 import { AuthService } from './auth.service';
 import { DeviceCookieService } from './device-cookie.service';
+import { AppleOAuthService } from './apple-oauth.service';
 import { GoogleOAuthService } from './google-oauth.service';
 import { PasswordService } from './password.service';
 import { RefreshTokenService } from './refresh-token.service';
@@ -16,7 +17,7 @@ import { RefreshTokenService } from './refresh-token.service';
 @Module({
   imports: [MailModule, SmsModule, AnalyticsCoreModule],
   controllers: [AuthController, TwoFactorController],
-  providers: [AuthService, AuthGuard, DeviceCookieService, GoogleOAuthService, PasswordService, AccessTokenService, RefreshTokenService, TwoFactorService],
+  providers: [AuthService, AuthGuard, DeviceCookieService, GoogleOAuthService, AppleOAuthService, PasswordService, AccessTokenService, RefreshTokenService, TwoFactorService],
   exports: [AuthService, TwoFactorService, AuthGuard, PasswordService, AccessTokenService, RefreshTokenService],
 })
 export class AuthModule {}

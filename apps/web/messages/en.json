@@ -333,7 +333,8 @@
         "title": "This link does not work",
         "body": "It may be cut short. Open it from the email once more, or ask for a new one."
       }
-    }
+    },
+    "apple": "Continue with Apple"
   },
   "settings": {
     "title": "Settings",
