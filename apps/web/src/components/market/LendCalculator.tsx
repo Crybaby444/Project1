@@ -69,23 +69,6 @@ export function LendCalculator() {
       </div>
 
       <div className="flex flex-col gap-9">
-        <div className="flex flex-col gap-3">
-          <span className="text-ink/60 text-[12px] font-bold tracking-[0.08em] uppercase">{t('examples')}</span>
-          <div className="flex flex-wrap gap-2" role="group" aria-label={t('examples')}>
-            {EXAMPLES.map((e) => (
-              <button
-                key={e.key}
-                type="button"
-                aria-pressed={price === e.price}
-                onClick={() => setPrice(e.price)}
-                className={`rounded-pill ease-yoyo min-h-10 border px-4 text-[14px] font-semibold transition-[background-color,color,transform] duration-200 hover:-translate-y-0.5 ${price === e.price ? 'bg-ink text-canvas border-ink' : 'border-ink/20 hover:border-ink/50'}`}
-              >
-                {t(`example.${e.key}`)} · {euros(e.price)}
-              </button>
-            ))}
-          </div>
-        </div>
-
         <div className="grid gap-8 sm:grid-cols-2">
           <div className="flex flex-col gap-4">
             <div className="flex items-baseline justify-between gap-4">

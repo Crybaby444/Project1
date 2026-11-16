@@ -5,14 +5,9 @@ import { ListingCard } from '@/components/catalog/ListingCard';
 import { RecentlyViewed } from '@/components/catalog/RecentlyViewed';
 import { HomeSearch } from '@/components/market/HomeSearch';
 import { LendCalculator } from '@/components/market/LendCalculator';
-import { BackUp } from '@/components/market/BackUp';
-import { LoopScene } from '@/components/market/LoopScene';
-import { TagString } from '@/components/market/TagString';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { Button } from '@/components/ui/Button';
 import { Link } from '@/i18n/navigation';
 import { loadPlaces, loadSearch } from '@/lib/catalog/server-api';
-import { cents, formatMoney } from '@yoyo/domain';
 import { pageMetadata } from '@/lib/seo';
 import { CONTACT_EMAIL, SITE_URL } from '@/lib/site';
 
@@ -66,9 +61,6 @@ export default async function HomePage({ params }: Params) {
   const items = newest.ok ? newest.data.items : [];
   const districts = places.ok ? places.data.districts : [];
   const today = new Date().toISOString().slice(0, 10);
-  // The loop ends with a real deposit coming back: the newest item's, or a round example.
-  const depositCents = items[0]?.depositCents ?? 5000;
-  const deposit = formatMoney(cents(depositCents), locale).replace(/[\u00a0\u202f]/g, ' ').replace(/[.,]00(?=\D*$)/, '');
 
   return (
     <main className="flex flex-1 flex-col" data-market-home="">
@@ -84,9 +76,6 @@ export default async function HomePage({ params }: Params) {
         <HomeSearch districts={districts} today={today} />
       </section>
 
-      <TagString items={items} />
-
-      <LoopScene deposit={deposit} />
 
       {items.length > 0 && (
         <section aria-labelledby="home-fresh" className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-16 sm:px-8 sm:py-20">
@@ -113,22 +102,6 @@ export default async function HomePage({ params }: Params) {
         <LendCalculator />
       </div>
 
-      <section aria-labelledby="home-close" className="border-ink/15 border-t">
-        <div className="mx-auto flex max-w-[1440px] flex-col items-start gap-8 px-4 py-20 sm:px-8 sm:py-28">
-          <h2 id="home-close" className="font-display text-[clamp(3rem,9vw,6rem)] leading-[0.84] font-black uppercase">
-            {t('close.title')}
-          </h2>
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
-            <Button href="/c" size="lg">
-              {t('close.rent')}
-            </Button>
-            <Button href="/listings/new" size="lg" variant="ghost">
-              {t('close.lend')}
-            </Button>
-            <BackUp />
-          </div>
-        </div>
-      </section>
     </main>
   );
 }
