@@ -354,5 +354,31 @@
     "contents": "Contents",
     "effective": "In effect from {date}",
     "note": "This summary helps you find your way; the full text below is what applies."
+  },
+  "categoryIntro": {
+    "roots": {
+      "electronics": "Game consoles for a weekend, a projector for a film night, a laptop while yours is in repair, drones and walkie-talkies for a trip. Rent electronics from people nearby for the days you need them, and give them back when you are done.",
+      "photo-video": "Cameras, lenses, action cameras, tripods and studio lights for a shoot, a wedding or a holiday. Try a lens before you buy it, or take a full kit for one weekend instead of owning it all year.",
+      "tools": "Drills, hammers, grinders, saws and cleaning machines for the jobs you do once or twice a year. Rent the tool from someone in your district, finish the job and bring it back.",
+      "construction": "Plate compactors, concrete mixers, tile cutters, generators, dehumidifiers, ladders and scaffolding for a renovation. Heavy gear that is expensive to buy and rarely needed, for the days the work takes.",
+      "garden": "Lawn mowers, trimmers, pressure washers, chainsaws, snow blowers and trampolines. Seasonal gear for the garden and the yard, rented for a weekend instead of stored all year.",
+      "home-kitchen": "Vacuum cleaners, fans, heaters and kitchen appliances for a move, a guest week or a big cooking day. Rent it for a few days instead of buying another thing for the cupboard.",
+      "sports": "Bikes, e-scooters, skates, skis, snowboards and sleds. Try a sport before you buy the gear, or take what you need for one trip and the season it is in.",
+      "camping": "Tents, sleeping bags, camping furniture, stoves, backpacks, boats and climbing gear. Everything for a weekend outdoors, from people nearby who are not using theirs.",
+      "kids": "Strollers, car seats, balance bikes, playhouses, toys and children’s furniture. Kids outgrow things fast: rent for the months they fit, or for a visit from the grandchildren.",
+      "events-party": "Event tents, tables and chairs, sound and light, costumes and decorations. Everything for a birthday, a wedding or a garden party, rented for the day.",
+      "music": "Musical instruments and DJ equipment for a gig, a party or to see whether lessons stick before you buy.",
+      "car-travel": "Roof boxes, racks, bike carriers, dashcams and battery chargers for a road trip. Rent them for the journey and give them back when you are home."
+    },
+    "about": {
+      "title": "Renting {name} on Yoyo",
+      "points": {
+        "a": "You see the price per day, the deposit and the free days on every item.",
+        "b": "You and the owner sign a contract online before anything is paid: you first, then the owner.",
+        "c": "The deposit is held during the deal and comes back once the owner has checked the return (within {hours} hours).",
+        "d": "Every item is checked by a person before it goes live, and reviews come only from finished deals."
+      },
+      "more": "How renting works"
+    }
   }
 }
