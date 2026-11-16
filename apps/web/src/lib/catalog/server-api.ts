@@ -6,6 +6,7 @@ import type {
   CategoryNode,
   ItemDetail,
   MapResponse,
+  ForYouResponse,
   PlacesResponse,
   PublicProfile,
   SitemapResponse,
@@ -94,6 +95,14 @@ const placesIn = cache(
   async (country: string): Promise<Loaded<PlacesResponse>> =>
     load(() => client(300).GET('/api/v1/catalog/places', { params: { query: { country } as never } })),
 );
+
+const forYouIn = cache(
+  async (country: string): Promise<Loaded<ForYouResponse>> =>
+    load(() => client(120).GET('/api/v1/catalog/for-you', { params: { query: { country } as never } })),
+);
+
+/** The home's list before the browser knows anyone: popular now in the visitor's country (kept 2 minutes). */
+export const loadForYou = async (): Promise<Loaded<ForYouResponse>> => forYouIn(await currentCountry());
 
 /** The countries with items, and the cities and districts of the visitor's country (kept 5 minutes). */
 export const loadPlaces = async (): Promise<Loaded<PlacesResponse>> => placesIn(await currentCountry());

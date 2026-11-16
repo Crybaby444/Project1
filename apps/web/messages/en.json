@@ -1218,6 +1218,10 @@
     "faq": {
       "title": "Before your first deal",
       "all": "All questions and answers"
+    },
+    "forYou": {
+      "personal": "For you",
+      "popular": "Popular now"
     }
   },
   "mySpace": {

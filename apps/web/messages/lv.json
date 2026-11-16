@@ -1218,6 +1218,10 @@
     "faq": {
       "title": "Pirms pirmā darījuma",
       "all": "Visi jautājumi un atbildes"
+    },
+    "forYou": {
+      "personal": "Jums",
+      "popular": "Populārākais tagad"
     }
   },
   "mySpace": {

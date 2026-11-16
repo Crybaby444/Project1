@@ -31,8 +31,9 @@ import { ReviewsService } from '../reviews/reviews.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { fold, orderSql, textMatchSql, VISIBLE_FROM, whereSql, type FilterContext } from './catalog-query';
 import { serializeCatalogItem } from './catalog.serializer';
+import { rankForYou } from './for-you';
 import { CATALOG_VISIBLE_SQL, CATALOG_VISIBLE_WHERE, catalogState } from './visibility';
-import type { CategoryCounts } from '@yoyo/shared';
+import type { CategoryCounts, ForYouResponse } from '@yoyo/shared';
 
 /** Owners and rentals are counted in the item's own zone; every listing is in Riga for now. */
 const CATALOG_TIME_ZONE = 'Europe/Riga';
@@ -279,6 +280,53 @@ export class CatalogService {
         ORDER BY x."createdAt" LIMIT 1
       ) r ON TRUE`;
     return row && row.n >= 2 && row.median !== null ? Math.round(row.median) : null;
+  }
+
+  /**
+   * The home's "For you" (owner, 2026-11-16): visible items of the country ranked by popularity and the
+   * person's interests (rankForYou). `userId` adds what the server knows (favourites, rentals, follows)
+   * and leaves out their own items; `categories` is what this browser looked at.
+   */
+  async forYou(input: { country?: string; categories: string[]; userId?: string }): Promise<ForYouResponse> {
+    const candidates = await this.prisma.listing.findMany({
+      where: { ...CATALOG_VISIBLE_WHERE, ...(input.country && { country: input.country }), ...(input.userId && { ownerId: { not: input.userId } }) },
+      select: { id: true, ownerId: true, categoryId: true, publishedAt: true },
+      orderBy: { publishedAt: 'desc' },
+      take: 400,
+    });
+    if (candidates.length === 0) return { items: [], personal: false };
+    const ids = candidates.map((c) => c.id);
+    const since = new Date(this.clock.now().getTime() - 60 * 86_400_000);
+    const [favorites, requests, ratings] = await Promise.all([
+      this.prisma.favorite.groupBy({ by: ['listingId'], where: { listingId: { in: ids } }, _count: { _all: true } }),
+      this.prisma.booking.groupBy({ by: ['listingId'], where: { listingId: { in: ids }, createdAt: { gte: since } }, _count: { _all: true } }),
+      this.reviews.ratingsOfListings(ids),
+    ]);
+    const favCount = new Map(favorites.map((f) => [f.listingId, f._count._all]));
+    const reqCount = new Map(requests.map((r) => [r.listingId, r._count._all]));
+    const categories = new Set(input.categories);
+    const owners = new Set<string>();
+    if (input.userId) {
+      const [faved, rented, follows] = await Promise.all([
+        this.prisma.favorite.findMany({ where: { userId: input.userId }, select: { listing: { select: { categoryId: true } } }, take: 100 }),
+        this.prisma.booking.findMany({ where: { renterId: input.userId }, select: { listing: { select: { categoryId: true } } }, take: 50 }),
+        this.prisma.follow.findMany({ where: { followerId: input.userId }, select: { followeeId: true } }),
+      ]);
+      for (const row of [...faved, ...rented]) if (row.listing.categoryId) categories.add(row.listing.categoryId);
+      for (const row of follows) owners.add(row.followeeId);
+    }
+    const order = rankForYou(
+      candidates.map((c) => ({
+        ...c,
+        favorites: favCount.get(c.id) ?? 0,
+        requests: reqCount.get(c.id) ?? 0,
+        rating: ratings.get(c.id)?.rating ?? null,
+        reviewCount: ratings.get(c.id)?.reviewCount ?? 0,
+      })),
+      { categories, owners },
+      this.clock.now(),
+    );
+    return { items: await this.items(order), personal: categories.size > 0 || owners.size > 0 };
   }
 
   /** Visible items by id, in the order given (ids that are not visible are left out). */

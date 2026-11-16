@@ -8,6 +8,7 @@ import type {
   Locale,
   MapResponse,
   PlacesResponse,
+  ForYouResponse,
   PublicProfile,
   SitemapResponse,
   SuggestResponse,
@@ -27,6 +28,8 @@ import {
   ItemResponseDto,
   MapResponseDto,
   PlacesQueryDto,
+  ForYouQueryDto,
+  ForYouResponseDto,
   PlacesResponseDto,
   PublicProfileDto,
   SitemapResponseDto,
@@ -81,6 +84,13 @@ export class CatalogController {
   @ApiErrors(400)
   places(@Query() query: PlacesQueryDto): Promise<PlacesResponse> {
     return this.catalog.places(query.country);
+  }
+
+  @Get('for-you')
+  @ZodResponse({ status: 200, type: ForYouResponseDto, description: 'Popular items of the country, lifted by the categories this browser looked at' })
+  @ApiErrors(400)
+  forYou(@Query() query: ForYouQueryDto): Promise<ForYouResponse> {
+    return this.catalog.forYou({ ...(query.country && { country: query.country }), categories: query.categories });
   }
 
   @Get('sitemap')

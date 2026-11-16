@@ -1,4 +1,5 @@
-import type { CatalogQuery, Locale } from '@yoyo/shared';
+import type { Locale } from '@yoyo/shared';
+import { ForYou } from '@/components/market/ForYou';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ListingCard } from '@/components/catalog/ListingCard';
@@ -10,7 +11,8 @@ import { TrustRow } from '@/components/market/TrustRow';
 import { TwoDoors } from '@/components/market/TwoDoors';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { Link } from '@/i18n/navigation';
-import { loadPlaces, loadSearch } from '@/lib/catalog/server-api';
+import { loadForYou, loadPlaces } from '@/lib/catalog/server-api';
+import { currentCountry } from '@/lib/country/server';
 import { pageMetadata } from '@/lib/seo';
 import { CONTACT_EMAIL, LIST_ITEM_HREF, SITE_URL } from '@/lib/site';
 
@@ -62,8 +64,9 @@ export default async function HomePage({ params }: Params) {
   const { locale } = (await params) as { locale: Locale };
   setRequestLocale(locale);
   const [meta, t] = await Promise.all([getTranslations('pages.home'), getTranslations('market')]);
-  const [newest, places] = await Promise.all([loadSearch({ sort: 'new', page: 1 } as CatalogQuery), loadPlaces()]);
-  const items = newest.ok ? newest.data.items : [];
+  const [feed, places] = await Promise.all([loadForYou(), loadPlaces()]);
+  const initial = feed.ok ? feed.data : { items: [], personal: false };
+  const items = initial.items;
   const districts = places.ok ? places.data.districts : [];
   const today = new Date().toISOString().slice(0, 10);
   const shown = items.slice(0, 8);
@@ -88,20 +91,17 @@ export default async function HomePage({ params }: Params) {
 
       {items.length > 0 && (
         <section aria-labelledby="home-fresh" className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-16 sm:px-8 sm:py-20">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <h2 id="home-fresh" className="font-display text-[clamp(2.4rem,5vw,4.4rem)] leading-[0.88] font-black uppercase">
-              {t('fresh.title')}
-            </h2>
-            <Link href="/search?sort=new" className="text-[15px] font-bold underline decoration-1 underline-offset-4">
-              {t('fresh.all')}
-            </Link>
-          </div>
-          <ul className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-4 lg:grid-cols-4">
-            {shown.map((item, i) => (
-              <li key={item.id}>
-                <ListingCard item={item} eager={i < 4} />
-              </li>
-            ))}
+          <ForYou
+            initial={initial}
+            country={await currentCountry()}
+            headingId="home-fresh"
+            titles={{ personal: t('forYou.personal'), popular: t('forYou.popular') }}
+            action={
+              <Link href="/search?sort=new" className="text-base font-bold underline decoration-1 underline-offset-4">
+                {t('fresh.all')}
+              </Link>
+            }
+          >
             {LIST_ITEM_HREF && spare.lg > 0 ? (
               <li className={`${SPAN_SM[spare.sm]} ${SPAN_LG[spare.lg]}`}>
                 <Link
@@ -120,7 +120,7 @@ export default async function HomePage({ params }: Params) {
                 </Link>
               </li>
             ) : null}
-          </ul>
+          </ForYou>
           <RecentlyViewed />
         </section>
       )}

@@ -187,6 +187,25 @@ export const PlacesQuerySchema = z.object({ country: CountrySchema.optional() })
 
 export type PlacesResponse = z.infer<typeof PlacesResponseSchema>;
 
+/**
+ * The home's "For you" (owner, 2026-11-16: by interests or popularity, not the raw newest). `categories`:
+ * what this browser looked at lately (category ids), so a visitor gets a personal list too.
+ */
+export const ForYouQuerySchema = z.object({
+  country: CountrySchema.optional(),
+  categories: z
+    .union([z.string(), z.array(z.string())])
+    .optional()
+    .transform((v) => (v === undefined ? [] : (Array.isArray(v) ? v : v.split(',')).filter(Boolean).slice(0, 12))),
+});
+export type ForYouQuery = z.infer<typeof ForYouQuerySchema>;
+export const ForYouResponseSchema = z.object({
+  /** At most 12, best first; `personal` says whether interests shaped the list (else it is "popular now"). */
+  items: z.array(CatalogItemSchema),
+  personal: z.boolean(),
+});
+export type ForYouResponse = z.infer<typeof ForYouResponseSchema>;
+
 /** Someone as everyone may see them: no email, no phone number. */
 export const OwnerSummarySchema = z.object({
   id: z.string(),
