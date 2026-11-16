@@ -182,6 +182,8 @@ export const ProvidersResponseSchema = z.object({
   apple: z.boolean(),
   /** False until a real SMS provider is configured: a "phone confirmed" mark must mean something. */
   phone: z.boolean(),
+  /** Lending and renting need an identity confirmed by a moderator (owner, 2026-11-16). */
+  identityRequired: z.boolean(),
 });
 
 export type ProvidersResponse = z.infer<typeof ProvidersResponseSchema>;

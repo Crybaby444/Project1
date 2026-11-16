@@ -1275,6 +1275,22 @@
       "consent": "Your consent is needed to send the photos.",
       "photo": "One of the photos could not be read. Use a JPEG, PNG or WebP under 10 MB.",
       "send": "The photos were not sent. Try again."
+    },
+    "notice": {
+      "profile": {
+        "lend": "Before you lend: confirm you are 18 or older and agree to the processing of your data.",
+        "rent": "Before you rent: confirm you are 18 or older and agree to the processing of your data.",
+        "button": "Open the profile"
+      },
+      "identity": {
+        "lend": "To send items for review, confirm who you are first. A moderator checks a document photo and a selfie.",
+        "rent": "To rent, confirm who you are first. A moderator checks a document photo and a selfie.",
+        "button": "Confirm who you are"
+      },
+      "pending": {
+        "lend": "Your identity check is with a moderator. You can send items for review once it is confirmed.",
+        "rent": "Your identity check is with a moderator. You can rent once it is confirmed."
+      }
     }
   }
 }

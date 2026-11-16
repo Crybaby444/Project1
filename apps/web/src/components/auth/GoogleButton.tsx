@@ -1,10 +1,8 @@
 'use client';
 
 import { DEFAULT_LOCALE } from '@yoyo/shared';
-import { useQuery } from '@tanstack/react-query';
 import { useLocale, useTranslations } from 'next-intl';
-import { unwrap } from '@/lib/session/api-error';
-import { useApiClient } from '@/lib/session/SessionProvider';
+import { useProviders } from '@/lib/auth/providers';
 import { safeNext } from '@/lib/session/safe-next';
 
 /** The site path (with the language prefix) Google should send the person back to. */
@@ -54,12 +52,7 @@ const BUTTON =
 export function GoogleButton({ next }: { next: string | null }) {
   const t = useTranslations('auth');
   const locale = useLocale();
-  const client = useApiClient();
-  const providers = useQuery({
-    queryKey: ['auth', 'providers'],
-    queryFn: () => unwrap(client.GET('/api/v1/auth/providers')),
-    staleTime: 5 * 60_000,
-  });
+  const providers = useProviders();
   const google = providers.data?.google === true;
   const apple = providers.data?.apple === true;
   if (!google && !apple) return null;

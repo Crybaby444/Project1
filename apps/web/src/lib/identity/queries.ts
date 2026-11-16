@@ -9,9 +9,9 @@ import { useApiClient, useSession } from '@/lib/session/SessionProvider';
 const KEY = ['me', 'identity'] as const;
 const QUEUE = ['admin', 'identity'] as const;
 
-export function useIdentityState() {
+export function useIdentityState(enabled = true) {
   const client = useApiClient();
-  return useQuery({ queryKey: KEY, queryFn: () => unwrap(client.GET('/api/v1/me/identity')) });
+  return useQuery({ queryKey: KEY, enabled, queryFn: () => unwrap(client.GET('/api/v1/me/identity')) });
 }
 
 async function post(form: FormData): Promise<Response> {
