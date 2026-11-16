@@ -2,11 +2,10 @@
 
 import { displayFit } from '@/lib/display-fit';
 import { useQueryClient } from '@tanstack/react-query';
-import { LISTING_STATUSES, type ListingStatus } from '@yoyo/shared';
+import { type ListingStatus } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import { Chip } from '@/components/ui/Chip';
 import { useErrorText } from '@/lib/forms/error-text';
 import { useMyListings } from '@/lib/listings/queries';
 import { unwrap } from '@/lib/session/api-error';
@@ -16,27 +15,26 @@ import { MyListingCard } from './MyListingCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 
 export type MyListingsFilter = ListingStatus | 'ALL';
-const FILTERS: MyListingsFilter[] = ['ALL', ...LISTING_STATUSES];
+/** What needs you first (owner, 2026-11-16: one list with statuses, no row of filters). */
+const ORDER: ListingStatus[] = ['REJECTED', 'DRAFT', 'PENDING_REVIEW', 'PUBLISHED', 'HIDDEN'];
+const rank = (l: { status: ListingStatus }) => {
+  const at = ORDER.indexOf(l.status);
+  return at === -1 ? ORDER.length : at;
+};
 
 /**
- * "My items" (spec §4.2): every listing of the owner with its state, filtered by status (kept in
- * `?status=`, so the view can be bookmarked). Deleted listings are asked for only with their filter.
+ * "My items" (spec §4.2): every listing of the owner in one list, each with its status, what needs you
+ * first (rejected, drafts), then in review, live and hidden. A line under the title counts them by status.
+ * Deleted listings are asked for only when you open them at the foot (or with `?status=ARCHIVED`).
  */
 export function MyListings({ initialStatus }: { initialStatus: MyListingsFilter }) {
   const t = useTranslations('myListings');
   const errorText = useErrorText();
   const client = useApiClient();
   const queryClient = useQueryClient();
-  const [status, setStatus] = useState<MyListingsFilter>(initialStatus);
-  const query = useMyListings(status);
-
-  function choose(next: MyListingsFilter) {
-    setStatus(next);
-    const url = new URL(window.location.href);
-    if (next === 'ALL') url.searchParams.delete('status');
-    else url.searchParams.set('status', next);
-    window.history.replaceState(window.history.state, '', url);
-  }
+  const query = useMyListings('ALL');
+  const [showDeleted, setShowDeleted] = useState(initialStatus === 'ARCHIVED');
+  const deleted = useMyListings(showDeleted ? 'ARCHIVED' : null);
 
   async function perform(id: string, action: ListingAction) {
     const path = { params: { path: { id } } };
@@ -46,7 +44,8 @@ export function MyListings({ initialStatus }: { initialStatus: MyListingsFilter 
     await queryClient.invalidateQueries({ queryKey: ['listings'] });
   }
 
-  const items = query.data ?? [];
+  const items = [...(query.data ?? [])].sort((a, b) => rank(a) - rank(b));
+  const counts = ORDER.map((st) => [st, items.filter((l) => l.status === st).length] as const).filter(([, n]) => n > 0);
 
   return (
     <main className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-10 sm:px-8 sm:py-14">
@@ -65,23 +64,15 @@ export function MyListings({ initialStatus }: { initialStatus: MyListingsFilter 
         </Button>
       </header>
 
-      <div
-        role="group"
-        aria-label={t('filters')}
-        className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0"
-      >
-        {FILTERS.map((filter, index) => (
-          <Chip
-            key={filter}
-            pressed={status === filter}
-            onPressedChange={() => choose(filter)}
-            tilt={index % 2 ? 'right' : 'left'}
-            className="shrink-0"
-          >
-            {t(`filter.${filter}`)}
-          </Chip>
-        ))}
-      </div>
+      {counts.length > 0 && (
+        <p className="text-ink/75 -mt-4 flex flex-wrap gap-x-4 gap-y-1 text-[15px]" data-status-summary="">
+          {counts.map(([st, n]) => (
+            <span key={st}>
+              <b className="text-ink tabular-nums">{n}</b> {t(`filter.${st}`).toLowerCase()}
+            </span>
+          ))}
+        </p>
+      )}
 
       {query.isPending ? (
         <ul aria-busy="true" className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
@@ -105,7 +96,7 @@ export function MyListings({ initialStatus }: { initialStatus: MyListingsFilter 
           </Button>
         </div>
       ) : items.length === 0 ? (
-        status === 'ALL' ? (
+        (
           <EmptyState
             title={t('emptyTitle')}
             body={t('emptyBody')}
@@ -115,8 +106,6 @@ export function MyListings({ initialStatus }: { initialStatus: MyListingsFilter 
               </Button>
             }
           />
-        ) : (
-          <EmptyState title={t('emptyFilter')} />
         )
       ) : (
         <>
@@ -132,6 +121,32 @@ export function MyListings({ initialStatus }: { initialStatus: MyListingsFilter 
           </ul>
         </>
       )}
+
+      {/* Deleted items stay out of the way: asked for only when opened. */}
+      <section className="border-ink/15 flex flex-col gap-4 border-t pt-6">
+        <button
+          type="button"
+          aria-expanded={showDeleted}
+          onClick={() => setShowDeleted((open) => !open)}
+          className="text-ink/75 hover:text-ink self-start text-[15px] font-bold underline decoration-1 underline-offset-4"
+        >
+          {showDeleted ? t('deleted.hide') : t('deleted.show')}
+        </button>
+        {showDeleted &&
+          (deleted.isPending ? (
+            <p className="text-ink/70 text-sm">{t('deleted.loading')}</p>
+          ) : (deleted.data ?? []).length === 0 ? (
+            <p className="text-ink/70 text-sm">{t('deleted.none')}</p>
+          ) : (
+            <ul className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              {(deleted.data ?? []).map((listing) => (
+                <li key={listing.id}>
+                  <MyListingCard listing={listing} perform={(action) => perform(listing.id, action)} />
+                </li>
+              ))}
+            </ul>
+          ))}
+      </section>
     </main>
   );
 }

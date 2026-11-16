@@ -696,7 +696,13 @@
       "next": "Nākamā noma no {date}",
       "earned": "Nopelnīts {amount}"
     },
-    "more": "Citas darbības: {title}"
+    "more": "Citas darbības: {title}",
+    "deleted": {
+      "show": "Rādīt dzēstās lietas",
+      "hide": "Paslēpt dzēstās lietas",
+      "loading": "Ielādē…",
+      "none": "Nav dzēstu lietu."
+    }
   },
   "moderation": {
     "title": "Moderācija",
