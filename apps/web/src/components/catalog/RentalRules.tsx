@@ -29,7 +29,7 @@ export async function RentalRules({ name, id = 'rental-rules' }: { name: string;
           ))}
         </ul>
         <Link
-          href="/how-it-works"
+          href="/what-is-yoyo"
           className="text-[15px] font-bold underline decoration-1 underline-offset-4"
         >
           {t('more')}
