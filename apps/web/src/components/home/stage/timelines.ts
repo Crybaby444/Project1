@@ -32,8 +32,6 @@ export function mountTimelines(stage: Stage, root: HTMLElement, opts: { mobile: 
   addEventListener('pointermove', onPointer, { passive: true });
 
   const q = <T extends Element>(sel: string) => Array.from(root.querySelectorAll<T>(sel));
-  const facts = { k: 0, ks: 0 };
-  let factsTick: ((t: number, d: number) => void) | null = null;
 
   const ctx = gsap.context(() => {
     const h = (x: number) => x / HK;
@@ -78,18 +76,19 @@ export function mountTimelines(stage: Stage, root: HTMLElement, opts: { mobile: 
       .to('[data-half="r"]', { xPercent: 140, ease: 'power2.in', duration: h(0.5) }, h(0.08))
       .fromTo(
         '[data-row]',
-        { scale: 1.12, opacity: 0, filter: 'blur(14px)' },
-        { scale: 1, opacity: 0.22, filter: 'blur(0px)', stagger: 0.02, duration: 0.07 },
+        // Only light, no scale or blur on rows that already run sideways: two motions at once judder.
+        { opacity: 0 },
+        { opacity: 0.22, stagger: 0.02, duration: 0.07 },
         h(0.58),
       )
-      .to('[data-row="1"]', { opacity: 1, scale: 1.03, duration: 0.07, ease: 'power2.inOut' }, 0.4)
-      .to('[data-row="1"]', { opacity: 0.3, scale: 1, duration: 0.07, ease: 'power2.inOut' }, 0.52)
-      .to('[data-row="2"]', { opacity: 1, scale: 1.03, duration: 0.07, ease: 'power2.inOut' }, 0.52)
+      .to('[data-row="1"]', { opacity: 1, duration: 0.07, ease: 'power2.inOut' }, 0.4)
+      .to('[data-row="1"]', { opacity: 0.3, duration: 0.07, ease: 'power2.inOut' }, 0.52)
+      .to('[data-row="2"]', { opacity: 1, duration: 0.07, ease: 'power2.inOut' }, 0.52)
       .to('[data-row="2"]', { color: () => tone('--paper'), duration: 0.07, ease: 'power2.inOut' }, 0.52)
-      .to('[data-row="2"]', { opacity: 0.3, scale: 1, duration: 0.07, ease: 'power2.inOut' }, 0.64)
+      .to('[data-row="2"]', { opacity: 0.3, duration: 0.07, ease: 'power2.inOut' }, 0.64)
       .to('[data-row="2"]', { color: () => tone('--night'), duration: 0.07, ease: 'power2.inOut' }, 0.64)
-      .to('[data-row="3"]', { opacity: 1, scale: 1.04, duration: 0.07, ease: 'power2.inOut' }, 0.64)
-      .to('[data-row]', { opacity: 1, scale: 1, duration: 0.07, ease: 'power2.inOut' }, 0.78)
+      .to('[data-row="3"]', { opacity: 1, duration: 0.07, ease: 'power2.inOut' }, 0.64)
+      .to('[data-row]', { opacity: 1, duration: 0.07, ease: 'power2.inOut' }, 0.78)
       .fromTo(
         '[data-say]',
         { opacity: 0, y: 30 },
@@ -122,42 +121,7 @@ export function mountTimelines(stage: Stage, root: HTMLElement, opts: { mobile: 
     });
     wt.set({}, {}, 1);
 
-    // ---- facts: a stack driven straight by the (smoothed) scroll, no restarts
-    const items = q<HTMLElement>('[data-fact]');
-    const layers = items.map((li) => Array.from(li.querySelectorAll<HTMLElement>('[data-l]'))); // the moving content inside each mask
-    const values = items.map((li) => li.querySelector<HTMLElement>('b[data-value]')!);
-    const segs = q<HTMLElement>('[data-fbar] i');
-    const idx = root.querySelector<HTMLElement>('[data-fidx]');
-    const N = items.length,
-      last = N - 1,
-      IN = 0.3;
-    const sm = (x: number) => x * x * (3 - 2 * x);
-    ScrollTrigger.create({
-      trigger: '[data-home="facts"]',
-      start: 'top top',
-      end: 'bottom bottom',
-      onUpdate: (st) => (facts.k = st.progress * N),
-    });
-    factsTick = (_t, dms) => {
-      facts.ks += (facts.k - facts.ks) * (1 - Math.pow(0.0025, Math.min(dms, 50) / 1000));
-      for (let i = 0; i <= last; i++) {
-        layers[i]!.forEach((el, j) => {
-          const tt = facts.ks - i - j * 0.05;
-          let y = 0;
-          if (tt < IN && i > 0) y = 110 * (1 - sm(clamp((tt + IN) / (2 * IN), 0, 1)));
-          else if (tt > 1 - IN && i < last) y = -110 * sm(clamp((tt - (1 - IN)) / (2 * IN), 0, 1));
-          if (i > 0 && tt < -IN) y = 110;
-          if (i < last && tt > 1 + IN) y = -110;
-          el.style.transform = `translate3d(0, ${y}%, 0)`;
-          el.style.visibility = Math.abs(y) >= 109.9 ? 'hidden' : 'visible';
-        });
-        const c = i === 0 ? 1 : sm(clamp((facts.ks - i + IN) / (IN * 2.2), 0, 1));
-        values[i]!.textContent = String(Math.round(Number(values[i]!.dataset.value) * c));
-      }
-      segs.forEach((g, i) => g.style.setProperty('--f', String(clamp(facts.ks - i, 0, 1))));
-      if (idx) idx.textContent = `0${Math.min(last, Math.max(0, Math.round(facts.ks - 0.5))) + 1} / 0${N}`;
-    };
-    gsap.ticker.add(factsTick);
+    // (The facts scene is gone, owner 2026-11-16: the rules section says the same, honestly.)
 
     // ---- finale: driven by how far you are into the held last slide; then it rolls away and back
     const R = { x: 0, hop: 0 };
@@ -223,7 +187,6 @@ export function mountTimelines(stage: Stage, root: HTMLElement, opts: { mobile: 
   return () => {
     removeEventListener('resize', onResize);
     removeEventListener('pointermove', onPointer);
-    if (factsTick) gsap.ticker.remove(factsTick);
     gsap.ticker.remove(tick);
     ctx.revert();
     lenis.destroy();

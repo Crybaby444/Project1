@@ -92,10 +92,10 @@ export const loadMap = async (query: CatalogQuery) => mapByKey(JSON.stringify(aw
 
 const placesIn = cache(
   async (country: string): Promise<Loaded<PlacesResponse>> =>
-    load(() => client().GET('/api/v1/catalog/places', { params: { query: { country } as never } })),
+    load(() => client(300).GET('/api/v1/catalog/places', { params: { query: { country } as never } })),
 );
 
-/** The countries with items, and the cities and districts of the visitor's country. */
+/** The countries with items, and the cities and districts of the visitor's country (kept 5 minutes). */
 export const loadPlaces = async (): Promise<Loaded<PlacesResponse>> => placesIn(await currentCountry());
 
 export const loadProfile = cache(

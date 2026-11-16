@@ -1,7 +1,6 @@
 import type { Locale } from '@yoyo/shared';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Facts } from '@/components/home/Facts';
 import { Finale } from '@/components/home/Finale';
 import { Hero } from '@/components/home/Hero';
 import { NightScene } from '@/components/home/NightScene';
@@ -31,7 +30,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 /**
  * What is Yoyo (owner, 2026-11-16: everything once, in order, nothing repeated): the word and the yo-yo;
  * the night (take it, lend it, get it back); what Yoyo is in one sentence; both sides step by step; the
- * rules a deal keeps; the people; what else is inside; the guarantees in numbers; and the way home.
+ * rules a deal keeps; the people; what else is inside; and the way home.
  */
 export default async function WhatIsYoyoPage({ params }: Params) {
   const { locale } = await params;
@@ -49,7 +48,6 @@ export default async function WhatIsYoyoPage({ params }: Params) {
       <FinePrint />
       <PeopleScene />
       <Inside />
-      <Facts />
       <Finale />
       <HomeStageLoader />
     </main>

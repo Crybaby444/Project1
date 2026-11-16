@@ -1009,7 +1009,8 @@
     "noFollowing": "{name} follows nobody yet.",
     "favorites": "Favourites",
     "noFavorites": "Nothing saved yet. Press the heart on an item to keep it here.",
-    "deals": "{count, plural, one {deal} other {deals}}"
+    "deals": "{count, plural, one {deal} other {deals}}",
+    "findPeople": "Find people"
   },
   "consent": {
     "label": "Cookie choice",
@@ -1057,7 +1058,12 @@
     "newItems": "New from them",
     "noNewItems": "Nothing new yet.",
     "youFollow": "You follow {count}",
-    "write": "Write a message"
+    "write": "Write a message",
+    "findLabel": "Name or @username",
+    "findPlaceholder": "Name or @username",
+    "findHint": "Type at least two letters.",
+    "findLoading": "Searching…",
+    "findNone": "Nobody found for “{q}”."
   },
   "identity": {
     "birthDate": "Date of birth",
@@ -1221,5 +1227,8 @@
     "button": "Country: {name}",
     "title": "Your country",
     "lead": "Yoyo shows things for rent in one country at a time, in euros. Pick where you are."
+  },
+  "dialog": {
+    "close": "Close"
   }
 }

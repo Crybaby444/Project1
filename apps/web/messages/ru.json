@@ -1009,7 +1009,8 @@
     "noFollowing": "{name} пока ни на кого не подписан(а).",
     "favorites": "Избранное",
     "noFavorites": "Пока ничего не сохранено. Нажми сердечко на вещи, чтобы она появилась здесь.",
-    "deals": "{count, plural, one {сделка} few {сделки} many {сделок} other {сделки}}"
+    "deals": "{count, plural, one {сделка} few {сделки} many {сделок} other {сделки}}",
+    "findPeople": "Найти людей"
   },
   "consent": {
     "label": "Выбор cookie",
@@ -1057,7 +1058,12 @@
     "newItems": "Новое от них",
     "noNewItems": "Пока ничего нового.",
     "youFollow": "Вы подписаны: {count}",
-    "write": "Написать"
+    "write": "Написать",
+    "findLabel": "Имя или @username",
+    "findPlaceholder": "Имя или @username",
+    "findHint": "Введите хотя бы две буквы.",
+    "findLoading": "Ищем…",
+    "findNone": "По запросу «{q}» никого не нашли."
   },
   "identity": {
     "birthDate": "Дата рождения",
@@ -1221,5 +1227,8 @@
     "button": "Страна: {name}",
     "title": "Ваша страна",
     "lead": "Yoyo показывает вещи в аренду в одной стране, в евро. Выберите, где вы."
+  },
+  "dialog": {
+    "close": "Закрыть"
   }
 }

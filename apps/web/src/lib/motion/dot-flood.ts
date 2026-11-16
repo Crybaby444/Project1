@@ -42,6 +42,16 @@ export function dotScale(t: number, delay: number, phase: Phase): number {
   return phase === 'cover' ? eased : 1 - eased;
 }
 
+/**
+ * The big part of the site a path belongs to: its first segment after the language (`/lv/c/tools` → `c`,
+ * `/dashboard/favorites` → `dashboard`, `/` → ``). Moving inside one part is not a change of place.
+ */
+export function sectionOf(pathname: string): string {
+  const parts = pathname.split('/').filter(Boolean);
+  if (parts[0] && /^[a-z]{2}$/.test(parts[0])) parts.shift();
+  return parts[0] ?? '';
+}
+
 /** Whether a click should run the flood. */
 export function shouldFlood(c: {
   reducedMotion: boolean;
@@ -51,8 +61,10 @@ export function shouldFlood(c: {
   sameOrigin: boolean;
   language: boolean;
   optOut: boolean;
+  /** Owner, 2026-11-16: only between big parts (home, catalog, profile, deals…), not inside one. */
+  sameSection?: boolean;
 }): boolean {
-  return c.plainClick && c.sameOrigin && !c.samePage && !c.language && !c.optOut && !c.reducedMotion && !c.automated;
+  return c.plainClick && c.sameOrigin && !c.samePage && !c.sameSection && !c.language && !c.optOut && !c.reducedMotion && !c.automated;
 }
 
 /** One flood on a canvas above the page: `cover` from a point, then `reveal`; `remove` drops the canvas. */

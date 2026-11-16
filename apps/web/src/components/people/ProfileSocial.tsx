@@ -7,10 +7,11 @@ import { Button } from '@/components/ui/Button';
 import { Dialog } from '@/components/ui/Dialog';
 import { usePeopleOf } from '@/lib/people/queries';
 import { useSession } from '@/lib/session/SessionProvider';
+import { FindPeople } from './FindPeople';
 import { FollowButton } from './FollowButton';
 import { PersonCard } from './PersonCard';
 
-type List = 'followers' | 'following';
+type List = 'followers' | 'following' | 'find';
 
 /**
  * The profile's social row (owner, 2026-11-16: a full profile). Followers and following open their
@@ -24,7 +25,7 @@ export function ProfileSocial({ userId, name, followers, following, reviews, dea
   const mine = user?.id === userId;
   const [delta, setDelta] = useState(0);
   const [open, setOpen] = useState<List | null>(null);
-  const people = usePeopleOf(userId, open);
+  const people = usePeopleOf(userId, open === 'find' ? null : open);
 
   const stat = (value: number, label: string, onClick?: () => void) => {
     const inner = (
@@ -59,6 +60,9 @@ export function ProfileSocial({ userId, name, followers, following, reviews, dea
             <Button href="/dashboard/lending" variant="ghost" size="md">
               {tp('manage')}
             </Button>
+            <Button variant="ghost" size="md" onClick={() => setOpen('find')}>
+              {tp('findPeople')}
+            </Button>
           </>
         ) : (
           <>
@@ -68,11 +72,24 @@ export function ProfileSocial({ userId, name, followers, following, reviews, dea
         )}
       </div>
 
-      <Dialog open={open !== null} onClose={() => setOpen(null)} title={open === 'followers' ? tp('followersOf', { name }) : tp('followingOf', { name })}>
-        {people.isPending ? (
+      <Dialog
+        open={open !== null}
+        onClose={() => setOpen(null)}
+        title={open === 'find' ? tp('findPeople') : open === 'followers' ? tp('followersOf', { name }) : tp('followingOf', { name })}
+      >
+        {open === 'find' ? (
+          <FindPeople />
+        ) : people.isPending ? (
           <p className="text-ink/70">{tp('loading')}</p>
         ) : (people.data ?? []).length === 0 ? (
-          <p className="text-ink/70">{open === 'followers' ? tp('noFollowers', { name }) : tp('noFollowing', { name })}</p>
+          <div className="flex flex-col items-start gap-4">
+            <p className="text-ink/70">{open === 'followers' ? tp('noFollowers', { name }) : tp('noFollowing', { name })}</p>
+            {mine && open === 'following' && (
+              <Button variant="ghost" onClick={() => setOpen('find')}>
+                {tp('findPeople')}
+              </Button>
+            )}
+          </div>
         ) : (
           <ul className="flex max-h-[60vh] flex-col gap-3 overflow-y-auto">
             {(people.data ?? []).map((person) => (

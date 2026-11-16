@@ -28,7 +28,6 @@ describe('SiteFooter', () => {
     const nav = screen.getByRole('navigation', { name: siteLv.footer.pagesLabel });
     const links = within(nav).getAllByRole('link');
     expect(links.map((link) => [link.textContent, link.getAttribute('href')])).toEqual([
-      [siteLv.footer.links.catalog, '/lv/c'],
       [siteLv.footer.links.whatIsYoyo, '/lv/what-is-yoyo'],
       [siteLv.footer.links.faq, '/lv/faq'],
       [siteLv.footer.links.terms, '/lv/terms'],

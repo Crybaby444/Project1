@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dotGrid, dotScale, shouldFlood } from './dot-flood';
+import { dotGrid, dotScale, sectionOf, shouldFlood } from './dot-flood';
 
 describe('dotGrid', () => {
   it('covers the whole screen with a staggered grid, the delay growing with the distance from the origin', () => {
@@ -36,5 +36,22 @@ describe('shouldFlood', () => {
   it('leaves alone anything else: reduced motion, tests, the same page, new tabs, other sites, language links, opt-outs', () => {
     for (const k of ['reducedMotion', 'automated', 'samePage', 'language', 'optOut'] as const) expect(shouldFlood({ ...base, [k]: true })).toBe(false);
     for (const k of ['plainClick', 'sameOrigin'] as const) expect(shouldFlood({ ...base, [k]: false })).toBe(false);
+  });
+});
+
+describe('sectionOf', () => {
+  it('names the big part of the site, in any language', () => {
+    expect(sectionOf('/')).toBe('');
+    expect(sectionOf('/lv')).toBe('');
+    expect(sectionOf('/c/tools')).toBe('c');
+    expect(sectionOf('/ru/c/instrumenty')).toBe('c');
+    expect(sectionOf('/dashboard/favorites')).toBe('dashboard');
+    expect(sectionOf('/what-is-yoyo')).toBe('what-is-yoyo');
+  });
+
+  it('does not flood a move inside one part (tabs of My profile, categories of the catalog)', () => {
+    const base = { reducedMotion: false, automated: false, samePage: false, plainClick: true, sameOrigin: true, language: false, optOut: false };
+    expect(shouldFlood({ ...base, sameSection: true })).toBe(false);
+    expect(shouldFlood({ ...base, sameSection: false })).toBe(true);
   });
 });

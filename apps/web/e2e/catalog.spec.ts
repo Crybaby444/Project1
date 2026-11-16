@@ -180,10 +180,11 @@ test('the owner’s public profile lists the item and has no reviews yet', async
   await expect(page.getByRole('tabpanel').getByText(en.profile.noReviewsTitle, { exact: true })).toBeVisible();
 });
 
-test('the catalog is reached from the header and the footer (owner, 2026-11-16)', async ({ page }) => {
+test('the catalog is reached from the header, not the footer (owner, 2026-11-16)', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('banner').getByRole('button', { name: 'Catalog' })).toBeVisible();
-  await page.getByRole('contentinfo').getByRole('link', { name: 'Catalog' }).click();
+  await expect(page.getByRole('contentinfo').getByRole('link', { name: 'Catalog' })).toHaveCount(0);
+  await page.getByRole('banner').getByRole('button', { name: 'Catalog' }).click();
+  await page.getByRole('link', { name: en.nav.allCategoriesPage }).click();
   await expect(page).toHaveURL(/\/c$/);
   // Every root category is a plain link on /c (for search engines and the keyboard).
   expect(await page.getByRole('main').locator('a[href^="/c/"]').count()).toBeGreaterThanOrEqual(13);

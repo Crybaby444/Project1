@@ -93,7 +93,8 @@ export function DropCursor() {
     const drawn = new Float32Array(frameData.length).fill(-1e9);
     let dpr = 1, H = 0;
     const size = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // The drop is a soft shape: 1.5× is sharp enough and halves the full-screen shader's work on Retina.
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       H = c.clientHeight;
       c.width = Math.round(c.clientWidth * dpr); c.height = Math.round(H * dpr);
       gl.viewport(0, 0, c.width, c.height);
