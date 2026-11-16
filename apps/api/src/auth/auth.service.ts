@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto';
+import { ActivityService } from '../activity/activity.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { DEFAULT_LOCALE, isLocale, type Locale, type LoginRequest, type RegisterRequest } from '@yoyo/shared';
 import { CLOCK, type Clock } from '../clock/clock';
@@ -51,6 +52,7 @@ export function webLink(origin: string, locale: string, path: string, token: str
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly activity: ActivityService,
     private readonly prisma: PrismaService,
     private readonly passwords: PasswordService,
     private readonly accessTokens: AccessTokenService,
@@ -93,6 +95,7 @@ export class AuthService {
       throw error;
     }
     const session = await this.startSession(user, meta);
+    this.activity.record('USER_REGISTERED', user.id, { type: 'USER', id: user.id }, user.username ? `@${user.username}` : user.name);
     await this.sendVerification(user);
     await this.analytics.count('FUNNEL', 'SIGNUP');
     return { user, session };
@@ -123,6 +126,7 @@ export class AuthService {
     if (!user || !passwordOk || user.deletedAt !== null) throw invalidCredentials();
     if (user.blockedAt !== null) throw new AppError('AUTH_BLOCKED', 403);
     await this.twoFactor.checkSignIn(user, input.code);
+    this.activity.record('USER_SIGNED_IN', user.id, null, 'password');
     return { user, session: await this.startSession(user, meta) };
   }
 
@@ -170,6 +174,7 @@ export class AuthService {
     if (user.blockedAt !== null) throw new AppError('AUTH_BLOCKED', 403);
     // Google can't ask for the app's code: an account with two-step sign-in uses email, password and code.
     if (this.twoFactor.enabled(user)) throw new AppError('AUTH_CODE_REQUIRED', 401);
+    this.activity.record('USER_SIGNED_IN', user.id, null, provider);
     return user;
   }
 

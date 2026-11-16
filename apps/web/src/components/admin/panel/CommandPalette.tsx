@@ -13,6 +13,7 @@ type Hit = { key: string; group: 'pages' | 'users' | 'listings' | 'deals'; label
 
 const PAGES: { key: string; section: AdminSection; href: string }[] = [
   { key: 'overview', section: 'overview', href: '/admin' },
+  { key: 'activity', section: 'activity', href: '/admin/activity' },
   { key: 'traffic', section: 'traffic', href: '/admin/traffic' },
   { key: 'seo', section: 'seo', href: '/admin/seo' },
   { key: 'moderation', section: 'moderation', href: '/admin/listings' },

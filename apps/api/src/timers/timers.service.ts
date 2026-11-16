@@ -1,4 +1,5 @@
 import { Inject, Injectable, Logger, type OnApplicationBootstrap } from '@nestjs/common';
+import { ActivityService } from '../activity/activity.service';
 import type { TimerKind } from '@yoyo/domain';
 import { BookingRulesService } from '../bookings/booking-rules.service';
 import { BookingsService } from '../bookings/bookings.service';
@@ -34,6 +35,7 @@ export class TimersService implements OnApplicationBootstrap {
   private readonly logger = new Logger('Timers');
 
   constructor(
+    private readonly activity: ActivityService,
     private readonly prisma: PrismaService,
     private readonly bookings: BookingsService,
     private readonly rules: BookingRulesService,
@@ -80,6 +82,8 @@ export class TimersService implements OnApplicationBootstrap {
     const { count: keysForgotten } = await this.prisma.idempotencyKey.deleteMany({
       where: { createdAt: { lt: new Date(this.clock.now().getTime() - DAY) } },
     });
+    // Activity older than 180 days goes (GDPR: kept no longer than the admin needs it).
+    await this.activity.prune();
     return { fired, failed, offersExpired, moneyJobs, keysForgotten, more };
   }
 

@@ -19,7 +19,8 @@
       "categories": "Kategorijas",
       "staff": "Komanda",
       "security": "Drošība",
-      "identity": "Identitātes pārbaudes"
+      "identity": "Identitātes pārbaudes",
+      "activity": "Aktivitāte"
     },
     "common": {
       "loadFailed": "Neizdevās ielādēt.",
@@ -564,6 +565,41 @@
       "approved": "Identitāte apstiprināta",
       "rejected": "Pārbaude noraidīta",
       "failed": "Lēmums netika saglabāts. Mēģiniet vēlreiz."
+    },
+    "activity": {
+      "intro": "Viss, ko cilvēki dara Yoyo, jaunākais augšā. Par ziņām redzams tikai, ka tā nosūtīta, nekad tās saturs.",
+      "all": "Viss",
+      "groups": {
+        "accounts": "Konti",
+        "listings": "Sludinājumi",
+        "deals": "Darījumi",
+        "messages": "Ziņas",
+        "reports": "Sūdzības",
+        "social": "Sekošana"
+      },
+      "person": "Tikai šī persona",
+      "clearPerson": "Visi",
+      "more": "Rādīt vecākus",
+      "empty": "Šeit vēl nekā nav.",
+      "live": "Atjaunojas ik pēc 30 sekundēm",
+      "system": "Sistēma",
+      "kinds": {
+        "USER_REGISTERED": "Reģistrējās",
+        "USER_SIGNED_IN": "Pieteicās",
+        "USER_DELETED": "Izdzēsa kontu",
+        "PROFILE_UPDATED": "Atjaunoja profilu",
+        "IDENTITY_SUBMITTED": "Nosūtīja identitātes pārbaudi",
+        "LISTING_CREATED": "Sāka sludinājumu",
+        "LISTING_SUBMITTED": "Nosūtīja sludinājumu pārbaudei",
+        "LISTING_DELETED": "Izdzēsa sludinājumu",
+        "BOOKING_REQUESTED": "Pieprasīja nomu",
+        "BOOKING_STEP": "Darījuma solis",
+        "OFFER_MADE": "Piedāvāja cenu",
+        "MESSAGE_SENT": "Nosūtīja ziņu",
+        "REVIEW_WRITTEN": "Uzrakstīja atsauksmi",
+        "REPORT_FILED": "Iesniedza sūdzību",
+        "FOLLOWED": "Sāka sekot"
+      }
     }
   }
 }

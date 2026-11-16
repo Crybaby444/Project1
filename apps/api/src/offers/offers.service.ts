@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { ActivityService } from '../activity/activity.service';
 import { cents, endOfDayIn, localDate, localDateIn, period, validateOffer, validateRentalPeriod, DomainError } from '@yoyo/domain';
 import type { OfferRequest, OfferStatus, OfferView, PublicUser } from '@yoyo/shared';
 import { CLOCK, type Clock } from '../clock/clock';
@@ -29,6 +30,7 @@ const notFound = () => new AppError('NOT_FOUND', 404, 'Offer not found');
 @Injectable()
 export class OffersService {
   constructor(
+    private readonly activity: ActivityService,
     private readonly prisma: PrismaService,
     private readonly rules: BookingRulesService,
     private readonly notifier: DealNotifier,
@@ -67,6 +69,7 @@ export class OffersService {
       });
     });
     await this.notifier.offer('OFFER_MADE', offer.id);
+    this.activity.record('OFFER_MADE', renter.id, { type: 'OFFER', id: offer.id }, `${(input.dailyCents / 100).toFixed(2)} €/day`);
     return this.serialize(offer);
   }
 

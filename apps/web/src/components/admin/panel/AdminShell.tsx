@@ -19,6 +19,12 @@ const SECTIONS: { key: Section; group: 'insight' | 'work' | 'money' | 'system'; 
     icon: <path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-3H4zM14 7h6V4h-6z" />,
   },
   {
+    key: 'activity',
+    group: 'insight',
+    href: '/admin/activity',
+    icon: <path d="M3 12h4l3-8 4 16 3-8h4" />,
+  },
+  {
     key: 'traffic',
     group: 'insight',
     href: '/admin/traffic',
@@ -105,6 +111,7 @@ const SECTIONS: { key: Section; group: 'insight' | 'work' | 'money' | 'system'; 
 ];
 
 function activeSection(pathname: string): Section {
+  if (pathname.startsWith('/admin/activity')) return 'activity';
   if (pathname.startsWith('/admin/traffic')) return 'traffic';
   if (pathname.startsWith('/admin/seo')) return 'seo';
   if (pathname.startsWith('/admin/listings')) return 'moderation';

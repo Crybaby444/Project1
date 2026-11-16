@@ -1118,3 +1118,18 @@ model IdentityCheck {
   @@index([status, submittedAt])
   @@index([userId])
 }
+
+/// Everything people do, for the admin's Activity page (owner, 2026-11-16). Kept 180 days.
+model ActivityEvent {
+  id         String   @id @default(cuid())
+  kind       String
+  actorId    String?
+  targetType String?
+  targetId   String?
+  summary    String   @default("")
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([kind, createdAt])
+  @@index([actorId, createdAt])
+}

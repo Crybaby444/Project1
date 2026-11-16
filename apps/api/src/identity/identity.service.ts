@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { ActivityService } from '../activity/activity.service';
 import type { AdminIdentityQueue, IdentityDecision, IdentityDocument, IdentityState, PublicUser } from '@yoyo/shared';
 import { AuditService } from '../audit/audit.service';
 import { CLOCK, type Clock } from '../clock/clock';
@@ -23,6 +24,7 @@ export class IdentityService {
   private readonly key: Buffer;
 
   constructor(
+    private readonly activity: ActivityService,
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
     private readonly mail: MailService,
@@ -62,6 +64,7 @@ export class IdentityService {
     await this.prisma.identityCheck.create({
       data: { userId, documentType, documentPhoto: new Uint8Array(sealed[0]!), selfiePhoto: new Uint8Array(sealed[1]!), consentAt: now, submittedAt: now },
     });
+    this.activity.record('IDENTITY_SUBMITTED', userId, { type: 'USER', id: userId }, documentType);
     return this.state(userId);
   }
 
