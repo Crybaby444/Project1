@@ -19,4 +19,4 @@ export type LegalDoc = {
 export type LegalTexts = Record<Locale, LegalDoc>;
 
 /** The date the current versions take effect (ISO), shown at the top of each document. */
-export const LEGAL_EFFECTIVE_DATE = '2026-11-05';
+export const LEGAL_EFFECTIVE_DATE = '2026-11-16';
