@@ -73,7 +73,7 @@ export async function startFakeApple(now: () => Date): Promise<FakeApple> {
           });
           secretOk = protectedHeader.kid === keyId && typeof payload.exp === 'number';
         } catch {
-          secretOk = false;
+          // A forged or expired client secret: secretOk stays false.
         }
         if (!issued || !secretOk || form.get('grant_type') !== 'authorization_code' || form.get('client_id') !== clientId || form.get('redirect_uri') !== issued.redirectUri) {
           res.writeHead(400, { 'content-type': 'application/json' }).end(JSON.stringify({ error: 'invalid_grant' }));
