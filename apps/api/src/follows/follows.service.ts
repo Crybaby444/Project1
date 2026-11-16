@@ -59,6 +59,29 @@ export class FollowsService {
     return { followers, following };
   }
 
+  /** A person whose profile is public (not blocked, deleted or staff), or 404. */
+  private async publicPerson(id: string): Promise<void> {
+    const target = await this.prisma.user.findUnique({ where: { id }, select: { blockedAt: true, deletedAt: true, role: true } });
+    if (!target || target.blockedAt !== null || target.deletedAt !== null || target.role === 'ADMIN') throw new AppError('NOT_FOUND', 404, 'User not found');
+  }
+
+  /** Who follows `userId` (public), newest first, as cards. */
+  async followersOf(userId: string): Promise<PersonCard[]> {
+    await this.publicPerson(userId);
+    const rows = await this.prisma.follow.findMany({
+      where: { followeeId: userId, follower: { deletedAt: null, blockedAt: null } },
+      orderBy: { createdAt: 'desc' },
+      select: { followerId: true },
+    });
+    return this.cards(rows.map((r) => r.followerId));
+  }
+
+  /** Whom `userId` follows (public), newest first, as cards. */
+  async followingOf(userId: string): Promise<PersonCard[]> {
+    await this.publicPerson(userId);
+    return this.following(userId);
+  }
+
   /** The people `userId` follows, as cards. */
   async following(userId: string): Promise<PersonCard[]> {
     const rows = await this.prisma.follow.findMany({

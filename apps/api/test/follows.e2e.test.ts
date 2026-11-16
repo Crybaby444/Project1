@@ -43,6 +43,21 @@ describe('following people, their feed and finding people', () => {
     expect((await request(t.server).get(`/api/v1/users/${olga.user.id}`).expect(200)).body.user.followers).toBe(0);
   });
 
+  it('anyone sees who follows a person and whom they follow, newest first; blocked people are left out', async () => {
+    const rita = await signedInClient(t, { name: 'Rita Ozola' });
+    await janis.post(`/users/${olga.user.id}/follow`).expect(204);
+    t.clock.advance(60_000);
+    await rita.post(`/users/${olga.user.id}/follow`).expect(204);
+    await olga.post(`/users/${janis.user.id}/follow`).expect(204);
+    const followers = (await request(t.server).get(`/api/v1/users/${olga.user.id}/followers`).expect(200)).body.items;
+    expect(followers.map((p: { name: string }) => p.name)).toEqual(['Rita Ozola', 'Jānis Ozols']);
+    const following = (await request(t.server).get(`/api/v1/users/${olga.user.id}/following`).expect(200)).body.items;
+    expect(following).toEqual([expect.objectContaining({ id: janis.user.id, name: 'Jānis Ozols' })]);
+    await t.prisma.user.update({ where: { id: rita.user.id }, data: { blockedAt: new Date() } });
+    expect((await request(t.server).get(`/api/v1/users/${olga.user.id}/followers`).expect(200)).body.items).toHaveLength(1);
+    await request(t.server).get(`/api/v1/users/${admin.user.id}/followers`).expect(404); // staff have no public profile
+  });
+
   it('a new item from someone you follow reaches your feed and your bell', async () => {
     await janis.post(`/users/${olga.user.id}/follow`).expect(204);
     const old = await seedListing(t, olga.user, { status: 'PUBLISHED', title: 'Old drill' });

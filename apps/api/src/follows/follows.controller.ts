@@ -27,6 +27,27 @@ export class PeopleController {
   }
 }
 
+/** Who follows a person and whom they follow: public, like the profile itself. */
+@ApiTags('people')
+@Controller('users')
+export class ProfileFollowsController {
+  constructor(private readonly follows: FollowsService) {}
+
+  @Get(':id/followers')
+  @ZodResponse({ status: 200, type: PeopleDto, description: 'The people who follow this person, newest first' })
+  @ApiErrors(404)
+  async followers(@Param('id') id: string): Promise<PeopleResponse> {
+    return { items: await this.follows.followersOf(id) };
+  }
+
+  @Get(':id/following')
+  @ZodResponse({ status: 200, type: PeopleDto, description: 'The people this person follows, newest first' })
+  @ApiErrors(404)
+  async following(@Param('id') id: string): Promise<PeopleResponse> {
+    return { items: await this.follows.followingOf(id) };
+  }
+}
+
 @ApiTags('people')
 @Controller()
 @UseGuards(AuthGuard)
