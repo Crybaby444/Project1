@@ -112,6 +112,7 @@ test('a category page gives search engines its breadcrumb trail', async ({ page 
   );
   expect(trails).toHaveLength(1);
   expect(trails[0].itemListElement.map((i: { name: string }) => i.name)).toEqual(['Home', 'Catalog']);
+});
 
 test('a category page opens with what people rent there and closes with the rules every rental keeps', async ({ page }) => {
   const site = (await import('../messages/site/en.json', { with: { type: 'json' } })).default;
