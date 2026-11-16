@@ -20,6 +20,7 @@ export function ownerListing(overrides: Partial<OwnerListing> = {}): OwnerListin
     contentLocale: 'en',
     city: null,
     district: null,
+    country: null,
     timeZone: 'Europe/Riga',
     rules: { preset: [], custom: [] },
     photos: [],

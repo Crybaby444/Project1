@@ -1,5 +1,5 @@
 import { DomainError, PRICING_LIMITS, validatePricing, type ListingPricing } from '@yoyo/domain';
-import { LISTING_LIMITS, ListingSubmitSchema, stepOfField, validateAttributes, type ListingStep } from '@yoyo/shared';
+import { HOME_COUNTRY, LISTING_LIMITS, ListingSubmitSchema, stepOfField, validateAttributes, type ListingStep } from '@yoyo/shared';
 import type { CategoryForListing } from '../categories/categories.service';
 import { AppError } from '../common/app-error';
 import type { Listing } from '../generated/prisma/client';
@@ -32,6 +32,8 @@ export function incompleteFields(listing: Listing, photoCount: number, category:
     dailyCents: listing.dailyCents,
     city: listing.city,
     district: listing.district,
+    // A listing from before countries (or from an older builder) counts as Latvian; submit stores it.
+    country: listing.country ?? HOME_COUNTRY,
     lat: toNumber(listing.lat),
     lng: toNumber(listing.lng),
   });

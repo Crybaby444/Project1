@@ -1,3 +1,4 @@
+import { CountrySchema } from './countries';
 import { z } from 'zod';
 import { LocalizedTextSchema, STICKERS } from './categories';
 import { DatePeriodSchema, LISTING_CONDITIONS, PhotoUrlsSchema, PublicListingSchema } from './listings';
@@ -71,6 +72,10 @@ export const CatalogQuerySchema = z
     end: Day.optional(),
     /** A district's slug (`slugify` of its name, as `GET /catalog/places` gives it). */
     district: z.string().max(CATALOG_LIMITS.place).regex(/^[a-z0-9-]+$/).optional(),
+    /** Only items in this country (owner, 2026-11-16: nobody in Riga rents from Paris). */
+    country: CountrySchema.optional(),
+    /** A city's slug within the country (`slugify` of its name, as `GET /catalog/places` gives it). */
+    city: z.string().max(CATALOG_LIMITS.place).regex(/^[a-z0-9-]+$/).optional(),
     sort: z.enum(CATALOG_SORTS).optional(),
     page: z.coerce.number().int().min(1).max(CATALOG_LIMITS.page).default(1),
   })
@@ -108,6 +113,7 @@ export const CatalogItemSchema = z.object({
   condition: z.enum(LISTING_CONDITIONS).nullable(),
   city: z.string().nullable(),
   district: z.string().nullable(),
+  country: z.string().nullable(),
   categoryId: z.string().nullable(),
   cover: PhotoUrlsSchema.nullable(),
   ownerId: z.string(),
@@ -170,8 +176,14 @@ export type SuggestResponse = z.infer<typeof SuggestResponseSchema>;
 
 /** Districts that have items in the catalog, for the place filter (W03: one city, districts as a filter). */
 export const PlacesResponseSchema = z.object({
+  /** Countries that have items, most first. */
+  countries: z.array(z.object({ country: z.string(), count: z.number().int() })),
+  /** Cities with items (in the asked country, or everywhere), most first. */
+  cities: z.array(z.object({ city: z.string(), slug: z.string(), count: z.number().int() })),
   districts: z.array(z.object({ district: z.string(), slug: z.string(), count: z.number().int() })),
 });
+
+export const PlacesQuerySchema = z.object({ country: CountrySchema.optional() });
 
 export type PlacesResponse = z.infer<typeof PlacesResponseSchema>;
 

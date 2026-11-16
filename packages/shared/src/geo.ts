@@ -21,6 +21,8 @@ export const GeoPlaceSchema = z.object({
   label: z.string(),
   city: z.string().nullable(),
   district: z.string().nullable(),
+  /** ISO 3166-1 alpha-2, upper case; null outside the countries Yoyo works in. */
+  country: z.string().nullable(),
   lat: z.number(),
   lng: z.number(),
 });
@@ -34,6 +36,7 @@ export type GeoSearchResponse = z.infer<typeof GeoSearchResponseSchema>;
 export const GeoReverseResponseSchema = z.object({
   city: z.string().nullable(),
   district: z.string().nullable(),
+  country: z.string().nullable(),
   attribution: z.string(),
 });
 

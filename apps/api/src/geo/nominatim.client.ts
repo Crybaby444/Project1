@@ -1,3 +1,4 @@
+import { isCountry } from '@yoyo/shared';
 import { Logger } from '@nestjs/common';
 import type { GeoPlace, Locale } from '@yoyo/shared';
 import type { Clock } from '../clock/clock';
@@ -27,6 +28,7 @@ interface NominatimAddress {
   municipality?: string;
   suburb?: string;
   city_district?: string;
+  country_code?: string;
   quarter?: string;
   neighbourhood?: string;
   borough?: string;
@@ -44,6 +46,12 @@ const round6 = (value: number) => Math.round(value * 1e6) / 1e6;
 
 function cityOf(address: NominatimAddress = {}): string | null {
   return address.city ?? address.town ?? address.village ?? address.hamlet ?? address.municipality ?? null;
+}
+
+/** The country in upper case, or null outside the countries Yoyo works in. */
+function countryOf(address: NominatimAddress = {}): string | null {
+  const code = address.country_code?.toUpperCase();
+  return isCountry(code) ? code : null;
 }
 
 function districtOf(address: NominatimAddress = {}): string | null {
@@ -81,12 +89,13 @@ export class NominatimClient {
         label: place.display_name ?? '',
         city: cityOf(place.address),
         district: districtOf(place.address),
+        country: countryOf(place.address),
         lat: round6(Number(place.lat)),
         lng: round6(Number(place.lon)),
       }));
   }
 
-  async reverse(lat: number, lng: number, lang: Locale): Promise<{ city: string | null; district: string | null }> {
+  async reverse(lat: number, lng: number, lang: Locale): Promise<{ city: string | null; district: string | null; country: string | null }> {
     const place = await this.get<NominatimPlace>('/reverse', {
       lat: String(lat),
       lon: String(lng),
@@ -95,7 +104,7 @@ export class NominatimClient {
       zoom: '16',
       'accept-language': lang,
     });
-    return { city: cityOf(place.address), district: districtOf(place.address) };
+    return { city: cityOf(place.address), district: districtOf(place.address), country: countryOf(place.address) };
   }
 
   private async get<T>(path: string, params: Record<string, string>): Promise<T> {

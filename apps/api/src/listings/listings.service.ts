@@ -1,3 +1,4 @@
+import { HOME_COUNTRY, timeZoneOf } from '@yoyo/shared';
 import { isDeepStrictEqual } from 'node:util';
 import { assertProfileComplete } from '../auth/identity';
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -29,7 +30,7 @@ import { serializeListing, serializePeriods, serializeSummary, type ListingWithR
  * owner writes that the public reads (city and district are shown on the card). Every other field is
  * a term. Own rules are free text too, so `rules` counts as content when its `custom` part changes.
  */
-const CONTENT_FIELDS: ReadonlySet<string> = new Set(['title', 'description', 'categoryId', 'attributes', 'condition', 'city', 'district']);
+const CONTENT_FIELDS: ReadonlySet<string> = new Set(['title', 'description', 'categoryId', 'attributes', 'condition', 'city', 'district', 'country']);
 
 /** Whether changing `key` of `listing` to `value` is a change of content (see CONTENT_FIELDS). */
 function isContentChange(listing: Listing, key: keyof ListingDraft, value: unknown): boolean {
@@ -222,7 +223,9 @@ export class ListingsService {
     const status = nextStatus(listing.status, 'submit');
     if (status === null || status === 'REMOVED') throw invalidStatus(listing.status);
     await this.assertComplete(listing, listing.photos.length);
-    await this.transition(listing, status, { submittedAt: this.clock.now(), rejectionReason: null });
+    // Until every builder sends the country (2026-11-16), a listing without one is where Yoyo started.
+    const place = listing.country === null ? { country: HOME_COUNTRY, timeZone: timeZoneOf(HOME_COUNTRY) } : {};
+    await this.transition(listing, status, { submittedAt: this.clock.now(), rejectionReason: null, ...place });
     return this.serialize(id);
   }
 
@@ -379,6 +382,8 @@ export class ListingsService {
       data.attributes = {};
     }
     if (rules !== undefined) data.rules = rules;
+    // A deal's days are counted where the item is.
+    if (draft.country) data.timeZone = timeZoneOf(draft.country);
 
     if (Object.keys(fields).length > 0) throw new AppError('VALIDATION_FAILED', 400, undefined, fields);
     return { data, category };

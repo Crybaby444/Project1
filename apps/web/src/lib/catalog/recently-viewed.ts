@@ -12,7 +12,8 @@ export function recallViewed(): CatalogItem[] {
     const raw: unknown = JSON.parse(localStorage.getItem(KEY) ?? '[]');
     if (!Array.isArray(raw)) return [];
     return raw.flatMap((entry) => {
-      const parsed = CatalogItemSchema.safeParse(entry);
+      // Items stored before countries (2026-11-16) have none: read them as unknown, not broken.
+      const parsed = CatalogItemSchema.safeParse(entry && typeof entry === 'object' && !('country' in entry) ? { ...entry, country: null } : entry);
       return parsed.success ? [parsed.data] : [];
     });
   } catch {

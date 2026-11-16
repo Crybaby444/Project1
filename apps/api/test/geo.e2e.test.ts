@@ -45,8 +45,8 @@ describe('address search', () => {
 
       expect(res.body).toEqual({
         results: [
-          { label: 'Brīvības iela 1, Centrs, Rīga, LV-1010, Latvija', city: 'Rīga', district: 'Centrs', lat: 56.949649, lng: 24.105187 },
-          { label: 'Jomas iela, Majori, Jūrmala, Latvija', city: 'Jūrmala', district: 'Majori', lat: 56.968, lng: 23.7703 },
+          { label: 'Brīvības iela 1, Centrs, Rīga, LV-1010, Latvija', city: 'Rīga', district: 'Centrs', country: 'LV', lat: 56.949649, lng: 24.105187 },
+          { label: 'Jomas iela, Majori, Jūrmala, Latvija', city: 'Jūrmala', district: 'Majori', country: 'LV', lat: 56.968, lng: 23.7703 },
         ],
         attribution: '© OpenStreetMap contributors',
       });
@@ -114,7 +114,7 @@ describe('address search', () => {
   describe('GET /geo/reverse', () => {
     it('names the city and district of a point', async () => {
       const res = await anna.get('/geo/reverse?lat=56.9496&lng=24.1052&lang=lv').expect(200);
-      expect(res.body).toEqual({ city: 'Rīga', district: 'Centrs', attribution: '© OpenStreetMap contributors' });
+      expect(res.body).toEqual({ city: 'Rīga', district: 'Centrs', country: 'LV', attribution: '© OpenStreetMap contributors' });
       expect(Object.fromEntries(nominatim.requests[0]!.query)).toMatchObject({ lat: '56.9496', lon: '24.1052', 'accept-language': 'lv' });
     });
 

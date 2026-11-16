@@ -11,6 +11,8 @@ export interface FilterContext {
   textCategoryIds: string[];
   /** Districts whose slug is the one asked for, or null for no district filter. */
   districts: string[] | null;
+  /** Cities whose slug is the one asked for, or null for no city filter. */
+  cities: string[] | null;
 }
 
 /** Visible listings with their owners: the FROM and the visibility rule of every catalog query. */
@@ -43,6 +45,10 @@ export function whereSql(query: CatalogQuery, ctx: FilterContext): Prisma.Sql {
   }
   if (ctx.districts !== null) {
     parts.push(ctx.districts.length > 0 ? Prisma.sql`l."district" IN (${Prisma.join(ctx.districts)})` : Prisma.sql`FALSE`);
+  }
+  if (query.country !== undefined) parts.push(Prisma.sql`l."country" = ${query.country}`);
+  if (ctx.cities !== null) {
+    parts.push(ctx.cities.length > 0 ? Prisma.sql`l."city" IN (${Prisma.join(ctx.cities)})` : Prisma.sql`FALSE`);
   }
   if (query.priceMin !== undefined) parts.push(Prisma.sql`l."dailyCents" >= ${query.priceMin}`);
   if (query.priceMax !== undefined) parts.push(Prisma.sql`l."dailyCents" <= ${query.priceMax}`);

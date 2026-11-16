@@ -35,7 +35,7 @@ describe('NominatimClient', () => {
     expect(sent.path).toBe('/search');
     expect(Object.fromEntries(sent.query)).toMatchObject({ q: 'Brīvības iela 1', format: 'jsonv2', addressdetails: '1', limit: '5', 'accept-language': 'lv' });
     expect(sent.userAgent).toBe('Yoyo/1.0 (+https://yoyo.rent)');
-    expect(places[0]).toEqual({ label: 'Brīvības iela 1, Centrs, Rīga, LV-1010, Latvija', city: 'Rīga', district: 'Centrs', lat: 56.949649, lng: 24.105187 });
+    expect(places[0]).toEqual({ label: 'Brīvības iela 1, Centrs, Rīga, LV-1010, Latvija', city: 'Rīga', district: 'Centrs', country: 'LV', lat: 56.949649, lng: 24.105187 });
     expect(places[1]).toMatchObject({ city: 'Jūrmala', district: 'Majori' });
   });
 });

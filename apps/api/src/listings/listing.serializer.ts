@@ -65,6 +65,7 @@ export function serializeListing(listing: ListingWithRelations, viewer: ListingV
     maxDays: listing.maxDays,
     city: listing.city,
     district: listing.district,
+    country: listing.country,
     timeZone: listing.timeZone,
     contentLocale: listing.contentLocale as PublicListing['contentLocale'],
     rules: listing.rules as ListingRules,

@@ -21,6 +21,7 @@ const row: ListingWithRelations = {
   maxDays: 14,
   city: 'Rīga',
   district: 'Centrs',
+  country: 'LV',
   lat: new Prisma.Decimal('56.949651'),
   lng: new Prisma.Decimal('24.105190'),
   timeZone: 'Europe/Riga',

@@ -65,6 +65,7 @@ describe('ListingSubmitSchema', () => {
     dailyCents: 1500,
     city: 'Rīga',
     district: 'Centrs',
+    country: 'LV',
     lat: 56.95,
     lng: 24.1,
   };
@@ -74,7 +75,7 @@ describe('ListingSubmitSchema', () => {
   });
 
   it('names every missing or too short field', () => {
-    const result = ListingSubmitSchema.safeParse({ ...complete, title: 'Dr', description: null, condition: null, lat: null, city: null });
-    expect(result.error!.issues.map((issue) => issue.path.join('.')).sort()).toEqual(['city', 'condition', 'description', 'lat', 'title']);
+    const result = ListingSubmitSchema.safeParse({ ...complete, title: 'Dr', description: null, condition: null, lat: null, city: null, country: 'US' });
+    expect(result.error!.issues.map((issue) => issue.path.join('.')).sort()).toEqual(['city', 'condition', 'country', 'description', 'lat', 'title']);
   });
 });

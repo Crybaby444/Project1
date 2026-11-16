@@ -2979,6 +2979,47 @@
             }
           },
           {
+            "name": "country",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "AT",
+                "BE",
+                "BG",
+                "HR",
+                "CY",
+                "EE",
+                "FI",
+                "FR",
+                "DE",
+                "GR",
+                "IE",
+                "IT",
+                "LV",
+                "LT",
+                "LU",
+                "MT",
+                "NL",
+                "PT",
+                "SK",
+                "SI",
+                "ES"
+              ]
+            }
+          },
+          {
+            "name": "city",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 60,
+              "pattern": "^[a-z0-9-]+$",
+              "type": "string"
+            }
+          },
+          {
             "name": "sort",
             "required": false,
             "in": "query",
@@ -3092,6 +3133,47 @@
           },
           {
             "name": "district",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 60,
+              "pattern": "^[a-z0-9-]+$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "country",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "AT",
+                "BE",
+                "BG",
+                "HR",
+                "CY",
+                "EE",
+                "FI",
+                "FR",
+                "DE",
+                "GR",
+                "IE",
+                "IT",
+                "LV",
+                "LT",
+                "LU",
+                "MT",
+                "NL",
+                "PT",
+                "SK",
+                "SI",
+                "ES"
+              ]
+            }
+          },
+          {
+            "name": "city",
             "required": false,
             "in": "query",
             "schema": {
@@ -3221,14 +3303,56 @@
     "/api/v1/catalog/places": {
       "get": {
         "operationId": "CatalogController_places",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "country",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "AT",
+                "BE",
+                "BG",
+                "HR",
+                "CY",
+                "EE",
+                "FI",
+                "FR",
+                "DE",
+                "GR",
+                "IE",
+                "IT",
+                "LV",
+                "LT",
+                "LU",
+                "MT",
+                "NL",
+                "PT",
+                "SK",
+                "SI",
+                "ES"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Districts that have items",
+            "description": "Countries with items, and the cities and districts of one country (or all)",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PlacesResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
                 }
               }
             }
@@ -13279,6 +13403,12 @@
                     "null"
                   ]
                 },
+                "country": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
                 "categoryId": {
                   "type": [
                     "string",
@@ -13344,6 +13474,7 @@
                 "condition",
                 "city",
                 "district",
+                "country",
                 "categoryId",
                 "cover",
                 "ownerId",
@@ -13594,6 +13725,52 @@
       "PlacesResponseDto_Output": {
         "type": "object",
         "properties": {
+          "countries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "country": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "country",
+                "count"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "cities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "city": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "city",
+                "slug",
+                "count"
+              ],
+              "additionalProperties": false
+            }
+          },
           "districts": {
             "type": "array",
             "items": {
@@ -13621,6 +13798,8 @@
           }
         },
         "required": [
+          "countries",
+          "cities",
           "districts"
         ],
         "additionalProperties": false
@@ -13869,6 +14048,12 @@
                           "null"
                         ]
                       },
+                      "country": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
                       "timeZone": {
                         "type": "string"
                       },
@@ -14018,6 +14203,7 @@
                       "maxDays",
                       "city",
                       "district",
+                      "country",
                       "timeZone",
                       "contentLocale",
                       "rules",
@@ -14374,6 +14560,12 @@
                     "null"
                   ]
                 },
+                "country": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
                 "categoryId": {
                   "type": [
                     "string",
@@ -14439,6 +14631,7 @@
                 "condition",
                 "city",
                 "district",
+                "country",
                 "categoryId",
                 "cover",
                 "ownerId",
@@ -14782,6 +14975,12 @@
                     "null"
                   ]
                 },
+                "country": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
                 "categoryId": {
                   "type": [
                     "string",
@@ -14863,6 +15062,7 @@
                 "condition",
                 "city",
                 "district",
+                "country",
                 "categoryId",
                 "cover",
                 "ownerId",
@@ -15057,6 +15257,12 @@
                     "null"
                   ]
                 },
+                "country": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
                 "categoryId": {
                   "type": [
                     "string",
@@ -15122,6 +15328,7 @@
                 "condition",
                 "city",
                 "district",
+                "country",
                 "categoryId",
                 "cover",
                 "ownerId",
@@ -16271,6 +16478,34 @@
             "maxLength": 240,
             "nullable": true
           },
+          "country": {
+            "type": "string",
+            "enum": [
+              "AT",
+              "BE",
+              "BG",
+              "HR",
+              "CY",
+              "EE",
+              "FI",
+              "FR",
+              "DE",
+              "GR",
+              "IE",
+              "IT",
+              "LV",
+              "LT",
+              "LU",
+              "MT",
+              "NL",
+              "PT",
+              "SK",
+              "SI",
+              "ES",
+              null
+            ],
+            "nullable": true
+          },
           "lat": {
             "type": "number",
             "minimum": -90,
@@ -16424,6 +16659,12 @@
                 ]
               },
               "district": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "country": {
                 "type": [
                   "string",
                   "null"
@@ -16619,6 +16860,7 @@
               "maxDays",
               "city",
               "district",
+              "country",
               "timeZone",
               "contentLocale",
               "rules",
@@ -16711,6 +16953,34 @@
           "district": {
             "type": "string",
             "maxLength": 240,
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "enum": [
+              "AT",
+              "BE",
+              "BG",
+              "HR",
+              "CY",
+              "EE",
+              "FI",
+              "FR",
+              "DE",
+              "GR",
+              "IE",
+              "IT",
+              "LV",
+              "LT",
+              "LU",
+              "MT",
+              "NL",
+              "PT",
+              "SK",
+              "SI",
+              "ES",
+              null
+            ],
             "nullable": true
           },
           "lat": {
@@ -18577,6 +18847,12 @@
                     "null"
                   ]
                 },
+                "country": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
                 "timeZone": {
                   "type": "string"
                 },
@@ -18787,6 +19063,7 @@
                 "maxDays",
                 "city",
                 "district",
+                "country",
                 "timeZone",
                 "contentLocale",
                 "rules",
@@ -18933,6 +19210,12 @@
                 ]
               },
               "district": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "country": {
                 "type": [
                   "string",
                   "null"
@@ -19148,6 +19431,7 @@
               "maxDays",
               "city",
               "district",
+              "country",
               "timeZone",
               "contentLocale",
               "rules",
@@ -19227,6 +19511,12 @@
                     "null"
                   ]
                 },
+                "country": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
                 "lat": {
                   "type": "number"
                 },
@@ -19238,6 +19528,7 @@
                 "label",
                 "city",
                 "district",
+                "country",
                 "lat",
                 "lng"
               ],
@@ -19269,6 +19560,12 @@
               "type": "string"
             }
           },
+          "country": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "attribution": {
             "type": "string"
           }
@@ -19276,6 +19573,7 @@
         "required": [
           "city",
           "district",
+          "country",
           "attribution"
         ],
         "additionalProperties": false
@@ -21721,6 +22019,12 @@
                     "null"
                   ]
                 },
+                "country": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
                 "categoryId": {
                   "type": [
                     "string",
@@ -21789,6 +22093,7 @@
                 "condition",
                 "city",
                 "district",
+                "country",
                 "categoryId",
                 "cover",
                 "ownerId",

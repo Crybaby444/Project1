@@ -27,6 +27,7 @@ const riga = {
   label: 'Brīvības iela 1, Centrs, Rīga',
   city: 'Rīga',
   district: 'Centrs',
+  country: 'LV',
   lat: 56.949649,
   lng: 24.105186,
 };
@@ -49,7 +50,7 @@ function renderPlaceInner() {
     'GET /api/v1/geo/search': { status: 200, body: { results: [riga], attribution: GEO_ATTRIBUTION } },
     'GET /api/v1/geo/reverse': {
       status: 200,
-      body: { city: 'Jūrmala', district: 'Majori', attribution: GEO_ATTRIBUTION },
+      body: { city: 'Jūrmala', district: 'Majori', country: 'LV', attribution: GEO_ATTRIBUTION },
     },
     'PUT /api/v1/listings/listing-1/unavailability': (body) => ({
       status: 200,

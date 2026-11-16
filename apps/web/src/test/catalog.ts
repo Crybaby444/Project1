@@ -14,6 +14,7 @@ export function availableItem(overrides: Partial<AvailableItem['listing']> = {})
     depositCents: 5000,
     city: 'Rīga',
     district: 'Centrs',
+    country: 'LV',
     photos: [
       { id: 'p1', width: 800, height: 600, position: 0, urls: { thumb: '/t1', card: '/c1', full: '/f1' } },
       { id: 'p2', width: 800, height: 600, position: 1, urls: { thumb: '/t2', card: '/c2', full: '/f2' } },
@@ -58,6 +59,7 @@ export function catalogItem(overrides: Partial<CatalogItem> = {}): CatalogItem {
     condition: 'GOOD',
     city: 'Rīga',
     district: 'Centrs',
+    country: 'LV',
     categoryId: 'cat-1',
     cover: { thumb: '/t', card: '/c', full: '/f' },
     ownerId: 'owner-1',
