@@ -61,6 +61,12 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
         </div>
       </div>
       <ul className="flex min-w-0 flex-wrap gap-2 text-xs font-bold">
+        {owner.identityVerified && (
+          <li className="bg-ink text-canvas rounded-pill inline-flex items-center gap-1 px-2.5 py-0.5" data-identity-verified="">
+            <Check />
+            {t('identityVerified')}
+          </li>
+        )}
         {owner.emailVerified && (
           <li className="border-ink/25 rounded-pill inline-flex items-center gap-1 border px-2.5 py-0.5">
             <Check />

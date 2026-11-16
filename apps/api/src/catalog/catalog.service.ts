@@ -245,6 +245,7 @@ export class CatalogService {
       memberSince: user.createdAt.toISOString(),
       emailVerified: user.emailVerifiedAt !== null,
       phoneVerified: user.phoneVerifiedAt !== null,
+      identityVerified: user.identityVerifiedAt !== null,
       completedDeals,
       listingCount,
       rating: rating.rating,

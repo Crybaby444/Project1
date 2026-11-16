@@ -14782,6 +14782,9 @@
                       "phoneVerified": {
                         "type": "boolean"
                       },
+                      "identityVerified": {
+                        "type": "boolean"
+                      },
                       "completedDeals": {
                         "type": "integer",
                         "minimum": -9007199254740991,
@@ -14818,6 +14821,7 @@
                       "memberSince",
                       "emailVerified",
                       "phoneVerified",
+                      "identityVerified",
                       "completedDeals",
                       "listingCount",
                       "rating",
@@ -14984,6 +14988,9 @@
               "phoneVerified": {
                 "type": "boolean"
               },
+              "identityVerified": {
+                "type": "boolean"
+              },
               "completedDeals": {
                 "type": "integer",
                 "minimum": -9007199254740991,
@@ -15036,6 +15043,7 @@
               "memberSince",
               "emailVerified",
               "phoneVerified",
+              "identityVerified",
               "completedDeals",
               "listingCount",
               "rating",

@@ -197,6 +197,8 @@ export const OwnerSummarySchema = z.object({
   memberSince: z.iso.datetime(),
   emailVerified: z.boolean(),
   phoneVerified: z.boolean(),
+  /** A moderator has confirmed who this is (identity check). */
+  identityVerified: z.boolean(),
   /** Finished deals, as owner or as renter. */
   completedDeals: z.number().int(),
   /** Items in the catalog. */

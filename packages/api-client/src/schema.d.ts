@@ -3263,6 +3263,7 @@ export interface components {
                     memberSince: string;
                     emailVerified: boolean;
                     phoneVerified: boolean;
+                    identityVerified: boolean;
                     completedDeals: number;
                     listingCount: number;
                     rating: number | null;
@@ -3302,6 +3303,7 @@ export interface components {
                 memberSince: string;
                 emailVerified: boolean;
                 phoneVerified: boolean;
+                identityVerified: boolean;
                 completedDeals: number;
                 listingCount: number;
                 rating: number | null;
