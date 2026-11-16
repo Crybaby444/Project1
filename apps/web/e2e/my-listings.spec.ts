@@ -60,9 +60,8 @@ test('a published listing can be hidden and shown again', async ({ page, browser
   await page.getByRole('menuitem', { name: en.listingActions.hide }).click();
   await expect(card.getByText(en.listingStatus.HIDDEN)).toBeVisible();
 
-  await page.getByRole('button', { name: m.filter.HIDDEN }).click();
-  await expect(page).toHaveURL(/status=HIDDEN/);
+  // One list with statuses (owner, 2026-11-16): the hidden item stays in it, shown again from the same menu.
   await card.getByRole('button', { name: en.myListings.more.replace('{title}', 'Kayak for two people') }).click();
   await page.getByRole('menuitem', { name: en.listingActions.unhide }).click();
-  await expect(page.getByText(m.emptyFilter)).toBeVisible();
+  await expect(card.getByText(en.listingStatus.PUBLISHED)).toBeVisible();
 });

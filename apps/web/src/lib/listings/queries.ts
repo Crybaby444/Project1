@@ -40,18 +40,19 @@ export function useListing(id: string | null) {
   });
 }
 
-/** "My items": every listing except archived ones, or only those in `status`. */
-export function useMyListings(status: ListingStatus | 'ALL') {
+/** "My items": every listing except archived ones, or only those in `status`; null asks nothing (yet). */
+export function useMyListings(status: ListingStatus | 'ALL' | null) {
   const client = useApiClient();
   return useQuery({
-    queryKey: listingKeys.mine(status),
+    enabled: status !== null,
+    queryKey: listingKeys.mine(status ?? 'ALL'),
     queryFn: async () =>
       (
         await unwrap(
-          client.GET('/api/v1/me/listings', { params: { query: status === 'ALL' ? {} : { status } } }),
+          client.GET('/api/v1/me/listings', { params: { query: status === 'ALL' || status === null ? {} : { status } } }),
         )
       ).items,
-    placeholderData: keepPreviousData,
+    placeholderData: status === 'ARCHIVED' ? undefined : keepPreviousData,
   });
 }
 
