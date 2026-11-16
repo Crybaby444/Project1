@@ -13,19 +13,17 @@ const LANGUAGES = [
 ] as const;
 
 for (const { locale, prefix, m } of LANGUAGES) {
-  test(`What is Yoyo in ${locale}: one h1, every scene, the facts from the booking rules`, async ({ page }) => {
+  test(`What is Yoyo in ${locale}: one h1, every scene, the real numbers in the rules`, async ({ page }) => {
     await page.goto(`${prefix}/what-is-yoyo`);
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
     await expect(page.getByRole('heading', { level: 1, name: 'Yoyo' })).toBeAttached();
-    for (const scene of ['hero', 'night', 'what', 'sides', 'rules', 'people', 'inside', 'facts', 'finale']) {
+    for (const scene of ['hero', 'night', 'what', 'sides', 'rules', 'people', 'inside', 'finale']) {
       await expect(page.locator(`[data-home="${scene}"]`)).toHaveCount(1);
     }
     await expect(page.getByRole('heading', { level: 2, name: m.landing.people.title })).toBeAttached();
-    await expect(page.getByRole('heading', { level: 2, name: m.landing.facts.label })).toBeAttached();
     await expect(page.getByRole('heading', { level: 2, name: new RegExp(m.landing.finale.line1, 'i') })).toBeAttached();
     // The numbers are the rules the deals keep, not typed copy.
-    const values = await page.locator('[data-fact] b[data-value]').evaluateAll((els) => els.map((e) => e.getAttribute('data-value')));
-    expect(values).toEqual(['0', String(DEFAULT_BOOKING_SETTINGS.inspectionHours), '1', '100', '3']);
+    await expect(page.locator('[data-home="rules"]')).toContainText(`${DEFAULT_BOOKING_SETTINGS.inspectionHours}`);
   });
 }
 

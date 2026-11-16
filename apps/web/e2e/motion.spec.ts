@@ -117,7 +117,7 @@ test.describe('motion on', () => {
     const errors = watchErrors(page);
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto('/what-is-yoyo');
-    for (const scene of ['hero', 'night', 'what', 'facts', 'finale']) {
+    for (const scene of ['hero', 'night', 'what', 'finale']) {
       await expect(page.locator(`[data-home="${scene}"]`)).toBeVisible();
     }
     expect(await page.evaluate(() => document.documentElement.hasAttribute('data-staged'))).toBe(false);

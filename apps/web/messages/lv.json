@@ -1008,7 +1008,8 @@
     "noFollowing": "{name} vēl nevienam neseko.",
     "favorites": "Izlase",
     "noFavorites": "Vēl nekas nav saglabāts. Nospied sirsniņu uz lietas, lai to paturētu šeit.",
-    "deals": "{count, plural, zero {darījumu} one {darījums} other {darījumi}}"
+    "deals": "{count, plural, zero {darījumu} one {darījums} other {darījumi}}",
+    "findPeople": "Atrast cilvēkus"
   },
   "consent": {
     "label": "Sīkdatņu izvēle",
@@ -1056,7 +1057,12 @@
     "newItems": "Jaunākais no viņiem",
     "noNewItems": "Pagaidām nekā jauna.",
     "youFollow": "Jūs sekojat: {count}",
-    "write": "Rakstīt ziņu"
+    "write": "Rakstīt ziņu",
+    "findLabel": "Vārds vai @lietotājvārds",
+    "findPlaceholder": "Vārds vai @lietotājvārds",
+    "findHint": "Ieraksti vismaz divus burtus.",
+    "findLoading": "Meklē…",
+    "findNone": "Pēc “{q}” neviens netika atrasts."
   },
   "identity": {
     "birthDate": "Dzimšanas datums",
@@ -1215,5 +1221,8 @@
       "shops": "Mani veikali"
     },
     "menu": "Mans profils"
+  },
+  "dialog": {
+    "close": "Aizvērt"
   }
 }

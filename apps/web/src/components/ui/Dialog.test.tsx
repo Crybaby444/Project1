@@ -41,9 +41,19 @@ describe('Dialog', () => {
 
     await user.tab();
     expect(screen.getByRole('button', { name: 'Last' })).toHaveFocus();
+    await user.tab(); // the close button sits last in order
+    expect(screen.getByRole('button', { name: 'Close' })).toHaveFocus();
     await user.tab();
     expect(screen.getByRole('button', { name: 'First' })).toHaveFocus();
     await user.tab({ shift: true });
-    expect(screen.getByRole('button', { name: 'Last' })).toHaveFocus();
+    expect(screen.getByRole('button', { name: 'Close' })).toHaveFocus();
+  });
+
+  it('closes from its visible close button', async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<Demo />);
+    await user.click(screen.getByRole('button', { name: 'Open' }));
+    await user.click(screen.getByRole('button', { name: 'Close' }));
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 });

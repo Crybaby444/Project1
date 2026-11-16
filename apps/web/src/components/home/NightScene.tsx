@@ -1,14 +1,14 @@
 import { getTranslations } from 'next-intl/server';
 import { Button } from '@/components/ui/Button';
 
-const ROW = 'font-display flex gap-[0.3em] whitespace-nowrap text-[21vw] leading-[0.92] font-black uppercase will-change-transform sm:text-[clamp(4.4rem,13vw,15rem)]';
+const ROW = 'font-display flex gap-[0.3em] whitespace-nowrap text-[21vw] leading-[0.92] font-black uppercase will-change-[opacity] sm:text-[clamp(4.4rem,13vw,15rem)]';
 
 /** Repeats a phrase across a row, with the small dot between, for the drifting lines of the night. */
 function Row({ text, times, className, row }: { text: string; times: number; className: string; row: number }) {
   return (
     <div data-row={row} aria-hidden="true" className={`${ROW} ${className}`}>
       {/* Two identical halves: the track slides by one half and starts again, so the row never runs out. */}
-      <div data-track className={`flex flex-none gap-[0.3em] ${row === 2 ? 'animate-[night-run_70s_linear_infinite_reverse]' : 'animate-[night-run_60s_linear_infinite]'} motion-reduce:animate-none`}>
+      <div data-track className={`flex flex-none gap-[0.3em] will-change-transform [backface-visibility:hidden] ${row === 2 ? 'animate-[night-run_70s_linear_infinite_reverse]' : 'animate-[night-run_60s_linear_infinite]'} motion-reduce:animate-none`}>
         {Array.from({ length: times * 2 }, (_, i) => (
           <span key={i} className="inline-flex flex-none items-center gap-[0.3em]">
             {text}

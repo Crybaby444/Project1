@@ -87,30 +87,6 @@
         }
       }
     },
-    "facts": {
-      "label": "Kā Yoyo rūpējas par godīgumu",
-      "hours": "h",
-      "fee": {
-        "title": "Servisa maksa",
-        "body": "Pirmos trīs mēnešus. Pēc tam {after} %, vienmēr redzama pirms rezervēšanas."
-      },
-      "inspection": {
-        "title": "Atgrieztās lietas pārbaudei",
-        "body": "Pēc tam depozīts atgriežas pie tevis pats."
-      },
-      "contract": {
-        "title": "Līgums katram darījumam",
-        "body": "To paraksta abas puses, pirms tiek kustināta nauda."
-      },
-      "checked": {
-        "title": "Sludinājumu pārbauda cilvēks",
-        "body": "Nekas netiek publicēts, kamēr mēs to neesam apskatījuši."
-      },
-      "languages": {
-        "title": "Valodas",
-        "body": "English, Latviešu un Русский, visur vietnē."
-      }
-    },
     "finale": {
       "line1": "Tas vienmēr",
       "line2": "atgriežas.",
