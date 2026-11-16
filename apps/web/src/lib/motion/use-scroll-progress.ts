@@ -17,6 +17,16 @@ export function useScrollProgress<T extends HTMLElement>(): [RefObject<T | null>
       return () => cancelAnimationFrame(frame);
     }
     let shown = 0;
+    // Only while the section is on screen (or near it): off screen nothing is measured or set.
+    let visible = false;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry?.isIntersecting ?? false;
+        if (visible && !frame) frame = requestAnimationFrame(tick);
+      },
+      { rootMargin: '200px 0px' },
+    );
+    if (ref.current) io.observe(ref.current);
     const tick = () => {
       const el = ref.current;
       if (el) {
@@ -27,10 +37,12 @@ export function useScrollProgress<T extends HTMLElement>(): [RefObject<T | null>
         if (Math.abs(target - shown) < 0.0005) shown = target;
         setProgress(shown);
       }
-      frame = requestAnimationFrame(tick);
+      frame = visible ? requestAnimationFrame(tick) : 0;
     };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      io.disconnect();
+      cancelAnimationFrame(frame);
+    };
   }, []);
   return [ref, progress];
 }

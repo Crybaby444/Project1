@@ -491,7 +491,7 @@ html[data-page-switch]::view-transition-new(site-header) {
 /* The night rows of the home: each track is two identical halves and slides by one, endlessly. */
 @keyframes night-run {
   to {
-    transform: translateX(calc(-50% - 0.15em));
+    transform: translate3d(calc(-50% - 0.15em), 0, 0);
   }
 }
 @keyframes scroll-cue {

@@ -87,30 +87,6 @@
         }
       }
     },
-    "facts": {
-      "label": "How Yoyo keeps it fair",
-      "hours": "h",
-      "fee": {
-        "title": "Service fee",
-        "body": "For the first three months. Then {after}%, always shown before you book."
-      },
-      "inspection": {
-        "title": "To check the return",
-        "body": "Then the deposit goes back to you by itself."
-      },
-      "contract": {
-        "title": "Contract for every deal",
-        "body": "Signed by both sides before any money moves."
-      },
-      "checked": {
-        "title": "Listings checked by a person",
-        "body": "Nothing goes live without a look from us first."
-      },
-      "languages": {
-        "title": "Languages",
-        "body": "English, Latviešu and Русский, everywhere on the site."
-      }
-    },
     "finale": {
       "line1": "It always",
       "line2": "comes back.",

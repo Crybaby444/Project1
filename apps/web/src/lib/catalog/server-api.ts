@@ -86,7 +86,8 @@ export const loadSearch = (query: CatalogQuery) => searchByKey(JSON.stringify(qu
 
 export const loadMap = (query: CatalogQuery) => mapByKey(JSON.stringify(query));
 
-export const loadPlaces = cache(async (): Promise<Loaded<PlacesResponse>> => load(() => client().GET('/api/v1/catalog/places')));
+// Districts with items change rarely: kept 5 minutes, so the home and the catalog do not wait for them.
+export const loadPlaces = cache(async (): Promise<Loaded<PlacesResponse>> => load(() => client(300).GET('/api/v1/catalog/places')));
 
 export const loadProfile = cache(
   async (id: string): Promise<Loaded<PublicProfile>> => load(() => client().GET('/api/v1/users/{id}', { params: { path: { id } } })),
