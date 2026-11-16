@@ -1118,40 +1118,6 @@
       "clearDays": "Clear the days",
       "submit": "Search"
     },
-    "tags": {
-      "label": "New on Yoyo",
-      "perDay": "/ day",
-      "depositBack": "{amount} deposit, back to you"
-    },
-    "categories": {
-      "title": "Everything, by category",
-      "all": "All categories"
-    },
-    "loop": {
-      "title": "Out and back. Like a yo-yo.",
-      "lead": "Every rental on Yoyo runs the same loop. Yoyo holds the money in between, so neither side has to trust a stranger’s word.",
-      "whatIs": "What is Yoyo",
-      "how": "How it works",
-      "steps": {
-        "find": {
-          "title": "Find",
-          "body": "Search by name, place and days."
-        },
-        "book": {
-          "title": "Book & sign",
-          "body": "The owner accepts; you both sign the contract."
-        },
-        "use": {
-          "title": "Use",
-          "body": "Meet, take it, use it for your days."
-        },
-        "back": {
-          "title": "Back",
-          "body": "Return it; the deposit comes back to you."
-        }
-      },
-      "returned": "{amount} deposit — back to you"
-    },
     "fresh": {
       "title": "Just added",
       "all": "See everything new"
@@ -1174,12 +1140,6 @@
         "bike": "Bike",
         "camera": "Camera"
       }
-    },
-    "close": {
-      "title": "It always comes back.",
-      "rent": "Find something",
-      "lend": "Lend something",
-      "backUp": "Back up"
     }
   }
 }
