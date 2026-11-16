@@ -63,7 +63,7 @@ test('sitemap.xml is an index; its pages sitemap lists every page in every langu
   const response = await request.get('/sitemap-pages.xml');
   expect(response.status()).toBe(200);
   const xml = await response.text();
-  expect(xml.match(/<url>/g)).toHaveLength(18);
+  expect(xml.match(/<url>/g)).toHaveLength(21);
   expect(xml).toContain(`<loc>${SITE}/lv/faq</loc>`);
   expect(xml).toContain(`hreflang="ru" href="${SITE}/ru/privacy"`);
 });

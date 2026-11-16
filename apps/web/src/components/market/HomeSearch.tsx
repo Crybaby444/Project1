@@ -65,7 +65,7 @@ export function HomeSearch({ districts, today }: { districts: { slug: string; di
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder={t('whatPlaceholder')}
-          className="placeholder:text-ink/45 min-w-0 bg-transparent text-[17px] font-semibold outline-none [&::-webkit-search-cancel-button]:hidden"
+          className="placeholder:text-ink/60 min-w-0 bg-transparent text-[17px] font-semibold outline-none [&::-webkit-search-cancel-button]:hidden"
         />
       </div>
       <div className={`${cell} border-ink/15 max-md:border-b md:border-l`}>
@@ -81,11 +81,11 @@ export function HomeSearch({ districts, today }: { districts: { slug: string; di
         />
       </div>
       <div ref={popover} className={`${cell} border-ink/15 relative md:border-l`}>
-        <span id={ids.when} className={caption}>
+        <span id={ids.when} aria-hidden="true" className={caption}>
           {t('when')}
         </span>
-        <button type="button" aria-labelledby={ids.when} aria-expanded={calendar} onClick={() => setCalendar((v) => !v)} className="text-left text-[17px] font-semibold">
-          {range ? (range.end && range.end !== range.start ? `${label(range.start)} – ${label(range.end)}` : label(range.start)) : <span className="text-ink/45">{t('anyDays')}</span>}
+        <button type="button" aria-label={`${t('when')}: ${range ? (range.end && range.end !== range.start ? `${label(range.start)} – ${label(range.end)}` : label(range.start)) : t('anyDays')}`} aria-expanded={calendar} onClick={() => setCalendar((v) => !v)} className="text-left text-[17px] font-semibold">
+          {range ? (range.end && range.end !== range.start ? `${label(range.start)} – ${label(range.end)}` : label(range.start)) : <span className="text-ink/60">{t('anyDays')}</span>}
         </button>
         {calendar && (
           <div className="border-ink/15 bg-surface rounded-media animate-pop-in absolute top-[calc(100%+10px)] right-0 z-30 w-[min(92vw,640px)] border p-4 shadow-[0_32px_64px_-32px_rgba(10,11,14,0.5)] max-md:left-0">

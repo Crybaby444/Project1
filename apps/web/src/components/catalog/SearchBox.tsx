@@ -36,7 +36,7 @@ function optionsOf(answer: SuggestResponse | null, locale: Locale): Option[] {
  * cancelling the last. Arrows move through the suggestions, Enter opens one or searches the text, Esc
  * closes the list and a second Esc clears the box.
  */
-export function SearchBox({ initialQuery = '', className = '', compact = false }: { initialQuery?: string; className?: string; /** The header's slim box: 40px tall, Enter searches (no button). */ compact?: boolean }) {
+export function SearchBox({ initialQuery = '', className = '', compact = false, label }: { initialQuery?: string; className?: string; /** The header's slim box: 40px tall, Enter searches (no button). */ compact?: boolean; /** Its own accessible name, when another search box is on the page. */ label?: string }) {
   const t = useTranslations('catalog.search');
   const locale = useLocale() as Locale;
   const client = useApiClient();
@@ -148,7 +148,7 @@ export function SearchBox({ initialQuery = '', className = '', compact = false }
   return (
     <form role="search" onSubmit={submit} className={`relative ${className}`}>
       <label htmlFor={ids.input} className="sr-only">
-        {t('label')}
+        {label ?? t('label')}
       </label>
       <div className={`bg-surface rounded-pill focus-within:outline-ink flex items-center gap-2 border pr-1 pl-4 focus-within:outline-2 focus-within:outline-offset-3 ${compact ? 'border-ink/25 hover:border-ink/60 min-h-10 py-0.5 transition-colors' : 'border-ink min-h-12 py-1'}`}>
         <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5 shrink-0">

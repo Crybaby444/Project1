@@ -10,6 +10,7 @@ import { SearchBox } from '@/components/catalog/SearchBox';
  */
 export function SearchCell() {
   const t = useTranslations('catalog.search');
+  const tn = useTranslations('nav');
   const [open, setOpen] = useState(false);
   const panel = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -21,7 +22,7 @@ export function SearchCell() {
   }, [open]);
   return (
     <div className="@container flex min-w-0 flex-1 items-center">
-      <SearchBox compact className="w-full @max-[199px]:hidden" />
+      <SearchBox compact label={tn('search')} className="w-full @max-[199px]:hidden" />
       <button
         type="button"
         aria-label={t('label')}
@@ -36,7 +37,7 @@ export function SearchCell() {
       </button>
       {open && (
         <div ref={panel} className="border-ink/15 bg-canvas animate-pop-in absolute inset-x-0 top-full z-40 border-b px-8 py-5 shadow-[0_30px_60px_-40px_rgba(10,11,14,0.55)]">
-          <SearchBox className="mx-auto max-w-3xl" />
+          <SearchBox label={tn('search')} className="mx-auto max-w-3xl" />
         </div>
       )}
     </div>

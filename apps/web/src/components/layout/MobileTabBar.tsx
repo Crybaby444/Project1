@@ -116,7 +116,7 @@ export function MobileTabBar({ roots, hidden }: { roots: MenuRoot[]; hidden: boo
               </svg>
             </button>
           </div>
-          <SearchBox compact />
+          <SearchBox compact label={t('search')} />
           <ul className="border-ink/10 divide-ink/10 divide-y border-y">
             {roots.map((root) => {
               const key = root.slugs.en;

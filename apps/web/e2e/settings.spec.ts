@@ -23,6 +23,8 @@ test.describe('profile', () => {
     await page.getByRole('button', { name: en.settings.profile.save }).click();
     await expect(page.getByRole('status').filter({ hasText: en.settings.profile.saved })).toBeVisible();
 
+    // The bar steps away while scrolling down and comes back on the way up (like a yo-yo).
+    await page.evaluate(() => window.scrollTo(0, 0));
     await expect(page.getByRole('button', { name: new RegExp(`^${en.header.account}`) })).toHaveText(/, JO$/);
     await page.getByRole('button', { name: new RegExp(`^${en.header.account}`) }).click();
     await expect(page.getByRole('menu').locator('..').getByText('Jānis Ozols')).toBeVisible();

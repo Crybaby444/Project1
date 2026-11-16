@@ -53,7 +53,7 @@ test.describe('unknown or wrong-case locale prefixes', () => {
     expect(res?.status()).toBe(200);
     await expect(page).toHaveURL(/\/lv$/);
     await expect(page.locator('html')).toHaveAttribute('lang', 'lv');
-    await expect(page.getByText(lv.home.tagline)).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: lv.market.hero.title })).toBeVisible();
   });
 });
 

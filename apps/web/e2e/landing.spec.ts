@@ -13,8 +13,8 @@ const LANGUAGES = [
 ] as const;
 
 for (const { locale, prefix, m } of LANGUAGES) {
-  test(`the v16 home in ${locale}: one h1, every scene, the facts from the booking rules`, async ({ page }) => {
-    await page.goto(`${prefix}/`);
+  test(`What is Yoyo in ${locale}: one h1, every scene, the facts from the booking rules`, async ({ page }) => {
+    await page.goto(`${prefix}/what-is-yoyo`);
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
     await expect(page.getByRole('heading', { level: 1, name: 'Yoyo' })).toBeAttached();
     for (const scene of ['hero', 'night', 'what', 'facts', 'finale']) {

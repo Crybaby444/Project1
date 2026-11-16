@@ -42,7 +42,7 @@ function MessagesLink() {
  * The navigation (owner, 2026-11-16: not a table, adaptive, our concept). A capsule that floats over the
  * page with real depth: the mark, Catalog (a sheet of every category), What is Yoyo, How it works with one
  * light that slides along under them, the search, lending, messages, notifications and you. Like a yo-yo it
- * goes away while you scroll down and comes back when you scroll up. On phones and tablets a slim capsule on
+ * goes away while you scroll down and comes back when you scroll up (and at once when the keyboard reaches it). On phones and tablets a slim capsule on
  * top (the mark, the search, you) and a tab bar at the bottom where the thumb is.
  */
 export function SiteHeader({ catalog = [] }: { catalog?: MenuRoot[] }) {
@@ -60,7 +60,7 @@ export function SiteHeader({ catalog = [] }: { catalog?: MenuRoot[] }) {
     <>
       <header
         data-site-header
-        className={`pointer-events-none fixed inset-x-0 top-0 z-30 px-3 pt-3 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-5 ${hidden ? '-translate-y-[calc(100%+8px)]' : ''}`}
+        className={`pointer-events-none fixed inset-x-0 top-0 z-30 px-3 pt-3 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus-within:translate-y-0 focus-within:transition-none sm:px-5 ${hidden ? '-translate-y-[calc(100%+8px)]' : ''}`}
       >
         <div className="border-ink/10 bg-canvas pointer-events-auto relative mx-auto flex h-14 max-w-[1280px] items-center gap-2 rounded-full border pr-2 pl-4 shadow-[0_16px_40px_-22px_rgba(10,11,14,0.45),0_1px_0_rgba(255,255,255,0.6)_inset] backdrop-blur-xl lg:h-[60px] lg:gap-3 lg:pl-5">
           <Link href="/" data-site-brand aria-label={tn('homeLabel')} className="rounded-pill flex shrink-0 items-center gap-2 pr-1">
@@ -101,7 +101,8 @@ export function SiteHeader({ catalog = [] }: { catalog?: MenuRoot[] }) {
             <div data-desktop-only data-theme-control className="max-lg:hidden">
               <ThemeToggle />
             </div>
-            <div className="max-lg:hidden">
+            {/* One language menu: on phones a visitor keeps it here; a signed-in person finds it under You. */}
+            <div className={signedIn ? 'max-lg:hidden' : ''}>
               <LanguageSwitcher />
             </div>
             {signedIn ? (
@@ -127,9 +128,6 @@ export function SiteHeader({ catalog = [] }: { catalog?: MenuRoot[] }) {
               </>
             ) : status === 'anonymous' ? (
               <>
-                <div className="lg:hidden">
-                  <LanguageSwitcher />
-                </div>
                 <Link href="/login" className="rounded-pill hover:bg-ink/[0.06] inline-flex h-10 items-center px-3.5 text-[13px] font-bold tracking-[0.03em] whitespace-nowrap uppercase">
                   {t('signIn')}
                 </Link>
