@@ -7,34 +7,14 @@ const FACTS = {
   reviewDays: SERVICE_FACTS.reviewDays,
   fee: SERVICE_FACTS.serviceFeePercent,
 };
-const RENTER = ['find', 'request', 'contract', 'pay', 'handover', 'return'] as const;
-const OWNER = ['list', 'review', 'accept', 'handover', 'check'] as const;
 
 /**
- * Everything How it works used to say (owner, 2026-11-16: one page holds all of it): both sides step by
- * step with the real numbers, the deposit rule, changing your mind, reviews and where Yoyo is today.
- * Native <details> for the step lists, so the page stays light but nothing is hidden from search.
+ * The rules every deal keeps (owner, 2026-11-16: no repeats, everything in its one place): the deposit
+ * rule with its time limits, changing your mind, reviews and where Yoyo is today. The steps themselves
+ * are in TwoSides.
  */
 export async function FinePrint() {
   const t = await getTranslations('howItWorks');
-  const lists = [
-    {
-      id: 'renter',
-      heading: t('renter.heading'),
-      steps: RENTER.map((k) => ({
-        title: t(`renter.steps.${k}.title`),
-        body: t(`renter.steps.${k}.body`, FACTS),
-      })),
-    },
-    {
-      id: 'owner',
-      heading: t('owner.heading'),
-      steps: OWNER.map((k) => ({
-        title: t(`owner.steps.${k}.title`),
-        body: t(`owner.steps.${k}.body`, FACTS),
-      })),
-    },
-  ];
   return (
     <section
       data-home="rules"
@@ -47,55 +27,9 @@ export async function FinePrint() {
             id="intro-rules"
             className="font-display text-[clamp(2.6rem,7vw,6rem)] leading-[0.88] font-black uppercase"
           >
-            {t('title')}
+            {t('rulesTitle')}
           </h2>
-          <p className="text-ink/75 max-w-[46ch] text-[17px] leading-relaxed lg:pb-2">{t('lead')}</p>
-        </div>
-
-        <div className="grid gap-x-12 gap-y-4 lg:grid-cols-2">
-          {lists.map((list) => (
-            <details key={list.id} open className="group border-ink/15 border-t">
-              <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 py-5 [&::-webkit-details-marker]:hidden">
-                <h3 className="font-display text-[clamp(1.8rem,3vw,2.6rem)] leading-[0.9] font-black uppercase">
-                  {list.heading}
-                </h3>
-                <span
-                  aria-hidden="true"
-                  className="border-ink/40 group-open:bg-ink group-open:text-canvas inline-grid size-10 shrink-0 place-items-center rounded-full border transition-colors"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="size-5 transition-transform duration-300 group-open:rotate-45"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  >
-                    <path d="M12 5v14M5 12h14" />
-                  </svg>
-                </span>
-              </summary>
-              <ol className="m-0 list-none p-0">
-                {list.steps.map((step, i) => (
-                  <li
-                    key={step.title}
-                    className="border-ink/12 grid grid-cols-[2.6rem_1fr] gap-x-4 border-t py-5"
-                  >
-                    <span
-                      aria-hidden="true"
-                      className="font-display text-ink/60 text-[2rem] leading-[0.85] font-black tabular-nums"
-                    >
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <span className="flex flex-col gap-1.5">
-                      <span className="text-[18px] leading-snug font-bold">{step.title}</span>
-                      <span className="text-ink/80 text-[15.5px] leading-relaxed">{step.body}</span>
-                    </span>
-                  </li>
-                ))}
-              </ol>
-            </details>
-          ))}
+          <p className="text-ink/75 max-w-[46ch] text-[17px] leading-relaxed lg:pb-2">{t('rulesLead')}</p>
         </div>
 
         <div className="grid gap-3 lg:grid-cols-[1.3fr_1fr]">
@@ -151,4 +85,18 @@ export async function FinePrint() {
       </div>
     </section>
   );
+}
+
+/** The steps of each side with the real numbers, for TwoSides (same source as the rules above). */
+export async function sideSteps() {
+  const t = await getTranslations('howItWorks');
+  const RENTER = ['find', 'request', 'contract', 'pay', 'handover', 'return'] as const;
+  const OWNER = ['list', 'review', 'accept', 'handover', 'check'] as const;
+  return {
+    rent: RENTER.map((k) => ({
+      title: t(`renter.steps.${k}.title`),
+      body: t(`renter.steps.${k}.body`, FACTS),
+    })),
+    lend: OWNER.map((k) => ({ title: t(`owner.steps.${k}.title`), body: t(`owner.steps.${k}.body`, FACTS) })),
+  };
 }

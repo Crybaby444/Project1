@@ -17,10 +17,9 @@ for (const { locale, prefix, m } of LANGUAGES) {
     await page.goto(`${prefix}/what-is-yoyo`);
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
     await expect(page.getByRole('heading', { level: 1, name: 'Yoyo' })).toBeAttached();
-    for (const scene of ['hero', 'night', 'ends', 'what', 'sides', 'rules', 'people', 'inside', 'facts', 'finale']) {
+    for (const scene of ['hero', 'night', 'what', 'sides', 'rules', 'people', 'inside', 'facts', 'finale']) {
       await expect(page.locator(`[data-home="${scene}"]`)).toHaveCount(1);
     }
-    await expect(page.getByRole('heading', { level: 2, name: m.landing.ends.title })).toBeAttached();
     await expect(page.getByRole('heading', { level: 2, name: m.landing.people.title })).toBeAttached();
     await expect(page.getByRole('heading', { level: 2, name: m.landing.facts.label })).toBeAttached();
     await expect(page.getByRole('heading', { level: 2, name: new RegExp(m.landing.finale.line1, 'i') })).toBeAttached();
@@ -34,10 +33,10 @@ test('What is Yoyo walks through both sides: the switch shows the lender’s ste
   await page.goto('/what-is-yoyo');
   const sides = page.locator('[data-home="sides"]');
   await expect(sides.locator('[data-side]')).toHaveCount(2);
-  await expect(sides.getByRole('heading', { level: 3, name: en.landing.sides.rent.steps.s3.title })).toBeVisible();
+  await expect(sides.getByRole('heading', { level: 3, name: en.howItWorks.renter.steps.contract.title })).toBeVisible();
   await sides.getByRole('tab', { name: en.landing.sides.lend.tab }).click();
-  await expect(sides.getByRole('heading', { level: 3, name: en.landing.sides.lend.steps.s2.title })).toBeVisible();
-  await expect(sides.getByRole('heading', { level: 3, name: en.landing.sides.rent.steps.s3.title })).toBeHidden();
+  await expect(sides.getByRole('heading', { level: 3, name: en.howItWorks.owner.steps.review.title })).toBeVisible();
+  await expect(sides.getByRole('heading', { level: 3, name: en.howItWorks.renter.steps.contract.title })).toBeHidden();
 });
 
 test('What is Yoyo has nothing around it: no header or footer, and the way home is at its very end (owner, 2026-11-16)', async ({ page }) => {

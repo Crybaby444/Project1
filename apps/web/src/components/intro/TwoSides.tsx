@@ -7,15 +7,17 @@ import { LIST_ITEM_HREF } from '@/lib/site';
 
 const SIDES = ['rent', 'lend'] as const;
 type Side = (typeof SIDES)[number];
-const STEPS = ['s1', 's2', 's3', 's4', 's5'] as const;
 const SHIELDS = ['a', 'b', 'c'] as const;
 
 /**
- * Both sides in full (owner, 2026-11-16): the one who rents and the one who lends, each with the five steps
- * of a deal from their side and what protects them. A switch between the two; both panels are in the HTML
+ * Both sides in full (owner, 2026-11-16): the one who rents and the one who lends, each with every step of
+ * a deal from their side (the How it works steps, with the real numbers, given by the page) and what
+ * protects them. The page tells the deal here and nowhere else. A switch between the two; both panels are in the HTML
  * (the hidden one with `hidden`), so search engines and readers without script get the whole story.
  */
-export function TwoSides() {
+export type SideSteps = Record<Side, { title: string; body: string }[]>;
+
+export function TwoSides({ steps }: { steps: SideSteps }) {
   const t = useTranslations('landing.sides');
   const [side, setSide] = useState<Side>('rent');
   const id = useId();
@@ -88,18 +90,18 @@ export function TwoSides() {
             data-side={s}
             className="flex flex-col gap-10"
           >
-            <ol className="m-0 grid list-none gap-3 p-0 sm:grid-cols-2 lg:grid-cols-5">
-              {STEPS.map((k, i) => (
+            <ol className="m-0 grid list-none gap-3 p-0 sm:grid-cols-2 lg:grid-cols-3">
+              {steps[s].map((step, i) => (
                 <li
-                  key={k}
+                  key={step.title}
                   className="border-ink/12 bg-ink/[0.035] flex flex-col gap-3 rounded-[24px] border p-6 motion-safe:animate-[side-in_600ms_cubic-bezier(0.16,1,0.3,1)_both]"
                   style={{ animationDelay: `${i * 70}ms` }}
                 >
                   <b className="font-display text-[clamp(2.4rem,3.6vw,3.4rem)] leading-[0.8] font-black">
                     {String(i + 1).padStart(2, '0')}
                   </b>
-                  <h3 className="text-[18px] leading-snug font-bold">{t(`${s}.steps.${k}.title`)}</h3>
-                  <p className="text-ink/75 m-0 text-[15px] leading-relaxed">{t(`${s}.steps.${k}.body`)}</p>
+                  <h3 className="text-[18px] leading-snug font-bold">{step.title}</h3>
+                  <p className="text-ink/75 m-0 text-[15px] leading-relaxed">{step.body}</p>
                 </li>
               ))}
             </ol>

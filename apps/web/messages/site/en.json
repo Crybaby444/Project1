@@ -116,24 +116,6 @@
       "line2": "comes back.",
       "home": "Back to Yoyo"
     },
-    "ends": {
-      "title": "Two ends of one string",
-      "middle": "In the middle, Yoyo holds the contract you both signed and the deposit until the thing is back.",
-      "need": {
-        "who": "If you need it",
-        "title": "Take it for days",
-        "a": "Find it by name, district and dates.",
-        "b": "Rent from a person nearby, not a warehouse.",
-        "c": "Pay only after you both sign the contract."
-      },
-      "have": {
-        "who": "If you have it",
-        "title": "Let it earn",
-        "a": "List it in minutes, with your price and your days.",
-        "b": "A deposit covers the thing while it is out.",
-        "c": "You see who rents: a profile with reviews from real deals."
-      }
-    },
     "people": {
       "title": "People, not a warehouse",
       "lead": "Everyone on Yoyo has a face: a public profile, reviews from finished deals, followers and shops of their own things.",
@@ -160,28 +142,6 @@
       "rent": {
         "tab": "I need something",
         "cta": "Find something",
-        "steps": {
-          "s1": {
-            "title": "Find it nearby",
-            "body": "Search by name, district and dates. Every listing shows the price per day, the deposit and the free days."
-          },
-          "s2": {
-            "title": "Ask for the days",
-            "body": "Pick the first and the last day. You see the full price, the fee and the deposit before you send anything."
-          },
-          "s3": {
-            "title": "Sign first",
-            "body": "When the owner accepts, you sign the contract online, then the owner signs. Yoyo checks both signatures."
-          },
-          "s4": {
-            "title": "Pay and pick it up",
-            "body": "Pay through Yoyo. Meet the owner, check the thing together and add photos to the deal’s own chat."
-          },
-          "s5": {
-            "title": "Bring it back",
-            "body": "Hand it back on the last day. When the owner has checked it, the deposit comes back to you. Then leave a review."
-          }
-        },
         "shield": {
           "title": "What protects you",
           "a": "Nothing is charged before both of you sign.",
@@ -192,28 +152,6 @@
       "lend": {
         "tab": "I have something",
         "cta": "Lend an item",
-        "steps": {
-          "s1": {
-            "title": "Put it on Yoyo",
-            "body": "Add photos, a price per day, a week discount if you like, a deposit and your district. It takes a few minutes."
-          },
-          "s2": {
-            "title": "A person checks it",
-            "body": "Before it goes live, someone from Yoyo looks at the listing, so the catalog stays honest."
-          },
-          "s3": {
-            "title": "Choose who rents",
-            "body": "Requests come with a notification. You see the person’s profile and reviews, and accept or decline."
-          },
-          "s4": {
-            "title": "Sign and hand over",
-            "body": "The renter signs first, then you. You meet, hand it over and add photos to the deal chat; once you both confirm the handover, the rent goes to your Yoyo wallet."
-          },
-          "s5": {
-            "title": "Get it back and check it",
-            "body": "Check it within 48 hours: press “All good”, or claim damage from the deposit with photos. If you do nothing, the item counts as fine."
-          }
-        },
         "shield": {
           "title": "What protects you",
           "a": "A deposit you set covers the thing while it is out.",
@@ -223,24 +161,8 @@
       }
     },
     "inside": {
-      "title": "Everything inside",
-      "lead": "Yoyo is more than a list of things. These are the parts that make a deal between strangers work.",
-      "contract": {
-        "title": "Contract for every deal",
-        "body": "Written for EU law, signed online by both sides, renter first."
-      },
-      "deposit": {
-        "title": "A deposit that returns",
-        "body": "Held during the deal and released after the return is checked."
-      },
-      "checked": {
-        "title": "Listings checked by a person",
-        "body": "Nothing goes live without a look from us first."
-      },
-      "chat": {
-        "title": "A chat for every deal",
-        "body": "Photos, times and places stay next to the contract. Personal messages live apart."
-      },
+      "title": "Also on Yoyo",
+      "lead": "The small things that make it easy, every day.",
       "live": {
         "title": "Updates as they happen",
         "body": "Requests, signatures and messages show up without reloading, with notifications."
@@ -249,18 +171,6 @@
         "title": "Districts and a map",
         "body": "Search by district and see where to pick the thing up."
       },
-      "reviews": {
-        "title": "Reviews from real deals",
-        "body": "Only people who finished a deal together can review each other."
-      },
-      "follow": {
-        "title": "Follow people",
-        "body": "Follow the lenders you like and see what they add."
-      },
-      "shops": {
-        "title": "Shops of your own",
-        "body": "Gather your things into collections that others can browse."
-      },
       "favorites": {
         "title": "Favourites",
         "body": "Save things with a heart and come back to them later."
@@ -268,10 +178,6 @@
       "wallet": {
         "title": "A wallet",
         "body": "Rent you earn lands in your Yoyo wallet; you can pay from it too."
-      },
-      "languages": {
-        "title": "Three languages",
-        "body": "English, Latviešu and Русский, everywhere on the site."
       }
     }
   },
@@ -356,7 +262,9 @@
     "cta": {
       "title": "Ready when you are",
       "faq": "Read the FAQ"
-    }
+    },
+    "rulesTitle": "The rules of every deal",
+    "rulesLead": "One set of rules for both sides. The site keeps them, so nobody has to remember."
   },
   "faq": {
     "title": "Questions and answers",
