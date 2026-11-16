@@ -3,7 +3,17 @@ import { getTranslations } from 'next-intl/server';
 /** The three that make a deal between strangers safe: big, on the night. */
 const PILLARS = ['contract', 'deposit', 'checked'] as const;
 /** Everything else the platform does, in a compact sheet. */
-const PARTS = ['chat', 'live', 'map', 'reviews', 'follow', 'shops', 'favorites', 'wallet', 'languages'] as const;
+const PARTS = [
+  'chat',
+  'live',
+  'map',
+  'reviews',
+  'follow',
+  'shops',
+  'favorites',
+  'wallet',
+  'languages',
+] as const;
 
 /**
  * Everything inside Yoyo (2026-11-16): the three guarantees as large night cards, each with its own small
@@ -12,10 +22,17 @@ const PARTS = ['chat', 'live', 'map', 'reviews', 'follow', 'shops', 'favorites',
 export async function Inside() {
   const t = await getTranslations('landing.inside');
   return (
-    <section data-home="inside" aria-labelledby="intro-inside" className="bg-canvas text-ink px-4 py-24 sm:px-8 sm:py-32">
+    <section
+      data-home="inside"
+      aria-labelledby="intro-inside"
+      className="bg-canvas text-ink px-4 py-24 sm:px-8 sm:py-32"
+    >
       <div className="mx-auto flex max-w-[1280px] flex-col gap-12">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-end">
-          <h2 id="intro-inside" className="font-display text-[clamp(2.6rem,7vw,6rem)] leading-[0.88] font-black uppercase">
+          <h2
+            id="intro-inside"
+            className="font-display text-[clamp(2.6rem,7vw,6rem)] leading-[0.88] font-black uppercase"
+          >
             {t('title')}
           </h2>
           <p className="text-ink/75 max-w-[46ch] text-[17px] leading-relaxed lg:pb-2">{t('lead')}</p>
@@ -23,11 +40,18 @@ export async function Inside() {
 
         <ul className="m-0 grid list-none gap-3 p-0 lg:grid-cols-3">
           {PILLARS.map((f) => (
-            <li key={f} className="group flex min-h-[19rem] flex-col justify-between gap-8 rounded-[28px] bg-[var(--night)] p-7 text-[var(--paper)] sm:p-9">
+            <li
+              key={f}
+              className="group flex min-h-[19rem] flex-col justify-between gap-8 rounded-[28px] bg-[var(--night)] p-7 text-[var(--paper)] sm:p-9"
+            >
               <Drawing kind={f} />
               <div className="flex flex-col gap-3">
-                <h3 className="font-display text-[clamp(1.9rem,2.8vw,2.6rem)] leading-[0.9] font-black uppercase">{t(`${f}.title`)}</h3>
-                <p className="m-0 max-w-[34ch] text-[15.5px] leading-relaxed text-[var(--paper)]/80">{t(`${f}.body`)}</p>
+                <h3 className="font-display text-[clamp(1.9rem,2.8vw,2.6rem)] leading-[0.9] font-black uppercase">
+                  {t(`${f}.title`)}
+                </h3>
+                <p className="m-0 max-w-[34ch] text-[15.5px] leading-relaxed text-[var(--paper)]/80">
+                  {t(`${f}.body`)}
+                </p>
               </div>
             </li>
           ))}
@@ -48,9 +72,19 @@ export async function Inside() {
 
 /** A small line drawing per guarantee, in the yo-yo's language: two signatures, a disc that returns, an eye. */
 function Drawing({ kind }: { kind: (typeof PILLARS)[number] }) {
-  const common = { fill: 'none', stroke: 'currentColor', strokeWidth: 2.2, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
+  const common = {
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 2.2,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+  };
   return (
-    <svg viewBox="0 0 120 64" aria-hidden="true" className="h-16 w-[120px] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1.5 motion-reduce:transition-none">
+    <svg
+      viewBox="0 0 120 64"
+      aria-hidden="true"
+      className="h-16 w-[120px] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1.5 motion-reduce:transition-none"
+    >
       {kind === 'contract' && (
         <g {...common}>
           <path d="M6 44c8-14 14-14 18-4s10 10 16-6" />

@@ -9,6 +9,7 @@ import { WhatIsYoyo } from '@/components/home/WhatIsYoyo';
 import { HomeLoader } from '@/components/home/HomeLoader';
 import { HomeStageLoader } from '@/components/home/HomeStageLoader';
 import { PeopleScene } from '@/components/intro/PeopleScene';
+import { FinePrint } from '@/components/intro/FinePrint';
 import { Inside } from '@/components/intro/Inside';
 import { TwoEnds } from '@/components/intro/TwoEnds';
 import { TwoSides } from '@/components/intro/TwoSides';
@@ -41,6 +42,7 @@ export default async function WhatIsYoyoPage({ params }: Params) {
       <TwoEnds />
       <WhatIsYoyo />
       <TwoSides />
+      <FinePrint />
       <PeopleScene />
       <Inside />
       <Facts />

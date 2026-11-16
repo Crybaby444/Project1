@@ -2,8 +2,7 @@ import { DEFAULT_BOOKING_SETTINGS } from '@yoyo/domain';
 import { localizedUrl } from './seo';
 
 const PAGES = [
-  ['/what-is-yoyo', 'What is Yoyo', 'the idea, both sides of a deal and everything the platform does'],
-  ['/how-it-works', 'How renting works', 'step by step for the renter and the lender, and what happens to the deposit'],
+  ['/what-is-yoyo', 'What is Yoyo', 'the idea, both sides of a deal step by step, the deposit rule and everything the platform does'],
   ['/faq', 'Questions and answers', 'money, the deposit, safety, accounts and data'],
   ['/c', 'Catalog', 'every category'],
   ['/terms', 'Terms of service', ''],

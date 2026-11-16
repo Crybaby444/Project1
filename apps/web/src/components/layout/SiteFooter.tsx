@@ -15,7 +15,7 @@ import { GA_ID } from '@/lib/analytics/consent';
 
 const SERVICE_LINKS = [
   ['catalog', '/c'], // the header carries no catalog (owner, 2026-11-13): it lives here and on the home page
-  ['howItWorks', '/how-it-works'],
+  ['whatIsYoyo', '/what-is-yoyo'],
   ['faq', '/faq'],
 ] as const;
 
