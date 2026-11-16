@@ -29,7 +29,7 @@ export function ProfileSocial({ userId, name, followers, following, reviews, dea
   const stat = (value: number, label: string, onClick?: () => void) => {
     const inner = (
       <>
-        <span className="font-display block text-[2.2rem] leading-none font-black tabular-nums">{value}</span>
+        <span className="font-display block text-[1.9rem] leading-none font-black tabular-nums sm:text-[2.2rem]">{value}</span>
         <span className="text-ink/70 block text-[13px] font-semibold">{label}</span>
       </>
     );
@@ -44,7 +44,7 @@ export function ProfileSocial({ userId, name, followers, following, reviews, dea
 
   return (
     <div className="flex flex-wrap items-center gap-x-8 gap-y-4" data-profile-social="">
-      <div className="flex gap-8">
+      <div className="flex flex-wrap gap-x-6 gap-y-3 sm:gap-x-8">
         {stat(deals, tp('deals', { count: deals }))}
         {stat(followers + delta, t('followers', { count: followers + delta }), () => setOpen('followers'))}
         {stat(following, t('followingCount'), () => setOpen('following'))}

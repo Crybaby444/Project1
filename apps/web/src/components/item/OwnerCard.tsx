@@ -54,11 +54,11 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
           >
             {owner.name}
           </Heading>
-          {owner.username && <p className="text-[15px] font-bold" data-username="">@{owner.username}</p>}
+          {owner.username && <p className="text-[15px] font-bold [overflow-wrap:anywhere]" data-username="">@{owner.username}</p>}
           <p className="text-sm">{owner.city ? t('sinceIn', { since, city: owner.city }) : t('since', { since })}</p>
         </div>
       </div>
-      <ul className="flex flex-wrap gap-2 text-xs font-bold">
+      <ul className="flex min-w-0 flex-wrap gap-2 text-xs font-bold">
         {owner.emailVerified && (
           <li className="border-ink/25 rounded-pill inline-flex items-center gap-1 border px-2.5 py-0.5">
             <Check />
