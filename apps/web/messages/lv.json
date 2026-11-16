@@ -1118,40 +1118,6 @@
       "clearDays": "Notīrīt dienas",
       "submit": "Meklēt"
     },
-    "tags": {
-      "label": "Jaunumi Yoyo",
-      "perDay": "/ dienā",
-      "depositBack": "{amount} drošības nauda, atgriežas"
-    },
-    "categories": {
-      "title": "Viss, pa kategorijām",
-      "all": "Visas kategorijas"
-    },
-    "loop": {
-      "title": "Turp un atpakaļ. Kā jo-jo.",
-      "lead": "Katra noma Yoyo iet pa to pašu loku. Yoyo glabā naudu pa vidu, tāpēc nevienai pusei nav jāpaļaujas uz svešinieka vārdu.",
-      "whatIs": "Kas ir Yoyo",
-      "how": "Kā tas strādā",
-      "steps": {
-        "find": {
-          "title": "Atrodi",
-          "body": "Meklē pēc nosaukuma, vietas un dienām."
-        },
-        "book": {
-          "title": "Rezervē un paraksti",
-          "body": "Īpašnieks piekrīt; jūs abi parakstāt līgumu."
-        },
-        "use": {
-          "title": "Lieto",
-          "body": "Satiecieties, paņem un lieto savas dienas."
-        },
-        "back": {
-          "title": "Atpakaļ",
-          "body": "Atdod lietu; drošības nauda atgriežas."
-        }
-      },
-      "returned": "{amount} drošības nauda — atpakaļ pie tevis"
-    },
     "fresh": {
       "title": "Tikko pievienots",
       "all": "Skatīt visus jaunumus"
@@ -1174,12 +1140,6 @@
         "bike": "Velosipēds",
         "camera": "Kamera"
       }
-    },
-    "close": {
-      "title": "Tas vienmēr atgriežas.",
-      "rent": "Atrast lietu",
-      "lend": "Izīrēt lietu",
-      "backUp": "Atpakaļ augšā"
     }
   }
 }
