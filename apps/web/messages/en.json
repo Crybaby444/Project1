@@ -641,7 +641,9 @@
       "send": "Send for review",
       "sent": "Sent for review. We will email you.",
       "notNow": "Already in review."
-    }
+    },
+    "saveDraft": "Save draft and exit",
+    "restored": "We found changes from your last visit that had not been saved yet, and saved them now."
   },
   "listingActions": {
     "hide": "Hide",
@@ -1186,5 +1188,16 @@
       "title": "Before your first deal",
       "all": "All questions and answers"
     }
+  },
+  "mySpace": {
+    "label": "My profile",
+    "public": "View my public profile",
+    "tabs": {
+      "lending": "My items",
+      "favorites": "Favourites",
+      "following": "Following",
+      "shops": "My shops"
+    },
+    "menu": "My profile"
   }
 }

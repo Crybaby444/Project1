@@ -34,13 +34,11 @@ describe('UserMenu', () => {
     expect(button).toHaveAttribute('aria-expanded', 'true');
     const items = within(menu).getAllByRole('menuitem');
     expect(items.map((i) => i.textContent)).toEqual([
+      // Only what matters (owner, 2026-11-16): items, favourites, following and shops live in My profile,
+      // messages have their own button in the bar.
+      en.mySpace.menu,
       deals.dealsMenu.myDeals,
-      deals.chat.menu,
       deals.dealsMenu.wallet,
-      en.header.myListings,
-      en.header.favorites,
-      en.header.following,
-      en.header.shops,
       en.header.settings,
       en.header.signOut,
     ]);
@@ -49,7 +47,7 @@ describe('UserMenu', () => {
     await user.keyboard('{ArrowDown}');
     expect(items[1]).toHaveFocus();
     await user.keyboard('{End}');
-    expect(items[8]).toHaveFocus();
+    expect(items[4]).toHaveFocus();
     await user.keyboard('{ArrowDown}');
     expect(items[0]).toHaveFocus(); // wraps around
 
@@ -74,11 +72,11 @@ describe('UserMenu', () => {
     expect(screen.getByRole('menuitem', { name: en.header.settings })).toHaveAttribute('href', '/settings');
   });
 
-  it('links to my listings, and to moderation for an administrator only', async () => {
+  it('links to my profile (my items first), and to moderation for an administrator only', async () => {
     const user = userEvent.setup();
     const { button } = await renderMenu();
     await user.click(button);
-    expect(screen.getByRole('menuitem', { name: en.header.myListings })).toHaveAttribute(
+    expect(screen.getByRole('menuitem', { name: en.mySpace.menu })).toHaveAttribute(
       'href',
       '/dashboard/lending',
     );

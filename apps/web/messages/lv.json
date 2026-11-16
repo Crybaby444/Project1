@@ -641,7 +641,9 @@
       "send": "Nosūtīt pārbaudei",
       "sent": "Nosūtīts pārbaudei. Mēs tev uzrakstīsim.",
       "notNow": "Jau tiek pārbaudīts."
-    }
+    },
+    "saveDraft": "Saglabāt melnrakstu un iziet",
+    "restored": "Atradām izmaiņas no tava pēdējā apmeklējuma, kas vēl nebija saglabātas, un saglabājām tās tagad."
   },
   "listingActions": {
     "hide": "Paslēpt",
@@ -1186,5 +1188,16 @@
       "title": "Pirms pirmā darījuma",
       "all": "Visi jautājumi un atbildes"
     }
+  },
+  "mySpace": {
+    "label": "Mans profils",
+    "public": "Skatīt manu publisko profilu",
+    "tabs": {
+      "lending": "Manas lietas",
+      "favorites": "Izlase",
+      "following": "Sekoju",
+      "shops": "Mani veikali"
+    },
+    "menu": "Mans profils"
   }
 }
