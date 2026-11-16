@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { publicName } from '../common/public-name';
 import { canReview, reviewDeadline, reviewIsPublic, type BookingSnapshot } from '@yoyo/domain';
 import type { DealReviews, PublicReview, ReviewPage, ReviewRequest } from '@yoyo/shared';
 import { BookingRulesService } from '../bookings/booking-rules.service';
@@ -11,7 +12,7 @@ import { PrismaService } from '../prisma/prisma.service';
 const PAGE_SIZE = 10;
 
 const REVIEW_INCLUDE = {
-  author: { select: { id: true, name: true } },
+  author: { select: { id: true, name: true, username: true, deletedAt: true } },
   listing: { select: { id: true, title: true } },
   booking: { select: { completedAt: true, reviews: { select: { authorId: true } } } },
 } as const satisfies Prisma.ReviewInclude;
@@ -31,7 +32,7 @@ function toPublic(row: ReviewRow): PublicReview {
     itemRating: row.itemRating,
     text: row.text,
     createdAt: row.createdAt.toISOString(),
-    author: { id: row.author.id, name: row.author.name },
+    author: { id: row.author.id, name: publicName(row.author) },
     authorRole: row.authorRole,
     listing: row.listing ? { id: row.listing.id, title: row.listing.title ?? '' } : null,
   };

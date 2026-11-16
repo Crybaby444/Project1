@@ -1,4 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { publicName } from '../common/public-name';
 import type { FollowFeed, PersonCard } from '@yoyo/shared';
 import { serializeCatalogItem } from '../catalog/catalog.serializer';
 import { escapeLike } from '../catalog/catalog-query';
@@ -156,7 +157,7 @@ export class FollowsService {
       const u = byId.get(id);
       if (!u) return [];
       const r = ratings.get(id);
-      return [{ id, name: u.name, username: u.username, city: u.city, listingCount: listingCount.get(id) ?? 0, followers: followerCount.get(id) ?? 0, rating: r?.rating ?? null, reviewCount: r?.reviewCount ?? 0 }];
+      return [{ id, name: publicName(u), username: u.username, city: u.city, listingCount: listingCount.get(id) ?? 0, followers: followerCount.get(id) ?? 0, rating: r?.rating ?? null, reviewCount: r?.reviewCount ?? 0 }];
     });
   }
 }
