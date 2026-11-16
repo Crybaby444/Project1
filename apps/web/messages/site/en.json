@@ -53,21 +53,21 @@
     "ctaListItem": "List an item",
     "ctaHowItWorks": "How it works",
     "hero": {
-      "line": "Rent from the people around you, for as long as you need.",
+      "line": "Rent from people nearby. Lend what you rarely use. Everything comes back.",
       "find": "Find something",
       "lend": "Lend an item",
       "scroll": "Scroll"
     },
     "night": {
-      "rent": "Rent it",
-      "use": "Use it",
-      "back": "Bring it back",
-      "line": "Why buy what you only need once? Someone near you already has it, and is happy to share.",
+      "rent": "Take it",
+      "use": "Lend it",
+      "back": "Get it back",
+      "line": "Most things sit still most of the time. On Yoyo they go out to someone nearby, do their job, and come back.",
       "catalog": "Open the catalog"
     },
     "what": {
       "label": "What is Yoyo",
-      "statement": "Yoyo is a rental marketplace between people. Take what you need for as long as you need it, share what you rarely use, and everything finds its way back.",
+      "statement": "Yoyo is a marketplace between people. Take what you need for as long as you need it, lend what you rarely use, and everything finds its way back.",
       "steps": {
         "find": {
           "title": "Find it nearby",
@@ -75,11 +75,11 @@
         },
         "book": {
           "title": "Book the days",
-          "body": "Pick the dates and send a request. Nothing is charged until the owner accepts and you both sign the contract."
+          "body": "Send a request. When the owner accepts, you sign the contract first, then the owner. Only then do you pay."
         },
         "meet": {
           "title": "Meet and check",
-          "body": "Hand it over with photos in the deal, so both sides see the state it left in."
+          "body": "Hand it over with photos in the deal’s own chat, so both sides see the state it left in."
         },
         "back": {
           "title": "Bring it back",
@@ -115,7 +115,44 @@
       "line1": "It always",
       "line2": "comes back."
     },
-    "loader": "Yoyo · rentals between people"
+    "loader": "Yoyo · rentals between people",
+    "ends": {
+      "title": "Two ends of one string",
+      "middle": "In the middle, Yoyo holds the contract you both signed and the deposit until the thing is back.",
+      "need": {
+        "who": "If you need it",
+        "title": "Take it for days",
+        "a": "Find it by name, district and dates.",
+        "b": "Rent from a person nearby, not a warehouse.",
+        "c": "Pay only after you both sign the contract."
+      },
+      "have": {
+        "who": "If you have it",
+        "title": "Let it earn",
+        "a": "List it in minutes, with your price and your days.",
+        "b": "A deposit covers the thing while it is out.",
+        "c": "You see who rents: a profile with reviews from real deals."
+      }
+    },
+    "people": {
+      "title": "People, not a warehouse",
+      "lead": "Everyone on Yoyo has a face: a public profile, reviews from finished deals, followers and shops of their own things.",
+      "profile": {
+        "title": "Profiles you can follow",
+        "body": "Reviews come only from real deals. Follow the people whose things you like.",
+        "follow": "Follow"
+      },
+      "shop": {
+        "title": "Shops of your own",
+        "body": "Gather your things into collections: a workshop, a camping kit, a party box."
+      },
+      "chat": {
+        "title": "Messages and deal chats",
+        "body": "Write to anyone from their profile. Every deal has its own chat beside the contract.",
+        "ask": "Is it free on Saturday?",
+        "answer": "Yes, book it."
+      }
+    }
   },
   "howItWorks": {
     "title": "How it works",

@@ -53,21 +53,21 @@
     "ctaListItem": "Izīrēt lietu",
     "ctaHowItWorks": "Kā tas strādā",
     "hero": {
-      "line": "Īrē no cilvēkiem sev apkārt, tik ilgi, cik vajag.",
+      "line": "Īrē no cilvēkiem tuvumā. Izīrē to, ko lieto reti. Viss atgriežas.",
       "find": "Atrast lietu",
       "lend": "Izīrēt lietu",
       "scroll": "Ritini"
     },
     "night": {
-      "rent": "Īrē",
-      "use": "Lieto",
-      "back": "Atnes atpakaļ",
-      "line": "Kāpēc pirkt to, kas vajadzīgs tikai reizi? Kādam tuvumā tas jau ir, un viņš labprāt padalīsies.",
+      "rent": "Paņem",
+      "use": "Izīrē",
+      "back": "Saņem atpakaļ",
+      "line": "Lielākā daļa lietu lielāko laiku stāv. Yoyo tās aiziet pie kāda tuvumā, padara savu darbu un atgriežas.",
       "catalog": "Atvērt katalogu"
     },
     "what": {
       "label": "Kas ir Yoyo",
-      "statement": "Yoyo ir nomas tirgus starp cilvēkiem. Ņem, ko vajag, uz tik ilgu laiku, cik vajag, dalies ar to, ko reti lieto, un viss atrod ceļu atpakaļ.",
+      "statement": "Yoyo ir tirgus starp cilvēkiem. Paņem, kas vajag, tik ilgi, cik vajag, izīrē to, ko lieto reti, un viss atrod ceļu atpakaļ.",
       "steps": {
         "find": {
           "title": "Atrodi tuvumā",
@@ -75,11 +75,11 @@
         },
         "book": {
           "title": "Izvēlies dienas",
-          "body": "Izvēlies datumus un nosūti pieprasījumu. Nekas netiek iekasēts, kamēr īpašnieks nav piekritis un jūs abi neesat parakstījuši līgumu."
+          "body": "Nosūti pieprasījumu. Kad īpašnieks piekrīt, līgumu vispirms paraksti tu, tad īpašnieks. Tikai tad maksā."
         },
         "meet": {
           "title": "Satiecieties un pārbaudiet",
-          "body": "Nodod lietu ar fotogrāfijām darījumā, lai abas puses redz, kādā stāvoklī tā bija."
+          "body": "Nodod lietu ar fotogrāfijām darījuma čatā, lai abas puses redz, kādā stāvoklī tā aizgāja."
         },
         "back": {
           "title": "Atnes atpakaļ",
@@ -115,7 +115,44 @@
       "line1": "Tas vienmēr",
       "line2": "atgriežas."
     },
-    "loader": "Yoyo · noma starp cilvēkiem"
+    "loader": "Yoyo · noma starp cilvēkiem",
+    "ends": {
+      "title": "Divi vienas auklas gali",
+      "middle": "Vidū Yoyo glabā līgumu, ko abi parakstījāt, un depozītu, līdz lieta ir atpakaļ.",
+      "need": {
+        "who": "Ja tev vajag",
+        "title": "Paņem uz dienām",
+        "a": "Atrodi pēc nosaukuma, rajona un datumiem.",
+        "b": "Īrē no cilvēka tuvumā, nevis no noliktavas.",
+        "c": "Maksā tikai pēc tam, kad abi parakstāt līgumu."
+      },
+      "have": {
+        "who": "Ja tev ir",
+        "title": "Ļauj tai pelnīt",
+        "a": "Ieliec to dažās minūtēs ar savu cenu un dienām.",
+        "b": "Depozīts sargā lietu, kamēr tā ir prom.",
+        "c": "Tu redzi, kas īrē: profils ar atsauksmēm no īstiem darījumiem."
+      }
+    },
+    "people": {
+      "title": "Cilvēki, nevis noliktava",
+      "lead": "Ikvienam Yoyo ir seja: publisks profils, atsauksmes no pabeigtiem darījumiem, sekotāji un savi veikali.",
+      "profile": {
+        "title": "Profili, kuriem var sekot",
+        "body": "Atsauksmes nāk tikai no īstiem darījumiem. Seko tiem, kuru lietas tev patīk.",
+        "follow": "Sekot"
+      },
+      "shop": {
+        "title": "Savi veikali",
+        "body": "Sakārto savas lietas kolekcijās: darbnīca, kempinga komplekts, svētku kaste."
+      },
+      "chat": {
+        "title": "Ziņas un darījumu čati",
+        "body": "Raksti jebkuram no viņa profila. Katram darījumam ir savs čats blakus līgumam.",
+        "ask": "Vai sestdien ir brīvs?",
+        "answer": "Jā, rezervē."
+      }
+    }
   },
   "howItWorks": {
     "title": "Kā tas strādā",
