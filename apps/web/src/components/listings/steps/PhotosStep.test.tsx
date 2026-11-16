@@ -95,8 +95,21 @@ describe('PhotosStep', () => {
     const eight = Array.from({ length: 8 }, (_, index) => photo(`p${index}`, index));
     renderStep({}, ownerListing({ photos: eight }));
     expect(screen.getByText(p.full.replace('{max}', '8'))).toBeVisible();
-    expect(chooser()).toBeDisabled();
+    // All 8 places are taken: there is no add tile at all.
+    expect(screen.queryByLabelText(p.choose)).toBeNull();
     expect(user).toBeDefined();
+  });
+
+  it('puts a new photo in the next free place while it uploads, with its progress there', async () => {
+    const user = userEvent.setup();
+    uploadPhoto.mockImplementation(() => new Promise(() => {}));
+    renderStep({}, ownerListing({ photos: [photo('p0', 0)] }));
+    const slots = () => Array.from(document.querySelectorAll('[data-photo-slots] > li'));
+    expect(slots()).toHaveLength(8); // the cover, the add tile, six free places
+    await user.upload(chooser(), jpeg());
+    await user.click(await screen.findByRole('button', { name: en.builder.crop.apply }));
+    const bar = await screen.findByRole('progressbar');
+    expect(slots().indexOf(bar.closest('li')!)).toBe(1);
   });
 
   it('says plainly when photo storage is off, and keeps the rest of the builder working', async () => {

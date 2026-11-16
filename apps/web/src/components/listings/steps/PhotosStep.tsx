@@ -23,6 +23,8 @@ type Item = {
   blob?: Blob;
   progress: number;
   error?: string;
+  /** A local picture of the file, so it shows in its place while it uploads. */
+  preview?: string;
 };
 
 /** Changes to the photos of a live listing can send it back to review: ask for its new status. */
@@ -56,7 +58,12 @@ export function PhotosStep() {
 
   const update = (key: number, patch: Partial<Item>) =>
     setItems((list) => list.map((item) => (item.key === key ? { ...item, ...patch } : item)));
-  const drop = (key: number) => setItems((list) => list.filter((item) => item.key !== key));
+  const drop = (key: number) =>
+    setItems((list) => {
+      const gone = list.find((item) => item.key === key);
+      if (gone?.preview) URL.revokeObjectURL(gone.preview);
+      return list.filter((item) => item.key !== key);
+    });
 
   async function refreshIfLive(listing: OwnerListing): Promise<(current: OwnerListing) => OwnerListing> {
     const fresh = (
@@ -77,6 +84,11 @@ export function PhotosStep() {
         status: 'editing',
         progress: 0,
       };
+      try {
+        item.preview = URL.createObjectURL(file);
+      } catch {
+        // no local preview (tests, old browsers): the tile shows its progress only
+      }
       if (free <= 0) Object.assign(item, { status: 'failed', error: tErrors('PHOTO_LIMIT') });
       else if (file.size > MAX_ORIGINAL_BYTES) Object.assign(item, { status: 'failed', error: t('tooBig') });
       else if (!(await sniffImage(file)))
@@ -170,19 +182,20 @@ export function PhotosStep() {
   }
 
   const editing = items.find((item) => item.status === 'editing');
+  const pending = items.filter((item) => item.status === 'waiting' || item.status === 'uploading');
+  const failed = items.filter((item) => item.status === 'failed');
   const photoError = errorFor('photos');
 
   return (
     <div className="flex flex-col gap-6">
       {storageOff && (
-        <p
-          role="alert"
-          className="bg-mist rounded-media border border-ink/15 p-4 text-sm font-bold text-ink"
-        >
+        <p role="alert" className="bg-mist rounded-media border-ink/15 text-ink border p-4 text-sm font-bold">
           {t('storageOff')}
         </p>
       )}
 
+      {/* One grid of the 8 places (owner, 2026-11-16): the cover is the big one, the add tile sits in the next
+          free place, and a new photo appears right there while it uploads. Drop files anywhere on it. */}
       <div
         onDragOver={(event) => {
           if (disabled) return;
@@ -191,55 +204,111 @@ export function PhotosStep() {
         }}
         onDragLeave={() => setDragOver(false)}
         onDrop={disabled ? undefined : onDrop}
-        className={`rounded-media ease-yoyo flex flex-col items-center gap-3 border-2 border-dashed p-6 text-center transition-[background-color,transform] duration-250 sm:p-8 ${
-          dragOver ? 'border-ink bg-mist scale-[1.01] text-ink' : 'border-ink/40 bg-transparent'
-        } ${disabled ? 'opacity-60' : ''}`}
+        className={`rounded-media ease-yoyo -m-2 p-2 transition-[background-color,box-shadow] duration-250 ${dragOver ? 'bg-mist shadow-[0_0_0_2px_var(--ink)]' : ''}`}
       >
-        <svg
-          viewBox="0 0 48 48"
-          aria-hidden="true"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinejoin="round"
-          className={`ease-yoyo size-12 transition-transform duration-450 ${dragOver ? 'scale-110' : ''}`}
+        <PhotoGrid
+          key={gridKey}
+          photos={photos}
+          disabled={readOnly}
+          onReorder={(ids) => void reorder(ids)}
+          onRemove={setRemoving}
         >
-          <path d="M6 16a4 4 0 0 1 4-4h6l3-4h10l3 4h6a4 4 0 0 1 4 4v20a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4z" />
-          <circle cx="24" cy="25" r="7.5" />
-        </svg>
-        <div className="flex flex-col items-center gap-2">
-          <input
-            id={inputId}
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            multiple
-            disabled={disabled || room <= 0}
-            onChange={(event) => {
-              void addFiles(Array.from(event.target.files ?? []));
-              event.target.value = '';
-            }}
-            className="peer sr-only"
-          />
-          <label
-            htmlFor={inputId}
-            className="border-cta bg-cta text-cta-fg rounded-pill ease-yoyo peer-focus-visible:outline-ink inline-flex min-h-12 cursor-pointer items-center gap-2 border px-6 text-[15px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 select-none peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3 peer-disabled:cursor-default peer-disabled:opacity-55 hover:-translate-y-0.5 active:scale-[0.96]"
-          >
-            {t('choose')}
-          </label>
-          <p className="text-sm font-bold">{t('drop')}</p>
-        </div>
-        <p className="text-sm">{t('limits')}</p>
-        <p className="text-sm">{t('paste')}</p>
+          {pending.map((item) => (
+            <li
+              key={item.key}
+              className={photos.length === 0 && item === pending[0] ? 'col-span-2 row-span-2' : ''}
+            >
+              <div className="bg-mist rounded-media border-ink/15 relative aspect-[4/3] size-full overflow-hidden border">
+                {item.preview && (
+                  // eslint-disable-next-line @next/next/no-img-element -- a local object URL
+                  <img src={item.preview} alt="" className="size-full object-cover opacity-60" />
+                )}
+                <div className="absolute inset-x-2 bottom-2 flex flex-col gap-1.5">
+                  <p className="truncate text-xs font-bold">
+                    {item.status === 'uploading'
+                      ? t('uploading', { name: item.name })
+                      : t('waiting', { name: item.name })}
+                  </p>
+                  <div
+                    role="progressbar"
+                    aria-label={t('uploading', { name: item.name })}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={item.progress}
+                    className="border-ink bg-canvas rounded-pill h-2.5 overflow-hidden border"
+                  >
+                    <div
+                      className="bg-ink ease-yoyo h-full transition-[width] duration-250"
+                      style={{ width: `${item.progress}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </li>
+          ))}
+          {room > 0 && (
+            <li className={photos.length + pending.length === 0 ? 'col-span-2 row-span-2' : ''}>
+              <input
+                id={inputId}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                multiple
+                aria-label={t('choose')}
+                disabled={disabled}
+                onChange={(event) => {
+                  void addFiles(Array.from(event.target.files ?? []));
+                  event.target.value = '';
+                }}
+                className="peer sr-only"
+              />
+              <label
+                htmlFor={inputId}
+                className="rounded-media border-ink/45 hover:border-ink hover:bg-mist peer-focus-visible:outline-ink ease-yoyo flex aspect-[4/3] size-full cursor-pointer flex-col items-center justify-center gap-2 border-2 border-dashed p-3 text-center transition-colors duration-200 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3 peer-disabled:cursor-default peer-disabled:opacity-55"
+              >
+                <svg
+                  viewBox="0 0 48 48"
+                  aria-hidden="true"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.4"
+                  strokeLinejoin="round"
+                  className={photos.length + pending.length === 0 ? 'size-12' : 'size-8'}
+                >
+                  <path d="M6 16a4 4 0 0 1 4-4h6l3-4h10l3 4h6a4 4 0 0 1 4 4v20a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4z" />
+                  <circle cx="24" cy="25" r="7.5" />
+                </svg>
+                <span className="text-[14px] font-bold">
+                  {photos.length + pending.length === 0 ? t('choose') : t('addMore')}
+                </span>
+                {photos.length + pending.length === 0 && (
+                  <span className="text-ink/70 text-[13px]">{t('drop')}</span>
+                )}
+              </label>
+            </li>
+          )}
+          {Array.from({ length: Math.max(0, room - 1) }, (_, i) => (
+            <li
+              key={`free-${i}`}
+              aria-hidden="true"
+              className="rounded-media border-ink/15 text-ink/30 font-display grid aspect-[4/3] place-items-center border border-dashed text-2xl font-black max-sm:hidden"
+            >
+              {photos.length + pending.length + 2 + i}
+            </li>
+          ))}
+        </PhotoGrid>
       </div>
 
-      <p className="text-sm font-bold" aria-live="polite">
-        {room <= 0 && photos.length >= LISTING_LIMITS.photos
-          ? t('full', { max: LISTING_LIMITS.photos })
-          : t('count', { count: photos.length, max: LISTING_LIMITS.photos })}
-      </p>
+      <div className="flex flex-col gap-1">
+        <p className="text-sm font-bold" aria-live="polite">
+          {room <= 0 && photos.length >= LISTING_LIMITS.photos
+            ? t('full', { max: LISTING_LIMITS.photos })
+            : t('count', { count: photos.length, max: LISTING_LIMITS.photos })}
+        </p>
+        <p className="text-ink/70 text-[13px]">{`${t('limits')} ${t('paste')}`}</p>
+      </div>
       {photoError && (
         <p className="flex items-start gap-1.5 text-sm font-bold">
-          <svg viewBox="0 0 24 24" aria-hidden="true" className="text-[var(--danger)] mt-0.5 size-4 shrink-0">
+          <svg viewBox="0 0 24 24" aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-[var(--danger)]">
             <circle cx="12" cy="12" r="10" fill="currentColor" />
             <path d="M12 7v6M12 16.5v.5" stroke="#000" strokeWidth="2" strokeLinecap="round" />
           </svg>
@@ -247,74 +316,38 @@ export function PhotosStep() {
         </p>
       )}
 
-      {items.length > 0 && (
+      {failed.length > 0 && (
         <ul className="flex flex-col gap-2">
-          {items
-            .filter((item) => item.status !== 'editing')
-            .map((item) => (
-              <li
-                key={item.key}
-                className="border-ink/15 bg-surface rounded-media flex flex-col gap-2 border p-3"
-              >
-                {item.status === 'failed' ? (
-                  <div role="alert" className="flex flex-wrap items-center justify-between gap-3">
-                    <p className="flex min-w-0 items-start gap-1.5 text-sm font-bold [overflow-wrap:anywhere]">
-                      <svg
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                        className="text-[var(--danger)] mt-0.5 size-4 shrink-0"
-                      >
-                        <circle cx="12" cy="12" r="10" fill="currentColor" />
-                        <path d="M12 7v6M12 16.5v.5" stroke="#000" strokeWidth="2" strokeLinecap="round" />
-                      </svg>
-                      {t('failed', { name: item.name, reason: item.error ?? '' })}
-                    </p>
-                    <div className="flex gap-2">
-                      {item.blob && !storageOff && (
-                        <Button variant="ghost" onClick={() => void upload(item, item.blob!)}>
-                          {t('retry')}
-                        </Button>
-                      )}
-                      <Button variant="ghost" onClick={() => drop(item.key)}>
-                        {t('dismiss')}
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <p className="truncate text-sm font-bold">
-                      {item.status === 'uploading'
-                        ? t('uploading', { name: item.name })
-                        : t('waiting', { name: item.name })}
-                    </p>
-                    <div
-                      role="progressbar"
-                      aria-label={t('uploading', { name: item.name })}
-                      aria-valuemin={0}
-                      aria-valuemax={100}
-                      aria-valuenow={item.progress}
-                      className="border-ink bg-mist rounded-pill h-3 overflow-hidden border"
-                    >
-                      <div
-                        className="bg-[var(--glow)] ease-yoyo h-full transition-[width] duration-250"
-                        style={{ width: `${item.progress}%` }}
-                      />
-                    </div>
-                  </>
+          {failed.map((item) => (
+            <li
+              key={item.key}
+              role="alert"
+              className="border-ink/15 bg-surface rounded-media flex flex-wrap items-center justify-between gap-3 border p-3"
+            >
+              <p className="flex min-w-0 items-start gap-1.5 text-sm font-bold [overflow-wrap:anywhere]">
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  className="mt-0.5 size-4 shrink-0 text-[var(--danger)]"
+                >
+                  <circle cx="12" cy="12" r="10" fill="currentColor" />
+                  <path d="M12 7v6M12 16.5v.5" stroke="#000" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+                {t('failed', { name: item.name, reason: item.error ?? '' })}
+              </p>
+              <div className="flex gap-2">
+                {item.blob && !storageOff && (
+                  <Button variant="ghost" onClick={() => void upload(item, item.blob!)}>
+                    {t('retry')}
+                  </Button>
                 )}
-              </li>
-            ))}
+                <Button variant="ghost" onClick={() => drop(item.key)}>
+                  {t('dismiss')}
+                </Button>
+              </div>
+            </li>
+          ))}
         </ul>
-      )}
-
-      {photos.length > 0 && (
-        <PhotoGrid
-          key={gridKey}
-          photos={photos}
-          disabled={readOnly}
-          onReorder={(ids) => void reorder(ids)}
-          onRemove={setRemoving}
-        />
       )}
 
       {editing && (

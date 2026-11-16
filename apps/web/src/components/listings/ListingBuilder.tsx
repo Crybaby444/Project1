@@ -160,7 +160,7 @@ function BuilderLayout({
         </div>
       )}
 
-      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[minmax(200px,240px)_minmax(0,1fr)_minmax(280px,340px)] lg:gap-8">
+      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[minmax(180px,210px)_minmax(0,1fr)_minmax(300px,380px)] lg:gap-8 xl:grid-cols-[210px_minmax(0,1fr)_420px] xl:gap-10">
         <div className="min-w-0 lg:sticky lg:top-6">
           <StepNav current={step} onSelect={goTo} />
         </div>

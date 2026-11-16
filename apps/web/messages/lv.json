@@ -552,7 +552,8 @@
       "dropped": "Foto nolikts {position}. vietā no {total}.",
       "cancelled": "Pārvietošana atcelta. Foto atkal ir {position}. vietā.",
       "coverChanged": "Vāks nomainīts.",
-      "removed": "Foto noņemts."
+      "removed": "Foto noņemts.",
+      "addMore": "Pievienot vēl"
     },
     "crop": {
       "title": "Apgriezt un pagriezt",

@@ -2,7 +2,15 @@
 
 import type { ListingPhoto } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
-import { useEffect, useId, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react';
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type PointerEvent,
+  type ReactNode,
+} from 'react';
 import { ActionMenu } from '@/components/ui/ActionMenu';
 import { prefersReducedMotion } from '@/lib/motion';
 import { move } from '@/lib/listings/reorder';
@@ -13,6 +21,8 @@ type Props = {
   /** Saves a new order (every id once, the cover first). */
   onReorder(ids: string[]): void;
   onRemove(photo: ListingPhoto): void;
+  /** More tiles after the photos, in the same grid: uploads in progress, the add tile, the free places. */
+  children?: ReactNode;
 };
 
 type Lift = { id: string; from: number; by: 'keyboard' | 'pointer' };
@@ -45,7 +55,7 @@ function DotsIcon() {
  * and tilts like a sticker), with the keyboard on its handle (Space picks it up, arrows move it,
  * Space drops it, Esc cancels; each step is announced), or from its menu (earlier, later, cover).
  */
-export function PhotoGrid({ photos, disabled, onReorder, onRemove }: Props) {
+export function PhotoGrid({ photos, disabled, onReorder, onRemove, children }: Props) {
   const t = useTranslations('builder.photos');
   const instructionsId = useId();
   const [order, setOrder] = useState(() => photos.map((photo) => photo.id));
@@ -150,14 +160,14 @@ export function PhotoGrid({ photos, disabled, onReorder, onRemove }: Props) {
     setAnnouncement(t('dropped', { position, total }));
   }
 
-  const tilt = prefersReducedMotion() ? '' : 'scale-[1.04] shadow-[0_0_0_2px_var(--glow)]';   // v16: lifted, lit — no tilt
+  const tilt = prefersReducedMotion() ? '' : 'scale-[1.04] shadow-[0_0_0_2px_var(--glow)]'; // v16: lifted, lit — no tilt
 
   return (
     <div className="flex flex-col gap-3">
       <p id={instructionsId} className="sr-only">
         {t('instructions')}
       </p>
-      <ol className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
+      <ol className="grid grid-cols-2 gap-3 sm:grid-cols-4" data-photo-slots="">
         {order.map((id, index) => {
           const photo = byId.get(id);
           if (!photo) return null;
@@ -171,12 +181,12 @@ export function PhotoGrid({ photos, disabled, onReorder, onRemove }: Props) {
               onPointerMove={onPointerMove}
               onPointerUp={onPointerEnd}
               onPointerCancel={onPointerEnd}
-              className={`group ease-yoyo relative touch-none transition-transform duration-250 select-none ${
+              className={`group ease-yoyo relative touch-none transition-transform duration-250 select-none ${index === 0 ? 'col-span-2 row-span-2' : ''} ${
                 lifted ? `z-10 ${tilt}` : 'hover:-translate-y-1'
               } ${disabled ? '' : 'cursor-grab active:cursor-grabbing'}`}
             >
               <div
-                className={`bg-mist rounded-media relative aspect-[4/3] overflow-hidden border ${
+                className={`bg-mist rounded-media relative aspect-[4/3] size-full overflow-hidden border ${
                   lifted ? 'border-ink/15 outline-ink border-2 outline-2 outline-offset-2' : 'border-ink/15'
                 }`}
               >
@@ -188,7 +198,7 @@ export function PhotoGrid({ photos, disabled, onReorder, onRemove }: Props) {
                   className="ease-yoyo size-full object-cover transition-transform duration-450 group-hover:scale-[1.04]"
                 />
                 {index === 0 && (
-                  <span className="bg-ink text-canvas rounded-pill absolute top-2 left-2 border border-ink/15 px-2.5 py-0.5 text-xs font-bold">
+                  <span className="bg-ink text-canvas rounded-pill border-ink/15 absolute top-2 left-2 border px-2.5 py-0.5 text-xs font-bold">
                     {t('cover')}
                   </span>
                 )}
@@ -233,6 +243,7 @@ export function PhotoGrid({ photos, disabled, onReorder, onRemove }: Props) {
             </li>
           );
         })}
+        {children}
       </ol>
       <p role="status" aria-live="assertive" className="sr-only">
         {announcement}
