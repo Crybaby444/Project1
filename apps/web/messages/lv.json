@@ -607,7 +607,8 @@
       "district": "Rajons",
       "placeHint": "Redzams sludinājumā. Aizpildās no punkta; vari to mainīt.",
       "pointSet": "Punkts iestatīts: {place}",
-      "pointSetNoName": "Punkts iestatīts kartē."
+      "pointSetNoName": "Punkts iestatīts kartē.",
+      "outside": "Šis punkts ir ārpus eirozonas. Pagaidām Yoyo darbojas tikai eiro valstīs; izvēlies vietu tur."
     },
     "calendar": {
       "title": "Dienas, kad lieta nav pieejama",
@@ -773,9 +774,9 @@
   },
   "catalog": {
     "allTitle": "Katalogs",
-    "allDescription": "Nomā instrumentus, elektroniku, sporta un kempinga piederumus un daudz ko citu no cilvēkiem Rīgā.",
-    "categoryTitle": "{name} nomai Rīgā",
-    "categoryDescription": "Nomā {name} no cilvēkiem tuvumā Rīgā: dienas cenas, drošības naudas un brīvie datumi.",
+    "allDescription": "Nomā instrumentus, elektroniku, sporta un kempinga piederumus un daudz ko citu no cilvēkiem.",
+    "categoryTitle": "{name} nomai tuvumā",
+    "categoryDescription": "Nomā {name} no cilvēkiem tuvumā: dienas cenas, drošības naudas un brīvie datumi.",
     "searchTitle": "Meklēšana",
     "searchTitleFor": "“{q}”",
     "found": "{count, plural, =0 {Nekas nav atrasts} zero {# lietas} one {# lieta} other {# lietas}}",
@@ -989,7 +990,7 @@
   },
   "profile": {
     "title": "{name}",
-    "description": "{name} Yoyo: {count, plural, =0 {vēl nav lietu nomai} zero {# lietas nomai} one {# lieta nomai} other {# lietas nomai}} Rīgā.",
+    "description": "{name} Yoyo: {count, plural, =0 {vēl nav lietu nomai} zero {# lietas nomai} one {# lieta nomai} other {# lietas nomai}}.",
     "about": "Par sevi",
     "tabs": "{name}: lietas un atsauksmes",
     "items": "{count, plural, zero {# lietas} one {# lieta} other {# lietas}}",
@@ -1139,7 +1140,7 @@
       "what": "Ko",
       "whatPlaceholder": "Kas tev vajadzīgs?",
       "where": "Kur",
-      "anywhere": "Visa Rīga",
+      "anywhere": "Visā valstī",
       "when": "Kad",
       "anyDays": "Jebkuras dienas",
       "clearDays": "Notīrīt dienas",
@@ -1221,6 +1222,11 @@
       "shops": "Mani veikali"
     },
     "menu": "Mans profils"
+  },
+  "country": {
+    "button": "Valsts: {name}",
+    "title": "Tava valsts",
+    "lead": "Yoyo rāda nomai pieejamās lietas vienā valstī, eiro. Izvēlies, kur tu esi."
   },
   "dialog": {
     "close": "Aizvērt"

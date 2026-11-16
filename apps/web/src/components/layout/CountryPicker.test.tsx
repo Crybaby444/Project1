@@ -1,0 +1,26 @@
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
+import { renderWithIntl } from '@/test/render';
+import { CountryPicker } from './CountryPicker';
+
+const refresh = vi.fn();
+vi.mock('@/i18n/navigation', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/i18n/navigation')>()),
+  useRouter: () => ({ refresh, push: vi.fn(), replace: vi.fn() }),
+}));
+
+describe('CountryPicker', () => {
+  it('shows the country, lists the euro area by name, and keeps a choice in a cookie', async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<CountryPicker country="LV" />);
+    await user.click(screen.getByRole('button', { name: /^Country: Latvia\s*LV$/ }));
+    const dialog = screen.getByRole('dialog', { name: 'Your country' });
+    expect(dialog.querySelectorAll('ul button')).toHaveLength(21);
+    expect(screen.getByRole('button', { name: /Latvia/, pressed: true })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /Germany/ }));
+    expect(document.cookie).toContain('yoyo-country=DE');
+    expect(refresh).toHaveBeenCalled();
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+});

@@ -1,3 +1,4 @@
+import { currentCountry } from '@/lib/country/server';
 import { Suspense } from 'react';
 import { PageCounter } from '@/components/analytics/PageCounter';
 import { AdminOnly } from '@/lib/session/AdminOnly';
@@ -79,7 +80,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
                   <SyncThemeWithProfile />
                   <div lang={locale} className="contents">
                     <Chrome>
-                      <SiteHeader catalog={catalog} />
+                      <SiteHeader catalog={catalog} country={await currentCountry()} />
                       <ProfileIncompleteBanner />
                     </Chrome>
                   </div>

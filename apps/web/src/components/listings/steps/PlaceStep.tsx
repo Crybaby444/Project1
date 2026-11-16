@@ -64,6 +64,7 @@ export function PlaceStep() {
       lng: place.lng,
       city: place.city ?? values.city,
       district: place.district ?? values.district,
+      ...(place.country ? { country: place.country } : {}),
     });
     setAnnouncement(
       t('pointSet', { place: [place.city, place.district].filter(Boolean).join(', ') || place.label }),
@@ -83,6 +84,7 @@ export function PlaceStep() {
         draft.change({
           ...(found.city ? { city: found.city } : {}),
           ...(found.district ? { district: found.district } : {}),
+          ...(found.country ? { country: found.country } : {}),
         });
       }
       const name = [found.city, found.district].filter(Boolean).join(', ');
@@ -123,6 +125,11 @@ export function PlaceStep() {
       <section className="flex flex-col gap-5">
         <AddressSearch onSelect={setPlace} disabled={readOnly} />
         <LocationMap point={point} onPick={(lat, lng) => void pickOnMap(lat, lng)} readOnly={readOnly} />
+        {values.lat !== null && values.country === null && (
+          <p role="status" className="border-ink/25 rounded-media border-[1.5px] border-dashed p-4 text-sm font-bold">
+            {t('outside')}
+          </p>
+        )}
         <p className="bg-mist rounded-media flex items-start gap-2 border border-ink/15 p-4 text-sm font-bold text-ink">
           <svg viewBox="0 0 24 24" aria-hidden="true" className="mt-0.5 size-4 shrink-0">
             <rect
