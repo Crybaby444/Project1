@@ -59,6 +59,7 @@ describe('PublicUserSchema', () => {
       hasPassword: true,
       phone: null,
       phoneVerified: false,
+      identityVerified: false,
       createdAt: '2026-11-03T10:00:00.000Z',
     };
     expect(PublicUserSchema.parse({ ...user, passwordHash: '$argon2id$…', blockedAt: null })).toEqual(user);

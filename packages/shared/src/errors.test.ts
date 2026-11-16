@@ -11,6 +11,7 @@ describe('ERROR_CODES', () => {
         'USERNAME_TAKEN',
         'UNDERAGE',
         'PROFILE_INCOMPLETE',
+        'IDENTITY_REQUIRED',
         'AUTH_UNAUTHENTICATED',
         'AUTH_FORBIDDEN',
         'AUTH_BLOCKED',
