@@ -110,7 +110,11 @@ const EnvObject = z.object({
    * provider of spec §0 — it looks and behaves like a card form, but no real money moves. A real
    * provider (Stripe Connect) is another value and class behind the PaymentProvider interface.
    */
-  PAYMENTS: z.preprocess(blankAsUnset, z.enum(['fake']).default('fake')),
+  PAYMENTS: z.preprocess(blankAsUnset, z.enum(['fake', 'stripe']).default('fake')),
+  /** Stripe (PAYMENTS=stripe): the secret key, the webhook signing secret and, for tests, the API address. */
+  STRIPE_SECRET_KEY: z.preprocess(blankAsUnset, z.string().optional()),
+  STRIPE_WEBHOOK_SECRET: z.preprocess(blankAsUnset, z.string().optional()),
+  STRIPE_API_URL: z.url().default('https://api.stripe.com'),
   /**
    * The service fee renters pay, in whole percent of the rent (owner's decision of 2026-11-06: 10 %).
    * A `fees.servicePercent` row in the Setting table overrides it at runtime. Unset: 10.
@@ -149,6 +153,9 @@ export const EnvSchema = EnvObject.superRefine((env, ctx) => {
       path: ['SMS_PROVIDER'],
       message: '"mailbox" only simulates SMS by email and is not allowed in production',
     });
+  }
+  if (env.PAYMENTS === 'stripe' && !env.STRIPE_SECRET_KEY) {
+    ctx.addIssue({ code: 'custom', path: ['STRIPE_SECRET_KEY'], message: 'PAYMENTS=stripe needs STRIPE_SECRET_KEY' });
   }
   if (env.NODE_ENV === 'production' && env.STORAGE === 'local') {
     ctx.addIssue({

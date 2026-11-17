@@ -8736,6 +8736,40 @@
         ]
       }
     },
+    "/api/v1/wallet/stripe-onboarding": {
+      "post": {
+        "operationId": "WalletController_stripeOnboarding",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The Stripe onboarding page to send the owner to"
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "wallet"
+        ]
+      }
+    },
     "/api/v1/wallet/payouts": {
       "post": {
         "operationId": "WalletController_payout",
@@ -20404,7 +20438,7 @@
             "type": "string",
             "minLength": 10,
             "maxLength": 1000,
-            "pattern": "^tok_[A-Za-z0-9_.-]+$"
+            "pattern": "^(tok|pm)_[A-Za-z0-9_.-]+$"
           }
         },
         "required": [
@@ -20465,7 +20499,7 @@
             "type": "string",
             "minLength": 10,
             "maxLength": 1000,
-            "pattern": "^tok_[A-Za-z0-9_.-]+$"
+            "pattern": "^(tok|pm)_[A-Za-z0-9_.-]+$"
           },
           "iban": {
             "type": "string",

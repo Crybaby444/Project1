@@ -1,4 +1,6 @@
 import { randomUUID } from 'node:crypto';
+import { ENV, type Env } from '../config/env';
+import { StripePaymentProvider } from '../payments/stripe.provider';
 import { Inject, Injectable } from '@nestjs/common';
 import { cents, topUp, withdraw, type OperationKind } from '@yoyo/domain';
 import { WALLET_LIMITS, type PayoutResponse, type TopUpResponse, type WalletSummary, type WalletTransactionsResponse } from '@yoyo/shared';
@@ -23,7 +25,24 @@ export class WalletService {
     private readonly ledger: LedgerService,
     private readonly moneyOut: MoneyOutService,
     @Inject(PAYMENT_PROVIDER) private readonly provider: PaymentProvider,
+    @Inject(ENV) private readonly env: Pick<Env, 'PAYMENTS' | 'WEB_ORIGIN'>,
   ) {}
+
+  /**
+   * With Stripe, an owner's money goes to their own Stripe account (Connect Express): this opens Stripe's
+   * onboarding for it (creating the account the first time) and answers the page to send them to.
+   */
+  async stripeOnboarding(userId: string): Promise<{ url: string }> {
+    if (this.env.PAYMENTS !== 'stripe' || !(this.provider instanceof StripePaymentProvider)) throw new AppError('NOT_FOUND', 404, 'Payouts through Stripe are not switched on');
+    const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId } });
+    let account = user.stripeAccountId;
+    if (!account) {
+      account = await this.provider.createAccount({ email: user.email, country: 'LV', userId });
+      await this.prisma.user.update({ where: { id: userId }, data: { stripeAccountId: account } });
+    }
+    const back = `${this.env.WEB_ORIGIN}/wallet`;
+    return { url: await this.provider.onboardingLink(account, `${back}?stripe=done`, `${back}?stripe=again`) };
+  }
 
   async summary(userId: string): Promise<WalletSummary> {
     const [held] = await this.prisma.$queryRaw<{ total: bigint | null }[]>`
@@ -108,10 +127,17 @@ export class WalletService {
    */
   async payout(userId: string, amountCents: number, to: { cardToken: string } | { iban: string; holder: string }): Promise<PayoutResponse> {
     // A bank account (owner, 2026-11-16) or a card: either way only a mark and the last four are kept for receipts.
+    // With Stripe the money always goes to the owner's own Stripe account, whatever the form sent.
+    if (this.env.PAYMENTS === 'stripe') {
+      const { stripeAccountId } = await this.prisma.user.findUniqueOrThrow({ where: { id: userId }, select: { stripeAccountId: true } });
+      if (!stripeAccountId) throw new AppError('ACTION_NOT_ALLOWED', 409, 'Connect your Stripe account first', undefined, { why: 'STRIPE_ONBOARDING_REQUIRED' });
+      to = { cardToken: stripeAccountId };
+    }
     const destination =
       'iban' in to
         ? { brand: 'iban', last4: to.iban.slice(-4), token: `iban:${to.iban}|${to.holder}` }
         : (() => {
+            if (to.cardToken.startsWith('acct_')) return { brand: 'stripe', last4: to.cardToken.slice(-4), token: to.cardToken };
             const card = this.provider.describe(to.cardToken);
             if (card === null) throw unknownCard();
             return { brand: card.brand as string, last4: card.last4, token: to.cardToken };

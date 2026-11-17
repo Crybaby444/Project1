@@ -363,7 +363,8 @@
       "invalid_token": "Ievadi karti vēlreiz."
     },
     "paid": "Apmaksāts. Drošības nauda iesaldēta, līdz lieta atgriezīsies.",
-    "cancel": "Ne tagad"
+    "cancel": "Ne tagad",
+    "stripeFailed": "Kartes forma neielādējās. Pārbaudiet savienojumu un mēģiniet vēlreiz."
   },
   "wallet": {
     "title": "Maks",
