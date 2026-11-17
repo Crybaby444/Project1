@@ -30,9 +30,9 @@ Keys go into `.env.deploy` and the hosts' settings only — never into the repos
 
 ## Before real money (must do)
 
-- **3-D Secure (SCA).** In the EU most card payments need the bank's confirmation. Today a card that
-  asks for it is answered `DECLINED authentication_required`. Needed: the API answers the PaymentIntent's
-  `client_secret`, the site runs `stripe.handleNextAction`, then the payment is confirmed. (Plan item B1b.)
+- ~~3-D Secure (SCA)~~ — **done**: a card that needs the bank's confirmation answers 402 with the
+  PaymentIntent's `clientSecret`; the site runs `stripe.handleNextAction` and pays again with the confirmed
+  intent (`pi_…`), which the API checks (succeeded, euros, the same amount) before recording it once.
 - **The wallet (audit M1).** A balance people top up and withdraw is e-money: with Stripe it must be
   the owner's Connect balance (Stripe holds it), not a Yoyo-held top-up wallet. Renters should pay per
   deal (rent + fee + deposit) instead of topping up. Confirm the set-up with an EU payments lawyer.

@@ -11874,7 +11874,7 @@
                     "type": "string",
                     "minLength": 10,
                     "maxLength": 1000,
-                    "pattern": "^tok_[A-Za-z0-9_.-]+$"
+                    "pattern": "^(tok|pm|pi)_[A-Za-z0-9_.-]+$"
                   }
                 },
                 "required": [
@@ -20438,7 +20438,7 @@
             "type": "string",
             "minLength": 10,
             "maxLength": 1000,
-            "pattern": "^(tok|pm)_[A-Za-z0-9_.-]+$"
+            "pattern": "^(tok|pm|pi)_[A-Za-z0-9_.-]+$"
           }
         },
         "required": [
@@ -20499,7 +20499,7 @@
             "type": "string",
             "minLength": 10,
             "maxLength": 1000,
-            "pattern": "^(tok|pm)_[A-Za-z0-9_.-]+$"
+            "pattern": "^(tok|pm|pi)_[A-Za-z0-9_.-]+$"
           },
           "iban": {
             "type": "string",

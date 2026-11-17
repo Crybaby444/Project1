@@ -417,7 +417,7 @@ export class BookingsService {
       description: `Yoyo booking ${id}`,
     });
     if (result.status === 'DECLINED')
-      throw result.declineCode === 'invalid_token' ? unknownCard() : declined(result.declineCode);
+      throw result.declineCode === 'invalid_token' ? unknownCard() : declined(result.declineCode, { ...(result.clientSecret && { clientSecret: result.clientSecret }), ...(result.paymentIntent && { paymentIntent: result.paymentIntent }) });
     return { ref: result.ref, brand: result.brand, last4: result.last4, amountCents };
   }
 
