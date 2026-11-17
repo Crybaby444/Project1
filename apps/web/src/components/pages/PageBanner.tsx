@@ -19,7 +19,7 @@ export function PageBanner({ title, lead, children }: PageBannerProps) {
   return (
     <header className="bg-canvas border-ink/15 relative overflow-x-clip border-b">
       <div
-        className={`relative mx-auto flex max-w-[1440px] flex-col gap-6 px-4 pt-14 sm:px-8 sm:pt-20 pb-14 sm:pb-20`}
+        className={`page relative flex flex-col gap-6 pt-14 sm:pt-20 pb-14 sm:pb-20`}
       >
         <div className="@container relative">
           <h1
@@ -29,7 +29,7 @@ export function PageBanner({ title, lead, children }: PageBannerProps) {
             <LetterRise text={title} stagger={18} />
           </h1>
         </div>
-        {lead && <p className="relative z-10 max-w-[56ch] text-lg leading-relaxed sm:text-xl">{lead}</p>}
+        {lead && <p className="relative z-10 max-w-lead text-lg leading-relaxed sm:text-xl">{lead}</p>}
         {children}
       </div>
     </header>

@@ -57,12 +57,12 @@ export function LendCalculator() {
   const euros = (v: number) => money(Math.round(v) * 100, locale).replace(/[.,]00(?=\D*$)/, '');
 
   return (
-    <section aria-labelledby="home-lend" className="mx-auto grid w-full max-w-[1440px] gap-12 px-4 py-24 sm:px-8 sm:py-32 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center" data-home-lend="">
+    <section aria-labelledby="home-lend" className="page grid gap-12 py-24 sm:py-32 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center" data-home-lend="">
       <div className="flex flex-col gap-6">
         <h2 id="home-lend" className="font-display text-display-xl leading-[0.86] font-black uppercase">
           {t('title')}
         </h2>
-        <p className="text-ink/80 max-w-[44ch] text-lg leading-relaxed">{t('lead')}</p>
+        <p className="text-ink/80 max-w-lead text-lg leading-relaxed">{t('lead')}</p>
         <Button href="/listings/new" size="lg" className="self-start">
           {t('cta')}
         </Button>

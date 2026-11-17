@@ -104,7 +104,7 @@ export default async function ItemPage({ params }: Props) {
   ];
 
   return (
-    <main className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 pt-6 pb-28 sm:px-8 lg:pb-16">
+    <main className="page flex flex-col gap-8 pt-6 pb-28 lg:pb-16">
       <ContentLanguage lang={detail.listing.contentLocale} />
       <Breadcrumbs items={crumbs} label={tCatalog('breadcrumbs.label')} />
       {detail.available ? (
@@ -117,7 +117,7 @@ export default async function ItemPage({ params }: Props) {
           <h1 className="font-display text-display-l leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]" lang={detail.listing.contentLocale}>
             {title}
           </h1>
-          <p className="max-w-[52ch] text-lg">{t('away.body')}</p>
+          <p className="max-w-lead text-lg">{t('away.body')}</p>
           <Button variant="ghost" href={category ? categoryLink(category, locale) : '/c'}>
             {category ? t('away.category', { name: categoryName(category, locale) }) : t('away.catalog')}
           </Button>
@@ -203,7 +203,7 @@ async function Available({ item, title, category, locale }: { item: AvailableIte
               <h2 id="item-about" className="font-display text-display-s leading-[0.9] font-black uppercase">
                 {t('about')}
               </h2>
-              <p className="max-w-[68ch] text-lg leading-relaxed whitespace-pre-line [overflow-wrap:anywhere]" lang={listing.contentLocale}>
+              <p className="max-w-read text-lg leading-relaxed whitespace-pre-line [overflow-wrap:anywhere]" lang={listing.contentLocale}>
                 {listing.description}
               </p>
             </section>

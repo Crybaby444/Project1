@@ -52,7 +52,7 @@ export function AdminTraffic() {
       ) : (
         <Body a={data.data} />
       )}
-      <p className="text-ink/70 max-w-[68ch] text-sm">{t('privacy')}</p>
+      <p className="text-ink/70 max-w-read text-sm">{t('privacy')}</p>
     </div>
   );
 }

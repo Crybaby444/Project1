@@ -117,7 +117,7 @@ export function LegalDocument({ doc, effective }: { doc: LegalDoc; effective: st
       </PageBanner>
 
       <div className="bg-surface">
-        <div className="mx-auto grid max-w-[1440px] grid-cols-[minmax(0,1fr)] gap-10 px-4 py-14 sm:px-8 sm:py-20 lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-16">
+        <div className="page grid grid-cols-[minmax(0,1fr)] gap-10 py-14 sm:py-20 lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-16">
           <nav aria-label={t('contents')} className="lg:sticky lg:top-6 lg:self-start">
             <h2 className="mb-3 text-xs font-bold tracking-[0.032em] uppercase">{t('contents')}</h2>
             <ol className="flex flex-col gap-1">
@@ -134,7 +134,7 @@ export function LegalDocument({ doc, effective }: { doc: LegalDoc; effective: st
             </ol>
           </nav>
 
-          <article className="flex max-w-[72ch] flex-col gap-12 text-base">
+          <article className="flex max-w-read flex-col gap-12 text-base">
             <section aria-labelledby="summary" className="border-ink text-ink flex flex-col gap-3 border-t-2 pt-6">
               <h2 id="summary" className="font-display text-display-s leading-[0.95] font-black uppercase">
                 {t('summary')}

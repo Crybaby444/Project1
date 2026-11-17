@@ -31,7 +31,7 @@ export function ConflictNotice({ onReload }: { onReload(): Promise<void> }) {
     >
       <div className="flex flex-col gap-1">
         <h2 className="text-lg font-bold">{t('title')}</h2>
-        <p className="max-w-[70ch] text-sm leading-relaxed">{t('body')}</p>
+        <p className="max-w-read text-sm leading-relaxed">{t('body')}</p>
         {error && <p className="text-sm font-bold">{error}</p>}
       </div>
       <Button onClick={reload} loading={busy} className="shrink-0 !border-ink/15 !bg-black !text-white">

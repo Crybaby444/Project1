@@ -62,7 +62,7 @@ export function FaqList({ groups, titled = true }: { groups: FaqGroup[]; /** Off
                     </svg>
                   </span>
                 </summary>
-                <p className="text-ink/85 max-w-[68ch] pb-6 text-base leading-relaxed">{item.answer}</p>
+                <p className="text-ink/85 max-w-read pb-6 text-base leading-relaxed">{item.answer}</p>
               </details>
             ))}
           </div>

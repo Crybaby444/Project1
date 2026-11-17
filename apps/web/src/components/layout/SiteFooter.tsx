@@ -99,7 +99,7 @@ export function SiteFooter() {
 
   return (
     <footer data-site-footer className="border-ink/15 bg-canvas text-ink overflow-x-clip border-t">
-      <div className="mx-auto grid max-w-[1440px] gap-10 px-4 pt-14 pb-6 sm:px-8 sm:pt-20 md:grid-cols-[1.3fr_1fr_1fr]">
+      <div className="page grid gap-10 pt-14 pb-6 sm:pt-20 md:grid-cols-[1.3fr_1fr_1fr]">
         <a
           href={`mailto:${CONTACT_EMAIL}`}
           className="group font-display self-start text-display-s leading-none font-black break-all uppercase"
@@ -133,7 +133,7 @@ export function SiteFooter() {
         </nav>
       </div>
       {/* The sign-off: only the top half of the wordmark shows, cut off by the bottom bar below it (owner, 2026-11-14). */}
-      <div className="@container mx-auto mt-10 max-w-[1440px] px-4 sm:px-8">
+      <div className="page @container mt-10">
         <div className="h-[21cqw] overflow-hidden">
           <p
             data-footer-wordmark
@@ -145,7 +145,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="border-ink/15 border-t">
-        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-4 sm:px-8">
+        <div className="page flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-4">
           <p className="text-ink/75 m-0 text-sm font-medium">{t('copyright', { year: new Date().getFullYear() })}</p>
           <div className="-mx-3 flex flex-wrap items-center gap-x-6 gap-y-1">
             <FooterLanguages label={t('languageLabel')} />

@@ -64,7 +64,7 @@ export default async function StyleguidePage({ params }: { params: Promise<{ loc
   return (
     // The style guide's texts are left out of the site-wide provider (i18n/client-messages.ts).
     <NextIntlClientProvider messages={await getMessages()}>
-      <main className="mx-auto flex max-w-[1440px] flex-col gap-14 px-4 pt-12 pb-16 sm:px-8">
+      <main className="page flex flex-col gap-14 pt-12 pb-16">
         <header className="@container flex flex-col items-start gap-5">
           <Mark size={48} />
           <h1
@@ -73,7 +73,7 @@ export default async function StyleguidePage({ params }: { params: Promise<{ loc
           >
             {t('title')}
           </h1>
-          <p className="max-w-[60ch] text-lg leading-relaxed">{t('intro')}</p>
+          <p className="max-w-read text-lg leading-relaxed">{t('intro')}</p>
           <ApiStatus />
         </header>
 
@@ -108,8 +108,8 @@ export default async function StyleguidePage({ params }: { params: Promise<{ loc
             </div>
             <div>
               <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('body')} · 16 / 15</p>
-              <p className="max-w-[60ch] text-base leading-relaxed">{t('cardStaticBody')}</p>
-              <p className="max-w-[60ch] text-base leading-relaxed">{t('cardInteractiveBody')}</p>
+              <p className="max-w-read text-base leading-relaxed">{t('cardStaticBody')}</p>
+              <p className="max-w-read text-base leading-relaxed">{t('cardInteractiveBody')}</p>
             </div>
             <div>
               <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('caption')} · 12</p>
