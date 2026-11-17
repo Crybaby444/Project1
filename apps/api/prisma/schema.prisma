@@ -583,6 +583,7 @@ model Contract {
 
   booking    Booking             @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   signatures ContractSignature[]
+  signings   SigningSession[]
 }
 
 enum SignatureSide {
@@ -611,6 +612,28 @@ model ContractSignature {
   contract Contract @relation(fields: [bookingId], references: [bookingId], onDelete: Cascade)
 
   @@unique([bookingId, side])
+}
+
+/**
+ * A signing started with the signing provider (SIGNATURES=dokobit; audit 2026-11-16, C1): one side of one
+ * contract, for the terms of that moment. The signature itself is recorded only after the provider's own
+ * status says this signer signed.
+ */
+model SigningSession {
+  id          String        @id @default(cuid())
+  bookingId   String
+  side        SignatureSide
+  userId      String
+  provider    String
+  /// The provider's signing token (Dokobit: signing token).
+  token       String        @unique
+  termsHash   String
+  createdAt   DateTime
+  completedAt DateTime?
+
+  contract Contract @relation(fields: [bookingId], references: [bookingId], onDelete: Cascade)
+
+  @@index([bookingId, side])
 }
 
 enum BookingPhotoKind {
