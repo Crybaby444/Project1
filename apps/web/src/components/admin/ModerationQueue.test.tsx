@@ -69,6 +69,20 @@ describe('ModerationQueue', () => {
     expect(card.innerHTML).not.toMatch(/56[.,]9|24[.,]1/);
   });
 
+  it('fixes a listing: only what changed is sent, with the version it showed (owner, 2026-11-16)', async () => {
+    const user = userEvent.setup();
+    const calls = renderQueue({
+      'PATCH /api/v1/admin/listings/listing-1': { status: 200, body: { listing: adminListing({ title: 'PlayStation 5 Pro' }) } },
+    });
+    await user.click(await screen.findByRole('button', { name: m.edit.button }));
+    const title = screen.getByLabelText(m.edit.fieldTitle);
+    await user.clear(title);
+    await user.type(title, 'PlayStation 5 Pro');
+    await user.click(screen.getByRole('button', { name: m.edit.save }));
+    await waitFor(() => expect(calls.find((c) => c.method === 'PATCH')?.body).toEqual({ title: 'PlayStation 5 Pro', version: 3 }));
+    expect(await screen.findByText(m.edit.done)).toBeVisible();
+  });
+
   it('approves the version it showed', async () => {
     const user = userEvent.setup();
     const calls = renderQueue({

@@ -13,7 +13,9 @@ export function recallViewed(): CatalogItem[] {
     if (!Array.isArray(raw)) return [];
     return raw.flatMap((entry) => {
       // Items stored before countries (2026-11-16) have none: read them as unknown, not broken.
-      const parsed = CatalogItemSchema.safeParse(entry && typeof entry === 'object' && !('country' in entry) ? { ...entry, country: null } : entry);
+      // Items remembered before a field existed get its default (country 2026-11-16, demo 2026-11-16).
+      const filled = entry && typeof entry === 'object' ? { country: null, demo: false, ...entry } : entry;
+      const parsed = CatalogItemSchema.safeParse(filled);
       return parsed.success ? [parsed.data] : [];
     });
   } catch {

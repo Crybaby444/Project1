@@ -41,7 +41,7 @@ export function AdminReports({ status, page }: { status: ReportStatus; page: num
             type="button"
             aria-pressed={status === s}
             onClick={() => go({ status: s })}
-            className={`rounded-pill min-h-9 px-4 text-[13px] font-bold tracking-[0.03em] uppercase ${status === s ? 'bg-ink text-canvas' : ''}`}
+            className={`rounded-pill min-h-9 px-4 text-sm font-bold tracking-[0.03em] uppercase ${status === s ? 'bg-ink text-canvas' : ''}`}
           >
             {t(`reports.${s.toLowerCase()}`)}
           </button>
@@ -84,7 +84,7 @@ function ReportCard({ report: r }: { report: AdminReport }) {
 
   return (
     <article className={`rounded-media flex flex-col gap-3 border p-5 ${r.status === 'OPEN' ? 'border-ink' : 'border-ink/15'}`}>
-      <div className="flex flex-wrap items-center gap-2 text-[13px] font-bold">
+      <div className="flex flex-wrap items-center gap-2 text-sm font-bold">
         <span className="bg-ink text-canvas rounded-pill px-2.5 py-0.5">{tr(r.reason)}</span>
         <span className="border-ink/25 rounded-pill border px-2.5 py-0.5">{t(`target.${r.target}`)}</span>
         <span className="text-ink/70 font-semibold">

@@ -219,7 +219,8 @@
     "USERNAME_TAKEN": "This username is taken. Try another one.",
     "UNDERAGE": "Yoyo is for people aged 18 and over.",
     "PROFILE_INCOMPLETE": "Add your username and date of birth in Settings → Profile first.",
-    "IDENTITY_REQUIRED": "Confirm who you are first: Settings → Profile → Confirm who you are."
+    "IDENTITY_REQUIRED": "Confirm who you are first: Settings → Profile → Confirm who you are.",
+    "DEMO_LISTING": "This is an example listing: it cannot be rented."
   },
   "validation": {
     "required": "Fill in this field.",
@@ -594,7 +595,18 @@
       "customHint": "Up to {max} short rules, 3–120 characters each.",
       "customLabel": "Rule {number}",
       "add": "Add a rule",
-      "remove": "Remove rule {number}"
+      "remove": "Remove rule {number}",
+      "cancellation": {
+        "title": "Cancellation",
+        "names": {
+          "FLEXIBLE": "Flexible",
+          "MODERATE": "Moderate",
+          "STRICT": "Strict"
+        },
+        "FLEXIBLE": "Renters get everything back if they cancel before the first day.",
+        "MODERATE": "Everything back 5 days or more before the start; half the rent after that. The deposit always comes back.",
+        "STRICT": "Everything back 14 days or more before; half the rent from 7 days; none of the rent in the last 6 days. The deposit always comes back."
+      }
     },
     "place": {
       "search": "Find the address",
@@ -774,6 +786,24 @@
       "cancel": "Cancel",
       "submit": "Move",
       "done": "Moved to {category}. The owner gets an email."
+    },
+    "edit": {
+      "button": "Edit",
+      "title": "Fix the listing",
+      "fieldTitle": "Title",
+      "fieldDescription": "Description",
+      "fieldCondition": "Condition",
+      "fieldDaily": "Price a day, €",
+      "fieldDeposit": "Deposit, €",
+      "fieldDiscount": "Weekly discount, %",
+      "note": "Only what you change is saved. The owner is told, and the change goes to the audit log.",
+      "save": "Save the fixes",
+      "cancel": "Cancel",
+      "done": "Saved; the owner has been told.",
+      "nothing": "Nothing changed.",
+      "titleLength": "The title needs 5–80 characters.",
+      "descriptionLength": "The description needs at least 30 characters.",
+      "price": "Prices are amounts in euros."
     }
   },
   "catalog": {
@@ -798,7 +828,8 @@
       "deposit": "Deposit {amount}",
       "noDeposit": "No deposit",
       "unavailable": "Not for rent right now",
-      "forDays": "{amount} for {days, plural, one {# day} other {# days}}"
+      "forDays": "{amount} for {days, plural, one {# day} other {# days}}",
+      "demo": "Example"
     },
     "search": {
       "label": "Search the catalog",
@@ -825,7 +856,8 @@
       "clearDates": "Clear the dates",
       "district": "District",
       "anyDistrict": "Any district",
-      "pickDates": "Choose dates"
+      "pickDates": "Choose dates",
+      "city": "City"
     },
     "active": {
       "label": "Active filters",
@@ -856,7 +888,8 @@
       "tipDistrict": "look in every district",
       "tipText": "use a shorter or more general word",
       "reset": "Reset the filters",
-      "allCategories": "All categories"
+      "allCategories": "All categories",
+      "tipCity": "Try another city or any city."
     },
     "error": {
       "title": "The catalog did not load",
@@ -990,7 +1023,25 @@
       "failed": "Could not copy the link"
     },
     "metaTitle": "{title} for rent in {place}",
-    "metaTitleNoPlace": "{title} for rent"
+    "metaTitleNoPlace": "{title} for rent",
+    "demo": {
+      "badge": "Example",
+      "title": "An example listing",
+      "body": "This is how a listing on Yoyo looks. It is not for rent: real items are in the catalog, and yours can be there in a few minutes.",
+      "browse": "See real items",
+      "lend": "Lend your item"
+    },
+    "cancellation": {
+      "title": "Cancellation",
+      "FLEXIBLE": "Renters get everything back if they cancel before the first day.",
+      "MODERATE": "Everything back 5 days or more before the start; half the rent after that. The deposit always comes back.",
+      "STRICT": "Everything back 14 days or more before; half the rent from 7 days; none of the rent in the last 6 days. The deposit always comes back.",
+      "names": {
+        "FLEXIBLE": "Flexible",
+        "MODERATE": "Moderate",
+        "STRICT": "Strict"
+      }
+    }
   },
   "profile": {
     "title": "{name}",
@@ -1148,11 +1199,12 @@
       "what": "What",
       "whatPlaceholder": "What do you need?",
       "where": "Where",
-      "anywhere": "Everywhere in the country",
+      "anywhere": "Any city",
       "when": "When",
       "anyDays": "Any days",
       "clearDays": "Clear the days",
-      "submit": "Search"
+      "submit": "Search",
+      "cityCount": "{count, plural, one {# item} other {# items}}"
     },
     "fresh": {
       "title": "Just added",

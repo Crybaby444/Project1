@@ -22,8 +22,8 @@ export function ShopCard({ shop }: { shop: ShopSummary }) {
         )}
       </div>
       <div className="flex flex-col gap-1 p-4">
-        <span className="font-display text-[1.8rem] leading-none font-black uppercase [overflow-wrap:anywhere]">{shop.name}</span>
-        <span className="text-ink/70 text-[13px] font-semibold">{t('itemCount', { count: shop.itemCount })}</span>
+        <span className="font-display text-3xl leading-none font-black uppercase [overflow-wrap:anywhere]">{shop.name}</span>
+        <span className="text-ink/70 text-sm font-semibold">{t('itemCount', { count: shop.itemCount })}</span>
         {shop.about && <span className="text-ink/80 line-clamp-2 text-sm">{shop.about}</span>}
       </div>
     </Link>

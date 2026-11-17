@@ -36,8 +36,8 @@ export function MySpaceNav() {
           {initials(user.name)}
         </span>
         <div className="flex min-w-0 flex-col gap-1">
-          <p className="font-display truncate text-[clamp(1.8rem,3vw,2.6rem)] leading-none font-black uppercase">{user.name}</p>
-          <p className="text-ink/75 flex flex-wrap items-center gap-x-3 text-[15px]">
+          <p className="font-display truncate text-display-s leading-none font-black uppercase">{user.name}</p>
+          <p className="text-ink/75 flex flex-wrap items-center gap-x-3 text-base">
             {user.username && <span>@{user.username}</span>}
             <Link href={`/u/${user.id}`} className="font-bold underline decoration-1 underline-offset-4">
               {t('public')}
@@ -54,7 +54,7 @@ export function MySpaceNav() {
                 <Link
                   href={href}
                   aria-current={current ? 'page' : undefined}
-                  className={`relative inline-flex min-h-12 items-center px-4 text-[15px] font-bold whitespace-nowrap transition-colors ${current ? 'text-ink after:bg-ink after:absolute after:inset-x-3 after:-bottom-px after:h-[3px] after:rounded-full' : 'text-ink/65 hover:text-ink'}`}
+                  className={`relative inline-flex min-h-12 items-center px-4 text-base font-bold whitespace-nowrap transition-colors ${current ? 'text-ink after:bg-ink after:absolute after:inset-x-3 after:-bottom-px after:h-[3px] after:rounded-full' : 'text-ink/65 hover:text-ink'}`}
                 >
                   {t(`tabs.${key}`)}
                 </Link>

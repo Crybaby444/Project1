@@ -27,7 +27,7 @@ export function StatusBadge({ tone, icon, children, className = '' }: StatusBadg
   return (
     <span
       data-tone={tone}
-      className={`rounded-pill inline-flex min-h-7 items-center gap-1.5 border px-3 text-[13px] font-bold whitespace-nowrap [&_svg]:size-3.5 [&_svg]:shrink-0 ${TONE[tone]} ${className}`}
+      className={`rounded-pill inline-flex min-h-7 items-center gap-1.5 border px-3 text-sm font-bold whitespace-nowrap [&_svg]:size-3.5 [&_svg]:shrink-0 ${TONE[tone]} ${className}`}
     >
       {icon}
       {children}

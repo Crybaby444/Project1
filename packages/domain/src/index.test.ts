@@ -37,9 +37,13 @@ describe('@yoyo/domain entry point', () => {
         'DEFAULT_BOOKING_SETTINGS',
         'serviceFeeAt',
         'validateBookingSettings',
+        // cancellation
+        'CANCELLATION_POLICIES',
+        'rentRefundPercent',
         // ledger
         'applyOperation',
         'assertBalanced',
+        'bookingPartialRefund',
         'bookingPayment',
         'bookingRefund',
         'depositRefund',

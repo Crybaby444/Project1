@@ -1,5 +1,7 @@
 'use client';
 
+import { ChoicePills } from '@/components/ui/ChoicePills';
+import { CANCELLATION_POLICIES, type CancellationPolicyName } from '@yoyo/shared';
 import { LISTING_LIMITS, RULE_PRESETS, type RulePreset } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
@@ -36,7 +38,7 @@ export function RulesStep() {
   return (
     <div className="flex flex-col gap-8">
       <fieldset className="flex flex-col gap-3" disabled={readOnly}>
-        <legend className="mb-2 text-[13px] font-bold tracking-[0.03em] uppercase">{t('presets')}</legend>
+        <legend className="mb-2 text-sm font-bold tracking-[0.03em] uppercase">{t('presets')}</legend>
         <div className="flex flex-wrap gap-2">
           {RULE_PRESETS.map((preset) => {
             const on = rules.preset.includes(preset);
@@ -79,7 +81,7 @@ export function RulesStep() {
       </fieldset>
 
       <fieldset className="flex flex-col gap-3" disabled={readOnly}>
-        <legend className="mb-1 text-[13px] font-bold tracking-[0.03em] uppercase">{t('custom')}</legend>
+        <legend className="mb-1 text-sm font-bold tracking-[0.03em] uppercase">{t('custom')}</legend>
         <p className="text-sm">{t('customHint', { max: LISTING_LIMITS.customRules })}</p>
         <ol className="flex flex-col gap-3">
           {shown.map((rule, index) => (
@@ -136,6 +138,14 @@ export function RulesStep() {
           <span aria-hidden="true">+</span> {t('add')}
         </Button>
       </fieldset>
+      <ChoicePills<CancellationPolicyName>
+        legend={t('cancellation.title')}
+        hint={t(`cancellation.${draft.values.cancellationPolicy}`)}
+        choices={CANCELLATION_POLICIES.map((p) => ({ value: p, label: t(`cancellation.names.${p}`) }))}
+        value={draft.values.cancellationPolicy}
+        onChange={(cancellationPolicy) => draft.change({ cancellationPolicy })}
+        disabled={readOnly}
+      />
     </div>
   );
 }

@@ -284,7 +284,8 @@ export class BookingsService {
             offerId: input.offerId ?? null,
             message: input.message || null,
             createdAt: next.createdAt,
-            ...snapshotData(next),
+            // The item's cancellation policy as it is now stays with the deal (owner, 2026-11-16).
+            ...snapshotData({ ...next, cancellationPolicy: listing.cancellationPolicy }),
           },
         })
         .catch(async (error: unknown) => {

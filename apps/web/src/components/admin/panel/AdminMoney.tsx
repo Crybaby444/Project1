@@ -63,7 +63,7 @@ export function AdminMoney({ kind, page }: { kind?: LedgerKind; page: number }) 
             ).map(([label, value]) => (
               <div key={label} className="border-ink/15 flex flex-col gap-1 py-5 pr-4 even:border-l even:pl-4 lg:border-l lg:px-5 lg:first:border-l-0 lg:first:pl-0">
                 <dt className="text-ink/70 text-sm font-semibold">{label}</dt>
-                <dd className="font-display text-[clamp(1.8rem,2.6vw,2.4rem)] leading-none font-black tabular-nums">{money(value)}</dd>
+                <dd className="font-display text-display-s leading-none font-black tabular-nums">{money(value)}</dd>
               </div>
             ))}
           </dl>
@@ -88,7 +88,7 @@ export function AdminMoney({ kind, page }: { kind?: LedgerKind; page: number }) 
                   .map(([key, list]) => (
                     <div key={key}>
                       <p className="text-sm font-semibold">{tm(key)}</p>
-                      <ul className="bg-mist mt-1 rounded-[12px] px-3 py-2 font-mono text-[13px]">
+                      <ul className="bg-mist mt-1 rounded-[12px] px-3 py-2 font-mono text-sm">
                         {list.map((line) => (
                           <li key={line}>{line}</li>
                         ))}
@@ -103,7 +103,7 @@ export function AdminMoney({ kind, page }: { kind?: LedgerKind; page: number }) 
 
       <section className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="font-display text-[2rem] leading-none font-black uppercase">{tm('operations')}</h2>
+          <h2 className="font-display text-4xl leading-none font-black uppercase">{tm('operations')}</h2>
           <AdminSelect
             label={tm('kindLabel')}
             value={kind ?? ''}
@@ -140,14 +140,14 @@ export function AdminMoney({ kind, page }: { kind?: LedgerKind; page: number }) 
                     <td className={`${TD} font-semibold`}>{tm(`kind.${op.kind}`)}</td>
                     <td className={TD}>
                       {op.bookingId ? (
-                        <Link href={`/admin/deals/${op.bookingId}`} className="font-mono text-[13px] underline decoration-1 underline-offset-2">
+                        <Link href={`/admin/deals/${op.bookingId}`} className="font-mono text-sm underline decoration-1 underline-offset-2">
                           {op.bookingId.slice(-8)}
                         </Link>
                       ) : (
                         '—'
                       )}
                     </td>
-                    <td className={`${TD} font-mono text-[13px]`}>
+                    <td className={`${TD} font-mono text-sm`}>
                       {op.postings.map((p) => (
                         <span key={p.account} className="flex justify-between gap-6">
                           <span className="truncate">{p.account}</span>

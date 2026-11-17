@@ -36,11 +36,11 @@ export function PeopleScene() {
         <div className="flex max-w-[52rem] flex-col items-center gap-5 text-center">
           <h2
             id="intro-people"
-            className="font-display text-[clamp(2.6rem,7vw,6rem)] leading-[0.88] font-black uppercase"
+            className="font-display text-display-xl leading-[0.88] font-black uppercase"
           >
             {t('title')}
           </h2>
-          <p className="max-w-[46ch] text-[17px] leading-relaxed text-[var(--paper)]/75">{t('lead')}</p>
+          <p className="max-w-[46ch] text-lg leading-relaxed text-[var(--paper)]/75">{t('lead')}</p>
         </div>
 
         <ul className="relative m-0 grid w-full max-w-[1100px] list-none gap-5 p-0 lg:block lg:h-[min(46svh,420px)]">
@@ -58,8 +58,8 @@ export function PeopleScene() {
                 }}
               >
                 <Picture card={card} t={t} />
-                <h3 className="mt-5 text-[19px] font-bold">{t(`${card}.title`)}</h3>
-                <p className="mt-1.5 text-[15px] leading-relaxed text-[var(--night)]/70">
+                <h3 className="mt-5 text-lg font-bold">{t(`${card}.title`)}</h3>
+                <p className="mt-1.5 text-base leading-relaxed text-[var(--night)]/70">
                   {t(`${card}.body`)}
                 </p>
               </li>
@@ -76,17 +76,17 @@ function Picture({ card, t }: { card: (typeof CARDS)[number]; t: ReturnType<type
   if (card === 'profile') {
     return (
       <div aria-hidden="true" className="flex items-center gap-3 rounded-[18px] bg-[var(--night)]/[0.05] p-4">
-        <span className="grid size-12 place-items-center rounded-full bg-[var(--night)] text-[15px] font-bold text-[var(--paper)]">
+        <span className="grid size-12 place-items-center rounded-full bg-[var(--night)] text-base font-bold text-[var(--paper)]">
           Y
         </span>
         <span className="flex flex-1 flex-col gap-1.5">
-          <b className="text-[15px]">@you</b>
+          <b className="text-base">@you</b>
           <span className="flex gap-1.5">
             <i className="h-1.5 w-10 rounded-full bg-[var(--night)]/20" />
             <i className="h-1.5 w-7 rounded-full bg-[var(--night)]/20" />
           </span>
         </span>
-        <span className="rounded-full bg-[var(--night)] px-3.5 py-1.5 text-[12px] font-bold text-[var(--paper)]">
+        <span className="rounded-full bg-[var(--night)] px-3.5 py-1.5 text-xs font-bold text-[var(--paper)]">
           {t('profile.follow')}
         </span>
       </div>
@@ -111,7 +111,7 @@ function Picture({ card, t }: { card: (typeof CARDS)[number]; t: ReturnType<type
   return (
     <div
       aria-hidden="true"
-      className="flex flex-col gap-2 rounded-[18px] bg-[var(--night)]/[0.05] p-4 text-[13.5px]"
+      className="flex flex-col gap-2 rounded-[18px] bg-[var(--night)]/[0.05] p-4 text-sm"
     >
       <span className="self-start rounded-[16px] rounded-bl-[6px] bg-[var(--night)]/10 px-3.5 py-2">
         {t('chat.ask')}

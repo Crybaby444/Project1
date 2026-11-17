@@ -137,7 +137,7 @@ export function PriceStep() {
         aria-label={t('payout')}
         className="bg-ink text-canvas rounded-media flex flex-col gap-3 border border-ink/15 p-5"
       >
-        <h3 className="text-[13px] font-bold tracking-[0.03em] uppercase">{t('payout')}</h3>
+        <h3 className="text-sm font-bold tracking-[0.03em] uppercase">{t('payout')}</h3>
         {examples.length > 0 ? (
           <dl className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
             {examples.map(({ days, result }) =>

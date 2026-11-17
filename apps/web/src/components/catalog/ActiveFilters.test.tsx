@@ -18,14 +18,14 @@ const { CatalogShell } = await import('./CatalogShell');
 describe('ActiveFilters', () => {
   it('shows each filter as a removable chip, and removing one keeps the others', async () => {
     const user = userEvent.setup();
-    const params = parseCatalogParams(new URLSearchParams('price_min=10&price_max=20&district=centrs&sort=price_asc'));
+    const params = parseCatalogParams(new URLSearchParams('price_min=10&price_max=20&city=riga&sort=price_asc'));
     renderWithIntl(
       <CatalogShell>
-        <ActiveFilters params={params} districts={[{ district: 'Centrs', slug: 'centrs', count: 4 }]} />
+        <ActiveFilters params={params} cities={[{ city: 'Rīga', slug: 'riga', count: 4 }]} />
       </CatalogShell>,
     );
     await user.click(screen.getByRole('button', { name: 'Remove the filter: €10–20 a day' }));
-    expect(replace).toHaveBeenLastCalledWith('/c/tools?district=centrs&sort=price_asc', { scroll: false });
+    expect(replace).toHaveBeenLastCalledWith('/c/tools?city=riga&sort=price_asc', { scroll: false });
     await user.click(screen.getByRole('button', { name: en.catalog.active.resetAll }));
     // Reset all clears the sort too: the list goes back to how the category opens.
     expect(replace).toHaveBeenLastCalledWith('/c/tools', { scroll: false });
@@ -35,7 +35,7 @@ describe('ActiveFilters', () => {
     const params = parseCatalogParams(new URLSearchParams('price_min=10&price_max=20'));
     renderWithIntl(
       <CatalogShell>
-        <ActiveFilters params={params} districts={[]} />
+        <ActiveFilters params={params} cities={[]} />
       </CatalogShell>,
     );
     const chip = screen.getByRole('button', { name: 'Remove the filter: €10–20 a day' });

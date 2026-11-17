@@ -35,10 +35,10 @@ export function DealSummary({ booking }: { booking: BookingView }) {
 
   return (
     <section aria-labelledby="deal-money" className="border-ink/15 flex flex-col gap-3 border-t pt-6">
-      <h2 id="deal-money" className="font-display text-[2rem] leading-[0.95] font-black uppercase">
+      <h2 id="deal-money" className="font-display text-4xl leading-[0.95] font-black uppercase">
         {t('title')}
       </h2>
-      <dl className="flex flex-col gap-2 text-[15px]">
+      <dl className="flex flex-col gap-2 text-base">
         <div className="flex flex-wrap justify-between gap-x-3">
           <dt>{t('rent')}</dt>
           <dd className="font-bold tabular-nums">{money(q.rentCents)}</dd>
@@ -47,7 +47,7 @@ export function DealSummary({ booking }: { booking: BookingView }) {
         <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
           <dt className="flex flex-wrap items-center gap-2">
             {t('deposit')}
-            <span data-deposit-state={deposit} className={`rounded-pill inline-flex min-h-6 items-center border border-ink/15 px-2.5 text-[12px] font-bold ${DEPOSIT_FILL[deposit]}`}>
+            <span data-deposit-state={deposit} className={`rounded-pill inline-flex min-h-6 items-center border border-ink/15 px-2.5 text-xs font-bold ${DEPOSIT_FILL[deposit]}`}>
               {t(`depositState.${deposit}`)}
             </span>
           </dt>

@@ -113,13 +113,13 @@ export function AdminUsers({ search, page }: { search: string; page: number }) {
                     </td>
                     <td className={TD}>
                       <span className="block max-w-[16rem] truncate">{u.email}</span>
-                      <span className="text-ink/70 text-[12px]">{u.emailVerified ? t('users.verified') : t('users.unverified')}</span>
+                      <span className="text-ink/70 text-xs">{u.emailVerified ? t('users.verified') : t('users.unverified')}</span>
                     </td>
                     <td className={TD}>{t(`users.roles.${u.role}`)}</td>
                     <td className={`${TD} whitespace-nowrap tabular-nums`}>{joined.format(new Date(u.createdAt))}</td>
                     <td className={TD}>
                       <span
-                        className={`rounded-pill inline-flex items-center gap-1.5 px-2.5 py-0.5 text-[12px] font-bold ${
+                        className={`rounded-pill inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-bold ${
                           state === 'active' ? 'border-ink/25 border' : 'bg-ink text-canvas'
                         }`}
                       >
@@ -133,7 +133,7 @@ export function AdminUsers({ search, page }: { search: string; page: number }) {
                           onClick={() => (u.blockedAt ? setBlocked(u, false) : setAsking(u))}
                           aria-label={`${u.blockedAt ? t('users.unblock') : t('users.block')} ${u.name}`}
                           disabled={block.isPending}
-                          className="border-ink rounded-pill min-h-9 border px-3 text-[12px] font-bold tracking-[0.03em] whitespace-nowrap uppercase disabled:opacity-40"
+                          className="border-ink rounded-pill min-h-9 border px-3 text-xs font-bold tracking-[0.03em] whitespace-nowrap uppercase disabled:opacity-40"
                         >
                           {u.blockedAt ? t('users.unblock') : t('users.block')}
                         </button>

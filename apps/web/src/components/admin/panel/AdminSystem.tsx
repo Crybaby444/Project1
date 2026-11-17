@@ -1,15 +1,19 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import { ADMIN_EXPORTS } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
+import { unwrap } from '@/lib/session/api-error';
+import { useApiClient } from '@/lib/session/SessionProvider';
 import { useAdminSystem } from '@/lib/admin/queries';
 import { AdminPageHeader, Panel } from './parts';
 
 /** A green-or-not light: a filled dot when fine, a ring with words when not. */
 function Light({ ok, label }: { ok: boolean; label: string }) {
   return (
-    <span className={`rounded-pill inline-flex items-center gap-2 self-start px-3 py-1 text-[13px] font-bold ${ok ? 'border-ink/20 border' : 'bg-ink text-canvas'}`}>
+    <span className={`rounded-pill inline-flex items-center gap-2 self-start px-3 py-1 text-sm font-bold ${ok ? 'border-ink/20 border' : 'bg-ink text-canvas'}`}>
       <span aria-hidden="true" className={`inline-block size-2 rounded-full ${ok ? 'bg-ink' : 'bg-[var(--danger)]'}`} />
       {label}
     </span>
@@ -48,7 +52,7 @@ export function AdminSystem() {
               <p className="text-ink/75 text-sm">{ts('latency', { ms: system.data.database.latencyMs })}</p>
             </Panel>
             <Panel title={ts('mail')}>
-              <p className="font-display text-[2.6rem] leading-none font-black tabular-nums">
+              <p className="font-display text-5xl leading-none font-black tabular-nums">
                 {system.data.mail.sent}
                 <span className="text-ink/50"> / {system.data.mail.limit}</span>
               </p>
@@ -58,14 +62,14 @@ export function AdminSystem() {
               <p className="text-ink/75 text-sm">{ts('mailHint')}</p>
             </Panel>
             <Panel title={ts('timers')}>
-              <p className="font-display text-[2.6rem] leading-none font-black tabular-nums">{system.data.overdueTimers}</p>
+              <p className="font-display text-5xl leading-none font-black tabular-nums">{system.data.overdueTimers}</p>
               <Light ok={system.data.overdueTimers === 0} label={system.data.overdueTimers === 0 ? ts('timersOk') : ts('timersBad')} />
             </Panel>
           </div>
 
           <div className="grid gap-5 lg:grid-cols-2">
             <Panel title={ts('providers')}>
-              <dl className="divide-ink/10 flex flex-col divide-y text-[15px]">
+              <dl className="divide-ink/10 flex flex-col divide-y text-base">
                 {(
                   [
                     [ts('version'), system.data.version],
@@ -76,7 +80,7 @@ export function AdminSystem() {
                 ).map(([label, value]) => (
                   <div key={label} className="flex justify-between gap-4 py-2.5">
                     <dt className="text-ink/75">{label}</dt>
-                    <dd className="font-mono text-[13px] font-semibold">{value}</dd>
+                    <dd className="font-mono text-sm font-semibold">{value}</dd>
                   </div>
                 ))}
               </dl>
@@ -85,8 +89,8 @@ export function AdminSystem() {
               <dl className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                 {(['users', 'listings', 'bookings', 'messages', 'reviews'] as const).map((key) => (
                   <div key={key}>
-                    <dt className="text-ink/70 text-[13px] font-semibold">{ts(`counts.${key}`)}</dt>
-                    <dd className="font-display text-[2rem] leading-none font-black tabular-nums">{nf.format(system.data.counts[key])}</dd>
+                    <dt className="text-ink/70 text-sm font-semibold">{ts(`counts.${key}`)}</dt>
+                    <dd className="font-display text-4xl leading-none font-black tabular-nums">{nf.format(system.data.counts[key])}</dd>
                   </div>
                 ))}
               </dl>
@@ -115,6 +119,68 @@ export function AdminSystem() {
           ))}
         </ul>
       </Panel>
+      <DemoListings />
     </div>
+  );
+}
+
+/**
+ * Example listings (owner, 2026-11-16): 24 for Latvia, marked "Example" and never rented. Added six at a
+ * time (each call stays short), repeated until all are there; removed with their photos in one go.
+ */
+function DemoListings() {
+  const ts = useTranslations('admin.system.demo');
+  const client = useApiClient();
+  const [state, setState] = useState<{ count: number; total: number } | null>(null);
+  const [busy, setBusy] = useState<'add' | 'remove' | null>(null);
+  const [problem, setProblem] = useState(false);
+  useEffect(() => {
+    void unwrap(client.GET('/api/v1/admin/system/demo'))
+      .then(setState)
+      .catch(() => setProblem(true));
+  }, [client]);
+  async function add() {
+    setBusy('add');
+    setProblem(false);
+    try {
+      for (let i = 0; i < 10; i++) {
+        const next = await unwrap(client.POST('/api/v1/admin/system/demo'));
+        setState(next);
+        if (!next.added || next.count >= next.total) break;
+      }
+    } catch {
+      setProblem(true);
+    } finally {
+      setBusy(null);
+    }
+  }
+  async function remove() {
+    setBusy('remove');
+    setProblem(false);
+    try {
+      await unwrap(client.DELETE('/api/v1/admin/system/demo'));
+      setState((s) => ({ count: 0, total: s?.total ?? 24 }));
+    } catch {
+      setProblem(true);
+    } finally {
+      setBusy(null);
+    }
+  }
+  return (
+    <Panel title={ts('title')}>
+      <p className="text-ink/75 text-sm leading-relaxed">{ts('intro')}</p>
+      <p className="text-base font-bold" role="status">
+        {state ? ts('count', { count: state.count, total: state.total }) : '…'}
+      </p>
+      {problem && <p role="alert" className="text-sm text-[var(--danger)]">{ts('failed')}</p>}
+      <div className="flex flex-wrap gap-2">
+        <Button onClick={() => void add()} loading={busy === 'add'} disabled={busy !== null || (state !== null && state.count >= state.total)}>
+          {ts('add')}
+        </Button>
+        <Button variant="ghost" onClick={() => void remove()} loading={busy === 'remove'} disabled={busy !== null || state?.count === 0}>
+          {ts('remove')}
+        </Button>
+      </div>
+    </Panel>
   );
 }

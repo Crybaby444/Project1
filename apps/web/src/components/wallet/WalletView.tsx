@@ -37,7 +37,7 @@ function BalanceTiles({ summary }: { summary: WalletSummary }) {
           className="border-ink/15 flex flex-col gap-2 border-b py-6 sm:px-6 sm:odd:border-r sm:odd:pl-0 xl:border-r xl:odd:pl-6 xl:first:pl-0 xl:last:border-r-0"
         >
           <dt className="text-ink/70 text-xs font-bold tracking-[0.08em] uppercase">{t(tile.key)}</dt>
-          <dd className="font-display text-[clamp(3rem,5vw,4.6rem)] leading-[0.9] font-black tabular-nums" data-tile={tile.key}>
+          <dd className="font-display text-display-l leading-[0.9] font-black tabular-nums" data-tile={tile.key}>
             <CountUp value={tile.cents} format={money} />
           </dd>
           {tile.hint && <dd className="text-ink/80 max-w-[34ch] text-sm">{tile.hint}</dd>}
@@ -73,7 +73,7 @@ function History() {
 
   return (
     <section aria-labelledby="wallet-history" className="flex flex-col gap-4">
-      <h2 id="wallet-history" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
+      <h2 id="wallet-history" className="font-display text-display-s leading-[0.95] font-black uppercase">
         {t('history')}
       </h2>
       <div role="group" aria-label={t('filters')} className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
@@ -125,7 +125,7 @@ function History() {
                       )}
                     </span>
                   </div>
-                  <span className="font-display ml-auto text-[1.9rem] leading-none font-black tabular-nums" data-amount={item.amountCents}>
+                  <span className="font-display ml-auto text-3xl leading-none font-black tabular-nums" data-amount={item.amountCents}>
                     {incoming ? '+' : ''}
                     {money(item.amountCents)}
                   </span>

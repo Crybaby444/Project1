@@ -49,14 +49,14 @@ export function Gallery({ listingId, title, photos }: Props) {
           className="size-full object-cover"
         />
         {photos.length > 1 && (
-          <span aria-hidden="true" className="bg-ink/80 text-canvas font-display absolute top-3 left-3 rounded-full px-3 py-1 text-[1.1rem] leading-none font-black tabular-nums backdrop-blur-sm">
+          <span aria-hidden="true" className="bg-ink/80 text-canvas font-display absolute top-3 left-3 rounded-full px-3 py-1 text-xl leading-none font-black tabular-nums backdrop-blur-sm">
             {String(index + 1).padStart(2, '0')} / {String(photos.length).padStart(2, '0')}
           </span>
         )}
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="bg-surface text-ink border-ink rounded-pill ease-yoyo absolute right-3 bottom-3 inline-flex min-h-10 items-center gap-2 border px-3 text-[13px] font-bold transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.96]"
+          className="bg-surface text-ink border-ink rounded-pill ease-yoyo absolute right-3 bottom-3 inline-flex min-h-10 items-center gap-2 border px-3 text-sm font-bold transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.96]"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4">
             <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -145,7 +145,7 @@ export function GalleryDialog({ open, onClose, photos, index, onIndex, title }: 
             <IconButton label={t('previous')} onClick={() => go(-1)} disabled={count < 2}>
               <span aria-hidden="true">←</span>
             </IconButton>
-            <p className="font-display m-0 text-[1.6rem] leading-none font-black tabular-nums" aria-live="polite">
+            <p className="font-display m-0 text-3xl leading-none font-black tabular-nums" aria-live="polite">
               <span className="sr-only">{t('counter', { number: index + 1, count })}</span>
               <span aria-hidden="true">
                 {String(index + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}

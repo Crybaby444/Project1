@@ -98,7 +98,7 @@ export function CheckoutDialog({ booking, open, onClose }: { booking: BookingVie
   return (
     <Dialog open={open} onClose={() => !pending && onClose()} title={t('title')} wide>
       <div className="flex flex-col gap-5" data-checkout="">
-        <dl className="bg-mist rounded-media flex flex-col gap-2 p-4 text-[15px]">
+        <dl className="bg-mist rounded-media flex flex-col gap-2 p-4 text-base">
           <div className="flex justify-between gap-3">
             <dt>{tm('rent')}</dt>
             <dd className="font-bold tabular-nums">{money(q.rentCents)}</dd>
@@ -117,7 +117,7 @@ export function CheckoutDialog({ booking, open, onClose }: { booking: BookingVie
         </dl>
 
         <fieldset className="flex flex-col gap-2" aria-describedby={`${groupId}-hint`}>
-          <legend className="mb-2 text-[13px] font-bold tracking-[0.03em] uppercase">{t('method')}</legend>
+          <legend className="mb-2 text-sm font-bold tracking-[0.03em] uppercase">{t('method')}</legend>
           {(['WALLET', 'CARD'] as const).map((value) => (
             <label
               key={value}

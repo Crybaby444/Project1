@@ -218,7 +218,7 @@ export function MoneyDialog({
                 aria-checked={method === m}
                 onClick={() => setMethod(m)}
                 disabled={pending}
-                className={`rounded-media flex min-h-14 items-center justify-center gap-1.5 border-[1.5px] px-2 text-[15px] font-bold transition-colors ${
+                className={`rounded-media flex min-h-14 items-center justify-center gap-1.5 border-[1.5px] px-2 text-base font-bold transition-colors ${
                   method === m ? 'border-ink bg-ink text-canvas' : 'border-ink/20 hover:border-ink'
                 }`}
               >

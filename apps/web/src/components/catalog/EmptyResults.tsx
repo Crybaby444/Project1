@@ -12,7 +12,7 @@ export async function EmptyResults({ params, resetHref }: { params: CatalogParam
   const tips = [
     params.from ? t('tipDates') : null,
     params.priceMin !== undefined || params.priceMax !== undefined ? t('tipPrice') : null,
-    params.district ? t('tipDistrict') : null,
+    params.city ? t('tipCity') : null,
     params.q ? t('tipText') : null,
   ].filter((tip): tip is string => tip !== null);
   return (
@@ -28,10 +28,10 @@ export async function EmptyResults({ params, resetHref }: { params: CatalogParam
         t('body')
       )}
       action={<>
-        <Link href={resetHref} className="bg-ink text-canvas border-ink rounded-pill ease-yoyo inline-flex min-h-11 items-center border px-5 text-[13px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5">
+        <Link href={resetHref} className="bg-ink text-canvas border-ink rounded-pill ease-yoyo inline-flex min-h-11 items-center border px-5 text-sm font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5">
           {t('reset')}
         </Link>
-        <Link href="/c" className="border-ink bg-surface rounded-pill ease-yoyo inline-flex min-h-11 items-center border px-5 text-[13px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5">
+        <Link href="/c" className="border-ink bg-surface rounded-pill ease-yoyo inline-flex min-h-11 items-center border px-5 text-sm font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5">
           {t('allCategories')}
         </Link>
       </>}

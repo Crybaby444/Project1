@@ -231,7 +231,7 @@ export function UnavailabilityCalendar({ periods, today, onChange, readOnly }: P
         <p className="text-sm">{t('none')}</p>
       ) : (
         <div className="flex flex-col gap-2">
-          <p id={`${keysId}-list`} className="text-[13px] font-bold tracking-[0.03em] uppercase">
+          <p id={`${keysId}-list`} className="text-sm font-bold tracking-[0.03em] uppercase">
             {t('list')}
           </p>
           <ul aria-labelledby={`${keysId}-list`} className="flex flex-wrap gap-2">

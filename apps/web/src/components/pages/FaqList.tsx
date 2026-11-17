@@ -39,7 +39,7 @@ export function FaqList({ groups, titled = true }: { groups: FaqGroup[]; /** Off
           className="flex flex-col gap-4"
         >
           {titled && (
-            <h2 id={`group-${group.id}`} className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
+            <h2 id={`group-${group.id}`} className="font-display text-display-s leading-[0.95] font-black uppercase">
               {group.title}
             </h2>
           )}

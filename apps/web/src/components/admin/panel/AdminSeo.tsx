@@ -33,11 +33,11 @@ export function AdminSeo() {
           <dl className="border-ink/15 grid grid-cols-2 border-y">
             <div className="flex flex-col gap-1 py-5 pr-4">
               <dt className="text-ink/70 text-sm font-semibold">{t('published')}</dt>
-              <dd className="font-display text-[3rem] leading-none font-black tabular-nums">{seo.data.published}</dd>
+              <dd className="font-display text-5xl leading-none font-black tabular-nums">{seo.data.published}</dd>
             </div>
             <div className="border-ink/15 flex flex-col gap-1 border-l py-5 pl-4">
               <dt className="text-ink/70 text-sm font-semibold">{t('healthy')}</dt>
-              <dd className="font-display text-[3rem] leading-none font-black tabular-nums">
+              <dd className="font-display text-5xl leading-none font-black tabular-nums">
                 {seo.data.published > 0 ? Math.round((seo.data.healthy / seo.data.published) * 100) : 100}%
               </dd>
             </div>
@@ -50,7 +50,7 @@ export function AdminSeo() {
               ) : (
                 <ul className="divide-ink/10 flex flex-col divide-y">
                   {seo.data.issues.map((i) => (
-                    <li key={i.key} className="flex items-baseline justify-between gap-4 py-2.5 text-[15px]">
+                    <li key={i.key} className="flex items-baseline justify-between gap-4 py-2.5 text-base">
                       <span>{t(`issue.${i.key}`)}</span>
                       <span className="font-bold tabular-nums">{i.value}</span>
                     </li>
@@ -66,7 +66,7 @@ export function AdminSeo() {
                   .map((l) => (
                     <li key={l.id} className="flex items-start gap-4 py-3">
                       <span
-                        className={`font-display grid size-12 shrink-0 place-items-center rounded-full text-[1.3rem] font-black tabular-nums ${l.score >= 80 ? 'border-ink/20 border' : 'bg-ink text-canvas'}`}
+                        className={`font-display grid size-12 shrink-0 place-items-center rounded-full text-xl font-black tabular-nums ${l.score >= 80 ? 'border-ink/20 border' : 'bg-ink text-canvas'}`}
                         aria-label={`${t('score')}: ${l.score}`}
                       >
                         {l.score}

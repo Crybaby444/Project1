@@ -27,7 +27,7 @@ function TextField({ label, value, onChange, type = 'text', hint, required = fal
       ) : (
         <input id={id} type={type} value={value} required={required} onChange={(e) => onChange(e.target.value)} className={INPUT_CLASS} />
       )}
-      {hint && <span className="text-ink/65 text-[12px]">{hint}</span>}
+      {hint && <span className="text-ink/65 text-xs">{hint}</span>}
     </div>
   );
 }
@@ -235,7 +235,7 @@ export function AddCategoryButton({ parent }: { parent?: Pick<AdminCategory, 'id
   return (
     <>
       {parent ? (
-        <button type="button" onClick={() => setOpen(true)} className="border-ink/25 hover:border-ink rounded-pill min-h-9 border px-3 text-[12px] font-bold uppercase">
+        <button type="button" onClick={() => setOpen(true)} className="border-ink/25 hover:border-ink rounded-pill min-h-9 border px-3 text-xs font-bold uppercase">
           {t('addSubShort')}
         </button>
       ) : (
@@ -264,7 +264,7 @@ export function AddCategoryButton({ parent }: { parent?: Pick<AdminCategory, 'id
           {LANGS.map((l) => (
             <TextField key={l} label={l.toUpperCase()} value={names[l]} onChange={(x) => setNames({ ...names, [l]: x })} required />
           ))}
-          <p className="text-ink/70 text-[13px]">{t('categoryHint')}</p>
+          <p className="text-ink/70 text-sm">{t('categoryHint')}</p>
         </Form>
       </Dialog>
     </>
@@ -284,7 +284,7 @@ export function DeleteCategoryButton({ category, targets }: { category: Pick<Adm
   const options = targets.filter((x) => x.id !== category.id);
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} className="border-ink/25 hover:border-ink rounded-pill min-h-9 border px-3 text-[12px] font-bold uppercase">
+      <button type="button" onClick={() => setOpen(true)} className="border-ink/25 hover:border-ink rounded-pill min-h-9 border px-3 text-xs font-bold uppercase">
         {t('delete')}
       </button>
       <Dialog open={open} onClose={() => setOpen(false)} title={t('deleteCategory', { name: category.names[locale] })}>

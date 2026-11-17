@@ -21,13 +21,13 @@ export function ErrorView({ title, body, retryLabel, onRetry, backLink }: ErrorV
       >
         500
       </p>
-      <h1 className="font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{title}</h1>
+      <h1 className="font-display text-display-l leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{title}</h1>
       <p className="max-w-[46ch] leading-relaxed">{body}</p>
       <div className="flex flex-wrap items-center justify-center gap-3">
         <button
           type="button"
           onClick={onRetry}
-          className="inline-flex min-h-10 items-center rounded-pill border border-cta bg-cta px-5 text-[13px] font-bold tracking-[0.03em] text-cta-fg uppercase transition-transform duration-150 ease-yoyo hover:-translate-y-0.5 active:scale-[0.96]"
+          className="inline-flex min-h-10 items-center rounded-pill border border-cta bg-cta px-5 text-sm font-bold tracking-[0.03em] text-cta-fg uppercase transition-transform duration-150 ease-yoyo hover:-translate-y-0.5 active:scale-[0.96]"
         >
           {retryLabel}
         </button>
@@ -39,4 +39,4 @@ export function ErrorView({ title, body, retryLabel, onRetry, backLink }: ErrorV
 
 /** Ghost-button classes for a plain link (used where the locale-aware Link is unavailable). */
 export const GHOST_LINK_CLASSES =
-  'inline-flex min-h-10 items-center rounded-pill border border-ink bg-surface px-5 text-[13px] font-bold tracking-[0.03em] text-ink uppercase transition-transform duration-150 ease-yoyo hover:-translate-y-0.5 active:scale-[0.96]';
+  'inline-flex min-h-10 items-center rounded-pill border border-ink bg-surface px-5 text-sm font-bold tracking-[0.03em] text-ink uppercase transition-transform duration-150 ease-yoyo hover:-translate-y-0.5 active:scale-[0.96]';

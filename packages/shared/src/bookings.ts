@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { CANCELLATION_POLICIES } from './listings';
 import { LocalDateSchema, PhotoUrlsSchema } from './listings';
 import { cleanText } from './text';
 
@@ -160,7 +161,9 @@ export const BookingViewSchema = z.object({
     })
     .nullable(),
   cancellation: z.object({ by: z.enum(['RENTER', 'OWNER', 'ADMIN']), reason: z.string().nullable(), at: z.iso.datetime() }).nullable(),
-  outcome: z.enum(['DEPOSIT_REFUNDED', 'DEPOSIT_TO_OWNER', 'REFUNDED_ALL']).nullable(),
+  outcome: z.enum(['DEPOSIT_REFUNDED', 'DEPOSIT_TO_OWNER', 'REFUNDED_ALL', 'REFUNDED_PART']).nullable(),
+  /** The cancellation policy the deal was requested under. */
+  cancellationPolicy: z.enum(CANCELLATION_POLICIES),
   /** The armed deadline: what happens by itself, and when. */
   deadline: z.object({ timer: z.enum(BOOKING_TIMERS), dueAt: z.iso.datetime() }).nullable(),
   /** What the viewer can do now, one button each (availableActions of @yoyo/domain). */
