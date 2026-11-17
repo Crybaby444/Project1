@@ -40,6 +40,9 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
   const pageHref = (number: number) => `${base}${queue === 'other' ? '&' : '?'}page=${number}`;
   const [busyId, setBusyId] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [picked, setPicked] = useState<ReadonlySet<string>>(new Set());
+  const [bulkRejecting, setBulkRejecting] = useState(false);
+  const [bulkBusy, setBulkBusy] = useState(false);
 
   async function decide(
     listing: AdminListing,
@@ -71,6 +74,40 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
       await queryClient.invalidateQueries({ queryKey: listingKeys.queue(page, queue) });
     }
   }
+
+  /**
+   * The same decision for every picked listing, one by one through the usual endpoints: each keeps its
+   * version check (a listing changed meanwhile is skipped, not approved unseen) and its audit entry.
+   */
+  async function decideAll(decision: { action: 'approve' } | { action: 'reject'; reason: string }) {
+    const chosen = (query.data?.items ?? []).filter((listing) => picked.has(listing.id) && listing.status === 'PENDING_REVIEW');
+    if (chosen.length === 0) return;
+    setBulkBusy(true);
+    setNotice(null);
+    let failed = 0;
+    for (const listing of chosen) {
+      const path = { params: { path: { id: listing.id } } };
+      try {
+        if (decision.action === 'approve') {
+          await unwrap(client.POST('/api/v1/admin/listings/{id}/approve', { ...path, body: { version: listing.version } }));
+        } else {
+          await unwrap(client.POST('/api/v1/admin/listings/{id}/reject', { ...path, body: { reason: decision.reason, version: listing.version } }));
+        }
+      } catch {
+        failed += 1;
+      }
+    }
+    const done = chosen.length - failed;
+    setPicked(new Set());
+    setBulkRejecting(false);
+    setBulkBusy(false);
+    if (failed === 0) toast.show(t(decision.action === 'approve' ? 'bulk.approved' : 'bulk.rejected', { count: done }));
+    else setNotice(t('bulk.partly', { done, failed }));
+    await queryClient.invalidateQueries({ queryKey: listingKeys.queue(page, queue) });
+  }
+
+  const pickable = (query.data?.items ?? []).filter((listing) => listing.status === 'PENDING_REVIEW');
+  const pickedCount = pickable.filter((listing) => picked.has(listing.id)).length;
 
   /** Files a listing under another category; the owner gets an email in their language. */
   async function edit(listing: AdminListing, fixes: ListingFixes) {
@@ -179,9 +216,16 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
         <EmptyState title={queue === 'other' ? t('otherEmptyTitle') : t('emptyTitle')} body={queue === 'other' ? t('otherEmptyBody') : t('emptyBody')} />
       ) : (
         <>
-          <p role="status" className="text-sm font-bold">
-            {t('showing', { from, to, total })}
-          </p>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p role="status" className="text-sm font-bold">
+              {t('showing', { from, to, total })}
+            </p>
+            {pickable.length > 1 && (
+              <Button variant="ghost" onClick={() => setPicked(pickedCount === pickable.length ? new Set() : new Set(pickable.map((listing) => listing.id)))}>
+                {pickedCount === pickable.length ? t('bulk.clear') : t('bulk.all', { count: pickable.length })}
+              </Button>
+            )}
+          </div>
           <ul className="flex flex-col gap-6">
             {items.map((listing) => (
               <li key={`${listing.id}:${listing.version}`} className="animate-pop-in">
@@ -193,6 +237,15 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
                   onReject={() => setRejecting(listing)}
                   {...(queue === 'other' && { onMove: () => setMoving(listing) })}
                   onEdit={() => setEditing(listing)}
+                  selected={picked.has(listing.id)}
+                  onSelect={(on) =>
+                    setPicked((current) => {
+                      const next = new Set(current);
+                      if (on) next.add(listing.id);
+                      else next.delete(listing.id);
+                      return next;
+                    })
+                  }
                 />
               </li>
             ))}
@@ -214,6 +267,27 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
             </nav>
           )}
         </>
+      )}
+
+      {pickedCount > 0 && (
+        <div role="region" aria-label={t('bulk.bar')} className="bg-night rounded-media text-[var(--paper)] animate-pop-in sticky bottom-4 z-10 flex flex-wrap items-center justify-between gap-3 p-4 shadow-lg">
+          <p className="font-bold">{t('bulk.picked', { count: pickedCount })}</p>
+          <div className="flex flex-wrap gap-2">
+            <Button onClick={() => void decideAll({ action: 'approve' })} loading={bulkBusy} className="[--cta-bg:var(--paper)] [--cta-fg:var(--night)]">
+              {t('bulk.approve', { count: pickedCount })}
+            </Button>
+            <Button variant="ghost" onClick={() => setBulkRejecting(true)} disabled={bulkBusy} className="border-[var(--paper)] text-[var(--paper)]">
+              {t('bulk.reject')}
+            </Button>
+            <Button variant="ghost" onClick={() => setPicked(new Set())} disabled={bulkBusy} className="border-[var(--paper)]/40 text-[var(--paper)]">
+              {t('bulk.clear')}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {bulkRejecting && (
+        <RejectDialog open busy={bulkBusy} onClose={() => setBulkRejecting(false)} onReject={(reason) => void decideAll({ action: 'reject', reason })} />
       )}
 
       {moving && (

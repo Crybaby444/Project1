@@ -804,6 +804,18 @@
       "titleLength": "Nosaukumam vajag 5–80 rakstzīmes.",
       "descriptionLength": "Aprakstam vajag vismaz 30 rakstzīmes.",
       "price": "Cenas ir summas eiro."
+    },
+    "bulk": {
+      "select": "Atzīmēt",
+      "all": "Atzīmēt visus {count}",
+      "clear": "Noņemt atzīmes",
+      "bar": "Atzīmētie sludinājumi",
+      "picked": "{count, plural, zero {Atzīmēti # sludinājumi} one {Atzīmēts # sludinājums} other {Atzīmēti # sludinājumi}}",
+      "approve": "Apstiprināt {count}",
+      "reject": "Noraidīt ar vienu iemeslu",
+      "approved": "{count, plural, zero {Apstiprināti # sludinājumi} one {Apstiprināts # sludinājums} other {Apstiprināti # sludinājumi}}",
+      "rejected": "{count, plural, zero {Noraidīti # sludinājumi} one {Noraidīts # sludinājums} other {Noraidīti # sludinājumi}}",
+      "partly": "Izdarīti: {done}; {failed} pa to laiku mainījās vai neizdevās un paliek rindā."
     }
   },
   "catalog": {

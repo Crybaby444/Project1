@@ -804,6 +804,18 @@
       "titleLength": "The title needs 5–80 characters.",
       "descriptionLength": "The description needs at least 30 characters.",
       "price": "Prices are amounts in euros."
+    },
+    "bulk": {
+      "select": "Pick",
+      "all": "Pick all {count}",
+      "clear": "Clear the picks",
+      "bar": "Picked listings",
+      "picked": "{count, plural, one {# listing picked} other {# listings picked}}",
+      "approve": "Approve {count}",
+      "reject": "Reject with one reason",
+      "approved": "{count, plural, one {# listing approved} other {# listings approved}}",
+      "rejected": "{count, plural, one {# listing rejected} other {# listings rejected}}",
+      "partly": "{done} done; {failed} changed meanwhile or failed and stay in the queue."
     }
   },
   "catalog": {
