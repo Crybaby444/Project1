@@ -18,7 +18,25 @@ type List = 'followers' | 'following' | 'find';
  * lists; reviews jump to the reviews tab. On someone else's profile: Follow and Write. On your own:
  * Edit profile and Manage my items instead.
  */
-export function ProfileSocial({ userId, name, followers, following, reviews, deals }: { userId: string; name: string; followers: number; following: number; reviews: number; deals: number }) {
+export function ProfileSocial({
+  userId,
+  name,
+  followers,
+  following,
+  reviews,
+  deals,
+  tone = 'light',
+}: {
+  userId: string;
+  name: string;
+  followers: number;
+  following: number;
+  reviews: number;
+  deals: number;
+  /** `night`: on the profile's dark band (light text, light buttons). */
+  tone?: 'light' | 'night';
+}) {
+  const night = tone === 'night';
   const t = useTranslations('people');
   const tp = useTranslations('profile');
   const { user } = useSession();
@@ -31,11 +49,11 @@ export function ProfileSocial({ userId, name, followers, following, reviews, dea
     const inner = (
       <>
         <span className="font-display block text-3xl leading-none font-black tabular-nums sm:text-4xl">{value}</span>
-        <span className="text-ink/70 block text-sm font-semibold">{label}</span>
+        <span className={`block text-sm font-semibold ${night ? 'text-[var(--paper)]/70' : 'text-ink/70'}`}>{label}</span>
       </>
     );
     return onClick ? (
-      <button type="button" onClick={onClick} className="hover:text-ink rounded-md text-left transition-opacity hover:opacity-80">
+      <button type="button" onClick={onClick} className="rounded-md text-left transition-opacity hover:opacity-80">
         {inner}
       </button>
     ) : (
@@ -44,7 +62,7 @@ export function ProfileSocial({ userId, name, followers, following, reviews, dea
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-x-8 gap-y-4" data-profile-social="">
+    <div className={`flex flex-wrap items-center justify-between gap-x-8 gap-y-5 ${night ? '[--cta-bg:var(--paper)] [--cta-fg:var(--night)] text-[var(--paper)]' : ''}`} data-profile-social="">
       <div className="flex flex-wrap gap-x-6 gap-y-3 sm:gap-x-8">
         {stat(deals, tp('deals', { count: deals }))}
         {stat(followers + delta, t('followers', { count: followers + delta }), () => setOpen('followers'))}

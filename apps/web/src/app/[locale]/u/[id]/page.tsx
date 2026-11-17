@@ -3,9 +3,8 @@ import type { Locale } from '@yoyo/shared';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { OwnerCard } from '@/components/item/OwnerCard';
 import { ProfileTabs } from '@/components/profile/ProfileTabs';
-import { ProfileSocial } from '@/components/people/ProfileSocial';
+import { ProfileHero } from '@/components/profile/ProfileHero';
 import { loadProfile } from '@/lib/catalog/server-api';
 import { profileSeo, seoMetadata } from '@/lib/seo';
 
@@ -39,21 +38,16 @@ export default async function ProfilePage({ params }: Props) {
   const { user, listings } = loaded.data;
 
   return (
-    <main className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-10 sm:px-8">
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-start">
-        <div className="flex flex-col gap-6">
-          <OwnerCard owner={user} heading="h1" />
-          <ProfileSocial userId={user.id} name={user.name} followers={user.followers ?? 0} following={user.following ?? 0} reviews={user.reviewCount} deals={user.completedDeals} />
-        </div>
-        {user.about && (
-          <section aria-labelledby="profile-about" className="flex flex-col gap-2">
-            <h2 id="profile-about" className="font-display text-display-s leading-[0.95] font-black uppercase">
-              {t('about')}
-            </h2>
-            <p className="max-w-[68ch] text-lg leading-relaxed whitespace-pre-line [overflow-wrap:anywhere]">{user.about}</p>
-          </section>
-        )}
-      </div>
+    <main className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-4 py-8 sm:px-8 sm:py-10">
+      <ProfileHero user={user} />
+      {user.about && (
+        <section aria-labelledby="profile-about" className="grid gap-3 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-10">
+          <h2 id="profile-about" className="font-display text-display-s leading-[0.95] font-black uppercase">
+            {t('about')}
+          </h2>
+          <p className="max-w-[68ch] text-lg leading-relaxed whitespace-pre-line [overflow-wrap:anywhere]">{user.about}</p>
+        </section>
+      )}
       <ProfileTabs listings={listings} name={user.name} userId={user.id} />
       <ReportButton target="USER" id={user.id} ownerId={user.id} className="self-start" />
     </main>

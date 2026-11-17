@@ -1003,7 +1003,8 @@
         "hour": "Usually answers within an hour",
         "hours": "Usually answers within a few hours",
         "day": "Usually answers within a day"
-      }
+      },
+      "identityVerified": "Identity confirmed"
     },
     "away": {
       "badge": "Away for now",
@@ -1065,7 +1066,13 @@
     "favorites": "Favourites",
     "noFavorites": "Nothing saved yet. Press the heart on an item to keep it here.",
     "deals": "{count, plural, one {deal} other {deals}}",
-    "findPeople": "Find people"
+    "findPeople": "Find people",
+    "hero": {
+      "cover": "Profile of {name}",
+      "rating": "Rating",
+      "noRating": "No rating yet",
+      "memberSince": "On Yoyo since {since}"
+    }
   },
   "consent": {
     "label": "Cookie choice",

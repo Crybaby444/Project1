@@ -37,6 +37,7 @@ export function availableItem(overrides: Partial<AvailableItem['listing']> = {})
       memberSince: '2026-03-01T10:00:00.000Z',
       emailVerified: true,
       phoneVerified: false,
+      identityVerified: false,
       completedDeals: 2,
       listingCount: 1,
       rating: null,

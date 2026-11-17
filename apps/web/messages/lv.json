@@ -1003,7 +1003,8 @@
         "hour": "Parasti atbild stundas laikā",
         "hours": "Parasti atbild dažu stundu laikā",
         "day": "Parasti atbild dienas laikā"
-      }
+      },
+      "identityVerified": "Identitāte apstiprināta"
     },
     "away": {
       "badge": "Uz laiku nav pieejams",
@@ -1065,7 +1066,13 @@
     "favorites": "Izlase",
     "noFavorites": "Vēl nekas nav saglabāts. Nospied sirsniņu uz lietas, lai to paturētu šeit.",
     "deals": "{count, plural, zero {darījumu} one {darījums} other {darījumi}}",
-    "findPeople": "Atrast cilvēkus"
+    "findPeople": "Atrast cilvēkus",
+    "hero": {
+      "cover": "{name} profils",
+      "rating": "Vērtējums",
+      "noRating": "Vēl nav vērtējuma",
+      "memberSince": "Yoyo kopš {since}"
+    }
   },
   "consent": {
     "label": "Sīkdatņu izvēle",
