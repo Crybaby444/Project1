@@ -150,7 +150,7 @@ export class ModerationService {
     const category = await this.prisma.category.findUniqueOrThrow({ where: { id: target.id }, select: { names: true } });
     await this.audit.record(admin, { action: 'LISTING_MOVED', targetType: 'LISTING', targetId: listing.id, summary: listing.title ?? '', before: { categoryId: listing.categoryId }, after: { categoryId: target.id } });
     if (listing.owner.deletedAt === null) {
-      void this.notifications.notify([listing.owner.id], { kind: 'LISTING', event: 'MOVED', listingId: listing.id, title: listing.title });
+      await this.notifications.notify([listing.owner.id], { kind: 'LISTING', event: 'MOVED', listingId: listing.id, title: listing.title });
     }
     if (listing.owner.deletedAt === null && wantsEmail(listing.owner, 'LISTINGS')) {
       void this.mail.sendListingMoved(listing.owner, {
