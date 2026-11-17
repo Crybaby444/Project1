@@ -62,8 +62,11 @@ export const CardTokenSchema = z.object({
 export type CardToken = z.infer<typeof CardTokenSchema>;
 
 /** A card token from POST /payments/card-tokens; it works for 15 minutes. */
-/** A test-card token (`tok_…`) or, with Stripe, a PaymentMethod from Stripe's own form (`pm_…`). */
-export const CardTokenFieldSchema = z.string().min(10).max(1000).regex(/^(tok|pm)_[A-Za-z0-9_.-]+$/, 'Not a card token');
+/**
+ * A test-card token (`tok_…`) or, with Stripe, a PaymentMethod from Stripe's own form (`pm_…`), or after
+ * 3-D Secure the PaymentIntent the bank confirmed (`pi_…`, paid again with it).
+ */
+export const CardTokenFieldSchema = z.string().min(10).max(1000).regex(/^(tok|pm|pi)_[A-Za-z0-9_.-]+$/, 'Not a card token');
 
 /** Bounds of wallet movements, in cents. */
 export const WALLET_LIMITS = {

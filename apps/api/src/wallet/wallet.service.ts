@@ -15,7 +15,9 @@ const overLimit = () => new AppError('WALLET_LIMIT', 409, `A wallet holds at mos
 /** The card token is not one the provider issued. */
 export const unknownCard = () => new AppError('VALIDATION_FAILED', 400, undefined, { cardToken: 'Enter the card again' });
 
-export const declined = (declineCode: string) => new AppError('PAYMENT_DECLINED', 402, undefined, undefined, { declineCode });
+/** A declined card; with 3-D Secure also what the site needs to ask the bank (clientSecret) and pay again (paymentIntent). */
+export const declined = (declineCode: string, action: { clientSecret?: string; paymentIntent?: string } = {}) =>
+  new AppError('PAYMENT_DECLINED', 402, undefined, undefined, { declineCode, ...action });
 
 /** The user's wallet (spec §4.5): its balance from the ledger, its history, card top-ups and payouts. */
 @Injectable()
@@ -98,7 +100,7 @@ export class WalletService {
       idempotencyKey: `top-up:${userId}:${randomUUID()}`,
       description: 'Yoyo wallet top-up',
     });
-    if (charge.status === 'DECLINED') throw charge.declineCode === 'invalid_token' ? unknownCard() : declined(charge.declineCode);
+    if (charge.status === 'DECLINED') throw charge.declineCode === 'invalid_token' ? unknownCard() : declined(charge.declineCode, { ...(charge.clientSecret && { clientSecret: charge.clientSecret }), ...(charge.paymentIntent && { paymentIntent: charge.paymentIntent }) });
     let payment;
     try {
       payment = await this.prisma.$transaction(async (tx) => {

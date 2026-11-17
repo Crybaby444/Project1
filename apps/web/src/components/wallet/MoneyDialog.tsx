@@ -11,6 +11,7 @@ import { Field } from '@/components/ui/Field';
 import { INPUT_CLASS } from '@/components/ui/inputs';
 import { useToast } from '@/components/ui/Toast';
 import { checkCard, tokenizeCard, type CardFields } from '@/lib/deals/card';
+import { confirmWithBank } from '@/lib/deals/stripe';
 import { useIdempotentMutation } from '@/lib/deals/idempotency';
 import { useMoney } from '@/lib/deals/money';
 import { walletKeys } from '@/lib/deals/queries';
@@ -136,7 +137,14 @@ export function MoneyDialog({
         const fingerprint = JSON.stringify(card);
         const current = token?.for === fingerprint ? token.token : await tokenizeCard(client, card);
         setToken({ for: fingerprint, token: current });
-        result = await move.run({ amountCents: cents, cardToken: current.token });
+        try {
+          result = await move.run({ amountCents: cents, cardToken: current.token });
+        } catch (first) {
+          // 3-D Secure: the bank confirms in Stripe's window, then the confirmed payment is used.
+          const confirmed = first instanceof ApiError && first.code === 'PAYMENT_DECLINED' ? await confirmWithBank(first.details) : null;
+          if (!confirmed) throw first;
+          result = await move.run({ amountCents: cents, cardToken: confirmed });
+        }
       }
       await queryClient.invalidateQueries({ queryKey: walletKeys.all });
       toast.show(result.text);

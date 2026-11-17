@@ -11,6 +11,8 @@ export interface FakeStripe {
   url: string;
   key: string;
   calls: { path: string; form: URLSearchParams; idempotencyKey: string | undefined }[];
+  /** What the bank's 3-D Secure page does when the person confirms: the intent succeeds. */
+  confirm(paymentIntent: string): void;
   close(): Promise<void>;
 }
 
@@ -27,6 +29,7 @@ export async function startFakeStripe(): Promise<FakeStripe> {
   const calls: FakeStripe['calls'] = [];
   const answered = new Map<string, { status: number; json: unknown }>();
   let n = 0;
+  const intents = new Map<string, { id: string; status: string; amount: number; currency: string; payment_method: { id: string; card: { brand: string; last4: string } } }>();
   const server: Server = createServer((req, res) => {
     void (async () => {
       const send = (status: number, json: unknown) => res.writeHead(status, { 'content-type': 'application/json' }).end(JSON.stringify(json));
@@ -49,9 +52,18 @@ export async function startFakeStripe(): Promise<FakeStripe> {
           status = 402;
           json = { error: { type: 'card_error', code: 'card_declined', decline_code: 'generic_decline', message: 'Your card was declined.' } };
         } else if (pm === 'pm_card_authenticationRequired') {
-          json = { id: `pi_${n}`, status: 'requires_action', client_secret: `pi_${n}_secret`, payment_method: { id: pm, card } };
+          intents.set(`pi_3Test${String(n).padStart(10, '0')}`, { id: `pi_3Test${String(n).padStart(10, '0')}`, status: 'requires_action', amount: Number(form.get('amount')), currency: form.get('currency') ?? 'eur', payment_method: { id: pm, card } });
+          json = { id: `pi_3Test${String(n).padStart(10, '0')}`, status: 'requires_action', client_secret: `pi_3Test${String(n).padStart(10, '0')}_secret`, payment_method: { id: pm, card } };
         } else {
-          json = { id: `pi_${n}`, status: 'succeeded', amount: Number(form.get('amount')), currency: form.get('currency'), payment_method: { id: pm, card } };
+          json = { id: `pi_3Test${String(n).padStart(10, '0')}`, status: 'succeeded', amount: Number(form.get('amount')), currency: form.get('currency'), payment_method: { id: pm, card } };
+        }
+      } else if (req.method === 'GET' && req.url?.startsWith('/v1/payment_intents/')) {
+        const id = decodeURIComponent(req.url.slice('/v1/payment_intents/'.length).split('?')[0]!);
+        const intent = intents.get(id);
+        if (intent) json = intent;
+        else {
+          status = 404;
+          json = { error: { type: 'invalid_request_error', message: 'No such payment_intent' } };
         }
       } else if (req.method === 'POST' && req.url === '/v1/refunds') {
         n += 1;
@@ -74,5 +86,9 @@ export async function startFakeStripe(): Promise<FakeStripe> {
   });
   await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
   const { port } = server.address() as AddressInfo;
-  return { url: `http://127.0.0.1:${port}`, key, calls, close: () => new Promise((resolve) => server.close(() => resolve())) };
+  const confirm = (id: string) => {
+    const intent = intents.get(id);
+    if (intent) intent.status = 'succeeded';
+  };
+  return { url: `http://127.0.0.1:${port}`, key, calls, confirm, close: () => new Promise((resolve) => server.close(() => resolve())) };
 }

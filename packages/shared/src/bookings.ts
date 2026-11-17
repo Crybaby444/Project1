@@ -284,7 +284,7 @@ export const BookingEventInputSchema = z.discriminatedUnion('type', [
     .object({
       type: z.literal('PAY'),
       method: z.enum(PAYMENT_METHODS),
-      cardToken: z.string().min(10).max(1000).regex(/^tok_[A-Za-z0-9_.-]+$/, 'Not a card token').optional(),
+      cardToken: z.string().min(10).max(1000).regex(/^(tok|pm|pi)_[A-Za-z0-9_.-]+$/, 'Not a card token').optional(),
     })
     .refine((pay) => (pay.method === 'CARD') === (pay.cardToken !== undefined), {
       path: ['cardToken'],

@@ -2,7 +2,13 @@ import type { CardBrand, CardInput, CardToken, WalletPayKind } from '@yoyo/share
 
 export type ChargeResult =
   | { status: 'SUCCEEDED'; ref: string; brand: CardBrand; last4: string }
-  | { status: 'DECLINED'; declineCode: string };
+  | {
+      status: 'DECLINED';
+      declineCode: string;
+      /** 3-D Secure: the bank must confirm in the browser (Stripe.js handleNextAction), then pay again with `paymentIntent`. */
+      clientSecret?: string;
+      paymentIntent?: string;
+    };
 
 /**
  * Where money comes from and goes to outside Yoyo (spec §0): today the test card provider, later a real

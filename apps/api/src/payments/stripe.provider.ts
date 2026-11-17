@@ -55,7 +55,9 @@ export class StripePaymentProvider implements PaymentProvider {
   }
 
   async charge(input: { token: string; amountCents: number; idempotencyKey: string; description: string }): Promise<ChargeResult> {
-    const { status, json } = await this.call<{ id: string; status: string; payment_method?: { id: string; card?: { brand: string; last4: string } } }>(
+    // After 3-D Secure the site pays again with the confirmed PaymentIntent itself: check it, charge nothing new.
+    if (input.token.startsWith('pi_')) return this.confirmed(input.token, input.amountCents);
+    const { status, json } = await this.call<{ id: string; status: string; client_secret?: string; payment_method?: { id: string; card?: { brand: string; last4: string } } }>(
       '/v1/payment_intents',
       {
         amount: String(input.amountCents),
@@ -76,12 +78,28 @@ export class StripePaymentProvider implements PaymentProvider {
       this.logger.error(`charge failed: ${status} ${json.error?.message ?? ''}`);
       throw new AppError('INTERNAL', 502, 'The payment provider did not answer as expected');
     }
-    if (json.status === 'requires_action') return { status: 'DECLINED', declineCode: 'authentication_required' };
+    if (json.status === 'requires_action') {
+      return { status: 'DECLINED', declineCode: 'authentication_required', ...(json.client_secret && { clientSecret: json.client_secret }), paymentIntent: json.id };
+    }
     if (json.status !== 'succeeded') return { status: 'DECLINED', declineCode: json.status };
     const card = json.payment_method?.card;
     const described = { brand: BRANDS[card?.brand ?? ''] ?? ('visa' as CardBrand), last4: card?.last4 ?? '0000' };
     this.cards.set(input.token, described);
     return { status: 'SUCCEEDED', ref: json.id, ...described };
+  }
+
+  /** A PaymentIntent the bank confirmed in the browser: it must have succeeded, in euros, for this amount. */
+  private async confirmed(id: string, amountCents: number): Promise<ChargeResult> {
+    const res = await fetch(`${this.apiUrl}/v1/payment_intents/${encodeURIComponent(id)}?expand[]=payment_method`, {
+      headers: { authorization: `Bearer ${this.options.secretKey}`, 'stripe-version': '2024-06-20' },
+      signal: AbortSignal.timeout(20_000),
+    });
+    const json = (await res.json()) as { id?: string; status?: string; amount?: number; currency?: string; payment_method?: { id: string; card?: { brand: string; last4: string } } } & StripeError;
+    if (!res.ok || json.error || json.id !== id) return { status: 'DECLINED', declineCode: 'invalid_token' };
+    if (json.status !== 'succeeded') return { status: 'DECLINED', declineCode: json.status === 'requires_payment_method' ? 'authentication_failed' : (json.status ?? 'card_declined') };
+    if (json.amount !== amountCents || json.currency !== 'eur') return { status: 'DECLINED', declineCode: 'amount_mismatch' };
+    const card = json.payment_method?.card;
+    return { status: 'SUCCEEDED', ref: id, brand: BRANDS[card?.brand ?? ''] ?? ('visa' as CardBrand), last4: card?.last4 ?? '0000' };
   }
 
   async refund(input: { paymentRef: string; amountCents: number; idempotencyKey: string }): Promise<{ ref: string }> {

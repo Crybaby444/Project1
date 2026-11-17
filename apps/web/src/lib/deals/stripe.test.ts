@@ -30,4 +30,16 @@ describe('card form with Stripe on (owner, 2026-11-16: ready, switched on with t
     expect(post).not.toHaveBeenCalled();
     expect(createPaymentMethod).toHaveBeenCalledWith(expect.objectContaining({ type: 'card', billing_details: { name: 'Anna Test' } }));
   });
+
+  it('3-D Secure: confirms with the bank and answers the intent to pay again with; nothing to confirm without a secret', async () => {
+    vi.stubEnv('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY', 'pk_test_123');
+    const handleNextAction = vi.fn(async () => ({ paymentIntent: { id: 'pi_123', status: 'succeeded' } }));
+    window.Stripe = (() => ({ elements: vi.fn(), createPaymentMethod: vi.fn(), handleNextAction })) as unknown as Window['Stripe'];
+    const { confirmWithBank } = await import('./stripe');
+    expect(await confirmWithBank({ declineCode: 'authentication_required', clientSecret: 'pi_123_secret', paymentIntent: 'pi_123' })).toBe('pi_123');
+    expect(handleNextAction).toHaveBeenCalledWith({ clientSecret: 'pi_123_secret' });
+    expect(await confirmWithBank({ declineCode: 'card_declined' })).toBeNull();
+    handleNextAction.mockResolvedValueOnce({ error: { message: 'cancelled' } } as never);
+    expect(await confirmWithBank({ clientSecret: 'pi_9_secret', paymentIntent: 'pi_9' })).toBeNull();
+  });
 });

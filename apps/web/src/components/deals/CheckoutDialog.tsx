@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { Dialog } from '@/components/ui/Dialog';
 import { useToast } from '@/components/ui/Toast';
 import { checkCard, tokenizeCard, type CardFields } from '@/lib/deals/card';
+import { confirmWithBank } from '@/lib/deals/stripe';
 import { useMoney } from '@/lib/deals/money';
 import { useDealAction, useWallet } from '@/lib/deals/queries';
 import { useErrorText } from '@/lib/forms/error-text';
@@ -63,7 +64,14 @@ export function CheckoutDialog({ booking, open, onClose }: { booking: BookingVie
         const fingerprint = JSON.stringify(card);
         const current = token?.for === fingerprint ? token.token : await tokenizeCard(client, card);
         setToken({ for: fingerprint, token: current });
-        await action.run({ type: 'PAY', method: 'CARD', cardToken: current.token });
+        try {
+          await action.run({ type: 'PAY', method: 'CARD', cardToken: current.token });
+        } catch (first) {
+          // 3-D Secure: the bank confirms in Stripe's window, then the confirmed payment is used.
+          const confirmed = first instanceof ApiError && first.code === 'PAYMENT_DECLINED' ? await confirmWithBank(first.details) : null;
+          if (!confirmed) throw first;
+          await action.run({ type: 'PAY', method: 'CARD', cardToken: confirmed });
+        }
       }
       setCard(EMPTY_CARD);
       setToken(null);
