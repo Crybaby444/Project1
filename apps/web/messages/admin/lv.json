@@ -437,6 +437,14 @@
         "ledger": "Virsgrāmatas ieraksti"
       },
       "download": "Lejupielādēt",
+      "demo": {
+        "title": "Sludinājumu piemēri",
+        "intro": "24 sludinājumu piemēri Latvijai ar pilniem aprakstiem un attēliem, atzīmēti kā “Piemērs” un nekad netiek iznomāti. Pievienojiet tos, lai parādītu, kā vietne darbojas; noņemiet, kad parādās īsti sludinājumi.",
+        "count": "Vietnē {count} no {total}",
+        "add": "Pievienot piemērus",
+        "remove": "Noņemt visus piemērus",
+        "failed": "Neizdevās. Mēģiniet vēlreiz."
+      },
       "errors": {
         "title": "Servera kļūdas",
         "none": "Pēdējās 30 dienās negaidītu kļūdu nav.",

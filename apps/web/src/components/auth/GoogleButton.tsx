@@ -43,7 +43,7 @@ function AppleMark() {
 }
 
 const BUTTON =
-  'rounded-pill ease-yoyo inline-flex min-h-12 items-center justify-center gap-3 border px-6 text-[15px] font-bold tracking-[0.03em] transition-[transform,background-color] duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96]';
+  'rounded-pill ease-yoyo inline-flex min-h-12 items-center justify-center gap-3 border px-6 text-base font-bold tracking-[0.03em] transition-[transform,background-color] duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96]';
 
 /**
  * "Continue with Google" and "Continue with Apple" (owner, 2026-11-16), each only where this deployment

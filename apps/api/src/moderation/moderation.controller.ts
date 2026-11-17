@@ -1,6 +1,7 @@
-import { Body, Controller, Get, HttpCode, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import {
+  AdminEditListingRequestSchema,
   ADMIN_LISTINGS_PAGE_SIZE,
   AdminListingResponseSchema,
   AdminListingsQuerySchema,
@@ -29,6 +30,8 @@ class RejectListingDto extends createZodDto(RejectListingRequestSchema) {}
 class MoveListingCategoryDto extends createZodDto(MoveListingCategoryRequestSchema) {}
 
 /** Listing moderation (spec §4.8). Administrators only. */
+class AdminEditListingDto extends createZodDto(AdminEditListingRequestSchema) {}
+
 @ApiTags('admin')
 @Controller('admin/listings')
 @UseGuards(AuthGuard, RolesGuard)
@@ -42,6 +45,13 @@ export class ModerationController {
   @ApiErrors(400, 401, 403)
   async queue(@Query() query: AdminListingsQueryDto): Promise<AdminListingsResponse> {
     return this.moderation.queue(query.status, query.page, query.category);
+  }
+
+  @Patch(':id')
+  @ZodResponse({ status: 200, type: AdminListingResponseDto, description: 'The listing with the administrator’s fixes; logged, the owner is told' })
+  @ApiErrors(400, 401, 403, 404, 409)
+  async edit(@CurrentUser() admin: PublicUser, @Param('id') id: string, @Body() body: AdminEditListingDto): Promise<AdminListingResponse> {
+    return { listing: await this.moderation.edit(id, admin, body) };
   }
 
   @Post(':id/category')

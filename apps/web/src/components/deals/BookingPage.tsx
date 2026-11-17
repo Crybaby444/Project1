@@ -28,7 +28,7 @@ export function BookingPage({ listingId }: { listingId: string }) {
             {title}
           </h1>
           {listing && terms.data && (
-            <p className="flex flex-wrap gap-x-4 gap-y-1 text-[15px]">
+            <p className="flex flex-wrap gap-x-4 gap-y-1 text-base">
               <span>{t('from', { name: listing.ownerName })}</span>
               {listing.city && <span>{listing.district ? t('where', { district: listing.district, city: listing.city }) : listing.city}</span>}
               <span className="font-bold">{t('perDay', { price: money(terms.data.pricing.dailyCents) })}</span>

@@ -23,6 +23,7 @@ export function ownerListing(overrides: Partial<OwnerListing> = {}): OwnerListin
     country: null,
     timeZone: 'Europe/Riga',
     rules: { preset: [], custom: [] },
+    cancellationPolicy: 'FLEXIBLE',
     photos: [],
     unavailability: [],
     publishedAt: null,

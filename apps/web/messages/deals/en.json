@@ -363,7 +363,8 @@
       "invalid_token": "Enter the card again."
     },
     "paid": "Paid. The deposit is frozen until the item comes back.",
-    "cancel": "Not now"
+    "cancel": "Not now",
+    "stripeFailed": "The card form did not load. Check your connection and try again."
   },
   "wallet": {
     "title": "Wallet",
@@ -534,7 +535,8 @@
       "LISTING": {
         "APPROVED": "“{title}” is published",
         "REJECTED": "“{title}” needs changes",
-        "MOVED": "“{title}” moved to another category"
+        "MOVED": "“{title}” moved to another category",
+        "EDITED": "An administrator corrected “{title}”"
       },
       "REVIEW": {
         "RECEIVED": "New review after “{title}”: write yours to read it"

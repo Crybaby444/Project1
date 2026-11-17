@@ -1,4 +1,6 @@
 import type { ApiClient } from '@yoyo/api-client';
+import { CARD_BRANDS } from '@yoyo/shared';
+import { stripeCardToken, stripeEnabled } from './stripe';
 import type { CardBrand, CardToken } from '@yoyo/shared';
 import { unwrap } from '@/lib/session/api-error';
 
@@ -57,6 +59,8 @@ export type CardFields = { number: string; expiry: string; cvc: string; holder: 
 export type CardProblem = Partial<Record<keyof CardFields, 'number' | 'expiry' | 'cvc' | 'holder'>>;
 
 export function checkCard(fields: CardFields, now: Date = new Date()): CardProblem {
+  // Stripe's field checks the number, date and code itself; only the holder is ours.
+  if (stripeEnabled()) return fields.holder.trim().length >= 2 ? {} : { holder: 'holder' };
   const problems: CardProblem = {};
   const brand = brandOf(fields.number);
   if (!luhn(fields.number) || brand === null) problems.number = 'number';
@@ -84,6 +88,11 @@ export const TEST_CARDS = [
  * Stripe it becomes Stripe.js, and nothing else on the site changes.
  */
 export async function tokenizeCard(client: ApiClient, fields: CardFields): Promise<CardToken> {
+  // With Stripe on, the card is in Stripe's own field: Stripe makes the token, Yoyo never sees the number.
+  if (stripeEnabled()) {
+    const pm = await stripeCardToken(fields.holder.trim());
+    return { ...pm, brand: (CARD_BRANDS as readonly string[]).includes(pm.brand) ? (pm.brand as CardToken['brand']) : 'visa' };
+  }
   const expiry = parseExpiry(fields.expiry)!;
   return unwrap(
     client.POST('/api/v1/payments/card-tokens', {

@@ -142,7 +142,7 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
     <div className={`grid gap-6 ${layout === 'wide' ? 'lg:grid-cols-[minmax(0,1fr)_22rem]' : ''}`} data-booking-panel="">
       <section aria-labelledby="booking-dates" className="border-ink/15 flex flex-col gap-4 border-t pt-6">
         <div className="flex flex-col gap-1">
-          <h2 id="booking-dates" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
+          <h2 id="booking-dates" className="font-display text-display-s leading-[0.95] font-black uppercase">
             {t('dates')}
           </h2>
           <p id={hintId} className="text-sm">

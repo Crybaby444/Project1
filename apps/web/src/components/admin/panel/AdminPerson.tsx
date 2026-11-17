@@ -75,9 +75,9 @@ function Body({ d }: { d: AdminUserDetail }) {
     <>
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex min-w-0 flex-col gap-2">
-          <h1 className="font-display text-[clamp(2.4rem,4.6vw,3.8rem)] leading-[0.92] font-black uppercase [overflow-wrap:anywhere]">{d.user.name}</h1>
+          <h1 className="font-display text-display-m leading-[0.92] font-black uppercase [overflow-wrap:anywhere]">{d.user.name}</h1>
           <p className="text-ink/80 [overflow-wrap:anywhere]">{d.user.email}</p>
-          <ul className="flex flex-wrap gap-1.5 text-[12px] font-bold">
+          <ul className="flex flex-wrap gap-1.5 text-xs font-bold">
             <li className={`rounded-pill px-2.5 py-0.5 ${state === 'active' ? 'border-ink/25 border' : 'bg-ink text-canvas'}`}>{tu(state)}</li>
             <li className="border-ink/25 rounded-pill border px-2.5 py-0.5">{tu(`roles.${d.user.role}`)}</li>
             <li className="border-ink/25 rounded-pill border px-2.5 py-0.5">{d.user.emailVerified ? tu('verified') : tu('unverified')}</li>
@@ -120,8 +120,8 @@ function Body({ d }: { d: AdminUserDetail }) {
           ] as const
         ).map(([key, value]) => (
           <div key={key} className="border-ink/10 flex flex-col gap-1 border-b px-1 py-4 sm:px-3">
-            <dt className="text-ink/70 text-[13px] font-semibold">{t(`stats.${key}`)}</dt>
-            <dd className={`font-display text-[1.9rem] leading-none font-black tabular-nums ${key === 'reportsAgainst' && d.stats.reportsAgainst > 0 ? 'underline decoration-2 underline-offset-4' : ''}`}>
+            <dt className="text-ink/70 text-sm font-semibold">{t(`stats.${key}`)}</dt>
+            <dd className={`font-display text-3xl leading-none font-black tabular-nums ${key === 'reportsAgainst' && d.stats.reportsAgainst > 0 ? 'underline decoration-2 underline-offset-4' : ''}`}>
               {value}
             </dd>
           </div>
@@ -174,8 +174,8 @@ function Body({ d }: { d: AdminUserDetail }) {
                 <div className="flex flex-wrap items-center gap-3">
                   <Stars value={r.rating} size={13} />
                   <span className="text-sm font-semibold">{r.author}</span>
-                  <span className="text-ink/70 text-[13px]">{date.format(new Date(r.createdAt))}</span>
-                  {r.hidden && <span className="bg-ink text-canvas rounded-pill px-2 py-0.5 text-[11px] font-bold">{t('hidden')}</span>}
+                  <span className="text-ink/70 text-sm">{date.format(new Date(r.createdAt))}</span>
+                  {r.hidden && <span className="bg-ink text-canvas rounded-pill px-2 py-0.5 text-xs font-bold">{t('hidden')}</span>}
                   <button
                     type="button"
                     onClick={() => (r.hidden ? act.mutate({ kind: 'showReview', reviewId: r.id }, done) : setAsk({ kind: 'hide', id: r.id }))}
@@ -184,7 +184,7 @@ function Body({ d }: { d: AdminUserDetail }) {
                     {r.hidden ? t('show') : t('hide')}
                   </button>
                 </div>
-                <p className="text-[15px] [overflow-wrap:anywhere]">{r.text}</p>
+                <p className="text-base [overflow-wrap:anywhere]">{r.text}</p>
               </li>
             ))}
           </Rows>
@@ -195,11 +195,11 @@ function Body({ d }: { d: AdminUserDetail }) {
             {d.reports.map((r) => (
               <li key={r.id} className="flex flex-col gap-1 py-3">
                 <p className="flex flex-wrap items-center gap-2 text-sm">
-                  <span className="bg-ink text-canvas rounded-pill px-2 py-0.5 text-[12px] font-bold">{trs.has(r.reason) ? trs(r.reason) : r.reason}</span>
+                  <span className="bg-ink text-canvas rounded-pill px-2 py-0.5 text-xs font-bold">{trs.has(r.reason) ? trs(r.reason) : r.reason}</span>
                   <span className="text-ink/70">{date.format(new Date(r.createdAt))}</span>
-                  <span className="border-ink/25 rounded-pill border px-2 py-0.5 text-[12px] font-bold">{tst(r.status.toLowerCase() as 'open' | 'resolved' | 'dismissed')}</span>
+                  <span className="border-ink/25 rounded-pill border px-2 py-0.5 text-xs font-bold">{tst(r.status.toLowerCase() as 'open' | 'resolved' | 'dismissed')}</span>
                 </p>
-                {r.note && <p className="text-[15px] [overflow-wrap:anywhere]">{r.note}</p>}
+                {r.note && <p className="text-base [overflow-wrap:anywhere]">{r.note}</p>}
               </li>
             ))}
           </Rows>
@@ -229,7 +229,7 @@ function Body({ d }: { d: AdminUserDetail }) {
             {d.notes.map((n) => (
               <li key={n.id} className="py-3">
                 <p className="whitespace-pre-wrap [overflow-wrap:anywhere]">{n.text}</p>
-                <p className="text-ink/70 mt-1 text-[13px]">
+                <p className="text-ink/70 mt-1 text-sm">
                   {n.admin} · {moment.format(new Date(n.createdAt))}
                 </p>
               </li>

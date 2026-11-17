@@ -162,7 +162,7 @@ export function DateRangePicker({
           const captionId = `${keysId}-${monthKey(month)}`;
           return (
             <table key={monthKey(month)} role="grid" aria-labelledby={captionId} className="w-full table-fixed border-collapse">
-              <caption id={captionId} className="font-display pb-3 text-left text-[1.7rem] leading-none font-black uppercase">
+              <caption id={captionId} className="font-display pb-3 text-left text-3xl leading-none font-black uppercase">
                 {monthHeading.format(asDate(`${monthKey(month)}-01`))}
               </caption>
               <thead>

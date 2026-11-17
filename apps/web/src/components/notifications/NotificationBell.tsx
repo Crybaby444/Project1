@@ -57,7 +57,7 @@ export function NotificationBell() {
           <path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0" />
         </svg>
         {unread > 0 && (
-          <span aria-hidden="true" className="bg-ink text-canvas border-canvas absolute -top-1 -right-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full border-2 px-1 text-[10px] font-bold tabular-nums">
+          <span aria-hidden="true" className="bg-ink text-canvas border-canvas absolute -top-1 -right-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full border-2 px-1 text-xs font-bold tabular-nums">
             {unread > 9 ? '9+' : unread}
           </span>
         )}

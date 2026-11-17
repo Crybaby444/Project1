@@ -27,7 +27,7 @@ export function MyShops() {
     <div className="flex flex-col gap-8">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="font-display text-[clamp(2.6rem,6vw,4.4rem)] leading-[0.9] font-black uppercase">{t('mineTitle')}</h1>
+          <h1 className="font-display text-display-l leading-[0.9] font-black uppercase">{t('mineTitle')}</h1>
           <p className="text-ink/75 max-w-[60ch]">{t('mineIntro')}</p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -45,10 +45,10 @@ export function MyShops() {
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {shops.data?.map((s) => (
           <li key={s.id} className="border-ink/15 bg-surface rounded-media flex flex-col gap-3 border p-5" data-my-shop={s.id}>
-            <Link href={`/shops/${s.id}`} className="font-display text-[1.8rem] leading-none font-black uppercase hover:underline">
+            <Link href={`/shops/${s.id}`} className="font-display text-3xl leading-none font-black uppercase hover:underline">
               {s.name}
             </Link>
-            <span className="text-ink/70 text-[13px] font-semibold">{t('itemCount', { count: s.listingIds.length })}</span>
+            <span className="text-ink/70 text-sm font-semibold">{t('itemCount', { count: s.listingIds.length })}</span>
             <div className="flex gap-2">
               <Button variant="ghost" onClick={() => setEditing(s)}>
                 {t('edit')}
@@ -112,25 +112,25 @@ function ShopEditor({ shop, onClose }: { shop: MyShop | null; onClose(): void })
         }}
       >
         <div className="flex flex-col gap-1.5">
-          <label htmlFor={nameId} className="text-[13px] font-bold tracking-[0.03em] uppercase">
+          <label htmlFor={nameId} className="text-sm font-bold tracking-[0.03em] uppercase">
             {t('name')}
           </label>
           <input id={nameId} value={name} maxLength={SHOP_LIMITS.name} onChange={(e) => setName(e.target.value)} className={INPUT_CLASS} />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label htmlFor={aboutId} className="text-[13px] font-bold tracking-[0.03em] uppercase">
+          <label htmlFor={aboutId} className="text-sm font-bold tracking-[0.03em] uppercase">
             {t('about')}
           </label>
           <textarea id={aboutId} value={about} rows={3} maxLength={SHOP_LIMITS.about} onChange={(e) => setAbout(e.target.value)} className={`${INPUT_CLASS} min-h-24 rounded-[22px] py-2.5`} />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label htmlFor={catId} className="text-[13px] font-bold tracking-[0.03em] uppercase">
+          <label htmlFor={catId} className="text-sm font-bold tracking-[0.03em] uppercase">
             {t('category')}
           </label>
           <Select id={catId} value={categoryId} onChange={setCategoryId} options={options} />
         </div>
         <fieldset className="flex flex-col gap-2">
-          <legend className="mb-1 text-[13px] font-bold tracking-[0.03em] uppercase">{t('items')}</legend>
+          <legend className="mb-1 text-sm font-bold tracking-[0.03em] uppercase">{t('items')}</legend>
           {mine.length === 0 && <p className="text-ink/75 text-sm">{t('noItemsYet')}</p>}
           <ul className="border-ink/15 divide-ink/10 max-h-72 divide-y overflow-y-auto rounded-[18px] border">
             {mine.map((l) => (
@@ -150,7 +150,7 @@ function ShopEditor({ shop, onClose }: { shop: MyShop | null; onClose(): void })
           </ul>
           {picked.length > 1 && (
             <div className="flex flex-col gap-1">
-              <p className="text-ink/70 text-[13px] font-semibold">{t('order')}</p>
+              <p className="text-ink/70 text-sm font-semibold">{t('order')}</p>
               <ol className="flex flex-col gap-1">
                 {picked.map((id, i) => (
                   <li key={id} className="flex items-center gap-2 text-sm">

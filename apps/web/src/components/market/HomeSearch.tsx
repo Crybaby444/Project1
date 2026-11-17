@@ -3,21 +3,23 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { RangeCalendar } from '@/components/catalog/RangeCalendar';
-import { Select } from '@/components/ui/Select';
+import { CityInput, type CityChoice } from '@/components/catalog/CityInput';
+import type { Country } from '@yoyo/shared';
 import { useRouter } from '@/i18n/navigation';
 
 import type { Range } from '@/lib/catalog/range';
 
 /**
- * The home's search, in its working form (the action visitors come for): what, where (a district of Riga
- * that has items) and when (a period on the site's own calendar). Sends to /search with q, district, from, to.
+ * The home's search, in its working form (the action visitors come for): what, where (any city of the
+ * visitor's country, typed with suggestions) and when (a period on the site's own calendar). Sends to
+ * /search with q, city, from, to.
  */
-export function HomeSearch({ districts, today }: { districts: { slug: string; district: string; count: number }[]; today: string }) {
+export function HomeSearch({ country, today }: { country: Country; today: string }) {
   const t = useTranslations('market.search');
   const locale = useLocale();
   const router = useRouter();
   const [q, setQ] = useState('');
-  const [district, setDistrict] = useState('');
+  const [city, setCity] = useState<CityChoice | null>(null);
   const [range, setRange] = useState<Range | null>(null);
   const [calendar, setCalendar] = useState(false);
   const ids = { q: useId(), where: useId(), when: useId() };
@@ -41,7 +43,7 @@ export function HomeSearch({ districts, today }: { districts: { slug: string; di
     event.preventDefault();
     const params = new URLSearchParams();
     if (q.trim()) params.set('q', q.trim());
-    if (district) params.set('district', district);
+    if (city) params.set('city', city.slug);
     if (range) {
       params.set('from', range.start);
       params.set('to', range.end ?? range.start);
@@ -51,7 +53,7 @@ export function HomeSearch({ districts, today }: { districts: { slug: string; di
   }
 
   const cell = 'flex min-w-0 flex-col justify-center gap-0.5 px-5 py-2.5';
-  const caption = 'text-ink/60 text-[11px] font-bold tracking-[0.06em] uppercase';
+  const caption = 'text-ink/60 text-xs font-bold tracking-[0.06em] uppercase';
   return (
     <form role="search" onSubmit={submit} data-home-search="" className="border-ink bg-surface relative grid w-full grid-cols-1 rounded-[28px] border sm:rounded-[999px] md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_minmax(0,1fr)_auto]">
       <div className={`${cell} max-md:border-ink/15 max-md:border-b`}>
@@ -65,26 +67,20 @@ export function HomeSearch({ districts, today }: { districts: { slug: string; di
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder={t('whatPlaceholder')}
-          className="placeholder:text-ink/60 min-w-0 bg-transparent text-[17px] font-semibold outline-none [&::-webkit-search-cancel-button]:hidden"
+          className="placeholder:text-ink/60 min-w-0 bg-transparent text-lg font-semibold outline-none [&::-webkit-search-cancel-button]:hidden"
         />
       </div>
       <div className={`${cell} border-ink/15 max-md:border-b md:border-l`}>
         <label htmlFor={ids.where} className={caption}>
           {t('where')}
         </label>
-        <Select
-          id={ids.where}
-          value={district}
-          onChange={setDistrict}
-          className="[&_button]:min-h-0 [&_button]:border-0 [&_button]:bg-transparent [&_button]:px-0 [&_button]:text-[17px] [&_button]:font-semibold"
-          options={[{ value: '', label: t('anywhere') }, ...districts.map((d) => ({ value: d.slug, label: `${d.district} · ${d.count}` }))]}
-        />
+        <CityInput id={ids.where} country={country} value={city} onChange={setCity} className="text-lg font-semibold" />
       </div>
       <div ref={popover} className={`${cell} border-ink/15 relative md:border-l`}>
         <span id={ids.when} aria-hidden="true" className={caption}>
           {t('when')}
         </span>
-        <button type="button" aria-label={`${t('when')}: ${range ? (range.end && range.end !== range.start ? `${label(range.start)} – ${label(range.end)}` : label(range.start)) : t('anyDays')}`} aria-expanded={calendar} onClick={() => setCalendar((v) => !v)} className="text-left text-[17px] font-semibold">
+        <button type="button" aria-label={`${t('when')}: ${range ? (range.end && range.end !== range.start ? `${label(range.start)} – ${label(range.end)}` : label(range.start)) : t('anyDays')}`} aria-expanded={calendar} onClick={() => setCalendar((v) => !v)} className="text-left text-lg font-semibold">
           {range ? (range.end && range.end !== range.start ? `${label(range.start)} – ${label(range.end)}` : label(range.start)) : <span className="text-ink/60">{t('anyDays')}</span>}
         </button>
         {calendar && (
@@ -108,7 +104,7 @@ export function HomeSearch({ districts, today }: { districts: { slug: string; di
       <div className="p-2">
         <button
           type="submit"
-          className="bg-cta text-cta-fg rounded-pill ease-yoyo flex h-full min-h-12 w-full items-center justify-center gap-2 px-6 text-[14px] font-bold tracking-[0.04em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.97]"
+          className="bg-cta text-cta-fg rounded-pill ease-yoyo flex h-full min-h-12 w-full items-center justify-center gap-2 px-6 text-sm font-bold tracking-[0.04em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.97]"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5">
             <circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" strokeWidth="2" />

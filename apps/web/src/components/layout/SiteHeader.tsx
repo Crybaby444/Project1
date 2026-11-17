@@ -32,7 +32,7 @@ function MessagesLink() {
         <path d="M4 5.5h16v10.5H9l-5 4z" />
       </svg>
       {unread > 0 && (
-        <span className="bg-ink text-canvas ring-canvas absolute -top-1 -right-1 grid min-h-5 min-w-5 place-items-center rounded-full px-1 text-[10px] font-bold tabular-nums ring-2">
+        <span className="bg-ink text-canvas ring-canvas absolute -top-1 -right-1 grid min-h-5 min-w-5 place-items-center rounded-full px-1 text-xs font-bold tabular-nums ring-2">
           {unread > 9 ? '9+' : unread}
         </span>
       )}
@@ -67,7 +67,7 @@ export function SiteHeader({ catalog = [], country = HOME_COUNTRY }: { catalog?:
         <div className="border-ink/10 bg-canvas pointer-events-auto relative mx-auto flex h-14 max-w-[1280px] items-center gap-2 rounded-full border pr-2 pl-4 shadow-[0_16px_40px_-22px_rgba(10,11,14,0.45),0_1px_0_rgba(255,255,255,0.6)_inset] backdrop-blur-xl lg:h-[60px] lg:gap-3 lg:pl-5">
           <Link href="/" data-site-brand aria-label={tn('homeLabel')} className="rounded-pill flex shrink-0 items-center gap-2 pr-1">
             <Mark size={22} />
-            <Wordmark className="text-[24px] lg:text-[26px]" />
+            <Wordmark className="text-2xl lg:text-2xl" />
           </Link>
 
           <nav aria-label={tn('main')} className="hidden lg:block">
@@ -84,7 +84,7 @@ export function SiteHeader({ catalog = [], country = HOME_COUNTRY }: { catalog?:
                   data-nav-item=""
                   data-nav-href={href}
                   aria-current={active === href ? 'page' : undefined}
-                  className={`rounded-pill flex h-10 items-center px-4 text-[14.5px] font-semibold whitespace-nowrap transition-colors duration-200 ${active === href ? 'text-ink' : 'text-ink/75 hover:text-ink'}`}
+                  className={`rounded-pill flex h-10 items-center px-4 text-sm font-semibold whitespace-nowrap transition-colors duration-200 ${active === href ? 'text-ink' : 'text-ink/75 hover:text-ink'}`}
                 >
                   {label}
                 </Link>
@@ -112,7 +112,7 @@ export function SiteHeader({ catalog = [], country = HOME_COUNTRY }: { catalog?:
                 {user.role !== 'ADMIN' && (
                   <Link
                     href="/listings/new"
-                    className="group bg-ink text-canvas rounded-pill ease-yoyo hidden h-10 items-center gap-1.5 px-4 text-[13px] font-bold tracking-[0.03em] uppercase shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition-transform duration-200 hover:-translate-y-0.5 lg:inline-flex"
+                    className="group bg-ink text-canvas rounded-pill ease-yoyo hidden h-10 items-center gap-1.5 px-4 text-sm font-bold tracking-[0.03em] uppercase shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition-transform duration-200 hover:-translate-y-0.5 lg:inline-flex"
                   >
                     <svg viewBox="0 0 24 24" aria-hidden="true" className="ease-yoyo size-4 transition-transform duration-300 group-hover:rotate-90">
                       <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" />
@@ -130,10 +130,10 @@ export function SiteHeader({ catalog = [], country = HOME_COUNTRY }: { catalog?:
               </>
             ) : status === 'anonymous' ? (
               <>
-                <Link href="/login" className="rounded-pill hover:bg-ink/[0.06] inline-flex h-10 items-center px-3.5 text-[13px] font-bold tracking-[0.03em] whitespace-nowrap uppercase">
+                <Link href="/login" className="rounded-pill hover:bg-ink/[0.06] inline-flex h-10 items-center px-3.5 text-sm font-bold tracking-[0.03em] whitespace-nowrap uppercase">
                   {t('signIn')}
                 </Link>
-                <Link href="/register" className="bg-ink text-canvas rounded-pill hidden h-10 items-center px-4 text-[13px] font-bold tracking-[0.03em] whitespace-nowrap uppercase shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition-transform hover:-translate-y-0.5 sm:inline-flex">
+                <Link href="/register" className="bg-ink text-canvas rounded-pill hidden h-10 items-center px-4 text-sm font-bold tracking-[0.03em] whitespace-nowrap uppercase shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition-transform hover:-translate-y-0.5 sm:inline-flex">
                   {t('signUp')}
                 </Link>
               </>

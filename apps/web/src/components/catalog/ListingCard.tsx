@@ -62,6 +62,11 @@ export function ListingCard({
           ) : (
             <div className="text-ink/70 grid size-full place-items-center text-sm font-bold">{t('noPhoto')}</div>
           )}
+          {item.demo && (
+            <span className="rounded-pill border-ink/20 bg-surface/90 text-ink absolute top-3 left-3 inline-flex items-center px-2.5 py-1 text-xs font-bold tracking-[0.04em] uppercase backdrop-blur" data-demo="">
+              {t('demo')}
+            </span>
+          )}
           {item.weeklyDiscountPercent > 0 && !unavailable && (
             <span className="rounded-pill bg-ink text-canvas absolute bottom-3 left-3 inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold">
               <i aria-hidden="true" className="size-1.5 rounded-full bg-[var(--glow)]" />
@@ -71,7 +76,7 @@ export function ListingCard({
         </div>
         <div className="flex flex-1 flex-col gap-1">
           <h3
-            className="line-clamp-2 text-[15px] leading-snug font-bold [overflow-wrap:break-word] sm:text-base"
+            className="line-clamp-2 text-base leading-snug font-bold [overflow-wrap:break-word] sm:text-base"
             lang={item.contentLocale}
           >
             <TransitionLink
@@ -87,11 +92,11 @@ export function ListingCard({
             <p className="text-sm font-bold">{t('unavailable')}</p>
           ) : (
             <>
-              <p className="font-display text-[1.45rem] leading-[0.9] font-black uppercase tabular-nums sm:text-[1.7rem]">
+              <p className="font-display text-2xl leading-[0.9] font-black uppercase tabular-nums sm:text-3xl">
                 {t('perDay', { price: formatEuros(item.dailyCents, locale) })}
               </p>
               {rent !== null && (
-                <p className="text-[15px] font-bold tabular-nums" data-card-total="">
+                <p className="text-base font-bold tabular-nums" data-card-total="">
                   {t('forDays', { amount: formatEuros(rent, locale), days: days! })}
                 </p>
               )}

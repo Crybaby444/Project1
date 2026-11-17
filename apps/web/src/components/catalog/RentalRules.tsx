@@ -15,14 +15,14 @@ export async function RentalRules({ name, id = 'rental-rules' }: { name: string;
     >
       <h2
         id={id}
-        className="font-display text-[clamp(1.6rem,2.6vw,2.4rem)] leading-[0.92] font-black uppercase"
+        className="font-display text-display-s leading-[0.92] font-black uppercase"
       >
         {t('title', { name })}
       </h2>
       <div className="flex flex-col items-start gap-5">
         <ul className="m-0 grid list-none gap-x-8 gap-y-4 p-0 sm:grid-cols-2">
           {(['a', 'b', 'c', 'd'] as const).map((k) => (
-            <li key={k} className="flex gap-3 text-[15px] leading-relaxed">
+            <li key={k} className="flex gap-3 text-base leading-relaxed">
               <span aria-hidden="true" className="bg-ink mt-[0.6em] size-1.5 flex-none rounded-full" />
               {t(`points.${k}`, { hours: DEFAULT_BOOKING_SETTINGS.inspectionHours })}
             </li>
@@ -30,7 +30,7 @@ export async function RentalRules({ name, id = 'rental-rules' }: { name: string;
         </ul>
         <Link
           href="/what-is-yoyo"
-          className="text-[15px] font-bold underline decoration-1 underline-offset-4"
+          className="text-base font-bold underline decoration-1 underline-offset-4"
         >
           {t('more')}
         </Link>

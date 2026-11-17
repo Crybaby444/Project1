@@ -11,7 +11,7 @@ const queryOf = (row: Row): SavedSearchRequest => row.query as SavedSearchReques
 
 const toView = (row: Row): SavedSearch => {
   const q = queryOf(row);
-  return { id: row.id, q: q.q ?? null, category: q.category ?? null, priceMax: q.priceMax ?? null, district: q.district ?? null, createdAt: row.createdAt.toISOString() };
+  return { id: row.id, q: q.q ?? null, category: q.category ?? null, priceMax: q.priceMax ?? null, district: q.district ?? null, city: q.city ?? null, createdAt: row.createdAt.toISOString() };
 };
 
 /**

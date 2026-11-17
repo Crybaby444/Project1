@@ -80,7 +80,7 @@ export function ReportButton({ target, id, ownerId, className = '' }: { target: 
                 {t('note')}
               </label>
               <textarea id={noteId} value={note} onChange={(e) => setNote(e.target.value)} maxLength={1000} aria-describedby={`${noteId}-hint`} className={TEXTAREA_CLASS} />
-              <span id={`${noteId}-hint`} className="text-ink/70 text-[13px]">
+              <span id={`${noteId}-hint`} className="text-ink/70 text-sm">
                 {t('noteHint')}
               </span>
             </div>

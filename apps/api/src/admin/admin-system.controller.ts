@@ -1,12 +1,15 @@
-import { Controller, Get, Inject, Param, Res, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, Inject, Param, Post, Res, UseGuards } from '@nestjs/common';
 import { ServerErrorListSchema, type ServerErrorList } from '@yoyo/shared';
 import { createZodDto as errorsDto } from 'nestjs-zod';
 import { ErrorLogService } from '../common/error-log.service';
 import { ApiTags } from '@nestjs/swagger';
-import { ADMIN_EXPORTS, AdminSystemSchema, type AdminExport, type AdminSystem } from '@yoyo/shared';
+import { ADMIN_EXPORTS, AdminSystemSchema, type AdminExport, type AdminSystem, type PublicUser, AdminDemoSchema, type AdminDemo } from '@yoyo/shared';
 import type { Response } from 'express';
 import { createZodDto, ZodResponse } from 'nestjs-zod';
+import { AuditService } from '../audit/audit.service';
 import { AuthGuard } from '../auth/auth.guard';
+import { CurrentUser } from '../auth/current-user.decorator';
+import { DemoListingsService } from '../demo/demo-listings.service';
 import { Roles, RolesGuard, Section } from '../auth/roles.guard';
 import { CLOCK, type Clock } from '../clock/clock';
 import { ApiErrors } from '../common/api-errors';
@@ -30,6 +33,7 @@ const csv = (head: string[], rows: unknown[][]) => [head.join(','), ...rows.map(
 
 /** Admin → System: health, limits and CSV exports of people, items, deals and the ledger. */
 class ServerErrorListDto extends errorsDto(ServerErrorListSchema) {}
+class AdminDemoDto extends createZodDto(AdminDemoSchema) {}
 
 @ApiTags('admin')
 @Controller('admin')
@@ -41,6 +45,8 @@ export class AdminSystemController {
     private readonly prisma: PrismaService,
     private readonly mail: MailService,
     private readonly errors: ErrorLogService,
+    private readonly demo: DemoListingsService,
+    private readonly audit: AuditService,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(ENV) private readonly env: Pick<Env, 'STORAGE' | 'PAYMENTS'>,
   ) {}
@@ -51,6 +57,36 @@ export class AdminSystemController {
   @ApiErrors(401, 403)
   serverErrors(): Promise<ServerErrorList> {
     return this.errors.recent();
+  }
+
+  /** How many example listings are on the site (owner, 2026-11-16). */
+  @Get('system/demo')
+  @ZodResponse({ status: 200, type: AdminDemoDto, description: 'How many example listings are on the site' })
+  @ApiErrors(401, 403)
+  demoStatus(): Promise<AdminDemo> {
+    return this.demo.status();
+  }
+
+  /** Puts the 24 example listings for Latvia on the site (skips those already there); audited. */
+  @Post('system/demo')
+  @HttpCode(200)
+  @ZodResponse({ status: 200, type: AdminDemoDto, description: 'Up to six more examples added' })
+  @ApiErrors(401, 403, 503)
+  async addDemo(@CurrentUser() admin: PublicUser): Promise<AdminDemo> {
+    const added = await this.demo.add();
+    await this.audit.record(admin, { action: 'SETTINGS_CHANGED', targetType: 'SETTINGS', summary: `example listings added: ${added}` });
+    return { ...(await this.demo.status()), added };
+  }
+
+  /** Takes every example listing off the site, with its photos; audited. */
+  @Delete('system/demo')
+  @HttpCode(200)
+  @ZodResponse({ status: 200, type: AdminDemoDto, description: 'Every example removed' })
+  @ApiErrors(401, 403)
+  async removeDemo(@CurrentUser() admin: PublicUser): Promise<AdminDemo> {
+    const removed = await this.demo.remove();
+    await this.audit.record(admin, { action: 'SETTINGS_CHANGED', targetType: 'SETTINGS', summary: `example listings removed: ${removed}` });
+    return { count: 0, total: (await this.demo.status()).total, removed };
   }
 
   @Get('system')

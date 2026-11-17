@@ -53,7 +53,7 @@ export function MyListingCard({
           <p className="text-ink/75 text-sm">{t('changed', { date: changed })}</p>
           {listing.status === 'REJECTED' && listing.rejectionReason && (
             <div className="mt-2 flex flex-col gap-1">
-              <p className="text-[13px] font-bold tracking-[0.03em] uppercase">{t('reason')}</p>
+              <p className="text-sm font-bold tracking-[0.03em] uppercase">{t('reason')}</p>
               <p className="border-[var(--danger)] border-l-4 pl-3 text-sm font-bold [overflow-wrap:anywhere]">
                 {listing.rejectionReason}
               </p>
@@ -82,7 +82,7 @@ function Activity({ activity }: { activity: OwnerListingSummary['activity'] }) {
   const locale = useLocale();
   const day = (d: string) => new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(`${d}T00:00:00Z`));
   return (
-    <ul className="my-1 flex flex-wrap gap-1.5 text-[13px] font-semibold">
+    <ul className="my-1 flex flex-wrap gap-1.5 text-sm font-semibold">
       {activity.requests > 0 && (
         <li>
           <Link href="/bookings?role=owner" className="bg-ink text-canvas rounded-pill inline-flex min-h-7 items-center gap-1.5 px-2.5 before:size-1.5 before:rounded-full before:bg-current before:content-['']">

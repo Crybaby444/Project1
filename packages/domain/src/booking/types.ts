@@ -1,4 +1,5 @@
 import type { Period } from '../dates';
+import type { CancellationPolicy } from '../cancellation';
 import type { LedgerOperation, PaymentMethod } from '../ledger';
 import type { Cents } from '../money';
 import type { Quote } from '../pricing';
@@ -49,7 +50,7 @@ export type TimerKind = (typeof TIMER_KINDS)[number];
 export type DisputeReason = 'DAMAGE' | 'NOT_RETURNED' | 'NOT_HANDED_OVER';
 
 /** Where the money went when the booking closed. */
-export type BookingOutcome = 'DEPOSIT_REFUNDED' | 'DEPOSIT_TO_OWNER' | 'REFUNDED_ALL';
+export type BookingOutcome = 'DEPOSIT_REFUNDED' | 'DEPOSIT_TO_OWNER' | 'REFUNDED_ALL' | 'REFUNDED_PART';
 
 export type ResolveDecision = 'REFUND_DEPOSIT' | 'DEPOSIT_TO_OWNER' | 'REFUND_ALL' | 'CONFIRM_HANDOVER';
 
@@ -92,6 +93,8 @@ export interface BookingSnapshot {
   /** The item's time zone: it decides what "today" and "the end of the first day" mean. */
   readonly timeZone: string;
   readonly quote: Quote;
+  /** The item's cancellation policy when it was requested (FLEXIBLE when not set). */
+  readonly cancellationPolicy?: CancellationPolicy;
 
   readonly renterSignedAt?: Date;
   readonly ownerSignedAt?: Date;

@@ -28,10 +28,10 @@ export function DealStrip({ id }: { id: string }) {
 
   return (
     <section aria-label={tc('openDeal')} data-deal-strip="" className="border-ink/15 bg-ink/[0.03] flex flex-col gap-3 border-b px-4 py-3">
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[14px]">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
         <DealStatusBadge status={b.status} />
         {!closed && (
-          <span className={`rounded-pill inline-flex min-h-7 items-center border px-3 text-[13px] font-bold ${myTurn ? 'bg-ink text-canvas border-ink' : 'border-ink/40'}`}>
+          <span className={`rounded-pill inline-flex min-h-7 items-center border px-3 text-sm font-bold ${myTurn ? 'bg-ink text-canvas border-ink' : 'border-ink/40'}`}>
             {myTurn ? t('yourTurn') : t('theirTurn')}
           </span>
         )}

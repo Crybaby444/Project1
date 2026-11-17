@@ -173,7 +173,7 @@ function BuilderLayout({
       {draft.restored && (
         <p
           role="status"
-          className="border-ink/15 bg-surface rounded-media flex items-start gap-3 border p-4 text-[15px] font-semibold"
+          className="border-ink/15 bg-surface rounded-media flex items-start gap-3 border p-4 text-base font-semibold"
         >
           <span aria-hidden="true" className="bg-ink mt-1.5 size-2 flex-none rounded-full" />
           {t('restored')}
@@ -241,7 +241,7 @@ function BuilderLayout({
         </div>
 
         <aside className="hidden flex-col gap-3 lg:sticky lg:top-6 lg:flex" aria-label={t('preview.title')}>
-          <h2 className="text-[13px] font-bold tracking-[0.03em] uppercase">{t('preview.title')}</h2>
+          <h2 className="text-sm font-bold tracking-[0.03em] uppercase">{t('preview.title')}</h2>
           <BuilderPreview />
           <p className="text-sm">{t('preview.privacy')}</p>
         </aside>

@@ -1,10 +1,11 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useId } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Field } from '@/components/ui/Field';
 import { INPUT_CLASS } from '@/components/ui/inputs';
 import { brandOf, formatCardNumber, formatExpiry, TEST_CARDS, type CardFields, type CardProblem } from '@/lib/deals/card';
+import { mountStripeCard, stripeEnabled } from '@/lib/deals/stripe';
 
 export const EMPTY_CARD: CardFields = { number: '', expiry: '', cvc: '', holder: '' };
 
@@ -21,7 +22,7 @@ export function TestModeNotice({ onUse }: { onUse(number: string): void }) {
       data-test-mode=""
       className="rounded-media bg-ink text-canvas flex flex-col gap-2 border border-ink/15 p-4"
     >
-      <h3 id="test-mode" className="flex items-center gap-2 text-[13px] font-bold tracking-[0.03em] uppercase">
+      <h3 id="test-mode" className="flex items-center gap-2 text-sm font-bold tracking-[0.03em] uppercase">
         <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M9 3h6M10 3v6L4.5 18.5A1.7 1.7 0 0 0 6 21h12a1.7 1.7 0 0 0 1.5-2.5L14 9V3" />
         </svg>
@@ -38,7 +39,7 @@ export function TestModeNotice({ onUse }: { onUse(number: string): void }) {
               type="button"
               onClick={() => onUse(card.number)}
               aria-label={`${t('use')}: ${card.number}, ${t(`cards.${card.key}`)}`}
-              className="rounded-pill ease-yoyo min-h-8 border border-canvas/30 bg-canvas text-ink px-3 text-[12px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.96]"
+              className="rounded-pill ease-yoyo min-h-8 border border-canvas/30 bg-canvas text-ink px-3 text-xs font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.96]"
             >
               {t('use')}
             </button>
@@ -79,10 +80,12 @@ export function CardForm({
   const error = (field: keyof CardFields) => (showErrors && problems[field] ? t(`errors.${problems[field]!}`) : undefined);
   const set = (patch: Partial<CardFields>) => onChange({ ...value, ...patch });
 
+  if (stripeEnabled()) return <StripeCardFields value={value} onChange={onChange} holderError={error('holder')} disabled={disabled} />;
+
   return (
     <div className="flex flex-col gap-4" data-card-form="">
       <div className="flex flex-col gap-1.5">
-        <label htmlFor={`${id}-number`} className="text-[13px] font-bold tracking-[0.03em] uppercase">
+        <label htmlFor={`${id}-number`} className="text-sm font-bold tracking-[0.03em] uppercase">
           {t('number')}
         </label>
         <div className="relative">
@@ -101,7 +104,7 @@ export function CardForm({
           />
           <span
             aria-live="polite"
-            className={`rounded-pill pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 border px-2.5 py-0.5 text-[12px] font-bold transition-[opacity,transform] duration-250 ease-yoyo ${
+            className={`rounded-pill pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 border px-2.5 py-0.5 text-xs font-bold transition-[opacity,transform] duration-250 ease-yoyo ${
               brand ? `border-ink/15 opacity-100 ${BRAND_STYLE[brand]}` : 'scale-90 border-transparent opacity-0'
             }`}
           >
@@ -151,6 +154,43 @@ export function CardForm({
           disabled={disabled}
           className={INPUT_CLASS}
         />
+      </Field>
+    </div>
+  );
+}
+
+/** With Stripe on: Stripe's own card field (number, date, code in its iframe) and the holder's name. */
+function StripeCardFields({ value, onChange, holderError, disabled }: { value: CardFields; onChange(next: CardFields): void; holderError?: string | undefined; disabled: boolean }) {
+  const t = useTranslations('checkout');
+  const host = useRef<HTMLDivElement>(null);
+  const [problem, setProblem] = useState<string | null>(null);
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    let unmount: (() => void) | undefined;
+    let gone = false;
+    if (host.current) {
+      mountStripeCard(host.current, (state) => setProblem(state.error ?? null))
+        .then((stop) => (gone ? stop() : (unmount = stop)))
+        .catch(() => setFailed(true));
+    }
+    return () => {
+      gone = true;
+      unmount?.();
+    };
+  }, []);
+  return (
+    <div className="flex flex-col gap-4" data-card-form="" data-stripe="">
+      <div className="flex flex-col gap-1.5">
+        <span className="text-sm font-bold tracking-[0.03em] uppercase">{t('number')}</span>
+        <div ref={host} className={`${INPUT_CLASS} flex items-center py-3`} aria-describedby={problem ? 'stripe-card-error' : undefined} />
+        {(problem || failed) && (
+          <p id="stripe-card-error" role="alert" className="text-sm text-[var(--danger)]">
+            {failed ? t('stripeFailed') : problem}
+          </p>
+        )}
+      </div>
+      <Field label={t('holder')} error={holderError}>
+        <input autoComplete="cc-name" name="cc-name" value={value.holder} onChange={(event) => onChange({ ...value, holder: event.target.value })} disabled={disabled} className={INPUT_CLASS} />
       </Field>
     </div>
   );

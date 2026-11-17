@@ -15,7 +15,7 @@ export function Toolbar({ params }: { params: CatalogParams }) {
   return (
     <div className="flex flex-wrap items-center gap-3">
       <div className="flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
-        <label htmlFor={sortId} className="text-[13px] font-bold tracking-[0.03em] uppercase max-sm:sr-only">
+        <label htmlFor={sortId} className="text-sm font-bold tracking-[0.03em] uppercase max-sm:sr-only">
           {t('sort.label')}
         </label>
         <Select
@@ -36,7 +36,7 @@ export function Toolbar({ params }: { params: CatalogParams }) {
             type="button"
             aria-pressed={params.view === view}
             onClick={() => navigate(catalogSearch(params, { view }))}
-            className={`rounded-pill ease-yoyo min-h-9 px-3 text-[13px] sm:px-4 font-bold tracking-[0.03em] uppercase transition-[background-color,color,transform] duration-250 active:scale-95 ${
+            className={`rounded-pill ease-yoyo min-h-9 px-3 text-sm sm:px-4 font-bold tracking-[0.03em] uppercase transition-[background-color,color,transform] duration-250 active:scale-95 ${
               params.view === view ? 'bg-cta text-cta-fg' : 'hover:bg-mist'
             }`}
           >
