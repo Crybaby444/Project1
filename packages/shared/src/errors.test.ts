@@ -13,6 +13,7 @@ describe('ERROR_CODES', () => {
         'PROFILE_INCOMPLETE',
         'IDENTITY_REQUIRED',
         'DEMO_LISTING',
+        'VERIFICATION_REQUIRED',
         'AUTH_UNAUTHENTICATED',
         'AUTH_FORBIDDEN',
         'AUTH_BLOCKED',
