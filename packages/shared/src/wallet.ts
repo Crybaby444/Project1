@@ -10,6 +10,7 @@ export const LEDGER_KINDS = [
   'DEPOSIT_REFUND',
   'DEPOSIT_TO_OWNER',
   'BOOKING_REFUND',
+  'BOOKING_PARTIAL_REFUND',
 ] as const;
 
 export type LedgerKind = (typeof LEDGER_KINDS)[number];
@@ -61,7 +62,8 @@ export const CardTokenSchema = z.object({
 export type CardToken = z.infer<typeof CardTokenSchema>;
 
 /** A card token from POST /payments/card-tokens; it works for 15 minutes. */
-export const CardTokenFieldSchema = z.string().min(10).max(1000).regex(/^tok_[A-Za-z0-9_.-]+$/, 'Not a card token');
+/** A test-card token (`tok_…`) or, with Stripe, a PaymentMethod from Stripe's own form (`pm_…`). */
+export const CardTokenFieldSchema = z.string().min(10).max(1000).regex(/^(tok|pm)_[A-Za-z0-9_.-]+$/, 'Not a card token');
 
 /** Bounds of wallet movements, in cents. */
 export const WALLET_LIMITS = {

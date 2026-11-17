@@ -44,4 +44,19 @@ describe('demo listings (owner, 2026-11-16: examples on the live site, marked, n
     const chat = await renter.post(`/listings/${demo.id}/conversation`);
     expect(chat.body.error.code).toBe('DEMO_LISTING');
   });
+
+  it('the owner adds and removes the examples from Admin → System, without a shell', async () => {
+    const admin = await signedInClient(t, { name: 'Admin', role: 'ADMIN', staffRole: 'OWNER' });
+    expect((await admin.get('/admin/system/demo').expect(200)).body).toEqual({ count: 0, total: 24 });
+    // Six a call, so a request stays short; the button repeats until all are there.
+    expect((await admin.post('/admin/system/demo').expect(200)).body).toMatchObject({ count: 6, added: 6 });
+    for (let i = 0; i < 3; i++) await admin.post('/admin/system/demo').expect(200);
+    // Again: nothing doubles.
+    expect((await admin.post('/admin/system/demo').expect(200)).body).toMatchObject({ count: 24, added: 0 });
+    const photos = await t.prisma.listingPhoto.count({ where: { listing: { demo: true } } });
+    expect(photos).toBe(96);
+    expect((await admin.delete('/admin/system/demo').expect(200)).body).toMatchObject({ count: 0, removed: 24 });
+    expect(await t.prisma.user.count({ where: { email: 'demo@yoyo.rent' } })).toBe(0);
+    await owner.post('/admin/system/demo').expect(403);
+  }, 120_000);
 });

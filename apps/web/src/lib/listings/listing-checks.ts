@@ -7,6 +7,7 @@ import {
   validateAttributes,
   type AttributeValue,
   type CategoryNode,
+  type CancellationPolicyName,
   type ListingCondition,
   type ListingStep,
   type OwnerListing,
@@ -39,6 +40,8 @@ export type ListingValues = {
   lat: number | null;
   lng: number | null;
   rules: { preset: RulePreset[]; custom: string[] };
+  /** What a renter gets back when they cancel (owner, 2026-11-16). */
+  cancellationPolicy: CancellationPolicyName;
   /** The language the texts are written in (the item page's canonical address and <html lang>). */
   contentLocale: Locale;
 };
@@ -80,6 +83,7 @@ export function emptyValues(contentLocale: Locale = 'en'): ListingValues {
     lat: null,
     lng: null,
     rules: { preset: [], custom: [] },
+    cancellationPolicy: 'FLEXIBLE',
     contentLocale,
   };
 }
@@ -102,6 +106,7 @@ export function valuesFromListing(listing: OwnerListing): ListingValues {
     lat: listing.lat,
     lng: listing.lng,
     rules: { preset: [...listing.rules.preset], custom: [...listing.rules.custom] },
+    cancellationPolicy: listing.cancellationPolicy,
     contentLocale: listing.contentLocale,
   };
 }

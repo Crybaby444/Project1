@@ -437,7 +437,15 @@
         "deals": "Deals",
         "ledger": "Ledger entries"
       },
-      "download": "Download"
+      "download": "Download",
+      "demo": {
+        "title": "Example listings",
+        "intro": "24 example listings for Latvia with full descriptions and pictures, marked “Example” and never rented. Add them to show how the site works; remove them when real listings arrive.",
+        "count": "{count} of {total} on the site",
+        "add": "Add the examples",
+        "remove": "Remove all examples",
+        "failed": "That did not work. Try again."
+      }
     },
     "categories": {
       "title": "Categories",
