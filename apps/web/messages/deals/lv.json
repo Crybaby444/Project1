@@ -534,7 +534,8 @@
       "LISTING": {
         "APPROVED": "“{title}” ir publicēts",
         "REJECTED": "“{title}” jālabo",
-        "MOVED": "“{title}” pārvietots uz citu kategoriju"
+        "MOVED": "“{title}” pārvietots uz citu kategoriju",
+        "EDITED": "Administrators izlaboja “{title}”"
       },
       "REVIEW": {
         "RECEIVED": "Jauna atsauksme pēc “{title}”: uzraksti savu, lai to izlasītu"

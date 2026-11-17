@@ -534,7 +534,8 @@
       "LISTING": {
         "APPROVED": "“{title}” is published",
         "REJECTED": "“{title}” needs changes",
-        "MOVED": "“{title}” moved to another category"
+        "MOVED": "“{title}” moved to another category",
+        "EDITED": "An administrator corrected “{title}”"
       },
       "REVIEW": {
         "RECEIVED": "New review after “{title}”: write yours to read it"

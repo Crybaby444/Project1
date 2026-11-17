@@ -29,6 +29,7 @@ export function ModerationCard({
   onApprove,
   onReject,
   onMove,
+  onEdit,
   busy,
 }: {
   listing: AdminListing;
@@ -37,6 +38,8 @@ export function ModerationCard({
   onReject(): void;
   /** Files the listing under another category (the «Other» queue). */
   onMove?: () => void;
+  /** Fix the words or prices (owner, 2026-11-16: the admin manages everything). */
+  onEdit?: () => void;
   busy: boolean;
 }) {
   const t = useTranslations('moderation');
@@ -178,6 +181,11 @@ export function ModerationCard({
         {onMove && (
           <Button variant="ghost" onClick={onMove} disabled={busy}>
             {t('move.button')}
+          </Button>
+        )}
+        {onEdit && (
+          <Button variant="ghost" onClick={onEdit} disabled={busy}>
+            {t('edit.button')}
           </Button>
         )}
       </div>

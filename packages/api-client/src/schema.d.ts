@@ -1876,6 +1876,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/listings/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["ModerationController_edit"];
+        trace?: never;
+    };
     "/api/v1/admin/listings/{id}/category": {
         parameters: {
             query?: never;
@@ -3961,7 +3977,7 @@ export interface components {
                     name: string;
                 };
                 /** @enum {string} */
-                action: "LISTING_APPROVED" | "LISTING_REJECTED" | "LISTING_MOVED" | "LISTING_HIDDEN" | "LISTING_SHOWN" | "DISPUTE_RESOLVED" | "USER_BLOCKED" | "USER_UNBLOCKED" | "USER_NOTE" | "REPORT_CLOSED" | "REVIEW_HIDDEN" | "REVIEW_SHOWN" | "SETTINGS_CHANGED" | "CATEGORY_CHANGED" | "CATEGORY_CREATED" | "CATEGORY_DELETED" | "USER_CREATED" | "USER_EDITED" | "USER_DELETED" | "STAFF_CHANGED" | "TWO_FACTOR_RESET" | "IDENTITY_VIEWED" | "IDENTITY_APPROVED" | "IDENTITY_REJECTED";
+                action: "LISTING_APPROVED" | "LISTING_REJECTED" | "LISTING_MOVED" | "LISTING_EDITED" | "LISTING_HIDDEN" | "LISTING_SHOWN" | "DISPUTE_RESOLVED" | "USER_BLOCKED" | "USER_UNBLOCKED" | "USER_NOTE" | "REPORT_CLOSED" | "REVIEW_HIDDEN" | "REVIEW_SHOWN" | "SETTINGS_CHANGED" | "CATEGORY_CHANGED" | "CATEGORY_CREATED" | "CATEGORY_DELETED" | "USER_CREATED" | "USER_EDITED" | "USER_DELETED" | "STAFF_CHANGED" | "TWO_FACTOR_RESET" | "IDENTITY_VIEWED" | "IDENTITY_APPROVED" | "IDENTITY_REJECTED";
                 targetType: string;
                 targetId: string | null;
                 summary: string;
@@ -4313,9 +4329,15 @@ export interface components {
             }[];
             total: number;
         };
-        MoveListingCategoryDto: {
-            categoryId: string;
+        AdminEditListingDto: {
             version: number;
+            title?: string;
+            description?: string;
+            /** @enum {string} */
+            condition?: "NEW" | "LIKE_NEW" | "GOOD" | "FAIR";
+            dailyCents?: number;
+            weeklyDiscountPercent?: number;
+            depositCents?: number;
         };
         AdminListingResponseDto_Output: {
             listing: {
@@ -4382,6 +4404,10 @@ export interface components {
                     email: string;
                 };
             };
+        };
+        MoveListingCategoryDto: {
+            categoryId: string;
+            version: number;
         };
         ApproveListingDto: {
             version: number;
@@ -9924,7 +9950,7 @@ export interface operations {
     AdminAuditController_list: {
         parameters: {
             query?: {
-                action?: "LISTING_APPROVED" | "LISTING_REJECTED" | "LISTING_MOVED" | "LISTING_HIDDEN" | "LISTING_SHOWN" | "DISPUTE_RESOLVED" | "USER_BLOCKED" | "USER_UNBLOCKED" | "USER_NOTE" | "REPORT_CLOSED" | "REVIEW_HIDDEN" | "REVIEW_SHOWN" | "SETTINGS_CHANGED" | "CATEGORY_CHANGED" | "CATEGORY_CREATED" | "CATEGORY_DELETED" | "USER_CREATED" | "USER_EDITED" | "USER_DELETED" | "STAFF_CHANGED" | "TWO_FACTOR_RESET" | "IDENTITY_VIEWED" | "IDENTITY_APPROVED" | "IDENTITY_REJECTED";
+                action?: "LISTING_APPROVED" | "LISTING_REJECTED" | "LISTING_MOVED" | "LISTING_EDITED" | "LISTING_HIDDEN" | "LISTING_SHOWN" | "DISPUTE_RESOLVED" | "USER_BLOCKED" | "USER_UNBLOCKED" | "USER_NOTE" | "REPORT_CLOSED" | "REVIEW_HIDDEN" | "REVIEW_SHOWN" | "SETTINGS_CHANGED" | "CATEGORY_CHANGED" | "CATEGORY_CREATED" | "CATEGORY_DELETED" | "USER_CREATED" | "USER_EDITED" | "USER_DELETED" | "STAFF_CHANGED" | "TWO_FACTOR_RESET" | "IDENTITY_VIEWED" | "IDENTITY_APPROVED" | "IDENTITY_REJECTED";
                 targetId?: string;
                 page?: number;
             };
@@ -11228,6 +11254,77 @@ export interface operations {
             };
             /** @description Not allowed (blocked account, wrong role or foreign Origin) */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ModerationController_edit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdminEditListingDto"];
+            };
+        };
+        responses: {
+            /** @description The listing with the administrator’s fixes; logged, the owner is told */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminListingResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
