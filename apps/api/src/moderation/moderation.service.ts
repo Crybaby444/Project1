@@ -126,7 +126,7 @@ export class ModerationService {
     const before = Object.fromEntries(Object.keys(changes).map((key) => [key, listing[key as keyof typeof changes]]));
     await this.audit.record(admin, { action: 'LISTING_EDITED', targetType: 'LISTING', targetId: id, summary: changes.title ?? listing.title ?? '', before, after: changes });
     if (listing.owner.deletedAt === null) {
-      void this.notifications.notify([listing.owner.id], { kind: 'LISTING', event: 'EDITED', listingId: id, title: changes.title ?? listing.title });
+      await this.notifications.notify([listing.owner.id], { kind: 'LISTING', event: 'EDITED', listingId: id, title: changes.title ?? listing.title });
     }
     const fresh = await this.prisma.listing.findUniqueOrThrow({ where: { id }, include: { photos: true, unavailability: true, owner: true } });
     return this.toAdmin(fresh, fresh.owner);
