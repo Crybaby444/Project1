@@ -40,6 +40,10 @@ describe('@yoyo/domain entry point', () => {
         // cancellation
         'CANCELLATION_POLICIES',
         'rentRefundPercent',
+        // value checks
+        'HIGH_VALUE',
+        'isHighValue',
+        'missingForDeal',
         // ledger
         'applyOperation',
         'assertBalanced',

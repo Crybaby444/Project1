@@ -21,6 +21,8 @@ export interface SeedUser {
   dataConsent?: boolean;
   /** false: an account whose identity no moderator has checked yet (default: checked). */
   identityVerified?: boolean;
+  /** A confirmed phone (needed for high-value deals, audit D4). */
+  phoneVerified?: boolean;
 }
 
 /** Puts a user straight into the database (no HTTP, so no registration limit or email). */
@@ -44,6 +46,7 @@ export async function seedUser(
       adultConfirmedAt: seed.adultConfirmed === false ? null : t.clock.now(),
       dataConsentAt: seed.dataConsent === false ? null : t.clock.now(),
       identityVerifiedAt: seed.identityVerified === false ? null : t.clock.now(),
+      ...(seed.phoneVerified && { phone: `+3712${String(Math.floor(Math.random() * 1e7)).padStart(7, '0')}`, phoneVerifiedAt: t.clock.now() }),
       createdAt: t.clock.now(),
     },
   });

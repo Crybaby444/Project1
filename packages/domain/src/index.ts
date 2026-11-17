@@ -10,3 +10,4 @@ export * from './booking/decide';
 export * from './booking/actions';
 export * from './reviews';
 export * from './cancellation';
+export * from './value-checks';

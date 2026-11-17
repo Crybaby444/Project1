@@ -218,9 +218,10 @@
     "AUTH_CODE_INVALID": "That code is wrong or already used. Enter the newest code from the app.",
     "USERNAME_TAKEN": "This username is taken. Try another one.",
     "UNDERAGE": "Yoyo is for people aged 18 and over.",
-    "PROFILE_INCOMPLETE": "Add your username and date of birth in Settings → Profile first.",
+    "PROFILE_INCOMPLETE": "Add your username and confirm you are 18 or over in Settings → Profile first.",
     "IDENTITY_REQUIRED": "Confirm who you are first: Settings → Profile → Confirm who you are.",
-    "DEMO_LISTING": "This is an example listing: it cannot be rented."
+    "DEMO_LISTING": "This is an example listing: it cannot be rented.",
+    "VERIFICATION_REQUIRED": "For a deal of this value, confirm your phone and who you are first: Settings → Profile."
   },
   "validation": {
     "required": "Fill in this field.",

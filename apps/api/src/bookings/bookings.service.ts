@@ -14,6 +14,7 @@ import {
   period,
   quote,
   serviceFeeAt,
+  missingForDeal,
   type Actor,
   type BookingEvent,
   type BookingSettings,
@@ -114,6 +115,13 @@ async function recordSignature(
   await tx.contractSignature.create({
     data: { bookingId, side, userId: user.id, fullName, termsHash: contract.termsHash, ip: client.ip.slice(0, 64), userAgent: client.userAgent.slice(0, 300), createdAt: now },
   });
+}
+
+/** What the person has confirmed (administrators count as confirmed). */
+async function verifiedOf(tx: Prisma.TransactionClient, userId: string): Promise<{ phoneVerified: boolean; identityVerified: boolean }> {
+  const user = await tx.user.findUniqueOrThrow({ where: { id: userId }, select: { phoneVerifiedAt: true, identityVerifiedAt: true, role: true } });
+  const admin = user.role === 'ADMIN';
+  return { phoneVerified: admin || user.phoneVerifiedAt !== null, identityVerified: admin || user.identityVerifiedAt !== null };
 }
 
 /** Before payment: the renter's and then the owner's signature are on file, both for the contract's current terms. */
@@ -269,6 +277,11 @@ export class BookingsService {
         },
         { now, settings },
       );
+      // An expensive deal asks for more (audit D4): a confirmed phone and identity.
+      const missing = missingForDeal(next.quote, await verifiedOf(tx, renter.id));
+      if (missing.length > 0) {
+        throw new AppError('VERIFICATION_REQUIRED', 409, 'Confirm your phone and who you are for a deal of this value', undefined, { missing });
+      }
       if (input.offerId !== undefined) {
         const used = await tx.offer.updateMany({
           where: { id: input.offerId, status: 'ACCEPTED' },
