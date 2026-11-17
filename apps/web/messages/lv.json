@@ -219,7 +219,8 @@
     "USERNAME_TAKEN": "Šis lietotājvārds ir aizņemts. Pamēģiniet citu.",
     "UNDERAGE": "Yoyo ir cilvēkiem no 18 gadu vecuma.",
     "PROFILE_INCOMPLETE": "Vispirms pievienojiet lietotājvārdu un dzimšanas datumu sadaļā Iestatījumi → Profils.",
-    "IDENTITY_REQUIRED": "Vispirms apstipriniet savu identitāti: Iestatījumi → Profils → Apstipriniet savu identitāti."
+    "IDENTITY_REQUIRED": "Vispirms apstipriniet savu identitāti: Iestatījumi → Profils → Apstipriniet savu identitāti.",
+    "DEMO_LISTING": "Šis ir sludinājuma piemērs: to nevar nomāt."
   },
   "validation": {
     "required": "Aizpildiet šo lauku.",
@@ -798,7 +799,8 @@
       "deposit": "Drošības nauda {amount}",
       "noDeposit": "Bez drošības naudas",
       "unavailable": "Pašlaik netiek iznomāts",
-      "forDays": "{amount} par {days, plural, zero {# dienām} one {# dienu} other {# dienām}}"
+      "forDays": "{amount} par {days, plural, zero {# dienām} one {# dienu} other {# dienām}}",
+      "demo": "Piemērs"
     },
     "search": {
       "label": "Meklēt katalogā",
@@ -992,7 +994,14 @@
       "failed": "Neizdevās nokopēt saiti"
     },
     "metaTitle": "{title} nomai: {place}",
-    "metaTitleNoPlace": "{title} nomai"
+    "metaTitleNoPlace": "{title} nomai",
+    "demo": {
+      "badge": "Piemērs",
+      "title": "Sludinājuma piemērs",
+      "body": "Tā izskatās sludinājums Yoyo. To nevar nomāt: īstās lietas ir katalogā, un jūsējā tur var būt pēc dažām minūtēm.",
+      "browse": "Skatīt īstās lietas",
+      "lend": "Iznomāt savu lietu"
+    }
   },
   "profile": {
     "title": "{name}",

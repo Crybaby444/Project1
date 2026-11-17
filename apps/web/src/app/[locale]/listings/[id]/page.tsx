@@ -1,4 +1,5 @@
 import { splitListingParam, type AvailableItem, type CatalogItem, type CategoryNode, type Locale } from '@yoyo/shared';
+import { DemoNotice } from '@/components/item/DemoNotice';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -168,6 +169,7 @@ async function Available({ item, title, category, locale }: { item: AvailableIte
           publishedAt: listing.publishedAt,
           rating: item.rating,
           reviewCount: item.reviewCount,
+          demo: item.demo,
         }}
       />
       <div className="grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-start xl:gap-12">
@@ -215,7 +217,7 @@ async function Available({ item, title, category, locale }: { item: AvailableIte
           />
         </div>
         <aside className="flex flex-col gap-6 lg:sticky lg:top-6">
-          <BookingPanel item={item} />
+          {item.demo ? <DemoNotice /> : <BookingPanel item={item} />}
           <OwnerCard owner={owner} />
           <ReportButton target="LISTING" id={listing.id} ownerId={owner.id} className="self-start" />
         </aside>

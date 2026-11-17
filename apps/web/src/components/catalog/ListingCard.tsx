@@ -62,6 +62,11 @@ export function ListingCard({
           ) : (
             <div className="text-ink/70 grid size-full place-items-center text-sm font-bold">{t('noPhoto')}</div>
           )}
+          {item.demo && (
+            <span className="rounded-pill border-ink/20 bg-surface/90 text-ink absolute top-3 left-3 inline-flex items-center px-2.5 py-1 text-xs font-bold tracking-[0.04em] uppercase backdrop-blur" data-demo="">
+              {t('demo')}
+            </span>
+          )}
           {item.weeklyDiscountPercent > 0 && !unavailable && (
             <span className="rounded-pill bg-ink text-canvas absolute bottom-3 left-3 inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold">
               <i aria-hidden="true" className="size-1.5 rounded-full bg-[var(--glow)]" />
