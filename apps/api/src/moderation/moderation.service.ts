@@ -126,7 +126,7 @@ export class ModerationService {
     const before = Object.fromEntries(Object.keys(changes).map((key) => [key, listing[key as keyof typeof changes]]));
     await this.audit.record(admin, { action: 'LISTING_EDITED', targetType: 'LISTING', targetId: id, summary: changes.title ?? listing.title ?? '', before, after: changes });
     if (listing.owner.deletedAt === null) {
-      void this.notifications.notify([listing.owner.id], { kind: 'LISTING', event: 'EDITED', listingId: id, title: changes.title ?? listing.title });
+      await this.notifications.notify([listing.owner.id], { kind: 'LISTING', event: 'EDITED', listingId: id, title: changes.title ?? listing.title });
     }
     const fresh = await this.prisma.listing.findUniqueOrThrow({ where: { id }, include: { photos: true, unavailability: true, owner: true } });
     return this.toAdmin(fresh, fresh.owner);
@@ -150,7 +150,7 @@ export class ModerationService {
     const category = await this.prisma.category.findUniqueOrThrow({ where: { id: target.id }, select: { names: true } });
     await this.audit.record(admin, { action: 'LISTING_MOVED', targetType: 'LISTING', targetId: listing.id, summary: listing.title ?? '', before: { categoryId: listing.categoryId }, after: { categoryId: target.id } });
     if (listing.owner.deletedAt === null) {
-      void this.notifications.notify([listing.owner.id], { kind: 'LISTING', event: 'MOVED', listingId: listing.id, title: listing.title });
+      await this.notifications.notify([listing.owner.id], { kind: 'LISTING', event: 'MOVED', listingId: listing.id, title: listing.title });
     }
     if (listing.owner.deletedAt === null && wantsEmail(listing.owner, 'LISTINGS')) {
       void this.mail.sendListingMoved(listing.owner, {
