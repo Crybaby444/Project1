@@ -1,3 +1,5 @@
+import { StorageModule } from '../media/storage.module';
+import { DemoListingsService } from '../demo/demo-listings.service';
 import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { RolesGuard } from '../auth/roles.guard';
@@ -19,8 +21,8 @@ import { MailModule } from '../mail/mail.module';
 import { AdminPeopleService } from './admin-people.service';
 
 @Module({
-  imports: [AuthModule, BookingsModule, NotificationsModule, ReviewsModule, MailModule, MeModule],
+  imports: [AuthModule, BookingsModule, NotificationsModule, ReviewsModule, MailModule, MeModule, StorageModule],
   controllers: [AdminController, AdminAuditController, AdminPeopleController, AdminSearchController, AdminSystemController, AdminCategoriesController, AdminStaffController, AdminUsersCrudController],
-  providers: [AdminBootstrap, RolesGuard, AdminSettingsService, AdminPeopleService],
+  providers: [AdminBootstrap, RolesGuard, AdminSettingsService, AdminPeopleService, DemoListingsService],
 })
 export class AdminModule {}
