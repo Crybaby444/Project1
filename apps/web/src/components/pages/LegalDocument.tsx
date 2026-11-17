@@ -72,7 +72,7 @@ function BlockView({ block, fill }: { block: Block; fill: (text: string) => stri
       tabIndex={0}
       className="border-ink/15 rounded-media overflow-x-auto border"
     >
-      <table className="w-full min-w-[34rem] border-collapse text-left text-[15px] leading-relaxed">
+      <table className="w-full min-w-[34rem] border-collapse text-left text-base leading-relaxed">
         <thead className="bg-mist">
           <tr>
             {block.table.head.map((cell) => (
@@ -125,7 +125,7 @@ export function LegalDocument({ doc, effective }: { doc: LegalDoc; effective: st
                 <li key={section.id}>
                   <a
                     href={`#${section.id}`}
-                    className="rounded-pill hover:bg-mist -mx-3 flex min-h-10 items-center px-3 text-[15px] leading-snug transition-colors duration-150 ease-yoyo"
+                    className="rounded-pill hover:bg-mist -mx-3 flex min-h-10 items-center px-3 text-base leading-snug transition-colors duration-150 ease-yoyo"
                   >
                     {section.heading}
                   </a>
@@ -136,7 +136,7 @@ export function LegalDocument({ doc, effective }: { doc: LegalDoc; effective: st
 
           <article className="flex max-w-[72ch] flex-col gap-12 text-base">
             <section aria-labelledby="summary" className="border-ink text-ink flex flex-col gap-3 border-t-2 pt-6">
-              <h2 id="summary" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
+              <h2 id="summary" className="font-display text-display-s leading-[0.95] font-black uppercase">
                 {t('summary')}
               </h2>
               <ul className="flex list-disc flex-col gap-2 pl-6 leading-relaxed">
@@ -144,12 +144,12 @@ export function LegalDocument({ doc, effective }: { doc: LegalDoc; effective: st
                   <li key={line}>{line}</li>
                 ))}
               </ul>
-              <p className="text-[15px] leading-relaxed">{t('note')}</p>
+              <p className="text-base leading-relaxed">{t('note')}</p>
             </section>
 
             {doc.sections.map((section) => (
               <section key={section.id} aria-labelledby={section.id} className="flex flex-col gap-4">
-                <h2 id={section.id} className="scroll-mt-6 text-[clamp(1.5rem,2.4vw,1.875rem)] leading-tight font-bold">
+                <h2 id={section.id} className="scroll-mt-6 text-display-s leading-tight font-bold">
                   {section.heading}
                 </h2>
                 {section.blocks.map((block, index) => (

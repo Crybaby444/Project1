@@ -43,7 +43,7 @@ export function ReviewsFeed({ source, heading, empty = null }: { source: Source;
         <p className="m-0 flex items-center gap-3">
           {first.average > 0 && (
             <>
-              <span className="font-display text-[2.2rem] leading-none font-black tabular-nums" aria-hidden="true">
+              <span className="font-display text-4xl leading-none font-black tabular-nums" aria-hidden="true">
                 {formatScore(first.average, locale, true)}
               </span>
               <Stars value={first.average} size={16} />

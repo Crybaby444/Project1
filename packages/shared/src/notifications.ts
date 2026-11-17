@@ -45,8 +45,10 @@ export const SavedSearchRequestSchema = z
     category: Slug.optional(),
     priceMax: z.number().int().min(1).max(10_000_000).optional(),
     district: Slug.optional(),
+    /** A city of the country (owner, 2026-11-16: search by city). */
+    city: Slug.optional(),
   })
-  .refine((v) => v.q !== undefined || v.category !== undefined || v.priceMax !== undefined || v.district !== undefined, { message: 'Choose at least one filter' });
+  .refine((v) => v.q !== undefined || v.category !== undefined || v.priceMax !== undefined || v.district !== undefined || v.city !== undefined, { message: 'Choose at least one filter' });
 export type SavedSearchRequest = z.infer<typeof SavedSearchRequestSchema>;
 
 export const SavedSearchSchema = z.object({
@@ -55,6 +57,7 @@ export const SavedSearchSchema = z.object({
   category: z.string().nullable(),
   priceMax: z.number().int().nullable(),
   district: z.string().nullable(),
+  city: z.string().nullable(),
   createdAt: z.iso.datetime(),
 });
 export type SavedSearch = z.infer<typeof SavedSearchSchema>;

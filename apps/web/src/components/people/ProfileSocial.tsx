@@ -30,8 +30,8 @@ export function ProfileSocial({ userId, name, followers, following, reviews, dea
   const stat = (value: number, label: string, onClick?: () => void) => {
     const inner = (
       <>
-        <span className="font-display block text-[1.9rem] leading-none font-black tabular-nums sm:text-[2.2rem]">{value}</span>
-        <span className="text-ink/70 block text-[13px] font-semibold">{label}</span>
+        <span className="font-display block text-3xl leading-none font-black tabular-nums sm:text-4xl">{value}</span>
+        <span className="text-ink/70 block text-sm font-semibold">{label}</span>
       </>
     );
     return onClick ? (

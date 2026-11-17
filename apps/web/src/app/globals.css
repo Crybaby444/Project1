@@ -46,6 +46,17 @@
 
 /* Brand motion (DESIGN.md "Project adaptations" §1); the scroll and load motion system is styles/motion.css. */
 @theme {
+  /*
+   * One type scale (owner, 2026-11-16: "everywhere a different grid and font sizes; there must be a
+   * system"). Interface text uses Tailwind's steps only: xs 12 · sm 14 · base 16 · lg 18 · xl 20 ·
+   * 2xl 24 · 3xl 30 px. Display headings (Sofia Sans Extra Condensed) use four fluid steps:
+   * display-s for a card or block, display-m for a section, display-l for a page title, display-xl for
+   * a page's hero. Nothing else; the giant decorative words of What is Yoyo are artwork.
+   */
+  --text-display-s: clamp(1.8rem, 3vw, 2.8rem);
+  --text-display-m: clamp(2.2rem, 3.8vw, 3.4rem);
+  --text-display-l: clamp(2.6rem, 6vw, 4.8rem);
+  --text-display-xl: clamp(3rem, 8vw, 6rem);
   --animate-sticker-wobble: sticker-wobble 450ms var(--ease-yoyo);
   --animate-sticker-spin: sticker-spin 450ms var(--ease-yoyo);
   --animate-marquee: marquee 30s linear infinite;
@@ -181,6 +192,15 @@
     font-weight: 500;
     letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
+  }
+  /* A long @username or address without spaces wraps instead of pushing the page wider (320px phones). */
+  a,
+  h1,
+  h2,
+  h3,
+  p,
+  li {
+    overflow-wrap: break-word;
   }
 
   /* A theme lands in one step (components/theme/switch-theme.ts): no half-way colours. */

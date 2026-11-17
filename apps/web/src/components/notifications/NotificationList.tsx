@@ -52,7 +52,7 @@ export function NotificationList({ limit, compact = false, onNavigate }: { limit
   return (
     <div className="flex flex-col">
       <div className={`flex items-center justify-between gap-3 ${compact ? 'border-ink/15 border-b px-4 py-3' : 'pb-3'}`}>
-        <p className={compact ? 'text-[13px] font-bold tracking-[0.04em] uppercase' : 'text-ink/75 text-sm font-semibold'}>
+        <p className={compact ? 'text-sm font-bold tracking-[0.04em] uppercase' : 'text-ink/75 text-sm font-semibold'}>
           {compact ? t('title') : unread > 0 ? t('unread', { count: unread }) : ''}
         </p>
         {unread > 0 && (
@@ -77,7 +77,7 @@ export function NotificationList({ limit, compact = false, onNavigate }: { limit
               >
                 <span aria-hidden="true" className={`mt-2 inline-block size-2 shrink-0 rounded-full ${n.readAt ? 'border-ink/30 border' : 'bg-ink'}`} />
                 <span className="min-w-0 flex-1">
-                  <span className={`block text-[15px] leading-snug [overflow-wrap:anywhere] ${n.readAt ? '' : 'font-semibold'}`}>{text(n)}</span>
+                  <span className={`block text-base leading-snug [overflow-wrap:anywhere] ${n.readAt ? '' : 'font-semibold'}`}>{text(n)}</span>
                   <time dateTime={n.createdAt} className="text-ink/70 mt-0.5 block text-xs">
                     {ago(n.createdAt)}
                   </time>

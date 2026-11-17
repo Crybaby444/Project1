@@ -40,7 +40,7 @@ describe('chat (plan 9, spec §4.6)', () => {
     const { listing, conversation } = await talk();
     const again = (await renter.post(`/listings/${listing.id}/conversation`).expect(200)).body.conversation;
     expect(again.id).toBe(conversation.id);
-    expect(conversation).toMatchObject({ role: 'RENTER', other: { name: 'Olga Owner' }, listing: { id: listing.id } });
+    expect(conversation).toMatchObject({ role: 'RENTER', other: { name: `@${owner.user.username}` }, listing: { id: listing.id } });
     await owner.post(`/listings/${listing.id}/conversation`).expect(409);
     const draft = await seedListing(t, owner.user, { status: 'DRAFT' });
     await renter.post(`/listings/${draft.id}/conversation`).expect(404);

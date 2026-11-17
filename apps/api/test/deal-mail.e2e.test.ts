@@ -36,7 +36,7 @@ describe('deal emails', () => {
     const request = t.mail.to(owner.email);
     expect(request.map((m) => m.subject)).toEqual(['Jauns pieprasījums: “Bosch cordless drill”']);
     expect(request[0]).toMatchObject({ template: 'deal-event' });
-    expect(request[0]!.text).toContain('Анна');
+    expect(request[0]!.text).toContain(`@${renter.user.username}`);
     expect(request[0]!.text).toContain(formatMoney(cents(4_500), 'lv'));
     expect(request[0]!.html).toContain(`/lv/bookings/${booking.id}`);
 
@@ -61,7 +61,7 @@ describe('deal emails', () => {
     const listing = await seedListing(t, owner.user, { status: 'PUBLISHED' });
     const offer = (await renter.post(`/listings/${listing.id}/offers`).send({ start: day(t, 2), end: day(t, 3), dailyCents: 1200 }).expect(201)).body.offer;
     await t.mailSent();
-    expect(subjects(owner)).toEqual([`Анна piedāvā ${formatMoney(cents(1_200), 'lv')} dienā par “Bosch cordless drill”`]);
+    expect(subjects(owner)).toEqual([`@${renter.user.username} piedāvā ${formatMoney(cents(1_200), 'lv')} dienā par “Bosch cordless drill”`]);
     await owner.post(`/offers/${offer.id}/accept`).expect(200);
     await t.mailSent();
     expect(subjects(renter)).toEqual(['Ваше предложение за «Bosch cordless drill» принято']);

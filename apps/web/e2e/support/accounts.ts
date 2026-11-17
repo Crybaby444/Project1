@@ -20,14 +20,14 @@ export async function asOwnVisitor(context: BrowserContext): Promise<void> {
 /** Registers through the site's /api proxy; the browser of `request` is signed in afterwards. */
 export async function registerByApi(
   request: APIRequestContext,
-  { email = uniqueEmail(), password = PASSWORD, name = 'Anna Bērziņa', locale = 'en' } = {},
-): Promise<{ email: string; password: string; name: string }> {
+  { email = uniqueEmail(), password = PASSWORD, name = 'Anna Bērziņa', locale = 'en', username: wanted }: { email?: string; password?: string; name?: string; locale?: string; username?: string } = {},
+): Promise<{ email: string; password: string; name: string; username: string }> {
   // A unique username from the email, and an adult's birth date (sign-up asks both since 2026-11-16).
-  const username = `e${email.split('@')[0]!.replace(/[^a-z0-9]/gi, '').toLowerCase()}`.slice(-20);
+  const username = wanted ?? `e${email.split('@')[0]!.replace(/[^a-z0-9]/gi, '').toLowerCase()}`.slice(-20);
   const fullName = name.trim().includes(' ') ? name : `${name} Tester`;
   const res = await request.post('/api/v1/auth/register', { data: { email, password, name: fullName, username, adult: true, dataConsent: true, locale } });
   if (res.status() !== 201) throw new Error(`registration failed: ${res.status()} ${await res.text()}`);
-  return { email, password, name: fullName };
+  return { email, password, name: fullName, username };
 }
 
 /** Fills and sends the sign-in form. */

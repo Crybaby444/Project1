@@ -60,7 +60,7 @@ export function DealTimeline({
 
   return (
     <section aria-labelledby="deal-timeline" className="border-ink/15 flex flex-col gap-4 border-t pt-6">
-      <h2 id="deal-timeline" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
+      <h2 id="deal-timeline" className="font-display text-display-s leading-[0.95] font-black uppercase">
         {t('title')}
       </h2>
       <ol className="flex flex-col" data-timeline="">
@@ -88,7 +88,7 @@ export function DealTimeline({
               <div className={`flex min-w-0 flex-1 flex-col gap-1 pt-1 ${step.state === 'skipped' ? 'opacity-60' : ''}`}>
                 <p className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
                   <span className={`font-bold [overflow-wrap:anywhere] ${step.state === 'skipped' ? 'line-through' : ''}`}>{title}</span>
-                  <span className="text-[12px] font-bold tracking-[0.03em] uppercase">
+                  <span className="text-xs font-bold tracking-[0.03em] uppercase">
                     <span className="sr-only">, </span>
                     {t(`state.${step.state}`)}
                   </span>

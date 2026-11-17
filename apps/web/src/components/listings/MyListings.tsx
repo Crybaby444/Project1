@@ -65,7 +65,7 @@ export function MyListings({ initialStatus }: { initialStatus: MyListingsFilter 
       </header>
 
       {counts.length > 0 && (
-        <p className="text-ink/75 -mt-4 flex flex-wrap gap-x-4 gap-y-1 text-[15px]" data-status-summary="">
+        <p className="text-ink/75 -mt-4 flex flex-wrap gap-x-4 gap-y-1 text-base" data-status-summary="">
           {counts.map(([st, n]) => (
             <span key={st}>
               <b className="text-ink tabular-nums">{n}</b> {t(`filter.${st}`).toLowerCase()}
@@ -128,7 +128,7 @@ export function MyListings({ initialStatus }: { initialStatus: MyListingsFilter 
           type="button"
           aria-expanded={showDeleted}
           onClick={() => setShowDeleted((open) => !open)}
-          className="text-ink/75 hover:text-ink self-start text-[15px] font-bold underline decoration-1 underline-offset-4"
+          className="text-ink/75 hover:text-ink self-start text-base font-bold underline decoration-1 underline-offset-4"
         >
           {showDeleted ? t('deleted.hide') : t('deleted.show')}
         </button>

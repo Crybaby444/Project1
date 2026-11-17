@@ -78,7 +78,7 @@ export function AdminAudit() {
                     {ta(`action.${e.action}`)}
                     {e.summary && <span className="text-ink/75 font-normal"> · {e.summary}</span>}
                   </p>
-                  <p className="text-ink/70 text-[13px] tabular-nums">
+                  <p className="text-ink/70 text-sm tabular-nums">
                     {ta('by', { name: e.admin.name || '—' })} · {when.format(new Date(e.createdAt))}
                   </p>
                 </div>
@@ -95,8 +95,8 @@ export function AdminAudit() {
                       </summary>
                       <div className="mt-2 grid gap-2 sm:grid-cols-2">
                         {(['before', 'after'] as const).map((side) => (
-                          <pre key={side} className="bg-mist overflow-x-auto rounded-[12px] px-3 py-2 font-mono text-[12px] whitespace-pre-wrap">
-                            <span className="text-ink/60 block font-sans text-[11px] font-bold uppercase">{ta(side)}</span>
+                          <pre key={side} className="bg-mist overflow-x-auto rounded-[12px] px-3 py-2 font-mono text-xs whitespace-pre-wrap">
+                            <span className="text-ink/60 block font-sans text-xs font-bold uppercase">{ta(side)}</span>
                             {e[side] == null ? '—' : JSON.stringify(e[side], null, 2)}
                           </pre>
                         ))}

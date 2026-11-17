@@ -46,7 +46,7 @@ function CodeInput({ value, onChange, label }: { value: string; onChange(v: stri
         inputMode="numeric"
         pattern="[0-9]*"
         maxLength={6}
-        className={`${INPUT_CLASS} max-w-[12rem] font-mono text-[1.4rem] tracking-[0.4em]`}
+        className={`${INPUT_CLASS} max-w-[12rem] font-mono text-2xl tracking-[0.4em]`}
       />
     </div>
   );
@@ -143,7 +143,7 @@ export function TwoFactorSettings({ hasPassword }: { hasPassword: boolean }) {
         </div>
         <div className="flex min-w-0 flex-col gap-1.5">
           <p className="text-ink/75 text-sm">{t('keyLabel')}</p>
-          <code className="bg-mist rounded-[10px] px-3 py-2 font-mono text-[15px] font-semibold tracking-[0.08em] [overflow-wrap:anywhere] select-all">
+          <code className="bg-mist rounded-[10px] px-3 py-2 font-mono text-base font-semibold tracking-[0.08em] [overflow-wrap:anywhere] select-all">
             {setup.secret.match(/.{1,4}/g)?.join(' ')}
           </code>
         </div>

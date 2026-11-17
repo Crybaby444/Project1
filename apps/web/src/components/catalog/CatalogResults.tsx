@@ -1,4 +1,5 @@
 import { CATALOG_PAGE_SIZE, type CategoryNode, type Locale } from '@yoyo/shared';
+import { currentCountry } from '@/lib/country/server';
 import { getTranslations } from 'next-intl/server';
 import { RentalRules } from './RentalRules';
 import type { ReactNode } from 'react';
@@ -71,13 +72,13 @@ export async function CatalogResults({ params: raw, category, related, path, tit
   if (!results.ok) {
     return (
       <main className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-4 px-4 py-20 text-center sm:px-8">
-        <h1 className="font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black [overflow-wrap:anywhere] hyphens-auto uppercase">
+        <h1 className="font-display text-display-l leading-[0.95] font-black [overflow-wrap:anywhere] hyphens-auto uppercase">
           {t('error.title')}
         </h1>
         <p className="max-w-[46ch]">{t('error.body')}</p>
         <Link
           href={`${path}${catalogSearch(params)}`}
-          className="bg-cta text-cta-fg border-cta rounded-pill inline-flex min-h-10 items-center border px-5 text-[13px] font-bold tracking-[0.03em] uppercase"
+          className="bg-cta text-cta-fg border-cta rounded-pill inline-flex min-h-10 items-center border px-5 text-sm font-bold tracking-[0.03em] uppercase"
         >
           {t('error.retry')}
         </Link>
@@ -87,7 +88,8 @@ export async function CatalogResults({ params: raw, category, related, path, tit
 
   const { items, total } = results.data;
   const pages = Math.max(1, Math.ceil(total / CATALOG_PAGE_SIZE));
-  const districts = places.ok ? places.data.districts : [];
+  const cities = places.ok ? places.data.cities : [];
+  const country = await currentCountry();
   const status = t('found', { count: total });
 
   return (
@@ -101,7 +103,7 @@ export async function CatalogResults({ params: raw, category, related, path, tit
           >
             {title}
           </h1>
-          {lead && <p className="text-ink/80 max-w-[68ch] text-[16px] leading-relaxed">{lead}</p>}
+          {lead && <p className="text-ink/80 max-w-[68ch] text-base leading-relaxed">{lead}</p>}
           <SearchBox initialQuery={params.q ?? ''} className="max-w-3xl" />
           {related.length > 0 && (
             <nav aria-label={t('related')}>
@@ -125,18 +127,18 @@ export async function CatalogResults({ params: raw, category, related, path, tit
 
         <div className="grid gap-8 lg:grid-cols-[300px_minmax(0,1fr)]">
           <aside className="flex flex-col gap-4">
-            <Filters params={params} districts={districts} today={today} total={total} />
+            <Filters params={params} cities={cities} country={country} today={today} total={total} />
           </aside>
           <div className="flex min-w-0 flex-col gap-5">
             <Toolbar params={params} />
-            <ActiveFilters params={params} districts={districts} />
+            <ActiveFilters params={params} cities={cities} />
             {params.q && <span hidden data-search-q={params.q} data-search-results={total} />}
             <SaveSearchButton
               query={{
                 q: params.q,
                 category: category?.slug,
                 priceMax: params.priceMax,
-                district: params.district,
+                city: params.city,
               }}
             />
             <ResultsRegion status={status}>

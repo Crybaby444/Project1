@@ -38,7 +38,7 @@ describe('following people, their feed and finding people', () => {
     const profile = (await request(t.server).get(`/api/v1/users/${olga.user.id}`).expect(200)).body;
     expect(profile.user).toMatchObject({ followers: 1, following: 0 });
     expect((await janis.get('/me/following/ids').expect(200)).body.ids).toEqual([olga.user.id]);
-    expect((await janis.get('/me/following').expect(200)).body.items).toEqual([expect.objectContaining({ id: olga.user.id, name: 'Olga Kalniņa', followers: 1 })]);
+    expect((await janis.get('/me/following').expect(200)).body.items).toEqual([expect.objectContaining({ id: olga.user.id, name: `@${olga.user.username}`, followers: 1 })]);
     await janis.delete(`/users/${olga.user.id}/follow`).expect(204);
     expect((await request(t.server).get(`/api/v1/users/${olga.user.id}`).expect(200)).body.user.followers).toBe(0);
   });
@@ -50,9 +50,9 @@ describe('following people, their feed and finding people', () => {
     await rita.post(`/users/${olga.user.id}/follow`).expect(204);
     await olga.post(`/users/${janis.user.id}/follow`).expect(204);
     const followers = (await request(t.server).get(`/api/v1/users/${olga.user.id}/followers`).expect(200)).body.items;
-    expect(followers.map((p: { name: string }) => p.name)).toEqual(['Rita Ozola', 'Jānis Ozols']);
+    expect(followers.map((p: { name: string }) => p.name)).toEqual([`@${rita.user.username}`, `@${janis.user.username}`]);
     const following = (await request(t.server).get(`/api/v1/users/${olga.user.id}/following`).expect(200)).body.items;
-    expect(following).toEqual([expect.objectContaining({ id: janis.user.id, name: 'Jānis Ozols' })]);
+    expect(following).toEqual([expect.objectContaining({ id: janis.user.id, name: `@${janis.user.username}` })]);
     await t.prisma.user.update({ where: { id: rita.user.id }, data: { blockedAt: new Date() } });
     expect((await request(t.server).get(`/api/v1/users/${olga.user.id}/followers`).expect(200)).body.items).toHaveLength(1);
     await request(t.server).get(`/api/v1/users/${admin.user.id}/followers`).expect(404); // staff have no public profile
@@ -74,14 +74,14 @@ describe('following people, their feed and finding people', () => {
   it('finds people by name, accents ignored, never staff', async () => {
     await janis.post(`/users/${olga.user.id}/follow`).expect(204);
     const found = (await request(t.server).get('/api/v1/people?q=kalnina').expect(200)).body.items;
-    expect(found.map((p: { name: string }) => p.name)).toEqual(['Olga Kalniņa']);
+    expect(found.map((p: { name: string }) => p.name)).toEqual([`@${olga.user.username}`]);
     expect((await request(t.server).get('/api/v1/people?q=ada').expect(200)).body.items).toEqual([]);
     await request(t.server).get('/api/v1/people?q=a').expect(400);
   });
 
   it('finds people by username first (with or without @)', async () => {
     const byUsername = (await request(t.server).get('/api/v1/people?q=%40olga').expect(200)).body.items;
-    expect(byUsername[0]).toMatchObject({ name: 'Olga Kalniņa', username: 'olga.k' });
+    expect(byUsername[0]).toMatchObject({ name: '@olga.k', username: 'olga.k' });
   });
 
   it('renting and lending need the two ticks (18 or older, the data consent); given once in the profile', async () => {

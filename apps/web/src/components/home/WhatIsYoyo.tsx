@@ -11,11 +11,11 @@ export async function WhatIsYoyo() {
   return (
     <section data-home="what" id="what" className="bg-canvas text-ink relative">
       <div data-pin className="flex min-h-svh flex-col items-center justify-center gap-[5vh] px-4 py-[14vh] text-center sm:px-8">
-        <p className="text-ink/65 m-0 flex items-center gap-2.5 text-[13px] font-semibold">
+        <p className="text-ink/65 m-0 flex items-center gap-2.5 text-sm font-semibold">
           <span aria-hidden="true" className="size-2 rounded-full bg-current" />
           {t('label')}
         </p>
-        <h2 className="font-display m-0 mx-auto max-w-[14em] text-[clamp(2rem,9.4vw,3rem)] leading-[0.95] font-black uppercase sm:text-[clamp(2.4rem,5.4vw,6.4rem)]">
+        <h2 className="font-display m-0 mx-auto max-w-[14em] text-display-m leading-[0.95] font-black uppercase sm:text-display-xl">
           {words.map((w, i) => (
             <span key={i}>
               <span data-word className="inline-block">

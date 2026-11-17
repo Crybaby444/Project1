@@ -29,7 +29,7 @@ export function FindPeople() {
         onChange={(event) => setText(event.target.value)}
         placeholder={t('findPlaceholder')}
         autoComplete="off"
-        className="border-ink/25 bg-surface focus:border-ink rounded-pill min-h-12 w-full border px-5 text-[16px] outline-none"
+        className="border-ink/25 bg-surface focus:border-ink rounded-pill min-h-12 w-full border px-5 text-base outline-none"
       />
       {words.length < 2 ? (
         <p className="text-ink/70 text-sm">{t('findHint')}</p>

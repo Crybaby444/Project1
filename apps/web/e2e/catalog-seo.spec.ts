@@ -94,7 +94,7 @@ test.describe('category pages', () => {
   });
 
   test('filters, sorts and the map point at the bare category and are not indexed; ?page=N alone is', async ({ page }) => {
-    for (const query of ['?price_min=5', '?sort=price_asc', '?view=map', '?district=centrs&page=2']) {
+    for (const query of ['?price_min=5', '?sort=price_asc', '?view=map', '?city=riga&page=2']) {
       await page.goto(`/c/projectors${query}`);
       expect(await canonical(page), query).toBe(`${SITE}/c/projectors`);
       expect(await robots(page), query).toBe('noindex, follow');

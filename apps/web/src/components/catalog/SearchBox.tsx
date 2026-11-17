@@ -174,7 +174,7 @@ export function SearchBox({ initialQuery = '', className = '', compact = false, 
           onFocus={() => setOpen(true)}
           onKeyDown={onKeyDown}
           onBlur={() => setOpen(false)}
-          className={`min-w-0 flex-1 bg-transparent outline-none placeholder:text-ink/60 [&::-webkit-search-cancel-button]:hidden ${compact ? 'text-[15px]' : 'text-base'}`}
+          className={`min-w-0 flex-1 bg-transparent outline-none placeholder:text-ink/60 [&::-webkit-search-cancel-button]:hidden ${compact ? 'text-base' : 'text-base'}`}
         />
         {text && (
           <button
@@ -194,7 +194,7 @@ export function SearchBox({ initialQuery = '', className = '', compact = false, 
         {!compact && (
           <button
             type="submit"
-            className="bg-cta text-cta-fg border-cta rounded-pill ease-yoyo min-h-10 shrink-0 border px-4 text-[13px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.97]"
+            className="bg-cta text-cta-fg border-cta rounded-pill ease-yoyo min-h-10 shrink-0 border px-4 text-sm font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.97]"
           >
             {t('submit')}
           </button>
@@ -207,7 +207,7 @@ export function SearchBox({ initialQuery = '', className = '', compact = false, 
         <ul id={ids.list} role="listbox" aria-label={t('label')} className="flex flex-col gap-1">
           {categories.length > 0 && (
             <li role="presentation">
-              <p id={ids.categories} className="px-3 pt-1 pb-1 text-[12px] font-bold tracking-[0.032em] uppercase">
+              <p id={ids.categories} className="px-3 pt-1 pb-1 text-xs font-bold tracking-[0.032em] uppercase">
                 {t('categories')}
               </p>
               <ul role="group" aria-labelledby={ids.categories}>
@@ -217,7 +217,7 @@ export function SearchBox({ initialQuery = '', className = '', compact = false, 
           )}
           {listings.length > 0 && (
             <li role="presentation">
-              <p id={ids.listings} className="px-3 pt-2 pb-1 text-[12px] font-bold tracking-[0.032em] uppercase">
+              <p id={ids.listings} className="px-3 pt-2 pb-1 text-xs font-bold tracking-[0.032em] uppercase">
                 {t('items')}
               </p>
               <ul role="group" aria-labelledby={ids.listings}>

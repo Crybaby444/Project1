@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { publicName } from '../common/public-name';
 import { SHOP_LIMITS, type MyShop, type ShopInput, type ShopResponse, type ShopSummary } from '@yoyo/shared';
 import { serializeCatalogItem } from '../catalog/catalog.serializer';
 import { CATALOG_VISIBLE_WHERE } from '../catalog/visibility';
@@ -49,7 +50,7 @@ export class ShopsService {
     const ratings = await this.reviews.ratingsOfListings(ordered.map((l) => l.id));
     return {
       shop: this.summary(shop, true),
-      owner: { id: shop.owner.id, name: shop.owner.name, username: shop.owner.username },
+      owner: { id: shop.owner.id, name: publicName(shop.owner), username: shop.owner.username },
       items: ordered.map((l) => serializeCatalogItem(l, this.urlFor, ratings.get(l.id))),
     };
   }

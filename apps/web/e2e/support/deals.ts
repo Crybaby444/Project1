@@ -12,12 +12,18 @@ export function rigaDay(offset = 0): string {
 }
 
 /** A signed-in person in a browser context of their own (their own visitor address too). */
-export async function person(browser: Browser, baseURL: string | undefined, name: string): Promise<{ context: BrowserContext; page: Page }> {
+/**
+ * A person signed up in their own browser. They are shown as @username (owner, 2026-11-16), so it is made
+ * from their first name plus a short unique tail and returned (`handle` is `@username`).
+ */
+export async function person(browser: Browser, baseURL: string | undefined, name: string): Promise<{ context: BrowserContext; page: Page; handle: string }> {
   const context = await browser.newContext({ baseURL });
   await asOwnVisitor(context);
   const page = await context.newPage();
-  await registerByApi(page.request, { email: uniqueEmail(name.normalize('NFD').replace(/[^A-Za-z]/g, '').toLowerCase().slice(0, 12) || 'deal'), name });
-  return { context, page };
+  const first = name.split(' ')[0]!.normalize('NFD').replace(/[^A-Za-z]/g, '').toLowerCase().slice(0, 10) || 'person';
+  const username = `${first}.${Math.random().toString(36).slice(2, 8)}`;
+  await registerByApi(page.request, { email: uniqueEmail(first), name, username });
+  return { context, page, handle: `@${username}` };
 }
 
 /**

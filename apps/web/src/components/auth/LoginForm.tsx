@@ -106,7 +106,7 @@ export function LoginForm({ next, oauthError }: { next: string | null; oauthErro
                 inputMode="numeric"
                 pattern="[0-9]*"
                 maxLength={6}
-                className={`${INPUT_CLASS} font-mono text-[1.4rem] tracking-[0.4em]`}
+                className={`${INPUT_CLASS} font-mono text-2xl tracking-[0.4em]`}
                 {...form.register('code', { setValueAs: (v: string) => (v ? v.replace(/\D/g, '') : undefined) })}
               />
             </Field>

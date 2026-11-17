@@ -160,9 +160,9 @@ export function CommandPalette() {
                 setOpen(false);
               }
             }}
-            className="min-h-14 flex-1 bg-transparent text-[17px] outline-none placeholder:text-[color-mix(in_srgb,var(--ink)_55%,transparent)]"
+            className="min-h-14 flex-1 bg-transparent text-lg outline-none placeholder:text-[color-mix(in_srgb,var(--ink)_55%,transparent)]"
           />
-          <kbd className="border-ink/20 rounded-[6px] border px-1.5 text-[11px] font-semibold">Esc</kbd>
+          <kbd className="border-ink/20 rounded-[6px] border px-1.5 text-xs font-semibold">Esc</kbd>
         </div>
         <ul id={listId} role="listbox" aria-label={t('search.open')} className="max-h-[min(60vh,28rem)] overflow-y-auto p-2">
           {hits.length === 0 && <li className="text-ink/70 px-3 py-6 text-center text-sm">{t('search.empty')}</li>}
@@ -172,7 +172,7 @@ export function CommandPalette() {
             const isActive = i === Math.min(active, hits.length - 1);
             return (
               <li key={hit.key} role="presentation">
-                {heading && <p className="text-ink/60 px-3 pt-3 pb-1 text-[11px] font-bold tracking-[0.08em] uppercase" aria-hidden="true">{t(`search.${heading}`)}</p>}
+                {heading && <p className="text-ink/60 px-3 pt-3 pb-1 text-xs font-bold tracking-[0.08em] uppercase" aria-hidden="true">{t(`search.${heading}`)}</p>}
                 <div
                   id={optionId(i)}
                   role="option"
@@ -182,13 +182,13 @@ export function CommandPalette() {
                   className={`flex cursor-pointer items-baseline justify-between gap-4 rounded-[12px] px-3 py-2.5 ${isActive ? 'bg-ink text-canvas' : ''}`}
                 >
                   <span className="min-w-0 truncate font-semibold">{hit.label}</span>
-                  <span className={`shrink-0 truncate text-[13px] ${isActive ? 'text-canvas/75' : 'text-ink/65'}`}>{hit.detail}</span>
+                  <span className={`shrink-0 truncate text-sm ${isActive ? 'text-canvas/75' : 'text-ink/65'}`}>{hit.detail}</span>
                 </div>
               </li>
             );
           })}
         </ul>
-        <p className="border-ink/15 text-ink/65 border-t px-4 py-2 text-[12px]">{t('search.hint')}</p>
+        <p className="border-ink/15 text-ink/65 border-t px-4 py-2 text-xs">{t('search.hint')}</p>
       </div>
     </div>
   );

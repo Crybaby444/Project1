@@ -29,11 +29,11 @@ export default async function VerifyIdentityPage({ params, searchParams }: Props
       <h1 style={displayFit(t('title'), { max: '3.25rem' })} className="font-display text-display-fit leading-[0.85] font-black uppercase">
         {t('title')}
       </h1>
-      <p className="text-[17px] leading-relaxed">{t('intro')}</p>
+      <p className="text-lg leading-relaxed">{t('intro')}</p>
       <RequireSession>
         <IdentityCheck />
       </RequireSession>
-      <Link href={next} className="self-start text-[15px] font-bold underline underline-offset-4">
+      <Link href={next} className="self-start text-base font-bold underline underline-offset-4">
         {t('skip')}
       </Link>
     </main>

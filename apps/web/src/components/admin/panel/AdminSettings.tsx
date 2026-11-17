@@ -92,9 +92,9 @@ function Form({ data }: { data: Settings }) {
                     <label htmlFor={id} className="font-semibold">
                       {t(`key.${key}`)}
                     </label>
-                    <p className="text-ink/70 text-[13px]">
+                    <p className="text-ink/70 text-sm">
                       {t('default', { value: String(item.default) || '—' })}
-                      {item.changed && <span className="bg-ink text-canvas rounded-pill ml-2 px-2 py-0.5 text-[11px] font-bold">{t('changed')}</span>}
+                      {item.changed && <span className="bg-ink text-canvas rounded-pill ml-2 px-2 py-0.5 text-xs font-bold">{t('changed')}</span>}
                       {t.has(`hint.${key}`) && <span className="block">{t(`hint.${key}`)}</span>}
                     </p>
                   </div>

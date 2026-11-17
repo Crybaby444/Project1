@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ActivityService } from '../activity/activity.service';
+import { publicName } from '../common/public-name';
 import type { BookingStatus as SharedStatus, ChatMessage, ChatRole, ConversationList, ConversationSummary, ConversationThread } from '@yoyo/shared';
 import { CLOCK, type Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
@@ -14,8 +15,8 @@ const THREAD_LIMIT = 300;
 
 const CONVERSATION_INCLUDE = {
   listing: { select: { id: true, title: true, photos: { orderBy: { position: 'asc' }, take: 1, select: { storageKey: true } } } },
-  renter: { select: { id: true, name: true } },
-  owner: { select: { id: true, name: true } },
+  renter: { select: { id: true, name: true, username: true, deletedAt: true } },
+  owner: { select: { id: true, name: true, username: true, deletedAt: true } },
 } as const satisfies Prisma.ConversationInclude;
 
 type ConversationRow = Prisma.ConversationGetPayload<{ include: typeof CONVERSATION_INCLUDE }>;
@@ -41,8 +42,9 @@ export class ChatService {
 
   /** The renter's conversation about a published item, started when there is none. */
   async open(userId: string, listingId: string): Promise<ConversationSummary> {
-    const listing = await this.prisma.listing.findUnique({ where: { id: listingId }, select: { id: true, ownerId: true, status: true } });
+    const listing = await this.prisma.listing.findUnique({ where: { id: listingId }, select: { id: true, ownerId: true, status: true, demo: true } });
     if (!listing || listing.status !== 'PUBLISHED') throw new AppError('NOT_FOUND', 404, 'Listing not found');
+    if (listing.demo) throw new AppError('DEMO_LISTING', 409);
     if (listing.ownerId === userId) {
       throw new AppError('ACTION_NOT_ALLOWED', 409, 'This is your own item', undefined, { why: 'OWN_LISTING' });
     }
@@ -191,7 +193,7 @@ export class ChatService {
       id: row.id,
       role,
       listing: row.listing ? { id: row.listing.id, title: row.listing.title ?? '', photoUrl: cover ? this.storage.url(cover.storageKey, 'thumb') : null } : null,
-      other: { id: other.id, name: other.name },
+      other: { id: other.id, name: publicName(other) },
       lastMessage: last ? this.message(last, userId) : null,
       lastMessageAt: row.lastMessageAt.toISOString(),
       unread,
