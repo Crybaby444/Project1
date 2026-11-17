@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { ActivityService } from '../activity/activity.service';
 import { publicName } from '../common/public-name';
 import { canReview, reviewDeadline, reviewIsPublic, type BookingSnapshot } from '@yoyo/domain';
 import type { DealReviews, PublicReview, ReviewPage, ReviewRequest } from '@yoyo/shared';
@@ -46,6 +47,7 @@ function toPublic(row: ReviewRow): PublicReview {
 @Injectable()
 export class ReviewsService {
   constructor(
+    private readonly activity: ActivityService,
     private readonly prisma: PrismaService,
     private readonly rules: BookingRulesService,
     private readonly notifications: NotificationsService,
@@ -119,6 +121,7 @@ export class ReviewsService {
         include: REVIEW_INCLUDE,
       });
       await this.notifications.notify([row.subjectId], { kind: 'REVIEW', event: 'RECEIVED', bookingId, listingId: booking.listingId, title: row.listing?.title ?? '' });
+      this.activity.record('REVIEW_WRITTEN', userId, { type: 'REVIEW', id: row.id }, `${request.rating}★`);
       return toPublic(row);
     } catch (error) {
       if ((error as { code?: string }).code === 'P2002') {

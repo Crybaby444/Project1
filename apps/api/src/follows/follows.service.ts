@@ -1,4 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ActivityService } from '../activity/activity.service';
 import { publicName } from '../common/public-name';
 import type { FollowFeed, PersonCard } from '@yoyo/shared';
 import { serializeCatalogItem } from '../catalog/catalog.serializer';
@@ -25,6 +26,7 @@ export class FollowsService {
   private readonly urlFor: UrlFor = (key, variant) => this.storage.url(key, variant);
 
   constructor(
+    private readonly activity: ActivityService,
     private readonly prisma: PrismaService,
     private readonly reviews: ReviewsService,
     private readonly notifications: NotificationsService,
@@ -42,6 +44,7 @@ export class FollowsService {
       create: { followerId, followeeId, createdAt: this.clock.now() },
       update: {},
     });
+    this.activity.record('FOLLOWED', followerId, { type: 'USER', id: followeeId }, target.username ? `@${target.username}` : target.name);
   }
 
   async unfollow(followerId: string, followeeId: string): Promise<void> {

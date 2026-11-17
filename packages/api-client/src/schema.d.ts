@@ -1252,6 +1252,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/activity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminActivityController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/me/export": {
         parameters: {
             query?: never;
@@ -3727,6 +3743,25 @@ export interface components {
                 score: number;
                 issues: ("SHORT_TITLE" | "LONG_TITLE" | "SHORT_DESCRIPTION" | "FEW_PHOTOS" | "NO_DISTRICT")[];
             }[];
+        };
+        ActivityPageDto_Output: {
+            items: {
+                id: string;
+                /** @enum {string} */
+                kind: "USER_REGISTERED" | "USER_SIGNED_IN" | "USER_DELETED" | "PROFILE_UPDATED" | "IDENTITY_SUBMITTED" | "LISTING_CREATED" | "LISTING_SUBMITTED" | "LISTING_DELETED" | "BOOKING_REQUESTED" | "BOOKING_STEP" | "OFFER_MADE" | "MESSAGE_SENT" | "REVIEW_WRITTEN" | "REPORT_FILED" | "FOLLOWED";
+                actor: {
+                    id: string;
+                    name: string;
+                    username: string | null;
+                } | null;
+                /** @enum {string|null} */
+                targetType: "USER" | "LISTING" | "BOOKING" | "OFFER" | "CONVERSATION" | "REVIEW" | "REPORT" | null;
+                targetId: string | null;
+                summary: string;
+                /** Format: date-time */
+                at: string;
+            }[];
+            next: string | null;
         };
         UpdateProfileDto: {
             name?: string;
@@ -8565,6 +8600,59 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AdminSeoDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminActivityController_list: {
+        parameters: {
+            query?: {
+                group?: "accounts" | "listings" | "deals" | "messages" | "reports" | "social";
+                kind?: "USER_REGISTERED" | "USER_SIGNED_IN" | "USER_DELETED" | "PROFILE_UPDATED" | "IDENTITY_SUBMITTED" | "LISTING_CREATED" | "LISTING_SUBMITTED" | "LISTING_DELETED" | "BOOKING_REQUESTED" | "BOOKING_STEP" | "OFFER_MADE" | "MESSAGE_SENT" | "REVIEW_WRITTEN" | "REPORT_FILED" | "FOLLOWED";
+                userId?: string;
+                before?: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Activity, newest first; `next` pages back */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActivityPageDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
                 };
             };
             /** @description Not signed in or wrong credentials */

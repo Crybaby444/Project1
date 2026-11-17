@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { ActivityService } from '../activity/activity.service';
 import { ENV, type Env } from '../config/env';
 import { Inject, Injectable } from '@nestjs/common';
 import {
@@ -156,6 +157,7 @@ export function actorFor(
 @Injectable()
 export class BookingsService {
   constructor(
+    private readonly activity: ActivityService,
     private readonly prisma: PrismaService,
     private readonly rules: BookingRulesService,
     private readonly effects: EffectsExecutor,
@@ -313,6 +315,7 @@ export class BookingsService {
     });
     await this.afterCommit(after);
     await this.analytics.count('FUNNEL', 'REQUEST');
+    this.activity.record('BOOKING_REQUESTED', renter.id, { type: 'BOOKING', id }, `${input.start} – ${input.end}`);
     return this.view(id, renter);
   }
 
@@ -382,6 +385,7 @@ export class BookingsService {
         status: outcome.saved.next.status,
       });
     }
+    this.activity.record('BOOKING_STEP', user.id, { type: 'BOOKING', id }, input.type);
     return this.view(id, user);
   }
 

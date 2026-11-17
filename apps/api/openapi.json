@@ -4721,6 +4721,130 @@
         ]
       }
     },
+    "/api/v1/admin/activity": {
+      "get": {
+        "operationId": "AdminActivityController_list",
+        "parameters": [
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "accounts",
+                "listings",
+                "deals",
+                "messages",
+                "reports",
+                "social"
+              ]
+            }
+          },
+          {
+            "name": "kind",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "USER_REGISTERED",
+                "USER_SIGNED_IN",
+                "USER_DELETED",
+                "PROFILE_UPDATED",
+                "IDENTITY_SUBMITTED",
+                "LISTING_CREATED",
+                "LISTING_SUBMITTED",
+                "LISTING_DELETED",
+                "BOOKING_REQUESTED",
+                "BOOKING_STEP",
+                "OFFER_MADE",
+                "MESSAGE_SENT",
+                "REVIEW_WRITTEN",
+                "REPORT_FILED",
+                "FOLLOWED"
+              ]
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 40,
+              "type": "string"
+            }
+          },
+          {
+            "name": "before",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 80,
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Activity, newest first; `next` pages back",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityPageDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "admin"
+        ]
+      }
+    },
     "/api/v1/me/export": {
       "get": {
         "operationId": "MeController_export",
@@ -17144,6 +17268,114 @@
           "healthy",
           "issues",
           "listings"
+        ],
+        "additionalProperties": false
+      },
+      "ActivityPageDto_Output": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "USER_REGISTERED",
+                    "USER_SIGNED_IN",
+                    "USER_DELETED",
+                    "PROFILE_UPDATED",
+                    "IDENTITY_SUBMITTED",
+                    "LISTING_CREATED",
+                    "LISTING_SUBMITTED",
+                    "LISTING_DELETED",
+                    "BOOKING_REQUESTED",
+                    "BOOKING_STEP",
+                    "OFFER_MADE",
+                    "MESSAGE_SENT",
+                    "REVIEW_WRITTEN",
+                    "REPORT_FILED",
+                    "FOLLOWED"
+                  ]
+                },
+                "actor": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "username"
+                  ],
+                  "additionalProperties": false,
+                  "nullable": true
+                },
+                "targetType": {
+                  "type": "string",
+                  "enum": [
+                    "USER",
+                    "LISTING",
+                    "BOOKING",
+                    "OFFER",
+                    "CONVERSATION",
+                    "REVIEW",
+                    "REPORT",
+                    null
+                  ],
+                  "nullable": true
+                },
+                "targetId": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "summary": {
+                  "type": "string"
+                },
+                "at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                }
+              },
+              "required": [
+                "id",
+                "kind",
+                "actor",
+                "targetType",
+                "targetId",
+                "summary",
+                "at"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "next": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          }
+        },
+        "required": [
+          "items",
+          "next"
         ],
         "additionalProperties": false
       },
