@@ -1,10 +1,11 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useId } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Field } from '@/components/ui/Field';
 import { INPUT_CLASS } from '@/components/ui/inputs';
 import { brandOf, formatCardNumber, formatExpiry, TEST_CARDS, type CardFields, type CardProblem } from '@/lib/deals/card';
+import { mountStripeCard, stripeEnabled } from '@/lib/deals/stripe';
 
 export const EMPTY_CARD: CardFields = { number: '', expiry: '', cvc: '', holder: '' };
 
@@ -79,6 +80,8 @@ export function CardForm({
   const error = (field: keyof CardFields) => (showErrors && problems[field] ? t(`errors.${problems[field]!}`) : undefined);
   const set = (patch: Partial<CardFields>) => onChange({ ...value, ...patch });
 
+  if (stripeEnabled()) return <StripeCardFields value={value} onChange={onChange} holderError={error('holder')} disabled={disabled} />;
+
   return (
     <div className="flex flex-col gap-4" data-card-form="">
       <div className="flex flex-col gap-1.5">
@@ -151,6 +154,43 @@ export function CardForm({
           disabled={disabled}
           className={INPUT_CLASS}
         />
+      </Field>
+    </div>
+  );
+}
+
+/** With Stripe on: Stripe's own card field (number, date, code in its iframe) and the holder's name. */
+function StripeCardFields({ value, onChange, holderError, disabled }: { value: CardFields; onChange(next: CardFields): void; holderError?: string | undefined; disabled: boolean }) {
+  const t = useTranslations('checkout');
+  const host = useRef<HTMLDivElement>(null);
+  const [problem, setProblem] = useState<string | null>(null);
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    let unmount: (() => void) | undefined;
+    let gone = false;
+    if (host.current) {
+      mountStripeCard(host.current, (state) => setProblem(state.error ?? null))
+        .then((stop) => (gone ? stop() : (unmount = stop)))
+        .catch(() => setFailed(true));
+    }
+    return () => {
+      gone = true;
+      unmount?.();
+    };
+  }, []);
+  return (
+    <div className="flex flex-col gap-4" data-card-form="" data-stripe="">
+      <div className="flex flex-col gap-1.5">
+        <span className="text-sm font-bold tracking-[0.03em] uppercase">{t('number')}</span>
+        <div ref={host} className={`${INPUT_CLASS} flex items-center py-3`} aria-describedby={problem ? 'stripe-card-error' : undefined} />
+        {(problem || failed) && (
+          <p id="stripe-card-error" role="alert" className="text-sm text-[var(--danger)]">
+            {failed ? t('stripeFailed') : problem}
+          </p>
+        )}
+      </div>
+      <Field label={t('holder')} error={holderError}>
+        <input autoComplete="cc-name" name="cc-name" value={value.holder} onChange={(event) => onChange({ ...value, holder: event.target.value })} disabled={disabled} className={INPUT_CLASS} />
       </Field>
     </div>
   );
