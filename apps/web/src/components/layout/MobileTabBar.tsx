@@ -14,10 +14,10 @@ import { categoryPath } from '@/lib/seo';
 
 function Tab({ href, label, active, children, badge }: { href: string; label: string; active: boolean; children: ReactNode; badge?: number }) {
   return (
-    <Link href={href} aria-current={active ? 'page' : undefined} className="relative flex min-w-0 flex-1 flex-col items-center gap-1 py-2 text-[10.5px] font-semibold">
+    <Link href={href} aria-current={active ? 'page' : undefined} className="relative flex min-w-0 flex-1 flex-col items-center gap-1 py-2 text-xs font-semibold">
       <span className={`relative grid size-7 place-items-center ${active ? 'text-ink' : 'text-ink/60'}`}>
         {children}
-        {badge ? <span className="bg-ink text-canvas ring-canvas absolute -top-1 -right-2 grid min-h-4 min-w-4 place-items-center rounded-full px-1 text-[9px] font-bold ring-2">{badge > 9 ? '9+' : badge}</span> : null}
+        {badge ? <span className="bg-ink text-canvas ring-canvas absolute -top-1 -right-2 grid min-h-4 min-w-4 place-items-center rounded-full px-1 text-xs font-bold ring-2">{badge > 9 ? '9+' : badge}</span> : null}
       </span>
       <span className={active ? 'text-ink' : 'text-ink/60'}>{label}</span>
       {active && <span aria-hidden="true" className="absolute top-0 size-[5px] rounded-full bg-[var(--glow)] shadow-[0_0_8px_1px_var(--glow)]" />}
@@ -65,7 +65,7 @@ export function MobileTabBar({ roots, hidden }: { roots: MenuRoot[]; hidden: boo
             <path d="M4 10.5 12 4l8 6.5V20H4z" />
           </svg>
         </Tab>
-        <button type="button" aria-expanded={sheet} onClick={() => setSheet(true)} className="flex min-w-0 flex-1 flex-col items-center gap-1 py-2 text-[10.5px] font-semibold">
+        <button type="button" aria-expanded={sheet} onClick={() => setSheet(true)} className="flex min-w-0 flex-1 flex-col items-center gap-1 py-2 text-xs font-semibold">
           <span className="text-ink/60 grid size-7 place-items-center">
             <svg viewBox="0 0 24 24" aria-hidden="true" className={icon}>
               <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" />
@@ -109,7 +109,7 @@ export function MobileTabBar({ roots, hidden }: { roots: MenuRoot[]; hidden: boo
         <div className="flex flex-col gap-5 px-5 pt-3 pb-[max(24px,env(safe-area-inset-bottom))]">
           <span aria-hidden="true" className="bg-ink/20 mx-auto h-1.5 w-12 rounded-full" />
           <div className="flex items-center justify-between">
-            <span className="font-display text-[2rem] leading-none font-black uppercase">{t('catalog')}</span>
+            <span className="font-display text-4xl leading-none font-black uppercase">{t('catalog')}</span>
             <button type="button" aria-label={t('close')} onClick={() => setSheet(false)} className="bg-ink/[0.06] rounded-pill inline-grid size-10 place-items-center">
               <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5">
                 <path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
@@ -124,7 +124,7 @@ export function MobileTabBar({ roots, hidden }: { roots: MenuRoot[]; hidden: boo
               return (
                 <li key={key}>
                   <button type="button" aria-expanded={open} onClick={() => setExpanded(open ? null : key)} className="flex min-h-14 w-full items-center justify-between gap-3 text-left">
-                    <span className="font-display text-[1.55rem] leading-none font-black uppercase">{localized(root.names, locale)}</span>
+                    <span className="font-display text-2xl leading-none font-black uppercase">{localized(root.names, locale)}</span>
                     <svg viewBox="0 0 12 12" aria-hidden="true" className={`size-3 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}>
                       <path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -133,13 +133,13 @@ export function MobileTabBar({ roots, hidden }: { roots: MenuRoot[]; hidden: boo
                     <ul className="flex flex-col pb-3">
                       {root.children.map((child) => (
                         <li key={child.slugs.en}>
-                          <Link href={categoryPath(child.slugs[locale])} className="flex min-h-11 items-center text-[16px]">
+                          <Link href={categoryPath(child.slugs[locale])} className="flex min-h-11 items-center text-base">
                             {localized(child.names, locale)}
                           </Link>
                         </li>
                       ))}
                       <li>
-                        <Link href={categoryPath(root.slugs[locale])} className="flex min-h-11 items-center text-[15px] font-bold underline decoration-1 underline-offset-4">
+                        <Link href={categoryPath(root.slugs[locale])} className="flex min-h-11 items-center text-base font-bold underline decoration-1 underline-offset-4">
                           {t('all')}
                         </Link>
                       </li>
@@ -149,7 +149,7 @@ export function MobileTabBar({ roots, hidden }: { roots: MenuRoot[]; hidden: boo
               );
             })}
           </ul>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[16px] font-semibold">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-base font-semibold">
             <Link href="/what-is-yoyo" className="flex min-h-11 items-center gap-2">
               <span aria-hidden="true" className="size-2 rounded-full bg-[var(--glow)] ring-1 ring-black/20" />
               {t('whatIsYoyo')}

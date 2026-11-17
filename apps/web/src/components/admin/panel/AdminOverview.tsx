@@ -25,7 +25,7 @@ export function AdminOverview() {
     <div className="flex flex-col gap-10">
       <header className="flex flex-col gap-1">
         <p className="text-ink/70 text-sm font-semibold first-letter:uppercase">{today}</p>
-        <h1 className="font-display text-[clamp(2.6rem,5vw,4.2rem)] leading-[0.92] font-black uppercase">{t('overview.title')}</h1>
+        <h1 className="font-display text-display-l leading-[0.92] font-black uppercase">{t('overview.title')}</h1>
         {user && <p className="text-ink/75">{t('overview.hello', { name: user.name.split(' ')[0] ?? user.name })}</p>}
       </header>
 
@@ -64,7 +64,7 @@ function Body({ data }: { data: Overview }) {
   return (
     <>
       <section aria-labelledby="admin-waiting" className="flex flex-col gap-4">
-        <h2 id="admin-waiting" className="text-ink/70 text-[13px] font-bold tracking-[0.04em] uppercase">
+        <h2 id="admin-waiting" className="text-ink/70 text-sm font-bold tracking-[0.04em] uppercase">
           {t('waiting')}
         </h2>
         {anything ? (
@@ -78,11 +78,11 @@ function Body({ data }: { data: Overview }) {
                   }`}
                 >
                   <span className="sr-only">{`${w.count} ${w.label}`}</span>
-                  <span aria-hidden="true" className="font-display min-w-[2ch] text-[clamp(2.6rem,5vw,4.6rem)] leading-[0.8] font-black tabular-nums">
+                  <span aria-hidden="true" className="font-display min-w-[2ch] text-display-l leading-[0.8] font-black tabular-nums">
                     {w.count}
                   </span>
                   <span aria-hidden="true" className="flex flex-1 items-center justify-between gap-3 sm:items-end">
-                    <span className="text-[15px] leading-snug font-semibold">{w.label}</span>
+                    <span className="text-base leading-snug font-semibold">{w.label}</span>
                     <span className="ease-yoyo text-lg transition-transform duration-200 group-hover:translate-x-1">→</span>
                   </span>
                 </Link>
@@ -107,14 +107,14 @@ function Body({ data }: { data: Overview }) {
       <div className="grid gap-8 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <Chart series={data.series} />
         <section aria-labelledby="admin-money" className="border-ink/15 rounded-media flex flex-col gap-5 border p-5 sm:p-6">
-          <h2 id="admin-money" className="text-ink/70 text-[13px] font-bold tracking-[0.04em] uppercase">
+          <h2 id="admin-money" className="text-ink/70 text-sm font-bold tracking-[0.04em] uppercase">
             {t('money')}
           </h2>
           <div>
             <p className="text-ink/70 text-sm font-semibold">{t('revenue')}</p>
-            <p className="font-display text-[clamp(2.4rem,4vw,3.4rem)] leading-none font-black tabular-nums">{money(data.money.revenueCents)}</p>
+            <p className="font-display text-display-m leading-none font-black tabular-nums">{money(data.money.revenueCents)}</p>
           </div>
-          <dl className="divide-ink/10 flex flex-col divide-y text-[15px]">
+          <dl className="divide-ink/10 flex flex-col divide-y text-base">
             {(
               [
                 ['escrow', data.money.escrowCents],
@@ -151,9 +151,9 @@ function Stat({ label, value, notes }: { label: string; value: string; notes: st
   return (
     <div className="border-ink/15 flex flex-col gap-1 px-1 py-5 odd:pr-4 even:border-l even:pl-4 lg:border-l lg:px-5 lg:first:border-l-0 lg:first:pl-1">
       <dt className="text-ink/70 text-sm font-semibold">{label}</dt>
-      <dd className="font-display text-[clamp(2.2rem,3.4vw,3rem)] leading-none font-black tabular-nums">{value}</dd>
+      <dd className="font-display text-display-m leading-none font-black tabular-nums">{value}</dd>
       {notes.map((note) => (
-        <dd key={note} className="text-ink/70 text-[13px]">
+        <dd key={note} className="text-ink/70 text-sm">
           {note}
         </dd>
       ))}
@@ -175,10 +175,10 @@ function Chart({ series }: { series: Overview['series'] }) {
   return (
     <section aria-labelledby="admin-chart" className="border-ink/15 rounded-media flex flex-col gap-4 border p-5 sm:p-6">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h2 id="admin-chart" className="text-ink/70 text-[13px] font-bold tracking-[0.04em] uppercase">
+        <h2 id="admin-chart" className="text-ink/70 text-sm font-bold tracking-[0.04em] uppercase">
           {t('chart')}
         </h2>
-        <ul className="flex gap-4 text-[13px] font-semibold">
+        <ul className="flex gap-4 text-sm font-semibold">
           <li className="flex items-center gap-2">
             <span aria-hidden="true" className="bg-ink inline-block size-2.5 rounded-[3px]" />
             {t('chartDeals')} · {deals}
@@ -208,7 +208,7 @@ function Chart({ series }: { series: Overview['series'] }) {
             );
           })}
         </svg>
-        <figcaption className="text-ink/70 mt-2 grid text-[11px] tabular-nums" style={{ gridTemplateColumns: `repeat(${series.length}, minmax(0, 1fr))` }}>
+        <figcaption className="text-ink/70 mt-2 grid text-xs tabular-nums" style={{ gridTemplateColumns: `repeat(${series.length}, minmax(0, 1fr))` }}>
           {series.map((d, i) => (
             <span key={d.day} className={`text-center ${i % 2 ? 'max-sm:invisible' : ''}`}>
               {label.format(new Date(`${d.day}T00:00:00Z`))}
@@ -246,7 +246,7 @@ function Activity({ items }: { items: AdminActivity[] }) {
 
   return (
     <section aria-labelledby="admin-activity" className="flex flex-col gap-3">
-      <h2 id="admin-activity" className="text-ink/70 text-[13px] font-bold tracking-[0.04em] uppercase">
+      <h2 id="admin-activity" className="text-ink/70 text-sm font-bold tracking-[0.04em] uppercase">
         {t('activity')}
       </h2>
       {items.length === 0 ? (
@@ -259,7 +259,7 @@ function Activity({ items }: { items: AdminActivity[] }) {
               <Link href={activityHref(a)} className="min-w-0 flex-1 truncate font-semibold hover:underline hover:decoration-1 hover:underline-offset-2">
                 {t(`kind.${a.kind}`, { who: a.who, title: a.title })}
               </Link>
-              <time dateTime={a.at} className="text-ink/70 shrink-0 text-[13px] tabular-nums">
+              <time dateTime={a.at} className="text-ink/70 shrink-0 text-sm tabular-nums">
                 {ago(a.at)}
               </time>
             </li>

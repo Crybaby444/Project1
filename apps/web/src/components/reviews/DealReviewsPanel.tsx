@@ -64,7 +64,7 @@ export function DealReviewsPanel({ bookingId, otherName }: { bookingId: string; 
 
   return (
     <section aria-labelledby={`${textId}-heading`} className="border-ink/15 flex flex-col gap-5 border-t pt-6" data-deal-reviews="">
-      <h2 id={`${textId}-heading`} className="font-display m-0 text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
+      <h2 id={`${textId}-heading`} className="font-display m-0 text-display-s leading-[0.95] font-black uppercase">
         {t('heading')}
       </h2>
 
@@ -75,7 +75,7 @@ export function DealReviewsPanel({ bookingId, otherName }: { bookingId: string; 
           <StarInput legend={t('aboutPerson', { name: otherName })} name="person" value={rating} onChange={setRating} invalid={tried && rating === 0} />
           {asRenter && <StarInput legend={t('aboutItem')} name="item" value={itemRating} onChange={setItemRating} invalid={tried && itemRating === 0} />}
           <div className="flex flex-col gap-1.5">
-            <label htmlFor={textId} className="text-[13px] font-bold tracking-[0.03em] uppercase">
+            <label htmlFor={textId} className="text-sm font-bold tracking-[0.03em] uppercase">
               {t('text')}
             </label>
             <textarea
@@ -108,13 +108,13 @@ export function DealReviewsPanel({ bookingId, otherName }: { bookingId: string; 
       {data.mine && !data.theirs && <p className="m-0 max-w-[60ch] leading-relaxed">{t('sent', { name: otherName, date })}</p>}
       {data.mine && (
         <div className="flex flex-col gap-2">
-          <h3 className="m-0 text-[13px] font-bold tracking-[0.03em] uppercase">{t('mine')}</h3>
+          <h3 className="m-0 text-sm font-bold tracking-[0.03em] uppercase">{t('mine')}</h3>
           <ReviewList reviews={[data.mine]} showItem={asRenter} />
         </div>
       )}
       {data.theirs && (
         <div className="flex flex-col gap-2">
-          <h3 className="m-0 text-[13px] font-bold tracking-[0.03em] uppercase">{t('theirs', { name: otherName })}</h3>
+          <h3 className="m-0 text-sm font-bold tracking-[0.03em] uppercase">{t('theirs', { name: otherName })}</h3>
           <ReviewList reviews={[data.theirs]} />
         </div>
       )}

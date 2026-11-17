@@ -41,11 +41,11 @@ export function TwoSides({ steps }: { steps: SideSteps }) {
         <div className="flex flex-col items-center gap-8 text-center">
           <h2
             id={`${id}-title`}
-            className="font-display max-w-[12em] text-[clamp(2.6rem,7vw,6rem)] leading-[0.88] font-black uppercase"
+            className="font-display max-w-[12em] text-display-xl leading-[0.88] font-black uppercase"
           >
             {t('title')}
           </h2>
-          <p className="text-ink/75 max-w-[52ch] text-[17px] leading-relaxed">{t('lead')}</p>
+          <p className="text-ink/75 max-w-[52ch] text-lg leading-relaxed">{t('lead')}</p>
 
           {/* The switch: a yo-yo slides under the side you pick. */}
           <div
@@ -72,7 +72,7 @@ export function TwoSides({ steps }: { steps: SideSteps }) {
                 aria-controls={`${id}-panel-${s}`}
                 tabIndex={side === s ? 0 : -1}
                 onClick={() => setSide(s)}
-                className={`relative z-10 min-h-12 rounded-full px-5 text-[15px] font-bold transition-colors duration-300 sm:px-8 ${side === s ? 'text-canvas' : 'text-ink/75 hover:text-ink'}`}
+                className={`relative z-10 min-h-12 rounded-full px-5 text-base font-bold transition-colors duration-300 sm:px-8 ${side === s ? 'text-canvas' : 'text-ink/75 hover:text-ink'}`}
               >
                 {t(`${s}.tab`)}
               </button>
@@ -97,24 +97,24 @@ export function TwoSides({ steps }: { steps: SideSteps }) {
                   className="border-ink/12 bg-ink/[0.035] flex flex-col gap-3 rounded-[24px] border p-6 motion-safe:animate-[side-in_600ms_cubic-bezier(0.16,1,0.3,1)_both]"
                   style={{ animationDelay: `${i * 70}ms` }}
                 >
-                  <b className="font-display text-[clamp(2.4rem,3.6vw,3.4rem)] leading-[0.8] font-black">
+                  <b className="font-display text-display-m leading-[0.8] font-black">
                     {String(i + 1).padStart(2, '0')}
                   </b>
-                  <h3 className="text-[18px] leading-snug font-bold">{step.title}</h3>
-                  <p className="text-ink/75 m-0 text-[15px] leading-relaxed">{step.body}</p>
+                  <h3 className="text-lg leading-snug font-bold">{step.title}</h3>
+                  <p className="text-ink/75 m-0 text-base leading-relaxed">{step.body}</p>
                 </li>
               ))}
             </ol>
 
             <div className="grid gap-6 rounded-[32px] bg-[var(--night)] p-7 text-[var(--paper)] sm:p-10 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)_auto] lg:items-center">
-              <h3 className="font-display text-[clamp(1.8rem,3vw,2.8rem)] leading-[0.9] font-black uppercase">
+              <h3 className="font-display text-display-s leading-[0.9] font-black uppercase">
                 {t(`${s}.shield.title`)}
               </h3>
               <ul className="m-0 grid list-none gap-3 p-0 sm:grid-cols-3">
                 {SHIELDS.map((k) => (
                   <li
                     key={k}
-                    className="flex gap-3 border-t border-[var(--paper)]/15 pt-3 text-[15px] leading-snug"
+                    className="flex gap-3 border-t border-[var(--paper)]/15 pt-3 text-base leading-snug"
                   >
                     <span
                       aria-hidden="true"

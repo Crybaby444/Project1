@@ -59,10 +59,10 @@ export function LendCalculator() {
   return (
     <section aria-labelledby="home-lend" className="mx-auto grid w-full max-w-[1440px] gap-12 px-4 py-24 sm:px-8 sm:py-32 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center" data-home-lend="">
       <div className="flex flex-col gap-6">
-        <h2 id="home-lend" className="font-display text-[clamp(2.8rem,6vw,5.6rem)] leading-[0.86] font-black uppercase">
+        <h2 id="home-lend" className="font-display text-display-xl leading-[0.86] font-black uppercase">
           {t('title')}
         </h2>
-        <p className="text-ink/80 max-w-[44ch] text-[18px] leading-relaxed">{t('lead')}</p>
+        <p className="text-ink/80 max-w-[44ch] text-lg leading-relaxed">{t('lead')}</p>
         <Button href="/listings/new" size="lg" className="self-start">
           {t('cta')}
         </Button>
@@ -75,7 +75,7 @@ export function LendCalculator() {
               <label htmlFor={priceId} className="font-semibold">
                 {t('price')}
               </label>
-              <output htmlFor={priceId} className="font-display text-[2rem] leading-none font-black tabular-nums">
+              <output htmlFor={priceId} className="font-display text-4xl leading-none font-black tabular-nums">
                 {euros(price)}
               </output>
             </div>
@@ -86,7 +86,7 @@ export function LendCalculator() {
               <label htmlFor={daysId} className="font-semibold">
                 {t('days')}
               </label>
-              <output htmlFor={daysId} className="font-display text-[2rem] leading-none font-black tabular-nums">
+              <output htmlFor={daysId} className="font-display text-4xl leading-none font-black tabular-nums">
                 {t('daysValue', { count: days })}
               </output>
             </div>
@@ -96,17 +96,17 @@ export function LendCalculator() {
 
         <div className="border-ink/15 flex flex-wrap items-end justify-between gap-x-10 gap-y-4 border-t pt-8">
           <div className="flex flex-col gap-2">
-            <span className="text-ink/60 text-[12px] font-bold tracking-[0.08em] uppercase">{t('month')}</span>
+            <span className="text-ink/60 text-xs font-bold tracking-[0.08em] uppercase">{t('month')}</span>
             <span aria-live="polite" className="font-display text-[clamp(4.5rem,11vw,9rem)] leading-[0.8] font-black tabular-nums">
               {euros(month)}
             </span>
           </div>
           <div className="flex flex-col gap-2 pb-2">
-            <span className="text-ink/60 text-[12px] font-bold tracking-[0.08em] uppercase">{t('year')}</span>
-            <span className="font-display text-[clamp(2rem,4vw,3.2rem)] leading-none font-black tabular-nums">{euros(year)}</span>
+            <span className="text-ink/60 text-xs font-bold tracking-[0.08em] uppercase">{t('year')}</span>
+            <span className="font-display text-display-m leading-none font-black tabular-nums">{euros(year)}</span>
           </div>
         </div>
-        <p className="text-ink/70 -mt-4 flex items-center gap-2 text-[14px]">
+        <p className="text-ink/70 -mt-4 flex items-center gap-2 text-sm">
           <span aria-hidden="true" className="size-1.5 rounded-full bg-[var(--glow)] ring-1 ring-black/25" />
           {t('note')}
         </p>

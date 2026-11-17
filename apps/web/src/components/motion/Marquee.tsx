@@ -80,7 +80,7 @@ export function Marquee({ rows, decorative = false, className = '' }: MarqueePro
               return (
                 <span
                   key={`${index}-${word}`}
-                  className={`font-display border-ink rounded-pill inline-flex min-h-12 items-center border px-5 text-[clamp(1.25rem,5vw,3rem)] leading-none font-black whitespace-nowrap uppercase sm:min-h-16 sm:px-7 ${
+                  className={`font-display border-ink rounded-pill inline-flex min-h-12 items-center border px-5 text-display-m leading-none font-black whitespace-nowrap uppercase sm:min-h-16 sm:px-7 ${
                     filled
                       ? `${PILL_TONES[(index + row) % PILL_TONES.length]} text-black`
                       : 'text-ink bg-transparent'

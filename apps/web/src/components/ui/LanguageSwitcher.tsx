@@ -286,7 +286,7 @@ function LanguageMenu({ href, className }: { href: string; className: string }) 
         data-language-focus="menu-button"
         onClick={() => (open ? closeMenu({ refocus: false }) : openMenu('current'))}
         onKeyDown={onButtonKeyDown}
-        className="group border-ink bg-surface text-ink rounded-pill ease-yoyo aria-expanded:bg-mist inline-flex h-10 min-w-10 items-center justify-center gap-1.5 border px-2.5 text-[12px] font-bold tracking-[0.06em] uppercase transition-transform duration-150 select-none hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.94] sm:pr-2 sm:pl-1.5"
+        className="group border-ink bg-surface text-ink rounded-pill ease-yoyo aria-expanded:bg-mist inline-flex h-10 min-w-10 items-center justify-center gap-1.5 border px-2.5 text-xs font-bold tracking-[0.06em] uppercase transition-transform duration-150 select-none hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.94] sm:pr-2 sm:pl-1.5"
       >
         <LanguageSticker />
         {/* The name says the language in full and still contains the visible code (WCAG 2.5.3). */}
@@ -346,10 +346,10 @@ function LanguageMenu({ href, className }: { href: string; className: string }) 
                 flushSync(() => closeMenu({ refocus: true, instant: true }));
                 switchTo(event, locale);
               }}
-              className={`rounded-pill ease-yoyo hover:bg-mist focus-visible:bg-mist flex min-h-10 items-center gap-3 px-3 text-[14px] font-bold outline-offset-0 transition-[background-color,transform] duration-150 select-none active:scale-[0.98]`}
+              className={`rounded-pill ease-yoyo hover:bg-mist focus-visible:bg-mist flex min-h-10 items-center gap-3 px-3 text-sm font-bold outline-offset-0 transition-[background-color,transform] duration-150 select-none active:scale-[0.98]`}
             >
               <span className="flex-1">{t(locale)}</span>
-              <span aria-hidden="true" className="text-ink/60 text-[11px] tracking-[0.06em] uppercase">
+              <span aria-hidden="true" className="text-ink/60 text-xs tracking-[0.06em] uppercase">
                 {locale}
               </span>
               <CheckSticker visible={checked} />

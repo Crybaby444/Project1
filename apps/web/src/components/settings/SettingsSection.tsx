@@ -13,7 +13,7 @@ export function SettingsSection({
   return (
     <section className="border-ink/15 flex flex-col gap-5 border-t pt-8">
       <header className="flex flex-col gap-1.5">
-        <h2 className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">{title}</h2>
+        <h2 className="font-display text-display-s leading-[0.95] font-black uppercase">{title}</h2>
         {intro && <p className="leading-relaxed">{intro}</p>}
       </header>
       {children}

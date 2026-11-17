@@ -35,8 +35,8 @@ function Check({ item }: { item: Item }) {
   return (
     <li className="border-ink/15 rounded-media flex flex-col gap-4 border p-5">
       <header className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="text-[18px] font-bold">{item.user.name}</h2>
-        <p className="text-ink/70 text-[14px]">
+        <h2 className="text-lg font-bold">{item.user.name}</h2>
+        <p className="text-ink/70 text-sm">
           {item.user.email}
           {item.user.birthDate && ` · ${t('born', { date: format.dateTime(new Date(item.user.birthDate), { dateStyle: 'medium' }) })}`}
           {` · ${td(item.documentType)} · ${format.relativeTime(new Date(item.submittedAt))}`}
@@ -46,10 +46,10 @@ function Check({ item }: { item: Item }) {
         <Photo id={item.id} which="document" alt={t('document', { name: item.user.name })} />
         <Photo id={item.id} which="selfie" alt={t('selfie', { name: item.user.name })} />
       </div>
-      <p className="text-ink/70 text-[14px] leading-relaxed">{t('compare')}</p>
+      <p className="text-ink/70 text-sm leading-relaxed">{t('compare')}</p>
       {rejecting ? (
         <div className="flex flex-col gap-3">
-          <label className="flex flex-col gap-1.5 text-[14px] font-bold">
+          <label className="flex flex-col gap-1.5 text-sm font-bold">
             {t('reason')}
             <textarea value={reason} onChange={(e) => setReason(e.target.value)} maxLength={500} rows={2} className={TEXTAREA_CLASS} />
           </label>

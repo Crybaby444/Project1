@@ -113,7 +113,7 @@ export default async function ItemPage({ params }: Props) {
           <p className="bg-ink text-canvas rounded-pill inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold uppercase before:size-1.5 before:rounded-full before:bg-[var(--glow)] before:content-['']">
             {t('away.badge')}
           </p>
-          <h1 className="font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]" lang={detail.listing.contentLocale}>
+          <h1 className="font-display text-display-l leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]" lang={detail.listing.contentLocale}>
             {title}
           </h1>
           <p className="max-w-[52ch] text-lg">{t('away.body')}</p>
@@ -125,7 +125,7 @@ export default async function ItemPage({ params }: Props) {
       {detail.available && <RentalRules name={category ? categoryName(category, locale) : title} />}
       {similar.length > 0 && (
         <section aria-labelledby="similar" className="flex flex-col gap-4">
-          <h2 id="similar" className="font-display text-[clamp(1.8rem,3vw,2.8rem)] leading-[0.9] font-black uppercase">
+          <h2 id="similar" className="font-display text-display-s leading-[0.9] font-black uppercase">
             {t('similar')}
           </h2>
           <ul className="grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 lg:grid-cols-4">
@@ -174,7 +174,7 @@ async function Available({ item, title, category, locale }: { item: AvailableIte
         <div className="flex min-w-0 flex-col gap-8">
           <Gallery listingId={listing.id} title={title} photos={listing.photos} />
           <div className="flex items-start justify-between gap-4">
-            <h1 className="font-display min-w-0 text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]" lang={listing.contentLocale}>
+            <h1 className="font-display min-w-0 text-display-l leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]" lang={listing.contentLocale}>
               {title}
             </h1>
             <div className="flex shrink-0 gap-2">
@@ -184,7 +184,7 @@ async function Available({ item, title, category, locale }: { item: AvailableIte
           </div>
           {/* Phones: the price is far below (after the story and the facts); say it here and lead to it. */}
           <a href="#booking" className="-mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1 lg:hidden">
-            <span className="font-display text-[1.9rem] leading-none font-black uppercase tabular-nums">
+            <span className="font-display text-3xl leading-none font-black uppercase tabular-nums">
               {t('booking.perDay', { price: formatEuros(listing.dailyCents ?? 0, locale) })}
             </span>
             <span className="text-sm font-semibold">
@@ -198,7 +198,7 @@ async function Available({ item, title, category, locale }: { item: AvailableIte
           )}
           {listing.description && (
             <section aria-labelledby="item-about" className="flex flex-col gap-3">
-              <h2 id="item-about" className="font-display text-[clamp(1.8rem,3vw,2.8rem)] leading-[0.9] font-black uppercase">
+              <h2 id="item-about" className="font-display text-display-s leading-[0.9] font-black uppercase">
                 {t('about')}
               </h2>
               <p className="max-w-[68ch] text-lg leading-relaxed whitespace-pre-line [overflow-wrap:anywhere]" lang={listing.contentLocale}>
@@ -210,7 +210,7 @@ async function Available({ item, title, category, locale }: { item: AvailableIte
           <ReviewsFeed
             source={{ kind: 'listing', id: listing.id }}
             heading={
-              <h2 className="font-display m-0 text-[clamp(1.8rem,3vw,2.8rem)] leading-[0.9] font-black uppercase">{tr('itemHeading')}</h2>
+              <h2 className="font-display m-0 text-display-s leading-[0.9] font-black uppercase">{tr('itemHeading')}</h2>
             }
           />
         </div>

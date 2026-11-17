@@ -196,7 +196,7 @@ export function CropDialog({ file, name, onDone, onCancel, onUnreadable }: Props
           <IconButton label={t('rotateRight')} onClick={() => turn(90)}>
             <RotateIcon flip />
           </IconButton>
-          <label className="flex min-w-48 flex-1 items-center gap-3 text-[13px] font-bold tracking-[0.03em] uppercase">
+          <label className="flex min-w-48 flex-1 items-center gap-3 text-sm font-bold tracking-[0.03em] uppercase">
             {t('zoom')}
             <input
               type="range"

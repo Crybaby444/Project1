@@ -41,7 +41,7 @@ export function EmptyState({ title, body, action, headingLevel = 2, className = 
           </g>
         </g>
       </svg>
-      <Heading className="font-display m-0 max-w-[18ch] text-[clamp(2rem,4vw,3rem)] leading-[0.95] font-black text-balance uppercase">
+      <Heading className="font-display m-0 max-w-[18ch] text-display-m leading-[0.95] font-black text-balance uppercase">
         {title}
       </Heading>
       {body ? <p className="text-ink/80 m-0 max-w-[52ch] leading-relaxed">{body}</p> : null}

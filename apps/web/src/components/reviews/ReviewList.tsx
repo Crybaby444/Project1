@@ -15,7 +15,7 @@ export function ReviewList({ reviews, showItem = false }: { reviews: PublicRevie
         <li key={review.id} className="border-ink/15 flex flex-col gap-2.5 border-b py-5">
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
             <p className="m-0">
-              <span className="font-display text-[1.35rem] leading-none font-black uppercase">{review.author.name}</span>{' '}
+              <span className="font-display text-2xl leading-none font-black uppercase">{review.author.name}</span>{' '}
               <span className="text-ink/75 text-sm">· {showItem ? t(`roleItem.${review.authorRole}`) : t(`role.${review.authorRole}`)}</span>
             </p>
             <time dateTime={review.createdAt} className="text-ink/75 text-sm tabular-nums">
