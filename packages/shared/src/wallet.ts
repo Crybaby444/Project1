@@ -10,6 +10,7 @@ export const LEDGER_KINDS = [
   'DEPOSIT_REFUND',
   'DEPOSIT_TO_OWNER',
   'BOOKING_REFUND',
+  'BOOKING_PARTIAL_REFUND',
 ] as const;
 
 export type LedgerKind = (typeof LEDGER_KINDS)[number];

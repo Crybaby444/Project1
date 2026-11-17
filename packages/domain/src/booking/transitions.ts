@@ -1,7 +1,9 @@
+import { cents } from '../money';
+import { rentRefundPercent } from '../cancellation';
 import { addDays, compareDates, endOfDayIn, firstConflict, localDateIn } from '../dates';
 import { DomainError } from '../errors';
 import { validateBookingSettings } from '../settings';
-import { bookingPayment, bookingRefund, depositRefund, depositToOwner, rentRelease } from '../ledger';
+import { bookingPartialRefund, bookingPayment, bookingRefund, depositRefund, depositToOwner, rentRelease } from '../ledger';
 import type { LedgerOperation, PaymentMethod } from '../ledger';
 import { TIMER_KINDS } from './types';
 import type {
@@ -464,18 +466,26 @@ export const TRANSITIONS: readonly Transition[] = [
       if (side(actor) === 'RENTER' && sinceStart(s, ctx.now) >= 0)
         throw notAllowed(s, actor, 'CANCEL', 'RENTAL_STARTED');
     },
-    run: (s, actor, event, ctx) => ({
+    run: (s, actor, event, ctx) => {
+      // A renter's cancellation follows the item's policy; an owner's always gives everything back.
+      const percent = side(actor) === 'RENTER' ? rentRefundPercent(s.cancellationPolicy ?? 'FLEXIBLE', -sinceStart(s, ctx.now)) : 100;
+      const rentRefund = cents(Math.round((s.quote.rentCents * percent) / 100));
+      const partial = percent < 100;
+      return {
       patch: {
         cancellation: { by: side(actor), reason: text(event.reason, 'reason'), at: ctx.now },
-        outcome: 'REFUNDED_ALL',
+        outcome: partial ? 'REFUNDED_PART' : 'REFUNDED_ALL',
       },
       effects: [
-        ...refundEverything(s),
+        ...(partial
+          ? ledger(bookingPartialRefund({ bookingId: s.id, renterId: s.renterId, ownerId: s.ownerId, quote: s.quote, method: paidWith(s), rentRefundCents: rentRefund }))
+          : refundEverything(s)),
         RELEASE_DATES,
         notify(otherSide(actor), 'CANCELLED'),
         message('CANCELLED'),
       ],
-    }),
+      };
+    },
   }),
   row({
     from: 'ACTIVE',

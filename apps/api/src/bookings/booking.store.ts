@@ -37,6 +37,8 @@ export function toSnapshot(row: Booking): BookingSnapshot {
     period: period(dayOf(row.start), dayOf(row.end)),
     timeZone: row.timeZone,
     quote,
+    // FLEXIBLE is what a snapshot without a policy means, so it round-trips as "not set".
+    ...(row.cancellationPolicy !== 'FLEXIBLE' && { cancellationPolicy: row.cancellationPolicy }),
     ...opt('renterSignedAt', row.renterSignedAt),
     ...opt('ownerSignedAt', row.ownerSignedAt),
     ...opt('paymentMethod', row.paymentMethod),
@@ -91,6 +93,7 @@ export function snapshotData(s: BookingSnapshot) {
     start: dateOf(s.period.start),
     end: dateOf(s.period.end),
     timeZone: s.timeZone,
+    cancellationPolicy: s.cancellationPolicy ?? 'FLEXIBLE',
     days: s.quote.days,
     dailyCents: s.quote.dailyCents,
     baseCents: s.quote.baseCents,

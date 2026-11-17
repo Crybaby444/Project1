@@ -2649,7 +2649,9 @@ export interface components {
                     at: string;
                 } | null;
                 /** @enum {string|null} */
-                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | null;
+                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | "REFUNDED_PART" | null;
+                /** @enum {string} */
+                cancellationPolicy: "FLEXIBLE" | "MODERATE" | "STRICT";
                 deadline: {
                     /** @enum {string} */
                     timer: "REQUEST_EXPIRY" | "PAYMENT_EXPIRY" | "HANDOVER_DEADLINE" | "HANDOVER_CONFIRM" | "RETURN_CONFIRM" | "INSPECTION" | "DAMAGE_REPLY";
@@ -2840,7 +2842,9 @@ export interface components {
                     at: string;
                 } | null;
                 /** @enum {string|null} */
-                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | null;
+                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | "REFUNDED_PART" | null;
+                /** @enum {string} */
+                cancellationPolicy: "FLEXIBLE" | "MODERATE" | "STRICT";
                 deadline: {
                     /** @enum {string} */
                     timer: "REQUEST_EXPIRY" | "PAYMENT_EXPIRY" | "HANDOVER_DEADLINE" | "HANDOVER_CONFIRM" | "RETURN_CONFIRM" | "INSPECTION" | "DAMAGE_REPLY";
@@ -3276,6 +3280,8 @@ export interface components {
                         preset: ("ID_AT_PICKUP" | "RETURN_CLEAN" | "NO_SMOKING" | "PICKUP_ONLY" | "PETS_OK" | "CARE_INSTRUCTIONS")[];
                         custom: string[];
                     };
+                    /** @enum {string} */
+                    cancellationPolicy: "FLEXIBLE" | "MODERATE" | "STRICT";
                     photos: {
                         id: string;
                         width: number;
@@ -3772,6 +3778,8 @@ export interface components {
                 custom: string[];
             };
             /** @enum {string} */
+            cancellationPolicy?: "FLEXIBLE" | "MODERATE" | "STRICT";
+            /** @enum {string} */
             contentLocale?: "en" | "lv" | "ru";
         };
         OwnerListingResponseDto_Output: {
@@ -3803,6 +3811,8 @@ export interface components {
                     preset: ("ID_AT_PICKUP" | "RETURN_CLEAN" | "NO_SMOKING" | "PICKUP_ONLY" | "PETS_OK" | "CARE_INSTRUCTIONS")[];
                     custom: string[];
                 };
+                /** @enum {string} */
+                cancellationPolicy: "FLEXIBLE" | "MODERATE" | "STRICT";
                 photos: {
                     id: string;
                     width: number;
@@ -3860,6 +3870,8 @@ export interface components {
                 preset: ("ID_AT_PICKUP" | "RETURN_CLEAN" | "NO_SMOKING" | "PICKUP_ONLY" | "PETS_OK" | "CARE_INSTRUCTIONS")[];
                 custom: string[];
             };
+            /** @enum {string} */
+            cancellationPolicy?: "FLEXIBLE" | "MODERATE" | "STRICT";
             /** @enum {string} */
             contentLocale?: "en" | "lv" | "ru";
             version: number;
@@ -4296,6 +4308,8 @@ export interface components {
                     preset: ("ID_AT_PICKUP" | "RETURN_CLEAN" | "NO_SMOKING" | "PICKUP_ONLY" | "PETS_OK" | "CARE_INSTRUCTIONS")[];
                     custom: string[];
                 };
+                /** @enum {string} */
+                cancellationPolicy: "FLEXIBLE" | "MODERATE" | "STRICT";
                 photos: {
                     id: string;
                     width: number;
@@ -4367,6 +4381,8 @@ export interface components {
                     preset: ("ID_AT_PICKUP" | "RETURN_CLEAN" | "NO_SMOKING" | "PICKUP_ONLY" | "PETS_OK" | "CARE_INSTRUCTIONS")[];
                     custom: string[];
                 };
+                /** @enum {string} */
+                cancellationPolicy: "FLEXIBLE" | "MODERATE" | "STRICT";
                 photos: {
                     id: string;
                     width: number;
@@ -4439,7 +4455,7 @@ export interface components {
             items: {
                 id: string;
                 /** @enum {string} */
-                kind: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND";
+                kind: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND" | "BOOKING_PARTIAL_REFUND";
                 amountCents: number;
                 bookingId: string | null;
                 listingTitle: string | null;
@@ -4671,7 +4687,9 @@ export interface components {
                     at: string;
                 } | null;
                 /** @enum {string|null} */
-                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | null;
+                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | "REFUNDED_PART" | null;
+                /** @enum {string} */
+                cancellationPolicy: "FLEXIBLE" | "MODERATE" | "STRICT";
                 deadline: {
                     /** @enum {string} */
                     timer: "REQUEST_EXPIRY" | "PAYMENT_EXPIRY" | "HANDOVER_DEADLINE" | "HANDOVER_CONFIRM" | "RETURN_CONFIRM" | "INSPECTION" | "DAMAGE_REPLY";
@@ -4785,7 +4803,9 @@ export interface components {
                     at: string;
                 } | null;
                 /** @enum {string|null} */
-                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | null;
+                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | "REFUNDED_PART" | null;
+                /** @enum {string} */
+                cancellationPolicy: "FLEXIBLE" | "MODERATE" | "STRICT";
                 deadline: {
                     /** @enum {string} */
                     timer: "REQUEST_EXPIRY" | "PAYMENT_EXPIRY" | "HANDOVER_DEADLINE" | "HANDOVER_CONFIRM" | "RETURN_CONFIRM" | "INSPECTION" | "DAMAGE_REPLY";
@@ -4829,7 +4849,7 @@ export interface components {
             operations: {
                 id: string;
                 /** @enum {string} */
-                kind: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND";
+                kind: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND" | "BOOKING_PARTIAL_REFUND";
                 bookingId: string | null;
                 userId: string | null;
                 /** Format: date-time */
@@ -4882,7 +4902,7 @@ export interface components {
             items: {
                 id: string;
                 /** @enum {string} */
-                kind: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND";
+                kind: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND" | "BOOKING_PARTIAL_REFUND";
                 bookingId: string | null;
                 userId: string | null;
                 /** Format: date-time */
@@ -11651,7 +11671,7 @@ export interface operations {
         parameters: {
             query?: {
                 page?: number;
-                kind?: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND";
+                kind?: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND" | "BOOKING_PARTIAL_REFUND";
             };
             header?: never;
             path?: never;
@@ -12409,7 +12429,7 @@ export interface operations {
             query?: {
                 bookingId?: string;
                 account?: string;
-                kind?: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND";
+                kind?: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND" | "BOOKING_PARTIAL_REFUND";
                 page?: number;
             };
             header?: never;

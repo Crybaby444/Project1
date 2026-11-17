@@ -8666,7 +8666,8 @@
                 "RENT_RELEASE",
                 "DEPOSIT_REFUND",
                 "DEPOSIT_TO_OWNER",
-                "BOOKING_REFUND"
+                "BOOKING_REFUND",
+                "BOOKING_PARTIAL_REFUND"
               ]
             }
           }
@@ -9657,7 +9658,8 @@
                 "RENT_RELEASE",
                 "DEPOSIT_REFUND",
                 "DEPOSIT_TO_OWNER",
-                "BOOKING_REFUND"
+                "BOOKING_REFUND",
+                "BOOKING_PARTIAL_REFUND"
               ]
             }
           },
@@ -11701,9 +11703,18 @@
                   "DEPOSIT_REFUNDED",
                   "DEPOSIT_TO_OWNER",
                   "REFUNDED_ALL",
+                  "REFUNDED_PART",
                   null
                 ],
                 "nullable": true
+              },
+              "cancellationPolicy": {
+                "type": "string",
+                "enum": [
+                  "FLEXIBLE",
+                  "MODERATE",
+                  "STRICT"
+                ]
               },
               "deadline": {
                 "type": "object",
@@ -11841,6 +11852,7 @@
               "dispute",
               "cancellation",
               "outcome",
+              "cancellationPolicy",
               "deadline",
               "actions",
               "hasContract",
@@ -12634,9 +12646,18 @@
                     "DEPOSIT_REFUNDED",
                     "DEPOSIT_TO_OWNER",
                     "REFUNDED_ALL",
+                    "REFUNDED_PART",
                     null
                   ],
                   "nullable": true
+                },
+                "cancellationPolicy": {
+                  "type": "string",
+                  "enum": [
+                    "FLEXIBLE",
+                    "MODERATE",
+                    "STRICT"
+                  ]
                 },
                 "deadline": {
                   "type": "object",
@@ -12774,6 +12795,7 @@
                 "dispute",
                 "cancellation",
                 "outcome",
+                "cancellationPolicy",
                 "deadline",
                 "actions",
                 "hasContract",
@@ -14809,6 +14831,14 @@
                         ],
                         "additionalProperties": false
                       },
+                      "cancellationPolicy": {
+                        "type": "string",
+                        "enum": [
+                          "FLEXIBLE",
+                          "MODERATE",
+                          "STRICT"
+                        ]
+                      },
                       "photos": {
                         "type": "array",
                         "items": {
@@ -14921,6 +14951,7 @@
                       "timeZone",
                       "contentLocale",
                       "rules",
+                      "cancellationPolicy",
                       "photos",
                       "unavailability",
                       "publishedAt",
@@ -17290,6 +17321,14 @@
               "custom"
             ]
           },
+          "cancellationPolicy": {
+            "type": "string",
+            "enum": [
+              "FLEXIBLE",
+              "MODERATE",
+              "STRICT"
+            ]
+          },
           "contentLocale": {
             "type": "string",
             "enum": [
@@ -17447,6 +17486,14 @@
                 ],
                 "additionalProperties": false
               },
+              "cancellationPolicy": {
+                "type": "string",
+                "enum": [
+                  "FLEXIBLE",
+                  "MODERATE",
+                  "STRICT"
+                ]
+              },
               "photos": {
                 "type": "array",
                 "items": {
@@ -17600,6 +17647,7 @@
               "timeZone",
               "contentLocale",
               "rules",
+              "cancellationPolicy",
               "photos",
               "unavailability",
               "publishedAt",
@@ -17765,6 +17813,14 @@
             "required": [
               "preset",
               "custom"
+            ]
+          },
+          "cancellationPolicy": {
+            "type": "string",
+            "enum": [
+              "FLEXIBLE",
+              "MODERATE",
+              "STRICT"
             ]
           },
           "contentLocale": {
@@ -19792,6 +19848,14 @@
                   ],
                   "additionalProperties": false
                 },
+                "cancellationPolicy": {
+                  "type": "string",
+                  "enum": [
+                    "FLEXIBLE",
+                    "MODERATE",
+                    "STRICT"
+                  ]
+                },
                 "photos": {
                   "type": "array",
                   "items": {
@@ -19965,6 +20029,7 @@
                 "timeZone",
                 "contentLocale",
                 "rules",
+                "cancellationPolicy",
                 "photos",
                 "unavailability",
                 "publishedAt",
@@ -20160,6 +20225,14 @@
                 ],
                 "additionalProperties": false
               },
+              "cancellationPolicy": {
+                "type": "string",
+                "enum": [
+                  "FLEXIBLE",
+                  "MODERATE",
+                  "STRICT"
+                ]
+              },
               "photos": {
                 "type": "array",
                 "items": {
@@ -20333,6 +20406,7 @@
               "timeZone",
               "contentLocale",
               "rules",
+              "cancellationPolicy",
               "photos",
               "unavailability",
               "publishedAt",
@@ -20534,7 +20608,8 @@
                     "RENT_RELEASE",
                     "DEPOSIT_REFUND",
                     "DEPOSIT_TO_OWNER",
-                    "BOOKING_REFUND"
+                    "BOOKING_REFUND",
+                    "BOOKING_PARTIAL_REFUND"
                   ]
                 },
                 "amountCents": {
@@ -21613,9 +21688,18 @@
                     "DEPOSIT_REFUNDED",
                     "DEPOSIT_TO_OWNER",
                     "REFUNDED_ALL",
+                    "REFUNDED_PART",
                     null
                   ],
                   "nullable": true
+                },
+                "cancellationPolicy": {
+                  "type": "string",
+                  "enum": [
+                    "FLEXIBLE",
+                    "MODERATE",
+                    "STRICT"
+                  ]
                 },
                 "deadline": {
                   "type": "object",
@@ -21753,6 +21837,7 @@
                 "dispute",
                 "cancellation",
                 "outcome",
+                "cancellationPolicy",
                 "deadline",
                 "actions",
                 "hasContract",
@@ -22169,9 +22254,18 @@
                   "DEPOSIT_REFUNDED",
                   "DEPOSIT_TO_OWNER",
                   "REFUNDED_ALL",
+                  "REFUNDED_PART",
                   null
                 ],
                 "nullable": true
+              },
+              "cancellationPolicy": {
+                "type": "string",
+                "enum": [
+                  "FLEXIBLE",
+                  "MODERATE",
+                  "STRICT"
+                ]
               },
               "deadline": {
                 "type": "object",
@@ -22309,6 +22403,7 @@
               "dispute",
               "cancellation",
               "outcome",
+              "cancellationPolicy",
               "deadline",
               "actions",
               "hasContract",
@@ -22421,7 +22516,8 @@
                     "RENT_RELEASE",
                     "DEPOSIT_REFUND",
                     "DEPOSIT_TO_OWNER",
-                    "BOOKING_REFUND"
+                    "BOOKING_REFUND",
+                    "BOOKING_PARTIAL_REFUND"
                   ]
                 },
                 "bookingId": {
@@ -22677,7 +22773,8 @@
                     "RENT_RELEASE",
                     "DEPOSIT_REFUND",
                     "DEPOSIT_TO_OWNER",
-                    "BOOKING_REFUND"
+                    "BOOKING_REFUND",
+                    "BOOKING_PARTIAL_REFUND"
                   ]
                 },
                 "bookingId": {

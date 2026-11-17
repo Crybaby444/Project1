@@ -70,6 +70,7 @@ export function serializeBooking(
       : null,
     cancellation: s.cancellation ? { by: s.cancellation.by, reason: s.cancellation.reason ?? null, at: s.cancellation.at.toISOString() } : null,
     outcome: s.outcome ?? null,
+    cancellationPolicy: s.cancellationPolicy ?? 'FLEXIBLE',
     deadline: timer ? { timer: timer[0], dueAt: timer[1].toISOString() } : null,
     actions: actions.filter((a): a is BookingAction => a !== 'TIMEOUT'),
     hasContract: row.contract !== null,
