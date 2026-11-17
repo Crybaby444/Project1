@@ -1,4 +1,5 @@
 import type { CatalogQuery, Locale } from '@yoyo/shared';
+import { currentCountry } from '@/lib/country/server';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ListingCard } from '@/components/catalog/ListingCard';
@@ -64,7 +65,6 @@ export default async function HomePage({ params }: Params) {
   const [meta, t] = await Promise.all([getTranslations('pages.home'), getTranslations('market')]);
   const [newest, places] = await Promise.all([loadSearch({ sort: 'new', page: 1 } as CatalogQuery), loadPlaces()]);
   const items = newest.ok ? newest.data.items : [];
-  const districts = places.ok ? places.data.districts : [];
   const today = new Date().toISOString().slice(0, 10);
   const shown = items.slice(0, 8);
   // Few things yet: the empty places in the last row invite the visitor to put theirs there.
@@ -81,7 +81,7 @@ export default async function HomePage({ params }: Params) {
           </h1>
           <p className="text-ink/80 max-w-[44ch] text-[18px] leading-relaxed lg:pb-2">{t('hero.lead')}</p>
         </div>
-        <HomeSearch districts={districts} today={today} />
+        <HomeSearch country={await currentCountry()} today={today} />
         <TrustRow />
       </section>
 
