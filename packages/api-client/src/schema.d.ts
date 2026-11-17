@@ -1684,6 +1684,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/system/demo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminSystemController_demoStatus"];
+        put?: never;
+        post: operations["AdminSystemController_addDemo"];
+        delete: operations["AdminSystemController_removeDemo"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/system": {
         parameters: {
             query?: never;
@@ -1876,6 +1892,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/listings/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["ModerationController_edit"];
+        trace?: never;
+    };
     "/api/v1/admin/listings/{id}/category": {
         parameters: {
             query?: never;
@@ -1998,6 +2030,22 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["WalletController_topUp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/wallet/stripe-onboarding": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["WalletController_stripeOnboarding"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2633,7 +2681,9 @@ export interface components {
                     at: string;
                 } | null;
                 /** @enum {string|null} */
-                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | null;
+                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | "REFUNDED_PART" | null;
+                /** @enum {string} */
+                cancellationPolicy: "FLEXIBLE" | "MODERATE" | "STRICT";
                 deadline: {
                     /** @enum {string} */
                     timer: "REQUEST_EXPIRY" | "PAYMENT_EXPIRY" | "HANDOVER_DEADLINE" | "HANDOVER_CONFIRM" | "RETURN_CONFIRM" | "INSPECTION" | "DAMAGE_REPLY";
@@ -2824,7 +2874,9 @@ export interface components {
                     at: string;
                 } | null;
                 /** @enum {string|null} */
-                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | null;
+                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | "REFUNDED_PART" | null;
+                /** @enum {string} */
+                cancellationPolicy: "FLEXIBLE" | "MODERATE" | "STRICT";
                 deadline: {
                     /** @enum {string} */
                     timer: "REQUEST_EXPIRY" | "PAYMENT_EXPIRY" | "HANDOVER_DEADLINE" | "HANDOVER_CONFIRM" | "RETURN_CONFIRM" | "INSPECTION" | "DAMAGE_REPLY";
@@ -3260,6 +3312,8 @@ export interface components {
                         preset: ("ID_AT_PICKUP" | "RETURN_CLEAN" | "NO_SMOKING" | "PICKUP_ONLY" | "PETS_OK" | "CARE_INSTRUCTIONS")[];
                         custom: string[];
                     };
+                    /** @enum {string} */
+                    cancellationPolicy: "FLEXIBLE" | "MODERATE" | "STRICT";
                     photos: {
                         id: string;
                         width: number;
@@ -3758,6 +3812,8 @@ export interface components {
                 custom: string[];
             };
             /** @enum {string} */
+            cancellationPolicy?: "FLEXIBLE" | "MODERATE" | "STRICT";
+            /** @enum {string} */
             contentLocale?: "en" | "lv" | "ru";
         };
         OwnerListingResponseDto_Output: {
@@ -3789,6 +3845,8 @@ export interface components {
                     preset: ("ID_AT_PICKUP" | "RETURN_CLEAN" | "NO_SMOKING" | "PICKUP_ONLY" | "PETS_OK" | "CARE_INSTRUCTIONS")[];
                     custom: string[];
                 };
+                /** @enum {string} */
+                cancellationPolicy: "FLEXIBLE" | "MODERATE" | "STRICT";
                 photos: {
                     id: string;
                     width: number;
@@ -3846,6 +3904,8 @@ export interface components {
                 preset: ("ID_AT_PICKUP" | "RETURN_CLEAN" | "NO_SMOKING" | "PICKUP_ONLY" | "PETS_OK" | "CARE_INSTRUCTIONS")[];
                 custom: string[];
             };
+            /** @enum {string} */
+            cancellationPolicy?: "FLEXIBLE" | "MODERATE" | "STRICT";
             /** @enum {string} */
             contentLocale?: "en" | "lv" | "ru";
             version: number;
@@ -3968,7 +4028,7 @@ export interface components {
                     name: string;
                 };
                 /** @enum {string} */
-                action: "LISTING_APPROVED" | "LISTING_REJECTED" | "LISTING_MOVED" | "LISTING_HIDDEN" | "LISTING_SHOWN" | "DISPUTE_RESOLVED" | "USER_BLOCKED" | "USER_UNBLOCKED" | "USER_NOTE" | "REPORT_CLOSED" | "REVIEW_HIDDEN" | "REVIEW_SHOWN" | "SETTINGS_CHANGED" | "CATEGORY_CHANGED" | "CATEGORY_CREATED" | "CATEGORY_DELETED" | "USER_CREATED" | "USER_EDITED" | "USER_DELETED" | "STAFF_CHANGED" | "TWO_FACTOR_RESET" | "IDENTITY_VIEWED" | "IDENTITY_APPROVED" | "IDENTITY_REJECTED";
+                action: "LISTING_APPROVED" | "LISTING_REJECTED" | "LISTING_MOVED" | "LISTING_EDITED" | "LISTING_HIDDEN" | "LISTING_SHOWN" | "DISPUTE_RESOLVED" | "USER_BLOCKED" | "USER_UNBLOCKED" | "USER_NOTE" | "REPORT_CLOSED" | "REVIEW_HIDDEN" | "REVIEW_SHOWN" | "SETTINGS_CHANGED" | "CATEGORY_CHANGED" | "CATEGORY_CREATED" | "CATEGORY_DELETED" | "USER_CREATED" | "USER_EDITED" | "USER_DELETED" | "STAFF_CHANGED" | "TWO_FACTOR_RESET" | "IDENTITY_VIEWED" | "IDENTITY_APPROVED" | "IDENTITY_REJECTED";
                 targetType: string;
                 targetId: string | null;
                 summary: string;
@@ -4101,6 +4161,12 @@ export interface components {
                 renter: string;
                 owner: string;
             }[];
+        };
+        AdminDemoDto_Output: {
+            count: number;
+            total: number;
+            added?: number;
+            removed?: number;
         };
         AdminSystemDto_Output: {
             version: string;
@@ -4282,6 +4348,8 @@ export interface components {
                     preset: ("ID_AT_PICKUP" | "RETURN_CLEAN" | "NO_SMOKING" | "PICKUP_ONLY" | "PETS_OK" | "CARE_INSTRUCTIONS")[];
                     custom: string[];
                 };
+                /** @enum {string} */
+                cancellationPolicy: "FLEXIBLE" | "MODERATE" | "STRICT";
                 photos: {
                     id: string;
                     width: number;
@@ -4320,9 +4388,15 @@ export interface components {
             }[];
             total: number;
         };
-        MoveListingCategoryDto: {
-            categoryId: string;
+        AdminEditListingDto: {
             version: number;
+            title?: string;
+            description?: string;
+            /** @enum {string} */
+            condition?: "NEW" | "LIKE_NEW" | "GOOD" | "FAIR";
+            dailyCents?: number;
+            weeklyDiscountPercent?: number;
+            depositCents?: number;
         };
         AdminListingResponseDto_Output: {
             listing: {
@@ -4353,6 +4427,8 @@ export interface components {
                     preset: ("ID_AT_PICKUP" | "RETURN_CLEAN" | "NO_SMOKING" | "PICKUP_ONLY" | "PETS_OK" | "CARE_INSTRUCTIONS")[];
                     custom: string[];
                 };
+                /** @enum {string} */
+                cancellationPolicy: "FLEXIBLE" | "MODERATE" | "STRICT";
                 photos: {
                     id: string;
                     width: number;
@@ -4390,6 +4466,10 @@ export interface components {
                 };
             };
         };
+        MoveListingCategoryDto: {
+            categoryId: string;
+            version: number;
+        };
         ApproveListingDto: {
             version: number;
         };
@@ -4425,7 +4505,7 @@ export interface components {
             items: {
                 id: string;
                 /** @enum {string} */
-                kind: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND";
+                kind: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND" | "BOOKING_PARTIAL_REFUND";
                 amountCents: number;
                 bookingId: string | null;
                 listingTitle: string | null;
@@ -4657,7 +4737,9 @@ export interface components {
                     at: string;
                 } | null;
                 /** @enum {string|null} */
-                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | null;
+                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | "REFUNDED_PART" | null;
+                /** @enum {string} */
+                cancellationPolicy: "FLEXIBLE" | "MODERATE" | "STRICT";
                 deadline: {
                     /** @enum {string} */
                     timer: "REQUEST_EXPIRY" | "PAYMENT_EXPIRY" | "HANDOVER_DEADLINE" | "HANDOVER_CONFIRM" | "RETURN_CONFIRM" | "INSPECTION" | "DAMAGE_REPLY";
@@ -4771,7 +4853,9 @@ export interface components {
                     at: string;
                 } | null;
                 /** @enum {string|null} */
-                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | null;
+                outcome: "DEPOSIT_REFUNDED" | "DEPOSIT_TO_OWNER" | "REFUNDED_ALL" | "REFUNDED_PART" | null;
+                /** @enum {string} */
+                cancellationPolicy: "FLEXIBLE" | "MODERATE" | "STRICT";
                 deadline: {
                     /** @enum {string} */
                     timer: "REQUEST_EXPIRY" | "PAYMENT_EXPIRY" | "HANDOVER_DEADLINE" | "HANDOVER_CONFIRM" | "RETURN_CONFIRM" | "INSPECTION" | "DAMAGE_REPLY";
@@ -4815,7 +4899,7 @@ export interface components {
             operations: {
                 id: string;
                 /** @enum {string} */
-                kind: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND";
+                kind: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND" | "BOOKING_PARTIAL_REFUND";
                 bookingId: string | null;
                 userId: string | null;
                 /** Format: date-time */
@@ -4868,7 +4952,7 @@ export interface components {
             items: {
                 id: string;
                 /** @enum {string} */
-                kind: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND";
+                kind: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND" | "BOOKING_PARTIAL_REFUND";
                 bookingId: string | null;
                 userId: string | null;
                 /** Format: date-time */
@@ -9932,7 +10016,7 @@ export interface operations {
     AdminAuditController_list: {
         parameters: {
             query?: {
-                action?: "LISTING_APPROVED" | "LISTING_REJECTED" | "LISTING_MOVED" | "LISTING_HIDDEN" | "LISTING_SHOWN" | "DISPUTE_RESOLVED" | "USER_BLOCKED" | "USER_UNBLOCKED" | "USER_NOTE" | "REPORT_CLOSED" | "REVIEW_HIDDEN" | "REVIEW_SHOWN" | "SETTINGS_CHANGED" | "CATEGORY_CHANGED" | "CATEGORY_CREATED" | "CATEGORY_DELETED" | "USER_CREATED" | "USER_EDITED" | "USER_DELETED" | "STAFF_CHANGED" | "TWO_FACTOR_RESET" | "IDENTITY_VIEWED" | "IDENTITY_APPROVED" | "IDENTITY_REJECTED";
+                action?: "LISTING_APPROVED" | "LISTING_REJECTED" | "LISTING_MOVED" | "LISTING_EDITED" | "LISTING_HIDDEN" | "LISTING_SHOWN" | "DISPUTE_RESOLVED" | "USER_BLOCKED" | "USER_UNBLOCKED" | "USER_NOTE" | "REPORT_CLOSED" | "REVIEW_HIDDEN" | "REVIEW_SHOWN" | "SETTINGS_CHANGED" | "CATEGORY_CHANGED" | "CATEGORY_CREATED" | "CATEGORY_DELETED" | "USER_CREATED" | "USER_EDITED" | "USER_DELETED" | "STAFF_CHANGED" | "TWO_FACTOR_RESET" | "IDENTITY_VIEWED" | "IDENTITY_APPROVED" | "IDENTITY_REJECTED";
                 targetId?: string;
                 page?: number;
             };
@@ -10464,6 +10548,129 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminSystemController_demoStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description How many example listings are on the site */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminDemoDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminSystemController_addDemo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Up to six more examples added */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminDemoDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description A service behind the API is unavailable (STORAGE_DISABLED, GEO_UNAVAILABLE) */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminSystemController_removeDemo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Every example removed */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminDemoDto_Output"];
                 };
             };
             /** @description Not signed in or wrong credentials */
@@ -11245,6 +11452,77 @@ export interface operations {
             };
         };
     };
+    ModerationController_edit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdminEditListingDto"];
+            };
+        };
+        responses: {
+            /** @description The listing with the administrator’s fixes; logged, the owner is told */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminListingResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
     ModerationController_moveCategory: {
         parameters: {
             query?: never;
@@ -11637,7 +11915,7 @@ export interface operations {
         parameters: {
             query?: {
                 page?: number;
-                kind?: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND";
+                kind?: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND" | "BOOKING_PARTIAL_REFUND";
             };
             header?: never;
             path?: never;
@@ -11755,6 +12033,42 @@ export interface operations {
             };
             /** @description Too many attempts (RATE_LIMITED); see Retry-After */
             429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    WalletController_stripeOnboarding: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The Stripe onboarding page to send the owner to */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not found or not available */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -12359,7 +12673,7 @@ export interface operations {
             query?: {
                 bookingId?: string;
                 account?: string;
-                kind?: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND";
+                kind?: "TOP_UP" | "WITHDRAWAL" | "BOOKING_PAYMENT" | "RENT_RELEASE" | "DEPOSIT_REFUND" | "DEPOSIT_TO_OWNER" | "BOOKING_REFUND" | "BOOKING_PARTIAL_REFUND";
                 page?: number;
             };
             header?: never;

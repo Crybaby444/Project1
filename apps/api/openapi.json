@@ -6440,6 +6440,7 @@
                 "LISTING_APPROVED",
                 "LISTING_REJECTED",
                 "LISTING_MOVED",
+                "LISTING_EDITED",
                 "LISTING_HIDDEN",
                 "LISTING_SHOWN",
                 "DISPUTE_RESOLVED",
@@ -7130,6 +7131,135 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/system/demo": {
+      "get": {
+        "operationId": "AdminSystemController_demoStatus",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "How many example listings are on the site",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminDemoDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "admin"
+        ]
+      },
+      "post": {
+        "operationId": "AdminSystemController_addDemo",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Up to six more examples added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminDemoDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "A service behind the API is unavailable (STORAGE_DISABLED, GEO_UNAVAILABLE)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "admin"
+        ]
+      },
+      "delete": {
+        "operationId": "AdminSystemController_removeDemo",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Every example removed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminDemoDto_Output"
                 }
               }
             }
@@ -8126,6 +8256,96 @@
         ]
       }
     },
+    "/api/v1/admin/listings/{id}": {
+      "patch": {
+        "operationId": "ModerationController_edit",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminEditListingDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The listing with the administrator’s fixes; logged, the owner is told",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminListingResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (e.g. AUTH_EMAIL_TAKEN, PHOTO_LIMIT, DATES_UNAVAILABLE, ACTION_NOT_ALLOWED, DEADLINE_PASSED, IDEMPOTENCY_*, or INVALID_STATUS with details.currentVersion)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "admin"
+        ]
+      }
+    },
     "/api/v1/admin/listings/{id}/category": {
       "post": {
         "operationId": "ModerationController_moveCategory",
@@ -8666,7 +8886,8 @@
                 "RENT_RELEASE",
                 "DEPOSIT_REFUND",
                 "DEPOSIT_TO_OWNER",
-                "BOOKING_REFUND"
+                "BOOKING_REFUND",
+                "BOOKING_PARTIAL_REFUND"
               ]
             }
           }
@@ -8805,6 +9026,40 @@
           },
           "429": {
             "description": "Too many attempts (RATE_LIMITED); see Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "wallet"
+        ]
+      }
+    },
+    "/api/v1/wallet/stripe-onboarding": {
+      "post": {
+        "operationId": "WalletController_stripeOnboarding",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The Stripe onboarding page to send the owner to"
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found or not available",
             "content": {
               "application/json": {
                 "schema": {
@@ -9623,7 +9878,8 @@
                 "RENT_RELEASE",
                 "DEPOSIT_REFUND",
                 "DEPOSIT_TO_OWNER",
-                "BOOKING_REFUND"
+                "BOOKING_REFUND",
+                "BOOKING_PARTIAL_REFUND"
               ]
             }
           },
@@ -11667,9 +11923,18 @@
                   "DEPOSIT_REFUNDED",
                   "DEPOSIT_TO_OWNER",
                   "REFUNDED_ALL",
+                  "REFUNDED_PART",
                   null
                 ],
                 "nullable": true
+              },
+              "cancellationPolicy": {
+                "type": "string",
+                "enum": [
+                  "FLEXIBLE",
+                  "MODERATE",
+                  "STRICT"
+                ]
               },
               "deadline": {
                 "type": "object",
@@ -11807,6 +12072,7 @@
               "dispute",
               "cancellation",
               "outcome",
+              "cancellationPolicy",
               "deadline",
               "actions",
               "hasContract",
@@ -12600,9 +12866,18 @@
                     "DEPOSIT_REFUNDED",
                     "DEPOSIT_TO_OWNER",
                     "REFUNDED_ALL",
+                    "REFUNDED_PART",
                     null
                   ],
                   "nullable": true
+                },
+                "cancellationPolicy": {
+                  "type": "string",
+                  "enum": [
+                    "FLEXIBLE",
+                    "MODERATE",
+                    "STRICT"
+                  ]
                 },
                 "deadline": {
                   "type": "object",
@@ -12740,6 +13015,7 @@
                 "dispute",
                 "cancellation",
                 "outcome",
+                "cancellationPolicy",
                 "deadline",
                 "actions",
                 "hasContract",
@@ -14775,6 +15051,14 @@
                         ],
                         "additionalProperties": false
                       },
+                      "cancellationPolicy": {
+                        "type": "string",
+                        "enum": [
+                          "FLEXIBLE",
+                          "MODERATE",
+                          "STRICT"
+                        ]
+                      },
                       "photos": {
                         "type": "array",
                         "items": {
@@ -14887,6 +15171,7 @@
                       "timeZone",
                       "contentLocale",
                       "rules",
+                      "cancellationPolicy",
                       "photos",
                       "unavailability",
                       "publishedAt",
@@ -17264,6 +17549,14 @@
               "custom"
             ]
           },
+          "cancellationPolicy": {
+            "type": "string",
+            "enum": [
+              "FLEXIBLE",
+              "MODERATE",
+              "STRICT"
+            ]
+          },
           "contentLocale": {
             "type": "string",
             "enum": [
@@ -17421,6 +17714,14 @@
                 ],
                 "additionalProperties": false
               },
+              "cancellationPolicy": {
+                "type": "string",
+                "enum": [
+                  "FLEXIBLE",
+                  "MODERATE",
+                  "STRICT"
+                ]
+              },
               "photos": {
                 "type": "array",
                 "items": {
@@ -17574,6 +17875,7 @@
               "timeZone",
               "contentLocale",
               "rules",
+              "cancellationPolicy",
               "photos",
               "unavailability",
               "publishedAt",
@@ -17739,6 +18041,14 @@
             "required": [
               "preset",
               "custom"
+            ]
+          },
+          "cancellationPolicy": {
+            "type": "string",
+            "enum": [
+              "FLEXIBLE",
+              "MODERATE",
+              "STRICT"
             ]
           },
           "contentLocale": {
@@ -18298,6 +18608,7 @@
                     "LISTING_APPROVED",
                     "LISTING_REJECTED",
                     "LISTING_MOVED",
+                    "LISTING_EDITED",
                     "LISTING_HIDDEN",
                     "LISTING_SHOWN",
                     "DISPUTE_RESOLVED",
@@ -18931,6 +19242,36 @@
           "users",
           "listings",
           "deals"
+        ],
+        "additionalProperties": false
+      },
+      "AdminDemoDto_Output": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "total": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "added": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "removed": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "count",
+          "total"
         ],
         "additionalProperties": false
       },
@@ -19766,6 +20107,14 @@
                   ],
                   "additionalProperties": false
                 },
+                "cancellationPolicy": {
+                  "type": "string",
+                  "enum": [
+                    "FLEXIBLE",
+                    "MODERATE",
+                    "STRICT"
+                  ]
+                },
                 "photos": {
                   "type": "array",
                   "items": {
@@ -19939,6 +20288,7 @@
                 "timeZone",
                 "contentLocale",
                 "rules",
+                "cancellationPolicy",
                 "photos",
                 "unavailability",
                 "publishedAt",
@@ -19968,22 +20318,48 @@
         ],
         "additionalProperties": false
       },
-      "MoveListingCategoryDto": {
+      "AdminEditListingDto": {
         "type": "object",
         "properties": {
-          "categoryId": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 64
-          },
           "version": {
             "type": "integer",
             "minimum": 0,
             "maximum": 9007199254740991
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 6000
+          },
+          "condition": {
+            "type": "string",
+            "enum": [
+              "NEW",
+              "LIKE_NEW",
+              "GOOD",
+              "FAIR"
+            ]
+          },
+          "dailyCents": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 1000000
+          },
+          "weeklyDiscountPercent": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 90
+          },
+          "depositCents": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5000000
           }
         },
         "required": [
-          "categoryId",
           "version"
         ]
       },
@@ -20133,6 +20509,14 @@
                   "custom"
                 ],
                 "additionalProperties": false
+              },
+              "cancellationPolicy": {
+                "type": "string",
+                "enum": [
+                  "FLEXIBLE",
+                  "MODERATE",
+                  "STRICT"
+                ]
               },
               "photos": {
                 "type": "array",
@@ -20307,6 +20691,7 @@
               "timeZone",
               "contentLocale",
               "rules",
+              "cancellationPolicy",
               "photos",
               "unavailability",
               "publishedAt",
@@ -20328,6 +20713,25 @@
           "listing"
         ],
         "additionalProperties": false
+      },
+      "MoveListingCategoryDto": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "categoryId",
+          "version"
+        ]
       },
       "ApproveListingDto": {
         "type": "object",
@@ -20508,7 +20912,8 @@
                     "RENT_RELEASE",
                     "DEPOSIT_REFUND",
                     "DEPOSIT_TO_OWNER",
-                    "BOOKING_REFUND"
+                    "BOOKING_REFUND",
+                    "BOOKING_PARTIAL_REFUND"
                   ]
                 },
                 "amountCents": {
@@ -20569,7 +20974,7 @@
             "type": "string",
             "minLength": 10,
             "maxLength": 1000,
-            "pattern": "^tok_[A-Za-z0-9_.-]+$"
+            "pattern": "^(tok|pm)_[A-Za-z0-9_.-]+$"
           }
         },
         "required": [
@@ -20630,7 +21035,7 @@
             "type": "string",
             "minLength": 10,
             "maxLength": 1000,
-            "pattern": "^tok_[A-Za-z0-9_.-]+$"
+            "pattern": "^(tok|pm)_[A-Za-z0-9_.-]+$"
           },
           "iban": {
             "type": "string",
@@ -21587,9 +21992,18 @@
                     "DEPOSIT_REFUNDED",
                     "DEPOSIT_TO_OWNER",
                     "REFUNDED_ALL",
+                    "REFUNDED_PART",
                     null
                   ],
                   "nullable": true
+                },
+                "cancellationPolicy": {
+                  "type": "string",
+                  "enum": [
+                    "FLEXIBLE",
+                    "MODERATE",
+                    "STRICT"
+                  ]
                 },
                 "deadline": {
                   "type": "object",
@@ -21727,6 +22141,7 @@
                 "dispute",
                 "cancellation",
                 "outcome",
+                "cancellationPolicy",
                 "deadline",
                 "actions",
                 "hasContract",
@@ -22143,9 +22558,18 @@
                   "DEPOSIT_REFUNDED",
                   "DEPOSIT_TO_OWNER",
                   "REFUNDED_ALL",
+                  "REFUNDED_PART",
                   null
                 ],
                 "nullable": true
+              },
+              "cancellationPolicy": {
+                "type": "string",
+                "enum": [
+                  "FLEXIBLE",
+                  "MODERATE",
+                  "STRICT"
+                ]
               },
               "deadline": {
                 "type": "object",
@@ -22283,6 +22707,7 @@
               "dispute",
               "cancellation",
               "outcome",
+              "cancellationPolicy",
               "deadline",
               "actions",
               "hasContract",
@@ -22395,7 +22820,8 @@
                     "RENT_RELEASE",
                     "DEPOSIT_REFUND",
                     "DEPOSIT_TO_OWNER",
-                    "BOOKING_REFUND"
+                    "BOOKING_REFUND",
+                    "BOOKING_PARTIAL_REFUND"
                   ]
                 },
                 "bookingId": {
@@ -22651,7 +23077,8 @@
                     "RENT_RELEASE",
                     "DEPOSIT_REFUND",
                     "DEPOSIT_TO_OWNER",
-                    "BOOKING_REFUND"
+                    "BOOKING_REFUND",
+                    "BOOKING_PARTIAL_REFUND"
                   ]
                 },
                 "bookingId": {

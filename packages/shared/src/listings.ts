@@ -13,6 +13,10 @@ export const LISTING_CONDITIONS = ['NEW', 'LIKE_NEW', 'GOOD', 'FAIR'] as const;
 export type ListingCondition = (typeof LISTING_CONDITIONS)[number];
 
 /** Ready-made rules an owner ticks; the site labels them in every language (`listingRules.<KEY>`). */
+/** The cancellation policies an owner can pick (the rule itself is in @yoyo/domain cancellation.ts). */
+export const CANCELLATION_POLICIES = ['FLEXIBLE', 'MODERATE', 'STRICT'] as const;
+export type CancellationPolicyName = (typeof CANCELLATION_POLICIES)[number];
+
 export const RULE_PRESETS = ['ID_AT_PICKUP', 'RETURN_CLEAN', 'NO_SMOKING', 'PICKUP_ONLY', 'PETS_OK', 'CARE_INSTRUCTIONS'] as const;
 
 export type RulePreset = (typeof RULE_PRESETS)[number];
@@ -101,6 +105,8 @@ const ListingDraftObject = z.object({
   lng: z.number().min(-180).max(180).transform(roundTo6).nullable().optional(),
   timeZone: z.string().max(64).refine(isTimeZone, 'Unknown time zone').optional(),
   rules: ListingRulesSchema.optional(),
+  /** What a renter gets back when they cancel (owner, 2026-11-16): FLEXIBLE, MODERATE or STRICT. */
+  cancellationPolicy: z.enum(CANCELLATION_POLICIES).optional(),
   /** The language the texts are written in; a new draft without it takes the author's language. */
   contentLocale: z.enum(LOCALES).optional(),
 });
@@ -235,6 +241,7 @@ export const PublicListingSchema = z.object({
   /** The language of the texts: the canonical address and <html lang> of the item page use it. */
   contentLocale: z.enum(LOCALES),
   rules: z.object({ preset: z.array(z.enum(RULE_PRESETS)), custom: z.array(z.string()) }),
+  cancellationPolicy: z.enum(CANCELLATION_POLICIES),
   photos: z.array(ListingPhotoSchema),
   unavailability: z.array(DatePeriodSchema),
   publishedAt: z.iso.datetime().nullable(),
@@ -327,6 +334,20 @@ export type AdminListingsResponse = z.infer<typeof AdminListingsResponseSchema>;
 export const ApproveListingRequestSchema = z.object({ version: z.number().int().min(0) });
 
 /** The reason is shown to the owner and emailed to them. */
+/** An administrator fixes a listing (owner, 2026-11-16: manage everything): the fields given change. */
+export const AdminEditListingRequestSchema = z
+  .object({
+    version: z.number().int().min(0),
+    title: z.string().max(200).transform(cleanText).pipe(z.string().min(LISTING_LIMITS.title.min).max(LISTING_LIMITS.title.max)).optional(),
+    description: z.string().max(6000).transform(cleanText).pipe(z.string().min(LISTING_LIMITS.description.min).max(LISTING_LIMITS.description.max)).optional(),
+    condition: z.enum(LISTING_CONDITIONS).optional(),
+    dailyCents: z.number().int().min(100).max(1_000_000).optional(),
+    weeklyDiscountPercent: z.number().int().min(0).max(90).optional(),
+    depositCents: z.number().int().min(0).max(5_000_000).optional(),
+  })
+  .refine((v) => Object.keys(v).length > 1, { message: 'Change at least one field' });
+export type AdminEditListingRequest = z.infer<typeof AdminEditListingRequestSchema>;
+
 export const RejectListingRequestSchema = z.object({
   reason: z.string().max(2000).transform(cleanText).pipe(z.string().min(10).max(500)),
   /** The version the administrator reviewed (see ApproveListingRequestSchema). */

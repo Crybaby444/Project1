@@ -34,8 +34,8 @@ async function cleanBooks(): Promise<void> {
 }
 
 /** The README example: 3 days at 15 €, 100 € deposit, signed by both, ready to pay. */
-async function signedDeal(): Promise<string> {
-  const listing = await seedListing(t, owner.user, { status: 'PUBLISHED', dailyCents: 1500, depositCents: 10_000 });
+async function signedDeal(policy: 'FLEXIBLE' | 'MODERATE' | 'STRICT' = 'FLEXIBLE'): Promise<string> {
+  const listing = await seedListing(t, owner.user, { status: 'PUBLISHED', dailyCents: 1500, depositCents: 10_000, cancellationPolicy: policy });
   const booking = await requestBooking(t, renter, listing.id, 1, 3);
   await step(owner, booking.id, { type: 'ACCEPT' });
   await step(renter, booking.id, { type: 'SIGN' });
@@ -119,6 +119,19 @@ describe('paying and the deposit rule', () => {
     expect(payment.refunds).toMatchObject([{ amountCents: 14_950, status: 'DONE' }]);
     expect(await balance('platform:revenue')).toBe(0);
     expect(await balance('external:card')).toBe(0);
+    await cleanBooks();
+  });
+
+  it('a renter cancelling a moderate deal the day before gets the deposit, the fee and half the rent back; the owner half the rent (owner, 2026-11-16)', async () => {
+    const id = await signedDeal('MODERATE');
+    await payByCard(id);
+    const cancelled = await step(renter, id, { type: 'CANCEL', reason: 'Plans changed' });
+    expect(cancelled).toMatchObject({ status: 'CANCELLED', outcome: 'REFUNDED_PART', cancellationPolicy: 'MODERATE' });
+    // Rent 45 €, fee 4.50 €, deposit 100 €: back to the card 149.50 − 22.50.
+    const payment = await t.prisma.payment.findFirstOrThrow({ where: { bookingId: id }, include: { refunds: true } });
+    expect(payment.refunds).toMatchObject([{ amountCents: 12_700, status: 'DONE' }]);
+    expect(await balance(`wallet:${owner.user.id}`)).toBe(2_250);
+    expect(await balance('platform:revenue')).toBe(0);
     await cleanBooks();
   });
 
