@@ -9,6 +9,7 @@ import type {
   MapResponse,
   PlacesResponse,
   ForYouResponse,
+  CitySuggestResponse,
   PublicProfile,
   SitemapResponse,
   SuggestResponse,
@@ -30,12 +31,15 @@ import {
   PlacesQueryDto,
   ForYouQueryDto,
   ForYouResponseDto,
+  CitySuggestQueryDto,
+  CitySuggestResponseDto,
   PlacesResponseDto,
   PublicProfileDto,
   SitemapResponseDto,
   SuggestQueryDto,
   SuggestResponseDto,
 } from './catalog.dto';
+import { CityDirectory } from './city-directory';
 import { CatalogService } from './catalog.service';
 import { ProfilesService } from './profiles.service';
 
@@ -49,6 +53,7 @@ export class CatalogController {
   constructor(
     private readonly catalog: CatalogService,
     private readonly limiter: RateLimiter,
+    private readonly directory: CityDirectory,
   ) {}
 
   @Get('category-counts')
@@ -91,6 +96,16 @@ export class CatalogController {
   @ApiErrors(400)
   forYou(@Query() query: ForYouQueryDto): Promise<ForYouResponse> {
     return this.catalog.forYou({ ...(query.country && { country: query.country }), categories: query.categories });
+  }
+
+  @Get('cities')
+  @ZodResponse({ status: 200, type: CitySuggestResponseDto, description: 'Cities of a country that start with what was typed, with their item counts' })
+  @ApiErrors(400, 429)
+  async cities(@Query() query: CitySuggestQueryDto, @Req() req: Request): Promise<CitySuggestResponse> {
+    this.limiter.hit(RATE_LIMITS.suggest(clientIp(req)));
+    const found = await this.directory.suggest(query.country, query.q);
+    const counts = new Map((await this.catalog.places(query.country)).cities.map((c) => [c.slug, c.count]));
+    return { items: found.map((city) => ({ ...city, count: counts.get(city.slug) ?? 0 })) };
   }
 
   @Get('sitemap')

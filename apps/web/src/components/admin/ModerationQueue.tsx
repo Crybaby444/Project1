@@ -118,7 +118,7 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
             key={name}
             href={name === 'other' ? '/admin/listings?queue=other' : '/admin/listings'}
             aria-current={queue === name ? 'page' : undefined}
-            className={`rounded-pill ease-yoyo inline-flex min-h-10 items-center border px-4 text-[13px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 ${
+            className={`rounded-pill ease-yoyo inline-flex min-h-10 items-center border px-4 text-sm font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 ${
               queue === name ? 'bg-cta text-cta-fg border-cta' : 'border-ink bg-surface text-ink'
             }`}
           >

@@ -25,7 +25,7 @@ const DOCUMENT_LINKS = [
 ] as const;
 
 const LINK =
-  'inline-flex min-h-10 items-center rounded-pill text-[15px] font-bold underline-offset-4 transition-transform duration-150 ease-yoyo hover:-translate-y-0.5 hover:underline';
+  'inline-flex min-h-10 items-center rounded-pill text-base font-bold underline-offset-4 transition-transform duration-150 ease-yoyo hover:-translate-y-0.5 hover:underline';
 
 /**
  * The language choice of the footer: its own small list (the header has the main switcher), using the
@@ -75,7 +75,7 @@ function FooterLanguages({ label }: { label: string }) {
                 aria-current={active ? 'true' : undefined}
                 data-footer-language={active ? 'current' : undefined}
                 onClick={(event) => onClick(event, locale)}
-                className={`rounded-pill inline-flex min-h-10 items-center px-3 text-[12px] font-bold tracking-[0.03em] uppercase transition-colors duration-200 ${
+                className={`rounded-pill inline-flex min-h-10 items-center px-3 text-xs font-bold tracking-[0.03em] uppercase transition-colors duration-200 ${
                   active ? 'text-ink underline decoration-1 underline-offset-4' : 'text-ink/70 hover:text-ink'
                 }`}
               >
@@ -102,7 +102,7 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-[1440px] gap-10 px-4 pt-14 pb-6 sm:px-8 sm:pt-20 md:grid-cols-[1.3fr_1fr_1fr]">
         <a
           href={`mailto:${CONTACT_EMAIL}`}
-          className="group font-display self-start text-[clamp(1.6rem,2.6vw,2.4rem)] leading-none font-black break-all uppercase"
+          className="group font-display self-start text-display-s leading-none font-black break-all uppercase"
         >
           <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_2px] bg-left-bottom bg-no-repeat pb-1 transition-[background-size] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:bg-[length:100%_2px]">
             {CONTACT_EMAIL}
@@ -114,7 +114,7 @@ export function SiteFooter() {
               <li key={key}>
                 <TransitionLink
                   href={href}
-                  className="font-display inline-flex min-h-10 items-center text-[clamp(1.5rem,2.2vw,2rem)] leading-none font-black uppercase transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:translate-x-1.5"
+                  className="font-display inline-flex min-h-10 items-center text-display-s leading-none font-black uppercase transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:translate-x-1.5"
                 >
                   {t(`links.${key}`)}
                 </TransitionLink>
@@ -146,10 +146,10 @@ export function SiteFooter() {
       </div>
       <div className="border-ink/15 border-t">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-4 sm:px-8">
-          <p className="text-ink/75 m-0 text-[13px] font-medium">{t('copyright', { year: new Date().getFullYear() })}</p>
+          <p className="text-ink/75 m-0 text-sm font-medium">{t('copyright', { year: new Date().getFullYear() })}</p>
           <div className="-mx-3 flex flex-wrap items-center gap-x-6 gap-y-1">
             <FooterLanguages label={t('languageLabel')} />
-            <CookieSettingsButton gaId={GA_ID} className="text-ink/70 hover:text-ink inline-flex min-h-10 items-center px-3 text-[12px] font-bold tracking-[0.03em] whitespace-nowrap uppercase" />
+            <CookieSettingsButton gaId={GA_ID} className="text-ink/70 hover:text-ink inline-flex min-h-10 items-center px-3 text-xs font-bold tracking-[0.03em] whitespace-nowrap uppercase" />
             <div data-theme-control>
               <ThemeSelect compact />
             </div>

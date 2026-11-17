@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { publicName } from '../common/public-name';
 import { cents, endOfDayIn, localDate, localDateIn, period, validateOffer, validateRentalPeriod, DomainError } from '@yoyo/domain';
 import type { OfferRequest, OfferStatus, OfferView, PublicUser } from '@yoyo/shared';
 import { CLOCK, type Clock } from '../clock/clock';
@@ -128,8 +129,8 @@ export class OffersService {
     return {
       id: offer.id,
       listing: { id: offer.listing.id, title: offer.listing.title ?? '' },
-      renter: { id: offer.renter.id, name: offer.renter.deletedAt ? 'Deleted user' : offer.renter.name },
-      owner: { id: offer.owner.id, name: offer.owner.deletedAt ? 'Deleted user' : offer.owner.name },
+      renter: { id: offer.renter.id, name: publicName(offer.renter) },
+      owner: { id: offer.owner.id, name: publicName(offer.owner) },
       start: dayOf(offer.start),
       end: dayOf(offer.end),
       dailyCents: offer.dailyCents,

@@ -900,6 +900,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/catalog/cities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CatalogController_cities"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/catalog/sitemap": {
         parameters: {
             query?: never;
@@ -2305,7 +2321,7 @@ export interface components {
         ApiErrorDto_Output: {
             error: {
                 /** @enum {string} */
-                code: "VALIDATION_FAILED" | "AUTH_INVALID_CREDENTIALS" | "AUTH_EMAIL_TAKEN" | "USERNAME_TAKEN" | "UNDERAGE" | "PROFILE_INCOMPLETE" | "IDENTITY_REQUIRED" | "AUTH_UNAUTHENTICATED" | "AUTH_FORBIDDEN" | "AUTH_BLOCKED" | "AUTH_PROVIDER_DISABLED" | "AUTH_CODE_REQUIRED" | "AUTH_CODE_INVALID" | "TOKEN_EXPIRED" | "TOKEN_USED" | "RATE_LIMITED" | "OAUTH_CANCELLED" | "OAUTH_STATE_INVALID" | "OAUTH_FAILED" | "ORIGIN_FORBIDDEN" | "NOT_FOUND" | "INTERNAL" | "INVALID_STATUS" | "UNSUPPORTED_MEDIA" | "PAYLOAD_TOO_LARGE" | "PHOTO_LIMIT" | "STORAGE_DISABLED" | "LISTING_INCOMPLETE" | "GEO_UNAVAILABLE" | "DATES_UNAVAILABLE" | "CANNOT_RENT_OWN" | "LISTING_UNAVAILABLE" | "INSUFFICIENT_FUNDS" | "PAYMENT_DECLINED" | "CONTRACT_NOT_SIGNED" | "ACTION_NOT_ALLOWED" | "DEADLINE_PASSED" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_IN_PROGRESS" | "OFFER_UNAVAILABLE" | "WALLET_LIMIT" | "LISTING_GONE";
+                code: "VALIDATION_FAILED" | "AUTH_INVALID_CREDENTIALS" | "AUTH_EMAIL_TAKEN" | "USERNAME_TAKEN" | "UNDERAGE" | "PROFILE_INCOMPLETE" | "IDENTITY_REQUIRED" | "DEMO_LISTING" | "AUTH_UNAUTHENTICATED" | "AUTH_FORBIDDEN" | "AUTH_BLOCKED" | "AUTH_PROVIDER_DISABLED" | "AUTH_CODE_REQUIRED" | "AUTH_CODE_INVALID" | "TOKEN_EXPIRED" | "TOKEN_USED" | "RATE_LIMITED" | "OAUTH_CANCELLED" | "OAUTH_STATE_INVALID" | "OAUTH_FAILED" | "ORIGIN_FORBIDDEN" | "NOT_FOUND" | "INTERNAL" | "INVALID_STATUS" | "UNSUPPORTED_MEDIA" | "PAYLOAD_TOO_LARGE" | "PHOTO_LIMIT" | "STORAGE_DISABLED" | "LISTING_INCOMPLETE" | "GEO_UNAVAILABLE" | "DATES_UNAVAILABLE" | "CANNOT_RENT_OWN" | "LISTING_UNAVAILABLE" | "INSUFFICIENT_FUNDS" | "PAYMENT_DECLINED" | "CONTRACT_NOT_SIGNED" | "ACTION_NOT_ALLOWED" | "DEADLINE_PASSED" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_IN_PROGRESS" | "OFFER_UNAVAILABLE" | "WALLET_LIMIT" | "LISTING_GONE";
                 message: string;
                 fields?: {
                     [key: string]: string;
@@ -3085,6 +3101,7 @@ export interface components {
                 category: string | null;
                 priceMax: number | null;
                 district: string | null;
+                city: string | null;
                 /** Format: date-time */
                 createdAt: string;
             }[];
@@ -3094,6 +3111,7 @@ export interface components {
             category?: string;
             priceMax?: number;
             district?: string;
+            city?: string;
         };
         SavedSearchResponseDto_Output: {
             search: {
@@ -3102,6 +3120,7 @@ export interface components {
                 category: string | null;
                 priceMax: number | null;
                 district: string | null;
+                city: string | null;
                 /** Format: date-time */
                 createdAt: string;
             };
@@ -3136,6 +3155,7 @@ export interface components {
                 publishedAt: string | null;
                 rating: number | null;
                 reviewCount: number;
+                demo: boolean;
             }[];
             total: number;
             page: number;
@@ -3227,8 +3247,16 @@ export interface components {
                 publishedAt: string | null;
                 rating: number | null;
                 reviewCount: number;
+                demo: boolean;
             }[];
             personal: boolean;
+        };
+        CitySuggestResponseDto_Output: {
+            items: {
+                name: string;
+                slug: string;
+                count: number;
+            }[];
         };
         SitemapResponseDto_Output: {
             listings: {
@@ -3264,6 +3292,7 @@ export interface components {
             item: {
                 /** @enum {boolean} */
                 available: true;
+                demo: boolean;
                 listing: {
                     id: string;
                     ownerId: string;
@@ -3395,6 +3424,7 @@ export interface components {
                 publishedAt: string | null;
                 rating: number | null;
                 reviewCount: number;
+                demo: boolean;
             }[];
         };
         CategoryNode_Output: {
@@ -3478,6 +3508,7 @@ export interface components {
                 publishedAt: string | null;
                 rating: number | null;
                 reviewCount: number;
+                demo: boolean;
                 owner: {
                     id: string;
                     name: string;
@@ -3533,6 +3564,7 @@ export interface components {
                 publishedAt: string | null;
                 rating: number | null;
                 reviewCount: number;
+                demo: boolean;
             }[];
         };
         MyShopsDto_Output: {
@@ -4956,6 +4988,7 @@ export interface components {
                 publishedAt: string | null;
                 rating: number | null;
                 reviewCount: number;
+                demo: boolean;
                 available: boolean;
             }[];
         };
@@ -7600,6 +7633,47 @@ export interface operations {
             };
             /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    CatalogController_cities: {
+        parameters: {
+            query: {
+                country: "AT" | "BE" | "BG" | "HR" | "CY" | "EE" | "FI" | "FR" | "DE" | "GR" | "IE" | "IT" | "LV" | "LT" | "LU" | "MT" | "NL" | "PT" | "SK" | "SI" | "ES";
+                q: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Cities of a country that start with what was typed, with their item counts */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CitySuggestResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };

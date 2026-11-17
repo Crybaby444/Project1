@@ -17,7 +17,7 @@ export function FavoritesList() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{t('title')}</h1>
+      <h1 className="font-display text-display-l leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{t('title')}</h1>
       {favorites.isPending ? (
         <ul aria-busy="true" className="grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-4 lg:grid-cols-4">
           {Array.from({ length: 4 }, (_, index) => (

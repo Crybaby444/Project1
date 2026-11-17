@@ -41,7 +41,7 @@ export function ChoicePills<T extends string>({
   const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(' ') || undefined;
   return (
     <fieldset className="flex min-w-0 flex-col gap-2" aria-describedby={describedBy} disabled={disabled}>
-      <legend className={hideLegend ? 'sr-only' : 'mb-2 text-[13px] font-bold tracking-[0.03em] uppercase'}>
+      <legend className={hideLegend ? 'sr-only' : 'mb-2 text-sm font-bold tracking-[0.03em] uppercase'}>
         {legend}
         {note && <span className="ml-2 font-medium tracking-normal normal-case">· {note}</span>}
       </legend>

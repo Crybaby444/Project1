@@ -6,13 +6,14 @@ import { CategoriesModule } from '../categories/categories.module';
 import { StorageModule } from '../media/storage.module';
 import { ReviewsModule } from '../reviews/reviews.module';
 import { CatalogController, ProfilesController } from './catalog.controller';
+import { CityDirectory } from './city-directory';
 import { CatalogService } from './catalog.service';
 import { ProfilesService } from './profiles.service';
 
 @Module({
   imports: [AuthModule, BookingsModule, CategoriesModule, StorageModule, ReviewsModule],
   controllers: [CatalogController, ProfilesController, ForYouController],
-  providers: [CatalogService, ProfilesService],
+  providers: [CatalogService, ProfilesService, CityDirectory],
   exports: [CatalogService],
 })
 export class CatalogModule {}

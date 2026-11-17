@@ -172,9 +172,9 @@ test('the map view shows the item in its district cell, never the exact point', 
 
 test('the owner’s public profile lists the item and has no reviews yet', async ({ page }) => {
   await page.goto(`/listings/${drill.id}-${drill.slug}`);
-  await page.getByRole('link', { name: en.item.owner.profile.replace('{name}', 'Jānis Ozols') }).click();
+  await page.getByRole('link', { name: /^More from @janis\./ }).click();
   await expect(page).toHaveURL(new RegExp(`/u/${drill.ownerId}$`));
-  await expect(page.getByRole('heading', { level: 1, name: 'Jānis Ozols' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: /^@janis\./ })).toBeVisible();
   await expect(page.getByRole('link', { name: drill.title })).toBeVisible();
   await page.getByRole('tab', { name: en.profile.reviews }).click();
   await expect(page.getByRole('tabpanel').getByText(en.profile.noReviewsTitle, { exact: true })).toBeVisible();

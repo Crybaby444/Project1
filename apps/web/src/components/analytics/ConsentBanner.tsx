@@ -47,7 +47,7 @@ export function ConsentBanner({ gaId }: { gaId: string }) {
       className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
     >
       <div className="bg-ink text-canvas animate-toast-in pointer-events-auto flex w-full max-w-2xl flex-wrap items-center gap-x-5 gap-y-3 rounded-[28px] py-3 pr-3 pl-5 shadow-[0_24px_48px_-24px_rgba(10,11,14,0.55)] sm:rounded-full">
-        <p className="m-0 min-w-0 flex-[1_1_16rem] text-[14px] leading-snug font-semibold">
+        <p className="m-0 min-w-0 flex-[1_1_16rem] text-sm leading-snug font-semibold">
           {t('text')}{' '}
           <Link href="/cookies" className="underline underline-offset-4">
             {t('policy')}
@@ -57,14 +57,14 @@ export function ConsentBanner({ gaId }: { gaId: string }) {
           <button
             type="button"
             onClick={() => choose('denied')}
-            className="text-canvas rounded-pill border-canvas/40 hover:border-canvas inline-flex min-h-10 items-center border px-4 text-[13px] font-bold tracking-[0.03em] uppercase transition-colors duration-150"
+            className="text-canvas rounded-pill border-canvas/40 hover:border-canvas inline-flex min-h-10 items-center border px-4 text-sm font-bold tracking-[0.03em] uppercase transition-colors duration-150"
           >
             {t('decline')}
           </button>
           <button
             type="button"
             onClick={() => choose('granted')}
-            className="bg-canvas text-ink rounded-pill inline-flex min-h-10 items-center px-5 text-[13px] font-bold tracking-[0.03em] uppercase"
+            className="bg-canvas text-ink rounded-pill inline-flex min-h-10 items-center px-5 text-sm font-bold tracking-[0.03em] uppercase"
           >
             {t('accept')}
           </button>

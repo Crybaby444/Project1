@@ -62,7 +62,7 @@ export function ListingStatusBadge({
     <span
       data-status={status}
       data-tone={status.toLowerCase()}
-      className={`rounded-pill inline-flex min-h-7 items-center gap-1.5 border px-3 text-[13px] font-bold whitespace-nowrap ${TONE[status]} ${className}`}
+      className={`rounded-pill inline-flex min-h-7 items-center gap-1.5 border px-3 text-sm font-bold whitespace-nowrap ${TONE[status]} ${className}`}
     >
       <svg viewBox="0 0 24 24" aria-hidden="true" className="size-3.5 shrink-0">
         {ICON[status]}

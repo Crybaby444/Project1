@@ -51,7 +51,7 @@ export function StepNav({ current, onSelect }: { current: BuilderStep; onSelect(
                 <span aria-hidden="true" className="self-start pt-[0.35em] text-xs font-bold tabular-nums lg:self-center lg:pt-0">
                   {String(index + 1).padStart(2, '0')}
                 </span>
-                <span className="font-display text-[1.45rem] leading-none font-black uppercase transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] lg:text-[1.7rem] lg:group-hover:translate-x-1.5">
+                <span className="font-display text-2xl leading-none font-black uppercase transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] lg:text-3xl lg:group-hover:translate-x-1.5">
                   {t(step)}
                 </span>
                 {isCurrent ? (

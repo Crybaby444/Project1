@@ -76,19 +76,19 @@ export function LanguageSuggestion() {
       {/* v16: a quiet ink bar that floats over the page bottom: the question in the suggested language, the switch, stay. */}
       <div className="bg-ink text-canvas animate-toast-in pointer-events-auto flex w-full max-w-2xl flex-wrap items-center gap-x-5 gap-y-3 rounded-[28px] py-3 pr-3 pl-5 shadow-[0_24px_48px_-24px_rgba(10,11,14,0.55)] sm:rounded-full">
         <Mark size={22} string={false} className="text-canvas shrink-0 [--mark-cut:var(--ink)]" />
-        <p className="m-0 min-w-0 flex-[1_1_14rem] text-[15px] leading-snug font-semibold">{text.text}</p>
+        <p className="m-0 min-w-0 flex-[1_1_14rem] text-base leading-snug font-semibold">{text.text}</p>
         <div className="flex shrink-0 items-center gap-1">
           <button
             type="button"
             onClick={stay}
-            className="text-canvas/80 hover:text-canvas rounded-pill inline-flex min-h-10 items-center px-4 text-[13px] font-bold tracking-[0.03em] uppercase underline-offset-4 transition-colors duration-150 hover:underline"
+            className="text-canvas/80 hover:text-canvas rounded-pill inline-flex min-h-10 items-center px-4 text-sm font-bold tracking-[0.03em] uppercase underline-offset-4 transition-colors duration-150 hover:underline"
           >
             {text.stay}
           </button>
           <button
             type="button"
             onClick={() => go(suggested)}
-            className="bg-canvas text-ink rounded-pill ease-yoyo inline-flex min-h-10 items-center px-5 text-[13px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96]"
+            className="bg-canvas text-ink rounded-pill ease-yoyo inline-flex min-h-10 items-center px-5 text-sm font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96]"
           >
             {text.switch}
           </button>

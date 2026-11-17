@@ -42,12 +42,12 @@ export function DealCard({ booking, index }: { booking: BookingView; index: numb
           <div className="flex flex-wrap items-center gap-2">
             <DealStatusBadge status={booking.status} />
             {mine && (
-              <span className="rounded-pill bg-ink text-canvas border-ink inline-flex min-h-7 items-center border px-3 text-[13px] font-bold" data-your-turn="">
+              <span className="rounded-pill bg-ink text-canvas border-ink inline-flex min-h-7 items-center border px-3 text-sm font-bold" data-your-turn="">
                 {t('yourTurn')}
               </span>
             )}
           </div>
-          <h2 data-cursor-text className="font-display text-[1.75rem] leading-[0.95] font-black uppercase [overflow-wrap:anywhere]">{booking.listing.title}</h2>
+          <h2 data-cursor-text className="font-display text-3xl leading-[0.95] font-black uppercase [overflow-wrap:anywhere]">{booking.listing.title}</h2>
           <p className="flex flex-wrap gap-x-3 gap-y-0.5 text-sm">
             <span>{t(`with.${booking.viewerRole === 'OWNER' ? 'owner' : 'renter'}`, { name: other })}</span>
             <span className="font-bold">{formatPeriod(booking.period.start, booking.period.end, locale)}</span>
@@ -190,7 +190,7 @@ export function MyDeals({ initialRole }: { initialRole: DealRole }) {
           >
             {t(r)}
             {waiting(r) > 0 && (
-              <span aria-hidden="true" className="rounded-pill bg-ink text-canvas animate-pop-in inline-flex min-h-5 min-w-5 items-center justify-center border border-ink/15 px-1.5 text-[11px] tabular-nums" data-badge={r}>
+              <span aria-hidden="true" className="rounded-pill bg-ink text-canvas animate-pop-in inline-flex min-h-5 min-w-5 items-center justify-center border border-ink/15 px-1.5 text-xs tabular-nums" data-badge={r}>
                 {waiting(r)}
               </span>
             )}

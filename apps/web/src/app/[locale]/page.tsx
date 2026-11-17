@@ -11,7 +11,7 @@ import { TrustRow } from '@/components/market/TrustRow';
 import { TwoDoors } from '@/components/market/TwoDoors';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { Link } from '@/i18n/navigation';
-import { loadForYou, loadPlaces } from '@/lib/catalog/server-api';
+import { loadForYou } from '@/lib/catalog/server-api';
 import { currentCountry } from '@/lib/country/server';
 import { pageMetadata } from '@/lib/seo';
 import { CONTACT_EMAIL, LIST_ITEM_HREF, SITE_URL } from '@/lib/site';
@@ -64,10 +64,9 @@ export default async function HomePage({ params }: Params) {
   const { locale } = (await params) as { locale: Locale };
   setRequestLocale(locale);
   const [meta, t] = await Promise.all([getTranslations('pages.home'), getTranslations('market')]);
-  const [feed, places] = await Promise.all([loadForYou(), loadPlaces()]);
+  const feed = await loadForYou();
   const initial = feed.ok ? feed.data : { items: [], personal: false };
   const items = initial.items;
-  const districts = places.ok ? places.data.districts : [];
   const today = new Date().toISOString().slice(0, 10);
   const shown = items.slice(0, 8);
   // Few things yet: the empty places in the last row invite the visitor to put theirs there.
@@ -79,12 +78,12 @@ export default async function HomePage({ params }: Params) {
 
       <section aria-labelledby="home-title" className="mx-auto flex w-full max-w-[1440px] flex-col gap-7 px-4 pt-9 pb-4 sm:px-8 sm:pt-12">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:items-end lg:gap-12">
-          <h1 id="home-title" className="font-display text-[clamp(3rem,8.4vw,6rem)] leading-[0.84] font-black text-balance uppercase">
+          <h1 id="home-title" className="font-display text-display-xl leading-[0.84] font-black text-balance uppercase">
             {t('hero.title')}
           </h1>
-          <p className="text-ink/80 max-w-[44ch] text-[18px] leading-relaxed lg:pb-2">{t('hero.lead')}</p>
+          <p className="text-ink/80 max-w-[44ch] text-lg leading-relaxed lg:pb-2">{t('hero.lead')}</p>
         </div>
-        <HomeSearch districts={districts} today={today} />
+        <HomeSearch country={await currentCountry()} today={today} />
         <TrustRow />
       </section>
 
@@ -113,9 +112,9 @@ export default async function HomePage({ params }: Params) {
                     <span className="bg-canvas h-[3px] w-6 rounded-full" />
                   </span>
                   <span className="flex flex-col gap-2">
-                    <span className="font-display text-[clamp(1.8rem,3vw,2.8rem)] leading-[0.9] font-black uppercase">{t('fresh.spot.title')}</span>
-                    <span className="text-ink/75 max-w-[36ch] text-[15px] leading-relaxed">{t('fresh.spot.body')}</span>
-                    <span className="mt-2 inline-flex items-center gap-2 text-[15px] font-bold underline decoration-1 underline-offset-4">{t('fresh.spot.cta')}</span>
+                    <span className="font-display text-display-s leading-[0.9] font-black uppercase">{t('fresh.spot.title')}</span>
+                    <span className="text-ink/75 max-w-[36ch] text-base leading-relaxed">{t('fresh.spot.body')}</span>
+                    <span className="mt-2 inline-flex items-center gap-2 text-base font-bold underline decoration-1 underline-offset-4">{t('fresh.spot.cta')}</span>
                   </span>
                 </Link>
               </li>

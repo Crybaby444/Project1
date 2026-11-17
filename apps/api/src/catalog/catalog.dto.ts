@@ -9,6 +9,8 @@ import {
   PlacesQuerySchema,
   ForYouQuerySchema,
   ForYouResponseSchema,
+  CitySuggestQuerySchema,
+  CitySuggestResponseSchema,
   PublicProfileSchema,
   SitemapResponseSchema,
   SuggestQuerySchema,
@@ -26,6 +28,8 @@ export class PlacesResponseDto extends createZodDto(PlacesResponseSchema) {}
 export class PlacesQueryDto extends createZodDto(PlacesQuerySchema) {}
 export class ForYouQueryDto extends createZodDto(ForYouQuerySchema) {}
 export class ForYouResponseDto extends createZodDto(ForYouResponseSchema) {}
+export class CitySuggestQueryDto extends createZodDto(CitySuggestQuerySchema) {}
+export class CitySuggestResponseDto extends createZodDto(CitySuggestResponseSchema) {}
 export class ItemAddressDto extends createZodDto(ItemAddressSchema) {}
 export class ItemResponseDto extends createZodDto(ItemResponseSchema) {}
 export class SitemapResponseDto extends createZodDto(SitemapResponseSchema) {}
