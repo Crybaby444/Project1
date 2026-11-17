@@ -1,3 +1,4 @@
+import { type AdminEditListingRequest } from '@yoyo/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { ADMIN_LISTINGS_PAGE_SIZE, DEFAULT_LOCALE, isLocale, listingSlug, type AdminListing, type ListingStatus, type LocalizedText, type PublicUser } from '@yoyo/shared';
 import { CategoriesService } from '../categories/categories.service';
@@ -109,6 +110,28 @@ export class ModerationService {
    * the new category does not know are dropped; the owner is emailed in their language. Only an active
    * category without subcategories takes it; not one's own listing; `version` is the one looked at.
    */
+  /**
+   * An administrator fixes a listing's words or prices (owner, 2026-11-16). It stays in its status; the
+   * change is in the audit log with before and after, and the owner hears about it in the bell.
+   */
+  async edit(id: string, admin: PublicUser, input: AdminEditListingRequest): Promise<AdminListing> {
+    const listing = await this.prisma.listing.findUnique({ where: { id }, include: { owner: true } });
+    if (!listing) throw new AppError('NOT_FOUND', 404, 'Listing not found');
+    if (listing.ownerId === admin.id) throw new AppError('AUTH_FORBIDDEN', 403, 'Another administrator handles your own listings');
+    if (listing.status === 'ARCHIVED') throw invalidStatus(listing.status);
+    if (input.version !== listing.version) throw this.listings.stale(listing.version);
+    const { version, ...changes } = input;
+    const edited = await this.prisma.listing.updateMany({ where: { id, version }, data: { ...changes, version: { increment: 1 } } });
+    if (edited.count === 0) throw this.listings.stale(listing.version + 1);
+    const before = Object.fromEntries(Object.keys(changes).map((key) => [key, listing[key as keyof typeof changes]]));
+    await this.audit.record(admin, { action: 'LISTING_EDITED', targetType: 'LISTING', targetId: id, summary: changes.title ?? listing.title ?? '', before, after: changes });
+    if (listing.owner.deletedAt === null) {
+      void this.notifications.notify([listing.owner.id], { kind: 'LISTING', event: 'EDITED', listingId: id, title: changes.title ?? listing.title });
+    }
+    const fresh = await this.prisma.listing.findUniqueOrThrow({ where: { id }, include: { photos: true, unavailability: true, owner: true } });
+    return this.toAdmin(fresh, fresh.owner);
+  }
+
   async moveCategory(id: string, admin: PublicUser, categoryId: string, version: number): Promise<AdminListing> {
     const listing = await this.prisma.listing.findUnique({ where: { id }, include: { owner: true } });
     if (!listing) throw new AppError('NOT_FOUND', 404, 'Listing not found');

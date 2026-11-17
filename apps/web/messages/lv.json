@@ -786,6 +786,24 @@
       "cancel": "Atcelt",
       "submit": "Pārvietot",
       "done": "Pārvietots uz {category}. Īpašnieks saņem e-pastu."
+    },
+    "edit": {
+      "button": "Labot",
+      "title": "Labot sludinājumu",
+      "fieldTitle": "Nosaukums",
+      "fieldDescription": "Apraksts",
+      "fieldCondition": "Stāvoklis",
+      "fieldDaily": "Cena dienā, €",
+      "fieldDeposit": "Drošības nauda, €",
+      "fieldDiscount": "Nedēļas atlaide, %",
+      "note": "Saglabājas tikai tas, ko maināt. Īpašnieks tiek informēts, un izmaiņas nonāk audita žurnālā.",
+      "save": "Saglabāt labojumus",
+      "cancel": "Atcelt",
+      "done": "Saglabāts; īpašnieks ir informēts.",
+      "nothing": "Nekas nav mainīts.",
+      "titleLength": "Nosaukumam vajag 5–80 rakstzīmes.",
+      "descriptionLength": "Aprakstam vajag vismaz 30 rakstzīmes.",
+      "price": "Cenas ir summas eiro."
     }
   },
   "catalog": {

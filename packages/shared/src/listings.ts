@@ -334,6 +334,20 @@ export type AdminListingsResponse = z.infer<typeof AdminListingsResponseSchema>;
 export const ApproveListingRequestSchema = z.object({ version: z.number().int().min(0) });
 
 /** The reason is shown to the owner and emailed to them. */
+/** An administrator fixes a listing (owner, 2026-11-16: manage everything): the fields given change. */
+export const AdminEditListingRequestSchema = z
+  .object({
+    version: z.number().int().min(0),
+    title: z.string().max(200).transform(cleanText).pipe(z.string().min(LISTING_LIMITS.title.min).max(LISTING_LIMITS.title.max)).optional(),
+    description: z.string().max(6000).transform(cleanText).pipe(z.string().min(LISTING_LIMITS.description.min).max(LISTING_LIMITS.description.max)).optional(),
+    condition: z.enum(LISTING_CONDITIONS).optional(),
+    dailyCents: z.number().int().min(100).max(1_000_000).optional(),
+    weeklyDiscountPercent: z.number().int().min(0).max(90).optional(),
+    depositCents: z.number().int().min(0).max(5_000_000).optional(),
+  })
+  .refine((v) => Object.keys(v).length > 1, { message: 'Change at least one field' });
+export type AdminEditListingRequest = z.infer<typeof AdminEditListingRequestSchema>;
+
 export const RejectListingRequestSchema = z.object({
   reason: z.string().max(2000).transform(cleanText).pipe(z.string().min(10).max(500)),
   /** The version the administrator reviewed (see ApproveListingRequestSchema). */

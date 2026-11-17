@@ -786,6 +786,24 @@
       "cancel": "Cancel",
       "submit": "Move",
       "done": "Moved to {category}. The owner gets an email."
+    },
+    "edit": {
+      "button": "Edit",
+      "title": "Fix the listing",
+      "fieldTitle": "Title",
+      "fieldDescription": "Description",
+      "fieldCondition": "Condition",
+      "fieldDaily": "Price a day, €",
+      "fieldDeposit": "Deposit, €",
+      "fieldDiscount": "Weekly discount, %",
+      "note": "Only what you change is saved. The owner is told, and the change goes to the audit log.",
+      "save": "Save the fixes",
+      "cancel": "Cancel",
+      "done": "Saved; the owner has been told.",
+      "nothing": "Nothing changed.",
+      "titleLength": "The title needs 5–80 characters.",
+      "descriptionLength": "The description needs at least 30 characters.",
+      "price": "Prices are amounts in euros."
     }
   },
   "catalog": {
