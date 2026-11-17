@@ -39,6 +39,7 @@ export function testBooking(overrides: Partial<BookingView> = {}): BookingView {
     dispute: null,
     cancellation: null,
     outcome: null,
+    cancellationPolicy: 'FLEXIBLE',
     deadline: { timer: 'REQUEST_EXPIRY', dueAt: '2026-11-07T10:00:00.000Z' },
     actions: ['WITHDRAW'],
     hasContract: false,

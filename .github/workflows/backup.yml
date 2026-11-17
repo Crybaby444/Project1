@@ -1,0 +1,71 @@
+# A nightly copy of the production database (audit 2026-11-16, S7: Neon keeps only a short restore
+# window). pg_dump in custom format, encrypted with a passphrase (AES-256, gpg symmetric), kept 30 days as
+# a workflow artifact that only repository members can download.
+#
+# Set up once — repository Settings → Secrets and variables → Actions:
+#   secret BACKUP_DATABASE_URL = the production Postgres URL (a read-only role is enough)
+#   secret BACKUP_PASSPHRASE   = a long random passphrase, also kept somewhere safe offline
+# Without them the job says so and stops (nothing is dumped).
+#
+# Restore: download the artifact, then
+#   gpg --batch --passphrase "$BACKUP_PASSPHRASE" -d yoyo-<date>.dump.gpg > yoyo.dump
+#   pg_restore --no-owner --clean --if-exists -d "$TARGET_DATABASE_URL" yoyo.dump
+name: Nightly database backup
+
+on:
+  schedule:
+    - cron: '17 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nightly-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    name: pg_dump → encrypted artifact
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check the secrets
+        id: ready
+        env:
+          URL: ${{ secrets.BACKUP_DATABASE_URL }}
+          PASS: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          if [ -z "$URL" ] || [ -z "$PASS" ]; then
+            echo "::warning::BACKUP_DATABASE_URL and BACKUP_PASSPHRASE are not set: no backup made."
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Install the Postgres 17 client
+        if: steps.ready.outputs.ok == 'true'
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsSL -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client-17
+      - name: Dump and encrypt
+        if: steps.ready.outputs.ok == 'true'
+        env:
+          URL: ${{ secrets.BACKUP_DATABASE_URL }}
+          PASS: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          day=$(date -u +%F)
+          /usr/lib/postgresql/17/bin/pg_dump --format=custom --no-owner --no-privileges "$URL" \
+            | gpg --batch --yes --symmetric --cipher-algo AES256 --passphrase "$PASS" -o "yoyo-$day.dump.gpg"
+          ls -l "yoyo-$day.dump.gpg"
+          test -s "yoyo-$day.dump.gpg"
+      - name: Keep it 30 days
+        if: steps.ready.outputs.ok == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: yoyo-db-backup
+          path: yoyo-*.dump.gpg
+          retention-days: 30
+          if-no-files-found: error

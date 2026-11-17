@@ -247,7 +247,7 @@ function ThreadBody({ data, inDeal }: { data: ConversationThread; inDeal: boolea
         </Link>}
         {data.listing ? <Thumb url={data.listing.photoUrl} /> : <Initials name={data.other.name} />}
         <span className="min-w-0 flex-1">
-          <Link href={`/u/${data.other.id}`} className="font-display block truncate text-3xl leading-none font-black uppercase hover:underline">
+          <Link href={`/u/${data.other.id}`} className="font-display block text-3xl leading-none font-black uppercase [overflow-wrap:anywhere] hover:underline">
             {data.other.name}
           </Link>
           {data.listing && (

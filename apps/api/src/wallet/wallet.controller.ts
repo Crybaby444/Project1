@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, HttpCode, Post, Query, UseGuards } from '@nestjs/common';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import {
   PayoutRequestSchema,
   PayoutResponseSchema,
@@ -61,6 +61,15 @@ export class WalletController {
   topUp(@CurrentUser() user: PublicUser, @Body() body: TopUpRequestDto): Promise<TopUpResponse> {
     this.limiter.hit(RATE_LIMITS.walletMove(user.id, 'top-up'));
     return this.wallet.topUp(user.id, body.amountCents, body.cardToken);
+  }
+
+  /** With Stripe: Stripe's own page where an owner connects where their money goes (404 while Stripe is off). */
+  @Post('stripe-onboarding')
+  @HttpCode(200)
+  @ApiOkResponse({ description: 'The Stripe onboarding page to send the owner to' })
+  @ApiErrors(401, 404)
+  stripeOnboarding(@CurrentUser() user: PublicUser): Promise<{ url: string }> {
+    return this.wallet.stripeOnboarding(user.id);
   }
 
   @Post('payouts')
