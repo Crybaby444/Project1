@@ -445,6 +445,11 @@
         "add": "Add the examples",
         "remove": "Remove all examples",
         "failed": "That did not work. Try again."
+      },
+      "errors": {
+        "title": "Server errors",
+        "none": "No unexpected errors in the last 30 days.",
+        "times": "{count, plural, one {# time} other {# times}}"
       }
     },
     "categories": {

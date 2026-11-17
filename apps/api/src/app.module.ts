@@ -37,6 +37,7 @@ import { ReportsModule } from './reports/reports.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { ActivityCoreModule } from './activity/activity.module';
 import { AuditCoreModule } from './audit/audit-core.module';
+import { ErrorLogModule } from './common/error-log.service';
 
 @Global()
 @Module({
@@ -63,6 +64,7 @@ class EnvModule {}
     ReportsModule,
     AnalyticsModule,
     AuditCoreModule,
+    ErrorLogModule,
     ActivityCoreModule,
     AuthModule,
     MeModule,

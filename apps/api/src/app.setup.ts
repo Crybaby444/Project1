@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { ErrorFilter } from './common/error.filter';
+import { ErrorLogService } from './common/error-log.service';
 import { clientIpMiddleware } from './common/request-meta';
 import type { Env } from './config/env';
 
@@ -35,5 +36,12 @@ export function configureApp(
   });
   // Every body, query and param typed with a nestjs-zod DTO is validated before the handler runs.
   app.useGlobalPipes(new ZodValidationPipe());
-  app.useGlobalFilters(new ErrorFilter());
+  // The error log is there in the full app; a slimmed test module without it still gets the filter.
+  let errorLog: ErrorLogService | undefined;
+  try {
+    errorLog = app.get(ErrorLogService, { strict: false });
+  } catch {
+    errorLog = undefined;
+  }
+  app.useGlobalFilters(new ErrorFilter(errorLog));
 }

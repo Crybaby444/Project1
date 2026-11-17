@@ -3,11 +3,11 @@
 import { useEffect, useState } from 'react';
 
 import { ADMIN_EXPORTS } from '@yoyo/shared';
-import { useLocale, useTranslations } from 'next-intl';
+import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { unwrap } from '@/lib/session/api-error';
 import { useApiClient } from '@/lib/session/SessionProvider';
-import { useAdminSystem } from '@/lib/admin/queries';
+import { useAdminSystem, useServerErrors } from '@/lib/admin/queries';
 import { AdminPageHeader, Panel } from './parts';
 
 /** A green-or-not light: a filled dot when fine, a ring with words when not. */
@@ -119,8 +119,42 @@ export function AdminSystem() {
           ))}
         </ul>
       </Panel>
+      <ServerErrors />
       <DemoListings />
     </div>
+  );
+}
+
+/** What broke on the server lately (audit 2026-11-16), so nobody has to read Render's logs to know. */
+function ServerErrors() {
+  const ts = useTranslations('admin.system.errors');
+  const errors = useServerErrors();
+  const format = useFormatter();
+  const items = errors.data?.items ?? [];
+  return (
+    <Panel title={ts('title')}>
+      {errors.isPending ? (
+        <div aria-busy="true" className="bg-mist rounded-media h-24" />
+      ) : items.length === 0 ? (
+        <p className="text-ink/75 text-sm">{ts('none')}</p>
+      ) : (
+        <ul className="divide-ink/10 m-0 flex list-none flex-col divide-y p-0">
+          {items.map((e) => (
+            <li key={e.id} className="py-3">
+              <details>
+                <summary className="flex cursor-pointer flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <span className="font-mono text-sm font-bold break-all">{e.message}</span>
+                  <span className="text-ink/60 text-sm">
+                    {e.method} {e.path} · {ts('times', { count: e.count })} · {format.relativeTime(new Date(e.lastAt))}
+                  </span>
+                </summary>
+                <pre className="bg-mist rounded-media mt-2 overflow-x-auto p-3 text-xs leading-relaxed">{e.stack || e.message}</pre>
+              </details>
+            </li>
+          ))}
+        </ul>
+      )}
+    </Panel>
   );
 }
 

@@ -1,4 +1,7 @@
 import { Controller, Delete, Get, HttpCode, Inject, Param, Post, Res, UseGuards } from '@nestjs/common';
+import { ServerErrorListSchema, type ServerErrorList } from '@yoyo/shared';
+import { createZodDto as errorsDto } from 'nestjs-zod';
+import { ErrorLogService } from '../common/error-log.service';
 import { ApiTags } from '@nestjs/swagger';
 import { ADMIN_EXPORTS, AdminSystemSchema, type AdminExport, type AdminSystem, type PublicUser, AdminDemoSchema, type AdminDemo } from '@yoyo/shared';
 import type { Response } from 'express';
@@ -29,6 +32,7 @@ export function csvCell(value: unknown): string {
 const csv = (head: string[], rows: unknown[][]) => [head.join(','), ...rows.map((r) => r.map(csvCell).join(','))].join('\n') + '\n';
 
 /** Admin → System: health, limits and CSV exports of people, items, deals and the ledger. */
+class ServerErrorListDto extends errorsDto(ServerErrorListSchema) {}
 class AdminDemoDto extends createZodDto(AdminDemoSchema) {}
 
 @ApiTags('admin')
@@ -40,11 +44,20 @@ export class AdminSystemController {
   constructor(
     private readonly prisma: PrismaService,
     private readonly mail: MailService,
+    private readonly errors: ErrorLogService,
     private readonly demo: DemoListingsService,
     private readonly audit: AuditService,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(ENV) private readonly env: Pick<Env, 'STORAGE' | 'PAYMENTS'>,
   ) {}
+
+  /** The last unexpected server errors (counted when they repeat), newest first. */
+  @Get('system/errors')
+  @ZodResponse({ status: 200, type: ServerErrorListDto, description: 'Recent unexpected server errors' })
+  @ApiErrors(401, 403)
+  serverErrors(): Promise<ServerErrorList> {
+    return this.errors.recent();
+  }
 
   /** How many example listings are on the site (owner, 2026-11-16). */
   @Get('system/demo')

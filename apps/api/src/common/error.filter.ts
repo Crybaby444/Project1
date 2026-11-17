@@ -78,6 +78,9 @@ function toErrorResponse(exception: unknown): ErrorResponse {
 export class ErrorFilter implements ExceptionFilter {
   private readonly logger = new Logger('ErrorFilter');
 
+  /** `log` keeps unexpected errors for the admin (System → Errors). */
+  constructor(private readonly log?: { record(error: unknown, method: string, url: string): Promise<void> }) {}
+
   catch(original: unknown, host: ArgumentsHost): void {
     if (host.getType() !== 'http') throw original;
     // A refusal of the business rules (@yoyo/domain) answers like any AppError; a broken invariant is a 500.
@@ -91,6 +94,8 @@ export class ErrorFilter implements ExceptionFilter {
     // An AppError with a 5xx status (photo storage off, say) is an expected state, logged where it arises.
     if (status >= 500 && !(exception instanceof AppError)) {
       this.logger.error(exception instanceof Error ? (exception.stack ?? exception.message) : String(exception));
+      const req = host.switchToHttp().getRequest<{ method?: string; originalUrl?: string; url?: string }>();
+      void this.log?.record(exception, req.method ?? '', req.originalUrl ?? req.url ?? '');
     }
     if (res.headersSent) return;
     if (retryAfterSeconds !== undefined) res.setHeader('Retry-After', String(retryAfterSeconds));
