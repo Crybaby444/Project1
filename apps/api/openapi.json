@@ -3502,6 +3502,87 @@
         ]
       }
     },
+    "/api/v1/catalog/for-you": {
+      "get": {
+        "operationId": "CatalogController_forYou",
+        "parameters": [
+          {
+            "name": "country",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "AT",
+                "BE",
+                "BG",
+                "HR",
+                "CY",
+                "EE",
+                "FI",
+                "FR",
+                "DE",
+                "GR",
+                "IE",
+                "IT",
+                "LV",
+                "LT",
+                "LU",
+                "MT",
+                "NL",
+                "PT",
+                "SK",
+                "SI",
+                "ES"
+              ]
+            }
+          },
+          {
+            "name": "categories",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Popular items of the country, lifted by the categories this browser looked at",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForYouResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
     "/api/v1/catalog/cities": {
       "get": {
         "operationId": "CatalogController_cities",
@@ -3732,6 +3813,97 @@
           },
           "404": {
             "description": "Not found or not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
+    "/api/v1/me/for-you": {
+      "get": {
+        "operationId": "ForYouController_forYou",
+        "parameters": [
+          {
+            "name": "country",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "AT",
+                "BE",
+                "BG",
+                "HR",
+                "CY",
+                "EE",
+                "FI",
+                "FR",
+                "DE",
+                "GR",
+                "IE",
+                "IT",
+                "LV",
+                "LT",
+                "LU",
+                "MT",
+                "NL",
+                "PT",
+                "SK",
+                "SI",
+                "ES"
+              ]
+            }
+          },
+          {
+            "name": "categories",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Items ranked by popularity and this person’s interests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForYouResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
             "content": {
               "application/json": {
                 "schema": {
@@ -14844,6 +15016,155 @@
           "countries",
           "cities",
           "districts"
+        ],
+        "additionalProperties": false
+      },
+      "ForYouResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "dailyCents": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "weeklyDiscountPercent": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "depositCents": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "condition": {
+                  "type": "string",
+                  "enum": [
+                    "NEW",
+                    "LIKE_NEW",
+                    "GOOD",
+                    "FAIR",
+                    null
+                  ],
+                  "nullable": true
+                },
+                "city": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "district": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "country": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "categoryId": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "cover": {
+                  "type": "object",
+                  "properties": {
+                    "thumb": {
+                      "type": "string"
+                    },
+                    "card": {
+                      "type": "string"
+                    },
+                    "full": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "thumb",
+                    "card",
+                    "full"
+                  ],
+                  "additionalProperties": false,
+                  "nullable": true
+                },
+                "ownerId": {
+                  "type": "string"
+                },
+                "contentLocale": {
+                  "type": "string",
+                  "enum": [
+                    "en",
+                    "lv",
+                    "ru"
+                  ]
+                },
+                "publishedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "nullable": true
+                },
+                "rating": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "reviewCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "demo": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "dailyCents",
+                "weeklyDiscountPercent",
+                "depositCents",
+                "condition",
+                "city",
+                "district",
+                "country",
+                "categoryId",
+                "cover",
+                "ownerId",
+                "contentLocale",
+                "publishedAt",
+                "rating",
+                "reviewCount",
+                "demo"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "personal": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "items",
+          "personal"
         ],
         "additionalProperties": false
       },

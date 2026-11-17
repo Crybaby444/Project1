@@ -884,6 +884,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/catalog/for-you": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CatalogController_forYou"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/catalog/cities": {
         parameters: {
             query?: never;
@@ -956,6 +972,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["ProfilesController_profile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/for-you": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ForYouController_forYou"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3257,6 +3289,35 @@ export interface components {
                 slug: string;
                 count: number;
             }[];
+        };
+        ForYouResponseDto_Output: {
+            items: {
+                id: string;
+                title: string;
+                dailyCents: number;
+                weeklyDiscountPercent: number;
+                depositCents: number;
+                /** @enum {string|null} */
+                condition: "NEW" | "LIKE_NEW" | "GOOD" | "FAIR" | null;
+                city: string | null;
+                district: string | null;
+                country: string | null;
+                categoryId: string | null;
+                cover: {
+                    thumb: string;
+                    card: string;
+                    full: string;
+                } | null;
+                ownerId: string;
+                /** @enum {string} */
+                contentLocale: "en" | "lv" | "ru";
+                /** Format: date-time */
+                publishedAt: string | null;
+                rating: number | null;
+                reviewCount: number;
+                demo: boolean;
+            }[];
+            personal: boolean;
         };
         CitySuggestResponseDto_Output: {
             items: {
@@ -7668,6 +7729,38 @@ export interface operations {
             };
         };
     };
+    CatalogController_forYou: {
+        parameters: {
+            query?: {
+                country?: "AT" | "BE" | "BG" | "HR" | "CY" | "EE" | "FI" | "FR" | "DE" | "GR" | "IE" | "IT" | "LV" | "LT" | "LU" | "MT" | "NL" | "PT" | "SK" | "SI" | "ES";
+                categories?: string | string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Popular items of the country, lifted by the categories this browser looked at */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForYouResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
     CatalogController_cities: {
         parameters: {
             query: {
@@ -7831,6 +7924,47 @@ export interface operations {
             };
             /** @description Not found or not available */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    ForYouController_forYou: {
+        parameters: {
+            query?: {
+                country?: "AT" | "BE" | "BG" | "HR" | "CY" | "EE" | "FI" | "FR" | "DE" | "GR" | "IE" | "IT" | "LV" | "LT" | "LU" | "MT" | "NL" | "PT" | "SK" | "SI" | "ES";
+                categories?: string | string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Items ranked by popularity and this person’s interests */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForYouResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
                 headers: {
                     [name: string]: unknown;
                 };
