@@ -133,6 +133,28 @@ describe('ModerationQueue', () => {
     );
   });
 
+  it('approves the picked listings one by one, each with its own version, and says what stayed', async () => {
+    const user = userEvent.setup();
+    const items = [adminListing(), adminListing({ id: 'listing-2', title: 'Drill', version: 5 }), adminListing({ id: 'listing-3', title: 'Tent', version: 1 })];
+    const calls = renderQueue(
+      {
+        'POST /api/v1/admin/listings/listing-1/approve': { status: 200, body: { listing: adminListing({ status: 'PUBLISHED' }) } },
+        'POST /api/v1/admin/listings/listing-2/approve': apiError(409, 'LISTING_STALE'),
+      },
+      items,
+    );
+    await user.click(await screen.findByRole('button', { name: m.bulk.all.replace('{count}', '3') }));
+    const tent = (await screen.findByRole('heading', { name: 'Tent' })).closest('article')!;
+    await user.click(within(tent).getByRole('checkbox', { name: m.bulk.select }));
+    const bar = screen.getByRole('region', { name: m.bulk.bar });
+    await user.click(within(bar).getByRole('button', { name: m.bulk.approve.replace('{count}', '2') }));
+    await waitFor(() => expect(calls.filter((c) => c.path.endsWith('/approve')).map((c) => [c.path, c.body])).toEqual([
+      ['/api/v1/admin/listings/listing-1/approve', { version: 3 }],
+      ['/api/v1/admin/listings/listing-2/approve', { version: 5 }],
+    ]));
+    expect(await screen.findByText('1 done; 1 changed meanwhile or failed and stay in the queue.')).toBeVisible();
+  });
+
   it('has a friendly empty state', async () => {
     renderQueue({}, []);
     expect(await screen.findByRole('heading', { name: m.emptyTitle })).toBeVisible();

@@ -31,6 +31,8 @@ export function ModerationCard({
   onMove,
   onEdit,
   busy,
+  selected,
+  onSelect,
 }: {
   listing: AdminListing;
   categories: CategoryNode[];
@@ -41,6 +43,9 @@ export function ModerationCard({
   /** Fix the words or prices (owner, 2026-11-16: the admin manages everything). */
   onEdit?: () => void;
   busy: boolean;
+  /** Picked for a bulk decision (listings in review only). */
+  selected?: boolean;
+  onSelect?: (selected: boolean) => void;
 }) {
   const t = useTranslations('moderation');
   const tCondition = useTranslations('listingCondition');
@@ -74,7 +79,15 @@ export function ModerationCard({
           <h2 className="font-display text-display-m leading-[0.95] font-black uppercase [overflow-wrap:anywhere]">{listing.title}</h2>
           <p className="text-sm">{t('waiting', { date: date(listing.submittedAt) })}</p>
         </div>
-        <ListingStatusBadge status={listing.status} className="self-start" />
+        <div className="flex items-center gap-3 self-start">
+          {onSelect && listing.status === 'PENDING_REVIEW' && (
+            <label className="rounded-pill border-ink/20 inline-flex min-h-10 cursor-pointer items-center gap-2 border px-3 text-sm font-bold">
+              <input type="checkbox" checked={selected ?? false} onChange={(event) => onSelect(event.target.checked)} className="accent-cta size-4" />
+              {t('bulk.select')}
+            </label>
+          )}
+          <ListingStatusBadge status={listing.status} />
+        </div>
       </header>
 
       {total > 0 && (
