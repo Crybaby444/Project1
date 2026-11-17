@@ -6,6 +6,7 @@ import { useEffect, useId, useState, type FormEvent } from 'react';
 import { ChoicePills } from '@/components/ui/ChoicePills';
 import { Button } from '@/components/ui/Button';
 import { useIdentityState, useSubmitIdentity } from '@/lib/identity/queries';
+import { UnreadablePhotoError } from '@/lib/identity/shrink';
 import { ApiError } from '@/lib/session/api-error';
 
 /** One photo: a tile you tap to pick or take it; the picture shows in its place. */
@@ -41,7 +42,7 @@ function PhotoTile({ label, hint, file, onFile, capture, error }: { label: strin
         <input
           id={id}
           type="file"
-          accept="image/jpeg,image/png,image/webp"
+          accept="image/*"
           {...(capture && { capture })}
           className="sr-only"
           aria-describedby={`${id}-hint`}
@@ -106,7 +107,8 @@ export function IdentityCheck() {
     selfie: tried && !selfie ? t('errors.selfie') : undefined,
     consent: tried && !consent ? t('errors.consent') : undefined,
   };
-  const failure = submit.error instanceof ApiError ? submit.error : submit.error ? ApiError.network() : null;
+  const unreadable = submit.error instanceof UnreadablePhotoError;
+  const failure = submit.error instanceof ApiError ? submit.error : submit.error && !unreadable ? ApiError.network() : null;
 
   function send(e: FormEvent) {
     e.preventDefault();
@@ -148,9 +150,9 @@ export function IdentityCheck() {
           {missing.consent && <span className="mt-1 block text-sm text-[var(--danger)]">{missing.consent}</span>}
         </span>
       </label>
-      {failure && (
+      {(failure || unreadable) && (
         <p role="alert" className="text-[var(--danger)]">
-          {failure.code === 'UNSUPPORTED_MEDIA' || failure.code === 'PAYLOAD_TOO_LARGE' ? t('errors.photo') : t('errors.send')}
+          {unreadable || failure?.code === 'UNSUPPORTED_MEDIA' || failure?.code === 'PAYLOAD_TOO_LARGE' ? t('errors.photo') : t('errors.send')}
         </p>
       )}
       <Button type="submit" size="lg" loading={submit.isPending} className="self-start">

@@ -47,7 +47,7 @@ describe('item page, profiles and the sitemap', () => {
       expect(item).toMatchObject({
         available: true,
         listing: { id: listing.id, contentLocale: 'lv', title: 'Bosch cordless drill' },
-        owner: { id: anna.user.id, name: 'Anna', city: 'Rīga', emailVerified: true, phoneVerified: true, completedDeals: 0, listingCount: 1, rating: null },
+        owner: { id: anna.user.id, name: `@${anna.user.username}`, city: 'Rīga', emailVerified: true, phoneVerified: true, completedDeals: 0, listingCount: 1, rating: null },
         blocked: [
           { start: day(t, 10), end: day(t, 12) },
           { start: day(t, 20), end: day(t, 21) },
@@ -100,7 +100,7 @@ describe('item page, profiles and the sitemap', () => {
       await t.prisma.booking.update({ where: { id: booking.id }, data: { status: 'COMPLETED' } });
 
       const res = await api(`/users/${anna.user.id}`).expect(200);
-      expect(res.body.user).toMatchObject({ id: anna.user.id, name: 'Anna', about: 'I lend tools.', completedDeals: 1, listingCount: 1, rating: null });
+      expect(res.body.user).toMatchObject({ id: anna.user.id, name: `@${anna.user.username}`, about: 'I lend tools.', completedDeals: 1, listingCount: 1, rating: null });
       expect(res.body.listings.map((l: { id: string }) => l.id)).toEqual([shown.id]);
       expect(JSON.stringify(res.body)).not.toMatch(/@mail\.lv|\+371|"lat"/);
     });

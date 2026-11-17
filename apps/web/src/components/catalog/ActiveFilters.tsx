@@ -8,7 +8,10 @@ import { useCatalogNavigation } from './CatalogShell';
 const asDate = (day: string) => new Date(`${day}T00:00:00Z`);
 
 /** What is filtered on, as pills with a cross; «Reset all» keeps only the search text. */
-export function ActiveFilters({ params, districts }: { params: CatalogParams; districts: PlacesResponse['districts'] }) {
+/** A city's name for a chip: from the cities with items, else its slug written out. */
+const cityName = (slug: string) => slug.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+export function ActiveFilters({ params, cities }: { params: CatalogParams; cities: PlacesResponse['cities'] }) {
   const t = useTranslations('catalog.active');
   const locale = useLocale();
   const { navigate } = useCatalogNavigation();
@@ -27,9 +30,9 @@ export function ActiveFilters({ params, districts }: { params: CatalogParams; di
     const dates = (params.from === params.to ? format.format(asDate(params.from)) : format.formatRange(asDate(params.from), asDate(params.to))).replace(/[  ]/g, ' ');
     chips.push({ key: 'dates', label: t('dates', { dates }), patch: { from: undefined, to: undefined } });
   }
-  if (params.district) {
-    const name = districts.find((d) => d.slug === params.district)?.district ?? params.district;
-    chips.push({ key: 'district', label: name, patch: { district: undefined } });
+  if (params.city) {
+    const name = cities.find((c) => c.slug === params.city)?.city ?? cityName(params.city);
+    chips.push({ key: 'city', label: name, patch: { city: undefined } });
   }
   if (chips.length === 0) return null;
   return (

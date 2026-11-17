@@ -47,11 +47,13 @@ export function SavedSearches() {
       node ? categoryName(node, locale) : null,
       s.priceMax !== null ? t('upTo', { price: formatEuros(s.priceMax, locale) }) : null,
       s.district ?? null,
+      s.city ? s.city.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : null,
     ].filter(Boolean);
     const params = new URLSearchParams();
     if (s.q) params.set('q', s.q);
     if (s.priceMax !== null) params.set('price_max', String(Math.round(s.priceMax / 100)));
     if (s.district) params.set('district', s.district);
+    if (s.city) params.set('city', s.city);
     const base = node ? categoryLink(node, locale) : '/search';
     const query = params.toString();
     return { text: parts.join(' · '), href: query ? `${base}?${query}` : base };

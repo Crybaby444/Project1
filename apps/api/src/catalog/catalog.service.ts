@@ -1,4 +1,6 @@
 import { Prisma } from '../generated/prisma/client';
+import { CityDirectory } from './city-directory';
+import { publicName } from '../common/public-name';
 import { Inject, Injectable } from '@nestjs/common';
 import { addDays, compareDates, localDateIn, type LocalDate } from '@yoyo/domain';
 import {
@@ -55,6 +57,7 @@ export class CatalogService {
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider,
     private readonly reviews: ReviewsService,
+    private readonly directory: CityDirectory,
   ) {}
 
   private readonly urlFor: UrlFor = (key, variant) => this.storage.url(key, variant);
@@ -238,7 +241,7 @@ export class CatalogService {
     const rating = ratings.get(user.id) ?? { rating: null, reviewCount: 0 };
     return {
       id: user.id,
-      name: user.name,
+      name: publicName(user),
       username: user.username,
       city: user.city,
       memberSince: user.createdAt.toISOString(),
@@ -351,7 +354,9 @@ export class CatalogService {
     if (query.city !== undefined) {
       const rows = await this.prisma.$queryRaw<{ city: string }[]>`
         SELECT DISTINCT l."city" AS city ${VISIBLE_FROM} WHERE ${CATALOG_VISIBLE_SQL} AND l."city" IS NOT NULL`;
-      cities = rows.map((row) => row.city).filter((name) => slugify(name) === query.city);
+      // Any spelling of the city counts (Rīga / Riga / Рига, owner 2026-11-16: search by city).
+      const aliases = await this.directory.aliases(query.city, query.country);
+      cities = rows.map((row) => row.city).filter((name) => aliases.has(slugify(name)));
     }
     return { categoryIds, textCategoryIds, districts, cities };
   }

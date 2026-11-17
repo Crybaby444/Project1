@@ -884,6 +884,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/catalog/cities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CatalogController_cities"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/catalog/sitemap": {
         parameters: {
             query?: never;
@@ -3053,6 +3069,7 @@ export interface components {
                 category: string | null;
                 priceMax: number | null;
                 district: string | null;
+                city: string | null;
                 /** Format: date-time */
                 createdAt: string;
             }[];
@@ -3062,6 +3079,7 @@ export interface components {
             category?: string;
             priceMax?: number;
             district?: string;
+            city?: string;
         };
         SavedSearchResponseDto_Output: {
             search: {
@@ -3070,6 +3088,7 @@ export interface components {
                 category: string | null;
                 priceMax: number | null;
                 district: string | null;
+                city: string | null;
                 /** Format: date-time */
                 createdAt: string;
             };
@@ -3166,6 +3185,13 @@ export interface components {
             }[];
             districts: {
                 district: string;
+                slug: string;
+                count: number;
+            }[];
+        };
+        CitySuggestResponseDto_Output: {
+            items: {
+                name: string;
                 slug: string;
                 count: number;
             }[];
@@ -7508,6 +7534,47 @@ export interface operations {
             };
             /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    CatalogController_cities: {
+        parameters: {
+            query: {
+                country: "AT" | "BE" | "BG" | "HR" | "CY" | "EE" | "FI" | "FR" | "DE" | "GR" | "IE" | "IT" | "LV" | "LT" | "LU" | "MT" | "NL" | "PT" | "SK" | "SI" | "ES";
+                q: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Cities of a country that start with what was typed, with their item counts */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CitySuggestResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Too many attempts (RATE_LIMITED); see Retry-After */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };

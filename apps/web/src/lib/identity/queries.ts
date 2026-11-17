@@ -5,6 +5,7 @@ import { IdentityStateSchema, type IdentityDecision, type IdentityDocument, type
 import { ApiError, toApiError, unwrap } from '@/lib/session/api-error';
 import { refreshOnce } from '@/lib/session/fetch-with-refresh';
 import { useApiClient, useSession } from '@/lib/session/SessionProvider';
+import { shrinkPhoto } from './shrink';
 
 const KEY = ['me', 'identity'] as const;
 const QUEUE = ['admin', 'identity'] as const;
@@ -46,7 +47,8 @@ export async function submitIdentity(documentType: IdentityDocument, document: B
 export function useSubmitIdentity() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (input: { documentType: IdentityDocument; document: Blob; selfie: Blob }) => submitIdentity(input.documentType, input.document, input.selfie),
+    mutationFn: async (input: { documentType: IdentityDocument; document: Blob; selfie: Blob }) =>
+      submitIdentity(input.documentType, await shrinkPhoto(input.document), await shrinkPhoto(input.selfie)),
     onSuccess: (state) => queryClient.setQueryData(KEY, state),
   });
 }

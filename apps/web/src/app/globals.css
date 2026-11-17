@@ -193,6 +193,15 @@
     letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
   }
+  /* A long @username or address without spaces wraps instead of pushing the page wider (320px phones). */
+  a,
+  h1,
+  h2,
+  h3,
+  p,
+  li {
+    overflow-wrap: break-word;
+  }
 
   /* A theme lands in one step (components/theme/switch-theme.ts): no half-way colours. */
   html[data-theme-instant] *,

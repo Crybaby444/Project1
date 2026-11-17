@@ -9,6 +9,7 @@ import { FollowButton } from './FollowButton';
 export function PersonCard({ person }: { person: Person }) {
   const t = useTranslations('people');
   const initials = person.name
+    .replace(/^@/, '')
     .split(/\s+/)
     .slice(0, 2)
     .map((w) => w[0]?.toUpperCase() ?? '')
@@ -23,7 +24,7 @@ export function PersonCard({ person }: { person: Person }) {
           {person.name}
         </Link>
         <span className="text-ink/70 truncate text-sm">
-          {[person.username ? `@${person.username}` : null, person.city, t('itemsCount', { count: person.listingCount }), t('followers', { count: person.followers })].filter(Boolean).join(' · ')}
+          {[person.username && person.name !== `@${person.username}` ? `@${person.username}` : null, person.city, t('itemsCount', { count: person.listingCount }), t('followers', { count: person.followers })].filter(Boolean).join(' · ')}
         </span>
       </div>
       <FollowButton userId={person.id} name={person.name} />

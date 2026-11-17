@@ -1,6 +1,6 @@
 'use client';
 
-import type { PlacesResponse } from '@yoyo/shared';
+import type { Country, PlacesResponse } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useId, useState } from 'react';
 import { Button } from '@/components/ui/Button';
@@ -12,11 +12,14 @@ import { catalogSearch, filterCount, type CatalogParams } from '@/lib/catalog/pa
 import type { Range } from '@/lib/catalog/range';
 import { useCatalogNavigation } from './CatalogShell';
 import { formatPeriod } from '@/lib/deals/dates';
+import { CityInput } from './CityInput';
 import { RangeCalendar } from './RangeCalendar';
 
 type FiltersProps = {
   params: CatalogParams;
-  districts: PlacesResponse['districts'];
+  cities: PlacesResponse['cities'];
+  /** The visitor's country: the city field suggests its cities. */
+  country: Country;
   /** Today in Riga, `YYYY-MM-DD`: the first day the dates filter offers. */
   today: string;
   /** How many items the current filters find (the phone sheet's button says it). */
@@ -25,11 +28,12 @@ type FiltersProps = {
 
 const euros = (value: string) => (value.trim() === '' ? undefined : /^\d{1,5}$/.test(value.trim()) ? Number(value.trim()) : Number.NaN);
 
-/** The filter fields (W03 §H): daily price, free dates, district. Each change goes to the address. */
-function FilterFields({ params, districts, today }: Omit<FiltersProps, 'total'>) {
+/** The filter fields (W03 §H): daily price, free dates, city. Each change goes to the address. */
+function FilterFields({ params, cities, country, today }: Omit<FiltersProps, 'total'>) {
   const t = useTranslations('catalog.filters');
   const { navigate } = useCatalogNavigation();
-  const ids = { price: useId(), dates: useId() };
+  const ids = { price: useId(), dates: useId(), city: useId() };
+  const chosenCity = params.city ? { slug: params.city, name: cities.find((c) => c.slug === params.city)?.city ?? params.city.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') } : null;
   const [min, setMin] = useState(params.priceMin?.toString() ?? '');
   const [max, setMax] = useState(params.priceMax?.toString() ?? '');
   const [priceError, setPriceError] = useState<string | undefined>();
@@ -144,18 +148,21 @@ function FilterFields({ params, districts, today }: Omit<FiltersProps, 'total'>)
         )}
       </fieldset>
 
-      {districts.length > 0 && (
-        <Field label={t('district')}>
-          <Select
-            value={params.district ?? ''}
-            onChange={(next) => navigate(catalogSearch(params, { district: next || undefined }))}
-            options={[
-              { value: '', label: t('anyDistrict') },
-              ...districts.map((d) => ({ value: d.slug, label: `${d.district} (${d.count})` })),
-            ]}
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor={ids.city} className="text-sm font-bold tracking-[0.03em] uppercase">
+          {t('city')}
+        </label>
+        <div className="border-ink bg-surface rounded-pill flex min-h-12 items-center border px-5">
+          <CityInput
+            key={params.city ?? ''}
+            id={ids.city}
+            country={country}
+            value={chosenCity}
+            onChange={(next) => navigate(catalogSearch(params, { city: next?.slug }))}
+            className="text-base"
           />
-        </Field>
-      )}
+        </div>
+      </div>
     </div>
   );
 }

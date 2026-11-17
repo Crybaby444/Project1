@@ -33,6 +33,9 @@ test('an ordinary user sees no access, and the queue is never asked for', async 
   page.on('request', (request) => request.url().includes('/api/v1/admin/') && asked.push(request.url()));
   await page.goto('/admin/listings');
   await expect(page.getByRole('heading', { level: 1, name: en.noAccess.title })).toBeVisible();
+  // The admin has no site header (owner, 2026-11-16): the way out is the page's own button.
+  await page.getByRole('link', { name: en.noAccess.back }).click();
+  await expect(page).toHaveURL(/\/$/);
   await page.getByRole('button', { name: /^Account menu/ }).click();
   await expect(page.getByRole('menuitem', { name: en.header.moderation })).toHaveCount(0);
   expect(asked).toEqual([]);

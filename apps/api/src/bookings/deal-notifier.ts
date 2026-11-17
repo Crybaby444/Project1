@@ -1,4 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { publicName } from '../common/public-name';
 import { cents, formatMoney } from '@yoyo/domain';
 import { isLocale, type Locale } from '@yoyo/shared';
 import { formatDay } from '../common/format';
@@ -51,7 +52,7 @@ export class DealNotifier {
           { kind: 'DEAL', event: notice.template, bookingId: booking.id, listingId: booking.listingId, title },
         );
         for (const user of recipients.filter((u) => wantsEmail(u, 'DEALS'))) {
-          const other = user.id === booking.renterId ? booking.owner.name : booking.renter.name;
+          const other = publicName(user.id === booking.renterId ? booking.owner : booking.renter);
           const path = notice.to === 'ADMINS' ? `/admin/disputes/${booking.id}` : `/bookings/${booking.id}`;
           void this.mail.sendDealEvent(user, {
             template: notice.template,
@@ -103,7 +104,7 @@ export class DealNotifier {
           total: '',
           rent: '',
           deposit: '',
-          other: toOwner ? offer.renter.name : offer.owner.name,
+          other: publicName(toOwner ? offer.renter : offer.owner),
           price: money(offer.dailyCents, locale),
         }),
         summary: (locale) => ({ item: title, dates: `${formatDay(start, locale)} – ${formatDay(end, locale)}`, total: null }),
