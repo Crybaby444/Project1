@@ -213,3 +213,12 @@ export const AdminUserEditSchema = z
   })
   .refine((v) => Object.values(v).some((x) => x !== undefined), { message: 'Nothing to change' });
 export type AdminUserEdit = z.infer<typeof AdminUserEditSchema>;
+
+/** Admin → System → Example listings (owner, 2026-11-16). */
+export const AdminDemoSchema = z.object({
+  count: z.number().int(),
+  total: z.number().int(),
+  added: z.number().int().optional(),
+  removed: z.number().int().optional(),
+});
+export type AdminDemo = z.infer<typeof AdminDemoSchema>;
