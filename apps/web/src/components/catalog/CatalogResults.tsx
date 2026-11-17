@@ -72,13 +72,13 @@ export async function CatalogResults({ params: raw, category, related, path, tit
   if (!results.ok) {
     return (
       <main className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-4 px-4 py-20 text-center sm:px-8">
-        <h1 className="font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black [overflow-wrap:anywhere] hyphens-auto uppercase">
+        <h1 className="font-display text-display-l leading-[0.95] font-black [overflow-wrap:anywhere] hyphens-auto uppercase">
           {t('error.title')}
         </h1>
         <p className="max-w-[46ch]">{t('error.body')}</p>
         <Link
           href={`${path}${catalogSearch(params)}`}
-          className="bg-cta text-cta-fg border-cta rounded-pill inline-flex min-h-10 items-center border px-5 text-[13px] font-bold tracking-[0.03em] uppercase"
+          className="bg-cta text-cta-fg border-cta rounded-pill inline-flex min-h-10 items-center border px-5 text-sm font-bold tracking-[0.03em] uppercase"
         >
           {t('error.retry')}
         </Link>
@@ -103,7 +103,7 @@ export async function CatalogResults({ params: raw, category, related, path, tit
           >
             {title}
           </h1>
-          {lead && <p className="text-ink/80 max-w-[68ch] text-[16px] leading-relaxed">{lead}</p>}
+          {lead && <p className="text-ink/80 max-w-[68ch] text-base leading-relaxed">{lead}</p>}
           <SearchBox initialQuery={params.q ?? ''} className="max-w-3xl" />
           {related.length > 0 && (
             <nav aria-label={t('related')}>

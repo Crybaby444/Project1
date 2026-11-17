@@ -56,7 +56,7 @@ export function ProfileTabs({ listings, name, userId }: { listings: CatalogItem[
             tabIndex={tab === key ? 0 : -1}
             onClick={() => setTab(key)}
             onKeyDown={onKeyDown}
-            className={`relative inline-flex min-h-12 shrink-0 items-center px-4 text-[15px] font-bold whitespace-nowrap transition-colors ${
+            className={`relative inline-flex min-h-12 shrink-0 items-center px-4 text-base font-bold whitespace-nowrap transition-colors ${
               tab === key ? 'text-ink after:bg-ink after:absolute after:inset-x-3 after:-bottom-px after:h-[3px] after:rounded-full' : 'text-ink/65 hover:text-ink'
             }`}
           >

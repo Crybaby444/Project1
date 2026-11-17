@@ -62,7 +62,7 @@ export function SavedSearches() {
   if (searches.isPending || searches.isError) return null;
   return (
     <section aria-labelledby="saved-searches" className="flex flex-col gap-3">
-      <h2 id="saved-searches" className="font-display text-[clamp(1.8rem,3vw,2.4rem)] leading-none font-black uppercase">
+      <h2 id="saved-searches" className="font-display text-display-s leading-none font-black uppercase">
         {t('title')}
       </h2>
       {searches.data.length === 0 ? (

@@ -9,7 +9,7 @@ import { AdminPageHeader, Panel } from './parts';
 /** A green-or-not light: a filled dot when fine, a ring with words when not. */
 function Light({ ok, label }: { ok: boolean; label: string }) {
   return (
-    <span className={`rounded-pill inline-flex items-center gap-2 self-start px-3 py-1 text-[13px] font-bold ${ok ? 'border-ink/20 border' : 'bg-ink text-canvas'}`}>
+    <span className={`rounded-pill inline-flex items-center gap-2 self-start px-3 py-1 text-sm font-bold ${ok ? 'border-ink/20 border' : 'bg-ink text-canvas'}`}>
       <span aria-hidden="true" className={`inline-block size-2 rounded-full ${ok ? 'bg-ink' : 'bg-[var(--danger)]'}`} />
       {label}
     </span>
@@ -48,7 +48,7 @@ export function AdminSystem() {
               <p className="text-ink/75 text-sm">{ts('latency', { ms: system.data.database.latencyMs })}</p>
             </Panel>
             <Panel title={ts('mail')}>
-              <p className="font-display text-[2.6rem] leading-none font-black tabular-nums">
+              <p className="font-display text-5xl leading-none font-black tabular-nums">
                 {system.data.mail.sent}
                 <span className="text-ink/50"> / {system.data.mail.limit}</span>
               </p>
@@ -58,14 +58,14 @@ export function AdminSystem() {
               <p className="text-ink/75 text-sm">{ts('mailHint')}</p>
             </Panel>
             <Panel title={ts('timers')}>
-              <p className="font-display text-[2.6rem] leading-none font-black tabular-nums">{system.data.overdueTimers}</p>
+              <p className="font-display text-5xl leading-none font-black tabular-nums">{system.data.overdueTimers}</p>
               <Light ok={system.data.overdueTimers === 0} label={system.data.overdueTimers === 0 ? ts('timersOk') : ts('timersBad')} />
             </Panel>
           </div>
 
           <div className="grid gap-5 lg:grid-cols-2">
             <Panel title={ts('providers')}>
-              <dl className="divide-ink/10 flex flex-col divide-y text-[15px]">
+              <dl className="divide-ink/10 flex flex-col divide-y text-base">
                 {(
                   [
                     [ts('version'), system.data.version],
@@ -76,7 +76,7 @@ export function AdminSystem() {
                 ).map(([label, value]) => (
                   <div key={label} className="flex justify-between gap-4 py-2.5">
                     <dt className="text-ink/75">{label}</dt>
-                    <dd className="font-mono text-[13px] font-semibold">{value}</dd>
+                    <dd className="font-mono text-sm font-semibold">{value}</dd>
                   </div>
                 ))}
               </dl>
@@ -85,8 +85,8 @@ export function AdminSystem() {
               <dl className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                 {(['users', 'listings', 'bookings', 'messages', 'reviews'] as const).map((key) => (
                   <div key={key}>
-                    <dt className="text-ink/70 text-[13px] font-semibold">{ts(`counts.${key}`)}</dt>
-                    <dd className="font-display text-[2rem] leading-none font-black tabular-nums">{nf.format(system.data.counts[key])}</dd>
+                    <dt className="text-ink/70 text-sm font-semibold">{ts(`counts.${key}`)}</dt>
+                    <dd className="font-display text-4xl leading-none font-black tabular-nums">{nf.format(system.data.counts[key])}</dd>
                   </div>
                 ))}
               </dl>

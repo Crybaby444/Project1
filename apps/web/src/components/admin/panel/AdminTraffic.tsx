@@ -32,7 +32,7 @@ export function AdminTraffic() {
                 type="button"
                 aria-pressed={days === d}
                 onClick={() => setDays(d)}
-                className={`rounded-pill min-h-9 px-4 text-[13px] font-bold tabular-nums ${days === d ? 'bg-ink text-canvas' : ''}`}
+                className={`rounded-pill min-h-9 px-4 text-sm font-bold tabular-nums ${days === d ? 'bg-ink text-canvas' : ''}`}
               >
                 {t('days', { days: d })}
               </button>
@@ -110,8 +110,8 @@ function Body({ a }: { a: AdminAnalytics }) {
           ).map(([key, value, r], i) => (
             <li key={key} className={`rounded-media flex flex-col gap-1 p-4 ${i === 0 ? 'bg-ink text-canvas' : 'border-ink/15 border'}`}>
               <span className="text-sm font-semibold opacity-80">{t(key)}</span>
-              <span className="font-display text-[2.6rem] leading-none font-black tabular-nums">{nf.format(value)}</span>
-              {r !== null && <span className="text-[13px] opacity-80">{t('rate', { rate: r })}</span>}
+              <span className="font-display text-5xl leading-none font-black tabular-nums">{nf.format(value)}</span>
+              {r !== null && <span className="text-sm opacity-80">{t('rate', { rate: r })}</span>}
             </li>
           ))}
         </ol>
@@ -124,8 +124,8 @@ function Big({ label, value, note }: { label: string; value: string; note?: stri
   return (
     <div className="border-ink/15 flex flex-col gap-1 py-5 pr-4 even:border-l even:pl-4 lg:border-l lg:px-5 lg:first:border-l-0 lg:first:pl-0">
       <dt className="text-ink/70 text-sm font-semibold">{label}</dt>
-      <dd className="font-display text-[clamp(2.2rem,3.4vw,3rem)] leading-none font-black tabular-nums">{value}</dd>
-      {note && <dd className="text-ink/70 text-[13px]">{note}</dd>}
+      <dd className="font-display text-display-m leading-none font-black tabular-nums">{value}</dd>
+      {note && <dd className="text-ink/70 text-sm">{note}</dd>}
     </div>
   );
 }
@@ -140,14 +140,14 @@ function Bars({ rows, name }: { rows: Row[]; name?: (key: string) => string | nu
       {rows.map((r) => (
         <li key={r.key} className="relative overflow-hidden rounded-[10px] px-3 py-2">
           <span aria-hidden="true" className="bg-ink/[0.07] absolute inset-y-0 left-0 rounded-[10px]" style={{ width: `${Math.max(4, (r.value / max) * 100)}%` }} />
-          <span className="relative flex items-baseline justify-between gap-3 text-[15px]">
+          <span className="relative flex items-baseline justify-between gap-3 text-base">
             <span className="min-w-0 truncate">
               {name?.(r.key) ? (
                 <>
-                  <span className="font-semibold">{name(r.key)}</span> <span className="text-ink/60 font-mono text-[12px]">{r.key}</span>
+                  <span className="font-semibold">{name(r.key)}</span> <span className="text-ink/60 font-mono text-xs">{r.key}</span>
                 </>
               ) : (
-                <span className="font-mono text-[13px]">{r.key}</span>
+                <span className="font-mono text-sm">{r.key}</span>
               )}
             </span>
             <span className="shrink-0 font-semibold tabular-nums">{r.value}</span>
@@ -180,14 +180,14 @@ function Series({ series }: { series: AdminAnalytics['series'] }) {
         })}
         <polyline points={points} fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="4 3" vectorEffect="non-scaling-stroke" />
       </svg>
-      <figcaption className="text-ink/70 mt-2 grid text-[11px] tabular-nums" style={{ gridTemplateColumns: `repeat(${series.length}, minmax(0, 1fr))` }}>
+      <figcaption className="text-ink/70 mt-2 grid text-xs tabular-nums" style={{ gridTemplateColumns: `repeat(${series.length}, minmax(0, 1fr))` }}>
         {series.map((d, i) => (
           <span key={d.day} className={`text-center ${i % every ? 'invisible' : ''}`}>
             {label.format(new Date(`${d.day}T00:00:00Z`))}
           </span>
         ))}
       </figcaption>
-      <p className="mt-3 flex gap-4 text-[13px] font-semibold">
+      <p className="mt-3 flex gap-4 text-sm font-semibold">
         <span className="flex items-center gap-2">
           <span aria-hidden="true" className="bg-ink/80 inline-block size-2.5 rounded-[3px]" />
           {t('views')}

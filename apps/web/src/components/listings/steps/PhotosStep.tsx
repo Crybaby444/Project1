@@ -277,11 +277,11 @@ export function PhotosStep() {
                   <path d="M6 16a4 4 0 0 1 4-4h6l3-4h10l3 4h6a4 4 0 0 1 4 4v20a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4z" />
                   <circle cx="24" cy="25" r="7.5" />
                 </svg>
-                <span className="text-[14px] font-bold">
+                <span className="text-sm font-bold">
                   {photos.length + pending.length === 0 ? t('choose') : t('addMore')}
                 </span>
                 {photos.length + pending.length === 0 && (
-                  <span className="text-ink/70 text-[13px]">{t('drop')}</span>
+                  <span className="text-ink/70 text-sm">{t('drop')}</span>
                 )}
               </label>
             </li>
@@ -304,7 +304,7 @@ export function PhotosStep() {
             ? t('full', { max: LISTING_LIMITS.photos })
             : t('count', { count: photos.length, max: LISTING_LIMITS.photos })}
         </p>
-        <p className="text-ink/70 text-[13px]">{`${t('limits')} ${t('paste')}`}</p>
+        <p className="text-ink/70 text-sm">{`${t('limits')} ${t('paste')}`}</p>
       </div>
       {photoError && (
         <p className="flex items-start gap-1.5 text-sm font-bold">

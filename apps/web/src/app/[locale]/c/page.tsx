@@ -50,7 +50,7 @@ export default async function CategoriesPage({ params }: Props) {
           {fresh.length > 0 && (
             <section aria-labelledby="catalog-fresh" className="flex flex-col gap-4">
               <div className="flex items-baseline justify-between gap-4">
-                <h2 id="catalog-fresh" className="font-display text-[clamp(1.8rem,3vw,2.6rem)] leading-none font-black uppercase">
+                <h2 id="catalog-fresh" className="font-display text-display-s leading-none font-black uppercase">
                   {t('fresh')}
                 </h2>
                 <Link href="/search?sort=new" className="text-sm font-bold underline decoration-1 underline-offset-4">
@@ -67,7 +67,7 @@ export default async function CategoriesPage({ params }: Props) {
             </section>
           )}
           <section aria-labelledby="catalog-all" className="flex flex-col gap-4">
-            <h2 id="catalog-all" className="font-display text-[clamp(1.8rem,3vw,2.6rem)] leading-none font-black uppercase">
+            <h2 id="catalog-all" className="font-display text-display-s leading-none font-black uppercase">
               {t('allCategories')}
             </h2>
             <CategoryIndex roots={tree.data} locale={locale} counts={counts} />

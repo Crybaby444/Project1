@@ -20,7 +20,7 @@ export function FollowingView() {
   return (
     <div className="flex flex-col gap-10">
       <header className="flex flex-col gap-2">
-        <h1 className="font-display text-[clamp(2.6rem,6vw,4.4rem)] leading-[0.9] font-black uppercase">{t('feedTitle')}</h1>
+        <h1 className="font-display text-display-l leading-[0.9] font-black uppercase">{t('feedTitle')}</h1>
         <p className="text-ink/75">{t('feedIntro')}</p>
       </header>
       {people.data && people.data.length === 0 ? (
@@ -28,7 +28,7 @@ export function FollowingView() {
       ) : (
         <>
           <section aria-labelledby="feed-items" className="flex flex-col gap-4">
-            <h2 id="feed-items" className="font-display text-[2rem] leading-none font-black uppercase">
+            <h2 id="feed-items" className="font-display text-4xl leading-none font-black uppercase">
               {t('newItems')}
             </h2>
             {feed.data && feed.data.items.length === 0 && <p className="text-ink/75">{t('noNewItems')}</p>}
@@ -36,7 +36,7 @@ export function FollowingView() {
               {feed.data?.items.map((item) => (
                 <li key={item.id} className="flex flex-col gap-2">
                   <ListingCard item={item} />
-                  <Link href={`/u/${item.owner.id}`} className="text-ink/75 text-[13px] font-semibold underline-offset-4 hover:underline">
+                  <Link href={`/u/${item.owner.id}`} className="text-ink/75 text-sm font-semibold underline-offset-4 hover:underline">
                     {item.owner.name}
                   </Link>
                 </li>
@@ -54,7 +54,7 @@ export function FollowingView() {
             )}
           </section>
           <section aria-labelledby="feed-people" className="flex flex-col gap-4">
-            <h2 id="feed-people" className="font-display text-[2rem] leading-none font-black uppercase">
+            <h2 id="feed-people" className="font-display text-4xl leading-none font-black uppercase">
               {t('youFollow', { count: people.data?.length ?? 0 })}
             </h2>
             <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

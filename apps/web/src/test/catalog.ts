@@ -27,6 +27,7 @@ export function availableItem(overrides: Partial<AvailableItem['listing']> = {})
   const listing = owned as AvailableItem['listing'];
   return {
     available: true,
+    demo: false,
     listing: { ...listing, ...overrides },
     owner: {
       id: 'owner-1',
@@ -52,6 +53,7 @@ export function availableItem(overrides: Partial<AvailableItem['listing']> = {})
 export function catalogItem(overrides: Partial<CatalogItem> = {}): CatalogItem {
   return {
     id: 'cm1abcdefg',
+    demo: false,
     title: 'Cordless drill',
     dailyCents: 1500,
     weeklyDiscountPercent: 10,

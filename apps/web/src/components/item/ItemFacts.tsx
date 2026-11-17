@@ -41,7 +41,7 @@ export function ItemFacts({ listing, attributes }: { listing: PublicListing; att
     <div className="flex flex-col gap-8">
       {(listing.condition || rows.length > 0) && (
         <section aria-labelledby="item-details" className="flex flex-col gap-3">
-          <h2 id="item-details" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
+          <h2 id="item-details" className="font-display text-display-s leading-[0.95] font-black uppercase">
             {t('details')}
           </h2>
           <dl className="border-ink/15 divide-ink/15 divide-y border-y">
@@ -65,7 +65,7 @@ export function ItemFacts({ listing, attributes }: { listing: PublicListing; att
 
       {hasRules && (
         <section aria-labelledby="item-rules" className="flex flex-col gap-3">
-          <h2 id="item-rules" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
+          <h2 id="item-rules" className="font-display text-display-s leading-[0.95] font-black uppercase">
             {t('rules')}
           </h2>
           <ul className="flex flex-col gap-2">
@@ -96,7 +96,7 @@ export function ItemFacts({ listing, attributes }: { listing: PublicListing; att
 
       {place && (
         <section aria-labelledby="item-place" className="flex flex-col gap-2">
-          <h2 id="item-place" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
+          <h2 id="item-place" className="font-display text-display-s leading-[0.95] font-black uppercase">
             {t('place')}
           </h2>
           <p className="flex items-center gap-2 text-lg">

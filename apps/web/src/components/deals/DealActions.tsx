@@ -239,7 +239,7 @@ function SignFields({
         {t('read')}
       </button>
       <Field label={t('name')} hint={t('nameHint')} error={tried && name.trim().length < 2 ? t('nameMissing') : undefined}>
-        <input value={name} onChange={(e) => onName(e.target.value)} maxLength={120} autoComplete="name" className={`${INPUT_CLASS} font-display text-[1.5rem] italic`} />
+        <input value={name} onChange={(e) => onName(e.target.value)} maxLength={120} autoComplete="name" className={`${INPUT_CLASS} font-display text-2xl italic`} />
       </Field>
       <label className="flex items-start gap-3">
         <input type="checkbox" checked={consent} onChange={(e) => onConsent(e.target.checked)} className="accent-ink mt-1 size-5 shrink-0" />
@@ -250,7 +250,7 @@ function SignFields({
           {t('consentMissing')}
         </p>
       )}
-      <p className="text-ink/70 text-[13px]">{t('testMode')}</p>
+      <p className="text-ink/70 text-sm">{t('testMode')}</p>
     </div>
   );
 }

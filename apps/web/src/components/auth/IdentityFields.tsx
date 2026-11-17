@@ -14,7 +14,7 @@ function Tick({ label, error, input }: { label: ReactNode; error?: string | unde
   const id = useId();
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="flex cursor-pointer items-start gap-3 text-[15px] leading-relaxed">
+      <label htmlFor={id} className="flex cursor-pointer items-start gap-3 text-base leading-relaxed">
         <input
           id={id}
           type="checkbox"
@@ -26,7 +26,7 @@ function Tick({ label, error, input }: { label: ReactNode; error?: string | unde
         <span>{label}</span>
       </label>
       {error && (
-        <p id={`${id}-error`} className="pl-8 text-[13.5px] text-[var(--danger)]">
+        <p id={`${id}-error`} className="pl-8 text-sm text-[var(--danger)]">
           {error}
         </p>
       )}
@@ -88,7 +88,7 @@ export function UsernameStatus({ username, current }: { username: string; curren
   });
   if (!parsed.success || parsed.data === current || !check.data) return null;
   return (
-    <p aria-live="polite" className="text-[13px] font-bold" data-username-status={check.data.available ? 'free' : 'taken'}>
+    <p aria-live="polite" className="text-sm font-bold" data-username-status={check.data.available ? 'free' : 'taken'}>
       {check.data.available ? t('usernameFree', { username: parsed.data }) : t('usernameTaken')}
     </p>
   );

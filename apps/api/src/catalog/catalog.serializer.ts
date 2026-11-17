@@ -27,5 +27,6 @@ export function serializeCatalogItem(
     publishedAt: listing.publishedAt?.toISOString() ?? null,
     rating: rating.rating,
     reviewCount: rating.reviewCount,
+    demo: listing.demo,
   };
 }

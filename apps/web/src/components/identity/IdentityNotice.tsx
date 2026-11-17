@@ -32,7 +32,7 @@ export function IdentityNotice({ action, readiness }: { action: 'lend' | 'rent';
   const href = readiness === 'profile' ? '/settings' : `/verify-identity?next=${encodeURIComponent(pathname)}`;
   return (
     <div role="status" className="border-ink/20 rounded-media flex flex-col items-start gap-3 border p-4" data-identity-notice={readiness}>
-      <p className="text-[15px] leading-relaxed">{t(`${readiness}.${action}`)}</p>
+      <p className="text-base leading-relaxed">{t(`${readiness}.${action}`)}</p>
       {readiness !== 'pending' && (
         <Button size="md" href={href}>
           {t(`${readiness}.button`)}

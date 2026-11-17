@@ -22,7 +22,7 @@ export function initials(name: string): string {
 
 /** A menu row (v16): the display face, a hairline under it, an arrow that slides in on hover or focus. */
 const ITEM =
-  "group/item font-display flex min-h-12 w-full items-center gap-3 border-b border-ink/10 px-3 text-left text-[1.35rem] leading-none font-black uppercase transition-[padding,background-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-mist hover:pl-4 focus-visible:bg-mist focus-visible:pl-4 after:ml-auto after:text-base after:opacity-0 after:transition-opacity after:duration-300 after:content-['→'_/_''] hover:after:opacity-100 focus-visible:after:opacity-100";
+  "group/item font-display flex min-h-12 w-full items-center gap-3 border-b border-ink/10 px-3 text-left text-2xl leading-none font-black uppercase transition-[padding,background-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-mist hover:pl-4 focus-visible:bg-mist focus-visible:pl-4 after:ml-auto after:text-base after:opacity-0 after:transition-opacity after:duration-300 after:content-['→'_/_''] hover:after:opacity-100 focus-visible:after:opacity-100";
 /** Signing out: quiet, the body face, no arrow. */
 const QUIET_ITEM =
   'flex min-h-11 w-full items-center rounded-pill px-3 text-left text-sm font-bold text-ink/75 transition-colors duration-150 hover:bg-mist hover:text-ink focus-visible:bg-mist focus-visible:text-ink';
@@ -121,7 +121,7 @@ export function UserMenu({ user }: { user: PublicUser }) {
         onClick={() => (open ? close({ refocus: false }) : openAt('first'))}
         onKeyDown={onButtonKeyDown}
         style={{ backgroundColor: 'var(--ink)', color: 'var(--canvas)' }} // v16: one ink disc for everyone
-        className="border-ink rounded-pill ease-yoyo relative inline-grid size-10 place-items-center border text-[13px] font-bold tracking-[0.03em] [filter:drop-shadow(0_0_0.6px_var(--sticker-edge))] transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96]"
+        className="border-ink rounded-pill ease-yoyo relative inline-grid size-10 place-items-center border text-sm font-bold tracking-[0.03em] [filter:drop-shadow(0_0_0.6px_var(--sticker-edge))] transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96]"
       >
         {/* The name says what the button is and still contains the visible initials (WCAG 2.5.3). */}
         <span className="sr-only">{t('account')}, </span>
@@ -138,7 +138,7 @@ export function UserMenu({ user }: { user: PublicUser }) {
               {initials(user.name)}
             </span>
             <span className="min-w-0">
-              <span className="font-display block truncate text-[1.5rem] leading-none font-black uppercase">
+              <span className="font-display block truncate text-2xl leading-none font-black uppercase">
                 {user.name}
               </span>
               <span className="text-ink/75 block truncate text-sm">{user.email}</span>
@@ -168,7 +168,7 @@ export function UserMenu({ user }: { user: PublicUser }) {
                   >
                     <span>{td('myDeals')}</span>
                     {waiting > 0 && (
-                      <span className="rounded-pill bg-ink text-canvas animate-pop-in inline-flex min-h-6 min-w-6 items-center justify-center px-2 font-sans text-[12px] tabular-nums">
+                      <span className="rounded-pill bg-ink text-canvas animate-pop-in inline-flex min-h-6 min-w-6 items-center justify-center px-2 font-sans text-xs tabular-nums">
                         <span aria-hidden="true">{waiting}</span>
                         <span className="sr-only">{td('waiting', { count: waiting })}</span>
                       </span>

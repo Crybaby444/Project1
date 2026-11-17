@@ -54,7 +54,7 @@ export function MessagesView({ activeId }: { activeId?: string }) {
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
       <h1
-        className={`font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.95] font-black uppercase ${activeId ? 'max-lg:sr-only' : ''}`}
+        className={`font-display text-display-l leading-[0.95] font-black uppercase ${activeId ? 'max-lg:sr-only' : ''}`}
       >
         {t('title')}
       </h1>
@@ -139,7 +139,7 @@ function ConversationList({ items, activeId }: { items: ConversationSummary[]; a
                   </span>
                   {c.unread > 0 && (
                     <span
-                      className={`rounded-pill inline-flex min-h-5 min-w-5 shrink-0 items-center justify-center px-1.5 text-[11px] font-bold tabular-nums ${active ? 'bg-canvas text-ink' : 'bg-ink text-canvas'}`}
+                      className={`rounded-pill inline-flex min-h-5 min-w-5 shrink-0 items-center justify-center px-1.5 text-xs font-bold tabular-nums ${active ? 'bg-canvas text-ink' : 'bg-ink text-canvas'}`}
                     >
                       <span aria-hidden="true">{c.unread}</span>
                       <span className="sr-only">{t('unread', { count: c.unread })}</span>
@@ -163,7 +163,7 @@ function Initials({ name }: { name: string }) {
     .map((w) => w[0]?.toUpperCase() ?? '')
     .join('');
   return (
-    <span aria-hidden="true" className="bg-ink text-canvas font-display grid size-12 shrink-0 place-items-center rounded-full text-[1.2rem] font-black">
+    <span aria-hidden="true" className="bg-ink text-canvas font-display grid size-12 shrink-0 place-items-center rounded-full text-xl font-black">
       {letters}
     </span>
   );
@@ -247,7 +247,7 @@ function ThreadBody({ data, inDeal }: { data: ConversationThread; inDeal: boolea
         </Link>}
         {data.listing ? <Thumb url={data.listing.photoUrl} /> : <Initials name={data.other.name} />}
         <span className="min-w-0 flex-1">
-          <Link href={`/u/${data.other.id}`} className="font-display block truncate text-[1.6rem] leading-none font-black uppercase hover:underline">
+          <Link href={`/u/${data.other.id}`} className="font-display block truncate text-3xl leading-none font-black uppercase hover:underline">
             {data.other.name}
           </Link>
           {data.listing && (
@@ -287,7 +287,7 @@ function ThreadBody({ data, inDeal }: { data: ConversationThread; inDeal: boolea
                   </span>
                 )}
                 {m.kind === 'SYSTEM' ? (
-                  <span className="text-ink/70 my-2 flex items-center gap-3 text-[13px] font-semibold">
+                  <span className="text-ink/70 my-2 flex items-center gap-3 text-sm font-semibold">
                     <span aria-hidden="true" className="bg-ink/15 h-px flex-1" />
                     <span className="text-center">{text(m)}</span>
                     <span aria-hidden="true" className="bg-ink/15 h-px flex-1" />
@@ -302,14 +302,14 @@ function ThreadBody({ data, inDeal }: { data: ConversationThread; inDeal: boolea
                   >
                     {m.text}
                     <span
-                      className={`mt-0.5 block text-right text-[11px] tabular-nums ${m.mine ? 'text-canvas/75' : 'text-ink/70'}`}
+                      className={`mt-0.5 block text-right text-xs tabular-nums ${m.mine ? 'text-canvas/75' : 'text-ink/70'}`}
                     >
                       {time(m.createdAt)}
                     </span>
                   </span>
                 )}
                 {seen && m.id === lastMine.id && (
-                  <span className="text-ink/75 mt-1 self-end text-[11px] font-semibold">{t('seen')}</span>
+                  <span className="text-ink/75 mt-1 self-end text-xs font-semibold">{t('seen')}</span>
                 )}
               </li>
             );
@@ -317,12 +317,13 @@ function ThreadBody({ data, inDeal }: { data: ConversationThread; inDeal: boolea
         </ol>
       </div>
 
-      <Composer id={data.id} />
+      <Composer id={data.id} aboutItem={data.listing !== null} />
     </>
   );
 }
 
-function Composer({ id }: { id: string }) {
+/** `aboutItem`: the payments note is about deals, so a direct message between people goes without it (owner, 2026-11-16). */
+function Composer({ id, aboutItem }: { id: string; aboutItem: boolean }) {
   const t = useTranslations('chat');
   const send = useSendMessage(id);
   // Opened from an item ("Write to the owner"): the box starts with the item's link.
@@ -367,7 +368,7 @@ function Composer({ id }: { id: string }) {
           {send.isPending ? t('sending') : t('send')}
         </Button>
       </div>
-      <p className="text-ink/70 px-2 text-xs">{t('hint')}</p>
+      {aboutItem && <p className="text-ink/70 px-2 text-xs">{t('hint')}</p>}
     </form>
   );
 }

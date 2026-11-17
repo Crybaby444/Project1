@@ -78,7 +78,7 @@ function FilterFields({ params, cities, country, today }: Omit<FiltersProps, 'to
   return (
     <div className="flex flex-col gap-6">
       <fieldset className="flex flex-col gap-3" aria-describedby={priceError ? `${ids.price}-error` : undefined}>
-        <legend className="mb-3 text-[13px] font-bold tracking-[0.03em] uppercase">{t('price')}</legend>
+        <legend className="mb-3 text-sm font-bold tracking-[0.03em] uppercase">{t('price')}</legend>
         <div className="grid grid-cols-2 gap-3">
           {(
             [
@@ -113,7 +113,7 @@ function FilterFields({ params, cities, country, today }: Omit<FiltersProps, 'to
       </fieldset>
 
       <fieldset className="flex flex-col gap-3">
-        <legend className="mb-1 text-[13px] font-bold tracking-[0.03em] uppercase">{t('dates')}</legend>
+        <legend className="mb-1 text-sm font-bold tracking-[0.03em] uppercase">{t('dates')}</legend>
         <button
           type="button"
           aria-expanded={datesOpen}
@@ -149,7 +149,7 @@ function FilterFields({ params, cities, country, today }: Omit<FiltersProps, 'to
       </fieldset>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor={ids.city} className="text-[13px] font-bold tracking-[0.03em] uppercase">
+        <label htmlFor={ids.city} className="text-sm font-bold tracking-[0.03em] uppercase">
           {t('city')}
         </label>
         <div className="border-ink bg-surface rounded-pill flex min-h-12 items-center border px-5">
@@ -159,7 +159,7 @@ function FilterFields({ params, cities, country, today }: Omit<FiltersProps, 'to
             country={country}
             value={chosenCity}
             onChange={(next) => navigate(catalogSearch(params, { city: next?.slug }))}
-            className="text-[16px]"
+            className="text-base"
           />
         </div>
       </div>

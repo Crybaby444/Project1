@@ -27,6 +27,7 @@ const row: ListingWithRelations = {
   timeZone: 'Europe/Riga',
   contentLocale: 'lv',
   cancellationPolicy: 'FLEXIBLE',
+  demo: false,
   rules: { preset: ['NO_SMOKING'], custom: ['Bring it back charged'] },
   rejectionReason: 'Earlier: blurry photos',
   submittedAt: at,

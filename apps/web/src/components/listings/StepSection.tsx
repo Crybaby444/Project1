@@ -28,7 +28,7 @@ export function StepSection({
           ref={heading}
           id="builder-step-title"
           tabIndex={-1}
-          className="font-display text-[clamp(2.4rem,5vw,3.6rem)] leading-[0.95] font-black uppercase outline-none [overflow-wrap:anywhere]"
+          className="font-display text-display-m leading-[0.95] font-black uppercase outline-none [overflow-wrap:anywhere]"
         >
           {title}
         </h2>
