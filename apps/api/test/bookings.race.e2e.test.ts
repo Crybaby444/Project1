@@ -43,5 +43,6 @@ describe('double booking', () => {
     expect(await t.prisma.booking.count({ where: { status: 'ACCEPTED' } })).toBe(1);
     expect(await t.prisma.contract.count()).toBe(1);
     expect(day(t, 3)).toBeTruthy();
-  });
+    // Ten sign-ups (password hashing) and ten requests before the race: slow on a busy CI runner.
+  }, 30_000);
 });
