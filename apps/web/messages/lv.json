@@ -594,7 +594,18 @@
       "customHint": "Līdz {max} īsiem noteikumiem, katrs 3–120 rakstzīmes.",
       "customLabel": "{number}. noteikums",
       "add": "Pievienot noteikumu",
-      "remove": "Noņemt {number}. noteikumu"
+      "remove": "Noņemt {number}. noteikumu",
+      "cancellation": {
+        "title": "Atcelšana",
+        "names": {
+          "FLEXIBLE": "Elastīga",
+          "MODERATE": "Mērena",
+          "STRICT": "Stingra"
+        },
+        "FLEXIBLE": "Nomnieks saņem visu atpakaļ, ja atceļ pirms pirmās dienas.",
+        "MODERATE": "Viss atpakaļ 5 vai vairāk dienas pirms sākuma; pēc tam puse nomas maksas. Drošības nauda vienmēr atgriežas.",
+        "STRICT": "Viss atpakaļ 14 vai vairāk dienas pirms; puse nomas maksas no 7 dienām; pēdējās 6 dienās nomas maksa netiek atgriezta. Drošības nauda vienmēr atgriežas."
+      }
     },
     "place": {
       "search": "Atrast adresi",
@@ -992,7 +1003,18 @@
       "failed": "Neizdevās nokopēt saiti"
     },
     "metaTitle": "{title} nomai: {place}",
-    "metaTitleNoPlace": "{title} nomai"
+    "metaTitleNoPlace": "{title} nomai",
+    "cancellation": {
+      "title": "Atcelšana",
+      "FLEXIBLE": "Nomnieks saņem visu atpakaļ, ja atceļ pirms pirmās dienas.",
+      "MODERATE": "Viss atpakaļ 5 vai vairāk dienas pirms sākuma; pēc tam puse nomas maksas. Drošības nauda vienmēr atgriežas.",
+      "STRICT": "Viss atpakaļ 14 vai vairāk dienas pirms; puse nomas maksas no 7 dienām; pēdējās 6 dienās nomas maksa netiek atgriezta. Drošības nauda vienmēr atgriežas.",
+      "names": {
+        "FLEXIBLE": "Elastīga",
+        "MODERATE": "Mērena",
+        "STRICT": "Stingra"
+      }
+    }
   },
   "profile": {
     "title": "{name}",

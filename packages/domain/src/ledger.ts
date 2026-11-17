@@ -28,7 +28,8 @@ export type OperationKind =
   | 'RENT_RELEASE'
   | 'DEPOSIT_REFUND'
   | 'DEPOSIT_TO_OWNER'
-  | 'BOOKING_REFUND';
+  | 'BOOKING_REFUND'
+  | 'BOOKING_PARTIAL_REFUND';
 
 /** A journal entry: its postings always sum to zero, so money is moved, never created or lost. */
 export interface LedgerOperation {
@@ -120,6 +121,26 @@ export function bookingRefund({ bookingId, renterId, quote, method }: BookingMon
       [`deposit:${booking}`, -cents(quote.depositCents)],
       ['platform:revenue', -cents(quote.serviceFeeCents)],
       [payerAccount(method, renterId), positive(quote.totalCents)],
+    ],
+    booking,
+  );
+}
+
+/**
+ * A renter's cancellation under a moderate or strict policy: the deposit and the fee go back with
+ * `rentRefundCents` of the rent; the rest of the rent goes to the owner.
+ */
+export function bookingPartialRefund({ bookingId, renterId, ownerId, quote, method, rentRefundCents }: BookingMoney & { readonly ownerId: string; readonly rentRefundCents: Cents }): LedgerOperation {
+  const booking = requireId(bookingId, 'bookingId');
+  const kept = cents(quote.rentCents - rentRefundCents);
+  return operation(
+    'BOOKING_PARTIAL_REFUND',
+    [
+      [`escrow:${booking}`, -cents(quote.rentCents)],
+      [`deposit:${booking}`, -cents(quote.depositCents)],
+      ['platform:revenue', -cents(quote.serviceFeeCents)],
+      [`wallet:${requireId(ownerId, 'ownerId')}`, kept],
+      [payerAccount(method, renterId), positive(cents(quote.totalCents - kept))],
     ],
     booking,
   );

@@ -1,5 +1,7 @@
 'use client';
 
+import { ChoicePills } from '@/components/ui/ChoicePills';
+import { CANCELLATION_POLICIES, type CancellationPolicyName } from '@yoyo/shared';
 import { LISTING_LIMITS, RULE_PRESETS, type RulePreset } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
@@ -136,6 +138,14 @@ export function RulesStep() {
           <span aria-hidden="true">+</span> {t('add')}
         </Button>
       </fieldset>
+      <ChoicePills<CancellationPolicyName>
+        legend={t('cancellation.title')}
+        hint={t(`cancellation.${draft.values.cancellationPolicy}`)}
+        choices={CANCELLATION_POLICIES.map((p) => ({ value: p, label: t(`cancellation.names.${p}`) }))}
+        value={draft.values.cancellationPolicy}
+        onChange={(cancellationPolicy) => draft.change({ cancellationPolicy })}
+        disabled={readOnly}
+      />
     </div>
   );
 }

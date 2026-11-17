@@ -34,6 +34,7 @@ export function ItemFacts({ listing, attributes }: { listing: PublicListing; att
     return [{ key: def.key, label: def.labels[locale as Locale], text: attributeText(def, value, format), free: def.type === 'TEXT' }];
   });
   const place = [listing.city, listing.district].filter(Boolean).join(', ');
+  const tc = useTranslations('item.cancellation');
   const hasRules = listing.rules.preset.length + listing.rules.custom.length > 0;
 
   return (
@@ -83,6 +84,15 @@ export function ItemFacts({ listing, attributes }: { listing: PublicListing; att
           </ul>
         </section>
       )}
+
+      <section aria-labelledby="item-cancellation" className="flex flex-col gap-2" data-cancellation={listing.cancellationPolicy}>
+        <h2 id="item-cancellation" className="font-display text-[clamp(1.9rem,3.2vw,2.8rem)] leading-[0.95] font-black uppercase">
+          {tc('title')}
+        </h2>
+        <p className="m-0 leading-relaxed">
+          <b>{tc(`names.${listing.cancellationPolicy}`)}.</b> {tc(listing.cancellationPolicy)}
+        </p>
+      </section>
 
       {place && (
         <section aria-labelledby="item-place" className="flex flex-col gap-2">

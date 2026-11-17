@@ -13,6 +13,10 @@ export const LISTING_CONDITIONS = ['NEW', 'LIKE_NEW', 'GOOD', 'FAIR'] as const;
 export type ListingCondition = (typeof LISTING_CONDITIONS)[number];
 
 /** Ready-made rules an owner ticks; the site labels them in every language (`listingRules.<KEY>`). */
+/** The cancellation policies an owner can pick (the rule itself is in @yoyo/domain cancellation.ts). */
+export const CANCELLATION_POLICIES = ['FLEXIBLE', 'MODERATE', 'STRICT'] as const;
+export type CancellationPolicyName = (typeof CANCELLATION_POLICIES)[number];
+
 export const RULE_PRESETS = ['ID_AT_PICKUP', 'RETURN_CLEAN', 'NO_SMOKING', 'PICKUP_ONLY', 'PETS_OK', 'CARE_INSTRUCTIONS'] as const;
 
 export type RulePreset = (typeof RULE_PRESETS)[number];
@@ -101,6 +105,8 @@ const ListingDraftObject = z.object({
   lng: z.number().min(-180).max(180).transform(roundTo6).nullable().optional(),
   timeZone: z.string().max(64).refine(isTimeZone, 'Unknown time zone').optional(),
   rules: ListingRulesSchema.optional(),
+  /** What a renter gets back when they cancel (owner, 2026-11-16): FLEXIBLE, MODERATE or STRICT. */
+  cancellationPolicy: z.enum(CANCELLATION_POLICIES).optional(),
   /** The language the texts are written in; a new draft without it takes the author's language. */
   contentLocale: z.enum(LOCALES).optional(),
 });
@@ -235,6 +241,7 @@ export const PublicListingSchema = z.object({
   /** The language of the texts: the canonical address and <html lang> of the item page use it. */
   contentLocale: z.enum(LOCALES),
   rules: z.object({ preset: z.array(z.enum(RULE_PRESETS)), custom: z.array(z.string()) }),
+  cancellationPolicy: z.enum(CANCELLATION_POLICIES),
   photos: z.array(ListingPhotoSchema),
   unavailability: z.array(DatePeriodSchema),
   publishedAt: z.iso.datetime().nullable(),

@@ -594,7 +594,18 @@
       "customHint": "Up to {max} short rules, 3–120 characters each.",
       "customLabel": "Rule {number}",
       "add": "Add a rule",
-      "remove": "Remove rule {number}"
+      "remove": "Remove rule {number}",
+      "cancellation": {
+        "title": "Cancellation",
+        "names": {
+          "FLEXIBLE": "Flexible",
+          "MODERATE": "Moderate",
+          "STRICT": "Strict"
+        },
+        "FLEXIBLE": "Renters get everything back if they cancel before the first day.",
+        "MODERATE": "Everything back 5 days or more before the start; half the rent after that. The deposit always comes back.",
+        "STRICT": "Everything back 14 days or more before; half the rent from 7 days; none of the rent in the last 6 days. The deposit always comes back."
+      }
     },
     "place": {
       "search": "Find the address",
@@ -992,7 +1003,18 @@
       "failed": "Could not copy the link"
     },
     "metaTitle": "{title} for rent in {place}",
-    "metaTitleNoPlace": "{title} for rent"
+    "metaTitleNoPlace": "{title} for rent",
+    "cancellation": {
+      "title": "Cancellation",
+      "FLEXIBLE": "Renters get everything back if they cancel before the first day.",
+      "MODERATE": "Everything back 5 days or more before the start; half the rent after that. The deposit always comes back.",
+      "STRICT": "Everything back 14 days or more before; half the rent from 7 days; none of the rent in the last 6 days. The deposit always comes back.",
+      "names": {
+        "FLEXIBLE": "Flexible",
+        "MODERATE": "Moderate",
+        "STRICT": "Strict"
+      }
+    }
   },
   "profile": {
     "title": "{name}",
