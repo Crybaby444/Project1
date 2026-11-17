@@ -436,7 +436,12 @@
         "deals": "Darījumi",
         "ledger": "Virsgrāmatas ieraksti"
       },
-      "download": "Lejupielādēt"
+      "download": "Lejupielādēt",
+      "errors": {
+        "title": "Servera kļūdas",
+        "none": "Pēdējās 30 dienās negaidītu kļūdu nav.",
+        "times": "{count, plural, zero {# reizes} one {# reizi} other {# reizes}}"
+      }
     },
     "categories": {
       "title": "Kategorijas",

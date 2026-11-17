@@ -36,6 +36,7 @@ import { SavedSearchesModule } from './saved-searches/saved-searches.module';
 import { ReportsModule } from './reports/reports.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { AuditCoreModule } from './audit/audit-core.module';
+import { ErrorLogModule } from './common/error-log.service';
 
 @Global()
 @Module({
@@ -62,6 +63,7 @@ class EnvModule {}
     ReportsModule,
     AnalyticsModule,
     AuditCoreModule,
+    ErrorLogModule,
     AuthModule,
     MeModule,
     IdentityModule,

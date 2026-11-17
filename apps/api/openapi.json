@@ -7077,6 +7077,47 @@
         ]
       }
     },
+    "/api/v1/admin/system/errors": {
+      "get": {
+        "operationId": "AdminSystemController_serverErrors",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Recent unexpected server errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerErrorListDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "admin"
+        ]
+      }
+    },
     "/api/v1/admin/system": {
       "get": {
         "operationId": "AdminSystemController_system",
@@ -18766,6 +18807,68 @@
           "users",
           "listings",
           "deals"
+        ],
+        "additionalProperties": false
+      },
+      "ServerErrorListDto_Output": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string",
+                  "maxLength": 400
+                },
+                "stack": {
+                  "type": "string",
+                  "maxLength": 4000
+                },
+                "method": {
+                  "type": "string",
+                  "maxLength": 10
+                },
+                "path": {
+                  "type": "string",
+                  "maxLength": 300
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "firstAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                },
+                "lastAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                }
+              },
+              "required": [
+                "id",
+                "message",
+                "stack",
+                "method",
+                "path",
+                "count",
+                "firstAt",
+                "lastAt"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "items"
         ],
         "additionalProperties": false
       },

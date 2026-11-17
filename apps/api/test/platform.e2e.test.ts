@@ -6,6 +6,7 @@ import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { RateLimitedError } from '../src/common/app-error';
+import { signedInClient } from './support/listings';
 import { createTestApp, type TestApp } from './support/test-app';
 
 class EchoDto extends createZodDto(z.object({ email: z.email() })) {}
@@ -93,6 +94,19 @@ describe('API platform: errors, validation and protection', () => {
     expect(boom.status).toBe(500);
     expect(boom.body).toEqual({ error: { code: 'INTERNAL', message: expect.any(String) } });
     expect(JSON.stringify(boom.body)).not.toContain('secret-detail');
+  });
+
+  it('keeps unexpected errors for the admin (System → Errors), the same one once a minute', async () => {
+    await t.prisma.serverError.deleteMany();
+    await request(t.server).get('/api/v1/__test/boom?x=1').expect(500);
+    await request(t.server).get('/api/v1/__test/boom').expect(500);
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    const rows = await t.prisma.serverError.findMany();
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({ method: 'GET', path: '/api/v1/__test/boom', message: 'Error: secret-detail', count: 2 });
+    const admin = await signedInClient(t, { name: 'Admin', role: 'ADMIN', staffRole: 'OWNER' });
+    const list = (await admin.get('/admin/system/errors').expect(200)).body.items;
+    expect(list[0]).toMatchObject({ path: '/api/v1/__test/boom', message: 'Error: secret-detail', count: 2 });
   });
 
   it('answers a rate-limited request with 429 RATE_LIMITED and Retry-After', async () => {

@@ -1668,6 +1668,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/system/errors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminSystemController_serverErrors"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/system": {
         parameters: {
             query?: never;
@@ -4067,6 +4083,20 @@ export interface components {
                 status: string;
                 renter: string;
                 owner: string;
+            }[];
+        };
+        ServerErrorListDto_Output: {
+            items: {
+                id: string;
+                message: string;
+                stack: string;
+                method: string;
+                path: string;
+                count: number;
+                /** Format: date-time */
+                firstAt: string;
+                /** Format: date-time */
+                lastAt: string;
             }[];
         };
         AdminSystemDto_Output: {
@@ -10389,6 +10419,44 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    AdminSystemController_serverErrors: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Recent unexpected server errors */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ServerErrorListDto_Output"];
                 };
             };
             /** @description Not signed in or wrong credentials */

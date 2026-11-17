@@ -1,4 +1,5 @@
 import { Inject, Injectable, Logger, type OnApplicationBootstrap } from '@nestjs/common';
+import { ErrorLogService } from '../common/error-log.service';
 import type { TimerKind } from '@yoyo/domain';
 import { BookingRulesService } from '../bookings/booking-rules.service';
 import { BookingsService } from '../bookings/bookings.service';
@@ -34,6 +35,7 @@ export class TimersService implements OnApplicationBootstrap {
   private readonly logger = new Logger('Timers');
 
   constructor(
+    private readonly errorLog: ErrorLogService,
     private readonly prisma: PrismaService,
     private readonly bookings: BookingsService,
     private readonly rules: BookingRulesService,
@@ -80,6 +82,8 @@ export class TimersService implements OnApplicationBootstrap {
     const { count: keysForgotten } = await this.prisma.idempotencyKey.deleteMany({
       where: { createdAt: { lt: new Date(this.clock.now().getTime() - DAY) } },
     });
+    // Server errors older than 30 days go.
+    await this.errorLog.prune();
     return { fired, failed, offersExpired, moneyJobs, keysForgotten, more };
   }
 

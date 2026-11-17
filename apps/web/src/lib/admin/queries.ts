@@ -205,6 +205,16 @@ export function useAdminPersonAction() {
   });
 }
 
+/** Admin → System → Errors: the last unexpected server errors, counted when they repeat. */
+export function useServerErrors() {
+  const client = useApiClient();
+  return useQuery({
+    queryKey: ['admin', 'system', 'errors'] as const,
+    queryFn: async () => unwrap(client.GET('/api/v1/admin/system/errors')),
+    refetchInterval: 60_000,
+  });
+}
+
 export function useAdminSystem() {
   const client = useApiClient();
   return useQuery({

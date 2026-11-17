@@ -436,7 +436,12 @@
         "deals": "Deals",
         "ledger": "Ledger entries"
       },
-      "download": "Download"
+      "download": "Download",
+      "errors": {
+        "title": "Server errors",
+        "none": "No unexpected errors in the last 30 days.",
+        "times": "{count, plural, one {# time} other {# times}}"
+      }
     },
     "categories": {
       "title": "Categories",

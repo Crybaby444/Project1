@@ -436,7 +436,12 @@
         "deals": "Сделки",
         "ledger": "Проводки"
       },
-      "download": "Скачать"
+      "download": "Скачать",
+      "errors": {
+        "title": "Ошибки сервера",
+        "none": "За последние 30 дней неожиданных ошибок нет.",
+        "times": "{count, plural, one {# раз} few {# раза} other {# раз}}"
+      }
     },
     "categories": {
       "title": "Категории",

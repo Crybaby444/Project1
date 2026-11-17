@@ -1118,3 +1118,17 @@ model IdentityCheck {
   @@index([status, submittedAt])
   @@index([userId])
 }
+
+/// An unexpected server error, for the admin (System → Errors): the same one is counted, not repeated.
+model ServerError {
+  id        String   @id @default(cuid())
+  message   String
+  stack     String   @default("")
+  method    String
+  path      String
+  count     Int      @default(1)
+  firstAt   DateTime
+  lastAt    DateTime
+
+  @@index([lastAt])
+}
