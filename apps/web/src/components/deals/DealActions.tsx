@@ -14,6 +14,7 @@ import { useSession } from '@/lib/session/SessionProvider';
 import { downloadContract } from './ContractCard';
 import { INPUT_CLASS } from '@/components/ui/inputs';
 import { CheckoutDialog } from './CheckoutDialog';
+import { PROVIDER_SIGNING, ProviderSign } from './ProviderSign';
 import { DamagePhotos } from './DealPhotos';
 
 /** The step each deal moves forward with: filled ink buttons (DESIGN.md: one per screen, here one per step). */
@@ -144,7 +145,9 @@ export function DealActions({ booking, onError }: { booking: BookingView; onErro
 
       {open === 'PAY' && <CheckoutDialog booking={booking} open onClose={() => setOpen(null)} />}
 
-      {open && open !== 'PAY' && (
+      {open === 'SIGN' && PROVIDER_SIGNING && <ProviderSign booking={booking} onClose={() => setOpen(null)} />}
+
+      {open && open !== 'PAY' && !(open === 'SIGN' && PROVIDER_SIGNING) && (
         <Dialog
           open
           onClose={() => running === null && setOpen(null)}

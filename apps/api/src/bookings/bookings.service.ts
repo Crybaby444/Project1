@@ -93,6 +93,8 @@ export function toDomainEvent(input: BookingEventInput): BookingEvent {
 export interface SigningClient {
   ip: string;
   userAgent: string;
+  /** How the person signed: SIMULATED (the typed name) unless a signing provider confirmed it (DOKOBIT:…). */
+  method?: string;
 }
 const UNKNOWN_CLIENT: SigningClient = { ip: 'unknown', userAgent: 'unknown' };
 
@@ -111,7 +113,7 @@ async function recordSignature(
 ): Promise<void> {
   const contract = await tx.contract.findUniqueOrThrow({ where: { bookingId } });
   await tx.contractSignature.create({
-    data: { bookingId, side, userId: user.id, fullName, termsHash: contract.termsHash, ip: client.ip.slice(0, 64), userAgent: client.userAgent.slice(0, 300), createdAt: now },
+    data: { bookingId, side, userId: user.id, fullName, termsHash: contract.termsHash, ip: client.ip.slice(0, 64), userAgent: client.userAgent.slice(0, 300), ...(client.method && { method: client.method.slice(0, 60) }), createdAt: now },
   });
 }
 
@@ -166,7 +168,7 @@ export class BookingsService {
     @Inject(PAYMENT_PROVIDER) private readonly payments: PaymentProvider,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider,
-    @Inject(ENV) private readonly env: Pick<Env, 'IDENTITY_REQUIRED'>,
+    @Inject(ENV) private readonly env: Pick<Env, 'IDENTITY_REQUIRED' | 'SIGNATURES'>,
   ) {}
 
   readonly urlFor: UrlFor = (key, variant) => this.storage.url(key, variant);
@@ -324,6 +326,10 @@ export class BookingsService {
   async act(id: string, user: PublicUser, version: number, input: BookingEventInput, client: SigningClient = UNKNOWN_CLIENT): Promise<BookingView> {
     const now = this.clock.now();
     const settings = await this.rules.settings();
+    // With a signing provider, a signature counts only once the provider confirmed it (C1).
+    if (input.type === 'SIGN' && this.env.SIGNATURES === 'dokobit' && !client.method?.startsWith('DOKOBIT')) {
+      throw new AppError('ACTION_NOT_ALLOWED', 409, 'Sign through the signing provider', undefined, { why: 'SIGN_WITH_PROVIDER' });
+    }
     const event = toDomainEvent(input);
     const charge =
       input.type === 'PAY' && input.cardToken !== undefined

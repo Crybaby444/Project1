@@ -228,7 +228,17 @@
       "consentMissing": "Atzīmējiet, lai parakstītu.",
       "nameMissing": "Ierakstiet vārdu un uzvārdu.",
       "submit": "Parakstīt",
-      "testMode": "Testa režīms: parakstīšana ir simulēta, tāpat kā maksājumi."
+      "testMode": "Testa režīms: parakstīšana ir simulēta, tāpat kā maksājumi.",
+      "provider": {
+        "title": "Parakstiet ar eID",
+        "lead": "Parakstiet līgumu ar Smart-ID, Mobile-ID vai eParaksts pakalpojuma sniedzēja drošajā lapā. Yoyo saglabā jūsu parakstu, tiklīdz pakalpojuma sniedzējs to apstiprina.",
+        "frame": "Parakstīšanas lapa",
+        "waiting": "Gaidām jūsu parakstu…",
+        "openNew": "Atvērt parakstīšanas lapu jaunā cilnē",
+        "done": "Parakstīts. Līgumā ir jūsu paraksts.",
+        "failed": "Parakstīšana netika pabeigta. Sāciet vēlreiz.",
+        "retry": "Sākt parakstīšanu vēlreiz"
+      }
     }
   },
   "myDeals": {

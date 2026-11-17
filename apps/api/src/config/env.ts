@@ -116,6 +116,15 @@ const EnvObject = z.object({
   STRIPE_WEBHOOK_SECRET: z.preprocess(blankAsUnset, z.string().optional()),
   STRIPE_API_URL: z.url().default('https://api.stripe.com'),
   /**
+   * Contract signatures: `typed` (the typed name, a simple electronic signature; the default) or `dokobit`
+   * (Smart-ID / Mobile-ID / eParaksts through Dokobit Documents Gateway; audit 2026-11-16, C1).
+   */
+  SIGNATURES: z.preprocess(blankAsUnset, z.enum(['typed', 'dokobit']).default('typed')),
+  DOKOBIT_ACCESS_TOKEN: z.preprocess(blankAsUnset, z.string().optional()),
+  DOKOBIT_API_URL: z.url().default('https://gateway-sandbox.dokobit.com'),
+  /** This API's public address, for callbacks from providers (Dokobit postbacks). */
+  API_PUBLIC_URL: z.preprocess(blankAsUnset, z.url().optional()),
+  /**
    * The service fee renters pay, in whole percent of the rent (owner's decision of 2026-11-06: 10 %).
    * A `fees.servicePercent` row in the Setting table overrides it at runtime. Unset: 10.
    */
@@ -153,6 +162,9 @@ export const EnvSchema = EnvObject.superRefine((env, ctx) => {
       path: ['SMS_PROVIDER'],
       message: '"mailbox" only simulates SMS by email and is not allowed in production',
     });
+  }
+  if (env.SIGNATURES === 'dokobit' && (!env.DOKOBIT_ACCESS_TOKEN || !env.API_PUBLIC_URL)) {
+    ctx.addIssue({ code: 'custom', path: ['DOKOBIT_ACCESS_TOKEN'], message: 'SIGNATURES=dokobit needs DOKOBIT_ACCESS_TOKEN and API_PUBLIC_URL' });
   }
   if (env.PAYMENTS === 'stripe' && !env.STRIPE_SECRET_KEY) {
     ctx.addIssue({ code: 'custom', path: ['STRIPE_SECRET_KEY'], message: 'PAYMENTS=stripe needs STRIPE_SECRET_KEY' });

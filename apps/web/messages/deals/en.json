@@ -228,7 +228,17 @@
       "consentMissing": "Tick the box to sign.",
       "nameMissing": "Type your full name.",
       "submit": "Sign",
-      "testMode": "Test mode: signing is simulated, like payments."
+      "testMode": "Test mode: signing is simulated, like payments.",
+      "provider": {
+        "title": "Sign with your eID",
+        "lead": "Sign the contract with Smart-ID, Mobile-ID or eParaksts on the provider's secure page. Yoyo records your signature as soon as the provider confirms it.",
+        "frame": "Signing page",
+        "waiting": "Waiting for your signature…",
+        "openNew": "Open the signing page in a new tab",
+        "done": "Signed. The contract has your signature.",
+        "failed": "The signing was not completed. Start it again.",
+        "retry": "Start signing again"
+      }
     }
   },
   "myDeals": {
