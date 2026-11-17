@@ -46,7 +46,7 @@ export function StatusBanner() {
     >
       <div className="flex min-w-0 flex-wrap items-center gap-3">
         <ListingStatusBadge status={status} />
-        {status !== 'REJECTED' && <p className="max-w-[80ch] text-sm leading-relaxed">{t(status)}</p>}
+        {status !== 'REJECTED' && <p className="max-w-read text-sm leading-relaxed">{t(status)}</p>}
       </div>
       {status === 'REJECTED' && (
         <div className="flex basis-full flex-col gap-2">

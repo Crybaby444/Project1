@@ -30,7 +30,7 @@ export function MySpaceNav() {
   const pathname = usePathname();
   if (!user) return null;
   return (
-    <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 pt-10 sm:px-8 sm:pt-14" data-my-space="">
+    <div className="page flex flex-col gap-6 pt-10 sm:pt-14" data-my-space="">
       <div className="flex flex-wrap items-center gap-4">
         <span aria-hidden="true" className="bg-ink text-canvas font-display grid size-16 shrink-0 place-items-center rounded-full text-2xl font-black">
           {initials(user.name)}

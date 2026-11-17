@@ -71,11 +71,11 @@ export async function CatalogResults({ params: raw, category, related, path, tit
 
   if (!results.ok) {
     return (
-      <main className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-4 px-4 py-20 text-center sm:px-8">
+      <main className="page flex flex-col items-center gap-4 py-20 text-center">
         <h1 className="font-display text-display-l leading-[0.95] font-black [overflow-wrap:anywhere] hyphens-auto uppercase">
           {t('error.title')}
         </h1>
-        <p className="max-w-[46ch]">{t('error.body')}</p>
+        <p className="max-w-lead">{t('error.body')}</p>
         <Link
           href={`${path}${catalogSearch(params)}`}
           className="bg-cta text-cta-fg border-cta rounded-pill inline-flex min-h-10 items-center border px-5 text-sm font-bold tracking-[0.03em] uppercase"
@@ -94,7 +94,7 @@ export async function CatalogResults({ params: raw, category, related, path, tit
 
   return (
     <CatalogShell>
-      <main className="@container mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-8 sm:px-8 sm:py-10">
+      <main className="page @container flex flex-col gap-6 py-8 sm:py-10">
         <Breadcrumbs items={crumbs} label={t('breadcrumbs.label')} />
         <div className="flex flex-col gap-4">
           <h1
@@ -103,7 +103,7 @@ export async function CatalogResults({ params: raw, category, related, path, tit
           >
             {title}
           </h1>
-          {lead && <p className="text-ink/80 max-w-[68ch] text-base leading-relaxed">{lead}</p>}
+          {lead && <p className="text-ink/80 max-w-read text-base leading-relaxed">{lead}</p>}
           <SearchBox initialQuery={params.q ?? ''} className="max-w-3xl" />
           {related.length > 0 && (
             <nav aria-label={t('related')}>

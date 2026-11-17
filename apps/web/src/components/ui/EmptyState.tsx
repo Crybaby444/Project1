@@ -44,7 +44,7 @@ export function EmptyState({ title, body, action, headingLevel = 2, className = 
       <Heading className="font-display m-0 max-w-[18ch] text-display-m leading-[0.95] font-black text-balance uppercase">
         {title}
       </Heading>
-      {body ? <p className="text-ink/80 m-0 max-w-[52ch] leading-relaxed">{body}</p> : null}
+      {body ? <p className="text-ink/80 m-0 max-w-lead leading-relaxed">{body}</p> : null}
       {action ? <div className="mt-2 flex flex-wrap justify-center gap-2.5">{action}</div> : null}
     </section>
   );

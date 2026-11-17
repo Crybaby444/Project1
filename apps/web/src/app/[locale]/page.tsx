@@ -76,12 +76,12 @@ export default async function HomePage({ params }: Params) {
     <main className="flex flex-1 flex-col" data-market-home="">
       <JsonLd data={structuredData(meta('description'))} />
 
-      <section aria-labelledby="home-title" className="mx-auto flex w-full max-w-[1440px] flex-col gap-7 px-4 pt-9 pb-4 sm:px-8 sm:pt-12">
+      <section aria-labelledby="home-title" className="page flex flex-col gap-7 pt-9 pb-4 sm:pt-12">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:items-end lg:gap-12">
           <h1 id="home-title" className="font-display text-display-xl leading-[0.84] font-black text-balance uppercase">
             {t('hero.title')}
           </h1>
-          <p className="text-ink/80 max-w-[44ch] text-lg leading-relaxed lg:pb-2">{t('hero.lead')}</p>
+          <p className="text-ink/80 max-w-lead text-lg leading-relaxed lg:pb-2">{t('hero.lead')}</p>
         </div>
         <HomeSearch country={await currentCountry()} today={today} />
         <TrustRow />
@@ -89,7 +89,7 @@ export default async function HomePage({ params }: Params) {
 
 
       {items.length > 0 && (
-        <section aria-labelledby="home-fresh" className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-16 sm:px-8 sm:py-20">
+        <section aria-labelledby="home-fresh" className="page flex flex-col gap-6 py-16 sm:py-20">
           <ForYou
             initial={initial}
             country={await currentCountry()}

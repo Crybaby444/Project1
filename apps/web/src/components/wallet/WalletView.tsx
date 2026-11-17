@@ -167,7 +167,7 @@ export function WalletView() {
           <h1 style={displayFit(t('title'), { max: '3.5rem' })} className="font-display text-display-fit leading-[0.85] font-black uppercase">
             {t('title')}
           </h1>
-          <p className="max-w-[60ch] leading-relaxed">{t('intro')}</p>
+          <p className="max-w-read leading-relaxed">{t('intro')}</p>
         </div>
         <div className="flex flex-wrap gap-3">
           <Button size="lg" onClick={() => setMode('topUp')} disabled={!wallet.data}>

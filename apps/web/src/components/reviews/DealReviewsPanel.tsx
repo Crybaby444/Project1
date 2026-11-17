@@ -70,7 +70,7 @@ export function DealReviewsPanel({ bookingId, otherName }: { bookingId: string; 
 
       {data.canReview ? (
         <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
-          <p className="m-0 max-w-[60ch] leading-relaxed">{t('intro', { name: otherName, date })}</p>
+          <p className="m-0 max-w-read leading-relaxed">{t('intro', { name: otherName, date })}</p>
           {data.theirsWaiting && <p className="m-0 text-sm font-bold">{t('waiting', { name: otherName })}</p>}
           <StarInput legend={t('aboutPerson', { name: otherName })} name="person" value={rating} onChange={setRating} invalid={tried && rating === 0} />
           {asRenter && <StarInput legend={t('aboutItem')} name="item" value={itemRating} onChange={setItemRating} invalid={tried && itemRating === 0} />}
@@ -105,7 +105,7 @@ export function DealReviewsPanel({ bookingId, otherName }: { bookingId: string; 
         </form>
       ) : null}
 
-      {data.mine && !data.theirs && <p className="m-0 max-w-[60ch] leading-relaxed">{t('sent', { name: otherName, date })}</p>}
+      {data.mine && !data.theirs && <p className="m-0 max-w-read leading-relaxed">{t('sent', { name: otherName, date })}</p>}
       {data.mine && (
         <div className="flex flex-col gap-2">
           <h3 className="m-0 text-sm font-bold tracking-[0.03em] uppercase">{t('mine')}</h3>

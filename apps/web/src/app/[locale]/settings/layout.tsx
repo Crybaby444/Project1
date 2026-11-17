@@ -20,7 +20,7 @@ export default async function SettingsLayout({ params, children }: Props) {
   const t = await getTranslations('settings');
 
   return (
-    <main className="@container mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-10 sm:py-14">
+    <main className="page-narrow @container flex flex-col gap-6 page-y">
       <h1
         style={displayFit(t('title'), { max: '3.25rem' })}
         className="font-display text-display-fit leading-[0.85] font-black uppercase"

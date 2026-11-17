@@ -16,7 +16,7 @@ export default async function DealPage({ params }: Props) {
   const { locale, id } = await params;
   setRequestLocale(locale);
   return (
-    <main className="mx-auto w-full max-w-[1440px] px-4 py-10 sm:px-8 sm:py-14">
+    <main className="page page-y">
       <RequireSession>
         <DealView id={id} />
       </RequireSession>

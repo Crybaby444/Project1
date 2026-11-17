@@ -20,7 +20,7 @@ export function EditListing({ id, initialStep }: { id: string; initialStep: Buil
 
   if (query.isPending) {
     return (
-      <div aria-busy="true" className="mx-auto flex w-full max-w-[1440px] flex-col gap-4 px-4 py-10 sm:px-8">
+      <div aria-busy="true" className="page flex flex-col gap-4 py-10">
         <span className="sr-only" role="status">
           {t('loading')}
         </span>
@@ -36,7 +36,7 @@ export function EditListing({ id, initialStep }: { id: string; initialStep: Buil
   if (query.isError) {
     const notFound = query.error instanceof ApiError && query.error.status === 404;
     return (
-      <main className="@container mx-auto flex w-full max-w-3xl flex-col items-start gap-5 px-4 py-14">
+      <main className="page-narrow @container flex flex-col items-start gap-5 py-14">
         <h1
           style={displayFit(notFound ? t('notFound.title') : t('loadFailed'), { max: '3.25rem' })}
           className="font-display text-display-fit leading-[0.85] font-black uppercase"

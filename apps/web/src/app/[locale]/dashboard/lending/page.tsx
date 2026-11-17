@@ -25,7 +25,7 @@ export default async function LendingPage({ params, searchParams }: Props) {
     ? (value as MyListingsFilter)
     : 'ALL';
   return (
-    <RequireSession className="mx-auto w-full max-w-[1440px] px-4 py-10 sm:px-8">
+    <RequireSession className="page py-10">
       <MyListings initialStatus={status} />
     </RequireSession>
   );

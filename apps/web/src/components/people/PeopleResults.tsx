@@ -10,7 +10,7 @@ export function PeopleResults({ q }: { q: string }) {
   const people = usePeopleSearch(q);
   if (!people.data || people.data.length === 0) return null;
   return (
-    <section aria-labelledby="people-results" className="mx-auto flex w-full max-w-[1440px] flex-col gap-3 px-4 pt-8 sm:px-8" data-people-results="">
+    <section aria-labelledby="people-results" className="page flex flex-col gap-3 pt-8" data-people-results="">
       <h2 id="people-results" className="font-display text-4xl leading-none font-black uppercase">
         {t('searchTitle')}
       </h2>

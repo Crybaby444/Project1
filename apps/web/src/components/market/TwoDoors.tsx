@@ -14,7 +14,7 @@ export async function TwoDoors() {
   ] as const;
   return (
     <section aria-labelledby="home-doors" className="bg-[var(--night)] px-4 py-20 text-[var(--paper)] sm:px-8 sm:py-28">
-      <div className="mx-auto flex max-w-[1440px] flex-col gap-10">
+      <div className="page flex flex-col gap-10">
         <h2 id="home-doors" className="font-display max-w-[14em] text-display-l leading-[0.88] font-black uppercase">
           {t('title')}
         </h2>

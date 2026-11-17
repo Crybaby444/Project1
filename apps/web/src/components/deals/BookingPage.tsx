@@ -15,7 +15,7 @@ export function BookingPage({ listingId }: { listingId: string }) {
   const title = listing ? t('title', { item: listing.title }) : t('pageTitle');
 
   return (
-    <main className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-10 sm:px-8 sm:py-14">
+    <main className="page flex flex-col gap-8 page-y">
       <header className="flex flex-col gap-5 sm:flex-row sm:items-center">
         <div className="border-ink/15 bg-mist rounded-media size-24 shrink-0 overflow-hidden border sm:size-28">
           {listing?.coverUrl && (

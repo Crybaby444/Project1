@@ -114,7 +114,7 @@ export function DealView({ id }: { id: string }) {
       <section role="alert" className="flex flex-col items-center gap-4 px-6 py-14 text-center">
         <Mark size={80} string={false} className="animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
         <h1 className="font-display text-display-l leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{t('notFound')}</h1>
-        <p className="max-w-[46ch]">{t('notFoundBody')}</p>
+        <p className="max-w-lead">{t('notFoundBody')}</p>
         <Button href="/bookings">{t('back')}</Button>
       </section>
     ) : (

@@ -13,7 +13,7 @@ type ErrorViewProps = {
 /** Yoyo-styled "something broke" screen, shared by the localized and the global error boundaries. */
 export function ErrorView({ title, body, retryLabel, onRetry, backLink }: ErrorViewProps) {
   return (
-    <main className="@container mx-auto flex min-h-dvh max-w-[1440px] flex-col items-center justify-center gap-6 px-4 py-16 text-center">
+    <main className="page @container flex min-h-dvh flex-col items-center justify-center gap-6 py-16 text-center">
       <p
         aria-hidden="true"
         style={displayFit('500', { min: '3rem', max: '10rem' })}
@@ -22,7 +22,7 @@ export function ErrorView({ title, body, retryLabel, onRetry, backLink }: ErrorV
         500
       </p>
       <h1 className="font-display text-display-l leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{title}</h1>
-      <p className="max-w-[46ch] leading-relaxed">{body}</p>
+      <p className="max-w-lead leading-relaxed">{body}</p>
       <div className="flex flex-wrap items-center justify-center gap-3">
         <button
           type="button"

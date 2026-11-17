@@ -32,7 +32,7 @@ export default async function CategoriesPage({ params }: Props) {
   const fresh = newest.ok ? newest.data.items.slice(0, 4) : [];
   const title = t('allTitle');
   return (
-    <main className="@container mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-8 sm:px-8 sm:py-10">
+    <main className="page @container flex flex-col gap-8 py-8 sm:py-10">
       <Breadcrumbs items={[{ label: t('breadcrumbs.home'), href: '/' }, { label: t('breadcrumbs.catalog') }]} label={t('breadcrumbs.label')} />
       <div className="flex flex-col gap-4">
         <h1 style={displayFit(title, { min: '2rem', max: '4rem' })} className="font-display text-display-fit leading-[0.9] font-black uppercase">
