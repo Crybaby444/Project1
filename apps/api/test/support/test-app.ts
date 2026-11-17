@@ -55,7 +55,7 @@ export async function createTestApp(options: TestAppOptions = {}): Promise<TestA
     .useValue(options.mailProvider ?? mail)
     .compile();
 
-  const app = moduleRef.createNestApplication({ logger: ['error', 'warn'] });
+  const app = moduleRef.createNestApplication({ logger: ['error', 'warn'], rawBody: true });
   configureApp(app, env);
   await app.init();
   return {

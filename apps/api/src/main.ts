@@ -12,7 +12,8 @@ async function bootstrap(): Promise<void> {
   if (existsSync('.env')) process.loadEnvFile('.env');
   const env = loadEnv(process.env);
 
-  const app = await NestFactory.create(AppModule);
+  // rawBody: Stripe signs the exact bytes of a webhook.
+  const app = await NestFactory.create(AppModule, { rawBody: true });
   configureApp(app, env);
   if (env.NODE_ENV !== 'production') {
     SwaggerModule.setup('api/docs', app, buildOpenApiDocument(app));

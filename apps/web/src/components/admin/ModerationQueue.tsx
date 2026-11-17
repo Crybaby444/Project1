@@ -14,6 +14,7 @@ import { listingKeys, useCategories, useModerationQueue, type ModerationQueueNam
 import { ApiError, unwrap } from '@/lib/session/api-error';
 import { useApiClient } from '@/lib/session/SessionProvider';
 import { ModerationCard } from './ModerationCard';
+import { EditListingDialog, type ListingFixes } from './EditListingDialog';
 import { MoveCategoryDialog } from './MoveCategoryDialog';
 import { RejectDialog } from './RejectDialog';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -34,6 +35,7 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
   const categories = useCategories().data ?? [];
   const [rejecting, setRejecting] = useState<AdminListing | null>(null);
   const [moving, setMoving] = useState<AdminListing | null>(null);
+  const [editing, setEditing] = useState<AdminListing | null>(null);
   const base = queue === 'other' ? '/admin/listings?queue=other' : '/admin/listings';
   const pageHref = (number: number) => `${base}${queue === 'other' ? '&' : '?'}page=${number}`;
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -71,6 +73,22 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
   }
 
   /** Files a listing under another category; the owner gets an email in their language. */
+  async function edit(listing: AdminListing, fixes: ListingFixes) {
+    setBusyId(listing.id);
+    setNotice(null);
+    try {
+      await unwrap(client.PATCH('/api/v1/admin/listings/{id}', { params: { path: { id: listing.id } }, body: { ...fixes, version: listing.version } }));
+      toast.show(t('edit.done'));
+      setEditing(null);
+    } catch (error) {
+      setNotice(error instanceof ApiError && error.status === 409 ? t('changed') : errorText(error));
+      setEditing(null);
+    } finally {
+      setBusyId(null);
+      await queryClient.invalidateQueries({ queryKey: ['listings', 'queue'] });
+    }
+  }
+
   async function move(listing: AdminListing, categoryId: string) {
     setBusyId(listing.id);
     setNotice(null);
@@ -174,6 +192,7 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
                   onApprove={() => void decide(listing, { action: 'approve' })}
                   onReject={() => setRejecting(listing)}
                   {...(queue === 'other' && { onMove: () => setMoving(listing) })}
+                  onEdit={() => setEditing(listing)}
                 />
               </li>
             ))}
@@ -207,6 +226,10 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
           onClose={() => setMoving(null)}
           onMove={(categoryId) => void move(moving, categoryId)}
         />
+      )}
+
+      {editing && (
+        <EditListingDialog key={editing.id} listing={editing} busy={busyId === editing.id} onClose={() => setEditing(null)} onSave={(fixes) => void edit(editing, fixes)} />
       )}
 
       {rejecting && (

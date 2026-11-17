@@ -1,8 +1,12 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import { ADMIN_EXPORTS } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
+import { unwrap } from '@/lib/session/api-error';
+import { useApiClient } from '@/lib/session/SessionProvider';
 import { useAdminSystem } from '@/lib/admin/queries';
 import { AdminPageHeader, Panel } from './parts';
 
@@ -115,6 +119,68 @@ export function AdminSystem() {
           ))}
         </ul>
       </Panel>
+      <DemoListings />
     </div>
+  );
+}
+
+/**
+ * Example listings (owner, 2026-11-16): 24 for Latvia, marked "Example" and never rented. Added six at a
+ * time (each call stays short), repeated until all are there; removed with their photos in one go.
+ */
+function DemoListings() {
+  const ts = useTranslations('admin.system.demo');
+  const client = useApiClient();
+  const [state, setState] = useState<{ count: number; total: number } | null>(null);
+  const [busy, setBusy] = useState<'add' | 'remove' | null>(null);
+  const [problem, setProblem] = useState(false);
+  useEffect(() => {
+    void unwrap(client.GET('/api/v1/admin/system/demo'))
+      .then(setState)
+      .catch(() => setProblem(true));
+  }, [client]);
+  async function add() {
+    setBusy('add');
+    setProblem(false);
+    try {
+      for (let i = 0; i < 10; i++) {
+        const next = await unwrap(client.POST('/api/v1/admin/system/demo'));
+        setState(next);
+        if (!next.added || next.count >= next.total) break;
+      }
+    } catch {
+      setProblem(true);
+    } finally {
+      setBusy(null);
+    }
+  }
+  async function remove() {
+    setBusy('remove');
+    setProblem(false);
+    try {
+      await unwrap(client.DELETE('/api/v1/admin/system/demo'));
+      setState((s) => ({ count: 0, total: s?.total ?? 24 }));
+    } catch {
+      setProblem(true);
+    } finally {
+      setBusy(null);
+    }
+  }
+  return (
+    <Panel title={ts('title')}>
+      <p className="text-ink/75 text-sm leading-relaxed">{ts('intro')}</p>
+      <p className="text-base font-bold" role="status">
+        {state ? ts('count', { count: state.count, total: state.total }) : '…'}
+      </p>
+      {problem && <p role="alert" className="text-sm text-[var(--danger)]">{ts('failed')}</p>}
+      <div className="flex flex-wrap gap-2">
+        <Button onClick={() => void add()} loading={busy === 'add'} disabled={busy !== null || (state !== null && state.count >= state.total)}>
+          {ts('add')}
+        </Button>
+        <Button variant="ghost" onClick={() => void remove()} loading={busy === 'remove'} disabled={busy !== null || state?.count === 0}>
+          {ts('remove')}
+        </Button>
+      </div>
+    </Panel>
   );
 }
