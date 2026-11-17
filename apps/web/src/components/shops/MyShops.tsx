@@ -28,7 +28,7 @@ export function MyShops() {
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
           <h1 className="font-display text-display-l leading-[0.9] font-black uppercase">{t('mineTitle')}</h1>
-          <p className="text-ink/75 max-w-[60ch]">{t('mineIntro')}</p>
+          <p className="text-ink/75 max-w-read">{t('mineIntro')}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {user && (

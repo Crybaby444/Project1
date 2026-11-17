@@ -218,9 +218,10 @@
     "AUTH_CODE_INVALID": "Kods nav pareizs vai jau izmantots. Ievadiet jaunāko kodu no lietotnes.",
     "USERNAME_TAKEN": "Šis lietotājvārds ir aizņemts. Pamēģiniet citu.",
     "UNDERAGE": "Yoyo ir cilvēkiem no 18 gadu vecuma.",
-    "PROFILE_INCOMPLETE": "Vispirms pievienojiet lietotājvārdu un dzimšanas datumu sadaļā Iestatījumi → Profils.",
+    "PROFILE_INCOMPLETE": "Vispirms iestatījumos → Profils pievienojiet lietotājvārdu un apstipriniet, ka jums ir vismaz 18 gadu.",
     "IDENTITY_REQUIRED": "Vispirms apstipriniet savu identitāti: Iestatījumi → Profils → Apstipriniet savu identitāti.",
-    "DEMO_LISTING": "Šis ir sludinājuma piemērs: to nevar nomāt."
+    "DEMO_LISTING": "Šis ir sludinājuma piemērs: to nevar nomāt.",
+    "VERIFICATION_REQUIRED": "Šādas vērtības darījumam vispirms apstipriniet tālruni un savu identitāti: Iestatījumi → Profils."
   },
   "validation": {
     "required": "Aizpildiet šo lauku.",
@@ -804,6 +805,18 @@
       "titleLength": "Nosaukumam vajag 5–80 rakstzīmes.",
       "descriptionLength": "Aprakstam vajag vismaz 30 rakstzīmes.",
       "price": "Cenas ir summas eiro."
+    },
+    "bulk": {
+      "select": "Atzīmēt",
+      "all": "Atzīmēt visus {count}",
+      "clear": "Noņemt atzīmes",
+      "bar": "Atzīmētie sludinājumi",
+      "picked": "{count, plural, zero {Atzīmēti # sludinājumi} one {Atzīmēts # sludinājums} other {Atzīmēti # sludinājumi}}",
+      "approve": "Apstiprināt {count}",
+      "reject": "Noraidīt ar vienu iemeslu",
+      "approved": "{count, plural, zero {Apstiprināti # sludinājumi} one {Apstiprināts # sludinājums} other {Apstiprināti # sludinājumi}}",
+      "rejected": "{count, plural, zero {Noraidīti # sludinājumi} one {Noraidīts # sludinājums} other {Noraidīti # sludinājumi}}",
+      "partly": "Izdarīti: {done}; {failed} pa to laiku mainījās vai neizdevās un paliek rindā."
     }
   },
   "catalog": {

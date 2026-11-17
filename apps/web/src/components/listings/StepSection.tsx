@@ -32,7 +32,7 @@ export function StepSection({
         >
           {title}
         </h2>
-        <p className="text-ink/80 max-w-[60ch] leading-relaxed">{intro}</p>
+        <p className="text-ink/80 max-w-read leading-relaxed">{intro}</p>
       </header>
       {children}
     </section>

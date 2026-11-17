@@ -18,7 +18,7 @@ export default async function NotificationsPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations('notifications');
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-10 sm:px-8 sm:py-14">
+    <main className="page-narrow flex flex-1 flex-col gap-6 page-y">
       <h1 className="font-display text-display-l leading-[0.95] font-black uppercase">{t('title')}</h1>
       <RequireSession>
         <NotificationList />

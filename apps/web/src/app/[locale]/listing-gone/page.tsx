@@ -20,12 +20,12 @@ export default async function ListingGonePage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations('item.gone');
   return (
-    <main className="@container mx-auto flex w-full max-w-[1440px] flex-1 flex-col items-center justify-center gap-6 px-4 py-16 text-center">
+    <main className="page @container flex flex-1 flex-col items-center justify-center gap-6 py-16 text-center">
       <p aria-hidden="true" style={displayFit('410', { min: '3rem', max: '10rem' })} className="font-display text-display-fit leading-[0.8] font-black">
         410
       </p>
       <h1 className="font-display text-display-l leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{t('title')}</h1>
-      <p className="max-w-[46ch] leading-relaxed">{t('body')}</p>
+      <p className="max-w-lead leading-relaxed">{t('body')}</p>
       <div className="flex flex-wrap justify-center gap-3">
         <Button href="/c">{t('catalog')}</Button>
         <Button variant="ghost" href="/search">

@@ -86,7 +86,7 @@ export function AdminIdentity() {
   return (
     <div className="flex flex-col gap-6">
       <AdminPageHeader title={t('nav.identity')} note={queue.data ? t('common.total', { count: queue.data.items.length }) : undefined} />
-      <p className="max-w-[60ch] leading-relaxed">{t('identityCheck.intro')}</p>
+      <p className="max-w-read leading-relaxed">{t('identityCheck.intro')}</p>
       {queue.isPending ? (
         <div aria-busy="true" className="bg-mist rounded-media h-64" />
       ) : queue.isError ? (

@@ -30,7 +30,7 @@ export function ReviewList({ reviews, showItem = false }: { reviews: PublicRevie
               </span>
             ) : null}
           </div>
-          <p className="m-0 max-w-[68ch] leading-relaxed whitespace-pre-line [overflow-wrap:anywhere]">{review.text}</p>
+          <p className="m-0 max-w-read leading-relaxed whitespace-pre-line [overflow-wrap:anywhere]">{review.text}</p>
         </li>
       ))}
     </ul>

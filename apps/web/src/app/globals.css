@@ -4,6 +4,9 @@
 
 /* Map DESIGN.md tokens to Tailwind utilities: bg-canvas, text-ink, border-ink, rounded-pill, font-display… */
 @theme inline {
+  /* Two reading widths (audit G1): a lead or short paragraph, and body text. */
+  --container-lead: 46ch;
+  --container-read: 68ch;
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
   --color-band: var(--band);
@@ -33,6 +36,22 @@
  * 900 "WORK", 0.51; "WWWW" 0.65), plus room for Latvian and Cyrillic capitals. A word that still does not fit
  * (an unexpected translation) is hyphenated in the page language or, failing that, broken.
  */
+/*
+ * One grid (audit 2026-11-16, G1): every page sits in `page` (1440px, 16px gutter, 32px from 640px) or,
+ * for forms and settings, `page-narrow` (48rem); `page-y` is the vertical rhythm of a page's main part.
+ */
+@utility page {
+  @apply mx-auto w-full max-w-[1440px] px-4 sm:px-8;
+}
+
+@utility page-narrow {
+  @apply mx-auto w-full max-w-3xl px-4 sm:px-8;
+}
+
+@utility page-y {
+  @apply py-10 sm:py-14;
+}
+
 @utility text-display-fit {
   font-size: clamp(
     var(--fit-min, 1rem),

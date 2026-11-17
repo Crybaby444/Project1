@@ -23,7 +23,7 @@ export function ShopView({ id }: { id: string }) {
           {owner.username && owner.name !== `@${owner.username}` && <span className="text-ink/70 font-semibold"> · @{owner.username}</span>}
         </Link>
         <h1 className="font-display text-display-xl leading-[0.9] font-black uppercase [overflow-wrap:anywhere]">{s.name}</h1>
-        {s.about && <p className="max-w-[68ch] text-lg leading-relaxed whitespace-pre-line">{s.about}</p>}
+        {s.about && <p className="max-w-read text-lg leading-relaxed whitespace-pre-line">{s.about}</p>}
         <div className="flex flex-wrap gap-3">
           <FollowButton userId={owner.id} name={owner.name} />
           <MessageOwnerButton ownerId={owner.id} label={t('write')} size="md" />

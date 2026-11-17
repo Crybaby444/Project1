@@ -4,6 +4,7 @@ import { ZodSerializerInterceptor } from 'nestjs-zod';
 import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
 import { BookingsModule } from './bookings/bookings.module';
+import { SignaturesModule } from './signatures/signatures.module';
 import { OffersModule } from './offers/offers.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { CategoriesModule } from './categories/categories.module';
@@ -77,6 +78,7 @@ class EnvModule {}
     GeoModule,
     WalletModule,
     BookingsModule,
+    SignaturesModule,
     OffersModule,
     TimersModule,
     AdminDealsModule,

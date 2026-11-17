@@ -8,7 +8,7 @@ export async function HomeFaq() {
   const [t, tf] = await Promise.all([getTranslations('market.faq'), getTranslations('faq')]);
   const items = FAQ_TEASER.map(([group, key]) => ({ id: `home-${key}`, question: tf(`groups.${group}.items.${key}.q`), answer: tf(`groups.${group}.items.${key}.a`) }));
   return (
-    <section aria-labelledby="home-faq" className="mx-auto grid w-full max-w-[1440px] gap-10 px-4 py-20 sm:px-8 sm:py-28 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+    <section aria-labelledby="home-faq" className="page grid gap-10 py-20 sm:py-28 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
       <div className="flex flex-col items-start gap-5">
         <h2 id="home-faq" className="font-display text-display-l leading-[0.88] font-black uppercase">
           {t('title')}

@@ -25,7 +25,7 @@ export default async function VerifyIdentityPage({ params, searchParams }: Props
   const raw = (await searchParams)['next'];
   const next = safeNext(Array.isArray(raw) ? raw[0] : raw);
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-10 sm:py-14">
+    <main className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 page-y">
       <h1 style={displayFit(t('title'), { max: '3.25rem' })} className="font-display text-display-fit leading-[0.85] font-black uppercase">
         {t('title')}
       </h1>

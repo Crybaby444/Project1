@@ -16,7 +16,7 @@ export default async function ConversationPage({ params }: Props) {
   const { locale, id } = await params;
   setRequestLocale(locale);
   return (
-    <main className="mx-auto flex w-full max-w-[1440px] flex-1 flex-col px-4 py-6 sm:px-8 sm:py-14">
+    <main className="page flex flex-1 flex-col py-6 sm:py-14">
       <RequireSession>
         <MessagesView activeId={id} />
       </RequireSession>

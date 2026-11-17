@@ -9,6 +9,7 @@ const DEFAULT_MESSAGES: Record<ErrorCode, string> = {
   PROFILE_INCOMPLETE: 'Add your birth date in Settings → Profile first',
   IDENTITY_REQUIRED: 'Confirm who you are first',
   DEMO_LISTING: 'This is an example listing: it cannot be rented',
+  VERIFICATION_REQUIRED: 'Confirm your phone and who you are for a deal of this value',
   AUTH_UNAUTHENTICATED: 'Sign in to continue',
   AUTH_FORBIDDEN: 'You do not have access to this',
   AUTH_BLOCKED: 'This account is blocked',

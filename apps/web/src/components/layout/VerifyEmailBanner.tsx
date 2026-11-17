@@ -40,7 +40,7 @@ function Banner() {
 
   return (
     <div className="border-ink/15 bg-surface border-b">
-      <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2.5 sm:px-8">
+      <div className="page flex flex-wrap items-center gap-x-4 gap-y-2 py-2.5">
         <MailIcon />
         <p className="min-w-48 flex-1 text-sm font-semibold">{t('title')}</p>
         <div className="flex flex-wrap items-center gap-3">

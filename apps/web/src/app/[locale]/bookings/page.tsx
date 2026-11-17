@@ -24,7 +24,7 @@ export default async function MyDealsPage({ params, searchParams }: Props) {
   const query = await searchParams;
   const role = first(query['role']);
   return (
-    <main className="mx-auto w-full max-w-[1440px] px-4 py-10 sm:px-8 sm:py-14">
+    <main className="page page-y">
       <RequireSession>
         <MyDeals
           initialRole={(DEAL_ROLES as readonly string[]).includes(role ?? '') ? (role as DealRole) : 'renter'}

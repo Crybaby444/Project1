@@ -14,6 +14,7 @@ import {
   period,
   quote,
   serviceFeeAt,
+  missingForDeal,
   type Actor,
   type BookingEvent,
   type BookingSettings,
@@ -94,6 +95,8 @@ export function toDomainEvent(input: BookingEventInput): BookingEvent {
 export interface SigningClient {
   ip: string;
   userAgent: string;
+  /** How the person signed: SIMULATED (the typed name) unless a signing provider confirmed it (DOKOBIT:…). */
+  method?: string;
 }
 const UNKNOWN_CLIENT: SigningClient = { ip: 'unknown', userAgent: 'unknown' };
 
@@ -112,8 +115,15 @@ async function recordSignature(
 ): Promise<void> {
   const contract = await tx.contract.findUniqueOrThrow({ where: { bookingId } });
   await tx.contractSignature.create({
-    data: { bookingId, side, userId: user.id, fullName, termsHash: contract.termsHash, ip: client.ip.slice(0, 64), userAgent: client.userAgent.slice(0, 300), createdAt: now },
+    data: { bookingId, side, userId: user.id, fullName, termsHash: contract.termsHash, ip: client.ip.slice(0, 64), userAgent: client.userAgent.slice(0, 300), ...(client.method && { method: client.method.slice(0, 60) }), createdAt: now },
   });
+}
+
+/** What the person has confirmed (administrators count as confirmed). */
+async function verifiedOf(tx: Prisma.TransactionClient, userId: string): Promise<{ phoneVerified: boolean; identityVerified: boolean }> {
+  const user = await tx.user.findUniqueOrThrow({ where: { id: userId }, select: { phoneVerifiedAt: true, identityVerifiedAt: true, role: true } });
+  const admin = user.role === 'ADMIN';
+  return { phoneVerified: admin || user.phoneVerifiedAt !== null, identityVerified: admin || user.identityVerifiedAt !== null };
 }
 
 /** Before payment: the renter's and then the owner's signature are on file, both for the contract's current terms. */
@@ -168,7 +178,7 @@ export class BookingsService {
     @Inject(PAYMENT_PROVIDER) private readonly payments: PaymentProvider,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider,
-    @Inject(ENV) private readonly env: Pick<Env, 'IDENTITY_REQUIRED'>,
+    @Inject(ENV) private readonly env: Pick<Env, 'IDENTITY_REQUIRED' | 'SIGNATURES'>,
   ) {}
 
   readonly urlFor: UrlFor = (key, variant) => this.storage.url(key, variant);
@@ -269,6 +279,11 @@ export class BookingsService {
         },
         { now, settings },
       );
+      // An expensive deal asks for more (audit D4): a confirmed phone and identity.
+      const missing = missingForDeal(next.quote, await verifiedOf(tx, renter.id));
+      if (missing.length > 0) {
+        throw new AppError('VERIFICATION_REQUIRED', 409, 'Confirm your phone and who you are for a deal of this value', undefined, { missing });
+      }
       if (input.offerId !== undefined) {
         const used = await tx.offer.updateMany({
           where: { id: input.offerId, status: 'ACCEPTED' },
@@ -327,6 +342,10 @@ export class BookingsService {
   async act(id: string, user: PublicUser, version: number, input: BookingEventInput, client: SigningClient = UNKNOWN_CLIENT): Promise<BookingView> {
     const now = this.clock.now();
     const settings = await this.rules.settings();
+    // With a signing provider, a signature counts only once the provider confirmed it (C1).
+    if (input.type === 'SIGN' && this.env.SIGNATURES === 'dokobit' && !client.method?.startsWith('DOKOBIT')) {
+      throw new AppError('ACTION_NOT_ALLOWED', 409, 'Sign through the signing provider', undefined, { why: 'SIGN_WITH_PROVIDER' });
+    }
     const event = toDomainEvent(input);
     const charge =
       input.type === 'PAY' && input.cardToken !== undefined

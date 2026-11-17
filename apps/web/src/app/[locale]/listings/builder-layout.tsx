@@ -18,5 +18,5 @@ export async function builderMetadata(locale: string, title: 'titleNew' | 'title
 export async function BuilderLayout({ params, children }: BuilderLayoutProps) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <RequireSession className="mx-auto w-full max-w-[1440px] px-4 py-10 sm:px-8">{children}</RequireSession>;
+  return <RequireSession className="page py-10">{children}</RequireSession>;
 }

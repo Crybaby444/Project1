@@ -62,7 +62,7 @@ export function MotionDemos() {
       <h2 id="motion-title" className="border-ink border-b pb-2 text-3xl leading-tight font-bold">
         {t('title')}
       </h2>
-      <p className="mt-5 max-w-[60ch] text-lg leading-relaxed">{t('intro')}</p>
+      <p className="mt-5 max-w-read text-lg leading-relaxed">{t('intro')}</p>
 
       <Band tone="mint" id="motion-words" title={t('statementTitle')}>
         <WordFill
@@ -122,7 +122,7 @@ export function MotionDemos() {
       </Band>
 
       <Band tone="canvas" id="motion-bento" title={t('bentoTitle')}>
-        <p className="max-w-[60ch] text-base leading-relaxed">{t('bentoHint')}</p>
+        <p className="max-w-read text-base leading-relaxed">{t('bentoHint')}</p>
         <ul className="grid gap-4 sm:grid-cols-2">
           {BENTO.map(({ stat, key, sticker, tone, wide }, index) => (
             <li key={key} className={wide ? 'sm:col-span-2' : undefined}>

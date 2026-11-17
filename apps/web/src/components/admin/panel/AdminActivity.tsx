@@ -51,7 +51,7 @@ export function AdminActivity({ group, userId }: { group?: ActivityGroup; userId
   return (
     <div className="flex flex-col gap-6">
       <AdminPageHeader title={tn('activity')} note={t('live')} />
-      <p className="text-ink/75 max-w-[64ch] leading-relaxed">{t('intro')}</p>
+      <p className="text-ink/75 max-w-read leading-relaxed">{t('intro')}</p>
       <nav aria-label={tn('activity')} className="flex flex-wrap gap-2">
         {[undefined, ...GROUPS].map((g) => (
           <button

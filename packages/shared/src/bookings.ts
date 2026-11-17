@@ -350,3 +350,11 @@ export type BookingPhotoResponse = z.infer<typeof BookingPhotoResponseSchema>;
 export const BookingPhotosResponseSchema = z.object({ items: z.array(BookingPhotoSchema) });
 
 export type BookingPhotosResponse = z.infer<typeof BookingPhotosResponseSchema>;
+
+/** Signing through the provider (SIGNATURES=dokobit): the page where this person signs. */
+export const SigningStartSchema = z.object({ url: z.url() });
+export type SigningStart = z.infer<typeof SigningStartSchema>;
+
+/** What the provider says about this person's latest signing; SIGNED means the deal has the signature. */
+export const SigningCheckSchema = z.object({ state: z.enum(['SIGNED', 'PENDING', 'FAILED', 'UNKNOWN']) });
+export type SigningCheck = z.infer<typeof SigningCheckSchema>;

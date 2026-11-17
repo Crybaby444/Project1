@@ -38,14 +38,14 @@ export default async function ProfilePage({ params }: Props) {
   const { user, listings } = loaded.data;
 
   return (
-    <main className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-4 py-8 sm:px-8 sm:py-10">
+    <main className="page flex flex-col gap-10 py-8 sm:py-10">
       <ProfileHero user={user} />
       {user.about && (
         <section aria-labelledby="profile-about" className="grid gap-3 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-10">
           <h2 id="profile-about" className="font-display text-display-s leading-[0.95] font-black uppercase">
             {t('about')}
           </h2>
-          <p className="max-w-[68ch] text-lg leading-relaxed whitespace-pre-line [overflow-wrap:anywhere]">{user.about}</p>
+          <p className="max-w-read text-lg leading-relaxed whitespace-pre-line [overflow-wrap:anywhere]">{user.about}</p>
         </section>
       )}
       <ProfileTabs listings={listings} name={user.name} userId={user.id} />
