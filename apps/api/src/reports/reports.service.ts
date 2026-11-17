@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { ActivityService } from '../activity/activity.service';
 import { ADMIN_REPORTS_PAGE_SIZE, type AdminReport, type AdminReportList, type CloseReport, type ReportRequest, type ReportStatus } from '@yoyo/shared';
 import { CLOCK, type Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
@@ -15,6 +16,7 @@ const notFound = () => new AppError('NOT_FOUND', 404, 'Nothing to report here');
 @Injectable()
 export class ReportsService {
   constructor(
+    private readonly activity: ActivityService,
     private readonly prisma: PrismaService,
     @Inject(CLOCK) private readonly clock: Clock,
   ) {}
@@ -23,9 +25,10 @@ export class ReportsService {
     const ids = await this.targetIds(reporterId, request);
     const open = await this.prisma.report.findFirst({ where: { reporterId, target: request.target, ...ids, status: 'OPEN' }, select: { id: true } });
     if (open) throw new AppError('ACTION_NOT_ALLOWED', 409, 'Already reported', undefined, { why: 'ALREADY_REPORTED' });
-    await this.prisma.report.create({
+    const report = await this.prisma.report.create({
       data: { reporterId, target: request.target, ...ids, reason: request.reason, note: request.note, createdAt: this.clock.now() },
     });
+    this.activity.record('REPORT_FILED', reporterId, { type: 'REPORT', id: report.id }, `${request.target} · ${request.reason}`);
   }
 
   /** The target's ids, after checking it exists and may be reported by this person. */

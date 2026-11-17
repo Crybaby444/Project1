@@ -1,4 +1,5 @@
 import { HOME_COUNTRY, timeZoneOf } from '@yoyo/shared';
+import { ActivityService } from '../activity/activity.service';
 import { isDeepStrictEqual } from 'node:util';
 import { assertIdentityVerified, assertProfileComplete } from '../auth/identity';
 import { ENV, type Env } from '../config/env';
@@ -105,6 +106,7 @@ export class ListingsService {
   private readonly logger = new Logger('Listings');
 
   constructor(
+    private readonly activity: ActivityService,
     private readonly prisma: PrismaService,
     private readonly categories: CategoriesService,
     @Inject(CLOCK) private readonly clock: Clock,
@@ -125,6 +127,7 @@ export class ListingsService {
       data: { contentLocale: authorLocale, ...(data as Prisma.ListingUncheckedCreateInput), ownerId, status: 'DRAFT' },
       include: WITH_RELATIONS,
     });
+    this.activity.record('LISTING_CREATED', ownerId, { type: 'LISTING', id: listing.id }, listing.title ?? '');
     return serializeListing(listing, 'owner', this.urlFor);
   }
 
@@ -229,6 +232,7 @@ export class ListingsService {
     // Until every builder sends the country (2026-11-16), a listing without one is where Yoyo started.
     const place = listing.country === null ? { country: HOME_COUNTRY, timeZone: timeZoneOf(HOME_COUNTRY) } : {};
     await this.transition(listing, status, { submittedAt: this.clock.now(), rejectionReason: null, ...place });
+    this.activity.record('LISTING_SUBMITTED', ownerId, { type: 'LISTING', id }, listing.title ?? '');
     return this.serialize(id);
   }
 
@@ -313,6 +317,7 @@ export class ListingsService {
       await tx.listing.update({ where: { id }, data: { status: 'ARCHIVED', version: { increment: 1 } } });
       return [];
     });
+    this.activity.record('LISTING_DELETED', ownerId, { type: 'LISTING', id });
     await this.forgetFiles(removedKeys);
   }
 

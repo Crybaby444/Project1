@@ -35,6 +35,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { SavedSearchesModule } from './saved-searches/saved-searches.module';
 import { ReportsModule } from './reports/reports.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { ActivityCoreModule } from './activity/activity.module';
 import { AuditCoreModule } from './audit/audit-core.module';
 import { ErrorLogModule } from './common/error-log.service';
 
@@ -64,6 +65,7 @@ class EnvModule {}
     AnalyticsModule,
     AuditCoreModule,
     ErrorLogModule,
+    ActivityCoreModule,
     AuthModule,
     MeModule,
     IdentityModule,

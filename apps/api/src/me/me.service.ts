@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { ActivityService } from '../activity/activity.service';
 import type { UpdateProfileRequest } from '@yoyo/shared';
 import { AuthService } from '../auth/auth.service';
 import type { SessionTokens } from '../auth/cookies';
@@ -16,6 +17,7 @@ const invalidCredentials = () => new AppError('AUTH_INVALID_CREDENTIALS', 401, '
 @Injectable()
 export class MeService {
   constructor(
+    private readonly activity: ActivityService,
     private readonly prisma: PrismaService,
     private readonly passwords: PasswordService,
     private readonly refreshTokens: RefreshTokenService,
@@ -76,6 +78,7 @@ export class MeService {
     if (user.passwordHash !== null && !(password && (await this.passwords.verify(user.passwordHash, password)))) {
       throw invalidCredentials();
     }
+    this.activity.record('USER_DELETED', userId, { type: 'USER', id: userId }, user.username ? `@${user.username}` : '');
     await this.erase(userId);
   }
 

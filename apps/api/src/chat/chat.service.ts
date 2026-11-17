@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { ActivityService } from '../activity/activity.service';
 import { publicName } from '../common/public-name';
 import type { BookingStatus as SharedStatus, ChatMessage, ChatRole, ConversationList, ConversationSummary, ConversationThread } from '@yoyo/shared';
 import { CLOCK, type Clock } from '../clock/clock';
@@ -33,6 +34,7 @@ const notFound = () => new AppError('NOT_FOUND', 404, 'Conversation not found');
 @Injectable()
 export class ChatService {
   constructor(
+    private readonly activity: ActivityService,
     private readonly prisma: PrismaService,
     @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider,
     @Inject(CLOCK) private readonly clock: Clock,
@@ -148,6 +150,8 @@ export class ChatService {
       this.prisma.message.create({ data: { conversationId: id, authorId: userId, kind: 'TEXT', text, createdAt: now } }),
       this.prisma.conversation.update({ where: { id }, data: { lastMessageAt: now } }),
     ]);
+    // That a message was sent, never its words.
+    this.activity.record('MESSAGE_SENT', userId, { type: 'CONVERSATION', id });
     return this.message(message, userId);
   }
 

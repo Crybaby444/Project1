@@ -19,7 +19,8 @@
       "categories": "Categories",
       "staff": "Staff",
       "security": "Security",
-      "identity": "Identity checks"
+      "identity": "Identity checks",
+      "activity": "Activity"
     },
     "common": {
       "loadFailed": "This did not load.",
@@ -577,6 +578,41 @@
       "approved": "Identity confirmed",
       "rejected": "Check refused",
       "failed": "The decision was not saved. Try again."
+    },
+    "activity": {
+      "intro": "Everything people do on Yoyo, newest first. Messages show only that one was sent, never their words.",
+      "all": "All",
+      "groups": {
+        "accounts": "Accounts",
+        "listings": "Listings",
+        "deals": "Deals",
+        "messages": "Messages",
+        "reports": "Reports",
+        "social": "Follows"
+      },
+      "person": "Only this person",
+      "clearPerson": "Everyone",
+      "more": "Show older",
+      "empty": "Nothing here yet.",
+      "live": "Updates every 30 seconds",
+      "system": "System",
+      "kinds": {
+        "USER_REGISTERED": "Signed up",
+        "USER_SIGNED_IN": "Signed in",
+        "USER_DELETED": "Deleted their account",
+        "PROFILE_UPDATED": "Updated their profile",
+        "IDENTITY_SUBMITTED": "Sent an identity check",
+        "LISTING_CREATED": "Started a listing",
+        "LISTING_SUBMITTED": "Sent a listing for review",
+        "LISTING_DELETED": "Deleted a listing",
+        "BOOKING_REQUESTED": "Asked to rent",
+        "BOOKING_STEP": "Deal step",
+        "OFFER_MADE": "Offered a price",
+        "MESSAGE_SENT": "Sent a message",
+        "REVIEW_WRITTEN": "Wrote a review",
+        "REPORT_FILED": "Reported",
+        "FOLLOWED": "Followed"
+      }
     }
   }
 }

@@ -1,5 +1,6 @@
 import { Inject, Injectable, Logger, type OnApplicationBootstrap } from '@nestjs/common';
 import { ErrorLogService } from '../common/error-log.service';
+import { ActivityService } from '../activity/activity.service';
 import type { TimerKind } from '@yoyo/domain';
 import { BookingRulesService } from '../bookings/booking-rules.service';
 import { BookingsService } from '../bookings/bookings.service';
@@ -36,6 +37,7 @@ export class TimersService implements OnApplicationBootstrap {
 
   constructor(
     private readonly errorLog: ErrorLogService,
+    private readonly activity: ActivityService,
     private readonly prisma: PrismaService,
     private readonly bookings: BookingsService,
     private readonly rules: BookingRulesService,
@@ -84,6 +86,8 @@ export class TimersService implements OnApplicationBootstrap {
     });
     // Server errors older than 30 days go.
     await this.errorLog.prune();
+    // Activity older than 180 days goes (GDPR: kept no longer than the admin needs it).
+    await this.activity.prune();
     return { fired, failed, offersExpired, moneyJobs, keysForgotten, more };
   }
 

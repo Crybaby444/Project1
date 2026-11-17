@@ -1137,14 +1137,29 @@ model IdentityCheck {
 
 /// An unexpected server error, for the admin (System → Errors): the same one is counted, not repeated.
 model ServerError {
-  id        String   @id @default(cuid())
-  message   String
-  stack     String   @default("")
-  method    String
-  path      String
-  count     Int      @default(1)
-  firstAt   DateTime
-  lastAt    DateTime
+  id      String   @id @default(cuid())
+  message String
+  stack   String   @default("")
+  method  String
+  path    String
+  count   Int      @default(1)
+  firstAt DateTime
+  lastAt  DateTime
 
   @@index([lastAt])
+}
+
+/// Everything people do, for the admin's Activity page (owner, 2026-11-16). Kept 180 days.
+model ActivityEvent {
+  id         String   @id @default(cuid())
+  kind       String
+  actorId    String?
+  targetType String?
+  targetId   String?
+  summary    String   @default("")
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([kind, createdAt])
+  @@index([actorId, createdAt])
 }
