@@ -48,7 +48,7 @@ export function ProfileSocial({
   const stat = (value: number, label: string, onClick?: () => void) => {
     const inner = (
       <>
-        <span className="font-display block text-[1.9rem] leading-none font-black tabular-nums sm:text-[2.2rem]">{value}</span>
+        <span className="font-display block text-3xl leading-none font-black tabular-nums sm:text-4xl">{value}</span>
         <span className={`block text-sm font-semibold ${night ? 'text-[var(--paper)]/70' : 'text-ink/70'}`}>{label}</span>
       </>
     );

@@ -5,13 +5,13 @@ const parse = (search: string) => parseCatalogParams(new URLSearchParams(search)
 
 describe('parseCatalogParams', () => {
   it('reads only the W03 parameters', () => {
-    expect(parse('q=drill&price_min=5&price_max=20&from=2026-12-01&to=2026-12-03&district=centrs&sort=price_asc&view=map&page=2&utm_source=x&gclid=y')).toEqual({
+    expect(parse('q=drill&price_min=5&price_max=20&from=2026-12-01&to=2026-12-03&city=riga&sort=price_asc&view=map&page=2&utm_source=x&gclid=y')).toEqual({
       q: 'drill',
       priceMin: 5,
       priceMax: 20,
       from: '2026-12-01',
       to: '2026-12-03',
-      district: 'centrs',
+      city: 'riga',
       sort: 'price_asc',
       view: 'map',
       page: 2,
@@ -19,27 +19,27 @@ describe('parseCatalogParams', () => {
   });
 
   it('drops a broken parameter and keeps the rest', () => {
-    expect(parse('price_min=abc&district=centrs')).toEqual({ district: 'centrs', page: 1, view: 'list' });
+    expect(parse('price_min=abc&city=riga')).toEqual({ city: 'riga', page: 1, view: 'list' });
     expect(parse('from=2026-12-01')).toEqual({ page: 1, view: 'list' });
     expect(parse('from=2026-12-05&to=2026-12-01')).toEqual({ page: 1, view: 'list' });
     expect(parse('from=2026-02-30&to=2026-03-02')).toEqual({ page: 1, view: 'list' });
     expect(parse('price_min=50&price_max=10')).toEqual({ priceMin: 50, page: 1, view: 'list' });
-    expect(parse('sort=cheapest&page=0&district=Centrs&view=grid')).toEqual({ page: 1, view: 'list' });
+    expect(parse('sort=cheapest&page=0&city=Riga&view=grid')).toEqual({ page: 1, view: 'list' });
   });
 });
 
 describe('catalogSearch', () => {
   it('writes defaults out and resets the page when a filter changes', () => {
-    const params = parse('page=3&district=centrs');
-    expect(catalogSearch(params, { priceMax: 20 })).toBe('?price_max=20&district=centrs');
-    expect(catalogSearch(params, { page: 4 })).toBe('?district=centrs&page=4');
+    const params = parse('page=3&city=riga');
+    expect(catalogSearch(params, { priceMax: 20 })).toBe('?price_max=20&city=riga');
+    expect(catalogSearch(params, { page: 4 })).toBe('?city=riga&page=4');
     expect(catalogSearch(parse('sort=new&view=list'))).toBe('?sort=new');
     expect(catalogSearch(parse(''))).toBe('');
     expect(catalogSearch(parse('view=map&q=dril'), { q: 'drill' })).toBe('?q=drill&view=map');
   });
 
   it('gives one selection one address whatever order it was typed in', () => {
-    expect(catalogSearch(parse('district=centrs&q=x'))).toBe(catalogSearch(parse('q=x&district=centrs')));
+    expect(catalogSearch(parse('city=riga&q=x'))).toBe(catalogSearch(parse('q=x&city=riga')));
   });
 });
 

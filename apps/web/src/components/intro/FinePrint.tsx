@@ -25,11 +25,11 @@ export async function FinePrint() {
         <div className="grid gap-5 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-end">
           <h2
             id="intro-rules"
-            className="font-display text-[clamp(2.6rem,7vw,6rem)] leading-[0.88] font-black uppercase"
+            className="font-display text-display-xl leading-[0.88] font-black uppercase"
           >
             {t('rulesTitle')}
           </h2>
-          <p className="text-ink/75 max-w-[46ch] text-[17px] leading-relaxed lg:pb-2">{t('rulesLead')}</p>
+          <p className="text-ink/75 max-w-[46ch] text-lg leading-relaxed lg:pb-2">{t('rulesLead')}</p>
         </div>
 
         <div className="grid gap-3 lg:grid-cols-[1.3fr_1fr]">
@@ -39,16 +39,16 @@ export async function FinePrint() {
           >
             <h3
               id="rules-deposit"
-              className="font-display text-[clamp(1.9rem,3vw,2.8rem)] leading-[0.9] font-black uppercase"
+              className="font-display text-display-s leading-[0.9] font-black uppercase"
             >
               {t('deposit.heading')}
             </h3>
-            <p className="m-0 text-[17px] leading-relaxed">{t('deposit.lead')}</p>
+            <p className="m-0 text-lg leading-relaxed">{t('deposit.lead')}</p>
             <ol className="m-0 list-none border-t border-[var(--paper)]/15 p-0">
               {(['fine', 'agreed', 'disputed'] as const).map((k, i) => (
                 <li
                   key={k}
-                  className="grid grid-cols-[2rem_1fr] gap-3 border-b border-[var(--paper)]/15 py-4 text-[15.5px] leading-relaxed"
+                  className="grid grid-cols-[2rem_1fr] gap-3 border-b border-[var(--paper)]/15 py-4 text-base leading-relaxed"
                 >
                   <span aria-hidden="true" className="pt-0.5 text-xs font-bold tabular-nums">
                     {String(i + 1).padStart(2, '0')}
@@ -57,10 +57,10 @@ export async function FinePrint() {
                 </li>
               ))}
             </ol>
-            <p className="m-0 text-[15px] leading-relaxed text-[var(--paper)]/80">
+            <p className="m-0 text-base leading-relaxed text-[var(--paper)]/80">
               {t('deposit.timeouts', FACTS)}
             </p>
-            <p className="m-0 text-[15px] leading-relaxed text-[var(--paper)]/80">
+            <p className="m-0 text-base leading-relaxed text-[var(--paper)]/80">
               {t('deposit.notReturned')}
             </p>
           </section>
@@ -73,11 +73,11 @@ export async function FinePrint() {
               >
                 <h3
                   id={`rules-${k}`}
-                  className="font-display text-[clamp(1.6rem,2.4vw,2.2rem)] leading-[0.9] font-black uppercase"
+                  className="font-display text-display-s leading-[0.9] font-black uppercase"
                 >
                   {t(`${k}.heading`)}
                 </h3>
-                <p className="text-ink/80 m-0 text-[15.5px] leading-relaxed">{t(`${k}.body`, FACTS)}</p>
+                <p className="text-ink/80 m-0 text-base leading-relaxed">{t(`${k}.body`, FACTS)}</p>
               </section>
             ))}
           </div>

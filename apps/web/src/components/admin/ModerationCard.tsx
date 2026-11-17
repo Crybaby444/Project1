@@ -12,7 +12,7 @@ import { formatEuros } from '@/lib/listings/money';
 function Row({ term, children, wide = false }: { term: string; children: ReactNode; wide?: boolean }) {
   return (
     <div className={`flex flex-col gap-0.5 ${wide ? 'sm:col-span-2' : ''}`}>
-      <dt className="text-[13px] font-bold tracking-[0.03em] uppercase">{term}</dt>
+      <dt className="text-sm font-bold tracking-[0.03em] uppercase">{term}</dt>
       <dd className="[overflow-wrap:anywhere]">{children}</dd>
     </div>
   );
@@ -68,7 +68,7 @@ export function ModerationCard({
     <article className="border-ink flex flex-col gap-6 border-t-2 pt-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-2">
-          <h2 className="font-display text-[clamp(2rem,3.4vw,3rem)] leading-[0.95] font-black uppercase [overflow-wrap:anywhere]">{listing.title}</h2>
+          <h2 className="font-display text-display-m leading-[0.95] font-black uppercase [overflow-wrap:anywhere]">{listing.title}</h2>
           <p className="text-sm">{t('waiting', { date: date(listing.submittedAt) })}</p>
         </div>
         <ListingStatusBadge status={listing.status} className="self-start" />

@@ -3502,6 +3502,89 @@
         ]
       }
     },
+    "/api/v1/catalog/cities": {
+      "get": {
+        "operationId": "CatalogController_cities",
+        "parameters": [
+          {
+            "name": "country",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "AT",
+                "BE",
+                "BG",
+                "HR",
+                "CY",
+                "EE",
+                "FI",
+                "FR",
+                "DE",
+                "GR",
+                "IE",
+                "IT",
+                "LV",
+                "LT",
+                "LU",
+                "MT",
+                "NL",
+                "PT",
+                "SK",
+                "SI",
+                "ES"
+              ]
+            }
+          },
+          {
+            "name": "q",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 60,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cities of a country that start with what was typed, with their item counts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CitySuggestResponseDto_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many attempts (RATE_LIMITED); see Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
     "/api/v1/catalog/sitemap": {
       "get": {
         "operationId": "CatalogController_sitemap",
@@ -10038,6 +10121,7 @@
                   "UNDERAGE",
                   "PROFILE_INCOMPLETE",
                   "IDENTITY_REQUIRED",
+                  "DEMO_LISTING",
                   "AUTH_UNAUTHENTICATED",
                   "AUTH_FORBIDDEN",
                   "AUTH_BLOCKED",
@@ -13767,6 +13851,12 @@
                     "null"
                   ]
                 },
+                "city": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
                 "createdAt": {
                   "type": "string",
                   "format": "date-time",
@@ -13779,6 +13869,7 @@
                 "category",
                 "priceMax",
                 "district",
+                "city",
                 "createdAt"
               ],
               "additionalProperties": false
@@ -13809,6 +13900,11 @@
             "maximum": 10000000
           },
           "district": {
+            "type": "string",
+            "maxLength": 80,
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "city": {
             "type": "string",
             "maxLength": 80,
             "pattern": "^[a-z0-9-]+$"
@@ -13848,6 +13944,12 @@
                   "null"
                 ]
               },
+              "city": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
               "createdAt": {
                 "type": "string",
                 "format": "date-time",
@@ -13860,6 +13962,7 @@
               "category",
               "priceMax",
               "district",
+              "city",
               "createdAt"
             ],
             "additionalProperties": false
@@ -13999,6 +14102,9 @@
                   "type": "integer",
                   "minimum": -9007199254740991,
                   "maximum": 9007199254740991
+                },
+                "demo": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -14017,7 +14123,8 @@
                 "contentLocale",
                 "publishedAt",
                 "rating",
-                "reviewCount"
+                "reviewCount",
+                "demo"
               ],
               "additionalProperties": false
             }
@@ -14340,6 +14447,40 @@
         ],
         "additionalProperties": false
       },
+      "CitySuggestResponseDto_Output": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "name",
+                "slug",
+                "count"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false
+      },
       "SitemapResponseDto_Output": {
         "type": "object",
         "properties": {
@@ -14486,6 +14627,9 @@
                     "enum": [
                       true
                     ]
+                  },
+                  "demo": {
+                    "type": "boolean"
                   },
                   "listing": {
                     "type": "object",
@@ -14889,6 +15033,7 @@
                 },
                 "required": [
                   "available",
+                  "demo",
                   "listing",
                   "owner",
                   "rating",
@@ -15164,6 +15309,9 @@
                   "type": "integer",
                   "minimum": -9007199254740991,
                   "maximum": 9007199254740991
+                },
+                "demo": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -15182,7 +15330,8 @@
                 "contentLocale",
                 "publishedAt",
                 "rating",
-                "reviewCount"
+                "reviewCount",
+                "demo"
               ],
               "additionalProperties": false
             }
@@ -15580,6 +15729,9 @@
                   "minimum": -9007199254740991,
                   "maximum": 9007199254740991
                 },
+                "demo": {
+                  "type": "boolean"
+                },
                 "owner": {
                   "type": "object",
                   "properties": {
@@ -15614,6 +15766,7 @@
                 "publishedAt",
                 "rating",
                 "reviewCount",
+                "demo",
                 "owner"
               ],
               "additionalProperties": false
@@ -15861,6 +16014,9 @@
                   "type": "integer",
                   "minimum": -9007199254740991,
                   "maximum": 9007199254740991
+                },
+                "demo": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -15879,7 +16035,8 @@
                 "contentLocale",
                 "publishedAt",
                 "rating",
-                "reviewCount"
+                "reviewCount",
+                "demo"
               ],
               "additionalProperties": false
             }
@@ -22803,6 +22960,9 @@
                   "minimum": -9007199254740991,
                   "maximum": 9007199254740991
                 },
+                "demo": {
+                  "type": "boolean"
+                },
                 "available": {
                   "type": "boolean"
                 }
@@ -22824,6 +22984,7 @@
                 "publishedAt",
                 "rating",
                 "reviewCount",
+                "demo",
                 "available"
               ],
               "additionalProperties": false

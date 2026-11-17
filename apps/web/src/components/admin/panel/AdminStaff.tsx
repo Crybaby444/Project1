@@ -99,13 +99,13 @@ export function AdminStaff() {
                     {m.name}
                   </Link>
                   {me && (
-                    <span className="bg-ink text-canvas rounded-pill ml-2 px-2 py-0.5 text-[11px] font-bold">
+                    <span className="bg-ink text-canvas rounded-pill ml-2 px-2 py-0.5 text-xs font-bold">
                       {ts('you')}
                     </span>
                   )}
-                  <p className="text-ink/70 text-[13px] [overflow-wrap:anywhere]">{m.email}</p>
+                  <p className="text-ink/70 text-sm [overflow-wrap:anywhere]">{m.email}</p>
                 </div>
-                <p className="text-ink/75 text-[13px]">
+                <p className="text-ink/75 text-sm">
                   {ts('twoFactor')}:{' '}
                   <span className="font-semibold">{m.twoFactor ? ts('on') : ts('off')}</span>
                   {m.twoFactor && !me && (
@@ -125,7 +125,7 @@ export function AdminStaff() {
                   </span>
                 </p>
                 {me ? (
-                  <span className="border-ink/25 rounded-pill border px-3 py-1.5 text-[14px] font-semibold">
+                  <span className="border-ink/25 rounded-pill border px-3 py-1.5 text-sm font-semibold">
                     {ts(`roles.${m.staffRole}`)}
                   </span>
                 ) : (
@@ -137,7 +137,7 @@ export function AdminStaff() {
         </ul>
       )}
       <Panel title={ts('access')}>
-        <dl className="divide-ink/10 flex flex-col divide-y text-[15px]">
+        <dl className="divide-ink/10 flex flex-col divide-y text-base">
           {STAFF_ROLES.map((r) => (
             <div key={r} className="flex flex-wrap justify-between gap-x-4 gap-y-1 py-2.5">
               <dt className="font-semibold">{ts(`roles.${r}`)}</dt>

@@ -53,6 +53,25 @@ describe('catalog search', () => {
     expect(de.districts.map((d: { slug: string }) => d.slug).sort()).toEqual(['altstadt', 'mitte']);
   });
 
+  it('suggests every city of the country as you type, diacritics and local names welcome, with its item count (owner, 2026-11-16)', async () => {
+    await live({ city: 'Rīga' });
+    const cities = (query: Record<string, string>) => request(t.server).get('/api/v1/catalog/cities').query(query);
+    const riga = (await cities({ country: 'LV', q: 'rig' }).expect(200)).body.items;
+    expect(riga[0]).toEqual({ name: 'Rīga', slug: 'riga', count: 1 });
+    expect((await cities({ country: 'LV', q: 'Рига' }).expect(200)).body.items[0]).toMatchObject({ slug: 'riga' });
+    const vent = (await cities({ country: 'LV', q: 'vents' }).expect(200)).body.items;
+    expect(vent[0]).toEqual({ name: 'Ventspils', slug: 'ventspils', count: 0 });
+    expect((await cities({ country: 'LV', q: 'berl' }).expect(200)).body.items).toEqual([]);
+    expect((await cities({ country: 'DE', q: 'berl' }).expect(200)).body.items[0]).toMatchObject({ name: 'Berlin' });
+    expect((await cities({ country: 'DE', q: 'a' }).expect(200)).body.items.length).toBeLessThanOrEqual(8);
+    await cities({ country: 'US', q: 'new' }).expect(400);
+    await cities({ country: 'LV', q: '' }).expect(400);
+    // A city written another way is still the same city in search.
+    const munich = await live({ country: 'DE', city: 'Munich', district: 'Altstadt', timeZone: 'Europe/Berlin' });
+    const suggested = (await cities({ country: 'DE', q: 'münch' }).expect(200)).body.items[0];
+    expect(await ids({ country: 'DE', city: suggested.slug })).toEqual([munich.id]);
+  });
+
   it('counts the visible items of each category, for the catalog index', async () => {
     const drills = await categoryId(t, 'drills-drivers');
     await live();
@@ -83,7 +102,7 @@ describe('catalog search', () => {
     expect(res.body).toMatchObject({ total: 1, page: 1, pageSize: 24 });
     const item = res.body.items[0];
     expect(Object.keys(item).sort()).toEqual(
-      ['categoryId', 'city', 'condition', 'contentLocale', 'country', 'cover', 'dailyCents', 'depositCents', 'district', 'id', 'ownerId', 'publishedAt', 'rating', 'reviewCount', 'title', 'weeklyDiscountPercent'].sort(),
+      ['categoryId', 'city', 'condition', 'contentLocale', 'country', 'cover', 'dailyCents', 'demo', 'depositCents', 'district', 'id', 'ownerId', 'publishedAt', 'rating', 'reviewCount', 'title', 'weeklyDiscountPercent'].sort(),
     );
     expect(JSON.stringify(res.body)).not.toMatch(/"lat"|"lng"|version|rejectionReason/);
   });

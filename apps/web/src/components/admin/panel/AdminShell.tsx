@@ -159,20 +159,20 @@ export function AdminShell({ children }: { children: ReactNode }) {
   return (
     <div data-admin-root className="-mx-4 grid min-h-svh grid-cols-[minmax(0,1fr)] sm:-mx-8 lg:grid-cols-[248px_minmax(0,1fr)] lg:bg-[linear-gradient(to_right,var(--ink)_248px,transparent_248px)]">
       <aside className="bg-ink text-canvas min-w-0 lg:sticky lg:top-0 lg:flex lg:h-svh lg:flex-col">
-        <p className="font-display hidden px-6 pt-7 pb-6 text-[1.9rem] leading-none font-black uppercase lg:block">
+        <p className="font-display hidden px-6 pt-7 pb-6 text-3xl leading-none font-black uppercase lg:block">
           Yoyo <span className="text-canvas/60">/ {t('brand')}</span>
         </p>
         <div className="hidden px-3 pb-4 lg:block">
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE))}
-            className="bg-canvas/10 hover:bg-canvas/15 text-canvas/80 flex min-h-11 w-full items-center gap-3 rounded-[14px] px-3.5 text-[14px] font-semibold"
+            className="bg-canvas/10 hover:bg-canvas/15 text-canvas/80 flex min-h-11 w-full items-center gap-3 rounded-[14px] px-3.5 text-sm font-semibold"
           >
             <Icon>
               <path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4" />
             </Icon>
             <span className="flex-1 text-left">{t('search.open')}</span>
-            <kbd className="border-canvas/25 rounded-[6px] border px-1.5 text-[11px]">{t('search.shortcut')}</kbd>
+            <kbd className="border-canvas/25 rounded-[6px] border px-1.5 text-xs">{t('search.shortcut')}</kbd>
           </button>
         </div>
         <nav aria-label={t('navLabel')} className="overflow-x-auto lg:flex-1 lg:overflow-y-auto">
@@ -196,14 +196,14 @@ export function AdminShell({ children }: { children: ReactNode }) {
               return (
                 <li key={key} className="shrink-0">
                   {firstOfGroup && (
-                    <p className={`text-canvas/65 hidden px-3.5 pb-1 text-[11px] font-bold tracking-[0.08em] uppercase lg:block ${index === 0 ? '' : 'pt-4'}`}>
+                    <p className={`text-canvas/65 hidden px-3.5 pb-1 text-xs font-bold tracking-[0.08em] uppercase lg:block ${index === 0 ? '' : 'pt-4'}`}>
                       {t(`groups.${group}`)}
                     </p>
                   )}
                   <Link
                     href={href}
                     aria-current={current ? 'page' : undefined}
-                    className={`ease-yoyo flex min-h-11 items-center gap-3 rounded-[14px] px-3.5 text-[15px] font-semibold whitespace-nowrap transition-colors duration-150 ${
+                    className={`ease-yoyo flex min-h-11 items-center gap-3 rounded-[14px] px-3.5 text-base font-semibold whitespace-nowrap transition-colors duration-150 ${
                       current ? 'bg-canvas text-ink' : 'text-canvas/80 hover:bg-canvas/10 hover:text-canvas'
                     }`}
                   >
@@ -211,7 +211,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
                     <span className="flex-1">{t(`nav.${key}`)}</span>
                     {count > 0 && (
                       <span
-                        className={`rounded-pill inline-flex min-h-5 min-w-5 items-center justify-center px-1.5 text-[11px] font-bold tabular-nums ${
+                        className={`rounded-pill inline-flex min-h-5 min-w-5 items-center justify-center px-1.5 text-xs font-bold tabular-nums ${
                           current ? 'bg-ink text-canvas' : 'bg-canvas text-ink'
                         }`}
                       >
@@ -226,7 +226,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
               <button
                 type="button"
                 onClick={() => void leave()}
-                className="text-canvas/80 hover:bg-canvas/10 flex min-h-11 items-center gap-3 rounded-[14px] px-3.5 text-[15px] font-semibold whitespace-nowrap"
+                className="text-canvas/80 hover:bg-canvas/10 flex min-h-11 items-center gap-3 rounded-[14px] px-3.5 text-base font-semibold whitespace-nowrap"
               >
                 {t('signOut')}
               </button>
@@ -234,11 +234,11 @@ export function AdminShell({ children }: { children: ReactNode }) {
           </ul>
         </nav>
         <div className="border-canvas/15 hidden border-t px-3 py-4 lg:block">
-          {user && <p className="text-canvas/70 truncate px-3.5 pb-2 text-[13px]">{user.email}</p>}
+          {user && <p className="text-canvas/70 truncate px-3.5 pb-2 text-sm">{user.email}</p>}
           <button
             type="button"
             onClick={() => void leave()}
-            className="text-canvas/80 hover:bg-canvas/10 hover:text-canvas flex min-h-11 w-full items-center gap-3 rounded-[14px] px-3.5 text-[14px] font-semibold"
+            className="text-canvas/80 hover:bg-canvas/10 hover:text-canvas flex min-h-11 w-full items-center gap-3 rounded-[14px] px-3.5 text-sm font-semibold"
           >
             <Icon>
               <path d="M15 17l5-5-5-5M20 12H9M12 20H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7" />
@@ -260,7 +260,7 @@ function NoAccess() {
   const t = useTranslations('admin.noAccess');
   return (
     <div role="alert" className="flex max-w-xl flex-col items-start gap-4 py-10">
-      <h1 className="font-display text-[clamp(2.2rem,4vw,3.2rem)] leading-[0.95] font-black uppercase">{t('title')}</h1>
+      <h1 className="font-display text-display-m leading-[0.95] font-black uppercase">{t('title')}</h1>
       <p className="text-ink/80">{t('body')}</p>
       <Link href="/admin" className="font-bold underline decoration-1 underline-offset-4">
         {t('back')}

@@ -56,7 +56,7 @@ function Body({ data }: { data: AdminBookingDetail }) {
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex min-w-0 flex-col gap-2">
           <DealStatusBadge status={b.status} className="self-start" />
-          <h1 className="font-display text-[clamp(2.2rem,4.4vw,3.6rem)] leading-[0.92] font-black uppercase [overflow-wrap:anywhere]">{b.listing.title}</h1>
+          <h1 className="font-display text-display-m leading-[0.92] font-black uppercase [overflow-wrap:anywhere]">{b.listing.title}</h1>
           <p className="text-ink/70 text-sm tabular-nums">
             {formatPeriod(b.period.start, b.period.end, locale)} · {b.id}
           </p>
@@ -70,7 +70,7 @@ function Body({ data }: { data: AdminBookingDetail }) {
         <div className="flex flex-col gap-5">
           {b.dispute && (
             <Panel title={t('dispute')} className="border-ink border-2">
-              <dl className="grid gap-3 text-[15px] sm:grid-cols-[10rem_minmax(0,1fr)]">
+              <dl className="grid gap-3 text-base sm:grid-cols-[10rem_minmax(0,1fr)]">
                 <dt className="text-ink/70">{t('reason')}</dt>
                 <dd className="font-semibold">{t(`disputeReason.${b.dispute.reason}`)}</dd>
                 <dt className="text-ink/70">{t('openedAt')}</dt>
@@ -103,10 +103,10 @@ function Body({ data }: { data: AdminBookingDetail }) {
             <ol className="flex flex-col">
               {data.events.map((e) => (
                 <li key={e.id} className="border-ink/10 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 border-b py-2.5 last:border-b-0">
-                  <time dateTime={e.createdAt} className="text-ink/70 text-[13px] whitespace-nowrap tabular-nums">
+                  <time dateTime={e.createdAt} className="text-ink/70 text-sm whitespace-nowrap tabular-nums">
                     {moment(e.createdAt)}
                   </time>
-                  <span className="min-w-0 text-[15px]">
+                  <span className="min-w-0 text-base">
                     <span className="font-semibold">{e.type}</span>
                     <span className="text-ink/70">
                       {' '}
@@ -127,11 +127,11 @@ function Body({ data }: { data: AdminBookingDetail }) {
                   <li key={op.id} className="flex flex-col gap-1.5">
                     <p className="flex flex-wrap items-baseline justify-between gap-2">
                       <span className="font-semibold">{tk(op.kind)}</span>
-                      <time dateTime={op.createdAt} className="text-ink/70 text-[13px] tabular-nums">
+                      <time dateTime={op.createdAt} className="text-ink/70 text-sm tabular-nums">
                         {moment(op.createdAt)}
                       </time>
                     </p>
-                    <ul className="bg-mist rounded-[12px] px-3 py-2 font-mono text-[13px]">
+                    <ul className="bg-mist rounded-[12px] px-3 py-2 font-mono text-sm">
                       {op.postings.map((p) => (
                         <li key={p.account} className="flex justify-between gap-4">
                           <span className="truncate">{p.account}</span>
@@ -148,7 +148,7 @@ function Body({ data }: { data: AdminBookingDetail }) {
 
         <div className="flex flex-col gap-5">
           <Panel title={t('parties')}>
-            <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 text-[15px]">
+            <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 text-base">
               <dt className="text-ink/70">{t('renter')}</dt>
               <dd className="font-semibold">
                 <Link href={`/u/${b.renter.id}`} className="hover:underline">
@@ -165,7 +165,7 @@ function Body({ data }: { data: AdminBookingDetail }) {
           </Panel>
 
           <Panel title={t('money')}>
-            <dl className="divide-ink/10 flex flex-col divide-y text-[15px]">
+            <dl className="divide-ink/10 flex flex-col divide-y text-base">
               {(
                 [
                   ['rent', b.quote.rentCents],
@@ -189,7 +189,7 @@ function Body({ data }: { data: AdminBookingDetail }) {
             {data.payments.length === 0 ? (
               <p className="text-ink/70">{t('none')}</p>
             ) : (
-              <ul className="flex flex-col gap-2 text-[15px]">
+              <ul className="flex flex-col gap-2 text-base">
                 {data.payments.map((p) => (
                   <li key={p.id} className="flex flex-wrap justify-between gap-2">
                     <span>
@@ -254,7 +254,7 @@ function ResolveForm({ id, version }: { id: string; version: number }) {
 
   return (
     <form aria-labelledby={titleId} onSubmit={submit} className="border-ink/15 flex flex-col gap-4 border-t pt-5">
-      <h3 id={titleId} className="font-display text-[1.9rem] leading-none font-black uppercase">
+      <h3 id={titleId} className="font-display text-3xl leading-none font-black uppercase">
         {t('resolve.title')}
       </h3>
       <fieldset disabled={confirming || resolve.isPending} className="flex flex-col gap-2">
@@ -262,7 +262,7 @@ function ResolveForm({ id, version }: { id: string; version: number }) {
         {RESOLVE_DECISIONS.map((d) => (
           <label
             key={d}
-            className={`rounded-media flex min-h-11 cursor-pointer items-center gap-3 border px-4 py-2.5 text-[15px] ${decision === d ? 'border-ink bg-ink/[0.04] font-semibold' : 'border-ink/20'}`}
+            className={`rounded-media flex min-h-11 cursor-pointer items-center gap-3 border px-4 py-2.5 text-base ${decision === d ? 'border-ink bg-ink/[0.04] font-semibold' : 'border-ink/20'}`}
           >
             <input type="radio" name="decision" value={d} checked={decision === d} onChange={() => setDecision(d)} className="accent-[var(--ink)] size-4" />
             {t(`decision.${d}`)}
@@ -282,7 +282,7 @@ function ResolveForm({ id, version }: { id: string; version: number }) {
           maxLength={2000}
           className={TEXTAREA_CLASS}
         />
-        <span id={hintId} className="text-ink/70 text-[13px]">
+        <span id={hintId} className="text-ink/70 text-sm">
           {t('resolve.commentHint')}
         </span>
       </div>

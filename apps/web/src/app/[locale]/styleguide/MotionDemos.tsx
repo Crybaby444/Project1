@@ -28,7 +28,7 @@ function PillSticker({ children, className }: { children: ReactNode; className: 
   return (
     <span
       data-pill-sticker=""
-      className={`border-ink font-display rounded-pill inline-flex min-h-11 items-center border px-5 text-[15px] leading-none font-black whitespace-nowrap text-black uppercase [filter:drop-shadow(0_0_0.6px_var(--sticker-edge))] ${className}`}
+      className={`border-ink font-display rounded-pill inline-flex min-h-11 items-center border px-5 text-base leading-none font-black whitespace-nowrap text-black uppercase [filter:drop-shadow(0_0_0.6px_var(--sticker-edge))] ${className}`}
     >
       {children}
     </span>
@@ -59,7 +59,7 @@ export function MotionDemos() {
 
   return (
     <section aria-labelledby="motion-title" className="flex flex-col">
-      <h2 id="motion-title" className="border-ink border-b pb-2 text-[30px] leading-tight font-bold">
+      <h2 id="motion-title" className="border-ink border-b pb-2 text-3xl leading-tight font-bold">
         {t('title')}
       </h2>
       <p className="mt-5 max-w-[60ch] text-lg leading-relaxed">{t('intro')}</p>
@@ -67,7 +67,7 @@ export function MotionDemos() {
       <Band tone="mint" id="motion-words" title={t('statementTitle')}>
         <WordFill
           text={t('statement')}
-          className="max-w-[22ch] text-[clamp(1.75rem,6vw,3.5rem)] leading-[1.08] font-bold text-balance [overflow-wrap:break-word]"
+          className="max-w-[22ch] text-display-m leading-[1.08] font-bold text-balance [overflow-wrap:break-word]"
         />
       </Band>
 
@@ -131,7 +131,7 @@ export function MotionDemos() {
                   <span data-bounce="" className="inline-block self-start">
                     <Sticker kind={sticker} size={48} />
                   </span>
-                  <span className="font-display text-[clamp(2.5rem,9vw,4rem)] leading-none font-black">
+                  <span className="font-display text-display-l leading-none font-black">
                     <CountUp value={stat} />
                   </span>
                   <span className="text-lg font-bold">{t(key)}</span>

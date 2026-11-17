@@ -33,7 +33,7 @@ export async function NightScene() {
       <Row row={2} text={t('use')} times={6} className="text-[var(--night)] [-webkit-text-stroke:3px_var(--paper)] [paint-order:stroke_fill]" />
       <Row row={3} text={t('back')} times={4} className="text-[var(--night-dim)]" />
       <div data-say className="mx-auto mt-[6vh] grid w-[min(90vw,30em)] justify-items-center gap-[18px] text-center">
-        <p className="m-0 text-[clamp(1rem,1.3vw,1.2rem)] leading-relaxed font-medium text-[var(--paper)]/75">{t('line')}</p>
+        <p className="m-0 text-lg leading-relaxed font-medium text-[var(--paper)]/75">{t('line')}</p>
         <Button href="/c" className="border-[var(--paper)] bg-[var(--paper)] text-[var(--night)]">
           <span aria-hidden="true" className="size-2 rounded-full bg-[var(--glow)]" />
           {t('catalog')}

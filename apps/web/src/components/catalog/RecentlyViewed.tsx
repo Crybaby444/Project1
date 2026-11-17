@@ -30,7 +30,7 @@ export function RecentlyViewed({ except }: { except?: string }) {
   return (
     <section aria-labelledby="recently-viewed" className="flex flex-col gap-4">
       <div className="flex items-baseline justify-between gap-4">
-        <h2 id="recently-viewed" className="font-display text-[clamp(1.8rem,3vw,2.6rem)] leading-none font-black uppercase">
+        <h2 id="recently-viewed" className="font-display text-display-s leading-none font-black uppercase">
           {t('title')}
         </h2>
         <button type="button" onClick={forgetViewed} className="min-h-10 text-sm font-bold underline decoration-1 underline-offset-4">

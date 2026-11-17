@@ -26,7 +26,7 @@ const STICKERS: StickerKind[] = ['coin', 'check', 'bolt', 'star', 'yoyo'];
 export function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="flex flex-col gap-5">
-      <h2 className="border-b border-ink pb-2 text-[30px] leading-tight font-bold">{title}</h2>
+      <h2 className="border-b border-ink pb-2 text-3xl leading-tight font-bold">{title}</h2>
       {children}
     </section>
   );

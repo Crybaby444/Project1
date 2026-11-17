@@ -294,6 +294,8 @@ model Listing {
   /// The language the owner wrote the texts in (en | lv | ru): the item's canonical address and its
   /// <html lang> use it. A term, not content: changing it does not send the listing back to review.
   contentLocale         String            @default("en")
+  /// An example shown on the live site (owner, 2026-11-16): marked, never booked.
+  demo                  Boolean           @default(false)
   /// { preset: RulePreset[], custom: string[] }
   rules                 Json              @default("{\"preset\":[],\"custom\":[]}")
   /// Why moderation rejected it; shown to the owner.

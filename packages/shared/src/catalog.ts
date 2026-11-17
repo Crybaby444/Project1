@@ -122,6 +122,8 @@ export const CatalogItemSchema = z.object({
   /** The average of the renters' item stars in public reviews (one decimal), or null with none. */
   rating: z.number().nullable(),
   reviewCount: z.number().int(),
+  /** An example listing (owner, 2026-11-16): shown with a mark, cannot be booked. */
+  demo: z.boolean(),
 });
 
 export type CatalogItem = z.infer<typeof CatalogItemSchema>;
@@ -187,6 +189,14 @@ export const PlacesQuerySchema = z.object({ country: CountrySchema.optional() })
 
 export type PlacesResponse = z.infer<typeof PlacesResponseSchema>;
 
+/** Typing a city (owner, 2026-11-16: every city of the country, not only those with items). */
+export const CitySuggestQuerySchema = z.object({ country: CountrySchema, q: z.string().trim().min(1).max(60) });
+export const CitySuggestResponseSchema = z.object({
+  /** At most 8, best first; `count` is how many items the city has now. */
+  items: z.array(z.object({ name: z.string(), slug: z.string(), count: z.number().int().min(0) })),
+});
+export type CitySuggestResponse = z.infer<typeof CitySuggestResponseSchema>;
+
 /** Someone as everyone may see them: no email, no phone number. */
 export const OwnerSummarySchema = z.object({
   id: z.string(),
@@ -216,6 +226,8 @@ export type OwnerSummary = z.infer<typeof OwnerSummarySchema>;
 /** An item that can be rented now: the whole public listing, its owner and what the calculator needs. */
 export const AvailableItemSchema = z.object({
   available: z.literal(true),
+  /** An example listing: the page shows it as such and offers no booking. */
+  demo: z.boolean(),
   listing: PublicListingSchema,
   owner: OwnerSummarySchema,
   /** The renters' item stars in public reviews (one decimal), or null with none. */

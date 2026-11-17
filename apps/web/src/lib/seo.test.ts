@@ -45,7 +45,7 @@ describe('category pages', () => {
   });
 
   it('with filters, a sort or the map point at the bare category and are not indexed', () => {
-    for (const search of ['price_max=20', 'from=2026-12-01&to=2026-12-02', 'district=centrs', 'sort=price_asc', 'view=map', 'q=drill', 'price_min=5&page=2']) {
+    for (const search of ['price_max=20', 'from=2026-12-01&to=2026-12-02', 'city=riga', 'sort=price_asc', 'view=map', 'q=drill', 'price_min=5&page=2']) {
       expect(categorySeo({ slug: 'tools', locale: 'en', count: 50, params: params(search) }), search).toEqual({
         canonical: '/c/tools',
         robots: { index: false, follow: true },

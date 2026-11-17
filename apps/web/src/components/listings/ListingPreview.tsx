@@ -67,7 +67,7 @@ export function ListingPreview({ values, cover, categoryName }: PreviewProps) {
         >
           {values.title.trim() || t('noTitle')}
         </p>
-        <p className="font-display text-[1.7rem] leading-[0.9] font-black uppercase tabular-nums">
+        <p className="font-display text-3xl leading-[0.9] font-black uppercase tabular-nums">
           {price !== null ? (
             t('perDay', { price: formatEuros(price, locale) })
           ) : (

@@ -49,7 +49,7 @@ export function AdminDeals({ view }: { view: DealsView }) {
               type="button"
               aria-pressed={view.disputed === disputed}
               onClick={() => go({ disputed, status: undefined })}
-              className={`rounded-pill min-h-9 px-4 text-[13px] font-bold tracking-[0.03em] uppercase ${view.disputed === disputed ? 'bg-ink text-canvas' : 'text-ink'}`}
+              className={`rounded-pill min-h-9 px-4 text-sm font-bold tracking-[0.03em] uppercase ${view.disputed === disputed ? 'bg-ink text-canvas' : 'text-ink'}`}
             >
               {disputed ? t('deals.disputes') : t('deals.all')}
             </button>

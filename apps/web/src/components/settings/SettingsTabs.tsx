@@ -24,7 +24,7 @@ export function SettingsTabs() {
               <Link
                 href={href}
                 aria-current={active ? 'page' : undefined}
-                className={`rounded-pill ease-yoyo flex min-h-10 items-center justify-center px-2 text-[12px] tracking-normal min-[380px]:px-3 min-[380px]:text-[13px] min-[380px]:tracking-[0.03em] sm:px-5 font-bold uppercase transition-[background-color,color,transform] duration-200 active:scale-[0.96] ${
+                className={`rounded-pill ease-yoyo flex min-h-10 items-center justify-center px-2 text-xs tracking-normal min-[380px]:px-3 min-[380px]:text-sm min-[380px]:tracking-[0.03em] sm:px-5 font-bold uppercase transition-[background-color,color,transform] duration-200 active:scale-[0.96] ${
                   active ? 'bg-cta text-cta-fg' : 'hover:bg-mist'
                 }`}
               >

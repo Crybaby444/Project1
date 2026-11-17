@@ -102,4 +102,16 @@ describe('HeartButton', () => {
     expect(badge.className).not.toMatch(/sticker|rotate/);
     expect(container.querySelector('[class*="perspective"]')).toBeNull();   // no tilting card
   });
+
+  it('marks an example listing, and only that one (owner, 2026-11-16)', () => {
+    const { client } = fakeApi(meRoute(null));
+    renderWithSession(<ListingCard item={catalogItem({ demo: true })} />, { client, hasSession: false });
+    expect(screen.getByText(en.catalog.card.demo)).toBeInTheDocument();
+  });
+
+  it('shows no mark on a real listing', () => {
+    const { client } = fakeApi(meRoute(null));
+    renderWithSession(<ListingCard item={catalogItem()} />, { client, hasSession: false });
+    expect(screen.queryByText(en.catalog.card.demo)).toBeNull();
+  });
 });

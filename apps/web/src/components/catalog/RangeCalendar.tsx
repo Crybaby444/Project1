@@ -142,7 +142,7 @@ export function RangeCalendar({ value, onChange, today, lastDay, blocked = [], t
           const captionId = `${keysId}-${monthKey(month)}`;
           return (
             <table key={monthKey(month)} role="grid" aria-labelledby={captionId} className="w-full table-fixed border-separate border-spacing-y-1">
-              <caption id={captionId} className="font-display pb-2 text-left text-[1.35rem] leading-none font-black uppercase">
+              <caption id={captionId} className="font-display pb-2 text-left text-2xl leading-none font-black uppercase">
                 {monthHeading.format(asDate(`${monthKey(month)}-01`))}
               </caption>
               <thead>

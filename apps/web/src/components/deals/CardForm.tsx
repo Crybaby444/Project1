@@ -21,7 +21,7 @@ export function TestModeNotice({ onUse }: { onUse(number: string): void }) {
       data-test-mode=""
       className="rounded-media bg-ink text-canvas flex flex-col gap-2 border border-ink/15 p-4"
     >
-      <h3 id="test-mode" className="flex items-center gap-2 text-[13px] font-bold tracking-[0.03em] uppercase">
+      <h3 id="test-mode" className="flex items-center gap-2 text-sm font-bold tracking-[0.03em] uppercase">
         <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M9 3h6M10 3v6L4.5 18.5A1.7 1.7 0 0 0 6 21h12a1.7 1.7 0 0 0 1.5-2.5L14 9V3" />
         </svg>
@@ -38,7 +38,7 @@ export function TestModeNotice({ onUse }: { onUse(number: string): void }) {
               type="button"
               onClick={() => onUse(card.number)}
               aria-label={`${t('use')}: ${card.number}, ${t(`cards.${card.key}`)}`}
-              className="rounded-pill ease-yoyo min-h-8 border border-canvas/30 bg-canvas text-ink px-3 text-[12px] font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.96]"
+              className="rounded-pill ease-yoyo min-h-8 border border-canvas/30 bg-canvas text-ink px-3 text-xs font-bold tracking-[0.03em] uppercase transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.96]"
             >
               {t('use')}
             </button>
@@ -82,7 +82,7 @@ export function CardForm({
   return (
     <div className="flex flex-col gap-4" data-card-form="">
       <div className="flex flex-col gap-1.5">
-        <label htmlFor={`${id}-number`} className="text-[13px] font-bold tracking-[0.03em] uppercase">
+        <label htmlFor={`${id}-number`} className="text-sm font-bold tracking-[0.03em] uppercase">
           {t('number')}
         </label>
         <div className="relative">
@@ -101,7 +101,7 @@ export function CardForm({
           />
           <span
             aria-live="polite"
-            className={`rounded-pill pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 border px-2.5 py-0.5 text-[12px] font-bold transition-[opacity,transform] duration-250 ease-yoyo ${
+            className={`rounded-pill pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 border px-2.5 py-0.5 text-xs font-bold transition-[opacity,transform] duration-250 ease-yoyo ${
               brand ? `border-ink/15 opacity-100 ${BRAND_STYLE[brand]}` : 'scale-90 border-transparent opacity-0'
             }`}
           >

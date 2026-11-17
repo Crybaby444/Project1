@@ -10,10 +10,10 @@ export async function HomeFaq() {
   return (
     <section aria-labelledby="home-faq" className="mx-auto grid w-full max-w-[1440px] gap-10 px-4 py-20 sm:px-8 sm:py-28 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
       <div className="flex flex-col items-start gap-5">
-        <h2 id="home-faq" className="font-display text-[clamp(2.4rem,5vw,4.4rem)] leading-[0.88] font-black uppercase">
+        <h2 id="home-faq" className="font-display text-display-l leading-[0.88] font-black uppercase">
           {t('title')}
         </h2>
-        <Link href="/faq" className="text-[15px] font-bold underline decoration-1 underline-offset-4">
+        <Link href="/faq" className="text-base font-bold underline decoration-1 underline-offset-4">
           {t('all')}
         </Link>
       </div>
