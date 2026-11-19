@@ -201,6 +201,16 @@ export const ForYouQuerySchema = z.object({
     .transform((v) => (v === undefined ? [] : (Array.isArray(v) ? v : v.split(',')).filter(Boolean).slice(0, 12))),
 });
 export type ForYouQuery = z.infer<typeof ForYouQuerySchema>;
+
+/** Items by id (the browser's "recently viewed"): only those still visible come back, as they are now. */
+export const CatalogItemsQuerySchema = z.object({
+  ids: z
+    .union([z.string(), z.array(z.string())])
+    .transform((v) => [...new Set((Array.isArray(v) ? v : v.split(',')).map((id) => id.trim()).filter((id) => /^[a-z0-9-]{1,40}$/i.test(id)))].slice(0, 24)),
+});
+export type CatalogItemsQuery = z.infer<typeof CatalogItemsQuerySchema>;
+export const CatalogItemsResponseSchema = z.object({ items: z.array(CatalogItemSchema) });
+export type CatalogItemsResponse = z.infer<typeof CatalogItemsResponseSchema>;
 export const ForYouResponseSchema = z.object({
   /** At most 12, best first; `personal` says whether interests shaped the list (else it is "popular now"). */
   items: z.array(CatalogItemSchema),

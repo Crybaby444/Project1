@@ -884,6 +884,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/catalog/items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CatalogController_byIds"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/catalog/for-you": {
         parameters: {
             query?: never;
@@ -3320,6 +3336,34 @@ export interface components {
                 district: string;
                 slug: string;
                 count: number;
+            }[];
+        };
+        CatalogItemsResponseDto_Output: {
+            items: {
+                id: string;
+                title: string;
+                dailyCents: number;
+                weeklyDiscountPercent: number;
+                depositCents: number;
+                /** @enum {string|null} */
+                condition: "NEW" | "LIKE_NEW" | "GOOD" | "FAIR" | null;
+                city: string | null;
+                district: string | null;
+                country: string | null;
+                categoryId: string | null;
+                cover: {
+                    thumb: string;
+                    card: string;
+                    full: string;
+                } | null;
+                ownerId: string;
+                /** @enum {string} */
+                contentLocale: "en" | "lv" | "ru";
+                /** Format: date-time */
+                publishedAt: string | null;
+                rating: number | null;
+                reviewCount: number;
+                demo: boolean;
             }[];
         };
         ForYouResponseDto_Output: {
@@ -7772,6 +7816,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PlacesResponseDto_Output"];
+                };
+            };
+            /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    CatalogController_byIds: {
+        parameters: {
+            query: {
+                ids: string | string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The given items that are still visible, as they are now, in the order asked */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogItemsResponseDto_Output"];
                 };
             };
             /** @description Invalid input (VALIDATION_FAILED, or LISTING_INCOMPLETE; with fields) */

@@ -9,6 +9,7 @@ import type {
   MapResponse,
   PlacesResponse,
   ForYouResponse,
+  CatalogItemsResponse,
   CitySuggestResponse,
   PublicProfile,
   SitemapResponse,
@@ -31,6 +32,8 @@ import {
   PlacesQueryDto,
   ForYouQueryDto,
   ForYouResponseDto,
+  CatalogItemsQueryDto,
+  CatalogItemsResponseDto,
   CitySuggestQueryDto,
   CitySuggestResponseDto,
   PlacesResponseDto,
@@ -89,6 +92,13 @@ export class CatalogController {
   @ApiErrors(400)
   places(@Query() query: PlacesQueryDto): Promise<PlacesResponse> {
     return this.catalog.places(query.country);
+  }
+
+  @Get('items')
+  @ZodResponse({ status: 200, type: CatalogItemsResponseDto, description: 'The given items that are still visible, as they are now, in the order asked' })
+  @ApiErrors(400)
+  async byIds(@Query() query: CatalogItemsQueryDto): Promise<CatalogItemsResponse> {
+    return { items: await this.catalog.items(query.ids) };
   }
 
   @Get('for-you')

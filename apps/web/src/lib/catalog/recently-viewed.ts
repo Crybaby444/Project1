@@ -41,3 +41,21 @@ export function forgetViewed(): void {
     // Nothing to forget.
   }
 }
+
+/**
+ * After the API said which of them are still visible (and how they look now): keep only those, in the
+ * remembered order. Removed items leave the strip for good (2026-11-19).
+ */
+export function refreshViewed(fresh: CatalogItem[]): CatalogItem[] {
+  const byId = new Map(fresh.map((item) => [item.id, item]));
+  const next = recallViewed().flatMap((item) => {
+    const now = byId.get(item.id);
+    return now ? [now] : [];
+  });
+  try {
+    localStorage.setItem(KEY, JSON.stringify(next));
+  } catch {
+    // Storage refused: the strip still shows the fresh list this time.
+  }
+  return next;
+}

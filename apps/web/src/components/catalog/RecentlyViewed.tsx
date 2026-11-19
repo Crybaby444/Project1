@@ -3,7 +3,8 @@
 import type { CatalogItem } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { forgetViewed, recallViewed, RECENT_EVENT, rememberViewed } from '@/lib/catalog/recently-viewed';
+import { forgetViewed, recallViewed, RECENT_EVENT, refreshViewed, rememberViewed } from '@/lib/catalog/recently-viewed';
+import { useApiClient } from '@/lib/session/SessionProvider';
 import { ListingCard } from './ListingCard';
 
 /**
@@ -14,6 +15,7 @@ import { ListingCard } from './ListingCard';
 export function RecentlyViewed({ except }: { except?: string }) {
   const t = useTranslations('catalog.recent');
   const [items, setItems] = useState<CatalogItem[]>([]);
+  const client = useApiClient();
 
   useEffect(() => {
     const read = () => setItems(recallViewed().filter((i) => i.id !== except));
@@ -25,6 +27,25 @@ export function RecentlyViewed({ except }: { except?: string }) {
       window.removeEventListener('storage', read);
     };
   }, [except]);
+
+  // Once per page: ask which remembered items are still there (a removed one must not stay here).
+  useEffect(() => {
+    const ids = recallViewed().map((item) => item.id);
+    if (ids.length === 0) return;
+    let live = true;
+    client
+      .GET('/api/v1/catalog/items', { params: { query: { ids: ids.join(',') } } })
+      .then(({ data }) => {
+        if (!live || !data) return;
+        const next = refreshViewed(data.items);
+        setItems(next.filter((item) => item.id !== except));
+      })
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- checked once per page
+  }, [client]);
 
   if (items.length === 0) return null;
   return (
