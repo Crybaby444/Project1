@@ -19,6 +19,7 @@ const PUBLIC = new Set([
   'GET /api/v1/catalog/category-counts',
   'GET /api/v1/catalog/cities',
   'GET /api/v1/catalog/for-you',
+  'GET /api/v1/catalog/items',
   'GET /api/v1/catalog/listings',
   'GET /api/v1/catalog/listings/{id}',
   'GET /api/v1/catalog/listings/{id}/address',

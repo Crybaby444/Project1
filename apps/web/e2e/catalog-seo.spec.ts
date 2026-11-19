@@ -53,7 +53,7 @@ test.describe('item pages', () => {
     }
   });
 
-  test('an item hidden for now stays, not indexed, with similar items; a removed one answers 410', async ({ page, browser, request }) => {
+  test('an item hidden for now stays, not indexed, with similar items; a removed one answers 404 with its own page', async ({ page, browser, request }) => {
     const away = await publishListing(browser, { title: `Hidden ${uniqueWord('cam')}`, categorySlug: 'projectors' });
     expect((await away.ownerRequest.post(`/api/v1/listings/${away.id}/hide`)).status()).toBe(200);
     const response = await page.goto(`/listings/${away.id}-${away.slug}`);
@@ -65,7 +65,7 @@ test.describe('item pages', () => {
     const gone = await publishListing(browser, { title: `Gone ${uniqueWord('tent')}` });
     expect((await gone.ownerRequest.delete(`/api/v1/listings/${gone.id}`)).status()).toBe(204);
     const answer = await request.get(`/listings/${gone.id}-${gone.slug}`, { maxRedirects: 0 });
-    expect(answer.status()).toBe(410);
+    expect(answer.status()).toBe(404);
     expect(await answer.text()).toContain(en.item.gone.title);
   });
 });

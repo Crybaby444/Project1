@@ -31,6 +31,17 @@ describe('item page, profiles and the sitemap', () => {
     await t.close();
   });
 
+  describe('GET /catalog/items', () => {
+    it('answers only the items still visible, as they are now, in the order asked (recently viewed)', async () => {
+      const live = await seedListing(t, anna.user, { status: 'PUBLISHED', title: 'Drill' });
+      const gone = await seedListing(t, anna.user, { status: 'ARCHIVED', title: 'Old tent' });
+      const second = await seedListing(t, anna.user, { status: 'PUBLISHED', title: 'Kayak' });
+      const res = await api(`/catalog/items?ids=${second.id},${gone.id},nonsense,${live.id}`).expect(200);
+      expect(res.body.items.map((i: { title: string }) => i.title)).toEqual(['Kayak', 'Drill']);
+      expect((await api('/catalog/items?ids=').expect(200)).body).toEqual({ items: [] });
+    });
+  });
+
   describe('GET /catalog/listings/:id', () => {
     it('gives the public listing, the owner without contacts, the taken days and the fee', async () => {
       const listing = await seedListing(t, anna.user, { status: 'PUBLISHED', contentLocale: 'lv' });
