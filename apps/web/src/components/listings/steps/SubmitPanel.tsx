@@ -12,6 +12,8 @@ import { BUILDER_STEPS, stepOf, type BuilderStep } from '@/lib/listings/listing-
 import { ApiError, unwrap } from '@/lib/session/api-error';
 import { useApiClient } from '@/lib/session/SessionProvider';
 import { useBuilder } from '../BuilderContext';
+import { useSession } from '@/lib/session/SessionProvider';
+import { myProfileHref } from '@/lib/profile/links';
 
 /**
  * Step 6 (second half): what review still needs, step by step with links, and "Send for review".
@@ -23,6 +25,7 @@ export function SubmitPanel() {
   const client = useApiClient();
   const queryClient = useQueryClient();
   const router = useRouter();
+  const { user } = useSession();
   const toast = useToast();
   const errorText = useErrorText();
   const { draft, missing, setAttempted, goTo, readOnly } = useBuilder();
@@ -57,7 +60,7 @@ export function SubmitPanel() {
       });
       void queryClient.invalidateQueries({ queryKey: ['listings', 'mine'] });
       toast.show(t('sent'));
-      router.push('/dashboard/lending');
+      router.push(user ? myProfileHref(user.id) : '/');
     } catch (failure) {
       if (failure instanceof ApiError && failure.code === 'LISTING_INCOMPLETE') {
         setServerFields(Object.keys(failure.fields ?? {}));

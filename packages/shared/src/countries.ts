@@ -1,16 +1,13 @@
 import { z } from 'zod';
 
 /**
- * The countries Yoyo works in (owner, 2026-11-16): the euro area, so every price and payment is in euros.
- * ISO 3166-1 alpha-2, with the time zone a deal's days are counted in. (EU members with their own
- * currency, and the rest of Europe, wait for local currencies.)
+ * The countries Yoyo works in: the Baltic states (owner, 2026-11-19; the whole euro area before that).
+ * All three use the euro. ISO 3166-1 alpha-2, with the time zone a deal's days are counted in.
  */
 export const COUNTRIES = {
-  AT: 'Europe/Vienna', BE: 'Europe/Brussels', BG: 'Europe/Sofia', HR: 'Europe/Zagreb', CY: 'Asia/Nicosia',
-  EE: 'Europe/Tallinn', FI: 'Europe/Helsinki', FR: 'Europe/Paris', DE: 'Europe/Berlin', GR: 'Europe/Athens',
-  IE: 'Europe/Dublin', IT: 'Europe/Rome', LV: 'Europe/Riga', LT: 'Europe/Vilnius', LU: 'Europe/Luxembourg',
-  MT: 'Europe/Malta', NL: 'Europe/Amsterdam', PT: 'Europe/Lisbon', SK: 'Europe/Bratislava', SI: 'Europe/Ljubljana',
-  ES: 'Europe/Madrid',
+  LV: 'Europe/Riga',
+  LT: 'Europe/Vilnius',
+  EE: 'Europe/Tallinn',
 } as const;
 
 export type Country = keyof typeof COUNTRIES;
@@ -24,7 +21,7 @@ export function isCountry(code: string | null | undefined): code is Country {
   return !!code && Object.prototype.hasOwnProperty.call(COUNTRIES, code);
 }
 
-/** The time zone of a country's deals (Spain's Canary Islands and Portugal's Azores use the mainland's). */
+/** The time zone of a country's deals. */
 export function timeZoneOf(country: string | null | undefined): string {
   return isCountry(country) ? COUNTRIES[country] : COUNTRIES[HOME_COUNTRY];
 }

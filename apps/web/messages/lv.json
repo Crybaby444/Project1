@@ -625,7 +625,7 @@
       "placeHint": "Redzams sludinājumā. Aizpildās no punkta; vari to mainīt.",
       "pointSet": "Punkts iestatīts: {place}",
       "pointSetNoName": "Punkts iestatīts kartē.",
-      "outside": "Šis punkts ir ārpus eirozonas. Pagaidām Yoyo darbojas tikai eiro valstīs; izvēlies vietu tur."
+      "outside": "Šī vieta ir ārpus Baltijas valstīm. Pagaidām Yoyo darbojas Latvijā, Lietuvā un Igaunijā; izvēlieties vietu tur."
     },
     "calendar": {
       "title": "Dienas, kad lieta nav pieejama",
@@ -1061,7 +1061,7 @@
     "title": "{name}",
     "description": "{name} Yoyo: {count, plural, =0 {vēl nav lietu nomai} zero {# lietas nomai} one {# lieta nomai} other {# lietas nomai}}.",
     "about": "Par sevi",
-    "tabs": "{name}: lietas un atsauksmes",
+    "tabs": "{name}: lietas, veikali un atsauksmes",
     "items": "{count, plural, zero {# lietas} one {# lieta} other {# lietas}}",
     "reviews": "Atsauksmes",
     "noItems": "{name} pašlaik neko neiznomā.",
@@ -1085,7 +1085,9 @@
       "rating": "Vērtējums",
       "noRating": "Vēl nav vērtējuma",
       "memberSince": "Yoyo kopš {since}"
-    }
+    },
+    "myItems": "Manas lietas",
+    "following": "Sekoju"
   },
   "consent": {
     "label": "Sīkdatņu izvēle",

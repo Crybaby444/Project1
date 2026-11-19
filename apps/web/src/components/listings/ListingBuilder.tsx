@@ -28,6 +28,8 @@ import { PriceStep } from './steps/PriceStep';
 import { RulesStep } from './steps/RulesStep';
 import { SubmitPanel } from './steps/SubmitPanel';
 import { StatusBanner } from './StatusBanner';
+import { useSession } from '@/lib/session/SessionProvider';
+import { myProfileHref } from '@/lib/profile/links';
 
 /** The fields of each step; steps added by later tasks register here. */
 const STEP_CONTENT: Partial<Record<BuilderStep, () => ReactNode>> = {
@@ -128,6 +130,7 @@ function BuilderLayout({
   const errorText = useErrorText();
   const { draft, goTo } = useBuilder();
   const router = useRouter();
+  const { user } = useSession();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [leaving, setLeaving] = useState(false);
   /** Keep it as a draft and go to My items (the draft is there under Drafts). */
@@ -135,7 +138,7 @@ function BuilderLayout({
     setLeaving(true);
     try {
       await draft.flush();
-      router.push('/dashboard/lending?status=DRAFT');
+      router.push(user ? myProfileHref(user.id, 'items', 'DRAFT') : '/');
     } finally {
       setLeaving(false);
     }

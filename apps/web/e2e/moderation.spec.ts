@@ -77,7 +77,7 @@ test('rejected with a reason, fixed by the owner, then approved', async ({ page,
     .first()
     .click();
   await page.getByRole('button', { name: en.builder.submit.send }).click();
-  await expect(page).toHaveURL(/\/dashboard\/lending$/);
+  await expect(page).toHaveURL(/\/u\/[^/?]+\?tab=items$/);
   await expect(
     page
       .getByRole('article')

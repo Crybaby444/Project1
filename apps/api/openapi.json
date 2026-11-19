@@ -3124,27 +3124,9 @@
             "schema": {
               "type": "string",
               "enum": [
-                "AT",
-                "BE",
-                "BG",
-                "HR",
-                "CY",
-                "EE",
-                "FI",
-                "FR",
-                "DE",
-                "GR",
-                "IE",
-                "IT",
                 "LV",
                 "LT",
-                "LU",
-                "MT",
-                "NL",
-                "PT",
-                "SK",
-                "SI",
-                "ES"
+                "EE"
               ]
             }
           },
@@ -3287,27 +3269,9 @@
             "schema": {
               "type": "string",
               "enum": [
-                "AT",
-                "BE",
-                "BG",
-                "HR",
-                "CY",
-                "EE",
-                "FI",
-                "FR",
-                "DE",
-                "GR",
-                "IE",
-                "IT",
                 "LV",
                 "LT",
-                "LU",
-                "MT",
-                "NL",
-                "PT",
-                "SK",
-                "SI",
-                "ES"
+                "EE"
               ]
             }
           },
@@ -3450,27 +3414,9 @@
             "schema": {
               "type": "string",
               "enum": [
-                "AT",
-                "BE",
-                "BG",
-                "HR",
-                "CY",
-                "EE",
-                "FI",
-                "FR",
-                "DE",
-                "GR",
-                "IE",
-                "IT",
                 "LV",
                 "LT",
-                "LU",
-                "MT",
-                "NL",
-                "PT",
-                "SK",
-                "SI",
-                "ES"
+                "EE"
               ]
             }
           }
@@ -3563,27 +3509,9 @@
             "schema": {
               "type": "string",
               "enum": [
-                "AT",
-                "BE",
-                "BG",
-                "HR",
-                "CY",
-                "EE",
-                "FI",
-                "FR",
-                "DE",
-                "GR",
-                "IE",
-                "IT",
                 "LV",
                 "LT",
-                "LU",
-                "MT",
-                "NL",
-                "PT",
-                "SK",
-                "SI",
-                "ES"
+                "EE"
               ]
             }
           },
@@ -3644,27 +3572,9 @@
             "schema": {
               "type": "string",
               "enum": [
-                "AT",
-                "BE",
-                "BG",
-                "HR",
-                "CY",
-                "EE",
-                "FI",
-                "FR",
-                "DE",
-                "GR",
-                "IE",
-                "IT",
                 "LV",
                 "LT",
-                "LU",
-                "MT",
-                "NL",
-                "PT",
-                "SK",
-                "SI",
-                "ES"
+                "EE"
               ]
             }
           },
@@ -3888,27 +3798,9 @@
             "schema": {
               "type": "string",
               "enum": [
-                "AT",
-                "BE",
-                "BG",
-                "HR",
-                "CY",
-                "EE",
-                "FI",
-                "FR",
-                "DE",
-                "GR",
-                "IE",
-                "IT",
                 "LV",
                 "LT",
-                "LU",
-                "MT",
-                "NL",
-                "PT",
-                "SK",
-                "SI",
-                "ES"
+                "EE"
               ]
             }
           },
@@ -18384,27 +18276,9 @@
           "country": {
             "type": "string",
             "enum": [
-              "AT",
-              "BE",
-              "BG",
-              "HR",
-              "CY",
-              "EE",
-              "FI",
-              "FR",
-              "DE",
-              "GR",
-              "IE",
-              "IT",
               "LV",
               "LT",
-              "LU",
-              "MT",
-              "NL",
-              "PT",
-              "SK",
-              "SI",
-              "ES",
+              "EE",
               null
             ],
             "nullable": true
@@ -18878,27 +18752,9 @@
           "country": {
             "type": "string",
             "enum": [
-              "AT",
-              "BE",
-              "BG",
-              "HR",
-              "CY",
-              "EE",
-              "FI",
-              "FR",
-              "DE",
-              "GR",
-              "IE",
-              "IT",
               "LV",
               "LT",
-              "LU",
-              "MT",
-              "NL",
-              "PT",
-              "SK",
-              "SI",
-              "ES",
+              "EE",
               null
             ],
             "nullable": true

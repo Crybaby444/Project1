@@ -3,9 +3,10 @@ import { countryCookie, pickCountry } from './country';
 
 describe('pickCountry', () => {
   it('takes the visitor’s choice first, then where they connect from, then Latvia', () => {
-    expect(pickCountry('DE', 'FR')).toBe('DE');
-    expect(pickCountry(null, 'fr')).toBe('FR');
-    expect(pickCountry('XX', 'PL')).toBe('LV'); // a broken cookie, and Poland is not in the euro area
+    expect(pickCountry('LT', 'EE')).toBe('LT');
+    expect(pickCountry(null, 'ee')).toBe('EE');
+    expect(pickCountry('DE', 'FR')).toBe('LV'); // an old choice and a visitor outside the Baltics (2026-11-19)
+    expect(pickCountry('XX', 'PL')).toBe('LV');
     expect(pickCountry(undefined, undefined)).toBe('LV');
   });
 

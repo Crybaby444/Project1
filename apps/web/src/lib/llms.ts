@@ -24,7 +24,7 @@ export function llmsText(origin: string, categories: { name: string; url: string
   const lines = [
     '# Yoyo',
     '',
-    '> Yoyo (yoyo.rent) is a marketplace where people rent things from other people nearby, for a day or a week, and lend out what they rarely use. It works across the euro area (one country at a time, prices in euros), in English, Latvian and Russian.',
+    '> Yoyo (yoyo.rent) is a marketplace where people rent things from other people nearby, for a day or a week, and lend out what they rarely use. It works in the Baltic states: Latvia, Lithuania and Estonia (one country at a time, prices in euros), in English, Latvian and Russian.',
     '',
     '## How a deal works',
     '',

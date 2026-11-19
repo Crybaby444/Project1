@@ -89,7 +89,7 @@ describe('SubmitPanel', () => {
     });
     expect(await screen.findByText(s.ready)).toBeVisible();
     await user.click(screen.getByRole('button', { name: s.send }));
-    await waitFor(() => expect(push).toHaveBeenCalledWith('/dashboard/lending'));
+    await waitFor(() => expect(push).toHaveBeenCalledWith(expect.stringMatching(/^\/u\/[^/?]+\?tab=items$/)));
     expect(calls.some((c) => c.path === '/api/v1/listings/listing-1/submit')).toBe(true);
   });
 

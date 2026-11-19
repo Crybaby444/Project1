@@ -182,7 +182,7 @@ test.describe('send for review', () => {
     await expect(page.getByText(b.submit.ready)).toBeVisible();
     await page.getByRole('button', { name: b.submit.send }).click();
 
-    await expect(page).toHaveURL(/\/dashboard\/lending$/);
+    await expect(page).toHaveURL(/\/u\/[^/?]+\?tab=items$/);
     const { items } = (await (await page.request.get('/api/v1/me/listings')).json()) as {
       items: { status: string; title: string }[];
     };

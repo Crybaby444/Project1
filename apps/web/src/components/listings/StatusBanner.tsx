@@ -8,6 +8,8 @@ import { useApiClient } from '@/lib/session/SessionProvider';
 import { useBuilder } from './BuilderContext';
 import { ListingActions, type ListingAction } from './ListingActions';
 import { ListingStatusBadge } from './ListingStatusBadge';
+import { useSession } from '@/lib/session/SessionProvider';
+import { myProfileHref } from '@/lib/profile/links';
 
 /** Where the listing stands, what that means for edits, and what the owner can do about it. */
 export function StatusBanner() {
@@ -16,6 +18,7 @@ export function StatusBanner() {
   const client = useApiClient();
   const queryClient = useQueryClient();
   const router = useRouter();
+  const { user } = useSession();
   const { draft, goTo } = useBuilder();
   const listing = draft.listing;
   // A new listing shows the draft banner from the start, so nothing jumps when its first change creates it.
@@ -36,7 +39,7 @@ export function StatusBanner() {
       return () => answer.listing;
     });
     void queryClient.invalidateQueries({ queryKey: ['listings', 'mine'] });
-    if (action === 'delete') router.push('/dashboard/lending');
+    if (action === 'delete') router.push(user ? myProfileHref(user.id) : '/');
   }
 
   return (

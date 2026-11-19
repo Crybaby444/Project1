@@ -5,6 +5,7 @@ import {
   type OwnerListingSummary,
   type PhotoUrls,
   type PublicListing,
+  isCountry,
 } from '@yoyo/shared';
 import type { Listing, ListingPhoto, Unavailability } from '../generated/prisma/client';
 
@@ -65,7 +66,8 @@ export function serializeListing(listing: ListingWithRelations, viewer: ListingV
     maxDays: listing.maxDays,
     city: listing.city,
     district: listing.district,
-    country: listing.country,
+    // Only the countries Yoyo works in (Baltics since 2026-11-19); anything else reads as not set.
+    country: isCountry(listing.country) ? listing.country : null,
     timeZone: listing.timeZone,
     contentLocale: listing.contentLocale as PublicListing['contentLocale'],
     rules: listing.rules as ListingRules,

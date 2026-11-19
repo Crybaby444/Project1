@@ -1,14 +1,12 @@
 """
 Builds assets/places/cities.json.gz from GeoNames cities1000.txt (https://download.geonames.org/export/dump/,
-CC BY 4.0): every place of 1000+ people in the euro area, with the names people type (the local spelling
+CC BY 4.0): every place of 1000+ people in the Baltic states (the countries Yoyo works in since 2026-11-19), with the names people type (the local spelling
 first for LV and LT, where GeoNames writes "Riga"; Cyrillic and other common forms for search).
 Usage: python3 -I scripts/build-cities.py path/to/cities1000.txt
 """
 import gzip, json, re, sys, unicodedata
 
-L = {'LV': 'āēīūģķļņšžč', 'LT': 'ąčęėįšųūž', 'EE': 'õäöüšž', 'FI': 'äöå', 'DE': 'äöüß', 'AT': 'äöüß', 'LU': 'äöüéè',
-     'FR': 'éèêàçôîûëïüœ', 'BE': 'éèêàçôëïü', 'NL': 'ëïéè', 'IT': 'àèéìòù', 'ES': 'áéíóúñü', 'PT': 'áâãàçéêíóôõú',
-     'SK': 'áäčďéíĺľňóôŕšťúýž', 'SI': 'čšž', 'HR': 'čćđšž', 'MT': 'ċġħż', 'IE': 'áéíóú', 'GR': '', 'CY': '', 'BG': ''}
+L = {'LV': 'āēīūģķļņšžč', 'LT': 'ąčęėįšųūž', 'EE': 'õäöüšž'}
 LOCAL_DISPLAY = {'LV', 'LT'}
 ok = re.compile(r"^[\w .'’()\-]+$")
 
