@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { RangeCalendar } from '@/components/catalog/RangeCalendar';
 import { CityInput, type CityChoice } from '@/components/catalog/CityInput';
+import { SuggestionList, suggestionKey, useSuggestions } from '@/components/catalog/suggestions';
 import type { Country } from '@yoyo/shared';
 import { useRouter } from '@/i18n/navigation';
 
@@ -22,7 +23,14 @@ export function HomeSearch({ country, today }: { country: Country; today: string
   const [city, setCity] = useState<CityChoice | null>(null);
   const [range, setRange] = useState<Range | null>(null);
   const [calendar, setCalendar] = useState(false);
-  const ids = { q: useId(), where: useId(), when: useId() };
+  const ids = { q: useId(), where: useId(), when: useId(), list: useId() };
+  const [whatOpen, setWhatOpen] = useState(false);
+  const suggest = useSuggestions(q, whatOpen);
+  const whatExpanded = whatOpen && suggest.options.length > 0;
+  const pick = (href: string) => {
+    setWhatOpen(false);
+    router.push(href);
+  };
   const popover = useRef<HTMLDivElement>(null);
   const day = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', timeZone: 'UTC' });
   const label = (d: string) => day.format(new Date(`${d}T00:00:00Z`));
@@ -56,19 +64,38 @@ export function HomeSearch({ country, today }: { country: Country; today: string
   const caption = 'text-ink/60 text-xs font-bold tracking-[0.06em] uppercase';
   return (
     <form role="search" onSubmit={submit} data-home-search="" className="border-ink bg-surface relative grid w-full grid-cols-1 rounded-[28px] border sm:rounded-[999px] md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_minmax(0,1fr)_auto]">
-      <div className={`${cell} max-md:border-ink/15 max-md:border-b`}>
+      <div className={`${cell} max-md:border-ink/15 relative max-md:border-b`}>
         <label htmlFor={ids.q} className={caption}>
           {t('what')}
         </label>
         <input
           id={ids.q}
           type="search"
+          role="combobox"
+          autoComplete="off"
           enterKeyHint="search"
+          aria-autocomplete="list"
+          aria-expanded={whatExpanded}
+          aria-controls={ids.list}
+          aria-activedescendant={whatExpanded && suggest.active >= 0 ? `${ids.list}-${suggest.active}` : undefined}
           value={q}
-          onChange={(e) => setQ(e.target.value)}
+          onChange={(e) => {
+            setQ(e.target.value);
+            setWhatOpen(true);
+          }}
+          onFocus={() => setWhatOpen(true)}
+          onBlur={() => setWhatOpen(false)}
+          onKeyDown={(e) => {
+            if (suggestionKey(e.key, { ...suggest, expanded: whatExpanded, open: () => setWhatOpen(true), pick })) e.preventDefault();
+            else if (e.key === 'Escape' && whatExpanded) {
+              e.preventDefault();
+              setWhatOpen(false);
+            }
+          }}
           placeholder={t('whatPlaceholder')}
           className="placeholder:text-ink/60 min-w-0 bg-transparent text-lg font-semibold outline-none [&::-webkit-search-cancel-button]:hidden"
         />
+        <SuggestionList id={ids.list} options={suggest.options} active={suggest.active} onActive={suggest.setActive} onPick={pick} hidden={!whatExpanded} className="top-[calc(100%+10px)] right-0 left-0 w-[min(92vw,560px)] shadow-[0_32px_64px_-32px_rgba(10,11,14,0.5)]" />
       </div>
       <div className={`${cell} border-ink/15 max-md:border-b md:border-l`}>
         <label htmlFor={ids.where} className={caption}>

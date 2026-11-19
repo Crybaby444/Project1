@@ -1,34 +1,11 @@
 'use client';
 
-import type { Locale, SuggestResponse } from '@yoyo/shared';
-import { useLocale, useTranslations } from 'next-intl';
-import { useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
+import { useTranslations } from 'next-intl';
+import { useId, useState, type FormEvent, type KeyboardEvent } from 'react';
 import { useRouter } from '@/i18n/navigation';
-import { localized } from '@/lib/listings/categories';
-import { categoryPath, listingPath } from '@/lib/seo';
-import { useApiClient } from '@/lib/session/SessionProvider';
+import { SuggestionList, suggestionKey, useSuggestions } from './suggestions';
 
-/** Suggestions wait this long after the last key. */
-export const SUGGEST_DELAY_MS = 200;
-
-type Option =
-  | { kind: 'category'; key: string; label: string; href: string; sticker: string }
-  | { kind: 'listing'; key: string; label: string; href: string; cover: string | null };
-
-
-function optionsOf(answer: SuggestResponse | null, locale: Locale): Option[] {
-  if (!answer) return [];
-  return [
-    ...answer.categories.map((c): Option => ({
-      kind: 'category',
-      key: `c-${c.slug}`,
-      label: localized(c.names, locale),
-      href: categoryPath(c.slugs[locale]),
-      sticker: c.sticker,
-    })),
-    ...answer.listings.map((l): Option => ({ kind: 'listing', key: `l-${l.id}`, label: l.title, href: listingPath(l.id, l.title), cover: l.cover?.thumb ?? null })),
-  ];
-}
+export { SUGGEST_DELAY_MS } from './suggestions';
 
 /**
  * The catalog's search box with suggestions (WAI-ARIA 1.2 combobox, list autocomplete): categories by
@@ -38,51 +15,12 @@ function optionsOf(answer: SuggestResponse | null, locale: Locale): Option[] {
  */
 export function SearchBox({ initialQuery = '', className = '', compact = false, label }: { initialQuery?: string; className?: string; /** The header's slim box: 40px tall, Enter searches (no button). */ compact?: boolean; /** Its own accessible name, when another search box is on the page. */ label?: string }) {
   const t = useTranslations('catalog.search');
-  const locale = useLocale() as Locale;
-  const client = useApiClient();
   const router = useRouter();
-  const ids = { input: useId(), list: useId(), categories: useId(), listings: useId() };
+  const ids = { input: useId(), list: useId() };
   const [text, setText] = useState(initialQuery);
   const [open, setOpen] = useState(false);
-  const [answer, setAnswer] = useState<SuggestResponse | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [active, setActive] = useState(-1);
-  const cache = useRef(new Map<string, SuggestResponse>());
-
-  useEffect(() => {
-    const query = text.trim();
-    if (!open || query.length < 2) return;
-    const key = `${locale}:${query.toLowerCase()}`;
-    const cached = cache.current.get(key);
-    if (cached) {
-      setAnswer(cached);
-      return;
-    }
-    const controller = new AbortController();
-    const timer = setTimeout(async () => {
-      setLoading(true);
-      try {
-        const { data } = await client.GET('/api/v1/catalog/suggest', { params: { query: { q: query, lang: locale } }, signal: controller.signal });
-        if (controller.signal.aborted || !data) return;
-        cache.current.set(key, data);
-        setAnswer(data);
-        setActive(-1);
-      } catch {
-        // A cancelled or failed suggestion is not an error to show: the search itself still works.
-      } finally {
-        if (!controller.signal.aborted) setLoading(false);
-      }
-    }, SUGGEST_DELAY_MS);
-    return () => {
-      clearTimeout(timer);
-      controller.abort();
-    };
-  }, [text, open, client, locale]);
-
-  const options = text.trim().length >= 2 ? optionsOf(answer, locale) : [];
+  const { answer, loading, options, active, setActive, clear } = useSuggestions(text, open);
   const expanded = open && options.length > 0;
-  const categories = options.filter((o) => o.kind === 'category');
-  const listings = options.filter((o) => o.kind === 'listing');
 
   function go(href: string) {
     setOpen(false);
@@ -96,54 +34,18 @@ export function SearchBox({ initialQuery = '', className = '', compact = false, 
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
-    if (event.key === 'ArrowDown' && options.length > 0) {
-      event.preventDefault();
-      setOpen(true);
-      setActive((index) => (index + 1) % options.length);
-    } else if (event.key === 'ArrowUp' && options.length > 0) {
-      event.preventDefault();
-      setOpen(true);
-      setActive((index) => (index <= 0 ? options.length - 1 : index - 1));
-    } else if (event.key === 'Enter' && expanded && active >= 0) {
-      event.preventDefault();
-      go(options[active]!.href);
-    } else if (event.key === 'Escape') {
+    if (suggestionKey(event.key, { options, active, setActive, expanded, open: () => setOpen(true), pick: go })) event.preventDefault();
+    else if (event.key === 'Escape') {
       event.preventDefault();
       if (expanded) setOpen(false);
       else {
         setText('');
-        setAnswer(null);
+        clear();
       }
     }
   }
 
   const optionId = (index: number) => `${ids.list}-${index}`;
-  const renderOption = (option: Option) => {
-    const index = options.indexOf(option);
-    const selected = index === active;
-    return (
-      <li
-        key={option.key}
-        id={optionId(index)}
-        role="option"
-        aria-selected={selected}
-        onPointerDown={(event) => event.preventDefault()}
-        onPointerEnter={() => setActive(index)}
-        onClick={() => go(option.href)}
-        className={`rounded-pill ease-yoyo flex min-h-11 cursor-pointer items-center gap-3 px-3 py-1.5 text-sm font-bold transition-colors duration-150 ${selected ? 'bg-cta text-cta-fg' : ''}`}
-      >
-        {option.kind === 'category' ? (
-          <span aria-hidden="true" className="size-2 shrink-0 rounded-full bg-[var(--glow)] ring-1 ring-black/15" />
-        ) : option.cover ? (
-          // eslint-disable-next-line @next/next/no-img-element -- a 160×120 thumbnail from the API's storage
-          <img src={option.cover} alt="" width={40} height={30} className="border-ink rounded-[6px] h-[30px] w-10 shrink-0 border object-cover" />
-        ) : (
-          <span aria-hidden="true" className="bg-mist border-ink h-[30px] w-10 shrink-0 rounded-[6px] border" />
-        )}
-        <span className="min-w-0 [overflow-wrap:anywhere]">{option.label}</span>
-      </li>
-    );
-  };
 
   return (
     <form role="search" onSubmit={submit} className={`relative ${className}`}>
@@ -182,7 +84,7 @@ export function SearchBox({ initialQuery = '', className = '', compact = false, 
             aria-label={t('clear')}
             onClick={() => {
               setText('');
-              setAnswer(null);
+              clear();
             }}
             className="hover:bg-mist ease-yoyo grid size-9 shrink-0 place-items-center rounded-full transition-transform duration-150 active:scale-90"
           >
@@ -203,30 +105,7 @@ export function SearchBox({ initialQuery = '', className = '', compact = false, 
       <p role="status" aria-live="polite" className="sr-only">
         {open && text.trim().length >= 2 && !loading && answer ? (options.length > 0 ? t('count', { count: options.length }) : t('none')) : ''}
       </p>
-      <div hidden={!expanded} className="border-ink/15 bg-surface rounded-media animate-pop-in absolute inset-x-0 top-full z-30 mt-2 origin-top border p-2">
-        <ul id={ids.list} role="listbox" aria-label={t('label')} className="flex flex-col gap-1">
-          {categories.length > 0 && (
-            <li role="presentation">
-              <p id={ids.categories} className="px-3 pt-1 pb-1 text-xs font-bold tracking-[0.032em] uppercase">
-                {t('categories')}
-              </p>
-              <ul role="group" aria-labelledby={ids.categories}>
-                {categories.map(renderOption)}
-              </ul>
-            </li>
-          )}
-          {listings.length > 0 && (
-            <li role="presentation">
-              <p id={ids.listings} className="px-3 pt-2 pb-1 text-xs font-bold tracking-[0.032em] uppercase">
-                {t('items')}
-              </p>
-              <ul role="group" aria-labelledby={ids.listings}>
-                {listings.map(renderOption)}
-              </ul>
-            </li>
-          )}
-        </ul>
-      </div>
+      <SuggestionList id={ids.list} options={options} active={active} onActive={setActive} onPick={go} hidden={!expanded} className="inset-x-0 top-full mt-2" />
     </form>
   );
 }
