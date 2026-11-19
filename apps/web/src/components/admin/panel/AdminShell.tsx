@@ -256,7 +256,8 @@ export function AdminShell({ children }: { children: ReactNode }) {
       </aside>
       <CommandPalette />
       <main id="admin-main" className="min-w-0 px-4 py-8 sm:px-8 lg:px-12 lg:py-10">
-        {allowed ? children : <NoAccess />}
+        {/* One working width for every admin page, centred (owner, 2026-11-19: no half-empty screens). */}
+        <div className="mx-auto w-full max-w-[1200px]">{allowed ? children : <NoAccess />}</div>
       </main>
     </div>
   );

@@ -156,7 +156,7 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
   const pages = Math.max(1, Math.ceil(total / ADMIN_LISTINGS_PAGE_SIZE));
 
   return (
-    <div className="flex w-full max-w-5xl flex-col gap-8">
+    <div className="flex w-full flex-col gap-8">
       <header className="@container flex flex-col gap-2">
         <h1
           style={displayFit(t('title'), { max: '3.5rem' })}
