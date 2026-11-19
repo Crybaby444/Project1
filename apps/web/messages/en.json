@@ -1087,7 +1087,15 @@
       "memberSince": "On Yoyo since {since}"
     },
     "myItems": "My items",
-    "following": "Following"
+    "following": "Following",
+    "lend": "Lend an item",
+    "shortcuts": {
+      "label": "My account",
+      "deals": "My deals",
+      "wallet": "Wallet",
+      "messages": "Messages",
+      "notifications": "Notifications"
+    }
   },
   "consent": {
     "label": "Cookie choice",

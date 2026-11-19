@@ -1087,7 +1087,15 @@
       "memberSince": "Yoyo kopš {since}"
     },
     "myItems": "Manas lietas",
-    "following": "Sekoju"
+    "following": "Sekoju",
+    "lend": "Izīrēt lietu",
+    "shortcuts": {
+      "label": "Mans konts",
+      "deals": "Mani darījumi",
+      "wallet": "Maks",
+      "messages": "Ziņas",
+      "notifications": "Paziņojumi"
+    }
   },
   "consent": {
     "label": "Sīkdatņu izvēle",

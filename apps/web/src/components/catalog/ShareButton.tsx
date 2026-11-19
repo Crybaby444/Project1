@@ -7,12 +7,21 @@ import { useToast } from '@/components/ui/Toast';
  * Shares the page: the device's own share sheet where there is one (phones), otherwise the link is
  * copied and a toast says so. A share the person dismisses is not an error.
  */
-export function ShareButton({ title, className = '' }: { title: string; className?: string }) {
+export function ShareButton({
+  title,
+  className = '',
+  withoutQuery = false,
+}: {
+  title: string;
+  className?: string;
+  /** Share the address without `?…` (a profile's open tab is not part of what is shared). */
+  withoutQuery?: boolean;
+}) {
   const t = useTranslations('item.share');
   const toast = useToast();
 
   async function onClick() {
-    const url = window.location.href;
+    const url = withoutQuery ? `${window.location.origin}${window.location.pathname}` : window.location.href;
     if (typeof navigator.share === 'function') {
       try {
         await navigator.share({ title, url });

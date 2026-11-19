@@ -1087,7 +1087,15 @@
       "memberSince": "На Yoyo с {since}"
     },
     "myItems": "Мои вещи",
-    "following": "Подписки"
+    "following": "Подписки",
+    "lend": "Сдать вещь",
+    "shortcuts": {
+      "label": "Мой аккаунт",
+      "deals": "Мои сделки",
+      "wallet": "Кошелёк",
+      "messages": "Сообщения",
+      "notifications": "Уведомления"
+    }
   },
   "consent": {
     "label": "Выбор cookie",
