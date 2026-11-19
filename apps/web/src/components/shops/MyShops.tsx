@@ -18,7 +18,7 @@ import { useSession } from '@/lib/session/SessionProvider';
 type Lang = 'en' | 'lv' | 'ru';
 
 /** Dashboard → My shops: make a shop, name it, pick a category and your items, order them, delete it. */
-export function MyShops() {
+export function MyShops({ embedded = false }: { /** Inside the profile: no page title, no link back to the profile. */ embedded?: boolean } = {}) {
   const t = useTranslations('shops');
   const { user } = useSession();
   const shops = useMyShops();
@@ -27,11 +27,11 @@ export function MyShops() {
     <div className="flex flex-col gap-8">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="font-display text-display-l leading-[0.9] font-black uppercase">{t('mineTitle')}</h1>
+          {!embedded && <h1 className="font-display text-display-l leading-[0.9] font-black uppercase">{t('mineTitle')}</h1>}
           <p className="text-ink/75 max-w-read">{t('mineIntro')}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          {user && (
+          {user && !embedded && (
             <Button variant="ghost" href={`/u/${user.id}`}>
               {t('seeProfile')}
             </Button>
@@ -41,7 +41,7 @@ export function MyShops() {
           </Button>
         </div>
       </header>
-      {shops.data && shops.data.length === 0 && <EmptyState headingLevel={2} title={t('noShops')} body={t('noShopsBody')} />}
+      {shops.data && shops.data.length === 0 && <EmptyState headingLevel={embedded ? 3 : 2} title={t('noShops')} body={t('noShopsBody')} />}
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {shops.data?.map((s) => (
           <li key={s.id} className="border-ink/15 bg-surface rounded-media flex flex-col gap-3 border p-5" data-my-shop={s.id}>

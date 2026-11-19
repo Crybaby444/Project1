@@ -1070,7 +1070,6 @@
     "shops": "Shops",
     "noShops": "{name} has no shops yet",
     "edit": "Edit profile",
-    "manage": "Manage my items",
     "followersOf": "Who follows {name}",
     "followingOf": "Whom {name} follows",
     "loading": "Loading…",
@@ -1085,6 +1084,14 @@
       "rating": "Rating",
       "noRating": "No rating yet",
       "memberSince": "On Yoyo since {since}"
+    },
+    "lend": "Lend an item",
+    "shortcuts": {
+      "label": "My account",
+      "deals": "My deals",
+      "wallet": "Wallet",
+      "messages": "Messages",
+      "notifications": "Notifications"
     }
   },
   "consent": {

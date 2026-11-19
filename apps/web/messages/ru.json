@@ -1070,7 +1070,6 @@
     "shops": "Магазины",
     "noShops": "У {name} пока нет магазинов",
     "edit": "Редактировать профиль",
-    "manage": "Управлять моими вещами",
     "followersOf": "Подписчики: {name}",
     "followingOf": "Подписки: {name}",
     "loading": "Загрузка…",
@@ -1085,6 +1084,14 @@
       "rating": "Рейтинг",
       "noRating": "Пока без рейтинга",
       "memberSince": "На Yoyo с {since}"
+    },
+    "lend": "Сдать вещь",
+    "shortcuts": {
+      "label": "Мой аккаунт",
+      "deals": "Мои сделки",
+      "wallet": "Кошелёк",
+      "messages": "Сообщения",
+      "notifications": "Уведомления"
     }
   },
   "consent": {

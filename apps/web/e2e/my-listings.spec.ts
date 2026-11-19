@@ -20,6 +20,16 @@ test('a visitor is sent to sign in first', async ({ page }) => {
   await expect(page).toHaveURL(/\/login\?next=%2Fdashboard%2Flending$/);
 });
 
+test('the old address opens my items in my profile', async ({ page }) => {
+  await registerByApi(page.request);
+  await page.goto('/dashboard/lending');
+  await expect(page).toHaveURL(/\/u\/[^/?]+$/);
+  await expect(page.getByRole('tab', { name: en.mySpace.tabs.lending })).toHaveAttribute('aria-selected', 'true');
+  await page.goto('/dashboard/favorites');
+  await expect(page).toHaveURL(/\/u\/[^/?]+\?tab=favorites$/);
+  await expect(page.getByRole('tab', { name: en.mySpace.tabs.favorites })).toHaveAttribute('aria-selected', 'true');
+});
+
 test('a new owner is invited to lend the first item', async ({ page }) => {
   await registerByApi(page.request);
   await page.goto('/dashboard/lending');

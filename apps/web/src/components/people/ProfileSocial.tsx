@@ -2,9 +2,11 @@
 
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import { ShareButton } from '@/components/catalog/ShareButton';
 import { MessageOwnerButton } from '@/components/chat/MessageOwnerButton';
 import { Button } from '@/components/ui/Button';
 import { Dialog } from '@/components/ui/Dialog';
+import { Link } from '@/i18n/navigation';
 import { usePeopleOf } from '@/lib/people/queries';
 import { useSession } from '@/lib/session/SessionProvider';
 import { FindPeople } from './FindPeople';
@@ -15,8 +17,8 @@ type List = 'followers' | 'following' | 'find';
 
 /**
  * The profile's social row (owner, 2026-11-16: a full profile). Followers and following open their
- * lists; reviews jump to the reviews tab. On someone else's profile: Follow and Write. On your own:
- * Edit profile and Manage my items instead.
+ * lists. On someone else's profile: Follow, Write, Share. On your own: Lend a thing, Edit profile,
+ * Find people, Share, and shortcuts to your deals, wallet, messages and notifications (owner, 2026-11-19).
  */
 export function ProfileSocial({
   userId,
@@ -72,23 +74,52 @@ export function ProfileSocial({
       <div className="flex flex-wrap gap-2">
         {mine ? (
           <>
-            <Button href="/settings" size="md">
-              {tp('edit')}
+            <Button href="/listings/new" size="md">
+              <span aria-hidden="true">+</span> {tp('lend')}
             </Button>
-            <Button href="/dashboard/lending" variant="ghost" size="md">
-              {tp('manage')}
+            <Button href="/settings" variant="ghost" size="md">
+              {tp('edit')}
             </Button>
             <Button variant="ghost" size="md" onClick={() => setOpen('find')}>
               {tp('findPeople')}
             </Button>
+            <ShareButton title={name} withoutQuery />
           </>
         ) : (
           <>
             <FollowButton userId={userId} name={name} onChange={(on) => setDelta((d) => d + (on ? 1 : -1))} />
             <MessageOwnerButton ownerId={userId} label={t('write')} size="md" />
+            <ShareButton title={name} withoutQuery />
           </>
         )}
       </div>
+
+      {mine && (
+        <nav aria-label={tp('shortcuts.label')} className="w-full">
+          <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
+            {(
+              [
+                ['/bookings', 'deals'],
+                ['/wallet', 'wallet'],
+                ['/messages', 'messages'],
+                ['/notifications', 'notifications'],
+              ] as const
+            ).map(([href, key]) => (
+              <li key={key}>
+                <Link
+                  href={href}
+                  className={`rounded-pill ease-yoyo inline-flex min-h-10 items-center gap-2 border px-4 text-sm font-bold transition-[transform,background-color] duration-150 hover:-translate-y-0.5 ${
+                    night ? 'border-[var(--paper)]/30 hover:bg-[var(--paper)]/10' : 'border-ink/20 hover:bg-mist'
+                  }`}
+                >
+                  {tp(`shortcuts.${key}`)}
+                  <span aria-hidden="true">→</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
 
       <Dialog
         open={open !== null}

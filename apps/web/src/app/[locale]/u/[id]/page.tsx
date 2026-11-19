@@ -1,14 +1,20 @@
 import { ReportButton } from '@/components/reports/ReportButton';
-import type { Locale } from '@yoyo/shared';
+import { LISTING_STATUSES, type Locale } from '@yoyo/shared';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ProfileTabs } from '@/components/profile/ProfileTabs';
+import { isProfileTab } from '@/components/profile/profile-tabs';
 import { ProfileHero } from '@/components/profile/ProfileHero';
 import { loadProfile } from '@/lib/catalog/server-api';
 import { profileSeo, seoMetadata } from '@/lib/seo';
 
-type Props = { params: Promise<{ locale: string; id: string }> };
+type Props = {
+  params: Promise<{ locale: string; id: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+const first = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value);
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, id } = (await params) as { locale: Locale; id: string };
@@ -26,8 +32,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /** Someone's public page `/u/{id}`: who they are as everyone may see it, and their items. */
-export default async function ProfilePage({ params }: Props) {
+export default async function ProfilePage({ params, searchParams }: Props) {
   const { locale, id } = (await params) as { locale: Locale; id: string };
+  const query = await searchParams;
+  const tab = first(query['tab']);
+  const status = first(query['status']);
   setRequestLocale(locale);
   const loaded = await loadProfile(id);
   if (!loaded.ok) {
@@ -48,7 +57,13 @@ export default async function ProfilePage({ params }: Props) {
           <p className="max-w-read text-lg leading-relaxed whitespace-pre-line [overflow-wrap:anywhere]">{user.about}</p>
         </section>
       )}
-      <ProfileTabs listings={listings} name={user.name} userId={user.id} />
+      <ProfileTabs
+        listings={listings}
+        name={user.name}
+        userId={user.id}
+        initialTab={isProfileTab(tab) ? tab : 'items'}
+        initialStatus={(LISTING_STATUSES as readonly string[]).includes(status ?? '') ? (status as (typeof LISTING_STATUSES)[number]) : 'ALL'}
+      />
       <ReportButton target="USER" id={user.id} ownerId={user.id} className="self-start" />
     </main>
   );

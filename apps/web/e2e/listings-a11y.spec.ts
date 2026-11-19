@@ -135,5 +135,5 @@ test('a listing can be made and sent with the keyboard alone', async ({ page, co
   await expect(page.getByRole('heading', { level: 2, name: en.builder.steps.rules })).toBeFocused();
   await page.getByRole('button', { name: en.builder.submit.send }).focus();
   await page.keyboard.press('Enter');
-  await expect(page).toHaveURL(/\/dashboard\/lending$/);
+  await expect(page).toHaveURL(/\/u\/[^/?]+$/); // my items, in the profile
 });

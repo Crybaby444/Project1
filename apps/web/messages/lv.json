@@ -1070,7 +1070,6 @@
     "shops": "Veikali",
     "noShops": "{name} vēl nav veikalu",
     "edit": "Rediģēt profilu",
-    "manage": "Pārvaldīt manas lietas",
     "followersOf": "Kas seko {name}",
     "followingOf": "Kam seko {name}",
     "loading": "Ielādē…",
@@ -1085,6 +1084,14 @@
       "rating": "Vērtējums",
       "noRating": "Vēl nav vērtējuma",
       "memberSince": "Yoyo kopš {since}"
+    },
+    "lend": "Izīrēt lietu",
+    "shortcuts": {
+      "label": "Mans konts",
+      "deals": "Mani darījumi",
+      "wallet": "Maks",
+      "messages": "Ziņas",
+      "notifications": "Paziņojumi"
     }
   },
   "consent": {

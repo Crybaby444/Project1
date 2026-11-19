@@ -11,13 +11,15 @@ import { EmptyState } from '@/components/ui/EmptyState';
  * stays, marked, so its heart can still be taken off. Removing a heart here keeps the card until the
  * list is loaded again, so nothing jumps under the pointer.
  */
-export function FavoritesList() {
+export function FavoritesList({ embedded = false }: { /** Inside the profile: the tab names it, no page title. */ embedded?: boolean } = {}) {
   const t = useTranslations('favorites');
   const favorites = useFavorites();
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="font-display text-display-l leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{t('title')}</h1>
+      {!embedded && (
+        <h1 className="font-display text-display-l leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{t('title')}</h1>
+      )}
       {favorites.isPending ? (
         <ul aria-busy="true" className="grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-4 lg:grid-cols-4">
           {Array.from({ length: 4 }, (_, index) => (
