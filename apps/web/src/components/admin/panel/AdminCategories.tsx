@@ -32,7 +32,7 @@ export function AdminCategories() {
   );
 
   return (
-    <div className="flex max-w-5xl flex-col gap-6">
+    <div className="flex flex-col gap-6">
       <AdminPageHeader title={tc('title')} note={tc('intro')} action={<AddCategoryButton />} />
       {categories.isPending ? (
         <div aria-busy="true" className="bg-mist rounded-media h-96" />

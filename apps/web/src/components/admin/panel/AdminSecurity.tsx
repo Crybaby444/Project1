@@ -11,7 +11,7 @@ export function AdminSecurity() {
   const tf = useTranslations('twoFactor');
   const { user } = useSession();
   return (
-    <div className="flex max-w-3xl flex-col gap-6">
+    <div className="flex flex-col gap-6">
       <AdminPageHeader title={t('title')} note={tf('intro')} />
       <Panel title={tf('title')}>{user && <TwoFactorSettings hasPassword={user.hasPassword} />}</Panel>
     </div>

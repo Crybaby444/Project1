@@ -74,7 +74,7 @@ export function AdminStaff() {
   });
 
   return (
-    <div className="flex max-w-5xl flex-col gap-6">
+    <div className="flex flex-col gap-6">
       <AdminPageHeader title={ts('title')} note={ts('intro')} />
       {staff.isPending ? (
         <div aria-busy="true" className="bg-mist rounded-media h-64" />
