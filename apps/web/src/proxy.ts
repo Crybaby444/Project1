@@ -49,7 +49,7 @@ const lookups: Lookups = {
  *   API knows it may trust the visitor address in X-Forwarded-For. (next.config rewrites cannot add
  *   request headers, hence this file.)
  * - Item, profile and category pages follow the SEO rules first (lib/page-headers.ts): 301 to the right
- *   address, 404 with the "removed" page for a removed item, and the hreflang `Link` header only where it is right.
+ *   address, the "removed" page (noindex) for a removed item, and the hreflang `Link` header only where it is right.
  * - Everything else: next-intl resolves the locale and rewrites to /[locale]/….
  */
 export default async function proxy(request: NextRequest): Promise<NextResponse> {
@@ -65,9 +65,12 @@ export default async function proxy(request: NextRequest): Promise<NextResponse>
   const decision = await decidePage(pathname, search, origin, lookups);
   if (decision.action === 'redirect') return NextResponse.redirect(new URL(decision.location, request.url), 301);
   if (decision.action === 'gone') {
-    // 404, not 410: Vercel replaces a 410 from the proxy with its own "deployment removed" page (2026-11-19).
-    // Search engines drop a 404 page the same way; the page itself is noindex.
-    return NextResponse.rewrite(new URL(`/${decision.locale}/listing-gone`, request.url), { status: 404 });
+    // No error status here: on Vercel a proxy rewrite with 410 shows the platform's own "deployment removed"
+    // page, and with 404 the site's generic 404, never this page (2026-11-19). The page is kept out of
+    // search by X-Robots-Tag (and its own robots meta), which drops it from the index like a 410 would.
+    const response = NextResponse.rewrite(new URL(`/${decision.locale}/listing-gone`, request.url));
+    response.headers.set('X-Robots-Tag', 'noindex');
+    return response;
   }
 
   // Only this proxy sets the content-language header; a copy sent from outside never reaches a page.

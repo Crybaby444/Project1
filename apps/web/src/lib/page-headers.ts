@@ -7,7 +7,7 @@ export const CONTENT_LOCALE_HEADER = 'x-yoyo-content-locale';
 
 /**
  * What the proxy does with a page before next-intl renders it (owner's SEO decision, W02 §F, W03 §G):
- * - item: 301 to the right `{id}-{slug}`; the "removed" page (404) for a removed item; no hreflang `Link`; the page's
+ * - item: 301 to the right `{id}-{slug}`; the "removed" page (noindex) for a removed item; no hreflang `Link`; the page's
  *   language for <html lang>;
  * - profile: no hreflang `Link`;
  * - category: 301 from another language's slug; `Link` with each language's own slug;
