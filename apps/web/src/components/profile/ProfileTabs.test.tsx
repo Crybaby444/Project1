@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import en from '../../../messages/en.json';
 import { catalogItem } from '@/test/catalog';
-import { fakeApi, meRoute } from '@/test/fake-api';
+import { fakeApi, meRoute, testUser } from '@/test/fake-api';
 import { renderWithSession } from '@/test/render';
 import { ProfileTabs } from './ProfileTabs';
 
@@ -35,5 +35,34 @@ describe('ProfileTabs', () => {
     expect(reviews).toHaveFocus();
     expect(reviews).toHaveAttribute('aria-selected', 'true');
     expect(await screen.findByText(en.profile.noReviewsTitle)).toBeVisible();
+  });
+
+  it('your own profile manages everything: drafts in Items, and ?tab= opens a tab (no separate dashboard, 2026-11-19)', async () => {
+    const me = testUser({ id: 'me-1' });
+    const draft = {
+      id: 'l1', status: 'DRAFT', title: 'Bosch drill draft', categoryId: null, dailyCents: 800, cover: null, photoCount: 0,
+      rejectionReason: null, submittedAt: null, publishedAt: null, updatedAt: '2026-11-04T10:00:00.000Z', version: 1,
+      activity: { requests: 0, nextStart: null, earnedCents: 0 },
+    };
+    const api = fakeApi({
+      ...meRoute(me),
+      'GET /api/v1/me/listings': { status: 200, body: { items: [draft] } },
+      'GET /api/v1/me/favorites': { status: 200, body: { items: [] } },
+      'GET /api/v1/me/favorites/ids': { status: 200, body: { ids: [] } },
+      'GET /api/v1/me/following': { status: 200, body: { items: [] } },
+      'GET /api/v1/me/following/ids': { status: 200, body: { ids: [] } },
+      'GET /api/v1/me/following/feed': { status: 200, body: { items: [], total: 0 } },
+    });
+    window.history.replaceState(null, '', '/u/me-1');
+    const { unmount } = renderWithSession(<ProfileTabs listings={[]} name="Me" userId="me-1" />, { client: api.client });
+    expect(await screen.findByText('Bosch drill draft')).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: en.profile.myItems })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('tab', { name: en.profile.following })).toBeInTheDocument();
+    unmount();
+
+    window.history.replaceState(null, '', '/u/me-1?tab=following');
+    renderWithSession(<ProfileTabs listings={[]} name="Me" userId="me-1" />, { client: api.client });
+    expect(await screen.findByRole('tab', { name: en.profile.following, selected: true })).toBeInTheDocument();
+    window.history.replaceState(null, '', '/');
   });
 });

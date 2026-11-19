@@ -10,7 +10,7 @@ import { useFollowFeed, useFollowing } from '@/lib/people/queries';
 import { PersonCard } from './PersonCard';
 
 /** Dashboard → Following: new items from the people you follow, and the people themselves. */
-export function FollowingView() {
+export function FollowingView({ embedded = false }: { embedded?: boolean }) {
   const t = useTranslations('people');
   const [page, setPage] = useState(1);
   const feed = useFollowFeed(page);
@@ -20,7 +20,7 @@ export function FollowingView() {
   return (
     <div className="flex flex-col gap-10">
       <header className="flex flex-col gap-2">
-        <h1 className="font-display text-display-l leading-[0.9] font-black uppercase">{t('feedTitle')}</h1>
+        {!embedded && <h1 className="font-display text-display-l leading-[0.9] font-black uppercase">{t('feedTitle')}</h1>}
         <p className="text-ink/75">{t('feedIntro')}</p>
       </header>
       {people.data && people.data.length === 0 ? (

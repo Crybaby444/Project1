@@ -1,3 +1,4 @@
+import { isCountry } from '@yoyo/shared';
 import type { CatalogItem, Locale } from '@yoyo/shared';
 import type { Listing, ListingPhoto } from '../generated/prisma/client';
 import { byPosition, photoUrls, type UrlFor } from '../listings/listing.serializer';
@@ -19,7 +20,8 @@ export function serializeCatalogItem(
     condition: listing.condition,
     city: listing.city,
     district: listing.district,
-    country: listing.country,
+    // Only the countries Yoyo works in (Baltics since 2026-11-19); anything else reads as not set.
+    country: isCountry(listing.country) ? listing.country : null,
     categoryId: listing.categoryId,
     cover: cover ? photoUrls(cover.storageKey, urlFor) : null,
     ownerId: listing.ownerId,

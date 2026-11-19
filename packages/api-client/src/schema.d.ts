@@ -3975,7 +3975,7 @@ export interface components {
             city?: string | null;
             district?: string | null;
             /** @enum {string|null} */
-            country?: "AT" | "BE" | "BG" | "HR" | "CY" | "EE" | "FI" | "FR" | "DE" | "GR" | "IE" | "IT" | "LV" | "LT" | "LU" | "MT" | "NL" | "PT" | "SK" | "SI" | "ES" | null;
+            country?: "LV" | "LT" | "EE" | null;
             lat?: number | null;
             lng?: number | null;
             timeZone?: string;
@@ -4068,7 +4068,7 @@ export interface components {
             city?: string | null;
             district?: string | null;
             /** @enum {string|null} */
-            country?: "AT" | "BE" | "BG" | "HR" | "CY" | "EE" | "FI" | "FR" | "DE" | "GR" | "IE" | "IT" | "LV" | "LT" | "LU" | "MT" | "NL" | "PT" | "SK" | "SI" | "ES" | null;
+            country?: "LV" | "LT" | "EE" | null;
             lat?: number | null;
             lng?: number | null;
             timeZone?: string;
@@ -7685,7 +7685,7 @@ export interface operations {
                 start?: string;
                 end?: string;
                 district?: string;
-                country?: "AT" | "BE" | "BG" | "HR" | "CY" | "EE" | "FI" | "FR" | "DE" | "GR" | "IE" | "IT" | "LV" | "LT" | "LU" | "MT" | "NL" | "PT" | "SK" | "SI" | "ES";
+                country?: "LV" | "LT" | "EE";
                 city?: string;
                 sort?: "new" | "price_asc" | "price_desc" | "relevance";
                 page?: number;
@@ -7726,7 +7726,7 @@ export interface operations {
                 start?: string;
                 end?: string;
                 district?: string;
-                country?: "AT" | "BE" | "BG" | "HR" | "CY" | "EE" | "FI" | "FR" | "DE" | "GR" | "IE" | "IT" | "LV" | "LT" | "LU" | "MT" | "NL" | "PT" | "SK" | "SI" | "ES";
+                country?: "LV" | "LT" | "EE";
                 city?: string;
                 sort?: "new" | "price_asc" | "price_desc" | "relevance";
                 page?: number;
@@ -7801,7 +7801,7 @@ export interface operations {
     CatalogController_places: {
         parameters: {
             query?: {
-                country?: "AT" | "BE" | "BG" | "HR" | "CY" | "EE" | "FI" | "FR" | "DE" | "GR" | "IE" | "IT" | "LV" | "LT" | "LU" | "MT" | "NL" | "PT" | "SK" | "SI" | "ES";
+                country?: "LV" | "LT" | "EE";
             };
             header?: never;
             path?: never;
@@ -7863,7 +7863,7 @@ export interface operations {
     CatalogController_forYou: {
         parameters: {
             query?: {
-                country?: "AT" | "BE" | "BG" | "HR" | "CY" | "EE" | "FI" | "FR" | "DE" | "GR" | "IE" | "IT" | "LV" | "LT" | "LU" | "MT" | "NL" | "PT" | "SK" | "SI" | "ES";
+                country?: "LV" | "LT" | "EE";
                 categories?: string | string[];
             };
             header?: never;
@@ -7895,7 +7895,7 @@ export interface operations {
     CatalogController_cities: {
         parameters: {
             query: {
-                country: "AT" | "BE" | "BG" | "HR" | "CY" | "EE" | "FI" | "FR" | "DE" | "GR" | "IE" | "IT" | "LV" | "LT" | "LU" | "MT" | "NL" | "PT" | "SK" | "SI" | "ES";
+                country: "LV" | "LT" | "EE";
                 q: string;
             };
             header?: never;
@@ -8067,7 +8067,7 @@ export interface operations {
     ForYouController_forYou: {
         parameters: {
             query?: {
-                country?: "AT" | "BE" | "BG" | "HR" | "CY" | "EE" | "FI" | "FR" | "DE" | "GR" | "IE" | "IT" | "LV" | "LT" | "LU" | "MT" | "NL" | "PT" | "SK" | "SI" | "ES";
+                country?: "LV" | "LT" | "EE";
                 categories?: string | string[];
             };
             header?: never;

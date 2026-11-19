@@ -98,7 +98,8 @@ for (const { locale, prefix, m } of LOCALES) {
           await fits(page, `builder: ${step}`, m.builder.titleEdit);
         }
         await page.goto(`${prefix}/dashboard/lending`);
-        await fits(page, 'my items', m.myListings.title);
+        await expect(page.getByRole('tab', { name: m.profile.myItems, selected: true })).toBeVisible();
+        await fits(page, 'my items (own profile)');
         await page.goto(`${prefix}/admin/listings`);
         await fits(page, 'moderation: no access', m.noAccess.title);
 

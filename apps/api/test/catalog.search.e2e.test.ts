@@ -39,18 +39,19 @@ describe('catalog search', () => {
 
   it('shows one country at a time, and its cities; places counts the countries (owner, 2026-11-16)', async () => {
     const riga = await live();
-    const berlin = await live({ country: 'DE', city: 'Berlin', district: 'Mitte', timeZone: 'Europe/Berlin' });
-    const munich = await live({ country: 'DE', city: 'München', district: 'Altstadt', timeZone: 'Europe/Berlin' });
+    const vilnius = await live({ country: 'LT', city: 'Vilnius', district: 'Senamiestis', timeZone: 'Europe/Vilnius' });
+    const siauliai = await live({ country: 'LT', city: 'Šiauliai', district: 'Centras', timeZone: 'Europe/Vilnius' });
     expect(await ids({ country: 'LV' })).toEqual([riga.id]);
-    expect((await ids({ country: 'DE' })).sort()).toEqual([berlin.id, munich.id].sort());
-    expect(await ids({ country: 'DE', city: 'munchen' })).toEqual([munich.id]);
-    expect(await ids({ country: 'LV', city: 'berlin' })).toEqual([]);
-    await get({ country: 'US' }).expect(400); // only the euro area
+    expect((await ids({ country: 'LT' })).sort()).toEqual([vilnius.id, siauliai.id].sort());
+    expect(await ids({ country: 'LT', city: 'siauliai' })).toEqual([siauliai.id]);
+    expect(await ids({ country: 'LV', city: 'vilnius' })).toEqual([]);
+    await get({ country: 'US' }).expect(400); // only the Baltics
+    await get({ country: 'DE' }).expect(400);
     const all = (await request(t.server).get('/api/v1/catalog/places').expect(200)).body;
-    expect(all.countries).toEqual([{ country: 'DE', count: 2 }, { country: 'LV', count: 1 }]);
-    const de = (await request(t.server).get('/api/v1/catalog/places').query({ country: 'DE' }).expect(200)).body;
-    expect(de.cities.map((c: { slug: string }) => c.slug).sort()).toEqual(['berlin', 'munchen']);
-    expect(de.districts.map((d: { slug: string }) => d.slug).sort()).toEqual(['altstadt', 'mitte']);
+    expect(all.countries).toEqual([{ country: 'LT', count: 2 }, { country: 'LV', count: 1 }]);
+    const lt = (await request(t.server).get('/api/v1/catalog/places').query({ country: 'LT' }).expect(200)).body;
+    expect(lt.cities.map((c: { slug: string }) => c.slug).sort()).toEqual(['siauliai', 'vilnius']);
+    expect(lt.districts.map((d: { slug: string }) => d.slug).sort()).toEqual(['centras', 'senamiestis']);
   });
 
   it('suggests every city of the country as you type, diacritics and local names welcome, with its item count (owner, 2026-11-16)', async () => {
@@ -61,15 +62,17 @@ describe('catalog search', () => {
     expect((await cities({ country: 'LV', q: 'Рига' }).expect(200)).body.items[0]).toMatchObject({ slug: 'riga' });
     const vent = (await cities({ country: 'LV', q: 'vents' }).expect(200)).body.items;
     expect(vent[0]).toEqual({ name: 'Ventspils', slug: 'ventspils', count: 0 });
-    expect((await cities({ country: 'LV', q: 'berl' }).expect(200)).body.items).toEqual([]);
-    expect((await cities({ country: 'DE', q: 'berl' }).expect(200)).body.items[0]).toMatchObject({ name: 'Berlin' });
-    expect((await cities({ country: 'DE', q: 'a' }).expect(200)).body.items.length).toBeLessThanOrEqual(8);
+    expect((await cities({ country: 'LV', q: 'kaun' }).expect(200)).body.items).toEqual([]);
+    expect((await cities({ country: 'LT', q: 'kaun' }).expect(200)).body.items[0]).toMatchObject({ name: 'Kaunas' });
+    expect((await cities({ country: 'EE', q: 'tall' }).expect(200)).body.items[0]).toMatchObject({ name: 'Tallinn' });
+    expect((await cities({ country: 'LT', q: 'a' }).expect(200)).body.items.length).toBeLessThanOrEqual(8);
     await cities({ country: 'US', q: 'new' }).expect(400);
+    await cities({ country: 'DE', q: 'berl' }).expect(400);
     await cities({ country: 'LV', q: '' }).expect(400);
     // A city written another way is still the same city in search.
-    const munich = await live({ country: 'DE', city: 'Munich', district: 'Altstadt', timeZone: 'Europe/Berlin' });
-    const suggested = (await cities({ country: 'DE', q: 'münch' }).expect(200)).body.items[0];
-    expect(await ids({ country: 'DE', city: suggested.slug })).toEqual([munich.id]);
+    const siauliai = await live({ country: 'LT', city: 'Siauliai', district: 'Centras', timeZone: 'Europe/Vilnius' });
+    const suggested = (await cities({ country: 'LT', q: 'šiaul' }).expect(200)).body.items[0];
+    expect(await ids({ country: 'LT', city: suggested.slug })).toEqual([siauliai.id]);
   });
 
   it('counts the visible items of each category, for the catalog index', async () => {

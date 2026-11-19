@@ -11,15 +11,15 @@ vi.mock('@/i18n/navigation', async (importOriginal) => ({
 }));
 
 describe('CountryPicker', () => {
-  it('shows the country, lists the euro area by name, and keeps a choice in a cookie', async () => {
+  it('shows the country, lists the Baltic states by name (owner, 2026-11-19), and keeps a choice in a cookie', async () => {
     const user = userEvent.setup();
     renderWithIntl(<CountryPicker country="LV" />);
     await user.click(screen.getByRole('button', { name: /^Country: Latvia\s*LV$/ }));
     const dialog = screen.getByRole('dialog', { name: 'Your country' });
-    expect(dialog.querySelectorAll('ul button')).toHaveLength(21);
+    expect(dialog.querySelectorAll('ul button')).toHaveLength(3);
     expect(screen.getByRole('button', { name: /Latvia/, pressed: true })).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: /Germany/ }));
-    expect(document.cookie).toContain('yoyo-country=DE');
+    await user.click(screen.getByRole('button', { name: /Lithuania/ }));
+    expect(document.cookie).toContain('yoyo-country=LT');
     expect(refresh).toHaveBeenCalled();
     expect(screen.queryByRole('dialog')).toBeNull();
   });

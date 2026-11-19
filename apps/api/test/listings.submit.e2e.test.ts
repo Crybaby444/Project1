@@ -40,8 +40,8 @@ describe('submitting, hiding and unavailable dates', () => {
       const res = await anna.post(`/listings/${old.id}/submit`).expect(200);
       expect(res.body.listing).toMatchObject({ country: 'LV', timeZone: 'Europe/Riga' });
       const german = await seedListing(t, anna.user);
-      const patched = await anna.patch(`/listings/${german.id}`).send({ country: 'DE', version: german.version }).expect(200);
-      expect(patched.body.listing).toMatchObject({ country: 'DE', timeZone: 'Europe/Berlin' });
+      const patched = await anna.patch(`/listings/${german.id}`).send({ country: 'LT', version: german.version }).expect(200);
+      expect(patched.body.listing).toMatchObject({ country: 'LT', timeZone: 'Europe/Vilnius' });
     });
 
     it('names what is missing, step by step: photos, the point, required attributes', async () => {

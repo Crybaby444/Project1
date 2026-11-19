@@ -75,9 +75,6 @@ export function ProfileSocial({
             <Button href="/settings" size="md">
               {tp('edit')}
             </Button>
-            <Button href="/dashboard/lending" variant="ghost" size="md">
-              {tp('manage')}
-            </Button>
             <Button variant="ghost" size="md" onClick={() => setOpen('find')}>
               {tp('findPeople')}
             </Button>

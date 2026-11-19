@@ -625,7 +625,7 @@
       "placeHint": "Shown on your listing. Filled in from the point; you can change it.",
       "pointSet": "Point set: {place}",
       "pointSetNoName": "Point set on the map.",
-      "outside": "This point is outside the euro area. For now Yoyo works only in euro countries; pick a place there."
+      "outside": "This point is outside the Baltic states. For now Yoyo works in Latvia, Lithuania and Estonia; pick a place there."
     },
     "calendar": {
       "title": "Days it is not available",
@@ -1061,7 +1061,7 @@
     "title": "{name}",
     "description": "{name} on Yoyo: {count, plural, =0 {no items for rent yet} one {# item for rent} other {# items for rent}}.",
     "about": "About",
-    "tabs": "{name}: items and reviews",
+    "tabs": "{name}: items, shops and reviews",
     "items": "{count, plural, one {# item} other {# items}}",
     "reviews": "Reviews",
     "noItems": "{name} has nothing for rent right now.",
@@ -1085,7 +1085,9 @@
       "rating": "Rating",
       "noRating": "No rating yet",
       "memberSince": "On Yoyo since {since}"
-    }
+    },
+    "myItems": "My items",
+    "following": "Following"
   },
   "consent": {
     "label": "Cookie choice",

@@ -27,7 +27,12 @@ const rank = (l: { status: ListingStatus }) => {
  * first (rejected, drafts), then in review, live and hidden. A line under the title counts them by status.
  * Deleted listings are asked for only when you open them at the foot (or with `?status=ARCHIVED`).
  */
-export function MyListings({ initialStatus }: { initialStatus: MyListingsFilter }) {
+/**
+ * `embedded`: inside the own profile's Items tab (owner, 2026-11-19: no separate dashboard), without the
+ * page frame and title; the tab names it.
+ */
+export function MyListings({ initialStatus, embedded = false }: { initialStatus: MyListingsFilter; embedded?: boolean }) {
+  const Wrapper = embedded ? 'div' : 'main';
   const t = useTranslations('myListings');
   const errorText = useErrorText();
   const client = useApiClient();
@@ -48,21 +53,30 @@ export function MyListings({ initialStatus }: { initialStatus: MyListingsFilter 
   const counts = ORDER.map((st) => [st, items.filter((l) => l.status === st).length] as const).filter(([, n]) => n > 0);
 
   return (
-    <main className="page flex flex-col gap-8 page-y">
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="@container flex min-w-0 flex-1 flex-col gap-2">
-          <h1
-            style={displayFit(t('title'), { max: '3.5rem' })}
-            className="font-display text-display-fit leading-[0.85] font-black uppercase"
-          >
-            {t('title')}
-          </h1>
-          <p className="leading-relaxed">{t('intro')}</p>
+    <Wrapper className={embedded ? 'flex flex-col gap-8' : 'page flex flex-col gap-8 page-y'}>
+      {embedded ? (
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-ink/75 max-w-read leading-relaxed">{t('intro')}</p>
+          <Button href="/listings/new" size="lg" className="self-start sm:self-auto">
+            <span aria-hidden="true">+</span> {t('lend')}
+          </Button>
         </div>
-        <Button href="/listings/new" size="lg" className="self-start sm:self-auto">
-          <span aria-hidden="true">+</span> {t('lend')}
-        </Button>
-      </header>
+      ) : (
+        <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="@container flex min-w-0 flex-1 flex-col gap-2">
+            <h1
+              style={displayFit(t('title'), { max: '3.5rem' })}
+              className="font-display text-display-fit leading-[0.85] font-black uppercase"
+            >
+              {t('title')}
+            </h1>
+            <p className="leading-relaxed">{t('intro')}</p>
+          </div>
+          <Button href="/listings/new" size="lg" className="self-start sm:self-auto">
+            <span aria-hidden="true">+</span> {t('lend')}
+          </Button>
+        </header>
+      )}
 
       {counts.length > 0 && (
         <p className="text-ink/75 -mt-4 flex flex-wrap gap-x-4 gap-y-1 text-base" data-status-summary="">
@@ -147,6 +161,6 @@ export function MyListings({ initialStatus }: { initialStatus: MyListingsFilter 
             </ul>
           ))}
       </section>
-    </main>
+    </Wrapper>
   );
 }

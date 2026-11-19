@@ -8,6 +8,8 @@ import type { BuilderStep } from '@/lib/listings/listing-checks';
 import { useListing } from '@/lib/listings/queries';
 import { ApiError } from '@/lib/session/api-error';
 import { ListingBuilder } from './ListingBuilder';
+import { useSession } from '@/lib/session/SessionProvider';
+import { myProfileHref } from '@/lib/profile/links';
 
 /**
  * Loads a listing into the builder. Someone else's listing is a 404 from the API (it does not exist
@@ -15,6 +17,7 @@ import { ListingBuilder } from './ListingBuilder';
  */
 export function EditListing({ id, initialStep }: { id: string; initialStep: BuilderStep }) {
   const t = useTranslations('builder');
+  const { user } = useSession();
   const errorText = useErrorText();
   const query = useListing(id);
 
@@ -46,7 +49,7 @@ export function EditListing({ id, initialStep }: { id: string; initialStep: Buil
         <p className="leading-relaxed">{notFound ? t('notFound.body') : errorText(query.error)}</p>
         <div className="flex flex-wrap gap-3">
           {!notFound && <Button onClick={() => void query.refetch()}>{t('retry')}</Button>}
-          <Button variant="ghost" href="/dashboard/lending">
+          <Button variant="ghost" href={user ? myProfileHref(user.id) : '/'}>
             {t('notFound.toMine')}
           </Button>
         </div>

@@ -8,7 +8,7 @@ import { Dialog } from '@/components/ui/Dialog';
 import { saveCountry } from '@/lib/country/country';
 
 /**
- * The country the catalog shows (owner, 2026-11-16: the euro area, one country at a time; nobody in Riga
+ * The country the catalog shows (owner: the Baltic states since 2026-11-19, one country at a time; nobody in Riga
  * rents from Paris). A small pill with the code; a dialog with every country by its name in the page's
  * language. The choice is kept in a cookie and the page is drawn again in that country.
  */
