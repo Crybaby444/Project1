@@ -580,7 +580,9 @@
       "empty": "Vēl nav. Katalogā nospied “Paziņot par jaunām lietām”, un zvaniņš iezvanīsies, kad parādīsies kas atbilstošs.",
       "upTo": "līdz {price}",
       "remove": "Pārtraukt šo meklējumu"
-    }
+    },
+    "emptyTitle": "Vēl nekā jauna",
+    "emptyBody": "Šeit parādīsies darījumu soļi, piedāvājumi un atsauksmes."
   },
   "report": {
     "listing": "Ziņot par sludinājumu",

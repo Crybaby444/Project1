@@ -580,7 +580,9 @@
       "empty": "None yet. In the catalog, press “Tell me about new items” and we will ring the bell when something matching appears.",
       "upTo": "up to {price}",
       "remove": "Stop this saved search"
-    }
+    },
+    "emptyTitle": "Nothing new yet",
+    "emptyBody": "Steps of your deals, offers and reviews will show up here."
   },
   "report": {
     "listing": "Report this listing",
