@@ -310,7 +310,11 @@
         "CATEGORY_DELETED": "Kategorija dzēsta",
         "USER_CREATED": "Cilvēks pievienots",
         "USER_EDITED": "Cilvēka dati laboti",
-        "USER_DELETED": "Cilvēks dzēsts"
+        "USER_DELETED": "Cilvēks dzēsts",
+        "LISTING_EDITED": "Sludinājums rediģēts",
+        "IDENTITY_VIEWED": "Skatīti identitātes dokumenti",
+        "IDENTITY_APPROVED": "Identitāte apstiprināta",
+        "IDENTITY_REJECTED": "Identitātes pārbaude noraidīta"
       }
     },
     "settings": {

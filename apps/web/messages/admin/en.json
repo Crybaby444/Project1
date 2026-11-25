@@ -310,7 +310,11 @@
         "CATEGORY_DELETED": "Category deleted",
         "USER_CREATED": "Person added",
         "USER_EDITED": "Person edited",
-        "USER_DELETED": "Person deleted"
+        "USER_DELETED": "Person deleted",
+        "LISTING_EDITED": "Listing edited",
+        "IDENTITY_VIEWED": "Identity documents viewed",
+        "IDENTITY_APPROVED": "Identity confirmed",
+        "IDENTITY_REJECTED": "Identity check rejected"
       }
     },
     "settings": {
