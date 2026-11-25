@@ -334,28 +334,65 @@
       },
       "key": {
         "fees": {
-          "servicePercent": "Servisa maksa, %",
-          "promoServicePercent": "Sākuma piedāvājuma maksa, %",
+          "servicePercent": "Servisa maksa",
+          "promoServicePercent": "Sākuma piedāvājuma maksa",
           "promoServiceUntil": "Sākuma piedāvājums līdz"
         },
         "booking": {
-          "requestTtlHours": "Īpašnieks atbild uz pieprasījumu, stundās",
-          "paymentTtlHours": "Īrnieks samaksā, stundās",
-          "handoverConfirmHours": "Īrnieks var iebilst pret nodošanu, stundās",
-          "returnConfirmHours": "Īpašnieks var iebilst pret atdošanu, stundās",
-          "inspectionHours": "Īpašnieks pārbauda atdoto lietu, stundās",
-          "damageReplyHours": "Īrnieks atbild uz bojājuma ziņojumu, stundās",
-          "maxAdvanceDays": "Nomu var sākt ne vēlāk kā pēc, dienām"
+          "requestTtlHours": "Īpašnieks atbild uz pieprasījumu",
+          "paymentTtlHours": "Īrnieks samaksā",
+          "handoverConfirmHours": "Īrnieks var iebilst pret nodošanu",
+          "returnConfirmHours": "Īpašnieks var iebilst pret atdošanu",
+          "inspectionHours": "Īpašnieks pārbauda atdoto lietu",
+          "damageReplyHours": "Īrnieks atbild uz bojājuma ziņojumu",
+          "maxAdvanceDays": "Nomu var sākt ne vēlāk kā pēc"
         },
         "review": {
-          "windowDays": "Atsauksmes var rakstīt, dienās"
+          "windowDays": "Atsauksmes var rakstīt"
         }
       },
       "hint": {
         "fees": {
           "promoServiceUntil": "Tukšs: sākuma piedāvājuma nav."
         }
-      }
+      },
+      "unit": {
+        "hours": "st.",
+        "days": "d.",
+        "percent": "%"
+      },
+      "asDays": "= {days, plural, zero {# dienas} one {# diena} other {# dienas}}",
+      "asMonths": "≈ {months, plural, zero {# mēneši} one {# mēnesis} other {# mēneši}}",
+      "feeExample": "No nomas {rent} — {fee}",
+      "range": "No {min} līdz {max}",
+      "was": "bija {value}",
+      "undo": "Atcelt šo izmaiņu",
+      "less": "Mazāk",
+      "more": "Vairāk",
+      "promo": {
+        "none": "Piedāvājuma nav: visi maksā {fee}%.",
+        "active": "Spēkā līdz {date}: {promo}% {fee}% vietā, atlikušas {days, plural, zero {# dienas} one {# diena} other {# dienas}}.",
+        "over": "Beidzās {date}: visi atkal maksā {fee}%.",
+        "plus1": "+1 mēnesis",
+        "plus3": "+3 mēneši",
+        "clear": "Bez piedāvājuma"
+      },
+      "flow": {
+        "title": "Kā notiek darījums",
+        "request": "Pieprasījums",
+        "answer": "īpašnieka atbilde",
+        "pay": "samaksa",
+        "handover": "nodošana",
+        "handoverObject": "īrnieka iebildums",
+        "return": "atdošana",
+        "returnObject": "īpašnieka iebildums",
+        "inspect": "lietas pārbaude",
+        "damage": "atbilde uz ziņojumu"
+      },
+      "changes": "{count, plural, zero {# izmaiņu} one {# izmaiņa} other {# izmaiņas}}",
+      "discard": "Atcelt visu",
+      "saveCount": "Saglabāt ({count})",
+      "invalid": "Vispirms izlabojiet atzīmētās vērtības."
     },
     "person": {
       "back": "Visi lietotāji",

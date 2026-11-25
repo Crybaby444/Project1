@@ -334,28 +334,65 @@
       },
       "key": {
         "fees": {
-          "servicePercent": "Service fee, %",
-          "promoServicePercent": "Launch offer fee, %",
+          "servicePercent": "Service fee",
+          "promoServicePercent": "Launch offer fee",
           "promoServiceUntil": "Launch offer until"
         },
         "booking": {
-          "requestTtlHours": "Owner answers a request within, hours",
-          "paymentTtlHours": "Renter pays within, hours",
-          "handoverConfirmHours": "Renter can object to the handover within, hours",
-          "returnConfirmHours": "Owner can object to the return within, hours",
-          "inspectionHours": "Owner inspects the returned item within, hours",
-          "damageReplyHours": "Renter answers a damage claim within, hours",
-          "maxAdvanceDays": "Rentals can start up to, days ahead"
+          "requestTtlHours": "Owner answers a request within",
+          "paymentTtlHours": "Renter pays within",
+          "handoverConfirmHours": "Renter can object to the handover within",
+          "returnConfirmHours": "Owner can object to the return within",
+          "inspectionHours": "Owner inspects the returned item within",
+          "damageReplyHours": "Renter answers a damage claim within",
+          "maxAdvanceDays": "Rentals can start up to"
         },
         "review": {
-          "windowDays": "Reviews can be written within, days"
+          "windowDays": "Reviews can be written within"
         }
       },
       "hint": {
         "fees": {
           "promoServiceUntil": "Empty: no launch offer."
         }
-      }
+      },
+      "unit": {
+        "hours": "h",
+        "days": "days",
+        "percent": "%"
+      },
+      "asDays": "= {days, plural, one {# day} other {# days}}",
+      "asMonths": "≈ {months, plural, one {# month} other {# months}}",
+      "feeExample": "On a {rent} rental: {fee}",
+      "range": "From {min} to {max}",
+      "was": "was {value}",
+      "undo": "Undo this change",
+      "less": "Less",
+      "more": "More",
+      "promo": {
+        "none": "No launch offer: everyone pays {fee}%.",
+        "active": "On until {date}: {promo}% instead of {fee}%, {days, plural, one {# day} other {# days}} left.",
+        "over": "Ended on {date}: everyone pays {fee}% again.",
+        "plus1": "+1 month",
+        "plus3": "+3 months",
+        "clear": "No offer"
+      },
+      "flow": {
+        "title": "How a deal runs",
+        "request": "Request",
+        "answer": "owner answers",
+        "pay": "renter pays",
+        "handover": "handover",
+        "handoverObject": "renter may object",
+        "return": "return",
+        "returnObject": "owner may object",
+        "inspect": "owner inspects",
+        "damage": "renter answers a claim"
+      },
+      "changes": "{count, plural, one {# change} other {# changes}}",
+      "discard": "Undo all",
+      "saveCount": "Save ({count})",
+      "invalid": "Fix the marked values first."
     },
     "person": {
       "back": "All users",

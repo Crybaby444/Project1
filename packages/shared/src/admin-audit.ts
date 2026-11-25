@@ -66,20 +66,39 @@ export const AdminSettingsSchema = z.object({
 });
 export type AdminSettings = z.infer<typeof AdminSettingsSchema>;
 
-const Hours = z.number().int().min(1).max(720);
+/**
+ * The range each number setting accepts (the deal rules and the fee), shared by the API's check and the
+ * admin form, which shows it and stops a value outside it before saving.
+ */
+export const SETTING_RANGES = {
+  'booking.requestTtlHours': { min: 1, max: 720, unit: 'hours' },
+  'booking.paymentTtlHours': { min: 1, max: 720, unit: 'hours' },
+  'booking.handoverConfirmHours': { min: 1, max: 720, unit: 'hours' },
+  'booking.returnConfirmHours': { min: 1, max: 720, unit: 'hours' },
+  'booking.inspectionHours': { min: 1, max: 720, unit: 'hours' },
+  'booking.damageReplyHours': { min: 1, max: 720, unit: 'hours' },
+  'booking.maxAdvanceDays': { min: 1, max: 730, unit: 'days' },
+  'review.windowDays': { min: 1, max: 90, unit: 'days' },
+  'fees.servicePercent': { min: 0, max: 50, unit: 'percent' },
+  'fees.promoServicePercent': { min: 0, max: 50, unit: 'percent' },
+} as const satisfies Partial<Record<SettingKey, { min: number; max: number; unit: 'hours' | 'days' | 'percent' }>>;
+
+const ranged = (key: keyof typeof SETTING_RANGES) =>
+  z.number().int().min(SETTING_RANGES[key].min).max(SETTING_RANGES[key].max);
+
 /** What an administrator may change, each in a range the deal rules accept. */
 export const AdminSettingsChangeSchema = z
   .object({
-    'booking.requestTtlHours': Hours,
-    'booking.paymentTtlHours': Hours,
-    'booking.handoverConfirmHours': Hours,
-    'booking.returnConfirmHours': Hours,
-    'booking.inspectionHours': Hours,
-    'booking.damageReplyHours': Hours,
-    'booking.maxAdvanceDays': z.number().int().min(1).max(730),
-    'review.windowDays': z.number().int().min(1).max(90),
-    'fees.servicePercent': z.number().int().min(0).max(50),
-    'fees.promoServicePercent': z.number().int().min(0).max(50),
+    'booking.requestTtlHours': ranged('booking.requestTtlHours'),
+    'booking.paymentTtlHours': ranged('booking.paymentTtlHours'),
+    'booking.handoverConfirmHours': ranged('booking.handoverConfirmHours'),
+    'booking.returnConfirmHours': ranged('booking.returnConfirmHours'),
+    'booking.inspectionHours': ranged('booking.inspectionHours'),
+    'booking.damageReplyHours': ranged('booking.damageReplyHours'),
+    'booking.maxAdvanceDays': ranged('booking.maxAdvanceDays'),
+    'review.windowDays': ranged('review.windowDays'),
+    'fees.servicePercent': ranged('fees.servicePercent'),
+    'fees.promoServicePercent': ranged('fees.promoServicePercent'),
     'fees.promoServiceUntil': z.union([z.literal(''), z.string().regex(/^\d{4}-\d{2}-\d{2}$/)]),
   } satisfies Record<SettingKey, z.ZodType>)
   .partial();

@@ -334,28 +334,65 @@
       },
       "key": {
         "fees": {
-          "servicePercent": "Сервисный сбор, %",
-          "promoServicePercent": "Сбор в стартовой акции, %",
+          "servicePercent": "Сервисный сбор",
+          "promoServicePercent": "Сбор в стартовой акции",
           "promoServiceUntil": "Стартовая акция до"
         },
         "booking": {
-          "requestTtlHours": "Владелец отвечает на запрос, часов",
-          "paymentTtlHours": "Арендатор оплачивает, часов",
-          "handoverConfirmHours": "Арендатор может возразить против передачи, часов",
-          "returnConfirmHours": "Владелец может возразить против возврата, часов",
-          "inspectionHours": "Владелец проверяет вернувшуюся вещь, часов",
-          "damageReplyHours": "Арендатор отвечает на жалобу о повреждении, часов",
-          "maxAdvanceDays": "Аренду можно начать не позже чем через, дней"
+          "requestTtlHours": "Владелец отвечает на запрос за",
+          "paymentTtlHours": "Арендатор оплачивает за",
+          "handoverConfirmHours": "Арендатор может возразить против передачи в течение",
+          "returnConfirmHours": "Владелец может возразить против возврата в течение",
+          "inspectionHours": "Владелец проверяет вернувшуюся вещь за",
+          "damageReplyHours": "Арендатор отвечает на жалобу о повреждении за",
+          "maxAdvanceDays": "Аренду можно начать не позже чем через"
         },
         "review": {
-          "windowDays": "Отзывы можно писать в течение, дней"
+          "windowDays": "Отзывы можно писать в течение"
         }
       },
       "hint": {
         "fees": {
           "promoServiceUntil": "Пусто: акции нет."
         }
-      }
+      },
+      "unit": {
+        "hours": "ч",
+        "days": "дн.",
+        "percent": "%"
+      },
+      "asDays": "= {days, plural, one {# день} few {# дня} many {# дней} other {# дня}}",
+      "asMonths": "≈ {months, plural, one {# месяц} few {# месяца} many {# месяцев} other {# месяца}}",
+      "feeExample": "С аренды {rent} — {fee}",
+      "range": "От {min} до {max}",
+      "was": "было {value}",
+      "undo": "Отменить это изменение",
+      "less": "Меньше",
+      "more": "Больше",
+      "promo": {
+        "none": "Акции нет: все платят {fee}%.",
+        "active": "Идёт до {date}: {promo}% вместо {fee}%, ещё {days, plural, one {# день} few {# дня} many {# дней} other {# дня}}.",
+        "over": "Закончилась {date}: все снова платят {fee}%.",
+        "plus1": "+1 месяц",
+        "plus3": "+3 месяца",
+        "clear": "Без акции"
+      },
+      "flow": {
+        "title": "Как идёт сделка",
+        "request": "Запрос",
+        "answer": "ответ владельца",
+        "pay": "оплата",
+        "handover": "передача",
+        "handoverObject": "возражение арендатора",
+        "return": "возврат",
+        "returnObject": "возражение владельца",
+        "inspect": "проверка вещи",
+        "damage": "ответ на жалобу"
+      },
+      "changes": "{count, plural, one {# изменение} few {# изменения} many {# изменений} other {# изменения}}",
+      "discard": "Отменить всё",
+      "saveCount": "Сохранить ({count})",
+      "invalid": "Сначала исправьте отмеченные значения."
     },
     "person": {
       "back": "Все пользователи",
