@@ -3,12 +3,12 @@ import { DomainError, validateBookingSettings, type BookingSettings } from '@yoy
 import { SETTING_KEYS, type AdminSettings, type AdminSettingsChange, type PublicUser, type SettingKey } from '@yoyo/shared';
 import { AuditService } from '../audit/audit.service';
 import { BookingRulesService } from '../bookings/booking-rules.service';
-import { SETTING_KEY_OF } from '../bookings/booking-settings';
+import { fieldValue, SETTING_KEY_OF, storedValue } from '../bookings/booking-settings';
 import { AppError } from '../common/app-error';
 import { PrismaService } from '../prisma/prisma.service';
 
 const FIELD_OF = Object.fromEntries(Object.entries(SETTING_KEY_OF).map(([field, key]) => [key, field])) as Record<SettingKey, keyof BookingSettings>;
-const stored = (field: keyof BookingSettings, value: unknown) => (field === 'promoServiceUntil' ? (value ?? '') : value);
+const stored = storedValue;
 
 /** Platform settings for administrators: every deal rule and fee, changed within the rules, logged. */
 @Injectable()
@@ -39,7 +39,7 @@ export class AdminSettingsService {
     const next = { ...current } as Record<string, unknown>;
     for (const key of keys) {
       const value = change[key];
-      next[FIELD_OF[key]] = key === 'fees.promoServiceUntil' && value === '' ? null : value;
+      next[FIELD_OF[key]] = fieldValue(FIELD_OF[key], value);
     }
     try {
       validateBookingSettings(next as unknown as BookingSettings);

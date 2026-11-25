@@ -129,14 +129,12 @@ const EnvObject = z.object({
    * A `fees.servicePercent` row in the Setting table overrides it at runtime. Unset: 10.
    */
   FEE_PERCENT: z.preprocess(blankAsUnset, z.coerce.number().int().min(0).max(100).optional()),
-  /** The fee during the launch offer, in whole percent (0 for the first 3 months). Unset: 0. */
-  FEE_PROMO_PERCENT: z.preprocess(blankAsUnset, z.coerce.number().int().min(0).max(100).optional()),
   /**
-   * The launch offer's last day, `YYYY-MM-DD` (in the item's time zone): requests sent before the end of
-   * that day pay FEE_PROMO_PERCENT, later ones FEE_PERCENT. Unset: no offer. A `fees.promoServiceUntil`
-   * row in the Setting table overrides it. Each booking keeps the fee it was requested with.
+   * A new account's first days without the fee (owner, 2026-11-26: the first month). A `fees.welcomeDays`
+   * row in the Setting table overrides it at runtime. Unset: 30. The test suites set 0, so the people they
+   * register pay the fee their money checks expect.
    */
-  FEE_PROMO_UNTIL: z.preprocess(blankAsUnset, z.iso.date().optional()),
+  FEE_WELCOME_DAYS: z.preprocess(blankAsUnset, z.coerce.number().int().min(0).max(365).optional()),
   /**
    * Protects POST /internal/timers/run, which the scheduled GitHub workflow calls every 10 minutes to
    * fire due deal deadlines on a server that sleeps. At least 32 characters; the same value as the

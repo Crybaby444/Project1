@@ -37,6 +37,7 @@ describe('@yoyo/domain entry point', () => {
         'DEFAULT_BOOKING_SETTINGS',
         'serviceFeeAt',
         'validateBookingSettings',
+        'welcomeFeeEnds',
         // cancellation
         'CANCELLATION_POLICIES',
         'rentRefundPercent',

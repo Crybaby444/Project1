@@ -14,8 +14,9 @@ describe('SETTING_DEFAULTS', () => {
       'review.windowDays': 14,
       'fees.servicePercent': 10,
       // The launch offer (owner decision of 2026-11-06): 0 % until a last day set at launch; none by default.
-      'fees.promoServicePercent': 0,
-      'fees.promoServiceUntil': '',
+      'fees.welcomeDays': 30,
+      'checks.highValueDepositEur': 300,
+      'checks.highValueRentEur': 500,
     });
   });
 });

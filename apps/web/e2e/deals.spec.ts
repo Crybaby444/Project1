@@ -25,7 +25,7 @@ test('owner lists, renter books, pays, handover, return, deposit released', asyn
   await r.locator(`[data-date="${rigaDay(0)}"]`).click();
   await r.locator(`[data-date="${rigaDay(1)}"]`).click();
   await expect(r.locator('[data-range-status]')).toContainText('2 days');
-  // 30 € rent + the service fee in force (from the settings, 10 % unless a launch offer runs) + 100 € deposit.
+  // 30 € rent + the service fee in force (from the settings, 10 %; the specs turn a new account's free month off) + 100 € deposit.
   const terms = (await (await r.request.get(`/api/v1/listings/${listingId}/booking-terms`)).json()) as { servicePercent: number };
   const total = `€${(30 + Math.round(30 * terms.servicePercent) / 100 + 100).toFixed(2)}`;
   await expect(r.locator('[data-total]')).toHaveText(total);

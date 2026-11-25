@@ -13708,6 +13708,11 @@
             "minimum": -9007199254740991,
             "maximum": 9007199254740991
           },
+          "welcomeFeeDays": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
           "maxAdvanceDays": {
             "type": "integer",
             "minimum": -9007199254740991,
@@ -13748,6 +13753,7 @@
           "servicePercent",
           "servicePromoUntil",
           "regularServicePercent",
+          "welcomeFeeDays",
           "maxAdvanceDays",
           "timeZone",
           "today",
@@ -19531,22 +19537,20 @@
             "minimum": 0,
             "maximum": 50
           },
-          "fees.promoServicePercent": {
+          "fees.welcomeDays": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 50
+            "maximum": 365
           },
-          "fees.promoServiceUntil": {
-            "anyOf": [
-              {
-                "type": "string",
-                "const": ""
-              },
-              {
-                "type": "string",
-                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-              }
-            ]
+          "checks.highValueDepositEur": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000
+          },
+          "checks.highValueRentEur": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000
           }
         }
       },

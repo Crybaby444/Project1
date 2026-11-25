@@ -1,4 +1,3 @@
-import { endOfDayIn, localDate } from '@yoyo/domain';
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { resetAccounts, resetDeals } from './support/db';
@@ -7,21 +6,21 @@ import { resetListings, seedListing, signedInClient, type Client } from './suppo
 import { createTestApp, type TestApp } from './support/test-app';
 
 /**
- * The service fee's launch offer (owner decision of 2026-11-06): 0 % until a configurable last day,
- * then 10 %. The fee is decided when the renter sends the request and never changes afterwards.
+ * A new account's first days without the fee (owner, 2026-11-26: the first month after sign-up, instead of
+ * a launch offer for everyone). The fee is decided when the renter sends the request and never changes.
  */
 let t: TestApp;
 let owner: Client;
 let renter: Client;
 
-const HOUR = 3_600_000;
+const DAY = 86_400_000;
 
 beforeAll(async () => {
   t = await createTestApp();
 });
 
 afterAll(async () => {
-  // The database is shared with the browser tests in CI: leave the fee settings as they were.
+  // The database is shared with the other files: leave the fee settings as they were.
   await t.prisma.setting.deleteMany({ where: { key: { startsWith: 'fees.' } } });
   await t.close();
 });
@@ -38,61 +37,40 @@ beforeEach(async () => {
 const setting = (key: string, value: unknown) =>
   t.prisma.setting.upsert({ where: { key }, create: { key, value: value as never }, update: { value: value as never } });
 
-/** 15 € a day, 50 € deposit (seedListing's defaults). The offer lasts through tomorrow, where the item is. */
-async function withOffer() {
-  await setting('fees.promoServicePercent', 0);
-  await setting('fees.promoServiceUntil', day(t, 1));
+/** The renter signed up `daysAgo` days before the test clock's now; 30 free days are on. */
+async function newRenter(daysAgo: number) {
+  await setting('fees.welcomeDays', 30);
+  await t.prisma.user.update({ where: { id: renter.user.id }, data: { createdAt: new Date(t.clock.now().getTime() - daysAgo * DAY) } });
+  renter = await again(t, renter);
   return seedListing(t, owner.user, { status: 'PUBLISHED' });
 }
 
-/** Moves the test clock to `ms` after the end of `date` in Riga (negative: before it). */
-function toEndOf(date: string, ms: number) {
-  const end = endOfDayIn(localDate(date), 'Europe/Riga').getTime();
-  t.clock.advance(end + ms - t.clock.now().getTime());
-}
-
-describe('the launch offer on the service fee', () => {
-  it('prices requests in the window at 0 % and says until when', async () => {
-    const listing = await withOffer();
+describe("a new account's first days without the fee", () => {
+  it('prices a request within them at 0 % and says until when; a visitor sees the regular fee', async () => {
+    const listing = await newRenter(2);
     const terms = (await request(t.server).get(`/api/v1/listings/${listing.id}/booking-terms`).expect(200)).body;
-    expect(terms).toMatchObject({ servicePercent: 0, servicePromoUntil: day(t, 1), regularServicePercent: 10 });
-    const quote = (await request(t.server).get(`/api/v1/listings/${listing.id}/quote?start=${day(t, 3)}&end=${day(t, 5)}`).expect(200)).body.quote;
-    expect(quote).toMatchObject({ servicePercent: 0, serviceFeeCents: 0, servicePromoUntil: day(t, 1), totalCents: 4_500 + 5_000 });
+    expect(terms).toMatchObject({ servicePercent: 10, servicePromoUntil: null, regularServicePercent: 10, welcomeFeeDays: 30 });
 
     const booking = await requestBooking(t, renter, listing.id, 3, 5);
-    expect(booking.quote).toMatchObject({ servicePercent: 0, serviceFeeCents: 0, servicePromoUntil: day(t, 1) });
+    expect(booking.quote).toMatchObject({ servicePercent: 0, serviceFeeCents: 0, servicePromoUntil: day(t, 28), totalCents: 4_500 + 5_000 });
   });
 
-  it('charges the regular 10 % from the first moment after the last day, and not a millisecond earlier', async () => {
-    const listing = await withOffer();
-    toEndOf(day(t, 1), -1);
-    owner = await again(t, owner);
-    renter = await again(t, renter);
-    const before = await requestBooking(t, renter, listing.id, 4, 5);
-    expect(before.quote).toMatchObject({ servicePercent: 0, serviceFeeCents: 0 });
-
-    t.clock.advance(1);
-    const terms = (await request(t.server).get(`/api/v1/listings/${listing.id}/booking-terms`).expect(200)).body;
-    expect(terms).toMatchObject({ servicePercent: 10, servicePromoUntil: null, regularServicePercent: 10 });
-    const other = await seedListing(t, owner.user, { status: 'PUBLISHED' });
-    const after = await requestBooking(t, renter, other.id, 4, 5);
-    expect(after.quote).toMatchObject({ servicePercent: 10, serviceFeeCents: 300, servicePromoUntil: null });
+  it('charges the regular 10 % to an account older than the free days', async () => {
+    const listing = await newRenter(31);
+    const booking = await requestBooking(t, renter, listing.id, 4, 5);
+    expect(booking.quote).toMatchObject({ servicePercent: 10, serviceFeeCents: 300, servicePromoUntil: null });
   });
 
-  it('keeps the frozen fee when the offer ends and the settings change before the deal is paid', async () => {
-    const listing = await withOffer();
-    const lastDay = day(t, 1);
-    // Requested and accepted in the offer's last hours, paid after it (well within the payment deadline).
-    toEndOf(lastDay, -2 * HOUR);
-    owner = await again(t, owner);
-    renter = await again(t, renter);
+  it('keeps the frozen fee when the free days end and the settings change before the deal is paid', async () => {
+    // 29.9 days in: the free days end 2.4 hours later, well within the payment deadline.
+    const listing = await newRenter(29.9);
     const booking = (await requestBooking(t, renter, listing.id, 4, 6)) as unknown as { id: string; quote: { servicePromoUntil: string } };
-    expect(booking.quote.servicePromoUntil).toBe(lastDay);
+    expect(booking.quote).toMatchObject({ servicePercent: 0 });
     await step(owner, booking.id, { type: 'ACCEPT' });
-    // The offer ends and the administrator raises the regular fee.
-    toEndOf(lastDay, HOUR);
+    // The free days end and the administrator raises the fee and turns them off.
+    t.clock.advance(3 * 3_600_000);
     await setting('fees.servicePercent', 25);
-    await setting('fees.promoServiceUntil', '');
+    await setting('fees.welcomeDays', 0);
     owner = await again(t, owner);
     renter = await again(t, renter);
     await step(renter, booking.id, { type: 'SIGN' });

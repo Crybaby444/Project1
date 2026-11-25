@@ -58,6 +58,9 @@ export async function createTestApp(options: TestAppOptions = {}): Promise<TestA
   const app = moduleRef.createNestApplication({ logger: ['error', 'warn'], rawBody: true });
   configureApp(app, env);
   await app.init();
+  // The free first days come from the environment in tests (FEE_WELCOME_DAYS=0, vitest.config.mts); a row a
+  // seed left in the shared database would turn them on for every file after it.
+  await app.get(PrismaService).setting.deleteMany({ where: { key: 'fees.welcomeDays' } });
   return {
     app,
     server: app.getHttpServer() as Server,

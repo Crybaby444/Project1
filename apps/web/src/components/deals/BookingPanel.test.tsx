@@ -23,6 +23,7 @@ function terms(overrides: Partial<BookingTerms> = {}): BookingTerms {
     servicePercent: 10,
     servicePromoUntil: null,
     regularServicePercent: 10,
+    welcomeFeeDays: 0,
     maxAdvanceDays: 365,
     timeZone: 'Europe/Riga',
     today: '2026-11-06',
@@ -63,9 +64,16 @@ describe('priceRange', () => {
     expect(priceRange(terms({ pricing: { ...terms().pricing, minDays: 3 } }), { start: '2026-11-08', end: '2026-11-08' }).problem).toBe('tooShort');
   });
 
-  it('applies the launch offer the terms give', () => {
-    const q = priceRange(terms({ servicePercent: 0, servicePromoUntil: '2027-02-05' }), { start: '2026-11-08', end: '2026-11-10' }).quote;
-    expect(q).toMatchObject({ servicePercent: 0, serviceFeeCents: 0, servicePromoUntil: '2027-02-05', totalCents: 9_500 });
+  it("prices a new account's first days without the fee, and everyone else with it", () => {
+    const range = { start: '2026-11-08', end: '2026-11-10' };
+    // Signed up 5 days ago: 30 free days, the last of them 25 days from now.
+    const joined = new Date(Date.now() - 5 * 86_400_000).toISOString();
+    const free = priceRange(terms({ welcomeFeeDays: 30 }), range, joined).quote!;
+    expect(free).toMatchObject({ servicePercent: 0, serviceFeeCents: 0, totalCents: 9_500 });
+    expect(free.servicePromoUntil).not.toBeNull();
+    const old = new Date(Date.now() - 40 * 86_400_000).toISOString();
+    expect(priceRange(terms({ welcomeFeeDays: 30 }), range, old).quote).toMatchObject({ servicePercent: 10, servicePromoUntil: null });
+    expect(priceRange(terms({ welcomeFeeDays: 30 }), range).quote).toMatchObject({ servicePercent: 10 });
   });
 
   it('starts a new range on a click before the start or after a finished range', () => {
@@ -112,14 +120,14 @@ describe('BookingPanel', () => {
     expect(screen.getByRole('button', { name: 'Send request' })).toBeDisabled();
   });
 
-  it('shows the launch-offer badge on the fee', async () => {
+  it('shows the free-month badge on the fee', async () => {
     const user = userEvent.setup();
     setup({}, terms({ servicePercent: 0, servicePromoUntil: '2027-02-05' }));
     await screen.findByRole('grid');
     await user.click(day(8));
     await user.click(day(9));
-    expect(screen.getByText('0% fee until 5 Feb 2027')).toBeInTheDocument();
-    expect(screen.getByText(/Launch offer: the service fee is 0% for requests sent until 5 Feb 2027/)).toBeInTheDocument();
+    expect(screen.getByText('No fee until 5 Feb 2027')).toBeInTheDocument();
+    expect(screen.getByText(/Your first month on Yoyo: no service fee for requests sent until 5 Feb 2027/)).toBeInTheDocument();
   });
 
   it('says when the days were taken meanwhile, and starts over', async () => {

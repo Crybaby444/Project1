@@ -209,6 +209,7 @@ export class BookingsService {
       servicePercent: fee.percent,
       servicePromoUntil: fee.promoUntil,
       regularServicePercent: settings.servicePercent,
+      welcomeFeeDays: settings.welcomeFeeDays,
       maxAdvanceDays: settings.maxAdvanceDays,
       timeZone: listing.timeZone,
       today: localDateIn(this.clock.now(), listing.timeZone),
@@ -273,6 +274,8 @@ export class BookingsService {
           ownerId: listing.ownerId,
           period: period(localDate(input.start), localDate(input.end)),
           timeZone: listing.timeZone,
+          // A new account's first days pay no fee (owner, 2026-11-26).
+          renterJoinedAt: new Date(renter.createdAt),
           pricing: pricingOf(listing),
           ...(agreedDailyCents !== undefined && { agreedDailyCents: cents(agreedDailyCents) }),
           blocked: await blockedPeriods(tx, listing.id),
@@ -280,7 +283,10 @@ export class BookingsService {
         { now, settings },
       );
       // An expensive deal asks for more (audit D4): a confirmed phone and identity.
-      const missing = missingForDeal(next.quote, await verifiedOf(tx, renter.id));
+      const missing = missingForDeal(next.quote, await verifiedOf(tx, renter.id), {
+        depositCents: settings.highValueDepositCents,
+        rentCents: settings.highValueRentCents,
+      });
       if (missing.length > 0) {
         throw new AppError('VERIFICATION_REQUIRED', 409, 'Confirm your phone and who you are for a deal of this value', undefined, { missing });
       }

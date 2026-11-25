@@ -4,9 +4,8 @@ import { formatDay } from '@/lib/deals/dates';
 import { useMoney } from '@/lib/deals/money';
 
 /**
- * The service fee row of a price: "Service fee (10%) · €4.50", or during the launch offer
- * "Service fee · 0 € · [0% fee until 5 Feb 2027]" with a Sunburst sticker (owner decision of
- * 2026-11-06). The percent and the offer come from the quote, frozen into a booking when it is requested.
+ * The service fee row of a price: "Service fee (10%) · €4.50", or in a new account's first month
+ * "Service fee · 0 € · [No fee until 5 Feb 2027]" (owner, 2026-11-26). The percent and the offer come from the quote, frozen into a booking when it is requested.
  */
 export function FeeLine({ quote }: { quote: Pick<QuoteView, 'servicePercent' | 'serviceFeeCents' | 'servicePromoUntil'> }) {
   const t = useTranslations('booking.summary');

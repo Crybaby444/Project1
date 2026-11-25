@@ -330,13 +330,13 @@
       "group": {
         "fees": "Fee",
         "deals": "Deal deadlines",
-        "other": "Other"
+        "checks": "High-value deals",
+        "reviews": "Reviews"
       },
       "key": {
         "fees": {
           "servicePercent": "Service fee",
-          "promoServicePercent": "Launch offer fee",
-          "promoServiceUntil": "Launch offer until"
+          "welcomeDays": "No fee after sign-up for"
         },
         "booking": {
           "requestTtlHours": "Owner answers a request within",
@@ -349,17 +349,17 @@
         },
         "review": {
           "windowDays": "Reviews can be written within"
-        }
-      },
-      "hint": {
-        "fees": {
-          "promoServiceUntil": "Empty: no launch offer."
+        },
+        "checks": {
+          "highValueDepositEur": "Deposit from",
+          "highValueRentEur": "Rent from"
         }
       },
       "unit": {
         "hours": "h",
         "days": "days",
-        "percent": "%"
+        "percent": "%",
+        "eur": "€"
       },
       "asDays": "= {days, plural, one {# day} other {# days}}",
       "asMonths": "≈ {months, plural, one {# month} other {# months}}",
@@ -369,30 +369,30 @@
       "undo": "Undo this change",
       "less": "Less",
       "more": "More",
-      "promo": {
-        "none": "No launch offer: everyone pays {fee}%.",
-        "active": "On until {date}: {promo}% instead of {fee}%, {days, plural, one {# day} other {# days}} left.",
-        "over": "Ended on {date}: everyone pays {fee}% again.",
-        "plus1": "+1 month",
-        "plus3": "+3 months",
-        "clear": "No offer"
-      },
-      "flow": {
-        "title": "How a deal runs",
-        "request": "Request",
-        "answer": "owner answers",
-        "pay": "renter pays",
-        "handover": "handover",
-        "handoverObject": "renter may object",
-        "return": "return",
-        "returnObject": "owner may object",
-        "inspect": "owner inspects",
-        "damage": "renter answers a claim"
-      },
       "changes": "{count, plural, one {# change} other {# changes}}",
       "discard": "Undo all",
       "saveCount": "Save ({count})",
-      "invalid": "Fix the marked values first."
+      "invalid": "Fix the marked values first.",
+      "groupNote": {
+        "fees": "The renter pays the fee on top of the rent. Every deal keeps the fee it was requested with.",
+        "checks": "From this deposit or this rent, the renter confirms their phone and identity first.",
+        "reviews": "After a completed deal both sides may leave a review."
+      },
+      "phase": {
+        "booking": {
+          "title": "Booking",
+          "note": "The request, the owner's answer and the payment. Without an answer or a payment the request closes by itself."
+        },
+        "handover": {
+          "title": "Handover",
+          "note": "The owner marks the handover; unless the renter objects, it counts."
+        },
+        "return": {
+          "title": "Return and deposit",
+          "note": "The renter brings the item back and the owner inspects it. Without an answer the deposit goes back to the renter and a dispute goes to an administrator."
+        }
+      },
+      "off": "Off"
     },
     "person": {
       "back": "All users",

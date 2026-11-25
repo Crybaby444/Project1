@@ -80,8 +80,10 @@ export const SETTING_RANGES = {
   'booking.maxAdvanceDays': { min: 1, max: 730, unit: 'days' },
   'review.windowDays': { min: 1, max: 90, unit: 'days' },
   'fees.servicePercent': { min: 0, max: 50, unit: 'percent' },
-  'fees.promoServicePercent': { min: 0, max: 50, unit: 'percent' },
-} as const satisfies Partial<Record<SettingKey, { min: number; max: number; unit: 'hours' | 'days' | 'percent' }>>;
+  'fees.welcomeDays': { min: 0, max: 365, unit: 'days' },
+  'checks.highValueDepositEur': { min: 0, max: 10_000, unit: 'eur' },
+  'checks.highValueRentEur': { min: 0, max: 10_000, unit: 'eur' },
+} as const satisfies Record<SettingKey, { min: number; max: number; unit: 'hours' | 'days' | 'percent' | 'eur' }>;
 
 const ranged = (key: keyof typeof SETTING_RANGES) =>
   z.number().int().min(SETTING_RANGES[key].min).max(SETTING_RANGES[key].max);
@@ -98,8 +100,9 @@ export const AdminSettingsChangeSchema = z
     'booking.maxAdvanceDays': ranged('booking.maxAdvanceDays'),
     'review.windowDays': ranged('review.windowDays'),
     'fees.servicePercent': ranged('fees.servicePercent'),
-    'fees.promoServicePercent': ranged('fees.promoServicePercent'),
-    'fees.promoServiceUntil': z.union([z.literal(''), z.string().regex(/^\d{4}-\d{2}-\d{2}$/)]),
+    'fees.welcomeDays': ranged('fees.welcomeDays'),
+    'checks.highValueDepositEur': ranged('checks.highValueDepositEur'),
+    'checks.highValueRentEur': ranged('checks.highValueRentEur'),
   } satisfies Record<SettingKey, z.ZodType>)
   .partial();
 export type AdminSettingsChange = z.infer<typeof AdminSettingsChangeSchema>;

@@ -17,6 +17,8 @@ export interface RequestInput {
   readonly period: Period;
   /** The item's time zone. */
   readonly timeZone: string;
+  /** When the renter signed up: their first days pay no fee (`welcomeFeeDays`). */
+  readonly renterJoinedAt?: Date;
   readonly pricing: ListingPricing;
   /** The daily price of an accepted offer (spec §4.6). */
   readonly agreedDailyCents?: Cents;
@@ -48,7 +50,7 @@ export function createRequest(input: RequestInput, ctx: DecideContext): Decision
   if (input.agreedDailyCents !== undefined) validateOffer(input.pricing, input.agreedDailyCents);
 
   // The fee is decided now and frozen into the booking: a later change of settings never alters it.
-  const fee = serviceFeeAt(ctx.settings, ctx.now, input.timeZone);
+  const fee = serviceFeeAt(ctx.settings, ctx.now, input.timeZone, input.renterJoinedAt ?? null);
   const priced = quote({
     pricing: input.pricing,
     days: daysIn(input.period),

@@ -1,6 +1,7 @@
 import { SETTING_DEFAULTS } from '@yoyo/shared';
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_BOOKING_SETTINGS, serviceFeeAt, validateBookingSettings } from './settings';
+import { DEFAULT_BOOKING_SETTINGS, serviceFeeAt,
+  welcomeFeeEnds, validateBookingSettings } from './settings';
 import type { BookingSettings } from './settings';
 
 describe('DEFAULT_BOOKING_SETTINGS', () => {
@@ -13,8 +14,9 @@ describe('DEFAULT_BOOKING_SETTINGS', () => {
       inspectionHours: 48,
       damageReplyHours: 48,
       servicePercent: 10,
-      promoServicePercent: 0,
-      promoServiceUntil: null,
+      welcomeFeeDays: 30,
+      highValueDepositCents: 30_000,
+      highValueRentCents: 50_000,
       maxAdvanceDays: 365,
       reviewWindowDays: 14,
     });
@@ -31,7 +33,7 @@ describe('DEFAULT_BOOKING_SETTINGS', () => {
       ['booking.damageReplyHours', 'damageReplyHours'],
       ['review.windowDays', 'reviewWindowDays'],
       ['fees.servicePercent', 'servicePercent'],
-      ['fees.promoServicePercent', 'promoServicePercent'],
+      ['fees.welcomeDays', 'welcomeFeeDays'],
     ];
     for (const [key, field] of counterpart) {
       expect({ [key]: DEFAULT_BOOKING_SETTINGS[field] }).toEqual({ [key]: SETTING_DEFAULTS[key] });
@@ -44,8 +46,9 @@ describe('DEFAULT_BOOKING_SETTINGS', () => {
 });
 
 describe('validateBookingSettings', () => {
-  // The launch offer's last day is a date or null, checked on its own below.
-  const FIELDS = (Object.keys(DEFAULT_BOOKING_SETTINGS) as (keyof BookingSettings)[]).filter((f) => f !== 'promoServiceUntil');
+  const FIELDS = Object.keys(DEFAULT_BOOKING_SETTINGS) as (keyof BookingSettings)[];
+  // These may be 0: no fee, no free first days, every deal checked.
+  const ZERO_OK: readonly string[] = ['servicePercent', 'welcomeFeeDays', 'highValueDepositCents', 'highValueRentCents'];
   const invalid = (field: string) =>
     expect.objectContaining({
       code: 'INVALID_INPUT',
@@ -64,7 +67,7 @@ describe('validateBookingSettings', () => {
         invalid(field),
       );
     }
-    if (field !== 'servicePercent' && field !== 'promoServicePercent') {
+    if (!ZERO_OK.includes(field)) {
       expect(() => validateBookingSettings({ ...DEFAULT_BOOKING_SETTINGS, [field]: 0 })).toThrow(
         invalid(field),
       );
@@ -75,7 +78,7 @@ describe('validateBookingSettings', () => {
     expect(() =>
       validateBookingSettings({ ...DEFAULT_BOOKING_SETTINGS, inspectionHours: 0.5 }),
     ).not.toThrow();
-    for (const field of ['servicePercent', 'promoServicePercent', 'maxAdvanceDays', 'reviewWindowDays'] as const) {
+    for (const field of ['servicePercent', 'welcomeFeeDays', 'maxAdvanceDays', 'reviewWindowDays'] as const) {
       expect(() => validateBookingSettings({ ...DEFAULT_BOOKING_SETTINGS, [field]: 1.5 })).toThrow(
         invalid(field),
       );
@@ -92,43 +95,23 @@ describe('validateBookingSettings', () => {
   });
 });
 
-describe('the launch offer on the service fee (owner decision of 2026-11-06)', () => {
-  const invalid = expect.objectContaining({
-    code: 'INVALID_INPUT',
-    details: expect.objectContaining({ field: 'settings.promoServiceUntil' }),
-  });
-  // 0 % until the end of 5 February 2027 in Riga (UTC+2 in winter), 10 % after.
-  const promo: BookingSettings = { ...DEFAULT_BOOKING_SETTINGS, promoServicePercent: 0, promoServiceUntil: '2027-02-05' as never };
+describe('a new account\'s first days without the fee (owner, 2026-11-26)', () => {
   const riga = 'Europe/Riga';
+  // Signed up at noon (Riga) on 1 December 2026: 30 free days end at noon on 31 December.
+  const joined = new Date('2026-12-01T10:00:00Z');
 
-  it('takes a valid day or null as the last day, and nothing else', () => {
-    expect(() => validateBookingSettings(promo)).not.toThrow();
-    for (const value of ['2027-02-30', '05.02.2027', '', 20270205]) {
-      expect(() => validateBookingSettings({ ...promo, promoServiceUntil: value as never })).toThrow(invalid);
-    }
+  it('charges nothing within the first days, and says until which day', () => {
+    expect(serviceFeeAt(DEFAULT_BOOKING_SETTINGS, new Date('2026-12-15T12:00:00Z'), riga, joined)).toEqual({ percent: 0, promoUntil: '2026-12-31' });
   });
 
-  it('charges the offer percent during the window', () => {
-    expect(serviceFeeAt(promo, new Date('2026-11-06T12:00:00Z'), riga)).toEqual({ percent: 0, promoUntil: '2027-02-05' });
-    expect(serviceFeeAt({ ...promo, promoServicePercent: 3 }, new Date('2027-02-05T12:00:00Z'), riga)).toEqual({
-      percent: 3,
-      promoUntil: '2027-02-05',
-    });
+  it('charges the regular fee from the moment they end', () => {
+    expect(serviceFeeAt(DEFAULT_BOOKING_SETTINGS, new Date('2026-12-31T09:59:59.999Z'), riga, joined).percent).toBe(0);
+    expect(serviceFeeAt(DEFAULT_BOOKING_SETTINGS, new Date('2026-12-31T10:00:00Z'), riga, joined)).toEqual({ percent: 10, promoUntil: null });
   });
 
-  it('charges the regular percent after the window', () => {
-    expect(serviceFeeAt(promo, new Date('2027-03-01T00:00:00Z'), riga)).toEqual({ percent: 10, promoUntil: null });
-  });
-
-  it('ends exactly at midnight after the last day, where the item is', () => {
-    // Midnight 5→6 February in Riga is 22:00 UTC on the 5th.
-    expect(serviceFeeAt(promo, new Date('2027-02-05T21:59:59.999Z'), riga).percent).toBe(0);
-    expect(serviceFeeAt(promo, new Date('2027-02-05T22:00:00.000Z'), riga).percent).toBe(10);
-    // In London the same day ends two hours later.
-    expect(serviceFeeAt(promo, new Date('2027-02-05T23:59:59.999Z'), 'Europe/London').percent).toBe(0);
-  });
-
-  it('is the regular fee when there is no offer', () => {
-    expect(serviceFeeAt(DEFAULT_BOOKING_SETTINGS, new Date('2026-11-06T12:00:00Z'), riga)).toEqual({ percent: 10, promoUntil: null });
+  it('charges the regular fee to a price without a renter, and when the free days are off', () => {
+    expect(serviceFeeAt(DEFAULT_BOOKING_SETTINGS, new Date('2026-12-02T00:00:00Z'), riga)).toEqual({ percent: 10, promoUntil: null });
+    expect(serviceFeeAt({ ...DEFAULT_BOOKING_SETTINGS, welcomeFeeDays: 0 }, new Date('2026-12-02T00:00:00Z'), riga, joined)).toEqual({ percent: 10, promoUntil: null });
+    expect(welcomeFeeEnds({ ...DEFAULT_BOOKING_SETTINGS, welcomeFeeDays: 0 }, joined)).toBeNull();
   });
 });

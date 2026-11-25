@@ -329,14 +329,14 @@
       "unsaved": "Nesaglabātas izmaiņas",
       "group": {
         "fees": "Maksa",
-        "deals": "Darījumu termiņi",
-        "other": "Citi"
+        "deals": "Darījuma termiņi",
+        "checks": "Dārgi darījumi",
+        "reviews": "Atsauksmes"
       },
       "key": {
         "fees": {
           "servicePercent": "Servisa maksa",
-          "promoServicePercent": "Sākuma piedāvājuma maksa",
-          "promoServiceUntil": "Sākuma piedāvājums līdz"
+          "welcomeDays": "Bez maksas pēc reģistrācijas"
         },
         "booking": {
           "requestTtlHours": "Īpašnieks atbild uz pieprasījumu",
@@ -349,17 +349,17 @@
         },
         "review": {
           "windowDays": "Atsauksmes var rakstīt"
-        }
-      },
-      "hint": {
-        "fees": {
-          "promoServiceUntil": "Tukšs: sākuma piedāvājuma nav."
+        },
+        "checks": {
+          "highValueDepositEur": "Drošības nauda no",
+          "highValueRentEur": "Noma no"
         }
       },
       "unit": {
         "hours": "st.",
         "days": "d.",
-        "percent": "%"
+        "percent": "%",
+        "eur": "€"
       },
       "asDays": "= {days, plural, zero {# dienas} one {# diena} other {# dienas}}",
       "asMonths": "≈ {months, plural, zero {# mēneši} one {# mēnesis} other {# mēneši}}",
@@ -369,30 +369,30 @@
       "undo": "Atcelt šo izmaiņu",
       "less": "Mazāk",
       "more": "Vairāk",
-      "promo": {
-        "none": "Piedāvājuma nav: visi maksā {fee}%.",
-        "active": "Spēkā līdz {date}: {promo}% {fee}% vietā, atlikušas {days, plural, zero {# dienas} one {# diena} other {# dienas}}.",
-        "over": "Beidzās {date}: visi atkal maksā {fee}%.",
-        "plus1": "+1 mēnesis",
-        "plus3": "+3 mēneši",
-        "clear": "Bez piedāvājuma"
-      },
-      "flow": {
-        "title": "Kā notiek darījums",
-        "request": "Pieprasījums",
-        "answer": "īpašnieka atbilde",
-        "pay": "samaksa",
-        "handover": "nodošana",
-        "handoverObject": "īrnieka iebildums",
-        "return": "atdošana",
-        "returnObject": "īpašnieka iebildums",
-        "inspect": "lietas pārbaude",
-        "damage": "atbilde uz ziņojumu"
-      },
       "changes": "{count, plural, zero {# izmaiņu} one {# izmaiņa} other {# izmaiņas}}",
       "discard": "Atcelt visu",
       "saveCount": "Saglabāt ({count})",
-      "invalid": "Vispirms izlabojiet atzīmētās vērtības."
+      "invalid": "Vispirms izlabojiet atzīmētās vērtības.",
+      "groupNote": {
+        "fees": "Maksu maksā nomnieks papildus nomai. Katrs darījums saglabā maksu, ar kādu tas pieprasīts.",
+        "checks": "No šādas drošības naudas vai nomas summas nomnieks vispirms apstiprina tālruni un identitāti.",
+        "reviews": "Pēc pabeigta darījuma abas puses var atstāt atsauksmi."
+      },
+      "phase": {
+        "booking": {
+          "title": "Rezervācija",
+          "note": "Pieprasījums, īpašnieka atbilde un samaksa. Bez atbildes vai samaksas pieprasījums noslēdzas pats."
+        },
+        "handover": {
+          "title": "Nodošana",
+          "note": "Īpašnieks atzīmē nodošanu; ja nomnieks neiebilst, tā tiek ieskaitīta."
+        },
+        "return": {
+          "title": "Atdošana un drošības nauda",
+          "note": "Nomnieks atdod lietu, īpašnieks to pārbauda. Bez atbildes drošības nauda atgriežas nomniekam, strīds nonāk pie administratora."
+        }
+      },
+      "off": "Izslēgts"
     },
     "person": {
       "back": "Visi lietotāji",

@@ -48,28 +48,30 @@ describe('createRequest', () => {
     expect(createRequest(requestInput(), { ...ctx, settings }).next.quote.serviceFeeCents).toBe(540);
   });
 
-  describe('the launch offer on the fee (owner decision of 2026-11-06)', () => {
-    // NOW is 4 November 2026, 12:00 in Riga. The offer's last day is the 5th, so it ends at 22:00 UTC that day.
-    const promo = { ...ctx.settings, servicePercent: 10, promoServicePercent: 0, promoServiceUntil: localDate('2026-11-05') };
+  describe("a new account's first days without the fee (owner, 2026-11-26)", () => {
+    // NOW is 4 November 2026, 12:00 in Riga (10:00 UTC). The renter signed up on 20 October at 10:00 UTC,
+    // so their 30 free days end at 10:00 UTC on 19 November.
+    const joined = new Date('2026-10-20T10:00:00Z');
 
-    it('prices a request in the window with the offer, and records it', () => {
-      const { quote: q } = createRequest(requestInput(), { ...ctx, settings: promo }).next;
-      expect(q).toMatchObject({ servicePercent: 0, serviceFeeCents: 0, servicePromoUntil: '2026-11-05', totalCents: q.rentCents + q.depositCents });
+    it('prices a request within the free days at 0 %, and records until when', () => {
+      const { quote: q } = createRequest(requestInput({ renterJoinedAt: joined }), ctx).next;
+      expect(q).toMatchObject({ servicePercent: 0, serviceFeeCents: 0, servicePromoUntil: '2026-11-19', totalCents: q.rentCents + q.depositCents });
     });
 
-    it('prices a request after the window with the regular fee', () => {
-      const after = { ...ctx, settings: promo, now: new Date('2026-11-05T22:00:00Z') };
-      const input = requestInput({ period: p('2026-11-07', '2026-11-09') });
+    it('prices a request after them, or from an older account, with the regular fee', () => {
+      const after = { ...ctx, now: new Date('2026-11-19T10:00:00Z') };
+      const input = requestInput({ period: p('2026-11-21', '2026-11-23'), renterJoinedAt: joined });
       expect(createRequest(input, after).next.quote).toMatchObject({ servicePercent: 10, serviceFeeCents: 450, servicePromoUntil: null });
-      const justBefore = { ...after, now: new Date('2026-11-05T21:59:59.999Z') };
+      const justBefore = { ...after, now: new Date('2026-11-19T09:59:59.999Z') };
       expect(createRequest(input, justBefore).next.quote.servicePercent).toBe(0);
+      expect(createRequest(requestInput(), ctx).next.quote.servicePercent).toBe(10);
     });
 
     it('keeps the frozen fee through the deal, whatever the settings and the clock say later', () => {
-      const input = requestInput({ period: p('2026-11-10', '2026-11-12') });
-      const requested = createRequest(input, { ...ctx, settings: promo }).next;
-      // The administrator raises the fee and ends the offer; the deal is accepted, signed and paid after the window.
-      const raised = { ...promo, servicePercent: 25, promoServiceUntil: null };
+      const input = requestInput({ period: p('2026-11-10', '2026-11-12'), renterJoinedAt: joined });
+      const requested = createRequest(input, ctx).next;
+      // The administrator raises the fee and turns the free days off; the deal goes on after they ended.
+      const raised = { ...ctx.settings, servicePercent: 25, welcomeFeeDays: 0 };
       const accepted = decide(requested, owner, { type: 'ACCEPT' }, { ...later(ctx, 20), settings: raised, blocked: [] }).next;
       const afterWindow = { ...later(ctx, 40), settings: raised };
       const signed = decide(decide(accepted, renter, { type: 'SIGN' }, afterWindow).next, owner, { type: 'SIGN' }, afterWindow).next;

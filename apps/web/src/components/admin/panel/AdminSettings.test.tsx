@@ -23,8 +23,9 @@ function renderSettings() {
       body: {
         items: [
           item('fees.servicePercent', 10),
-          item('fees.promoServicePercent', 0),
-          item('fees.promoServiceUntil', ''),
+          item('fees.welcomeDays', 30),
+          item('checks.highValueDepositEur', 300),
+          item('checks.highValueRentEur', 500),
           item('booking.requestTtlHours', 24),
           item('booking.paymentTtlHours', 24),
           item('booking.handoverConfirmHours', 48),
@@ -47,7 +48,9 @@ describe('AdminSettings', () => {
     renderSettings();
     const fee = await screen.findByLabelText(s.key.fees.servicePercent);
     expect(screen.getAllByText('= 1 day').length).toBeGreaterThan(0);
-    expect(screen.getByText(s.promo.none.replace('{fee}', '10'))).toBeVisible();
+    // The free first month reads as a month; the deadlines are grouped by the deal's phases.
+    expect(screen.getByText('≈ 1 month')).toBeVisible();
+    expect(screen.getByRole('heading', { name: new RegExp(s.phase.return.title) })).toBeVisible();
     const row = fee.closest('div.grid') as HTMLElement;
     await user.click(within(row).getByRole('button', { name: s.more }));
     expect(fee).toHaveValue(11);
