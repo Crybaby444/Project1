@@ -84,7 +84,7 @@ test('the home page describes Yoyo as an Organization and a WebSite', async ({ p
   expect(types).toEqual(expect.arrayContaining(['Organization', 'WebSite']));
   expect(data.find((item: { '@type': string }) => item['@type'] === 'Organization')).toMatchObject({
     name: 'Yoyo',
-    email: 'admin@yoyo.rent',
+    email: 'support@yoyo.rent',
   });
 });
 
