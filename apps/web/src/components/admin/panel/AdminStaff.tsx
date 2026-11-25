@@ -86,7 +86,7 @@ export function AdminStaff() {
           </Button>
         </div>
       ) : (
-        <ul className="border-ink/15 divide-ink/10 rounded-media divide-y border">
+        <ul className="admin-glass border-ink/15 divide-ink/10 rounded-media divide-y border">
           {staff.data.map((m) => {
             const me = m.id === user?.id;
             return (

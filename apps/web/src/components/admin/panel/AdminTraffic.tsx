@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { useAdminAnalytics } from '@/lib/admin/queries';
-import { AdminPageHeader, Panel } from './parts';
+import { AdminPageHeader, CountUp, Panel, StatCard } from './parts';
 
 type Row = AdminAnalytics['pages'][number];
 
@@ -66,11 +66,11 @@ function Body({ a }: { a: AdminAnalytics }) {
 
   return (
     <>
-      <dl className="border-ink/15 grid grid-cols-2 border-y lg:grid-cols-4">
-        <Big label={t('views')} value={nf.format(a.totals.views)} />
-        <Big label={t('visits')} value={nf.format(a.totals.visits)} note={t('perVisit', { count: perVisit })} />
-        <Big label={t('requests')} value={nf.format(a.funnel.requests)} note={t('rate', { rate: rate(a.funnel.requests) })} />
-        <Big label={t('signups')} value={nf.format(a.funnel.signups)} />
+      <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard label={t('views')} value={<CountUp value={a.totals.views} format={nf.format} />} />
+        <StatCard label={t('visits')} value={<CountUp value={a.totals.visits} format={nf.format} />} notes={[t('perVisit', { count: perVisit })]} />
+        <StatCard label={t('requests')} value={<CountUp value={a.funnel.requests} format={nf.format} />} notes={[t('rate', { rate: rate(a.funnel.requests) })]} />
+        <StatCard label={t('signups')} value={<CountUp value={a.funnel.signups} format={nf.format} />} />
       </dl>
 
       <Panel title={t('chart')}>
@@ -120,16 +120,6 @@ function Body({ a }: { a: AdminAnalytics }) {
   );
 }
 
-function Big({ label, value, note }: { label: string; value: string; note?: string }) {
-  return (
-    <div className="border-ink/15 flex flex-col gap-1 py-5 pr-4 even:border-l even:pl-4 lg:border-l lg:px-5 lg:first:border-l-0 lg:first:pl-0">
-      <dt className="text-ink/70 text-sm font-semibold">{label}</dt>
-      <dd className="font-display text-display-m leading-none font-black tabular-nums">{value}</dd>
-      {note && <dd className="text-ink/70 text-sm">{note}</dd>}
-    </div>
-  );
-}
-
 /** A ranked list with a bar each, as long as its share of the largest. */
 function Bars({ rows, name }: { rows: Row[]; name?: (key: string) => string | null }) {
   const t = useTranslations('admin.traffic');
@@ -139,7 +129,7 @@ function Bars({ rows, name }: { rows: Row[]; name?: (key: string) => string | nu
     <ol className="flex flex-col gap-2">
       {rows.map((r) => (
         <li key={r.key} className="relative overflow-hidden rounded-[10px] px-3 py-2">
-          <span aria-hidden="true" className="bg-ink/[0.07] absolute inset-y-0 left-0 rounded-[10px]" style={{ width: `${Math.max(4, (r.value / max) * 100)}%` }} />
+          <span aria-hidden="true" className="admin-grow-x bg-ink/[0.07] absolute inset-y-0 left-0 rounded-[10px]" style={{ width: `${Math.max(4, (r.value / max) * 100)}%` }} />
           <span className="relative flex items-baseline justify-between gap-3 text-base">
             <span className="min-w-0 truncate">
               {name?.(r.key) ? (

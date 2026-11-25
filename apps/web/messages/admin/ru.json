@@ -69,7 +69,10 @@
         "DEAL_REQUESTED": "{who} хочет арендовать «{title}»",
         "DISPUTE_OPENED": "Открыт спор по «{title}»"
       },
-      "reportsWaiting": "{count, plural, one {жалоба ждёт} few {жалобы ждут} many {жалоб ждут} other {жалобы ждут}}"
+      "reportsWaiting": "{count, plural, one {жалоба ждёт} few {жалобы ждут} many {жалоб ждут} other {жалобы ждут}}",
+      "vsLastWeek": "{delta} к прошлой неделе",
+      "shareLive": "{percent}% в каталоге",
+      "today": "Сегодня"
     },
     "deals": {
       "title": "Сделки",
@@ -178,7 +181,8 @@
         "RENT_RELEASE": "Аренда владельцу",
         "DEPOSIT_REFUND": "Залог возвращён",
         "DEPOSIT_TO_OWNER": "Залог владельцу",
-        "BOOKING_REFUND": "Возврат по сделке"
+        "BOOKING_REFUND": "Возврат по сделке",
+        "BOOKING_PARTIAL_REFUND": "Частичный возврат"
       }
     },
     "reports": {

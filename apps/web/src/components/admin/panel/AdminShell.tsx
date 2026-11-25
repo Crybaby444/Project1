@@ -164,22 +164,22 @@ export function AdminShell({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div data-admin-root className="-mx-4 grid min-h-svh grid-cols-[minmax(0,1fr)] sm:-mx-8 lg:grid-cols-[248px_minmax(0,1fr)] lg:bg-[linear-gradient(to_right,var(--ink)_248px,transparent_248px)]">
-      <aside className="bg-ink text-canvas min-w-0 lg:sticky lg:top-0 lg:flex lg:h-svh lg:flex-col">
+    <div data-admin-root className="-mx-4 grid min-h-svh grid-cols-[minmax(0,1fr)] sm:-mx-8 lg:grid-cols-[248px_minmax(0,1fr)] ">
+      <aside className="border-ink/10 text-ink min-w-0 border-b bg-[var(--night)]/80 backdrop-blur-xl lg:border-r lg:border-b-0 lg:sticky lg:top-0 lg:flex lg:h-svh lg:flex-col">
         <p className="font-display hidden px-6 pt-7 pb-6 text-3xl leading-none font-black uppercase lg:block">
-          Yoyo <span className="text-canvas/60">/ {t('brand')}</span>
+          Yoyo <span className="text-ink/60">/ {t('brand')}</span>
         </p>
         <div className="hidden px-3 pb-4 lg:block">
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE))}
-            className="bg-canvas/10 hover:bg-canvas/15 text-canvas/80 flex min-h-11 w-full items-center gap-3 rounded-[14px] px-3.5 text-sm font-semibold"
+            className="bg-ink/10 hover:bg-ink/15 text-ink/80 flex min-h-11 w-full items-center gap-3 rounded-[14px] px-3.5 text-sm font-semibold"
           >
             <Icon>
               <path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4" />
             </Icon>
             <span className="flex-1 text-left">{t('search.open')}</span>
-            <kbd className="border-canvas/25 rounded-[6px] border px-1.5 text-xs">{t('search.shortcut')}</kbd>
+            <kbd className="border-ink/25 rounded-[6px] border px-1.5 text-xs">{t('search.shortcut')}</kbd>
           </button>
         </div>
         <nav aria-label={t('navLabel')} className="overflow-x-auto lg:flex-1 lg:overflow-y-auto">
@@ -189,7 +189,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
                 type="button"
                 aria-label={t('search.open')}
                 onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE))}
-                className="text-canvas/80 hover:bg-canvas/10 flex min-h-11 items-center rounded-[14px] px-3.5"
+                className="text-ink/80 hover:bg-ink/10 flex min-h-11 items-center rounded-[14px] px-3.5"
               >
                 <Icon>
                   <path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4" />
@@ -203,7 +203,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
               return (
                 <li key={key} className="shrink-0">
                   {firstOfGroup && (
-                    <p className={`text-canvas/65 hidden px-3.5 pb-1 text-xs font-bold tracking-[0.08em] uppercase lg:block ${index === 0 ? '' : 'pt-4'}`}>
+                    <p className={`text-ink/65 hidden px-3.5 pb-1 text-xs font-bold tracking-[0.08em] uppercase lg:block ${index === 0 ? '' : 'pt-4'}`}>
                       {t(`groups.${group}`)}
                     </p>
                   )}
@@ -211,7 +211,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
                     href={href}
                     aria-current={current ? 'page' : undefined}
                     className={`ease-yoyo flex min-h-11 items-center gap-3 rounded-[14px] px-3.5 text-base font-semibold whitespace-nowrap transition-colors duration-150 ${
-                      current ? 'bg-canvas text-ink' : 'text-canvas/80 hover:bg-canvas/10 hover:text-canvas'
+                      current ? 'bg-ink text-canvas' : 'text-ink/80 hover:bg-ink/10 hover:text-ink'
                     }`}
                   >
                     <Icon>{icon}</Icon>
@@ -219,7 +219,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
                     {count > 0 && (
                       <span
                         className={`rounded-pill inline-flex min-h-5 min-w-5 items-center justify-center px-1.5 text-xs font-bold tabular-nums ${
-                          current ? 'bg-ink text-canvas' : 'bg-canvas text-ink'
+                          current ? 'bg-canvas text-ink' : 'bg-ink text-canvas'
                         }`}
                       >
                         {count}
@@ -233,19 +233,19 @@ export function AdminShell({ children }: { children: ReactNode }) {
               <button
                 type="button"
                 onClick={() => void leave()}
-                className="text-canvas/80 hover:bg-canvas/10 flex min-h-11 items-center gap-3 rounded-[14px] px-3.5 text-base font-semibold whitespace-nowrap"
+                className="text-ink/80 hover:bg-ink/10 flex min-h-11 items-center gap-3 rounded-[14px] px-3.5 text-base font-semibold whitespace-nowrap"
               >
                 {t('signOut')}
               </button>
             </li>
           </ul>
         </nav>
-        <div className="border-canvas/15 hidden border-t px-3 py-4 lg:block">
-          {user && <p className="text-canvas/70 truncate px-3.5 pb-2 text-sm">{user.email}</p>}
+        <div className="border-ink/15 hidden border-t px-3 py-4 lg:block">
+          {user && <p className="text-ink/70 truncate px-3.5 pb-2 text-sm">{user.email}</p>}
           <button
             type="button"
             onClick={() => void leave()}
-            className="text-canvas/80 hover:bg-canvas/10 hover:text-canvas flex min-h-11 w-full items-center gap-3 rounded-[14px] px-3.5 text-sm font-semibold"
+            className="text-ink/80 hover:bg-ink/10 hover:text-ink flex min-h-11 w-full items-center gap-3 rounded-[14px] px-3.5 text-sm font-semibold"
           >
             <Icon>
               <path d="M15 17l5-5-5-5M20 12H9M12 20H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7" />
@@ -257,7 +257,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
       <CommandPalette />
       <main id="admin-main" className="min-w-0 px-4 py-8 sm:px-8 lg:px-12 lg:py-10">
         {/* One working width for every admin page, centred (owner, 2026-11-19: no half-empty screens). */}
-        <div className="mx-auto w-full max-w-[1200px]">{allowed ? children : <NoAccess />}</div>
+        {/* Each section arrives out of a blur (owner, 2026-11-26: the motion of the panel); `key` replays it on a change of section. */}
+        <div key={active} className="admin-rise mx-auto w-full max-w-[1200px]">
+          {allowed ? children : <NoAccess />}
+        </div>
       </main>
     </div>
   );

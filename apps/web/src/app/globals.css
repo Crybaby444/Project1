@@ -592,6 +592,163 @@ html:has([data-admin-root]) [data-site-header] {
   display: none;
 }
 
+/*
+ * The admin panel is always night (owner, 2026-11-26: "night with glass"): the dark palette on the whole
+ * page, so dialogs, menus and lists opened from it are night too, whatever theme the site is set to.
+ * `html[data-theme]:has()` outranks the site's own dark rule, which turns --night to cream for the home.
+ */
+html:has([data-admin-root]),
+html[data-theme]:has([data-admin-root]) {
+  color-scheme: dark;
+  --canvas: #07080b;
+  --surface: #111318;
+  --band: #171a20;
+  --mist: #1c1f26;
+  --ink: #f4f1e6;
+  --cta-bg: #f4f1e6;
+  --cta-fg: #0a0b0e;
+  --marquee-bg: #f4f1e6;
+  --marquee-fg: #0a0b0e;
+  --sticker-edge: #f4f1e6;
+  --night: #050608;
+  --night-dim: #5f646c;
+  --paper: #f4f1e6;
+  /* The one light of the panel: ice blue, only ever as light (a glow, a dot, a lit bar), never a surface. */
+  --admin-light: 158 210 255;
+}
+html:has([data-admin-root]) body {
+  background: var(--canvas);
+}
+/* The night the glass sits on: two soft pools of the light, fixed while the page scrolls. */
+[data-admin-root] {
+  position: relative;
+  isolation: isolate;
+}
+[data-admin-root]::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(56rem 38rem at 88% -12%, rgb(var(--admin-light) / 0.15), transparent 62%),
+    radial-gradient(44rem 34rem at 18% 112%, rgb(var(--admin-light) / 0.07), transparent 60%);
+}
+/* Frosted glass: a faint sheet of paper over the night, a lit top edge, a soft fall of shadow. */
+.admin-glass {
+  background: linear-gradient(180deg, rgb(244 241 230 / 0.06), rgb(244 241 230 / 0.025));
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  backdrop-filter: blur(18px) saturate(1.15);
+  box-shadow:
+    inset 0 1px 0 rgb(244 241 230 / 0.09),
+    0 28px 56px -36px rgb(0 0 0 / 0.85);
+}
+/* Arrival: each block comes out of a blur in turn (`--i` is its place); still for reduced motion. */
+.admin-rise {
+  animation: admin-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+@keyframes admin-rise {
+  from {
+    opacity: 0;
+    filter: blur(14px);
+    transform: translateY(10px) scale(0.985);
+  }
+}
+/* Bars grow from the floor (or from the left) one after another; a sparkline draws itself. */
+.admin-grow-y {
+  transform-origin: bottom;
+  animation: admin-grow-y 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(280ms + var(--i, 0) * 45ms);
+}
+.admin-grow-x {
+  transform-origin: left;
+  animation: admin-grow-x 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+.admin-draw {
+  animation: admin-draw 1.4s cubic-bezier(0.65, 0, 0.35, 1) 0.25s both;
+}
+@keyframes admin-grow-y {
+  from {
+    transform: scaleY(0);
+  }
+}
+@keyframes admin-grow-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+@keyframes admin-draw {
+  from {
+    clip-path: inset(-20% 100% -20% 0);
+  }
+  to {
+    clip-path: inset(-20% 0 -20% 0);
+  }
+}
+/* Admin tables: rows arrive one after another, and the row under the pointer is lit a little. */
+[data-admin-root] tbody tr {
+  transition: background-color 150ms ease;
+  animation: admin-row 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+[data-admin-root] tbody tr:hover {
+  background: rgb(244 241 230 / 0.035);
+}
+[data-admin-root] tbody tr:nth-child(1) {
+  animation-delay: 148ms;
+}
+[data-admin-root] tbody tr:nth-child(2) {
+  animation-delay: 176ms;
+}
+[data-admin-root] tbody tr:nth-child(3) {
+  animation-delay: 204ms;
+}
+[data-admin-root] tbody tr:nth-child(4) {
+  animation-delay: 232ms;
+}
+[data-admin-root] tbody tr:nth-child(5) {
+  animation-delay: 260ms;
+}
+[data-admin-root] tbody tr:nth-child(6) {
+  animation-delay: 288ms;
+}
+[data-admin-root] tbody tr:nth-child(7) {
+  animation-delay: 316ms;
+}
+[data-admin-root] tbody tr:nth-child(8) {
+  animation-delay: 344ms;
+}
+[data-admin-root] tbody tr:nth-child(9) {
+  animation-delay: 372ms;
+}
+[data-admin-root] tbody tr:nth-child(10) {
+  animation-delay: 400ms;
+}
+[data-admin-root] tbody tr:nth-child(11) {
+  animation-delay: 428ms;
+}
+[data-admin-root] tbody tr:nth-child(12) {
+  animation-delay: 456ms;
+}
+[data-admin-root] tbody tr:nth-child(n + 13) {
+  animation-delay: 480ms;
+}
+@keyframes admin-row {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-rise,
+  [data-admin-root] tbody tr,
+  .admin-grow-y,
+  .admin-grow-x,
+  .admin-draw {
+    animation: none;
+  }
+}
+
 /* The home has no theme to choose: it always shows the light palette. */
 html:has([data-home-root]) [data-theme-control] {
   display: none;

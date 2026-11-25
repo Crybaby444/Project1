@@ -69,7 +69,10 @@
         "DEAL_REQUESTED": "{who} asked to rent “{title}”",
         "DISPUTE_OPENED": "Dispute opened on “{title}”"
       },
-      "reportsWaiting": "{count, plural, one {report to look at} other {reports to look at}}"
+      "reportsWaiting": "{count, plural, one {report to look at} other {reports to look at}}",
+      "vsLastWeek": "{delta} vs last week",
+      "shareLive": "{percent}% live in the catalog",
+      "today": "Today"
     },
     "deals": {
       "title": "Deals",
@@ -178,7 +181,8 @@
         "RENT_RELEASE": "Rent to owner",
         "DEPOSIT_REFUND": "Deposit returned",
         "DEPOSIT_TO_OWNER": "Deposit to owner",
-        "BOOKING_REFUND": "Deal refund"
+        "BOOKING_REFUND": "Deal refund",
+        "BOOKING_PARTIAL_REFUND": "Partly refunded"
       }
     },
     "reports": {

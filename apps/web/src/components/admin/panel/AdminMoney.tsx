@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useLedgerOperations, useLedgerSummary } from '@/lib/admin/queries';
 import { useMoney } from '@/lib/deals/money';
-import { AdminPageHeader, AdminSelect, Pager, Panel, TABLE_CLASS, TD, TH } from './parts';
+import { AdminPageHeader, AdminSelect, CountUp, Pager, Panel, StatCard, TABLE_CLASS, TD, TH } from './parts';
 
 /**
  * The platform's books: what it holds by kind of account, the audit of the whole journal (balances
@@ -51,7 +51,7 @@ export function AdminMoney({ kind, page }: { kind?: LedgerKind; page: number }) 
         </div>
       ) : (
         <>
-          <dl className="border-ink/15 grid grid-cols-2 border-y lg:grid-cols-5">
+          <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {(
               [
                 [to('revenue'), summary.data.revenueCents],
@@ -61,10 +61,7 @@ export function AdminMoney({ kind, page }: { kind?: LedgerKind; page: number }) 
                 [tm('external'), summary.data.externalCents],
               ] as const
             ).map(([label, value]) => (
-              <div key={label} className="border-ink/15 flex flex-col gap-1 py-5 pr-4 even:border-l even:pl-4 lg:border-l lg:px-5 lg:first:border-l-0 lg:first:pl-0">
-                <dt className="text-ink/70 text-sm font-semibold">{label}</dt>
-                <dd className="font-display text-display-s leading-none font-black tabular-nums">{money(value)}</dd>
-              </div>
+              <StatCard key={label} label={label} value={<CountUp value={value} format={money} />} />
             ))}
           </dl>
 
@@ -121,9 +118,9 @@ export function AdminMoney({ kind, page }: { kind?: LedgerKind; page: number }) 
             </Button>
           </div>
         ) : ops.data.items.length === 0 ? (
-          <p className="border-ink/15 rounded-media border px-5 py-10 text-center">{t('common.empty')}</p>
+          <p className="admin-glass border-ink/15 rounded-media border px-5 py-10 text-center">{t('common.empty')}</p>
         ) : (
-          <div className="border-ink/15 rounded-media relative overflow-x-auto border" tabIndex={0} role="region" aria-label={tm('operations')}>
+          <div className="admin-glass border-ink/15 rounded-media relative overflow-x-auto border" tabIndex={0} role="region" aria-label={tm('operations')}>
             <table className={TABLE_CLASS}>
               <thead>
                 <tr>

@@ -73,9 +73,9 @@ export function AdminActivity({ group, userId }: { group?: ActivityGroup; userId
       {feed.isPending ? (
         <div aria-busy="true" className="bg-mist rounded-media h-64" />
       ) : items.length === 0 ? (
-        <p className="border-ink/15 rounded-media border px-5 py-10 text-center">{t('empty')}</p>
+        <p className="admin-glass border-ink/15 rounded-media border px-5 py-10 text-center">{t('empty')}</p>
       ) : (
-        <ol className="divide-ink/10 border-ink/15 rounded-media m-0 list-none divide-y border p-0">
+        <ol className="admin-glass divide-ink/10 border-ink/15 rounded-media m-0 list-none divide-y border p-0">
           {items.map((e) => {
             const href = targetHref(e);
             const at = new Date(e.at);

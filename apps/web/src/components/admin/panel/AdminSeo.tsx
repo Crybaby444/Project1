@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { Link } from '@/i18n/navigation';
 import { useAdminSeo } from '@/lib/admin/queries';
-import { AdminPageHeader, Panel } from './parts';
+import { AdminPageHeader, CountUp, Panel, StatCard } from './parts';
 
 /**
  * SEO (owner, 2026-11-15): how the published items will look to search engines and in the catalog —
@@ -30,17 +30,12 @@ export function AdminSeo() {
         </div>
       ) : (
         <>
-          <dl className="border-ink/15 grid grid-cols-2 border-y">
-            <div className="flex flex-col gap-1 py-5 pr-4">
-              <dt className="text-ink/70 text-sm font-semibold">{t('published')}</dt>
-              <dd className="font-display text-5xl leading-none font-black tabular-nums">{seo.data.published}</dd>
-            </div>
-            <div className="border-ink/15 flex flex-col gap-1 border-l py-5 pl-4">
-              <dt className="text-ink/70 text-sm font-semibold">{t('healthy')}</dt>
-              <dd className="font-display text-5xl leading-none font-black tabular-nums">
-                {seo.data.published > 0 ? Math.round((seo.data.healthy / seo.data.published) * 100) : 100}%
-              </dd>
-            </div>
+          <dl className="grid gap-3 sm:grid-cols-2">
+            <StatCard label={t('published')} value={<CountUp value={seo.data.published} />} />
+            <StatCard
+              label={t('healthy')}
+              value={<CountUp value={seo.data.published > 0 ? Math.round((seo.data.healthy / seo.data.published) * 100) : 100} format={(n) => `${n}%`} />}
+            />
           </dl>
 
           <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">

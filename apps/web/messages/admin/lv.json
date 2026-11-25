@@ -69,7 +69,10 @@
         "DEAL_REQUESTED": "{who} vēlas nomāt “{title}”",
         "DISPUTE_OPENED": "Atvērts strīds par “{title}”"
       },
-      "reportsWaiting": "{count, plural, zero {ziņojumu jāizskata} one {ziņojums jāizskata} other {ziņojumi jāizskata}}"
+      "reportsWaiting": "{count, plural, zero {ziņojumu jāizskata} one {ziņojums jāizskata} other {ziņojumi jāizskata}}",
+      "vsLastWeek": "{delta} pret iepriekšējo nedēļu",
+      "shareLive": "{percent}% katalogā",
+      "today": "Šodien"
     },
     "deals": {
       "title": "Darījumi",
@@ -178,7 +181,8 @@
         "RENT_RELEASE": "Īre īpašniekam",
         "DEPOSIT_REFUND": "Drošības nauda atdota",
         "DEPOSIT_TO_OWNER": "Drošības nauda īpašniekam",
-        "BOOKING_REFUND": "Darījuma atmaksa"
+        "BOOKING_REFUND": "Darījuma atmaksa",
+        "BOOKING_PARTIAL_REFUND": "Daļēji atmaksāts"
       }
     },
     "reports": {

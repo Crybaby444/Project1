@@ -57,3 +57,18 @@ Rules: as plain markup every scene is complete (no WebGL, no script, reduced mot
 
 Text: words rise out of a mask (`expo.out`). Flights: `power3.inOut`. Scroll-driven values are smoothed, never
 re-triggered. Everything fits 320–2560 px, centred.
+
+## The admin panel
+
+Always night (owner, 2026-11-26), whatever the site's theme: `html:has([data-admin-root])` sets the dark
+palette for the whole page, so dialogs and menus opened from the panel are night too. One light, ice blue
+(`--admin-light`), only ever as light: two soft pools behind the page, a lit dot for what waits, today's bar,
+the end of a sparkline. Glass stays faint (`.admin-glass`): a thin sheet of paper over the night, a lit top
+edge, a soft shadow. Information first:
+
+- Every figure counts up as it arrives (`useCountUp`, `CountUp`); summary rows are `StatCard`s.
+- A figure gets a small drawing when it has a story: two weeks as a sparkline with the last week against the
+  one before, a share as a filled line, the money held as one bar of three parts.
+- Charts are pills grown from the floor one day after another; pointing at (or focusing) a day reads it out.
+- Blocks come out of a blur in turn (`.admin-rise`, `--i`), a change of section replays it, table rows arrive
+  one after another. All of it is still with reduced motion, in tests and in automated browsers.

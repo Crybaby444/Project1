@@ -46,7 +46,7 @@ export function AdminCategories() {
       ) : (
         <ol className="flex flex-col gap-3">
           {categories.data.map((root, i) => (
-            <li key={root.id} className="border-ink/15 rounded-media overflow-hidden border">
+            <li key={root.id} className="admin-glass border-ink/15 rounded-media overflow-hidden border">
               <Row category={root} first={i === 0} last={i === categories.data.length - 1} root onRename={setRenaming} targets={targets} />
               {root.children.length > 0 && (
                 <ol className="border-ink/10 divide-ink/10 divide-y border-t">
