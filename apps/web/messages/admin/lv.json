@@ -34,7 +34,7 @@
     "overview": {
       "title": "Pārskats",
       "hello": "Labdien, {name}",
-      "waiting": "Gaida tevi",
+      "waiting": "Gaida jūs",
       "allClear": "Nekas negaida. Viss kārtībā.",
       "toReview": "{count, plural, zero {sludinājumu jāpārbauda} one {sludinājums jāpārbauda} other {sludinājumi jāpārbauda}}",
       "disputes": "{count, plural, zero {strīdu jāizlemj} one {strīds jāizlemj} other {strīdi jāizlemj}}",
@@ -267,7 +267,7 @@
       "sitemap": "Vietnes karte",
       "robots": "Robotu noteikumi",
       "console": "Google Search Console",
-      "consoleHint": "Pievieno yoyo.rent kā īpašumu Google Search Console un iesniedz vietnes karti: tur redzams, ko cilvēki meklē Google pirms atnākšanas, un indeksēšanas problēmas. Vajadzīgs īpašnieka Google konts.",
+      "consoleHint": "Pievienojiet yoyo.rent kā īpašumu Google Search Console un iesniedziet vietnes karti: tur redzams, ko cilvēki meklē Google pirms atnākšanas, un indeksēšanas problēmas. Vajadzīgs īpašnieka Google konts.",
       "open": "Atvērt"
     },
     "groups": {
@@ -415,7 +415,7 @@
       "mailHint": "Virs robežas paziņojumi gaida; pieteikšanās e-pastiem ir rezerve.",
       "timers": "Nokavēti darījumu termiņi",
       "timersOk": "Termiņu darbs neatpaliek.",
-      "timersBad": "Termiņu darbs atpaliek: pārbaudi ieplānoto darbu serverī.",
+      "timersBad": "Termiņu darbs atpaliek: pārbaudiet ieplānoto darbu serverī.",
       "version": "Versija",
       "uptime": "Darbojas {hours} h",
       "providers": "Pakalpojumi",
@@ -454,7 +454,7 @@
     },
     "categories": {
       "title": "Kategorijas",
-      "intro": "Kataloga kategorijas un cik lietu katrā. Pārdēvē kategoriju visās trīs valodās, pārvieto augšup vai lejup vai paslēp no kataloga; izmaiņas vietnē parādās piecu minūšu laikā un tiek ierakstītas žurnālā.",
+      "intro": "Kataloga kategorijas un cik lietu katrā. Pārdēvējiet kategoriju visās trīs valodās, pārvietojiet augšup vai lejup vai paslēpiet no kataloga; izmaiņas vietnē parādās piecu minūšu laikā un tiek ierakstītas žurnālā.",
       "items": "{count} lietas",
       "rename": "Pārdēvēt",
       "renamed": "Pārdēvēta",

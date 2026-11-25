@@ -14,7 +14,7 @@ const DOC: LegalDoc = {
       id: 'contact',
       heading: '2. Kontakti',
       blocks: [
-        { p: 'Rakstiet uz [admin@yoyo.rent](mailto:admin@yoyo.rent) vai skatiet [www.dvi.gov.lv](https://www.dvi.gov.lv).' },
+        { p: 'Rakstiet uz [support@yoyo.rent](mailto:support@yoyo.rent) vai skatiet [www.dvi.gov.lv](https://www.dvi.gov.lv).' },
         { list: ['viens;', 'divi.'] },
         { table: { head: ['Nosaukums', 'Cik ilgi'], rows: [['yoyo_at', '15 minūtes']] } },
       ],
@@ -51,7 +51,7 @@ describe('LegalDocument', () => {
   it('turns written links into real ones: site pages in the page language, email, and other sites', () => {
     renderDoc();
     expect(screen.getByRole('link', { name: 'privātuma politiku' })).toHaveAttribute('href', '/lv/privacy');
-    expect(screen.getByRole('link', { name: 'admin@yoyo.rent' })).toHaveAttribute('href', 'mailto:admin@yoyo.rent');
+    expect(screen.getByRole('link', { name: 'support@yoyo.rent' })).toHaveAttribute('href', 'mailto:support@yoyo.rent');
     const external = screen.getByRole('link', { name: 'www.dvi.gov.lv' });
     expect(external).toHaveAttribute('href', 'https://www.dvi.gov.lv');
     expect(external).toHaveAttribute('rel', 'noopener noreferrer');

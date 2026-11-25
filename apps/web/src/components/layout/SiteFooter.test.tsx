@@ -38,9 +38,9 @@ describe('SiteFooter', () => {
 
   it('gives the contact address as an email link', () => {
     renderFooter();
-    expect(screen.getAllByRole('link', { name: 'admin@yoyo.rent' })[0]).toHaveAttribute(
+    expect(screen.getAllByRole('link', { name: 'support@yoyo.rent' })[0]).toHaveAttribute(
       'href',
-      'mailto:admin@yoyo.rent',
+      'mailto:support@yoyo.rent',
     );
   });
 

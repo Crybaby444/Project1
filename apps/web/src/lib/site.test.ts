@@ -19,6 +19,6 @@ describe('site pages', () => {
   });
 
   it('has one contact address', () => {
-    expect(CONTACT_EMAIL).toBe('admin@yoyo.rent');
+    expect(CONTACT_EMAIL).toBe('support@yoyo.rent');
   });
 });

@@ -1,8 +1,8 @@
 {
   "pages": {
     "home": {
-      "title": "Yoyo — nomā lietas no cilvēkiem tuvumā",
-      "description": "Nomā lietas uz dienu vai nedēļu no cilvēkiem tuvumā un nopelni ar to, ko lieto reti. Līgums pirms maksājuma un depozīts, kas atgriežas."
+      "title": "Yoyo — nomājiet lietas no cilvēkiem tuvumā",
+      "description": "Nomājiet lietas uz dienu vai nedēļu no cilvēkiem tuvumā un nopelniet ar to, ko lietojat reti. Līgums pirms maksājuma un depozīts, kas atgriežas."
     },
     "howItWorks": {
       "title": "Kā notiek noma",
@@ -10,7 +10,7 @@
     },
     "faq": {
       "title": "Jautājumi un atbildes",
-      "description": "Īsas un godīgas atbildes par nomu Yoyo: nauda, depozīts, drošība, konts un tavi dati."
+      "description": "Īsas un godīgas atbildes par nomu Yoyo: nauda, depozīts, drošība, konts un jūsu dati."
     },
     "terms": {
       "title": "Lietošanas noteikumi",
@@ -25,7 +25,7 @@
       "description": "Yoyo izmanto tikai tās sīkdatnes, bez kurām vietne nedarbojas: ne reklāmu, ne izsekošanu. Šeit ir pilns saraksts."
     },
     "whatIs": {
-      "title": "Kas ir Yoyo: īrē no cilvēkiem tuvumā, izīrē to, ko lieto reti",
+      "title": "Kas ir Yoyo: īrējiet no cilvēkiem tuvumā, izīrējiet to, ko lietojat reti",
       "description": "Tirgus starp cilvēkiem eirozonā: īrē lietas uz dienu vai nedēļu vai izīrē savas un pelni. Abu parakstīts līgums, depozīts atgriežas."
     }
   },
@@ -53,7 +53,7 @@
     "ctaListItem": "Izīrēt lietu",
     "ctaHowItWorks": "Kā tas strādā",
     "hero": {
-      "line": "Īrē no cilvēkiem tuvumā. Izīrē to, ko lieto reti. Viss atgriežas.",
+      "line": "Īrējiet no cilvēkiem tuvumā. Izīrējiet to, ko lietojat reti. Viss atgriežas.",
       "find": "Atrast lietu",
       "lend": "Izīrēt lietu",
       "scroll": "Ritini"
@@ -67,23 +67,23 @@
     },
     "what": {
       "label": "Kas ir Yoyo",
-      "statement": "Yoyo ir tirgus starp cilvēkiem. Paņem, kas vajag, tik ilgi, cik vajag, izīrē to, ko lieto reti, un viss atrod ceļu atpakaļ.",
+      "statement": "Yoyo ir tirgus starp cilvēkiem. Paņemiet, kas vajag, tik ilgi, cik vajag, izīrējiet to, ko lietojat reti, un viss atrod ceļu atpakaļ.",
       "steps": {
         "find": {
-          "title": "Atrodi tuvumā",
-          "body": "Meklē katalogā vai kartē. Katru sludinājumu pirms publicēšanas pārbauda cilvēks."
+          "title": "Atrodiet tuvumā",
+          "body": "Meklējiet katalogā vai kartē. Katru sludinājumu pirms publicēšanas pārbauda cilvēks."
         },
         "book": {
-          "title": "Izvēlies dienas",
-          "body": "Nosūti pieprasījumu. Kad īpašnieks piekrīt, līgumu vispirms paraksti tu, tad īpašnieks. Tikai tad maksā."
+          "title": "Izvēlieties dienas",
+          "body": "Nosūtiet pieprasījumu. Kad īpašnieks piekrīt, līgumu vispirms parakstāt jūs, tad īpašnieks. Tikai tad maksājat."
         },
         "meet": {
           "title": "Satiecieties un pārbaudiet",
-          "body": "Nodod lietu ar fotogrāfijām darījuma čatā, lai abas puses redz, kādā stāvoklī tā aizgāja."
+          "body": "Nododiet lietu ar fotogrāfijām darījuma čatā, lai abas puses redz, kādā stāvoklī tā aizgāja."
         },
         "back": {
-          "title": "Atnes atpakaļ",
-          "body": "Īpašnieks to pārbauda, un depozīts atgriežas pie tevis. Kā jojo."
+          "title": "Atnesiet atpakaļ",
+          "body": "Īpašnieks to pārbauda, un depozīts atgriežas pie jums. Kā jojo."
         }
       }
     },
@@ -97,7 +97,7 @@
       "lead": "Ikvienam Yoyo ir seja: publisks profils, atsauksmes no pabeigtiem darījumiem, sekotāji un savi veikali.",
       "profile": {
         "title": "Profili, kuriem var sekot",
-        "body": "Atsauksmes nāk tikai no īstiem darījumiem. Seko tiem, kuru lietas tev patīk.",
+        "body": "Atsauksmes nāk tikai no īstiem darījumiem. Sekojiet tiem, kuru lietas jums patīk.",
         "follow": "Sekot"
       },
       "shop": {
@@ -106,20 +106,20 @@
       },
       "chat": {
         "title": "Ziņas un darījumu čati",
-        "body": "Raksti jebkuram no viņa profila. Katram darījumam ir savs čats blakus līgumam.",
+        "body": "Rakstiet jebkuram no viņa profila. Katram darījumam ir savs čats blakus līgumam.",
         "ask": "Vai sestdien ir brīvs?",
         "answer": "Jā, rezervē."
       }
     },
     "sides": {
       "title": "Divas puses. Viens Yoyo.",
-      "lead": "Tas pats darījums, skatīts no katra auklas gala. Izvēlies savu pusi un izej tam cauri.",
+      "lead": "Tas pats darījums, skatīts no katra auklas gala. Izvēlieties savu pusi un izejiet tam cauri.",
       "switch": "Kura puse",
       "rent": {
         "tab": "Man vajag",
         "cta": "Atrast lietu",
         "shield": {
-          "title": "Kas tevi sargā",
+          "title": "Kas jūs sargā",
           "a": "Nekas netiek iekasēts, pirms abi parakstāt.",
           "b": "Foto darījumā rāda, kādā stāvoklī lieta aizgāja.",
           "c": "Ja nevienojaties par bojājumiem, izlemj Yoyo."
@@ -129,8 +129,8 @@
         "tab": "Man ir",
         "cta": "Izīrēt lietu",
         "shield": {
-          "title": "Kas tevi sargā",
-          "a": "Tevis noteikts depozīts sargā lietu, kamēr tā ir prom.",
+          "title": "Kas jūs sargā",
+          "a": "Jūsu noteiktais depozīts sargā lietu, kamēr tā ir prom.",
           "b": "Parakstīts līgums ar īrnieka vārdu.",
           "c": "Atsauksmes no īstiem darījumiem, pirms kādam piekrīti."
         }
@@ -145,15 +145,15 @@
       },
       "map": {
         "title": "Rajoni un karte",
-        "body": "Meklē pēc rajona un redzi, kur lietu saņemt."
+        "body": "Meklējiet pēc rajona un redziet, kur lietu saņemt."
       },
       "favorites": {
         "title": "Izlase",
-        "body": "Saglabā lietas ar sirsniņu un atgriezies pie tām vēlāk."
+        "body": "Saglabājiet lietas ar sirsniņu un atgriezieties pie tām vēlāk."
       },
       "wallet": {
         "title": "Maks",
-        "body": "Nopelnītā īre nonāk tavā Yoyo makā; no tā var arī maksāt."
+        "body": "Nopelnītā īre nonāk jūsu Yoyo makā; no tā var arī maksāt."
       }
     }
   },
@@ -173,7 +173,7 @@
         },
         "contract": {
           "title": "Parakstiet līgumu",
-          "body": "Yoyo sagatavo nomas līgumu ar abu vārdiem, lietu, datumiem, cenu, depozītu un noteikumiem. Vispirms paraksti tu, tad īpašnieks; pirms abiem parakstiem nekas netiek samaksāts."
+          "body": "Yoyo sagatavo nomas līgumu ar abu vārdiem, lietu, datumiem, cenu, depozītu un noteikumiem. Vispirms parakstāt jūs, tad īpašnieks; pirms abiem parakstiem nekas netiek samaksāts."
         },
         "pay": {
           "title": "Samaksājiet nomu un depozītu",
@@ -362,7 +362,7 @@
   },
   "categoryIntro": {
     "roots": {
-      "electronics": "Spēļu konsoles nedēļas nogalei, projektors filmu vakaram, klēpjdators, kamēr tavējais ir remontā, droni un rācijas ceļojumam. Īrē elektroniku no cilvēkiem tuvumā uz vajadzīgajām dienām un atdod, kad esi pabeidzis.",
+      "electronics": "Spēļu konsoles nedēļas nogalei, projektors filmu vakaram, klēpjdators, kamēr jūsējais ir remontā, droni un rācijas ceļojumam. Īrējiet elektroniku no cilvēkiem tuvumā uz vajadzīgajām dienām un atdodiet, kad tā vairs nav vajadzīga.",
       "photo-video": "Kameras, objektīvi, sporta kameras, statīvi un studijas gaismas fotosesijai, kāzām vai atvaļinājumam. Izmēģini objektīvu pirms pirkšanas vai paņem visu komplektu vienai nedēļas nogalei.",
       "tools": "Urbjmašīnas, perforatori, slīpmašīnas, zāģi un tīrīšanas iekārtas darbiem, ko dari reizi vai divas gadā. Īrē instrumentu no kāda savā rajonā, pabeidz darbu un atdod.",
       "construction": "Blietes, betona maisītāji, flīžu griezēji, ģeneratori, mitruma savācēji, kāpnes un sastatnes remontam. Dārga tehnika, ko reti vajag, uz tik dienām, cik ilgst darbs.",
@@ -373,13 +373,13 @@
       "kids": "Ratiņi, autosēdeklīši, līdzsvara velosipēdi, rotaļu mājiņas, rotaļlietas un bērnu mēbeles. Bērni ātri izaug: īrē uz tiem mēnešiem, kad der, vai mazbērnu ciemošanās laikam.",
       "events-party": "Pasākumu teltis, galdi un krēsli, skaņa un gaismas, kostīmi un dekorācijas. Viss dzimšanas dienai, kāzām vai dārza ballītei, īrēts uz vienu dienu.",
       "music": "Mūzikas instrumenti un DJ aprīkojums koncertam, ballītei vai lai saprastu, vai nodarbības patiks, pirms pērc.",
-      "car-travel": "Jumta kastes, bagāžnieki, velosipēdu turētāji, videoreģistratori un akumulatoru lādētāji ceļojumam ar auto. Īrē uz braucienu un atdod, kad esi mājās."
+      "car-travel": "Jumta kastes, bagāžnieki, velosipēdu turētāji, videoreģistratori un akumulatoru lādētāji ceļojumam ar auto. Īrējiet uz braucienu un atdodiet, kad esat mājās."
     },
     "about": {
       "title": "{name} noma Yoyo",
       "points": {
         "a": "Katrā sludinājumā redzama cena dienā, depozīts un brīvās dienas.",
-        "b": "Tu un īpašnieks parakstāt līgumu tiešsaistē, pirms kas tiek samaksāts: vispirms tu, tad īpašnieks.",
+        "b": "Jūs un īpašnieks parakstāt līgumu tiešsaistē, pirms kas tiek samaksāts: vispirms jūs, tad īpašnieks.",
         "c": "Depozīts tiek turēts darījuma laikā un atgriežas, kad īpašnieks pārbaudījis atgriešanu ({hours} stundu laikā).",
         "d": "Katru sludinājumu pirms publicēšanas pārbauda cilvēks, un atsauksmes nāk tikai no pabeigtiem darījumiem."
       },

@@ -103,7 +103,7 @@ const en: LegalDoc = {
       heading: '6. Contact',
       blocks: [
         {
-          p: 'Questions about cookies: [admin@yoyo.rent](mailto:admin@yoyo.rent). See also the [privacy policy](/privacy).',
+          p: 'Questions about cookies: [support@yoyo.rent](mailto:support@yoyo.rent). See also the [privacy policy](/privacy).',
         },
       ],
     },
@@ -208,7 +208,7 @@ const lv: LegalDoc = {
       heading: '6. Kontakti',
       blocks: [
         {
-          p: 'Jautājumi par sīkdatnēm: [admin@yoyo.rent](mailto:admin@yoyo.rent). Skatiet arī [privātuma politiku](/privacy).',
+          p: 'Jautājumi par sīkdatnēm: [support@yoyo.rent](mailto:support@yoyo.rent). Skatiet arī [privātuma politiku](/privacy).',
         },
       ],
     },
@@ -309,7 +309,7 @@ const ru: LegalDoc = {
       heading: '6. Контакты',
       blocks: [
         {
-          p: 'Вопросы о cookie: [admin@yoyo.rent](mailto:admin@yoyo.rent). См. также [политику конфиденциальности](/privacy).',
+          p: 'Вопросы о cookie: [support@yoyo.rent](mailto:support@yoyo.rent). См. также [политику конфиденциальности](/privacy).',
         },
       ],
     },
