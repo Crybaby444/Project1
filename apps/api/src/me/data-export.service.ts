@@ -66,7 +66,7 @@ export class DataExportService {
     return {
       exportedAt: now.toISOString(),
       about:
-        'Everything Yoyo (yoyo.rent) holds about you. Amounts are in euro cents; times are UTC. Questions: admin@yoyo.rent.',
+        'Everything Yoyo (yoyo.rent) holds about you. Amounts are in euro cents; times are UTC. Questions: support@yoyo.rent.',
       profile: {
         id: user.id,
         name: user.name,

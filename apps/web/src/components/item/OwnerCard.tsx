@@ -5,7 +5,7 @@ import { profilePath } from '@/lib/seo';
 import { Stars } from '@/components/reviews/Stars';
 import { formatScore } from '@/components/reviews/format';
 
-/** "AB" from "Anna Bērziņa", "A" from "Anna". */
+/** "AB" from "Anna Bērziņa", "A" from "Anna", "A" from "@444anna". */
 export function initials(name: string): string {
   // `@olga.k` (owner, 2026-11-16: usernames everywhere) gives "O".
   return name
@@ -13,7 +13,8 @@ export function initials(name: string): string {
     .trim()
     .split(/\s+/)
     .slice(0, 2)
-    .map((part) => Array.from(part)[0]?.toUpperCase() ?? '')
+    // A username that starts with digits ("@444anna") takes its first letter, not "4".
+    .map((part) => (part.match(/\p{L}/u)?.[0] ?? Array.from(part)[0] ?? '').toUpperCase())
     .join('');
 }
 

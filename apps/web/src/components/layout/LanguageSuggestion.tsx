@@ -11,6 +11,7 @@ import { prefersReducedMotion } from '@/lib/motion';
 import TEXTS from '../../../messages/language-suggestion.json';
 import { Mark } from '@/components/brand/Mark';
 import { CONSENT_EVENT, GA_ID, readConsent } from '@/lib/analytics/consent';
+import { useSession } from '@/lib/session/SessionProvider';
 
 /**
  * The polite alternative to a language redirect: every URL serves its own language, and on a first
@@ -26,8 +27,12 @@ export function LanguageSuggestion() {
   const router = useRouter();
   const remember = useRememberLocale();
   const [suggested, setSuggested] = useState<Locale | null>(null);
+  // Signed in, the language is already a choice: the profile keeps it (an admin was asked on every visit).
+  const { status } = useSession();
+  const signedIn = status === 'authenticated';
 
   useEffect(() => {
+    if (signedIn) return;
     let frame = 0;
     const decide = () => {
       // The cookie question comes first (one bar at a time at the bottom): wait for its answer.
@@ -42,9 +47,9 @@ export function LanguageSuggestion() {
       cancelAnimationFrame(frame);
       window.removeEventListener(CONSENT_EVENT, decide);
     };
-  }, [pageLocale]);
+  }, [pageLocale, signedIn]);
 
-  if (!suggested) return null;
+  if (!suggested || signedIn) return null;
   const text = TEXTS[suggested];
 
   function stay() {

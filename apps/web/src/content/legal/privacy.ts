@@ -13,7 +13,7 @@ const en: LegalDoc = {
     'Your exact address is never public: others see only the district.',
     'You can see, correct, export and delete your data. Deleting your account is one button in Settings.',
     'Our hosting and email providers process data for us under contract.',
-    'Questions and requests: admin@yoyo.rent.',
+    'Questions and requests: support@yoyo.rent.',
   ],
   sections: [
     {
@@ -21,7 +21,7 @@ const en: LegalDoc = {
       heading: '1. Who is responsible',
       blocks: [
         {
-          p: 'The controller of your personal data is {operator}. For anything about your data, write to [admin@yoyo.rent](mailto:admin@yoyo.rent).',
+          p: 'The controller of your personal data is {operator}. For anything about your data, write to [support@yoyo.rent](mailto:support@yoyo.rent).',
         },
       ],
     },
@@ -164,7 +164,7 @@ const en: LegalDoc = {
           ],
         },
         {
-          p: 'If you cannot sign in, write to [admin@yoyo.rent](mailto:admin@yoyo.rent) from the address of the account and we will delete it for you.',
+          p: 'If you cannot sign in, write to [support@yoyo.rent](mailto:support@yoyo.rent) from the address of the account and we will delete it for you.',
         },
         {
           p: 'If you have an open deal or money in your Yoyo wallet, finish the deal or pay the money out first: until then the account cannot be deleted, so that nobody’s deposit or payment is left without an owner.',
@@ -185,7 +185,7 @@ const en: LegalDoc = {
               ['Neon', 'The database', 'Frankfurt, Germany; company in the USA'],
               ['Resend', 'Sending the service’s emails', 'USA'],
               ['Cloudinary Ltd.', 'Storing and resizing listing photos', 'Israel and the USA'],
-              ['ImprovMX', 'Forwarding the email sent to admin@yoyo.rent', 'Outside the EU'],
+              ['ImprovMX', 'Forwarding the email sent to support@yoyo.rent', 'Outside the EU'],
               ['GoDaddy', 'The yoyo.rent domain name and its DNS', 'USA'],
             ],
           },
@@ -219,7 +219,7 @@ const en: LegalDoc = {
           ],
         },
         {
-          p: 'Much of this you can do yourself in Settings. For the rest, write to [admin@yoyo.rent](mailto:admin@yoyo.rent) from the address of your account. We answer within one month, free of charge.',
+          p: 'Much of this you can do yourself in Settings. For the rest, write to [support@yoyo.rent](mailto:support@yoyo.rent) from the address of your account. We answer within one month, free of charge.',
         },
         {
           p: 'If you think we handle your data wrongly, you can complain to the Data State Inspectorate of Latvia (Datu valsts inspekcija), Elijas iela 17, Rīga, LV-1050, [www.dvi.gov.lv](https://www.dvi.gov.lv), or to the data protection authority of the EU country where you live.',
@@ -268,7 +268,7 @@ const lv: LegalDoc = {
     'Jūsu precīzā adrese nekad nav publiska: citi redz tikai rajonu.',
     'Jūs varat savus datus apskatīt, labot, izgūt un dzēst. Konta dzēšana ir viena poga Iestatījumos.',
     'Mūsu mitināšanas un e-pasta pakalpojumu sniedzēji apstrādā datus mūsu uzdevumā saskaņā ar līgumu.',
-    'Jautājumi un pieprasījumi: admin@yoyo.rent.',
+    'Jautājumi un pieprasījumi: support@yoyo.rent.',
   ],
   sections: [
     {
@@ -276,7 +276,7 @@ const lv: LegalDoc = {
       heading: '1. Kas ir atbildīgs',
       blocks: [
         {
-          p: 'Jūsu personas datu pārzinis ir {operator}. Par visu, kas saistīts ar jūsu datiem, rakstiet uz [admin@yoyo.rent](mailto:admin@yoyo.rent).',
+          p: 'Jūsu personas datu pārzinis ir {operator}. Par visu, kas saistīts ar jūsu datiem, rakstiet uz [support@yoyo.rent](mailto:support@yoyo.rent).',
         },
       ],
     },
@@ -419,7 +419,7 @@ const lv: LegalDoc = {
           ],
         },
         {
-          p: 'Ja nevarat pieteikties, rakstiet uz [admin@yoyo.rent](mailto:admin@yoyo.rent) no konta e-pasta adreses, un mēs to izdzēsīsim jūsu vietā.',
+          p: 'Ja nevarat pieteikties, rakstiet uz [support@yoyo.rent](mailto:support@yoyo.rent) no konta e-pasta adreses, un mēs to izdzēsīsim jūsu vietā.',
         },
         {
           p: 'Ja jums ir neslēgts darījums vai nauda Yoyo makā, vispirms pabeidziet darījumu vai izmaksājiet naudu: līdz tam kontu dzēst nevar, lai neviena depozīts vai maksājums nepaliktu bez saņēmēja.',
@@ -440,7 +440,7 @@ const lv: LegalDoc = {
               ['Neon', 'Datubāze', 'Frankfurte, Vācija; uzņēmums ASV'],
               ['Resend', 'Pakalpojuma e-pastu sūtīšana', 'ASV'],
               ['Cloudinary Ltd.', 'Sludinājumu foto glabāšana un izmēra maiņa', 'Izraēla un ASV'],
-              ['ImprovMX', 'Uz admin@yoyo.rent sūtīto vēstuļu pāradresācija', 'Ārpus ES'],
+              ['ImprovMX', 'Uz support@yoyo.rent sūtīto vēstuļu pāradresācija', 'Ārpus ES'],
               ['GoDaddy', 'Domēns yoyo.rent un tā DNS', 'ASV'],
             ],
           },
@@ -474,7 +474,7 @@ const lv: LegalDoc = {
           ],
         },
         {
-          p: 'Daudz ko no tā varat izdarīt paši Iestatījumos. Par pārējo rakstiet uz [admin@yoyo.rent](mailto:admin@yoyo.rent) no sava konta e-pasta adreses. Mēs atbildam viena mēneša laikā, bez maksas.',
+          p: 'Daudz ko no tā varat izdarīt paši Iestatījumos. Par pārējo rakstiet uz [support@yoyo.rent](mailto:support@yoyo.rent) no sava konta e-pasta adreses. Mēs atbildam viena mēneša laikā, bez maksas.',
         },
         {
           p: 'Ja uzskatāt, ka apstrādājam jūsu datus nepareizi, varat iesniegt sūdzību Datu valsts inspekcijā, Elijas ielā 17, Rīgā, LV-1050, [www.dvi.gov.lv](https://www.dvi.gov.lv), vai jūsu dzīvesvietas ES valsts datu aizsardzības iestādē.',
@@ -523,7 +523,7 @@ const ru: LegalDoc = {
     'Ваш точный адрес никогда не публикуется: другие видят только район.',
     'Свои данные можно посмотреть, исправить, выгрузить и удалить. Удаление аккаунта — одна кнопка в Настройках.',
     'Наши хостинг- и почтовые провайдеры обрабатывают данные по нашему поручению и по договору.',
-    'Вопросы и запросы: admin@yoyo.rent.',
+    'Вопросы и запросы: support@yoyo.rent.',
   ],
   sections: [
     {
@@ -531,7 +531,7 @@ const ru: LegalDoc = {
       heading: '1. Кто отвечает',
       blocks: [
         {
-          p: 'Ответственный за обработку ваших персональных данных (контролёр) — {operator}. По любым вопросам о ваших данных пишите на [admin@yoyo.rent](mailto:admin@yoyo.rent).',
+          p: 'Ответственный за обработку ваших персональных данных (контролёр) — {operator}. По любым вопросам о ваших данных пишите на [support@yoyo.rent](mailto:support@yoyo.rent).',
         },
       ],
     },
@@ -674,7 +674,7 @@ const ru: LegalDoc = {
           ],
         },
         {
-          p: 'Если вы не можете войти, напишите на [admin@yoyo.rent](mailto:admin@yoyo.rent) с адреса аккаунта, и мы удалим его за вас.',
+          p: 'Если вы не можете войти, напишите на [support@yoyo.rent](mailto:support@yoyo.rent) с адреса аккаунта, и мы удалим его за вас.',
         },
         {
           p: 'Если у вас есть незакрытая сделка или деньги в кошельке Yoyo, сначала завершите сделку или выведите деньги: до этого аккаунт удалить нельзя, чтобы ничей залог или платёж не остался без получателя.',
@@ -695,7 +695,7 @@ const ru: LegalDoc = {
               ['Neon', 'База данных', 'Франкфурт, Германия; компания в США'],
               ['Resend', 'Отправка писем сервиса', 'США'],
               ['Cloudinary Ltd.', 'Хранение и изменение размера фото объявлений', 'Израиль и США'],
-              ['ImprovMX', 'Пересылка писем, отправленных на admin@yoyo.rent', 'За пределами ЕС'],
+              ['ImprovMX', 'Пересылка писем, отправленных на support@yoyo.rent', 'За пределами ЕС'],
               ['GoDaddy', 'Домен yoyo.rent и его DNS', 'США'],
             ],
           },
@@ -729,7 +729,7 @@ const ru: LegalDoc = {
           ],
         },
         {
-          p: 'Многое из этого можно сделать самому в Настройках. По остальному пишите на [admin@yoyo.rent](mailto:admin@yoyo.rent) с адреса вашего аккаунта. Мы отвечаем в течение месяца, бесплатно.',
+          p: 'Многое из этого можно сделать самому в Настройках. По остальному пишите на [support@yoyo.rent](mailto:support@yoyo.rent) с адреса вашего аккаунта. Мы отвечаем в течение месяца, бесплатно.',
         },
         {
           p: 'Если вы считаете, что мы обрабатываем ваши данные неправильно, вы можете подать жалобу в Государственную инспекцию данных Латвии (Datu valsts inspekcija), Elijas iela 17, Rīga, LV-1050, [www.dvi.gov.lv](https://www.dvi.gov.lv), или в надзорный орган страны ЕС, где вы живёте.',

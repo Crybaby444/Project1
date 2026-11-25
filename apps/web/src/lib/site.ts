@@ -18,7 +18,7 @@ export const PAGES = ['/', '/what-is-yoyo', '/faq', '/terms', '/privacy', '/cook
 export type SitePage = (typeof PAGES)[number];
 
 /** The one address people write to: support, privacy requests, legal notices. */
-export const CONTACT_EMAIL = 'admin@yoyo.rent';
+export const CONTACT_EMAIL = 'support@yoyo.rent';
 
 /**
  * Where "List an item" leads a signed-in person: the listing builder (plan 6b). Null hides the button

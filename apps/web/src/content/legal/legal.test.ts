@@ -43,7 +43,7 @@ describe.each(Object.entries(DOCS))('%s', (_name, texts) => {
   });
 
   it.each(LOCALES)('%s gives the contact address', (locale) => {
-    expect(allText(texts[locale])).toContain('admin@yoyo.rent');
+    expect(allText(texts[locale])).toContain('support@yoyo.rent');
   });
 });
 
@@ -134,7 +134,7 @@ describe('describeOperator', () => {
     const operator = {
       brand: 'Yoyo',
       country: 'Latvia',
-      email: 'admin@yoyo.rent',
+      email: 'support@yoyo.rent',
       legalName: 'SIA Piemērs',
       registrationNumber: '40000000000',
       address: 'Brīvības iela 1, Rīga',

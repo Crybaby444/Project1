@@ -1,11 +1,11 @@
 {
   "meta": {
-    "title": "Yoyo — nomā jebko no cilvēkiem tuvumā",
-    "description": "Nomā to, kas vajadzīgs, no cilvēkiem tuvumā, un iznomā to, ko lieto reti. Sarakstieties, parakstiet līgumu un maksājiet ar aizsargātu drošības naudu Yoyo."
+    "title": "Yoyo — nomājiet jebko no cilvēkiem tuvumā",
+    "description": "Nomājiet to, kas vajadzīgs, no cilvēkiem tuvumā, un iznomājiet to, ko lietojat reti. Sarakstieties, parakstiet līgumu un maksājiet ar aizsargātu drošības naudu Yoyo."
   },
   "home": {
     "tagline": "Īrē no cilvēkiem sev apkārt, tik ilgi, cik vajag.",
-    "lead": "Nomā to, kas vajadzīgs, no cilvēkiem tuvumā. Iznomā to, ko lieto reti. Tas vienmēr atgriežas, gluži kā jojo."
+    "lead": "Nomājiet to, kas vajadzīgs, no cilvēkiem tuvumā. Iznomājiet to, ko lietojat reti. Tas vienmēr atgriežas, gluži kā jojo."
   },
   "language": {
     "label": "Valoda",
@@ -392,8 +392,8 @@
       },
       "cancel": "Atcelt",
       "data": {
-        "title": "Tavi dati",
-        "intro": "Lejupielādē visu, ko Yoyo glabā par tevi — profilu, sludinājumus, darījumus, atsauksmes un maku — vienā failā, ko vari paturēt vai pārnest citur.",
+        "title": "Jūsu dati",
+        "intro": "Lejupielādējiet visu, ko Yoyo glabā par jums — profilu, sludinājumus, darījumus, atsauksmes un maku — vienā failā, ko varat paturēt vai pārnest citur.",
         "download": "Lejupielādēt manus datus"
       }
     }
@@ -416,7 +416,7 @@
   },
   "noAccess": {
     "title": "Šī lapa ir administratoriem",
-    "body": "Tavam kontam šeit nav piekļuves. Ja domā, ka vajadzētu būt, sazinies ar Yoyo komandu.",
+    "body": "Jūsu kontam šeit nav piekļuves. Ja domājat, ka vajadzētu būt, sazinieties ar Yoyo komandu.",
     "back": "Uz sākumlapu"
   },
   "listingCondition": {
@@ -428,7 +428,7 @@
   "builder": {
     "titleNew": "Izīrēt lietu",
     "titleEdit": "Labot sludinājumu",
-    "intro": "Aizpildi soļus jebkurā secībā. Viss saglabājas, kamēr raksti.",
+    "intro": "Aizpildiet soļus jebkurā secībā. Viss saglabājas, kamēr rakstāt.",
     "steps": {
       "label": "Sludinājuma soļi",
       "photos": "Foto",
@@ -446,7 +446,7 @@
       "attributes": "Detaļas, ko šīs kategorijas īrnieki meklē.",
       "price": "Cik maksā diena, atlaide no nedēļas un drošības nauda.",
       "place": "Kur lietu var saņemt un kurās dienās tā nav pieejama.",
-      "rules": "Tavi noteikumi īrniekiem, pēc tam nosūti sludinājumu pārbaudei."
+      "rules": "Jūsu noteikumi īrniekiem, pēc tam nosūtiet sludinājumu pārbaudei."
     },
     "back": "Atpakaļ",
     "next": "Tālāk",
@@ -455,18 +455,18 @@
       "saving": "Saglabā…",
       "saved": "Visas izmaiņas saglabātas",
       "error": "Vēl nav saglabāts. Mēģinām vēlreiz…",
-      "invalid": "Izlabo atzīmētos laukus, lai tos saglabātu",
+      "invalid": "Izlabojiet atzīmētos laukus, lai tos saglabātu",
       "conflict": "Saglabāšana apturēta",
       "readonly": "Dzēstus sludinājumus mainīt nevar"
     },
     "conflict": {
       "title": "Šis sludinājums ir mainīts citā cilnē",
-      "body": "Šeit saglabāšanu apturējām, lai abas versijas viena otru nepārrakstītu. Ielādē jaunāko versiju, lai turpinātu. Šajā lapā vēl nesaglabātās izmaiņas zudīs.",
+      "body": "Šeit saglabāšanu apturējām, lai abas versijas viena otru nepārrakstītu. Ielādējiet jaunāko versiju, lai turpinātu. Šajā lapā vēl nesaglabātās izmaiņas zudīs.",
       "reload": "Ielādēt jaunāko versiju"
     },
     "preview": {
       "open": "Priekšskatījums",
-      "title": "Tā izskatīsies tava kartīte",
+      "title": "Tā izskatīsies jūsu kartīte",
       "label": "Kartītes priekšskatījums",
       "noTitle": "Te būs nosaukums",
       "noPhoto": "Te būs vāka foto",
@@ -493,29 +493,29 @@
       "contentLocaleHint": "Rakstiet nosaukumu un aprakstu šajā valodā. Meklētāji sludinājumu rādīs tajā."
     },
     "attributes": {
-      "needCategory": "Vispirms izvēlies apakškategoriju: detaļas ir atkarīgas no tās.",
+      "needCategory": "Vispirms izvēlieties apakškategoriju: detaļas ir atkarīgas no tās.",
       "toBasics": "Izvēlēties kategoriju",
       "required": "obligāti",
-      "choose": "Izvēlies…",
+      "choose": "Izvēlieties…",
       "yes": "Jā",
       "no": "Nē",
-      "none": "Šai kategorijai papildu detaļu nav. Turpini ar cenu."
+      "none": "Šai kategorijai papildu detaļu nav. Turpiniet ar cenu."
     },
     "counter": "{count} / {max}",
     "check": {
-      "required": "Aizpildi šo lauku.",
+      "required": "Aizpildiet šo lauku.",
       "tooShort": "Vismaz {min, plural, zero {# rakstzīmes} one {# rakstzīme} other {# rakstzīmes}}.",
       "tooLong": "Ne vairāk kā {max, plural, zero {# rakstzīmes} one {# rakstzīme} other {# rakstzīmes}}.",
-      "number": "Ievadi skaitli, piemēram, 12 vai 12,50.",
+      "number": "Ievadiet skaitli, piemēram, 12 vai 12,50.",
       "priceRange": "No {min} € līdz {max} € dienā.",
       "discountRange": "No 0 līdz {max} %.",
       "depositRange": "No 0 € līdz {max} €.",
       "daysRange": "No {min} līdz {max} dienām.",
       "maxBelowMin": "Ne mazāk kā minimālais termiņš.",
-      "chooseSubcategory": "Izvēlies apakškategoriju.",
-      "attribute": "Pārbaudi šo vērtību.",
-      "photos": "Pievieno vismaz vienu foto.",
-      "point": "Atzīmē saņemšanas punktu kartē."
+      "chooseSubcategory": "Izvēlieties apakškategoriju.",
+      "attribute": "Pārbaudiet šo vērtību.",
+      "photos": "Pievienojiet vismaz vienu foto.",
+      "point": "Atzīmējiet saņemšanas punktu kartē."
     },
     "notFound": {
       "title": "Sludinājums nav atrasts",
@@ -527,20 +527,20 @@
     "loading": "Ielādē sludinājumu…",
     "photos": {
       "choose": "Izvēlēties foto",
-      "drop": "vai ievelc tos šeit",
+      "drop": "vai ievelciet tos šeit",
       "paste": "Foto var arī ielīmēt no starpliktuves.",
       "limits": "JPEG, PNG vai WebP. Katru vispirms var apgriezt.",
       "count": "{count} no {max} foto",
-      "full": "Pievienoti visi {max} foto. Noņem kādu, lai pievienotu citu.",
+      "full": "Pievienoti visi {max} foto. Noņemiet kādu, lai pievienotu citu.",
       "cover": "Vāks",
-      "storageOff": "Foto pagaidām nevar augšupielādēt: foto krātuve vēl nav pieslēgta. Aizpildi pārējo, melnraksts saglabājas, un foto pievieno vēlāk.",
+      "storageOff": "Foto pagaidām nevar augšupielādēt: foto krātuve vēl nav pieslēgta. Aizpildiet pārējo, melnraksts saglabājas, un foto pievienojiet vēlāk.",
       "uploading": "Augšupielādē {name}",
       "waiting": "Gaida: {name}",
       "failed": "{name}: {reason}",
       "retry": "Mēģināt vēlreiz",
       "dismiss": "Aizvērt",
-      "tooBig": "Šis foto ir par lielu, lai to atvērtu. Izmanto failu līdz 30 MB.",
-      "unreadable": "Šo failu neizdevās atvērt kā foto. Izmanto JPEG, PNG vai WebP.",
+      "tooBig": "Šis foto ir par lielu, lai to atvērtu. Izmantojiet failu līdz 30 MB.",
+      "unreadable": "Šo failu neizdevās atvērt kā foto. Izmantojiet JPEG, PNG vai WebP.",
       "photoAlt": "{number}. foto no {total}",
       "grab": "Pārvietot {number}. foto",
       "actions": "Vēl {number}. foto",
@@ -552,7 +552,7 @@
       "removeBody": "Tas uzreiz tiek dzēsts no sludinājuma.",
       "removeConfirm": "Noņemt foto",
       "cancel": "Atcelt",
-      "instructions": "Lai pārvietotu foto ar tastatūru, fokusē tā turi, nospied atstarpi, pārvieto ar bultiņām un vēlreiz nospied atstarpi. Escape atceļ.",
+      "instructions": "Lai pārvietotu foto ar tastatūru, fokusējiet tā turi, nospiediet atstarpi, pārvietojiet ar bultiņām un vēlreiz nospiediet atstarpi. Escape atceļ.",
       "lifted": "{number}. foto paņemts, vieta {position} no {total}.",
       "movedTo": "Vieta {position} no {total}.",
       "dropped": "Foto nolikts {position}. vietā no {total}.",
@@ -563,7 +563,7 @@
     },
     "crop": {
       "title": "Apgriezt un pagriezt",
-      "area": "Apgriešanas laukums: velc foto vai pārvieto ar bultiņām, tuvini ar plus un mīnus.",
+      "area": "Apgriešanas laukums: velciet foto vai pārvietojiet ar bultiņām, tuviniet ar plus un mīnus.",
       "zoom": "Tuvinājums",
       "rotateLeft": "Pagriezt pa kreisi",
       "rotateRight": "Pagriezt pa labi",
@@ -584,15 +584,15 @@
       "maxDays": "Garākā īre",
       "daysHint": "Dienās, no 1 līdz 365.",
       "days": "dienas",
-      "payout": "Tu saņemsi",
+      "payout": "Jūs saņemsiet",
       "payoutFor": "Par {days, plural, zero {# dienām} one {# dienu} other {# dienām}}",
       "payoutDiscount": "ar −{percent}%",
       "payoutNote": "Īrnieki papildus maksā Yoyo servisa maksu; drošības nauda pēc atgriešanas tiek atdota viņiem.",
-      "payoutWaiting": "Ievadi derīgu cenu, lai redzētu, cik saņemsi."
+      "payoutWaiting": "Ievadiet derīgu cenu, lai redzētu, cik saņemsiet."
     },
     "rules": {
       "presets": "Gatavi noteikumi",
-      "custom": "Tavi noteikumi",
+      "custom": "Jūsu noteikumi",
       "customHint": "Līdz {max} īsiem noteikumiem, katrs 3–120 rakstzīmes.",
       "customLabel": "{number}. noteikums",
       "add": "Pievienot noteikumu",
@@ -613,23 +613,23 @@
       "search": "Atrast adresi",
       "searchHint": "Iela un pilsēta, piemēram, “Brīvības iela 1, Rīga”.",
       "searching": "Meklē…",
-      "noResults": "Nekas netika atrasts. Pamēģini citādi vai atzīmē punktu kartē.",
+      "noResults": "Nekas netika atrasts. Pamēģiniet citādi vai atzīmējiet punktu kartē.",
       "results": "{count, plural, zero {Atrastas # vietas} one {Atrasta # vieta} other {Atrastas # vietas}}",
       "map": "Saņemšanas punkta karte",
-      "mapHelp": "Noklikšķini kartē vai pavelc piespraudi, lai iestatītu saņemšanas punktu.",
+      "mapHelp": "Noklikšķiniet kartē vai pavelciet piespraudi, lai iestatītu saņemšanas punktu.",
       "center": "Likt punktu kartes vidū",
       "pin": "Saņemšanas punkts",
-      "privacy": "Precīzo punktu redzi tikai tu. Īrnieki redz pilsētu un rajonu.",
+      "privacy": "Precīzo punktu redzat tikai jūs. Īrnieki redz pilsētu un rajonu.",
       "city": "Pilsēta",
       "district": "Rajons",
-      "placeHint": "Redzams sludinājumā. Aizpildās no punkta; vari to mainīt.",
+      "placeHint": "Redzams sludinājumā. Aizpildās no punkta; varat to mainīt.",
       "pointSet": "Punkts iestatīts: {place}",
       "pointSetNoName": "Punkts iestatīts kartē.",
       "outside": "Šī vieta ir ārpus Baltijas valstīm. Pagaidām Yoyo darbojas Latvijā, Lietuvā un Igaunijā; izvēlieties vietu tur."
     },
     "calendar": {
       "title": "Dienas, kad lieta nav pieejama",
-      "hint": "Atzīmē dienas, kad lieta vajadzīga tev pašam. Noklikšķini uz dienas vai uz vienas un ar Shift uz citas, lai atzīmētu periodu.",
+      "hint": "Atzīmējiet dienas, kad lieta vajadzīga jums. Noklikšķiniet uz dienas vai uz vienas un ar Shift uz citas, lai atzīmētu periodu.",
       "keys": "Bultiņas pārvieto pa dienām, Page Up un Page Down maina mēnesi, Enter atzīmē vai notīra dienu, Shift+Enter atzīmē periodu no pēdējās atzīmētās dienas.",
       "previous": "Iepriekšējais mēnesis",
       "next": "Nākamais mēnesis",
@@ -641,27 +641,27 @@
       "saved": "Datumi saglabāti"
     },
     "status": {
-      "DRAFT": "Melnraksts: to redzi tikai tu.",
+      "DRAFT": "Melnraksts: to redzat tikai jūs.",
       "PENDING_REVIEW": "Mēs pārbaudām katru sludinājumu, pirms to publicējam, parasti dienas laikā. Izmaiņas tagad to atstās rindā.",
       "REJECTED": "Šis sludinājums netika publicēts. Mūsu komandas iemesls:",
-      "REJECTED_next": "Izlabo to un nosūti pārbaudei vēlreiz.",
+      "REJECTED_next": "Izlabojiet to un nosūtiet pārbaudei vēlreiz.",
       "REJECTED_link": "Nosūtīt vēlreiz",
-      "PUBLISHED": "Redzams katalogā. Nosaukuma, apraksta, kategorijas, detaļu, stāvokļa, foto, tavu noteikumu, pilsētas vai rajona maiņa to atkal nosūta pārbaudei. Cena, drošības nauda, īres dienas, gatavie noteikumi, punkts un datumi — nē.",
-      "HIDDEN": "Paslēpts: īrnieki to neatrod. Parādi to atkal, kad vēlies.",
+      "PUBLISHED": "Redzams katalogā. Nosaukuma, apraksta, kategorijas, detaļu, stāvokļa, foto, jūsu noteikumu, pilsētas vai rajona maiņa to atkal nosūta pārbaudei. Cena, drošības nauda, īres dienas, gatavie noteikumi, punkts un datumi — nē.",
+      "HIDDEN": "Paslēpts: īrnieki to neatrod. Parādiet to atkal, kad vēlaties.",
       "ARCHIVED": "Dzēsts. Tas tiek glabāts pagātnes darījumiem, un to nevar mainīt."
     },
     "submit": {
       "title": "Nosūtīt pārbaudei",
-      "intro": "Mūsu komanda pārbauda sludinājumu, tad tas parādās katalogā. Jebkurā gadījumā saņemsi e-pastu.",
+      "intro": "Mūsu komanda pārbauda sludinājumu, tad tas parādās katalogā. Jebkurā gadījumā saņemsiet e-pastu.",
       "left": "Vēl vajag",
       "leftStep": "{step}: {count, plural, zero {# lauki} one {# lauks} other {# lauki}}",
       "ready": "Viss pārbaudei vajadzīgais ir aizpildīts.",
       "send": "Nosūtīt pārbaudei",
-      "sent": "Nosūtīts pārbaudei. Mēs tev uzrakstīsim.",
+      "sent": "Nosūtīts pārbaudei. Mēs jums uzrakstīsim.",
       "notNow": "Jau tiek pārbaudīts."
     },
     "saveDraft": "Saglabāt melnrakstu un iziet",
-    "restored": "Atradām izmaiņas no tava pēdējā apmeklējuma, kas vēl nebija saglabātas, un saglabājām tās tagad."
+    "restored": "Atradām izmaiņas no jūsu pēdējā apmeklējuma, kas vēl nebija saglabātas, un saglabājām tās tagad."
   },
   "listingActions": {
     "hide": "Paslēpt",
@@ -695,7 +695,7 @@
       "ARCHIVED": "Dzēsti"
     },
     "emptyTitle": "Vēl nav ko izīrēt",
-    "emptyBody": "Pievieno pirmo lietu, ko reti lieto. Tas aizņem dažas minūtes un saglabājas pa ceļam.",
+    "emptyBody": "Pievienojiet pirmo lietu, ko reti lietojat. Tas aizņem dažas minūtes un saglabājas pa ceļam.",
     "emptyFilter": "Te pagaidām nekā nav.",
     "untitled": "Bez nosaukuma",
     "noPhoto": "Vēl nav foto",
@@ -706,7 +706,7 @@
     "fix": "Izlabot",
     "edit": "Labot",
     "view": "Skatīt",
-    "loadFailed": "Neizdevās ielādēt tavas lietas.",
+    "loadFailed": "Neizdevās ielādēt jūsu lietas.",
     "retry": "Mēģināt vēlreiz",
     "count": "{count, plural, zero {# lietas} one {# lieta} other {# lietas}}",
     "activity": {
@@ -758,7 +758,7 @@
     "reject": "Noraidīt",
     "approved": "Publicēts. Īpašnieks saņems e-pastu.",
     "rejected": "Noraidīts. Īpašnieks saņems iemeslu e-pastā.",
-    "changed": "Īpašnieks mainīja šo sludinājumu, kamēr tu to skatīji. Rindā tagad redzama jaunākā versija.",
+    "changed": "Īpašnieks mainīja šo sludinājumu, kamēr jūs to skatījāt. Rindā tagad redzama jaunākā versija.",
     "rejectTitle": "Kāpēc tas netiek publicēts?",
     "reason": "Iemesls īpašniekam",
     "reasonHint": "Īpašnieks to redz un saņem e-pastā. 10–500 rakstzīmes.",
@@ -767,23 +767,23 @@
       "photos": "Foto nerāda lietu.",
       "category": "Apraksts neatbilst kategorijai.",
       "forbidden": "Šo lietu Yoyo nevar izīrēt.",
-      "contact": "Lūdzu, izņem no teksta kontaktinformāciju."
+      "contact": "Lūdzu, izņemiet no teksta kontaktinformāciju."
     },
     "send": "Noraidīt sludinājumu",
     "cancel": "Atcelt",
     "queues": "Rindas",
     "queueReview": "Pārbaudei",
     "queueOther": "Citi",
-    "otherIntro": "Sludinājumi kategorijā «Citi», vecākie vispirms. Pārvieto katru uz tam atbilstošo kategoriju; īpašnieks saņem e-pastu.",
+    "otherIntro": "Sludinājumi kategorijā «Citi», vecākie vispirms. Pārvietojiet katru uz tam atbilstošo kategoriju; īpašnieks saņem e-pastu.",
     "otherEmptyTitle": "Kategorijā «Citi» nekā nav",
     "otherEmptyBody": "Katram sludinājumam ir sava kategorija. Tie, kas iesniegti kategorijā «Citi», parādās šeit.",
     "move": {
       "button": "Pārvietot uz citu kategoriju",
       "title": "Pārvietot “{title}”",
-      "body": "Izvēlies apakškategoriju, kurai tas pieder. Statuss nemainās, īpašības, ko jaunā kategorija neprasa, tiek dzēstas, un īpašnieks saņem e-pastu.",
+      "body": "Izvēlieties apakškategoriju, kurai tas pieder. Statuss nemainās, īpašības, ko jaunā kategorija neprasa, tiek dzēstas, un īpašnieks saņem e-pastu.",
       "label": "Jaunā kategorija",
-      "placeholder": "Izvēlies apakškategoriju",
-      "required": "Izvēlies apakškategoriju.",
+      "placeholder": "Izvēlieties apakškategoriju",
+      "required": "Izvēlieties apakškategoriju.",
       "cancel": "Atcelt",
       "submit": "Pārvietot",
       "done": "Pārvietots uz {category}. Īpašnieks saņem e-pastu."
@@ -821,9 +821,9 @@
   },
   "catalog": {
     "allTitle": "Katalogs",
-    "allDescription": "Nomā instrumentus, elektroniku, sporta un kempinga piederumus un daudz ko citu no cilvēkiem.",
+    "allDescription": "Nomājiet instrumentus, elektroniku, sporta un kempinga piederumus un daudz ko citu no cilvēkiem.",
     "categoryTitle": "{name} nomai tuvumā",
-    "categoryDescription": "Nomā {name} no cilvēkiem tuvumā: dienas cenas, drošības naudas un brīvie datumi.",
+    "categoryDescription": "Nomājiet {name} no cilvēkiem tuvumā: dienas cenas, drošības naudas un brīvie datumi.",
     "searchTitle": "Meklēšana",
     "searchTitleFor": "“{q}”",
     "found": "{count, plural, =0 {Nekas nav atrasts} zero {# lietas} one {# lieta} other {# lietas}}",
@@ -846,11 +846,11 @@
     },
     "search": {
       "label": "Meklēt katalogā",
-      "placeholder": "Ko tu meklē?",
+      "placeholder": "Ko jūs meklējat?",
       "clear": "Notīrīt meklēšanu",
       "submit": "Meklēt",
       "count": "{count, plural, =0 {Nav ieteikumu} zero {# ieteikumi} one {# ieteikums} other {# ieteikumi}}",
-      "none": "Nav ieteikumu. Nospied Enter, lai tomēr meklētu.",
+      "none": "Nav ieteikumu. Nospiediet Enter, lai tomēr meklētu.",
       "categories": "Kategorijas",
       "items": "Lietas"
     },
@@ -862,10 +862,10 @@
       "price": "Cena dienā",
       "priceFrom": "No",
       "priceTo": "Līdz",
-      "priceWhole": "Ievadi veselus eiro, piemēram, 15.",
+      "priceWhole": "Ievadiet veselus eiro, piemēram, 15.",
       "priceOrder": "“Līdz” nedrīkst būt mazāks par “No”.",
       "dates": "Brīvs šajās dienās",
-      "datesHint": "Izvēlies pirmo un pēdējo dienu.",
+      "datesHint": "Izvēlieties pirmo un pēdējo dienu.",
       "clearDates": "Notīrīt datumus",
       "district": "Apkaime",
       "anyDistrict": "Jebkura apkaime",
@@ -895,18 +895,18 @@
     },
     "empty": {
       "title": "Šeit vēl nekā nav",
-      "body": "Pamēģini meklēt plašāk:",
-      "tipDates": "izvēlies citus datumus vai notīri tos",
-      "tipPrice": "paplašini cenu robežas",
-      "tipDistrict": "meklē visās apkaimēs",
-      "tipText": "lieto īsāku vai vispārīgāku vārdu",
+      "body": "Pamēģiniet meklēt plašāk:",
+      "tipDates": "izvēlieties citus datumus vai notīriet tos",
+      "tipPrice": "paplašiniet cenu robežas",
+      "tipDistrict": "meklējiet visās apkaimēs",
+      "tipText": "lietojiet īsāku vai vispārīgāku vārdu",
       "reset": "Atiestatīt filtrus",
       "allCategories": "Visas kategorijas",
       "tipCity": "Izmēģiniet citu pilsētu vai jebkuru pilsētu."
     },
     "error": {
       "title": "Katalogs neielādējās",
-      "body": "Mūsu serveris laikus neatbildēja. Iespējams, tas tikai mostas; pamēģini vēlreiz pēc brīža.",
+      "body": "Mūsu serveris laikus neatbildēja. Iespējams, tas tikai mostas; pamēģiniet vēlreiz pēc brīža.",
       "retry": "Mēģināt vēlreiz"
     },
     "pagination": {
@@ -921,7 +921,7 @@
       "cellTitle": "{count, plural, zero {Šeit # lietas} one {Šeit # lieta} other {Šeit # lietas}}",
       "perDay": "{price} / dienā",
       "more": "{count, plural, zero {un vēl #} one {un vēl #} other {un vēl #}}",
-      "truncated": "Kartē redzamas pirmās 500 lietas. Sašaurini meklēšanu, lai redzētu pārējās.",
+      "truncated": "Kartē redzamas pirmās 500 lietas. Sašauriniet meklēšanu, lai redzētu pārējās.",
       "approximate": "Vietas ir aptuvenas: precīzu adresi īpašnieks atsūta pēc rezervācijas."
     },
     "inCategory": "{count, plural, =0 {Vēl nav lietu} zero {# lietu} one {# lieta} other {# lietas}}",
@@ -941,8 +941,8 @@
     "keys": "Bultiņas pārvieto pa dienai vai nedēļai, Page Up un Page Down pa mēnesim. Enter izvēlas dienu.",
     "previous": "Iepriekšējais mēnesis",
     "next": "Nākamais mēnesis",
-    "pickStart": "Izvēlies pirmo dienu",
-    "pickEnd": "Tagad izvēlies pēdējo dienu",
+    "pickStart": "Izvēlieties pirmo dienu",
+    "pickEnd": "Tagad izvēlieties pēdējo dienu",
     "taken": "aizņemts",
     "past": "pagātnē",
     "tooFar": "pārāk tālu nākotnē",
@@ -958,15 +958,15 @@
     "removeShort": "Saglabāts",
     "addFailed": "Neizdevās pievienot izlasei.",
     "removeFailed": "Neizdevās izņemt no izlases.",
-    "loadFailed": "Tava izlase neielādējās.",
+    "loadFailed": "Jūsu izlase neielādējās.",
     "retry": "Mēģināt vēlreiz",
     "emptyTitle": "Izlasē vēl nekā nav",
-    "emptyBody": "Pieskaries sirsniņai pie jebkuras lietas, lai to saglabātu šeit.",
+    "emptyBody": "Pieskarieties sirsniņai pie jebkuras lietas, lai to saglabātu šeit.",
     "browse": "Apskatīt katalogu"
   },
   "item": {
     "untitled": "Lieta bez nosaukuma",
-    "metaDescription": "Nomā “{title}” Yoyo: dienas cena, drošības nauda un brīvie datumi.",
+    "metaDescription": "Nomājiet “{title}” Yoyo: dienas cena, drošības nauda un brīvie datumi.",
     "inCategory": "Kategorija: <b>{name}</b>",
     "about": "Par lietu",
     "similar": "Līdzīgas lietas",
@@ -1021,7 +1021,7 @@
     },
     "away": {
       "badge": "Uz laiku nav pieejams",
-      "body": "Īpašnieks uz laiku izņēmis šo lietu no kataloga. Apskati līdzīgas.",
+      "body": "Īpašnieks uz laiku izņēmis šo lietu no kataloga. Apskatiet līdzīgas.",
       "category": "Vairāk kategorijā {name}",
       "catalog": "Atvērt katalogu"
     },
@@ -1077,7 +1077,7 @@
     "noFollowers": "{name} vēl neviens neseko.",
     "noFollowing": "{name} vēl nevienam neseko.",
     "favorites": "Izlase",
-    "noFavorites": "Vēl nekas nav saglabāts. Nospied sirsniņu uz lietas, lai to paturētu šeit.",
+    "noFavorites": "Vēl nekas nav saglabāts. Nospiediet sirsniņu uz lietas, lai to paturētu šeit.",
     "deals": "{count, plural, zero {darījumu} one {darījums} other {darījumi}}",
     "findPeople": "Atrast cilvēkus",
     "hero": {
@@ -1088,7 +1088,6 @@
     },
     "myItems": "Manas lietas",
     "following": "Sekoju",
-    "lend": "Izīrēt lietu",
     "shortcuts": {
       "label": "Mans konts",
       "deals": "Mani darījumi",
@@ -1099,7 +1098,7 @@
   },
   "consent": {
     "label": "Sīkdatņu izvēle",
-    "text": "Vai drīkstam skaitīt apmeklējumus, lai uzlabotu Yoyo? Google Analytics, tikai ar tavu piekrišanu.",
+    "text": "Vai drīkstam skaitīt apmeklējumus, lai uzlabotu Yoyo? Google Analytics, tikai ar jūsu piekrišanu.",
     "accept": "Piekrītu",
     "decline": "Nepiekrītu",
     "policy": "Sīkdatņu politika",
@@ -1146,7 +1145,7 @@
     "write": "Rakstīt ziņu",
     "findLabel": "Vārds vai @lietotājvārds",
     "findPlaceholder": "Vārds vai @lietotājvārds",
-    "findHint": "Ieraksti vismaz divus burtus.",
+    "findHint": "Ierakstiet vismaz divus burtus.",
     "findLoading": "Meklē…",
     "findNone": "Pēc “{q}” neviens netika atrasts."
   },
@@ -1165,7 +1164,8 @@
     "adult": "Man ir 18 gadi vai vairāk",
     "dataConsent": "Piekrītu savu personas datu apstrādei, kā aprakstīts",
     "privacy": "privātuma politikā",
-    "ticksTitle": "Apstiprinājumi"
+    "ticksTitle": "Apstiprinājumi",
+    "completeShort": "Pabeidziet profilu, lai nomātu un iznomātu."
   },
   "shops": {
     "itemCount": "{count, plural, zero {# lietu} one {# lieta} other {# lietas}}",
@@ -1216,18 +1216,18 @@
     "main": "Galvenā",
     "allCategoriesPage": "Visas kategorijas vienā lapā",
     "newest": "Jaunās lietas",
-    "you": "Tu",
+    "you": "Jūs",
     "tabs": "Ātrās cilnes",
     "search": "Meklēt Yoyo"
   },
   "market": {
     "hero": {
-      "title": "Nomā tuvumā. Tas atgriežas.",
-      "lead": "Lietas uz dienu vai nedēļu no cilvēkiem tev apkārt — ar līgumu pirms maksājuma un drošības naudu, kas atgriežas."
+      "title": "Nomājiet tuvumā. Tas atgriežas.",
+      "lead": "Lietas uz dienu vai nedēļu no cilvēkiem jums apkārt — ar līgumu pirms maksājuma un drošības naudu, kas atgriežas."
     },
     "search": {
       "what": "Ko",
-      "whatPlaceholder": "Kas tev vajadzīgs?",
+      "whatPlaceholder": "Kas jums vajadzīgs?",
       "where": "Kur",
       "anywhere": "Jebkura pilsēta",
       "when": "Kad",
@@ -1240,20 +1240,20 @@
       "title": "Tikko pievienots",
       "all": "Skatīt visus jaunumus",
       "spot": {
-        "title": "Šeit varētu būt tava lieta",
-        "body": "Urbis, telts, projektors. Ieliec to dažās minūtēs ar savu cenu un dienām.",
+        "title": "Šeit varētu būt jūsu lieta",
+        "body": "Urbis, telts, projektors. Ielieciet to dažās minūtēs ar savu cenu un dienām.",
         "cta": "Izīrēt lietu"
       }
     },
     "lend": {
-      "title": "Tavas lietas var pelnīt",
-      "lead": "Urbjmašīna skapī, telts no pagājušās vasaras. Ieliec tās Yoyo, nosaki cenu un dienas un paturi visu nomas maksu.",
+      "title": "Jūsu lietas var pelnīt",
+      "lead": "Urbjmašīna skapī, telts no pagājušās vasaras. Ielieciet tās Yoyo, nosakiet cenu un dienas un paturiet visu nomas maksu.",
       "cta": "Izīrēt lietu",
       "price": "Cena dienā",
       "days": "Nomas dienas mēnesī",
       "daysValue": "{count, plural, zero {# dienu} one {# diena} other {# dienas}}",
       "month": "Mēnesī varētu nopelnīt",
-      "note": "Tu paturi visu nomas maksu; servisa maksu maksā nomnieks.",
+      "note": "Jūs paturat visu nomas maksu; servisa maksu maksā nomnieks.",
       "examples": "Piemēram",
       "year": "Gadā",
       "example": {
@@ -1284,17 +1284,17 @@
       }
     },
     "doors": {
-      "title": "Kurā auklas galā esi tu?",
+      "title": "Kurā auklas galā esat jūs?",
       "story": "Viss stāsts: kas ir Yoyo",
       "need": {
-        "who": "Ja tev vajag",
+        "who": "Ja jums vajag",
         "title": "Atrast lietu",
         "body": "Instrumenti, teltis, kameras un vēl — uz dienu vai nedēļu no cilvēkiem tuvumā."
       },
       "have": {
-        "who": "Ja tev ir",
+        "who": "Ja jums ir",
         "title": "Izīrēt lietu",
-        "body": "Ieliec Yoyo lietu, ko lieto reti, un ļauj tai pelnīt, kamēr tā gaida."
+        "body": "Ielieciet Yoyo lietu, ko lietojat reti, un ļaujiet tai pelnīt, kamēr tā gaida."
       }
     },
     "faq": {
@@ -1319,8 +1319,8 @@
   },
   "country": {
     "button": "Valsts: {name}",
-    "title": "Tava valsts",
-    "lead": "Yoyo rāda nomai pieejamās lietas vienā valstī, eiro. Izvēlies, kur tu esi."
+    "title": "Jūsu valsts",
+    "lead": "Yoyo rāda nomai pieejamās lietas vienā valstī, eiro. Izvēlieties, kur jūs esat."
   },
   "dialog": {
     "close": "Aizvērt"

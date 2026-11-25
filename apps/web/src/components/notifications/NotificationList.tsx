@@ -3,6 +3,7 @@
 import type { Notification } from '@yoyo/shared';
 import { useLocale, useNow, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { Link } from '@/i18n/navigation';
 import { notificationHref, useMarkNotificationRead, useNotifications } from '@/lib/notifications/queries';
 
@@ -62,7 +63,12 @@ export function NotificationList({ limit, compact = false, onNavigate }: { limit
         )}
       </div>
       {shown.length === 0 ? (
-        <p className="text-ink/75 px-4 py-8 text-center text-sm">{t('empty')}</p>
+        compact ? (
+          <p className="text-ink/75 px-4 py-8 text-center text-sm">{t('empty')}</p>
+        ) : (
+          // The page speaks like every other empty list on the site (messages, deals): the yo-yo, a title, a line.
+          <EmptyState title={t('emptyTitle')} body={t('emptyBody')} />
+        )
       ) : (
         <ul className={`divide-ink/10 divide-y ${compact ? 'max-h-[min(60vh,28rem)] overflow-y-auto' : 'border-ink/15 border-y'}`}>
           {shown.map((n) => (

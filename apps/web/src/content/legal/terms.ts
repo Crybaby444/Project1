@@ -12,7 +12,7 @@ const en: LegalDoc = {
     'List only items that are yours (or that you may rent out), safe and legal, and describe them honestly.',
     'The contract is signed before any payment, the deposit follows one rule, and our team decides disputes.',
     'Online payments arrive later. Until then no money moves through Yoyo.',
-    'Latvian law applies. Write to admin@yoyo.rent with anything.',
+    'Latvian law applies. Write to support@yoyo.rent with anything.',
   ],
   sections: [
     {
@@ -161,7 +161,7 @@ const en: LegalDoc = {
       heading: '10. Moderation, blocking and reports',
       blocks: [
         {
-          p: 'If you see something that breaks these terms or the law, write to [admin@yoyo.rent](mailto:admin@yoyo.rent). We look at every report. We may hide content, or limit or block an account, when the terms or the law are broken or to protect other people. We tell the person concerned what we did and why, unless the law or someone’s safety does not allow it, and they can answer us if they think we got it wrong.',
+          p: 'If you see something that breaks these terms or the law, write to [support@yoyo.rent](mailto:support@yoyo.rent). We look at every report. We may hide content, or limit or block an account, when the terms or the law are broken or to protect other people. We tell the person concerned what we did and why, unless the law or someone’s safety does not allow it, and they can answer us if they think we got it wrong.',
         },
       ],
     },
@@ -214,7 +214,7 @@ const en: LegalDoc = {
     {
       id: 'contact',
       heading: '15. Contact',
-      blocks: [{ p: 'Questions about these terms: [admin@yoyo.rent](mailto:admin@yoyo.rent).' }],
+      blocks: [{ p: 'Questions about these terms: [support@yoyo.rent](mailto:support@yoyo.rent).' }],
     },
   ],
 };
@@ -226,7 +226,7 @@ const lv: LegalDoc = {
     'Izlieciet tikai lietas, kas pieder jums (vai kuras jums ir tiesības izīrēt), ir drošas un likumīgas, un aprakstiet tās godīgi.',
     'Līgumu paraksta pirms jebkāda maksājuma, depozītam ir viens noteikums, un strīdus izšķir mūsu komanda.',
     'Tiešsaistes maksājumi parādīsies vēlāk. Līdz tam caur Yoyo nauda neplūst.',
-    'Piemēro Latvijas tiesības. Ar jebkuru jautājumu rakstiet uz admin@yoyo.rent.',
+    'Piemēro Latvijas tiesības. Ar jebkuru jautājumu rakstiet uz support@yoyo.rent.',
   ],
   sections: [
     {
@@ -375,7 +375,7 @@ const lv: LegalDoc = {
       heading: '10. Moderācija, bloķēšana un ziņojumi',
       blocks: [
         {
-          p: 'Ja redzat kaut ko, kas pārkāpj šos noteikumus vai likumu, rakstiet uz [admin@yoyo.rent](mailto:admin@yoyo.rent). Mēs izskatām katru ziņojumu. Mēs varam paslēpt saturu vai ierobežot vai bloķēt kontu, ja tiek pārkāpti noteikumi vai likums, vai lai aizsargātu citus. Mēs paziņojam attiecīgajai personai, ko darījām un kāpēc, ja vien to neliedz likums vai kāda drošība, un viņa var mums atbildēt, ja uzskata, ka esam kļūdījušies.',
+          p: 'Ja redzat kaut ko, kas pārkāpj šos noteikumus vai likumu, rakstiet uz [support@yoyo.rent](mailto:support@yoyo.rent). Mēs izskatām katru ziņojumu. Mēs varam paslēpt saturu vai ierobežot vai bloķēt kontu, ja tiek pārkāpti noteikumi vai likums, vai lai aizsargātu citus. Mēs paziņojam attiecīgajai personai, ko darījām un kāpēc, ja vien to neliedz likums vai kāda drošība, un viņa var mums atbildēt, ja uzskata, ka esam kļūdījušies.',
         },
       ],
     },
@@ -428,7 +428,7 @@ const lv: LegalDoc = {
     {
       id: 'contact',
       heading: '15. Kontakti',
-      blocks: [{ p: 'Jautājumi par šiem noteikumiem: [admin@yoyo.rent](mailto:admin@yoyo.rent).' }],
+      blocks: [{ p: 'Jautājumi par šiem noteikumiem: [support@yoyo.rent](mailto:support@yoyo.rent).' }],
     },
   ],
 };
@@ -440,7 +440,7 @@ const ru: LegalDoc = {
     'Выставляйте только свои вещи (или те, что вы вправе сдавать), безопасные и законные, и описывайте их честно.',
     'Договор подписывается до любой оплаты, у залога одно правило, а споры решает наша команда.',
     'Онлайн-оплата появится позже. До тех пор деньги через Yoyo не проходят.',
-    'Действует право Латвии. С любым вопросом пишите на admin@yoyo.rent.',
+    'Действует право Латвии. С любым вопросом пишите на support@yoyo.rent.',
   ],
   sections: [
     {
@@ -589,7 +589,7 @@ const ru: LegalDoc = {
       heading: '10. Модерация, блокировка и жалобы',
       blocks: [
         {
-          p: 'Если вы видите что-то, что нарушает эти условия или закон, напишите на [admin@yoyo.rent](mailto:admin@yoyo.rent). Мы рассматриваем каждую жалобу. Мы можем скрыть материал, ограничить или заблокировать аккаунт, если нарушены условия или закон, либо чтобы защитить других людей. Мы сообщаем человеку, что сделали и почему, если этого не запрещают закон или чья-то безопасность, и он может ответить нам, если считает, что мы ошиблись.',
+          p: 'Если вы видите что-то, что нарушает эти условия или закон, напишите на [support@yoyo.rent](mailto:support@yoyo.rent). Мы рассматриваем каждую жалобу. Мы можем скрыть материал, ограничить или заблокировать аккаунт, если нарушены условия или закон, либо чтобы защитить других людей. Мы сообщаем человеку, что сделали и почему, если этого не запрещают закон или чья-то безопасность, и он может ответить нам, если считает, что мы ошиблись.',
         },
       ],
     },
@@ -642,7 +642,7 @@ const ru: LegalDoc = {
     {
       id: 'contact',
       heading: '15. Контакты',
-      blocks: [{ p: 'Вопросы об этих условиях: [admin@yoyo.rent](mailto:admin@yoyo.rent).' }],
+      blocks: [{ p: 'Вопросы об этих условиях: [support@yoyo.rent](mailto:support@yoyo.rent).' }],
     },
   ],
 };

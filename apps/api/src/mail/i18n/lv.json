@@ -1,48 +1,48 @@
 {
   "common": {
     "greeting": "Sveiki, {name}!",
-    "linkFallback": "Ja poga nestrādā, iekopē šo saiti pārlūkā:",
+    "linkFallback": "Ja poga nestrādā, iekopējiet šo saiti pārlūkā:",
     "footer": "Yoyo — nomā jebko no cilvēkiem tuvumā."
   },
   "verifyEmail": {
-    "subject": "Apstiprini savu e-pastu Yoyo",
-    "preview": "Viens klikšķis, un tavs Yoyo konts ir gatavs.",
-    "heading": "Apstiprini savu e-pastu",
-    "body": "Prieks, ka esi Yoyo! Apstiprini, ka šī adrese ir tava, lai cilvēki, ar kuriem nomā lietas, var ar tevi sazināties.",
+    "subject": "Apstipriniet savu e-pastu Yoyo",
+    "preview": "Viens klikšķis, un jūsu Yoyo konts ir gatavs.",
+    "heading": "Apstipriniet savu e-pastu",
+    "body": "Prieks, ka esat Yoyo! Apstipriniet, ka šī adrese ir jūsu, lai cilvēki, ar kuriem nomājat lietas, var ar jums sazināties.",
     "button": "Apstiprināt e-pastu",
     "expiry": "Saite ir derīga 24 stundas.",
-    "ignore": "Ja tu neveidoji Yoyo kontu, vienkārši ignorē šo e-pastu."
+    "ignore": "Ja jūs neveidojāt Yoyo kontu, vienkārši ignorējiet šo e-pastu."
   },
   "resetPassword": {
     "subject": "Yoyo paroles atjaunošana",
-    "preview": "Iestati jaunu paroli savam Yoyo kontam.",
-    "heading": "Atjauno paroli",
-    "body": "Saņēmām pieprasījumu atjaunot tava Yoyo konta paroli. Ja tas biji tu, iestati jaunu:",
+    "preview": "Iestatiet jaunu paroli savam Yoyo kontam.",
+    "heading": "Atjaunojiet paroli",
+    "body": "Saņēmām pieprasījumu atjaunot jūsu Yoyo konta paroli. Ja tas bijāt jūs, iestatiet jaunu:",
     "button": "Iestatīt jaunu paroli",
     "expiry": "Saite ir derīga 1 stundu un tikai vienu reizi.",
-    "ignore": "Ja tu to nepieprasīji, ignorē šo e-pastu: parole paliks tā pati."
+    "ignore": "Ja jūs to nepieprasījāt, ignorējiet šo e-pastu: parole paliks tā pati."
   },
   "phoneCode": {
-    "subject": "Tavs Yoyo tālruņa apstiprināšanas kods",
-    "preview": "Ievadi šo kodu Yoyo, lai apstiprinātu tālruni.",
-    "heading": "Apstiprini tālruni",
-    "body": "Ievadi šo kodu Yoyo, lai apstiprinātu savu tālruņa numuru:",
+    "subject": "Jūsu Yoyo tālruņa apstiprināšanas kods",
+    "preview": "Ievadiet šo kodu Yoyo, lai apstiprinātu tālruni.",
+    "heading": "Apstipriniet tālruni",
+    "body": "Ievadiet šo kodu Yoyo, lai apstiprinātu savu tālruņa numuru:",
     "expiry": "Kods ir derīgs 10 minūtes.",
-    "ignore": "Ja tu nepieprasīji kodu, vienkārši ignorē šo e-pastu."
+    "ignore": "Ja jūs nepieprasījāt kodu, vienkārši ignorējiet šo e-pastu."
   },
   "listingApproved": {
-    "subject": "Tavs sludinājums ir publicēts Yoyo",
+    "subject": "Jūsu sludinājums ir publicēts Yoyo",
     "preview": "Cilvēki tuvumā to jau var atrast un nomāt.",
-    "heading": "Tavs sludinājums ir publicēts",
-    "body": "Labas ziņas: “{title}” ir izgājis moderāciju un ir Yoyo katalogā. Cilvēki tuvumā to var atrast un sūtīt tev pieprasījumus.",
+    "heading": "Jūsu sludinājums ir publicēts",
+    "body": "Labas ziņas: “{title}” ir izgājis moderāciju un ir Yoyo katalogā. Cilvēki tuvumā to var atrast un sūtīt jums pieprasījumus.",
     "button": "Apskatīt sludinājumu"
   },
   "listingRejected": {
-    "subject": "Tavā Yoyo sludinājumā jāveic izmaiņas",
-    "preview": "Apskati, kas jālabo, un nosūti vēlreiz.",
+    "subject": "Jūsu Yoyo sludinājumā jāveic izmaiņas",
+    "preview": "Apskatiet, kas jālabo, un nosūtiet vēlreiz.",
     "heading": "Sludinājumā jāveic dažas izmaiņas",
     "body": "Moderatori vēl nevarēja publicēt “{title}”. Lūk, kāpēc:",
-    "next": "Izlabo to un nosūti pārbaudei vēlreiz — tas aizņems tikai mirkli.",
+    "next": "Izlabojiet to un nosūtiet pārbaudei vēlreiz — tas aizņems tikai mirkli.",
     "button": "Labot sludinājumu"
   },
   "deal": {

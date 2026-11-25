@@ -2,7 +2,7 @@
   "dealsMenu": {
     "myDeals": "Mani darījumi",
     "wallet": "Maks",
-    "waiting": "{count, plural, zero {# gaida tevi} one {# gaida tevi} other {# gaida tevi}}"
+    "waiting": "{count, plural, zero {# gaida jūs} one {# gaida jūs} other {# gaida jūs}}"
   },
   "dealStatus": {
     "REQUESTED": "Pieprasīts",
@@ -81,12 +81,12 @@
     "notFoundBody": "Tāda var nebūt, vai arī tas ir kāda cita darījums.",
     "loadFailed": "Darījums neielādējās.",
     "retry": "Mēģināt vēlreiz",
-    "youRent": "Tu nomā no {name}",
-    "youLend": "{name} nomā no tevis",
+    "youRent": "Jūs nomājat no {name}",
+    "youLend": "{name} nomā no jums",
     "adminView": "{renter} nomā no {owner}",
     "period": "{period} · {days, plural, zero {# dienas} one {# diena} other {# dienas}}",
     "message": "Nomnieka ziņa",
-    "yourTurn": "Tavs gājiens",
+    "yourTurn": "Jūsu gājiens",
     "theirTurn": "Gaidām otru pusi",
     "nothingToDo": "Šobrīd nekas nav jādara.",
     "moved": "Darījums pa to laiku pavirzījās. Lūk, kur tas ir tagad.",
@@ -185,7 +185,7 @@
     "RESOLVE": "Izlemt",
     "confirm": {
       "WITHDRAW": "Atsaukt pieprasījumu? Īpašnieks to uzzinās.",
-      "CONFIRM_RECEIVED": "Apstiprināt, ka lieta ir pie tevis? Tad nomas maksa aiziet īpašniekam.",
+      "CONFIRM_RECEIVED": "Apstiprināt, ka lieta ir pie jums? Tad nomas maksa aiziet īpašniekam.",
       "ALL_FINE": "Viss kārtībā? Drošības nauda pilnībā atgriezīsies nomniekam.",
       "ACCEPT_DAMAGE": "Piekrist bojājuma prasībai? Visa drošības nauda aizies īpašniekam.",
       "MARK_HANDED_OVER": "Apstiprināt, ka nodevi lietu nomniekam?",
@@ -201,23 +201,23 @@
       "REPORT_DAMAGE": "Ziņot par bojājumu"
     },
     "lead": {
-      "DECLINE": "Nomnieks redzēs tavu iemeslu. Tas nav obligāts.",
-      "CANCEL": "Otra puse redzēs tavu iemeslu. Ja darījums apmaksāts, viss atgriežas nomniekam.",
-      "REPORT_NOT_RECEIVED": "Tas sāk strīdu. Izlems administrators; līdz tam tava nauda ir drošībā.",
+      "DECLINE": "Nomnieks redzēs jūsu iemeslu. Tas nav obligāts.",
+      "CANCEL": "Otra puse redzēs jūsu iemeslu. Ja darījums apmaksāts, viss atgriežas nomniekam.",
+      "REPORT_NOT_RECEIVED": "Tas sāk strīdu. Izlems administrators; līdz tam jūsu nauda ir drošībā.",
       "REPORT_NOT_RETURNED": "Tas sāk strīdu. Izlems administrators; līdz tam drošības nauda paliek iesaldēta.",
       "REJECT_DAMAGE": "Tas sāk strīdu. Administrators apskatīs foto un izlems.",
-      "REPORT_DAMAGE": "Apraksti, kas ir bojāts, un pievieno foto. Nomnieks var piekrist vai lūgt Yoyo izlemt."
+      "REPORT_DAMAGE": "Aprakstiet, kas ir bojāts, un pievienojiet foto. Nomnieks var piekrist vai lūgt Yoyo izlemt."
     },
     "reason": "Iemesls",
     "reasonOptional": "Iemesls (nav obligāts)",
     "note": "Kas notika",
     "description": "Kas ir bojāts",
     "descriptionHint": "Vismaz {min} rakstzīmes.",
-    "photosRequired": "Pievieno vismaz vienu bojājuma foto.",
+    "photosRequired": "Pievienojiet vismaz vienu bojājuma foto.",
     "submit": "Nosūtīt",
     "keep": "Atpakaļ",
     "confirmYes": "Jā, apstiprināt",
-    "required": "Uzraksti dažus vārdus.",
+    "required": "Uzrakstiet dažus vārdus.",
     "sign": {
       "lead": "Jūs parakstāt pirmais; parakstītais līgums tad nonāk pie īpašnieka, kurš to paraksta. Jūs maksājat tikai pēc tam, kad abi ir parakstījuši.",
       "leadOwner": "Nomnieks ir parakstījis. Parakstiet to pašu līgumu; tad nomnieks varēs samaksāt.",
@@ -243,7 +243,7 @@
   },
   "myDeals": {
     "title": "Mani darījumi",
-    "intro": "Viss, ko tu nomā un iznomā, un ko katrs darījums gaida.",
+    "intro": "Viss, ko jūs nomājat un iznomājat, un ko katrs darījums gaida.",
     "roles": "Kuri darījumi",
     "renter": "Es nomāju",
     "owner": "Es iznomāju",
@@ -253,20 +253,20 @@
       "open": "Notiek",
       "closed": "Noslēgti"
     },
-    "badge": "{count, plural, zero {# gaida tevi} one {# gaida tevi} other {# gaida tevi}}",
-    "yourTurn": "Tavs gājiens",
+    "badge": "{count, plural, zero {# gaida jūs} one {# gaida jūs} other {# gaida jūs}}",
+    "yourTurn": "Jūsu gājiens",
     "with": {
       "renter": "No {name}",
       "owner": "Nomniekam {name}"
     },
-    "loadFailed": "Tavi darījumi neielādējās.",
+    "loadFailed": "Jūsu darījumi neielādējās.",
     "retry": "Mēģināt vēlreiz",
     "more": "Rādīt vairāk",
     "count": "{count, plural, zero {# darījumu} one {# darījums} other {# darījumi}}",
     "empty": {
-      "renter": "Tu vēl neko neesi nomājis",
-      "owner": "Tavas lietas vēl neviens nav prasījis",
-      "action": "Nekas tevi negaida. Lieliski.",
+      "renter": "Jums vēl nav nevienas nomas",
+      "owner": "Jūsu lietas vēl neviens nav prasījis",
+      "action": "Nekas jūs negaida. Lieliski.",
       "closed": "Noslēgtu darījumu vēl nav."
     },
     "lend": "Iznomāt lietu",
@@ -282,8 +282,8 @@
     "dates": "Nomas dienas",
     "datesHint": "No {min, plural, zero {# dienām} one {# dienas} other {# dienām}} līdz {max, plural, zero {# dienām} one {# dienai} other {# dienām}}.",
     "weekly": "{percent}% atlaide no 7 dienām",
-    "pickStart": "Izvēlies pirmo dienu",
-    "pickEnd": "Tagad izvēlies pēdējo dienu",
+    "pickStart": "Izvēlieties pirmo dienu",
+    "pickEnd": "Tagad izvēlieties pēdējo dienu",
     "picked": "{period} · {days, plural, zero {# dienas} one {# diena} other {# dienas}}",
     "clear": "Izvēlēties citas dienas",
     "taken": "aizņemts",
@@ -291,14 +291,14 @@
     "first": "pirmā diena",
     "last": "pēdējā diena",
     "inRange": "izvēlēts",
-    "tooShort": "Nomā vismaz {min, plural, zero {# dienas} one {# dienu} other {# dienas}}.",
-    "tooLong": "Nomā ne vairāk kā {max, plural, zero {# dienas} one {# dienu} other {# dienas}}.",
-    "crossesTaken": "Dažas dienas starp tām ir aizņemtas. Izvēlies brīvas dienas pēc kārtas.",
+    "tooShort": "Nomājiet vismaz {min, plural, zero {# dienas} one {# dienu} other {# dienas}}.",
+    "tooLong": "Nomājiet ne vairāk kā {max, plural, zero {# dienas} one {# dienu} other {# dienas}}.",
+    "crossesTaken": "Dažas dienas starp tām ir aizņemtas. Izvēlieties brīvas dienas pēc kārtas.",
     "message": "Ziņa īpašniekam (nav obligāta)",
-    "messageHint": "Pastāsti, kad gribi to paņemt, vai pajautā kaut ko.",
+    "messageHint": "Pastāstiet, kad gribat to paņemt, vai pajautājiet kaut ko.",
     "send": "Nosūtīt pieprasījumu",
-    "signIn": "Ienāc, lai rezervētu",
-    "own": "Šī ir tava lieta. Citi to rezervē šajā lapā.",
+    "signIn": "Ienāciet, lai rezervētu",
+    "own": "Šī ir jūsu lieta. Citi to rezervē šajā lapā.",
     "noCharge": "Tagad nekas netiek iekasēts. Maksā pēc tam, kad īpašnieks pieņem un abi parakstāt līgumu.",
     "unavailable": "Šo lietu pašlaik nevar rezervēt.",
     "notFound": "Lieta nav atrasta",
@@ -319,7 +319,7 @@
       "fee": "Servisa maksa ({percent}%)",
       "deposit": "Drošības nauda, iesaldēta un atgriežama",
       "total": "Kopā jāmaksā",
-      "empty": "Izvēlies dienas, lai redzētu cenu.",
+      "empty": "Izvēlieties dienas, lai redzētu cenu.",
       "depositNote": "Drošības nauda atgriežas pilnībā, kad īpašnieks apstiprina, ka viss kārtībā.",
       "feePromo": "Maksa {percent}% līdz {date}",
       "feePromoLabel": "Starta piedāvājums: servisa maksa ir {percent}% pieprasījumiem, kas nosūtīti līdz {date}.",
@@ -331,7 +331,7 @@
   "checkout": {
     "title": "Apmaksāt rezervāciju",
     "testMode": "Testa režīms",
-    "testModeBody": "Īsta nauda netiek kustināta. Izmanto kādu no testa karšu numuriem.",
+    "testModeBody": "Īsta nauda netiek kustināta. Izmantojiet kādu no testa karšu numuriem.",
     "testCards": "Testa kartes",
     "use": "Lietot",
     "cards": {
@@ -362,15 +362,15 @@
       "amex": "American Express"
     },
     "errors": {
-      "number": "Pārbaudi kartes numuru.",
-      "expiry": "Ievadi datumu MM / GG, kas vēl nav pagājis.",
-      "cvc": "Ievadi 3 vai 4 ciparu kodu.",
-      "holder": "Ievadi vārdu tāpat kā uz kartes.",
-      "card_declined": "Banka noraidīja šo karti. Izmēģini citu karti vai maksā no maka.",
+      "number": "Pārbaudiet kartes numuru.",
+      "expiry": "Ievadiet datumu MM / GG, kas vēl nav pagājis.",
+      "cvc": "Ievadiet 3 vai 4 ciparu kodu.",
+      "holder": "Ievadiet vārdu tāpat kā uz kartes.",
+      "card_declined": "Banka noraidīja šo karti. Izmēģiniet citu karti vai maksājiet no maka.",
       "insufficient_funds": "Kartē nepietiek naudas.",
       "expired_card": "Šīs kartes derīgums ir beidzies.",
-      "processing_error": "Maksājumu pakalpojumam radās problēma. Mēģini vēlreiz pēc brīža.",
-      "invalid_token": "Ievadi karti vēlreiz."
+      "processing_error": "Maksājumu pakalpojumam radās problēma. Mēģiniet vēlreiz pēc brīža.",
+      "invalid_token": "Ievadiet karti vēlreiz."
     },
     "paid": "Apmaksāts. Drošības nauda iesaldēta, līdz lieta atgriezīsies.",
     "cancel": "Ne tagad",
@@ -378,23 +378,23 @@
   },
   "wallet": {
     "title": "Maks",
-    "intro": "Nauda Yoyo: ko vari tērēt, kas iesaldēts drošības naudās un ko nopelnīja tavas lietas.",
+    "intro": "Nauda Yoyo: ko varat tērēt, kas iesaldēts drošības naudās un ko nopelnīja jūsu lietas.",
     "available": "Pieejams",
     "deposits": "Drošības naudās",
     "depositsHint": "Iesaldēts tavās atvērtajās nomās; atgriežas pēc pārbaudes.",
     "incoming": "Gaida nodošanu",
-    "incomingHint": "Nomas maksa par tavām lietām; tev izmaksā, kad nomnieks apstiprina saņemšanu.",
+    "incomingHint": "Nomas maksa par jūsu lietām; to izmaksā jums, kad nomnieks apstiprina saņemšanu.",
     "earned": "Nopelnīts",
-    "earnedHint": "Viss, ko ienesušas tavas lietas.",
+    "earnedHint": "Viss, ko ienesušas jūsu lietas.",
     "topUp": "Papildināt",
     "withdraw": "Izņemt",
     "topUpTitle": "Papildināt maku",
     "withdrawTitle": "Izmaksāt uz bankas kontu",
     "amount": "Summa",
     "amountHint": "No {min} līdz {max}.",
-    "amountInvalid": "Ievadi summu, piemēram, 25 vai 25,50.",
-    "amountRange": "Ievadi summu no {min} līdz {max}.",
-    "amountOverBalance": "Tev pieejams {balance}.",
+    "amountInvalid": "Ievadiet summu, piemēram, 25 vai 25,50.",
+    "amountRange": "Ievadiet summu no {min} līdz {max}.",
+    "amountOverBalance": "Jums pieejams {balance}.",
     "topUpSubmit": "Papildināt par {amount}",
     "withdrawSubmit": "Izņemt {amount}",
     "toppedUp": "Makam pievienoti {amount}.",
@@ -404,7 +404,7 @@
     "filters": "Rādīt",
     "all": "Visu",
     "empty": "Šeit vēl nekā nav.",
-    "emptyAll": "Kustību vēl nav. Papildini maku vai iznomā kādu lietu.",
+    "emptyAll": "Kustību vēl nav. Papildiniet maku vai iznomājiet kādu lietu.",
     "deal": "Darījums: {item}",
     "dealFallback": "Atvērt darījumu",
     "loadFailed": "Maks neielādējās.",
@@ -417,10 +417,10 @@
     "walletPayTest": "Testa režīms: Apple Pay un Google Pay izmanto testa karti; nauda netiek pārskaitīta.",
     "iban": "Bankas konts (IBAN)",
     "ibanHint": "Eirozonas konts; pārskaitījums ir SEPA maksājums eiro.",
-    "ibanInvalid": "Šis IBAN nav derīgs. Pārbaudi burtus un ciparus.",
+    "ibanInvalid": "Šis IBAN nav derīgs. Pārbaudiet burtus un ciparus.",
     "ibanCountry": "Izmaksas notiek uz kontiem eirozonas valstīs.",
     "holder": "Konta īpašnieks",
-    "holderRequired": "Ieraksti vārdu, uz kuru ir konts."
+    "holderRequired": "Ierakstiet vārdu, uz kuru ir konts."
   },
   "ledgerKind": {
     "TOP_UP": "Papildināts no kartes",
@@ -429,7 +429,8 @@
     "RENT_RELEASE": "Saņemta nomas maksa",
     "DEPOSIT_REFUND": "Drošības nauda atgriezta",
     "DEPOSIT_TO_OWNER": "Saņemta drošības nauda par bojājumu",
-    "BOOKING_REFUND": "Rezervācija atmaksāta"
+    "BOOKING_REFUND": "Rezervācija atmaksāta",
+    "BOOKING_PARTIAL_REFUND": "Daļēji atmaksāts"
   },
   "reviews": {
     "title": "Atsauksmes",
@@ -449,16 +450,16 @@
     "itemHeading": "Ko saka nomnieki",
     "deal": {
       "heading": "Atsauksmes",
-      "intro": "Kā gāja? Tava atsauksme parādīsies, kad {name} uzrakstīs savējo, vai {date}.",
+      "intro": "Kā gāja? Jūsu atsauksme parādīsies, kad {name} uzrakstīs savējo, vai {date}.",
       "aboutPerson": "Zvaigznes: {name}",
       "aboutItem": "Zvaigznes lietai",
-      "text": "Tava atsauksme",
+      "text": "Jūsu atsauksme",
       "hint": "Kas izdevās, ko varētu uzlabot. No {min} līdz {max} rakstzīmēm.",
       "submit": "Atstāt atsauksmi",
-      "sent": "Paldies! Tava atsauksme parādīsies, kad {name} uzrakstīs savējo, vai {date}.",
-      "mine": "Tava atsauksme",
-      "theirs": "{name} par tevi",
-      "waiting": "{name} ir uzrakstījis atsauksmi. Tā parādīsies, kad uzrakstīsi savējo.",
+      "sent": "Paldies! Jūsu atsauksme parādīsies, kad {name} uzrakstīs savējo, vai {date}.",
+      "mine": "Jūsu atsauksme",
+      "theirs": "{name} par jums",
+      "waiting": "{name} ir uzrakstījis atsauksmi. Tā parādīsies, kad uzrakstīsiet savējo.",
       "closed": "Atsauksmju laiks ir beidzies.",
       "starLabel": "{count, plural, zero {# zvaigžņu} one {# zvaigzne} other {# zvaigznes}}"
     }
@@ -469,9 +470,9 @@
     "unread": "{count, plural, zero {# nelasītu} one {# nelasīta} other {# nelasītas}}",
     "listLabel": "Sarunas",
     "emptyTitle": "Sarunu vēl nav",
-    "emptyBody": "Pajautā īpašniekam par lietu, un saruna parādīsies šeit.",
+    "emptyBody": "Pajautājiet īpašniekam par lietu, un saruna parādīsies šeit.",
     "browse": "Skatīt katalogu",
-    "pick": "Izvēlies sarunu",
+    "pick": "Izvēlieties sarunu",
     "loadFailed": "Sarunas neielādējās.",
     "retry": "Mēģināt vēlreiz",
     "back": "Visas sarunas",
@@ -479,18 +480,18 @@
     "withRenter": "Īrnieks",
     "about": "Par",
     "openDeal": "Atvērt darījumu",
-    "placeholder": "Raksti ziņu",
+    "placeholder": "Rakstiet ziņu",
     "send": "Sūtīt",
     "sending": "Sūta…",
-    "sendFailed": "Ziņa netika nosūtīta. Mēģini vēlreiz.",
+    "sendFailed": "Ziņa netika nosūtīta. Mēģiniet vēlreiz.",
     "seen": "Izlasīts",
-    "you": "Tu",
+    "you": "Jūs",
     "today": "Šodien",
     "yesterday": "Vakar",
-    "noMessages": "Sasveicinies un pajautā, ko vēlies uzzināt.",
+    "noMessages": "Sasveicinieties un pajautājiet, ko vēlaties uzzināt.",
     "messageOwner": "Rakstīt īpašniekam",
     "messageRenter": "Rakstīt īrniekam",
-    "hint": "Maksā caur Yoyo: drošības nauda aizsargā tikai šeit apmaksātus darījumus.",
+    "hint": "Maksājiet caur Yoyo: drošības nauda aizsargā tikai šeit apmaksātus darījumus.",
     "system": {
       "REQUESTED": "Nomas pieprasījums nosūtīts",
       "ACCEPTED": "Īpašnieks pieņēma pieprasījumu",
@@ -539,8 +540,8 @@
       },
       "OFFER": {
         "OFFER_MADE": "Jauns cenas piedāvājums par “{title}”",
-        "OFFER_ACCEPTED": "Tavs piedāvājums par “{title}” pieņemts",
-        "OFFER_DECLINED": "Tavs piedāvājums par “{title}” noraidīts"
+        "OFFER_ACCEPTED": "Jūsu piedāvājums par “{title}” pieņemts",
+        "OFFER_DECLINED": "Jūsu piedāvājums par “{title}” noraidīts"
       },
       "LISTING": {
         "APPROVED": "“{title}” ir publicēts",
@@ -549,7 +550,7 @@
         "EDITED": "Administrators izlaboja “{title}”"
       },
       "REVIEW": {
-        "RECEIVED": "Jauna atsauksme pēc “{title}”: uzraksti savu, lai to izlasītu"
+        "RECEIVED": "Jauna atsauksme pēc “{title}”: uzrakstiet savu, lai to izlasītu"
       },
       "SEARCH": {
         "MATCH": "Jauns tavam saglabātajam meklējumam: “{title}”"
@@ -564,29 +565,31 @@
     },
     "email": {
       "title": "E-pasts",
-      "intro": "Izvēlies, kādus e-pastus saņemt. Zvaniņš vienmēr rāda visu; pieteikšanās un drošības e-pasti pienāk vienmēr.",
+      "intro": "Izvēlieties, kādus e-pastus saņemt. Zvaniņš vienmēr rāda visu; pieteikšanās un drošības e-pasti pienāk vienmēr.",
       "DEALS": "Darījumu soļi",
       "DEALS_hint": "Pieprasījumi, atbildes, maksājumi, nodošana, atgriešana, strīdi.",
       "OFFERS": "Cenas piedāvājumi",
-      "OFFERS_hint": "Tavi un tev izteiktie piedāvājumi un atbildes.",
+      "OFFERS_hint": "Jūsu un jums izteiktie piedāvājumi un atbildes.",
       "LISTINGS": "Manas lietas",
       "LISTINGS_hint": "Sludinājumu moderācijas rezultāti.",
       "saved": "Saglabāts.",
-      "failed": "Nesaglabājās. Mēģini vēlreiz."
+      "failed": "Nesaglabājās. Mēģiniet vēlreiz."
     },
     "searches": {
       "title": "Saglabātie meklējumi",
-      "empty": "Vēl nav. Katalogā nospied “Paziņot par jaunām lietām”, un zvaniņš iezvanīsies, kad parādīsies kas atbilstošs.",
+      "empty": "Vēl nav. Katalogā nospiediet “Paziņot par jaunām lietām”, un zvaniņš iezvanīsies, kad parādīsies kas atbilstošs.",
       "upTo": "līdz {price}",
       "remove": "Pārtraukt šo meklējumu"
-    }
+    },
+    "emptyTitle": "Vēl nekā jauna",
+    "emptyBody": "Šeit parādīsies darījumu soļi, piedāvājumi un atsauksmes."
   },
   "report": {
     "listing": "Ziņot par sludinājumu",
     "user": "Ziņot par lietotāju",
     "message": "Ziņot par ziņu",
     "title": "Ziņot",
-    "intro": "Pastāsti, kas nav kārtībā. Administrators izskata katru ziņojumu; lietotājam netiek pateikts, kas ziņoja.",
+    "intro": "Pastāstiet, kas nav kārtībā. Administrators izskata katru ziņojumu; lietotājam netiek pateikts, kas ziņoja.",
     "reason": {
       "SCAM": "Krāpšana vai maksājums ārpus Yoyo",
       "PROHIBITED": "Aizliegta vai zagta lieta",
@@ -599,7 +602,7 @@
     "send": "Nosūtīt ziņojumu",
     "cancel": "Atpakaļ",
     "sent": "Paldies. Administrators to izskatīs.",
-    "already": "Tu jau ziņoji par šo; tas tiek izskatīts.",
-    "failed": "Ziņojums netika nosūtīts. Mēģini vēlreiz."
+    "already": "Jūs jau ziņojāt par šo; tas tiek izskatīts.",
+    "failed": "Ziņojums netika nosūtīts. Mēģiniet vēlreiz."
   }
 }

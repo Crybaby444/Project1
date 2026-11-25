@@ -74,10 +74,7 @@ export function ProfileSocial({
       <div className="flex flex-wrap gap-2">
         {mine ? (
           <>
-            <Button href="/listings/new" size="md">
-              <span aria-hidden="true">+</span> {tp('lend')}
-            </Button>
-            <Button href="/settings" variant="ghost" size="md">
+            <Button href="/settings" size="md">
               {tp('edit')}
             </Button>
             <Button variant="ghost" size="md" onClick={() => setOpen('find')}>

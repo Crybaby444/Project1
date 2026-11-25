@@ -74,21 +74,21 @@ describe('LanguageSuggestion', () => {
     expect(push).not.toHaveBeenCalled();
   });
 
-  it('"Switch" remembers the language, saves it in the profile and opens the same page in it', async () => {
+  it('"Switch" remembers the language and opens the same page in it', async () => {
     browserPrefers('lv');
     const user = userEvent.setup();
-    const person = testUser({ locale: 'en' });
-    const { calls } = renderOn('en', person);
-    await waitFor(() =>
-      expect(calls.some((call) => call.method === 'GET' && call.path === '/api/v1/me')).toBe(true),
-    );
+    renderOn('en');
     await user.click(await screen.findByRole('button', { name: 'Pāriet' }));
     expect(document.cookie).toContain('NEXT_LOCALE=lv');
     expect(push).toHaveBeenCalledWith('/faq', { locale: 'lv', scroll: false });
+  });
+
+  it('does not ask someone signed in: the profile already keeps their language', async () => {
+    browserPrefers('lv');
+    const { calls } = renderOn('en', testUser({ locale: 'en' }));
     await waitFor(() =>
-      expect(calls.find((call) => call.method === 'PATCH' && call.path === '/api/v1/me')?.body).toEqual({
-        locale: 'lv',
-      }),
+      expect(calls.some((call) => call.method === 'GET' && call.path === '/api/v1/me')).toBe(true),
     );
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Pāriet' })).toBeNull());
   });
 });

@@ -57,9 +57,12 @@ export function MyListings({ initialStatus, embedded = false }: { initialStatus:
       {embedded ? (
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-ink/75 max-w-read leading-relaxed">{t('intro')}</p>
-          <Button href="/listings/new" size="lg" className="self-start sm:self-auto">
-            <span aria-hidden="true">+</span> {t('lend')}
-          </Button>
+          {/* With nothing yet, the empty state below carries the one Lend button (the header has its own). */}
+          {items.length > 0 && (
+            <Button href="/listings/new" size="lg" className="self-start sm:self-auto">
+              <span aria-hidden="true">+</span> {t('lend')}
+            </Button>
+          )}
         </div>
       ) : (
         <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
