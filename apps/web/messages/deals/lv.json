@@ -429,7 +429,8 @@
     "RENT_RELEASE": "Saņemta nomas maksa",
     "DEPOSIT_REFUND": "Drošības nauda atgriezta",
     "DEPOSIT_TO_OWNER": "Saņemta drošības nauda par bojājumu",
-    "BOOKING_REFUND": "Rezervācija atmaksāta"
+    "BOOKING_REFUND": "Rezervācija atmaksāta",
+    "BOOKING_PARTIAL_REFUND": "Daļēji atmaksāts"
   },
   "reviews": {
     "title": "Atsauksmes",

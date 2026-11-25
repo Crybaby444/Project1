@@ -1088,7 +1088,6 @@
     },
     "myItems": "Manas lietas",
     "following": "Sekoju",
-    "lend": "Izīrēt lietu",
     "shortcuts": {
       "label": "Mans konts",
       "deals": "Mani darījumi",
@@ -1165,7 +1164,8 @@
     "adult": "Man ir 18 gadi vai vairāk",
     "dataConsent": "Piekrītu savu personas datu apstrādei, kā aprakstīts",
     "privacy": "privātuma politikā",
-    "ticksTitle": "Apstiprinājumi"
+    "ticksTitle": "Apstiprinājumi",
+    "completeShort": "Pabeidziet profilu, lai nomātu un iznomātu."
   },
   "shops": {
     "itemCount": "{count, plural, zero {# lietu} one {# lieta} other {# lietas}}",

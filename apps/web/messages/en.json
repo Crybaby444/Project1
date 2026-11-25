@@ -1088,7 +1088,6 @@
     },
     "myItems": "My items",
     "following": "Following",
-    "lend": "Lend an item",
     "shortcuts": {
       "label": "My account",
       "deals": "My deals",
@@ -1165,7 +1164,8 @@
     "adult": "I am 18 or older",
     "dataConsent": "I agree to the processing of my personal data as described in the",
     "privacy": "privacy policy",
-    "ticksTitle": "Confirmations"
+    "ticksTitle": "Confirmations",
+    "completeShort": "Finish your profile to rent and lend."
   },
   "shops": {
     "itemCount": "{count, plural, one {# item} other {# items}}",

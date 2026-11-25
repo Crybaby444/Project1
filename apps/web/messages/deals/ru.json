@@ -429,7 +429,8 @@
     "RENT_RELEASE": "Получена аренда",
     "DEPOSIT_REFUND": "Залог возвращён",
     "DEPOSIT_TO_OWNER": "Получен залог за повреждение",
-    "BOOKING_REFUND": "Возврат за бронь"
+    "BOOKING_REFUND": "Возврат за бронь",
+    "BOOKING_PARTIAL_REFUND": "Частичный возврат"
   },
   "reviews": {
     "title": "Отзывы",

@@ -429,7 +429,8 @@
     "RENT_RELEASE": "Rent received",
     "DEPOSIT_REFUND": "Deposit returned",
     "DEPOSIT_TO_OWNER": "Deposit received for damage",
-    "BOOKING_REFUND": "Booking refunded"
+    "BOOKING_REFUND": "Booking refunded",
+    "BOOKING_PARTIAL_REFUND": "Partly refunded"
   },
   "reviews": {
     "title": "Reviews",
