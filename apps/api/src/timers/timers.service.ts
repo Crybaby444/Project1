@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger, type OnApplicationBootstrap } from '@nestjs/common';
+import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnApplicationShutdown } from '@nestjs/common';
 import { ErrorLogService } from '../common/error-log.service';
 import { ActivityService } from '../activity/activity.service';
 import type { TimerKind } from '@yoyo/domain';
@@ -12,6 +12,9 @@ import { PrismaService } from '../prisma/prisma.service';
 import { RemindersService } from './reminders.service';
 
 const DAY = 24 * 3_600_000;
+
+/** How often an awake server runs the due work on its own (the GitHub schedule wakes a sleeping one). */
+export const AWAKE_EVERY_MS = 10 * 60_000;
 
 export interface TimersRun {
   /** Deals whose deadline fired. */
@@ -35,8 +38,10 @@ export interface TimersRun {
  * taken one by one with FOR UPDATE SKIP LOCKED, and the domain ignores a TIMEOUT that is not armed or due.
  */
 @Injectable()
-export class TimersService implements OnApplicationBootstrap {
+export class TimersService implements OnApplicationBootstrap, OnApplicationShutdown {
   private readonly logger = new Logger('Timers');
+  private ticking = false;
+  private every: NodeJS.Timeout | undefined;
 
   constructor(
     private readonly errorLog: ErrorLogService,
@@ -51,12 +56,37 @@ export class TimersService implements OnApplicationBootstrap {
     @Inject(ENV) private readonly env: Pick<Env, 'NODE_ENV'>,
   ) {}
 
-  /** At start, in the background: a server that slept catches up without delaying its first answer. */
+  /**
+   * At start, in the background: a server that slept catches up without delaying its first answer. Then,
+   * while it is awake (people are using the site), every 10 minutes on its own: GitHub's schedule is a best
+   * effort and came 6 to 10 hours apart (2026-11-26), late for deadlines and for the reminders. The
+   * workflow stays, to wake a server that sleeps. Runs never overlap here, and SKIP LOCKED keeps them safe
+   * across instances and alongside the workflow's call.
+   */
   onApplicationBootstrap(): void {
     if (this.env.NODE_ENV === 'test') return;
-    void this.runDue()
-      .then((run) => this.logger.log(`start-up run: ${JSON.stringify(run)}`))
-      .catch((error: unknown) => this.logger.error(`start-up run failed: ${error instanceof Error ? error.message : String(error)}`));
+    void this.tick('start-up');
+    this.every = setInterval(() => void this.tick('scheduled'), AWAKE_EVERY_MS);
+    this.every.unref();
+  }
+
+  onApplicationShutdown(): void {
+    clearInterval(this.every);
+  }
+
+  /** One run in the background, logged at start-up and whenever it did something. */
+  async tick(kind: 'start-up' | 'scheduled'): Promise<void> {
+    if (this.ticking) return;
+    this.ticking = true;
+    try {
+      const run = await this.runDue();
+      const did = run.fired + run.failed + run.offersExpired + run.moneyJobs + run.reminders > 0;
+      if (kind === 'start-up' || did) this.logger.log(`${kind} run: ${JSON.stringify(run)}`);
+    } catch (error) {
+      this.logger.error(`${kind} run failed: ${error instanceof Error ? error.message : String(error)}`);
+    } finally {
+      this.ticking = false;
+    }
   }
 
   async runDue({ limit = 200, budgetMs = 20_000 }: { limit?: number; budgetMs?: number } = {}): Promise<TimersRun> {
