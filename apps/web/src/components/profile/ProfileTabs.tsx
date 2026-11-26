@@ -13,6 +13,7 @@ import { ReviewsFeed } from '@/components/reviews/ReviewsFeed';
 import { ShopsGrid } from '@/components/shops/ShopCard';
 import { useFavorites } from '@/lib/catalog/use-favorites';
 import { useMyListings } from '@/lib/listings/queries';
+import { useUserShops } from '@/lib/shops/queries';
 import { useFollowing } from '@/lib/people/queries';
 import { Button } from '@/components/ui/Button';
 import { useSession } from '@/lib/session/SessionProvider';
@@ -38,7 +39,9 @@ export function ProfileTabs({ listings, name, userId, reviewCount = 0 }: { listi
   const base = useId();
   const { user } = useSession();
   const mine = user?.id === userId;
-  const TABS: readonly Tab[] = mine ? OWN_TABS : PUBLIC_TABS;
+  // A visitor sees a shops tab only when there are shops to see (owner, 2026-11-26: nothing empty for show).
+  const theirShops = useUserShops(userId);
+  const TABS: readonly Tab[] = mine ? OWN_TABS : PUBLIC_TABS.filter((key) => key !== 'shops' || (theirShops.data?.length ?? 0) > 0);
   const [tab, setTabState] = useState<Tab>('items');
   const [status, setStatus] = useState<MyListingsFilter>('ALL');
   const buttons = useRef<Record<Tab, HTMLButtonElement | null>>({ items: null, shops: null, reviews: null, favorites: null, following: null });
@@ -70,6 +73,7 @@ export function ProfileTabs({ listings, name, userId, reviewCount = 0 }: { listi
     favorites: mine ? favorites.data?.length : undefined,
     following: mine ? followingList.data?.length : undefined,
     reviews: reviewCount,
+    shops: mine ? undefined : theirShops.data?.length,
   };
 
   function onKeyDown(event: KeyboardEvent<HTMLButtonElement>) {

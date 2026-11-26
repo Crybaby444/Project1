@@ -65,12 +65,15 @@ export function ProfileSocial({
 
   return (
     <div className={`flex flex-wrap items-center justify-between gap-x-8 gap-y-5 ${night ? '[--cta-bg:var(--paper)] [--cta-fg:var(--night)] text-[var(--paper)]' : ''}`} data-profile-social="">
-      <div className="grid w-full grid-cols-2 gap-x-4 gap-y-4 sm:flex sm:w-auto sm:flex-wrap sm:gap-x-8 sm:gap-y-3">
-        {stat(deals, tp('deals', { count: deals }))}
-        {stat(followers + delta, t('followers', { count: followers + delta }), () => setOpen('followers'))}
-        {stat(following, t('followingCount'), () => setOpen('following'))}
-        {stat(reviews, t('reviews', { count: reviews }))}
-      </div>
+      {/* Only what has happened is counted (owner, 2026-11-26): no row of zeros on a new person's profile. */}
+      {deals + followers + delta + following + reviews > 0 && (
+        <div className="grid w-full grid-cols-2 gap-x-4 gap-y-4 sm:flex sm:w-auto sm:flex-wrap sm:gap-x-8 sm:gap-y-3">
+          {deals > 0 && stat(deals, tp('deals', { count: deals }))}
+          {followers + delta > 0 && stat(followers + delta, t('followers', { count: followers + delta }), () => setOpen('followers'))}
+          {following > 0 && stat(following, t('followingCount'), () => setOpen('following'))}
+          {reviews > 0 && stat(reviews, t('reviews', { count: reviews }))}
+        </div>
+      )}
       <div className="flex flex-wrap gap-2">
         {mine ? (
           <>

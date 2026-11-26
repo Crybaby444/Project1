@@ -20,6 +20,7 @@ import { DealSummary } from './DealSummary';
 import { DealTimeline } from './DealTimeline';
 import { DealReviewsPanel } from '@/components/reviews/DealReviewsPanel';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { DealClosing } from './DealClosing';
 import { Sheet } from '@/components/ui/Sheet';
 
 /** Answers that mean "the deal moved on while you were looking": read it again and say so. */
@@ -140,6 +141,7 @@ export function DealView({ id }: { id: string }) {
   const myTurn = isMyTurn(booking.actions);
   const canAct = booking.actions.some((a) => a !== 'RESOLVE');
   const closed = ['COMPLETED', 'DECLINED', 'EXPIRED', 'CANCELLED'].includes(booking.status);
+  const completed = booking.status === 'COMPLETED';
 
   return (
     <div className="stack-page" data-deal={booking.id} data-deal-status={booking.status}>
@@ -175,6 +177,10 @@ export function DealView({ id }: { id: string }) {
 
       <div className="layout-split">
         <div className="stack-sheets min-w-0">
+          {/* A completed deal's one step left is the review: it comes first, the history after it. */}
+          {completed && booking.viewerRole !== 'ADMIN' && (
+            <DealReviewsPanel bookingId={booking.id} otherName={booking.viewerRole === 'RENTER' ? booking.owner.name : booking.renter.name} />
+          )}
           <DealTimeline booking={booking} history={history.data ?? []} onDeadline={reload} />
           <DealChat booking={booking} />
           {booking.message && (
@@ -217,15 +223,17 @@ export function DealView({ id }: { id: string }) {
             </Sheet>
           )}
           <DealPhotos booking={booking} />
-          {booking.status === 'COMPLETED' && booking.viewerRole !== 'ADMIN' && (
-            <DealReviewsPanel bookingId={booking.id} otherName={booking.viewerRole === 'RENTER' ? booking.owner.name : booking.renter.name} />
-          )}
         </div>
 
         {/* On a phone the step to take comes first, right under the header (audit 2026-11-14): the aside
             dissolves into the grid and its first panel moves to the top; the rest follows the timeline. */}
         <aside className="stack-sheets max-lg:contents lg:sticky lg:top-24">
-          <Sheet aria-labelledby="deal-turn" tone={myTurn && !closed ? 'ring' : 'quiet'} className="flex flex-col gap-3 max-lg:order-first">
+          {/* The page's moment (DESIGN.md "Surfaces"): your turn is drawn in the night; a completed deal gets its
+              own, the deposit back and the review. */}
+          {completed && booking.viewerRole !== 'ADMIN' ? (
+            <DealClosing booking={booking} />
+          ) : (
+          <Sheet aria-labelledby="deal-turn" tone={myTurn && !closed ? 'night' : 'quiet'} className="flex flex-col gap-3 max-lg:order-first">
             <h2 id="deal-turn" className="type-label">
               {closed ? t('closedTitle') : myTurn ? t('yourTurn') : t('theirTurn')}
             </h2>
@@ -246,6 +254,7 @@ export function DealView({ id }: { id: string }) {
               <p className="text-sm">{t('nothingToDo')}</p>
             )}
           </Sheet>
+          )}
           <ContractCard booking={booking} />
           <DealSummary booking={booking} />
         </aside>

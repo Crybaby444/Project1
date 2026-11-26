@@ -1385,5 +1385,33 @@
         "rent": "Your identity check is with a moderator. You can rent once it is confirmed."
       }
     }
+  },
+  "firstSteps": {
+    "title": "First steps",
+    "progress": "{done} of {total} done",
+    "done": "Done",
+    "welcome": "Your first month on Yoyo is without the service fee.",
+    "steps": {
+      "account": {
+        "title": "Account created",
+        "hint": "Welcome to Yoyo."
+      },
+      "email": {
+        "title": "Confirm your email",
+        "hint": "Open the link we sent you."
+      },
+      "identity": {
+        "title": "Confirm who you are",
+        "hint": "A moderator checks it once; then you can rent and lend."
+      },
+      "about": {
+        "title": "Say a few words about you",
+        "hint": "Your city and a line about you build trust."
+      },
+      "first": {
+        "title": "Your first thing",
+        "hint": "Find something to rent, or lend one of yours."
+      }
+    }
   }
 }

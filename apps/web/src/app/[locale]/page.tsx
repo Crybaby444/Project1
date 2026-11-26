@@ -8,6 +8,7 @@ import { HomeSearch } from '@/components/market/HomeSearch';
 import { LendCalculator } from '@/components/market/LendCalculator';
 import { TrustRow } from '@/components/market/TrustRow';
 import { TwoDoors } from '@/components/market/TwoDoors';
+import { FirstSteps } from '@/components/onboarding/FirstSteps';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { Link } from '@/i18n/navigation';
 import { loadForYou } from '@/lib/catalog/server-api';
@@ -84,6 +85,8 @@ export default async function HomePage({ params }: Params) {
         </div>
         <HomeSearch country={await currentCountry()} today={today} />
         <TrustRow />
+        {/* A new account's first steps: the home's moment for them (nothing for a visitor). */}
+        <FirstSteps />
       </section>
 
 

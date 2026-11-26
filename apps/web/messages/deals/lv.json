@@ -164,7 +164,37 @@
       "hint": "Foto ar lietas stāvokli palīdz, ja kaut kas noiet greizi.",
       "alt": "Lietas foto {n} ({kind})"
     },
-    "closedTitle": "Darījums noslēgts"
+    "closedTitle": "Darījums noslēgts",
+    "doneBy": {
+      "ACCEPT": "Pieprasījums pieņemts. Tālāk — līgums.",
+      "DECLINE": "Pieprasījums noraidīts.",
+      "WITHDRAW": "Pieprasījums atsaukts.",
+      "SIGN": "Līgums parakstīts.",
+      "PAY": "Samaksāts. Drošības nauda glabājas līdz atdošanai.",
+      "CANCEL": "Darījums atcelts.",
+      "MARK_HANDED_OVER": "Nodošana atzīmēta. Gaidām nomnieka apstiprinājumu.",
+      "CONFIRM_RECEIVED": "Saņemts. Lai noder, un atdodiet laikā.",
+      "REPORT_NOT_RECEIVED": "Pieņemts. Īpašnieks un Yoyo ir informēti.",
+      "MARK_RETURNED": "Atdošana atzīmēta. Gaidām īpašnieka apstiprinājumu.",
+      "CONFIRM_RETURNED": "Lieta ir atpakaļ pie jums. Pārbaudiet to un atbrīvojiet drošības naudu.",
+      "REPORT_NOT_RETURNED": "Strīds atvērts. Yoyo izskatīs darījumu.",
+      "ALL_FINE": "Drošības nauda atgriezta nomniekam. Paldies!",
+      "REPORT_DAMAGE": "Paziņojums nosūtīts nomniekam.",
+      "ACCEPT_DAMAGE": "Drošības nauda tiek īpašniekam.",
+      "REJECT_DAMAGE": "Yoyo izlems un rakstīs jums abiem.",
+      "RESOLVE": "Lēmums saglabāts."
+    },
+    "closing": {
+      "title": "Viss atgriezās",
+      "renterRefunded": "Jūsu drošības nauda {amount} ir atpakaļ jūsu Yoyo makā.",
+      "renterToOwner": "Drošības nauda {amount} tika īpašniekam, kā darījumā izlemts.",
+      "renterNone": "Paldies, ka atdevāt.",
+      "owner": "Noma {amount} ir jūsu Yoyo makā.",
+      "review": "Atstāt atsauksmi",
+      "reviewed": "Paldies par atsauksmi.",
+      "moreRenter": "Atrast vēl ko",
+      "moreOwner": "Izīrēt vēl vienu lietu"
+    }
   },
   "dealActions": {
     "ACCEPT": "Pieņemt",

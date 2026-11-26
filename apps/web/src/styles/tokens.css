@@ -77,6 +77,14 @@
   --ink: #0a0b0e; /* night: text and 1px outlines */
   --cta-bg: #0a0b0e;
   --cta-fg: #f4f1e6;
+  /* The page's own colours, kept as they are on <html>: a moment (globals.css `moment`) turns the working
+     ones over for what is inside it, and a dialog opened from inside takes these back. */
+  --base-ink: var(--ink);
+  --base-canvas: var(--canvas);
+  --base-surface: var(--surface);
+  --base-mist: var(--mist);
+  --base-cta-bg: var(--cta-bg);
+  --base-cta-fg: var(--cta-fg);
   --marquee-bg: #0a0b0e;
   --marquee-fg: #f4f1e6;
   --sticker-edge: transparent;
@@ -98,6 +106,14 @@
   --ink: #f4f1e6;
   --cta-bg: #f4f1e6;
   --cta-fg: #0a0b0e;
+  /* The page's own colours, kept as they are on <html>: a moment (globals.css `moment`) turns the working
+     ones over for what is inside it, and a dialog opened from inside takes these back. */
+  --base-ink: var(--ink);
+  --base-canvas: var(--canvas);
+  --base-surface: var(--surface);
+  --base-mist: var(--mist);
+  --base-cta-bg: var(--cta-bg);
+  --base-cta-fg: var(--cta-fg);
   --marquee-bg: #f4f1e6;
   --marquee-fg: #0a0b0e;
   --sticker-edge: #f4f1e6; /* die-cut edge around stickers */
@@ -123,6 +139,14 @@
     --ink: #f4f1e6;
     --cta-bg: #f4f1e6;
     --cta-fg: #0a0b0e;
+    /* The page's own colours, kept as they are on <html>: a moment (globals.css `moment`) turns the working
+       ones over for what is inside it, and a dialog opened from inside takes these back. */
+    --base-ink: var(--ink);
+    --base-canvas: var(--canvas);
+    --base-surface: var(--surface);
+    --base-mist: var(--mist);
+    --base-cta-bg: var(--cta-bg);
+    --base-cta-fg: var(--cta-fg);
     --marquee-bg: #f4f1e6;
     --marquee-fg: #0a0b0e;
     --sticker-edge: #f4f1e6;

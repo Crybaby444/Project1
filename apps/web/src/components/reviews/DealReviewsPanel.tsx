@@ -15,6 +15,15 @@ import { Sheet } from '@/components/ui/Sheet';
 
 const key = (bookingId: string) => ['bookings', bookingId, 'reviews'] as const;
 
+/** A completed deal's reviews: whether this side may still write, theirs and mine (one request, shared). */
+export function useDealReviews(bookingId: string) {
+  const client = useApiClient();
+  return useQuery({
+    queryKey: key(bookingId),
+    queryFn: () => unwrap(client.GET('/api/v1/bookings/{id}/reviews', { params: { path: { id: bookingId } } })),
+  });
+}
+
 /**
  * Reviews on a completed deal's page (plan 10): the form while this side may still write theirs (the
  * renter also scores the item), then theirs, and the other side's once it is public. Blind: until both
@@ -32,10 +41,7 @@ export function DealReviewsPanel({ bookingId, otherName }: { bookingId: string; 
   const [text, setText] = useState('');
   const [tried, setTried] = useState(false);
 
-  const reviews = useQuery({
-    queryKey: key(bookingId),
-    queryFn: () => unwrap(client.GET('/api/v1/bookings/{id}/reviews', { params: { path: { id: bookingId } } })),
-  });
+  const reviews = useDealReviews(bookingId);
   const send = useMutation({
     mutationFn: () =>
       unwrap(
@@ -64,7 +70,7 @@ export function DealReviewsPanel({ bookingId, otherName }: { bookingId: string; 
   }
 
   return (
-    <Sheet aria-labelledby={`${textId}-heading`} className="flex flex-col gap-5" data-deal-reviews="">
+    <Sheet id="deal-reviews" aria-labelledby={`${textId}-heading`} className="flex scroll-mt-28 flex-col gap-5" data-deal-reviews="">
       <h2 id={`${textId}-heading`} className="type-block m-0">
         {t('heading')}
       </h2>

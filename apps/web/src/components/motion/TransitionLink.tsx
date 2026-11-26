@@ -54,5 +54,7 @@ export function TransitionLink({ href, onClick, ...rest }: TransitionLinkProps) 
     });
   }
 
+  // A link to a part of this page ("#reviews") is a plain anchor: no router, no localising, just the scroll.
+  if (href.startsWith('#')) return <a href={href} onClick={onClick} {...rest} />;
   return <Link href={href} onClick={handleClick} {...rest} />;
 }
