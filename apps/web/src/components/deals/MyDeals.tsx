@@ -185,7 +185,7 @@ export function MyDeals({ initialRole }: { initialRole: DealRole }) {
       <div
         role="tablist"
         aria-label={t('roles')}
-        className="rise border-ink bg-surface rounded-pill flex w-full max-w-md gap-1 self-start border p-1"
+        className="border-ink bg-surface rounded-pill flex w-full max-w-md gap-1 self-start border p-1"
       >
         {DEAL_ROLES.map((r) => (
           <button

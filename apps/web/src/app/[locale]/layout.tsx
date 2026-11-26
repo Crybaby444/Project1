@@ -64,8 +64,8 @@ export async function generateMetadata({ params }: LocaleParams): Promise<Metada
     description: t('description'),
     // Installable as an app (owner, 2026-11-26): each language's manifest opens it in that language.
     manifest: manifestHref(locale as Locale),
+    // The tab icon and the Apple touch icon come from the files app/icon.svg and app/apple-icon.png.
     appleWebApp: { capable: true, title: 'Yoyo', statusBarStyle: 'black-translucent' },
-    icons: { apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180' }] },
   };
 }
 
