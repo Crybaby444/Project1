@@ -31,14 +31,13 @@ export function AdminOverview() {
 
   return (
     <div className="flex flex-col gap-10">
-      <header {...rise(0)} className="admin-rise flex flex-col gap-1">
-        <p className="text-ink/70 text-sm font-semibold first-letter:uppercase">{today}</p>
-        <h1 className="type-title">
-          {t('overview.title')}
-        </h1>
-        {user && (
-          <p className="text-ink/75">{t('overview.hello', { name: user.name.split(' ')[0] ?? user.name })}</p>
-        )}
+      {/* The title leads; the day and the greeting are its line underneath (DESIGN.md: no kicker above a heading). */}
+      <header {...rise(0)} className="admin-rise flex flex-col gap-2">
+        <h1 className="type-title">{t('overview.title')}</h1>
+        <p className="text-ink/75">
+          <span className="inline-block first-letter:uppercase">{today}</span>
+          {user && <> · {t('overview.hello', { name: user.name.split(' ')[0] ?? user.name })}</>}
+        </p>
       </header>
 
       {overview.isPending ? (
