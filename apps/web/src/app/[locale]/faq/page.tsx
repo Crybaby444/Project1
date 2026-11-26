@@ -31,8 +31,8 @@ export default async function FaqPage({ params }: Params) {
         stickers={[{ kind: 'star', size: 112, top: '-12%', right: '4%', rotate: 14, className: 'max-sm:hidden' }]}
       />
       <div className="overflow-x-clip">
-        <div className="page reveal grid gap-10 py-16 sm:py-24 lg:grid-cols-[1fr_2.2fr]">
-          <aside className="sheet border-ink/15 rounded-media text-ink flex flex-col gap-3 self-start border p-5 max-lg:order-last lg:sticky lg:top-24">
+        <div className="page page-y layout-rail reveal">
+          <aside className="sheet border-ink/15 rounded-media text-ink flex flex-col gap-3 self-start border p-5 max-lg:order-last sm:p-6 lg:sticky lg:top-24">
             <p className="text-lg leading-relaxed font-bold">
               {t.rich('askUs', {
                 email: CONTACT_EMAIL,

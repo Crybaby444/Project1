@@ -174,9 +174,10 @@ export function MyDeals({ initialRole }: { initialRole: DealRole }) {
   const waiting = (r: DealRole) => summary.data?.[r].needsAction ?? 0;
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="stack-page">
       <PageHeader title={t('title')} intro={t('intro')} count={total} />
 
+      <div className="stack-section">
       <div
         role="tablist"
         aria-label={t('roles')}
@@ -254,6 +255,7 @@ export function MyDeals({ initialRole }: { initialRole: DealRole }) {
             )}
           </>
         )}
+      </div>
       </div>
     </div>
   );

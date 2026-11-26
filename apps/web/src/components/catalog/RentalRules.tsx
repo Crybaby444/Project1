@@ -11,11 +11,11 @@ export async function RentalRules({ name, id = 'rental-rules' }: { name: string;
   return (
     <section
       aria-labelledby={id}
-      className="border-ink/15 mt-10 grid gap-6 border-t pt-10 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-8"
+      className="border-ink/15 layout-rail border-t pt-10 sm:pt-14"
     >
       <h2
         id={id}
-        className="font-display text-display-s leading-[0.92] font-black uppercase"
+        className="type-section"
       >
         {t('title', { name })}
       </h2>

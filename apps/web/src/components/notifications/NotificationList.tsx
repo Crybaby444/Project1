@@ -53,7 +53,7 @@ export function NotificationList({ limit, compact = false, onNavigate }: { limit
   return (
     <div className="flex flex-col">
       <div className={`flex items-center justify-between gap-3 ${compact ? 'border-ink/15 border-b px-4 py-3' : 'pb-3'}`}>
-        <p className={compact ? 'text-sm font-bold tracking-[0.04em] uppercase' : 'text-ink/75 text-sm font-semibold'}>
+        <p className={compact ? 'type-label' : 'text-ink/75 text-sm font-semibold'}>
           {compact ? t('title') : unread > 0 ? t('unread', { count: unread }) : ''}
         </p>
         {unread > 0 && (
@@ -66,7 +66,7 @@ export function NotificationList({ limit, compact = false, onNavigate }: { limit
         compact ? (
           <p className="text-ink/75 px-4 py-8 text-center text-sm">{t('empty')}</p>
         ) : (
-          // The page speaks like every other empty list on the site (messages, deals): the yo-yo, a title, a line.
+          // The page speaks like every other empty list on the site (messages, deals): a sheet, a title, a line.
           <EmptyState title={t('emptyTitle')} body={t('emptyBody')} />
         )
       ) : (

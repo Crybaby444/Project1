@@ -80,7 +80,7 @@ export function SubmitPanel() {
       <p className="text-sm leading-relaxed">{t('intro')}</p>
       {steps.length > 0 ? (
         <div className="flex flex-col gap-2">
-          <p id="submit-left" className="text-sm font-bold tracking-[0.03em] uppercase">
+          <p id="submit-left" className="type-label">
             {t('left')}
           </p>
           <ul ref={list} tabIndex={-1} aria-labelledby="submit-left" className="flex flex-wrap gap-2">

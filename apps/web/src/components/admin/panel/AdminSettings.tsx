@@ -87,7 +87,8 @@ function Form({ data }: { data: Settings }) {
   const set = (key: string, value: string) => setDraft((d) => ({ ...d, [key]: value }));
   const undo = (key: string) =>
     setDraft((d) => {
-      const { [key]: _, ...rest } = d;
+      const rest = { ...d };
+      delete rest[key];
       return rest;
     });
 

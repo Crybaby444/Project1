@@ -33,7 +33,7 @@ export function AdminOverview() {
     <div className="flex flex-col gap-10">
       <header {...rise(0)} className="admin-rise flex flex-col gap-1">
         <p className="text-ink/70 text-sm font-semibold first-letter:uppercase">{today}</p>
-        <h1 className="font-display text-display-l leading-[0.92] font-black uppercase">
+        <h1 className="type-title">
           {t('overview.title')}
         </h1>
         {user && (
@@ -101,7 +101,7 @@ function Body({ data }: { data: Overview }) {
   return (
     <>
       <section {...rise(1)} aria-labelledby="admin-waiting" className="admin-rise flex flex-col gap-4">
-        <h2 id="admin-waiting" className="text-ink/70 text-sm font-bold tracking-[0.04em] uppercase">
+        <h2 id="admin-waiting" className="text-ink/70 type-label">
           {t('waiting')}
         </h2>
         {anything ? (
@@ -195,7 +195,7 @@ function Body({ data }: { data: Overview }) {
           aria-labelledby="admin-money"
           className="admin-rise admin-glass border-ink/15 rounded-media flex min-w-0 flex-col gap-5 border p-5 sm:p-6"
         >
-          <h2 id="admin-money" className="text-ink/70 text-sm font-bold tracking-[0.04em] uppercase">
+          <h2 id="admin-money" className="text-ink/70 type-label">
             {t('money')}
           </h2>
           <div>
@@ -381,7 +381,7 @@ function Chart({ series }: { series: Overview['series'] }) {
       className="admin-glass border-ink/15 rounded-media flex h-full flex-col gap-5 border p-5 sm:p-6"
     >
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h2 id="admin-chart" className="text-ink/70 text-sm font-bold tracking-[0.04em] uppercase">
+        <h2 id="admin-chart" className="text-ink/70 type-label">
           {t('chart')}
         </h2>
         <ul className="flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold">
@@ -440,7 +440,7 @@ function Chart({ series }: { series: Overview['series'] }) {
                   onMouseEnter={() => setHover(i)}
                   onFocus={() => setHover(i)}
                   onBlur={() => setHover(null)}
-                  className={`group relative flex h-full w-full items-end justify-center gap-[12%] rounded-[10px] px-[6%] pb-0 transition-colors duration-150 ${active ? 'bg-ink/[0.06]' : 'hover:bg-ink/[0.04]'}`}
+                  className={`group relative flex h-full w-full items-end justify-center gap-[12%] rounded-tile px-[6%] pb-0 transition-colors duration-150 ${active ? 'bg-ink/[0.06]' : 'hover:bg-ink/[0.04]'}`}
                 >
                   <Bar
                     value={d.deals}
@@ -546,7 +546,7 @@ function Activity({ items }: { items: AdminActivity[] }) {
 
   return (
     <section aria-labelledby="admin-activity" className="flex flex-col gap-3">
-      <h2 id="admin-activity" className="text-ink/70 text-sm font-bold tracking-[0.04em] uppercase">
+      <h2 id="admin-activity" className="text-ink/70 type-label">
         {t('activity')}
       </h2>
       {items.length === 0 ? (
@@ -555,7 +555,7 @@ function Activity({ items }: { items: AdminActivity[] }) {
         <div className="flex flex-col gap-6">
           {groups.map((g) => (
             <div key={g.label} className="flex flex-col gap-1">
-              <h3 className="text-ink/55 text-xs font-bold tracking-[0.04em] uppercase">{g.label}</h3>
+              <h3 className="text-ink/55 type-caption">{g.label}</h3>
               <ol className="divide-ink/10 border-ink/10 m-0 list-none divide-y border-y p-0">
                 {g.items.map((a) => (
                   <li key={`${a.kind}-${a.id}-${a.at}`} className="group flex items-center gap-4 py-2.5">

@@ -62,7 +62,7 @@ export function RejectDialog({
           </p>
         </div>
         <div className="flex flex-col gap-2">
-          <p className="text-sm font-bold tracking-[0.03em] uppercase">{t('suggestions')}</p>
+          <p className="type-label">{t('suggestions')}</p>
           <div className="flex flex-wrap gap-2">
             {SUGGESTIONS.map((key) => (
               <button

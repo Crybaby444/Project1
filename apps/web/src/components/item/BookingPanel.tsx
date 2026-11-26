@@ -24,9 +24,14 @@ export function BookingPanel({ item }: { item: AvailableItem }) {
 
   return (
     <>
-      <section ref={panel} id="booking" aria-label={t('title')} className="flex scroll-mt-24 flex-col gap-4">
+      <section
+        ref={panel}
+        id="booking"
+        aria-label={t('title')}
+        className="sheet border-ink rounded-media flex scroll-mt-24 flex-col gap-4 border-2 p-5 sm:p-6"
+      >
         <div className="flex flex-col gap-2">
-          <p className="font-display text-display-l leading-[0.9] font-black uppercase tabular-nums">{t('perDay', { price: formatEuros(daily, locale) })}</p>
+          <p className="type-section tabular-nums">{t('perDay', { price: formatEuros(daily, locale) })}</p>
           <ul className="flex flex-wrap gap-2 text-xs font-bold">
             {listing.weeklyDiscountPercent > 0 && (
               <li className="bg-ink text-canvas rounded-pill inline-flex items-center gap-1.5 px-2.5 py-1 before:size-1.5 before:rounded-full before:bg-[var(--glow)] before:content-['']">
@@ -50,7 +55,7 @@ export function BookingPanel({ item }: { item: AvailableItem }) {
       <div
         aria-hidden={panelInView || undefined}
         data-book-bar={panelInView ? 'away' : 'shown'}
-        className={`border-ink bg-surface ease-yoyo fixed inset-x-3 bottom-[calc(max(10px,env(safe-area-inset-bottom))+80px)] z-30 flex items-center justify-between gap-3 rounded-[22px] border py-2 pr-2 pl-4 shadow-[0_18px_40px_-18px_rgba(10,11,14,0.45)] transition-[translate,opacity] duration-300 motion-reduce:transition-none lg:hidden ${
+        className={`border-ink bg-surface ease-yoyo fixed inset-x-4 bottom-[calc(max(10px,env(safe-area-inset-bottom))+80px)] z-30 flex items-center justify-between gap-3 rounded-float border py-2 pr-2 pl-4 shadow-[0_18px_40px_-18px_rgba(10,11,14,0.45)] transition-[translate,opacity] duration-300 motion-reduce:transition-none lg:hidden ${
           panelInView ? 'pointer-events-none translate-y-3 opacity-0' : ''
         }`}
       >

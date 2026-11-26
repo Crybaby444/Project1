@@ -214,7 +214,7 @@ export function CommandPalette() {
               <li key={hit.key} role="presentation">
                 {heading && (
                   <p
-                    className="text-ink/60 px-3 pt-3 pb-1 text-xs font-bold tracking-[0.08em] uppercase"
+                    className="text-ink/60 px-3 pt-3 pb-1 type-caption"
                     aria-hidden="true"
                   >
                     {t(`search.${heading}`)}
@@ -226,7 +226,7 @@ export function CommandPalette() {
                   aria-selected={isActive}
                   onMouseEnter={() => setActive(i)}
                   onClick={() => go(hit)}
-                  className={`flex cursor-pointer items-baseline justify-between gap-4 rounded-[12px] px-3 py-2.5 ${isActive ? 'bg-ink text-canvas' : ''}`}
+                  className={`flex cursor-pointer items-baseline justify-between gap-4 rounded-tile px-3 py-2.5 ${isActive ? 'bg-ink text-canvas' : ''}`}
                 >
                   <span className="min-w-0 truncate font-semibold">{hit.label}</span>
                   <span

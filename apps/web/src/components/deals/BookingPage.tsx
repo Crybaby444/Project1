@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { displayFit } from '@/lib/display-fit';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { useBookingTerms } from '@/lib/deals/queries';
 import { useMoney } from '@/lib/deals/money';
 import { BookingPanel } from './BookingPanel';
@@ -15,27 +15,28 @@ export function BookingPage({ listingId }: { listingId: string }) {
   const title = listing ? t('title', { item: listing.title }) : t('pageTitle');
 
   return (
-    <main className="page flex flex-col gap-8 page-y">
-      <header className="flex flex-col gap-5 sm:flex-row sm:items-center">
-        <div className="border-ink/15 bg-mist rounded-media size-24 shrink-0 overflow-hidden border sm:size-28">
-          {listing?.coverUrl && (
-            // eslint-disable-next-line @next/next/no-img-element -- photos come from the API's storage, already sized
-            <img src={listing.coverUrl} alt="" width={224} height={224} className="size-full object-cover" />
-          )}
-        </div>
-        <div className="@container flex min-w-0 flex-1 flex-col gap-2">
-          <h1 style={displayFit(title, { max: '3rem' })} className="font-display text-display-fit leading-[0.9] font-black uppercase [overflow-wrap:anywhere]">
-            {title}
-          </h1>
-          {listing && terms.data && (
+    <main className="page page-y stack-page">
+      <PageHeader
+        title={title}
+        media={
+          <div className="border-ink/15 bg-mist rounded-media size-24 overflow-hidden border sm:size-28">
+            {listing?.coverUrl && (
+              // eslint-disable-next-line @next/next/no-img-element -- photos come from the API's storage, already sized
+              <img src={listing.coverUrl} alt="" width={224} height={224} className="size-full object-cover" />
+            )}
+          </div>
+        }
+        meta={
+          listing &&
+          terms.data && (
             <p className="flex flex-wrap gap-x-4 gap-y-1 text-base">
               <span>{t('from', { name: listing.ownerName })}</span>
               {listing.city && <span>{listing.district ? t('where', { district: listing.district, city: listing.city }) : listing.city}</span>}
               <span className="font-bold">{t('perDay', { price: money(terms.data.pricing.dailyCents) })}</span>
             </p>
-          )}
-        </div>
-      </header>
+          )
+        }
+      />
       <BookingPanel listingId={listingId} />
     </main>
   );

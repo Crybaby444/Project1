@@ -8,7 +8,7 @@ import { catalogSearch, type CatalogParams, toApiQuery } from '@/lib/catalog/par
 import { SaveSearchButton } from './SaveSearchButton';
 import { daysBetween } from '@/lib/deals/dates';
 import { loadMap, loadPlaces, loadSearch } from '@/lib/catalog/server-api';
-import { displayFit } from '@/lib/display-fit';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { addDays, todayIn } from '@/lib/listings/calendar';
 import { ActiveFilters } from './ActiveFilters';
 import { Breadcrumbs, type Crumb } from './Breadcrumbs';
@@ -72,9 +72,7 @@ export async function CatalogResults({ params: raw, category, related, path, tit
   if (!results.ok) {
     return (
       <main className="page flex flex-col items-center gap-4 py-20 text-center">
-        <h1 className="font-display text-display-l leading-[0.95] font-black [overflow-wrap:anywhere] hyphens-auto uppercase">
-          {t('error.title')}
-        </h1>
+        <h1 className="type-title [overflow-wrap:anywhere] hyphens-auto">{t('error.title')}</h1>
         <p className="max-w-lead">{t('error.body')}</p>
         <Link
           href={`${path}${catalogSearch(params)}`}
@@ -94,16 +92,8 @@ export async function CatalogResults({ params: raw, category, related, path, tit
 
   return (
     <CatalogShell>
-      <main className="page @container flex flex-col gap-6 py-8 sm:py-10">
-        <Breadcrumbs items={crumbs} label={t('breadcrumbs.label')} />
-        <div className="flex flex-col gap-4">
-          <h1
-            style={displayFit(title, { min: '1.75rem', max: '3.5rem' })}
-            className="font-display text-display-fit leading-[0.9] font-black uppercase"
-          >
-            {title}
-          </h1>
-          {lead && <p className="text-ink/80 max-w-read text-base leading-relaxed">{lead}</p>}
+      <main className="page page-y stack-page">
+        <PageHeader title={title} intro={lead} crumbs={<Breadcrumbs items={crumbs} label={t('breadcrumbs.label')} />}>
           <SearchBox initialQuery={params.q ?? ''} className="max-w-3xl" />
           {related.length > 0 && (
             <nav aria-label={t('related')}>
@@ -123,9 +113,9 @@ export async function CatalogResults({ params: raw, category, related, path, tit
               </ul>
             </nav>
           )}
-        </div>
+        </PageHeader>
 
-        <div className="grid gap-8 lg:grid-cols-[300px_minmax(0,1fr)]">
+        <div className="layout-rail">
           <aside className="flex flex-col gap-4">
             <Filters params={params} cities={cities} country={country} today={today} total={total} />
           </aside>
@@ -152,7 +142,7 @@ export async function CatalogResults({ params: raw, category, related, path, tit
                     resetHref={params.q ? `${path}?q=${encodeURIComponent(params.q)}` : path}
                   />
                 ) : (
-                  <ul className="grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 xl:grid-cols-3">
+                  <ul className="grid-cards-rail">
                     {items.map((item, index) => (
                       <li key={item.id}>
                         <ListingCard item={item} eager={index < 3} days={days} />

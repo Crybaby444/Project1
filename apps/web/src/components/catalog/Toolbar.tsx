@@ -15,7 +15,7 @@ export function Toolbar({ params }: { params: CatalogParams }) {
   return (
     <div className="flex flex-wrap items-center gap-3">
       <div className="flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
-        <label htmlFor={sortId} className="text-sm font-bold tracking-[0.03em] uppercase max-sm:sr-only">
+        <label htmlFor={sortId} className="type-label max-sm:sr-only">
           {t('sort.label')}
         </label>
         <Select

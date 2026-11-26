@@ -16,7 +16,7 @@ export function StarInput({ legend, name, value, onChange, invalid }: { legend: 
   const lit = hover || value;
   return (
     <fieldset role="radiogroup" aria-labelledby={`${id}-legend`} aria-invalid={invalid || undefined} className="m-0 flex flex-col gap-2 border-0 p-0">
-      <legend id={`${id}-legend`} className="mb-1 p-0 text-sm font-bold tracking-[0.03em] uppercase">
+      <legend id={`${id}-legend`} className="mb-1 p-0 type-label">
         {legend}
       </legend>
       <div className="flex items-center gap-1" onPointerLeave={() => setHover(0)}>

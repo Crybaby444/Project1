@@ -322,7 +322,7 @@ export function PhotosStep() {
             <li
               key={item.key}
               role="alert"
-              className="border-ink/15 bg-surface rounded-media flex flex-wrap items-center justify-between gap-3 border p-3"
+              className="sheet border-ink/15 rounded-media flex flex-wrap items-center justify-between gap-3 border p-3"
             >
               <p className="flex min-w-0 items-start gap-1.5 text-sm font-bold [overflow-wrap:anywhere]">
                 <svg

@@ -51,7 +51,7 @@ export function CatalogMenu({ roots, className = '', onOpenChange }: { roots: Me
           <path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
-      <div id={panel} hidden={!open} className="border-ink/10 bg-canvas animate-sheet-drop fixed top-[84px] left-1/2 z-40 max-h-[calc(100dvh-110px)] w-[min(1280px,calc(100vw-40px))] -translate-x-1/2 overflow-y-auto rounded-[32px] border shadow-[0_40px_80px_-30px_rgba(10,11,14,0.45),0_2px_6px_rgba(10,11,14,0.06)]">
+      <div id={panel} hidden={!open} className="border-ink/10 bg-canvas animate-sheet-drop fixed top-[84px] left-1/2 z-40 max-h-[calc(100dvh-110px)] w-[min(1280px,calc(100vw-40px))] -translate-x-1/2 overflow-y-auto rounded-float border shadow-[0_40px_80px_-30px_rgba(10,11,14,0.45),0_2px_6px_rgba(10,11,14,0.06)]">
         <div className="grid grid-cols-3 gap-x-10 gap-y-9 px-10 pt-10 pb-8 xl:grid-cols-4">
           {roots.map((r) => (
             <div key={r.slugs.en} className="flex min-w-0 flex-col gap-2.5">

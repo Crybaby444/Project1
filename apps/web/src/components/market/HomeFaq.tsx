@@ -10,7 +10,7 @@ export async function HomeFaq() {
   return (
     <section aria-labelledby="home-faq" className="page grid gap-10 py-20 sm:py-28 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
       <div className="flex flex-col items-start gap-5">
-        <h2 id="home-faq" className="font-display text-display-l leading-[0.88] font-black uppercase">
+        <h2 id="home-faq" className="type-title">
           {t('title')}
         </h2>
         <Link href="/faq" className="text-base font-bold underline decoration-1 underline-offset-4">

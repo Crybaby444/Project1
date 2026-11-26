@@ -5,7 +5,6 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import { useToast } from '@/components/ui/Toast';
 import { Link, useRouter } from '@/i18n/navigation';
-import { useUnreadCount } from '@/lib/chat/queries';
 import { useDealsSummary } from '@/lib/deals/queries';
 import { useSession } from '@/lib/session/SessionProvider';
 
@@ -40,8 +39,6 @@ export function UserMenu({ user }: { user: PublicUser }) {
   const [wanted, setWanted] = useState(false);
   const summary = useDealsSummary(wanted);
   const waiting = (summary.data?.renter.needsAction ?? 0) + (summary.data?.owner.needsAction ?? 0);
-  const tc = useTranslations('chat');
-  const unread = useUnreadCount().data ?? 0;
   const { signOut } = useSession();
   const tm = useTranslations('mySpace');
   // An administrator's account is for the admin panel only (owner, 2026-11-15).

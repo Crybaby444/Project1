@@ -13,7 +13,7 @@ export function ThemeSelect({ compact = false }: { compact?: boolean }) {
 
   return (
     <fieldset role="radiogroup" aria-labelledby={legendId} className={compact ? 'flex items-center' : 'flex flex-col gap-1.5'}>
-      <legend id={legendId} className={compact ? 'sr-only' : 'mb-1.5 text-sm font-bold tracking-[0.03em] uppercase'}>
+      <legend id={legendId} className={compact ? 'sr-only' : 'mb-1.5 type-label'}>
         {t('label')}
       </legend>
       <div className={compact ? 'flex flex-wrap gap-1' : 'border-ink bg-surface rounded-pill grid w-full grid-cols-3 gap-1 border p-1 sm:flex sm:w-fit'}>

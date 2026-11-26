@@ -15,7 +15,7 @@ export default async function ShopPage({ params }: Props) {
   const { locale, id } = await params;
   setRequestLocale(locale);
   return (
-    <main className="page flex flex-1 flex-col page-y">
+    <main className="page page-y flex flex-1 flex-col">
       <ShopView id={id} />
     </main>
   );

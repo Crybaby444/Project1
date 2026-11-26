@@ -7,6 +7,7 @@ import { useId, useRef, useState, type ChangeEvent } from 'react';
 import { useErrorText } from '@/lib/forms/error-text';
 import { dealKeys, useDealPhotos } from '@/lib/deals/queries';
 import { uploadBookingPhoto } from '@/lib/listings/upload-photo';
+import { Sheet } from '@/components/ui/Sheet';
 
 /** Who may add which photos when (the API's rule, plan 8 Task 9); the API checks it again. */
 export function uploadableKinds(booking: Pick<BookingView, 'status' | 'viewerRole'>): BookingPhotoKind[] {
@@ -121,7 +122,7 @@ export function DamagePhotos({
   const [photos, setPhotos] = useState<BookingPhoto[]>([]);
   return (
     <fieldset className="flex flex-col gap-2">
-      <legend className="mb-1 text-sm font-bold tracking-[0.03em] uppercase">{t('damage.photos')}</legend>
+      <legend className="mb-1 type-label">{t('damage.photos')}</legend>
       <div className="flex flex-wrap gap-3">
         {photos.map((photo, index) => (
           <Thumb key={photo.id} photo={photo} n={index + 1} kindLabel={t('photos.DAMAGE')} />
@@ -162,16 +163,16 @@ export function DealPhotos({ booking }: { booking: BookingView }) {
     .filter((g) => g.items.length > 0 || kinds.includes(g.kind));
 
   return (
-    <section aria-labelledby="deal-photos" className="sheet border-ink/15 rounded-media border p-5 sm:p-6 flex flex-col gap-4">
+    <Sheet aria-labelledby="deal-photos" className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <h2 id="deal-photos" className="font-display text-4xl leading-[0.95] font-black uppercase">
+        <h2 id="deal-photos" className="type-block">
           {t('title')}
         </h2>
         {kinds.length > 0 && <p className="text-sm">{t('hint')}</p>}
       </div>
       {groups.map((group) => (
         <div key={group.kind} className="flex flex-col gap-2">
-          <h3 className="text-sm font-bold tracking-[0.03em] uppercase">{t(group.kind)}</h3>
+          <h3 className="type-label">{t(group.kind)}</h3>
           <div className="flex flex-wrap gap-3">
             {group.items.map((photo, index) => (
               <Thumb key={photo.id} photo={photo} n={index + 1} kindLabel={t(group.kind)} />
@@ -187,6 +188,6 @@ export function DealPhotos({ booking }: { booking: BookingView }) {
           </div>
         </div>
       ))}
-    </section>
+    </Sheet>
   );
 }

@@ -196,7 +196,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE))}
-            className="bg-ink/10 hover:bg-ink/15 text-ink/80 flex min-h-11 w-full items-center gap-3 rounded-[14px] px-3.5 text-sm font-semibold"
+            className="bg-ink/10 hover:bg-ink/15 text-ink/80 flex min-h-11 w-full items-center gap-3 rounded-media px-3.5 text-sm font-semibold"
           >
             <Icon>
               <path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4" />
@@ -212,7 +212,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
                 type="button"
                 aria-label={t('search.open')}
                 onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE))}
-                className="text-ink/80 hover:bg-ink/10 flex min-h-11 items-center rounded-[14px] px-3.5"
+                className="text-ink/80 hover:bg-ink/10 flex min-h-11 items-center rounded-media px-3.5"
               >
                 <Icon>
                   <path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4" />
@@ -227,7 +227,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
                 <li key={key} className="shrink-0">
                   {firstOfGroup && (
                     <p
-                      className={`text-ink/65 hidden px-3.5 pb-1 text-xs font-bold tracking-[0.08em] uppercase lg:block ${index === 0 ? '' : 'pt-4'}`}
+                      className={`text-ink/65 hidden px-3.5 pb-1 type-caption lg:block ${index === 0 ? '' : 'pt-4'}`}
                     >
                       {t(`groups.${group}`)}
                     </p>
@@ -235,7 +235,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
                   <Link
                     href={href}
                     aria-current={current ? 'page' : undefined}
-                    className={`ease-yoyo flex min-h-11 items-center gap-3 rounded-[14px] px-3.5 text-base font-semibold whitespace-nowrap transition-colors duration-150 ${
+                    className={`ease-yoyo flex min-h-11 items-center gap-3 rounded-media px-3.5 text-base font-semibold whitespace-nowrap transition-colors duration-150 ${
                       current ? 'bg-ink text-canvas' : 'text-ink/80 hover:bg-ink/10 hover:text-ink'
                     }`}
                   >
@@ -262,7 +262,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
               <button
                 type="button"
                 onClick={() => void leave()}
-                className="text-ink/80 hover:bg-ink/10 flex min-h-11 items-center gap-3 rounded-[14px] px-3.5 text-base font-semibold whitespace-nowrap"
+                className="text-ink/80 hover:bg-ink/10 flex min-h-11 items-center gap-3 rounded-media px-3.5 text-base font-semibold whitespace-nowrap"
               >
                 {t('signOut')}
               </button>
@@ -279,7 +279,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
           <button
             type="button"
             onClick={() => void leave()}
-            className="text-ink/80 hover:bg-ink/10 hover:text-ink flex min-h-11 w-full items-center gap-3 rounded-[14px] px-3.5 text-sm font-semibold"
+            className="text-ink/80 hover:bg-ink/10 hover:text-ink flex min-h-11 w-full items-center gap-3 rounded-media px-3.5 text-sm font-semibold"
           >
             <Icon>
               <path d="M15 17l5-5-5-5M20 12H9M12 20H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7" />
@@ -305,7 +305,7 @@ function NoAccess() {
   const t = useTranslations('admin.noAccess');
   return (
     <div role="alert" className="flex max-w-xl flex-col items-start gap-4 py-10">
-      <h1 className="font-display text-display-m leading-[0.95] font-black uppercase">{t('title')}</h1>
+      <h1 className="type-section">{t('title')}</h1>
       <p className="text-ink/80">{t('body')}</p>
       <Link href="/admin" className="font-bold underline decoration-1 underline-offset-4">
         {t('back')}

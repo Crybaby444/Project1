@@ -48,7 +48,7 @@ export function Field({ label, hint, error, children, className = '', suffix }: 
 
   return (
     <div className={`flex flex-col gap-1.5 ${className}`}>
-      <label htmlFor={inputId} className="text-sm font-bold tracking-[0.03em] uppercase">
+      <label htmlFor={inputId} className="type-label">
         {label}
       </label>
       {suffix ? (

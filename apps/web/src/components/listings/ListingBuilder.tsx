@@ -1,6 +1,5 @@
 'use client';
 
-import { displayFit } from '@/lib/display-fit';
 import { useQueryClient } from '@tanstack/react-query';
 import type { Locale, OwnerListing } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
@@ -30,6 +29,8 @@ import { SubmitPanel } from './steps/SubmitPanel';
 import { StatusBanner } from './StatusBanner';
 import { useSession } from '@/lib/session/SessionProvider';
 import { myProfileHref } from '@/lib/profile/links';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Sheet } from '@/components/ui/Sheet';
 
 /** The fields of each step; steps added by later tasks register here. */
 const STEP_CONTENT: Partial<Record<BuilderStep, () => ReactNode>> = {
@@ -148,18 +149,12 @@ function BuilderLayout({
   const next = BUILDER_STEPS[index + 1];
 
   return (
-    <main className="page flex flex-col gap-6 py-8 sm:py-12">
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="@container flex min-w-0 flex-1 flex-col gap-2">
-          <h1
-            style={displayFit(isNew ? t('titleNew') : t('titleEdit'), { max: '3.5rem' })}
-            className="font-display text-display-fit leading-[0.85] font-black uppercase"
-          >
-            {isNew ? t('titleNew') : t('titleEdit')}
-          </h1>
-          <p className="leading-relaxed">{t('intro')}</p>
-        </div>
-        <div className="flex flex-wrap items-center gap-3">
+    <main className="page page-y stack-page">
+      <PageHeader
+        title={isNew ? t('titleNew') : t('titleEdit')}
+        intro={t('intro')}
+        action={
+          <>
           <SaveIndicator state={draft.state} />
           {draft.state !== 'readonly' && (draft.listing === null || draft.listing.status === 'DRAFT') && (
             <Button
@@ -171,34 +166,29 @@ function BuilderLayout({
               {t('saveDraft')}
             </Button>
           )}
-        </div>
-      </header>
-      {draft.restored && (
-        <p
-          role="status"
-          className="border-ink/15 bg-surface rounded-media flex items-start gap-3 border p-4 text-base font-semibold"
-        >
-          <span aria-hidden="true" className="bg-ink mt-1.5 size-2 flex-none rounded-full" />
-          {t('restored')}
-        </p>
-      )}
-
-      <StatusBanner />
-      {draft.state === 'conflict' && <ConflictNotice onReload={draft.reload} />}
-      {categoriesFailed !== null && (
-        <div
-          role="alert"
-          className="border-ink/15 bg-surface rounded-media flex flex-wrap items-center gap-3 border p-4"
-        >
-          <p className="font-bold">{errorText(categoriesFailed)}</p>
-          <Button variant="ghost" onClick={retryCategories}>
-            {t('retry')}
-          </Button>
-        </div>
-      )}
+          </>
+        }
+      >
+        {draft.restored && (
+          <Sheet as="div" pad="sm" role="status" className="flex items-start gap-3 text-base font-semibold">
+            <span aria-hidden="true" className="bg-ink mt-1.5 size-2 flex-none rounded-full" />
+            {t('restored')}
+          </Sheet>
+        )}
+        <StatusBanner />
+        {draft.state === 'conflict' && <ConflictNotice onReload={draft.reload} />}
+        {categoriesFailed !== null && (
+          <Sheet as="div" pad="sm" role="alert" className="flex flex-wrap items-center gap-3">
+            <p className="font-bold">{errorText(categoriesFailed)}</p>
+            <Button variant="ghost" onClick={retryCategories}>
+              {t('retry')}
+            </Button>
+          </Sheet>
+        )}
+      </PageHeader>
 
       <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[minmax(180px,210px)_minmax(0,1fr)_minmax(300px,380px)] lg:gap-8 xl:grid-cols-[210px_minmax(0,1fr)_420px] xl:gap-10">
-        <div className="min-w-0 lg:sticky lg:top-6">
+        <div className="min-w-0 lg:sticky lg:top-24">
           <StepNav current={step} onSelect={goTo} />
         </div>
 
@@ -210,13 +200,11 @@ function BuilderLayout({
             }
             className={moved ? 'animate-step-in' : undefined}
           >
-            <p className="text-ink/70 mb-3 text-xs font-bold tracking-[0.08em] uppercase tabular-nums">
-              {t('steps.number', { number: index + 1, total: BUILDER_STEPS.length })}
-            </p>
             <StepSection
               title={t(`steps.${step}`)}
               intro={t(`stepIntro.${step}`)}
               focusOnMount={moved !== null}
+              place={{ short: `${index + 1} / ${BUILDER_STEPS.length}`, said: t('steps.number', { number: index + 1, total: BUILDER_STEPS.length }) }}
             >
               {STEP_CONTENT[step]?.()}
             </StepSection>
@@ -243,8 +231,8 @@ function BuilderLayout({
           </div>
         </div>
 
-        <aside className="hidden flex-col gap-3 lg:sticky lg:top-6 lg:flex" aria-label={t('preview.title')}>
-          <h2 className="text-sm font-bold tracking-[0.03em] uppercase">{t('preview.title')}</h2>
+        <aside className="hidden flex-col gap-3 lg:sticky lg:top-24 lg:flex" aria-label={t('preview.title')}>
+          <h2 className="type-label text-ink/70">{t('preview.title')}</h2>
           <BuilderPreview />
           <p className="text-sm">{t('preview.privacy')}</p>
         </aside>

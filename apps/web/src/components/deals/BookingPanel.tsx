@@ -124,7 +124,7 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
   if (terms.isError) {
     const code = terms.error instanceof ApiError ? terms.error.code : null;
     return (
-      <div role="alert" className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6">
+      <div role="alert" className="sheet border-ink/15 rounded-media flex flex-col items-start gap-3 border p-5 sm:p-6">
         <p className="text-lg font-bold">
           {code === 'NOT_FOUND' ? t('notFound') : code === 'LISTING_UNAVAILABLE' ? t('unavailable') : t('loadFailed')}
         </p>
@@ -151,10 +151,10 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
 
   return (
     // `stacked`: one column, for a side column such as the item page's (the calendar keeps its width).
-    <div className={`grid gap-6 ${layout === 'wide' ? 'lg:grid-cols-[minmax(0,1fr)_22rem]' : ''}`} data-booking-panel="">
+    <div className={layout === 'wide' ? 'layout-split' : 'grid gap-6'} data-booking-panel="">
       <section aria-labelledby="booking-dates" className={`flex flex-col gap-4 ${layout === 'wide' ? 'sheet border-ink/15 rounded-media border p-5 sm:p-6' : 'border-ink/15 border-t pt-6'}`}>
         <div className="flex flex-col gap-1">
-          <h2 id="booking-dates" className="font-display text-display-s leading-[0.95] font-black uppercase">
+          <h2 id="booking-dates" className="type-block">
             {t('dates')}
           </h2>
           <p id={hintId} className="text-sm">
@@ -192,7 +192,7 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
       <aside className={`flex flex-col gap-5 self-start ${layout === 'wide' ? 'sheet border-ink rounded-media border-2 p-5 sm:p-6 lg:sticky lg:top-24' : 'border-ink border-t-2 pt-6'}`}>
         <PriceSummary quote={priced.quote} />
         {own ? (
-          <p className="bg-mist rounded-media p-4 text-sm font-bold">{t('own')}</p>
+          <p className="bg-mist rounded-tile p-4 text-sm font-bold">{t('own')}</p>
         ) : (
           <>
             <Field label={t('message')} hint={t('messageHint')}>

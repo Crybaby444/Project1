@@ -53,7 +53,7 @@ export function MyListingCard({
           <p className="text-ink/75 text-sm">{t('changed', { date: changed })}</p>
           {listing.status === 'REJECTED' && listing.rejectionReason && (
             <div className="mt-2 flex flex-col gap-1">
-              <p className="text-sm font-bold tracking-[0.03em] uppercase">{t('reason')}</p>
+              <p className="type-label">{t('reason')}</p>
               <p className="border-[var(--danger)] border-l-4 pl-3 text-sm font-bold [overflow-wrap:anywhere]">
                 {listing.rejectionReason}
               </p>

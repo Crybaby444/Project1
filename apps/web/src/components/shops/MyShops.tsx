@@ -7,7 +7,7 @@ import { useId, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Dialog } from '@/components/ui/Dialog';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { INPUT_CLASS } from '@/components/ui/inputs';
+import { INPUT_CLASS, TEXTAREA_CLASS } from '@/components/ui/inputs';
 import { Select } from '@/components/ui/Select';
 import { useToast } from '@/components/ui/Toast';
 import { Link } from '@/i18n/navigation';
@@ -27,7 +27,7 @@ export function MyShops({ embedded = false }: { embedded?: boolean }) {
     <div className="flex flex-col gap-8">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          {!embedded && <h1 className="font-display text-display-l leading-[0.9] font-black uppercase">{t('mineTitle')}</h1>}
+          {!embedded && <h1 className="type-title">{t('mineTitle')}</h1>}
           <p className="text-ink/75 max-w-read">{t('mineIntro')}</p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -42,9 +42,9 @@ export function MyShops({ embedded = false }: { embedded?: boolean }) {
         </div>
       </header>
       {shops.data && shops.data.length === 0 && <EmptyState headingLevel={2} title={t('noShops')} body={t('noShopsBody')} />}
-      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid-tiles">
         {shops.data?.map((s) => (
-          <li key={s.id} className="border-ink/15 bg-surface rounded-media flex flex-col gap-3 border p-5" data-my-shop={s.id}>
+          <li key={s.id} className="sheet border-ink/15 rounded-media flex flex-col gap-3 border p-4 sm:p-5" data-my-shop={s.id}>
             <Link href={`/shops/${s.id}`} className="font-display text-3xl leading-none font-black uppercase hover:underline">
               {s.name}
             </Link>
@@ -112,35 +112,35 @@ function ShopEditor({ shop, onClose }: { shop: MyShop | null; onClose(): void })
         }}
       >
         <div className="flex flex-col gap-1.5">
-          <label htmlFor={nameId} className="text-sm font-bold tracking-[0.03em] uppercase">
+          <label htmlFor={nameId} className="type-label">
             {t('name')}
           </label>
           <input id={nameId} value={name} maxLength={SHOP_LIMITS.name} onChange={(e) => setName(e.target.value)} className={INPUT_CLASS} />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label htmlFor={aboutId} className="text-sm font-bold tracking-[0.03em] uppercase">
+          <label htmlFor={aboutId} className="type-label">
             {t('about')}
           </label>
-          <textarea id={aboutId} value={about} rows={3} maxLength={SHOP_LIMITS.about} onChange={(e) => setAbout(e.target.value)} className={`${INPUT_CLASS} min-h-24 rounded-[22px] py-2.5`} />
+          <textarea id={aboutId} value={about} rows={3} maxLength={SHOP_LIMITS.about} onChange={(e) => setAbout(e.target.value)} className={TEXTAREA_CLASS} />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label htmlFor={catId} className="text-sm font-bold tracking-[0.03em] uppercase">
+          <label htmlFor={catId} className="type-label">
             {t('category')}
           </label>
           <Select id={catId} value={categoryId} onChange={setCategoryId} options={options} />
         </div>
         <fieldset className="flex flex-col gap-2">
-          <legend className="mb-1 text-sm font-bold tracking-[0.03em] uppercase">{t('items')}</legend>
+          <legend className="mb-1 type-label">{t('items')}</legend>
           {mine.length === 0 && <p className="text-ink/75 text-sm">{t('noItemsYet')}</p>}
-          <ul className="border-ink/15 divide-ink/10 max-h-72 divide-y overflow-y-auto rounded-[18px] border">
+          <ul className="border-ink/15 divide-ink/10 max-h-72 divide-y overflow-y-auto rounded-media border">
             {mine.map((l) => (
               <li key={l.id} className="flex items-center gap-3 px-3 py-2">
                 <input id={`pick-${l.id}`} type="checkbox" checked={picked.includes(l.id)} onChange={() => toggle(l.id)} className="accent-ink size-5" />
                 {l.cover ? (
                   // eslint-disable-next-line @next/next/no-img-element -- a thumbnail from the photo store
-                  <img src={l.cover.thumb} alt="" className="size-10 rounded-[8px] object-cover" />
+                  <img src={l.cover.thumb} alt="" className="size-10 rounded-tile object-cover" />
                 ) : (
-                  <span className="bg-mist size-10 rounded-[8px]" />
+                  <span className="bg-mist size-10 rounded-tile" />
                 )}
                 <label htmlFor={`pick-${l.id}`} className="min-w-0 flex-1 truncate">
                   {l.title || t('untitled')}

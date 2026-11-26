@@ -6,14 +6,6 @@ import { Button } from '@/components/ui/Button';
 import { money } from '@/lib/deals/money';
 
 /** Example day prices to start from (synthetic, labelled as examples). */
-const EXAMPLES = [
-  { key: 'drill', price: 12 },
-  { key: 'tent', price: 15 },
-  { key: 'projector', price: 20 },
-  { key: 'bike', price: 18 },
-  { key: 'camera', price: 25 },
-] as const;
-
 /** A number that runs to its new value instead of jumping (an odometer feel). */
 function useRunning(value: number): number {
   const [shown, setShown] = useState(value);
@@ -96,13 +88,13 @@ export function LendCalculator() {
 
         <div className="border-ink/15 flex flex-wrap items-end justify-between gap-x-10 gap-y-4 border-t pt-8">
           <div className="flex flex-col gap-2">
-            <span className="text-ink/60 text-xs font-bold tracking-[0.08em] uppercase">{t('month')}</span>
+            <span className="text-ink/60 type-caption">{t('month')}</span>
             <span aria-live="polite" className="font-display text-[clamp(4.5rem,11vw,9rem)] leading-[0.8] font-black tabular-nums">
               {euros(month)}
             </span>
           </div>
           <div className="flex flex-col gap-2 pb-2">
-            <span className="text-ink/60 text-xs font-bold tracking-[0.08em] uppercase">{t('year')}</span>
+            <span className="text-ink/60 type-caption">{t('year')}</span>
             <span className="font-display text-display-m leading-none font-black tabular-nums">{euros(year)}</span>
           </div>
         </div>

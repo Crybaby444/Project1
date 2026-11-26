@@ -4,6 +4,7 @@ import type { BookingView } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
 import { useMoney } from '@/lib/deals/money';
 import { FeeLine } from './FeeLine';
+import { Sheet } from '@/components/ui/Sheet';
 
 type DepositState = 'none' | 'pending' | 'frozen' | 'refunded' | 'toOwner' | 'refundedAll';
 
@@ -34,8 +35,8 @@ export function DealSummary({ booking }: { booking: BookingView }) {
   const deposit = depositState(booking);
 
   return (
-    <section aria-labelledby="deal-money" className="sheet border-ink/15 rounded-media border p-5 sm:p-6 flex flex-col gap-3">
-      <h2 id="deal-money" className="font-display text-4xl leading-[0.95] font-black uppercase">
+    <Sheet aria-labelledby="deal-money" className="flex flex-col gap-3">
+      <h2 id="deal-money" className="type-block">
         {t('title')}
       </h2>
       <dl className="flex flex-col gap-2 text-base">
@@ -65,6 +66,6 @@ export function DealSummary({ booking }: { booking: BookingView }) {
         )}
       </dl>
       {booking.paymentMethod && <p className="text-sm">{t('paidBy', { method: t(booking.paymentMethod) })}</p>}
-    </section>
+    </Sheet>
   );
 }

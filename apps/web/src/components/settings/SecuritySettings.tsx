@@ -40,7 +40,7 @@ export function SecuritySettings({ user }: { user: PublicUser }) {
   const tf = useTranslations('twoFactor');
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="stack-sheets">
       <SettingsSection title={t('password.title')}>
         {user.hasPassword ? (
           <ChangePasswordForm />

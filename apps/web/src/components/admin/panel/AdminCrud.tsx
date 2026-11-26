@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useId, useState, type ReactNode } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Dialog } from '@/components/ui/Dialog';
-import { INPUT_CLASS } from '@/components/ui/inputs';
+import { INPUT_CLASS, TEXTAREA_CLASS } from '@/components/ui/inputs';
 import { useToast } from '@/components/ui/Toast';
 import { useRouter } from '@/i18n/navigation';
 import { useAdminCrud } from '@/lib/admin/queries';
@@ -45,7 +45,7 @@ function TextField({
           onChange={(e) => onChange(e.target.value)}
           rows={3}
           maxLength={500}
-          className={`${INPUT_CLASS} min-h-24 rounded-[22px] py-2.5`}
+          className={TEXTAREA_CLASS}
         />
       ) : (
         <input

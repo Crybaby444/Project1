@@ -8,7 +8,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Mark } from '@/components/brand/Mark';
 import { TransitionLink } from '@/components/motion/TransitionLink';
 import { Button } from '@/components/ui/Button';
-import { displayFit } from '@/lib/display-fit';
 import { formatMoment, formatPeriod } from '@/lib/deals/dates';
 import { useDeal, useDealHistory, useRefreshAfterDeal } from '@/lib/deals/queries';
 import { useErrorText } from '@/lib/forms/error-text';
@@ -20,6 +19,8 @@ import { DealStatusBadge } from './DealStatusBadge';
 import { DealSummary } from './DealSummary';
 import { DealTimeline } from './DealTimeline';
 import { DealReviewsPanel } from '@/components/reviews/DealReviewsPanel';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Sheet } from '@/components/ui/Sheet';
 
 /** Answers that mean "the deal moved on while you were looking": read it again and say so. */
 const MOVED = new Set(['DEADLINE_PASSED', 'ACTION_NOT_ALLOWED', 'INVALID_STATUS', 'IDEMPOTENCY_KEY_REUSED']);
@@ -44,12 +45,12 @@ export function DealCover({ booking, size }: { booking: Pick<BookingView, 'id' |
   );
 }
 
-function Panel({ title, tone = '', children }: { title: string; tone?: string; children: React.ReactNode }) {
+function Panel({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className={`sheet border-ink/15 rounded-media flex flex-col gap-2 border p-5 sm:p-6 ${tone}`}>
-      <h2 className="text-sm font-bold tracking-[0.03em] uppercase">{title}</h2>
+    <Sheet className="flex flex-col gap-2">
+      <h2 className="type-label text-ink/70">{title}</h2>
       {children}
-    </section>
+    </Sheet>
   );
 }
 
@@ -113,12 +114,12 @@ export function DealView({ id }: { id: string }) {
     return missing ? (
       <section role="alert" className="flex flex-col items-center gap-4 px-6 py-14 text-center">
         <Mark size={80} string={false} className="animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
-        <h1 className="font-display text-display-l leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{t('notFound')}</h1>
+        <h1 className="type-title hyphens-auto [overflow-wrap:anywhere]">{t('notFound')}</h1>
         <p className="max-w-lead">{t('notFoundBody')}</p>
         <Button href="/bookings">{t('back')}</Button>
       </section>
     ) : (
-      <div role="alert" className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6">
+      <div role="alert" className="sheet border-ink/15 rounded-media flex flex-col items-start gap-3 border p-5 sm:p-6">
         <p className="font-bold">{t('loadFailed')}</p>
         <p>{errorText(deal.error)}</p>
         <Button variant="ghost" onClick={() => void deal.refetch()}>
@@ -141,20 +142,19 @@ export function DealView({ id }: { id: string }) {
   const closed = ['COMPLETED', 'DECLINED', 'EXPIRED', 'CANCELLED'].includes(booking.status);
 
   return (
-    <div className="flex flex-col gap-8" data-deal={booking.id} data-deal-status={booking.status}>
+    <div className="stack-page" data-deal={booking.id} data-deal-status={booking.status}>
       <p className="sr-only" role="status" aria-live="polite">
         {announce}
       </p>
-      <TransitionLink href="/bookings" className="rounded-pill ease-yoyo -ml-1 inline-flex min-h-10 items-center gap-2 self-start px-2 text-sm font-bold transition-transform duration-150 hover:-translate-x-0.5">
-        <span aria-hidden="true">←</span> {t('back')}
-      </TransitionLink>
-
-      <header className="flex flex-col gap-5 sm:flex-row sm:items-center">
-        <DealCover booking={booking} size="page" />
-        <div className="@container flex min-w-0 flex-1 flex-col gap-3">
-          <h1 style={displayFit(title, { max: '3rem' })} className="font-display text-display-fit leading-[0.9] font-black uppercase [overflow-wrap:anywhere]">
-            {title}
-          </h1>
+      <PageHeader
+        title={title}
+        crumbs={
+          <TransitionLink href="/bookings" className="rounded-pill ease-yoyo -ml-2 inline-flex min-h-10 items-center gap-2 self-start px-2 text-sm font-bold transition-transform duration-150 hover:-translate-x-0.5">
+            <span aria-hidden="true">←</span> {t('back')}
+          </TransitionLink>
+        }
+        media={<DealCover booking={booking} size="page" />}
+        meta={
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-base">
             <DealStatusBadge status={booking.status} />
             {!closed && (
@@ -170,11 +170,11 @@ export function DealView({ id }: { id: string }) {
               {t('period', { period: formatPeriod(booking.period.start, booking.period.end, locale), days: booking.quote.days })}
             </span>
           </div>
-        </div>
-      </header>
+        }
+      />
 
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_24rem]">
-        <div className="flex min-w-0 flex-col gap-6">
+      <div className="layout-split">
+        <div className="stack-sheets min-w-0">
           <DealTimeline booking={booking} history={history.data ?? []} onDeadline={reload} />
           <DealChat booking={booking} />
           {booking.message && (
@@ -199,8 +199,8 @@ export function DealView({ id }: { id: string }) {
             </Panel>
           )}
           {booking.dispute && (
-            <section className="sheet rounded-media flex flex-col gap-2 border-2 border-[var(--danger)] p-5 sm:p-6" data-dispute="">
-              <h2 className="text-sm font-bold tracking-[0.03em] uppercase">
+            <Sheet tone="danger" className="flex flex-col gap-2" data-dispute="">
+              <h2 className="type-label">
                 {t('dispute.title')} · {t(`dispute.reason.${booking.dispute.reason}`)}
               </h2>
               {booking.dispute.note && <p className="[overflow-wrap:anywhere] whitespace-pre-line">{booking.dispute.note}</p>}
@@ -214,7 +214,7 @@ export function DealView({ id }: { id: string }) {
               ) : (
                 <p className="text-sm font-bold">{t('dispute.waiting')}</p>
               )}
-            </section>
+            </Sheet>
           )}
           <DealPhotos booking={booking} />
           {booking.status === 'COMPLETED' && booking.viewerRole !== 'ADMIN' && (
@@ -224,9 +224,9 @@ export function DealView({ id }: { id: string }) {
 
         {/* On a phone the step to take comes first, right under the header (audit 2026-11-14): the aside
             dissolves into the grid and its first panel moves to the top; the rest follows the timeline. */}
-        <aside className="flex flex-col gap-6 max-lg:contents lg:sticky lg:top-24">
-          <section aria-labelledby="deal-turn" className={`sheet rounded-media flex flex-col gap-3 border p-5 max-lg:order-first sm:p-6 ${myTurn && !closed ? 'border-ink border-2' : 'border-ink/15'}`}>
-            <h2 id="deal-turn" className="text-sm font-bold tracking-[0.03em] uppercase">
+        <aside className="stack-sheets max-lg:contents lg:sticky lg:top-24">
+          <Sheet aria-labelledby="deal-turn" tone={myTurn && !closed ? 'ring' : 'quiet'} className="flex flex-col gap-3 max-lg:order-first">
+            <h2 id="deal-turn" className="type-label">
               {closed ? t('closedTitle') : myTurn ? t('yourTurn') : t('theirTurn')}
             </h2>
             {notice && (
@@ -245,7 +245,7 @@ export function DealView({ id }: { id: string }) {
             ) : (
               <p className="text-sm">{t('nothingToDo')}</p>
             )}
-          </section>
+          </Sheet>
           <ContractCard booking={booking} />
           <DealSummary booking={booking} />
         </aside>

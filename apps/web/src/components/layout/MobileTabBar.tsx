@@ -58,7 +58,7 @@ export function MobileTabBar({ roots }: { roots: MenuRoot[] }) {
       <nav
         aria-label={t('tabs')}
         data-tab-bar=""
-        className={`border-ink/10 bg-canvas/90 fixed inset-x-3 bottom-[max(10px,env(safe-area-inset-bottom))] z-30 flex items-stretch rounded-[26px] border px-1 shadow-[0_18px_40px_-18px_rgba(10,11,14,0.45)] backdrop-blur-xl lg:hidden`}
+        className={`border-ink/10 bg-canvas/90 fixed inset-x-4 bottom-[max(10px,env(safe-area-inset-bottom))] z-30 flex items-stretch rounded-float border px-1 shadow-[0_18px_40px_-18px_rgba(10,11,14,0.45)] backdrop-blur-xl lg:hidden`}
       >
         <Tab href="/" label={t('home')} active={at('/')}>
           <svg viewBox="0 0 24 24" aria-hidden="true" className={icon}>
@@ -109,7 +109,7 @@ export function MobileTabBar({ roots }: { roots: MenuRoot[] }) {
         <div className="flex flex-col gap-5 px-5 pt-3 pb-[max(24px,env(safe-area-inset-bottom))]">
           <span aria-hidden="true" className="bg-ink/20 mx-auto h-1.5 w-12 rounded-full" />
           <div className="flex items-center justify-between">
-            <span className="font-display text-4xl leading-none font-black uppercase">{t('catalog')}</span>
+            <span className="type-section">{t('catalog')}</span>
             <button type="button" aria-label={t('close')} onClick={() => setSheet(false)} className="bg-ink/[0.06] rounded-pill inline-grid size-10 place-items-center">
               <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5">
                 <path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />

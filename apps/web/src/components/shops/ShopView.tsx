@@ -5,6 +5,7 @@ import { ListingCard } from '@/components/catalog/ListingCard';
 import { MessageOwnerButton } from '@/components/chat/MessageOwnerButton';
 import { FollowButton } from '@/components/people/FollowButton';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { Link } from '@/i18n/navigation';
 import { useShop } from '@/lib/shops/queries';
 
@@ -16,23 +17,28 @@ export function ShopView({ id }: { id: string }) {
   if (shop.isError || !shop.data) return <EmptyState title={t('notFound')} />;
   const { shop: s, owner, items } = shop.data;
   return (
-    <div className="flex flex-col gap-8">
-      <header className="flex flex-col gap-4">
-        <Link href={`/u/${owner.id}`} className="text-base font-bold underline-offset-4 hover:underline">
-          {owner.name}
-          {owner.username && owner.name !== `@${owner.username}` && <span className="text-ink/70 font-semibold"> · @{owner.username}</span>}
-        </Link>
-        <h1 className="font-display text-display-xl leading-[0.9] font-black uppercase [overflow-wrap:anywhere]">{s.name}</h1>
-        {s.about && <p className="max-w-read text-lg leading-relaxed whitespace-pre-line">{s.about}</p>}
-        <div className="flex flex-wrap gap-3">
-          <FollowButton userId={owner.id} name={owner.name} />
-          <MessageOwnerButton ownerId={owner.id} label={t('write')} size="md" />
-        </div>
-      </header>
+    <div className="stack-page">
+      <PageHeader
+        title={s.name}
+        count={items.length}
+        crumbs={
+          <Link href={`/u/${owner.id}`} className="self-start text-base font-bold underline-offset-4 hover:underline">
+            {owner.name}
+            {owner.username && owner.name !== `@${owner.username}` && <span className="text-ink/70 font-semibold"> · @{owner.username}</span>}
+          </Link>
+        }
+        intro={s.about ? <span className="whitespace-pre-line">{s.about}</span> : undefined}
+        action={
+          <>
+            <FollowButton userId={owner.id} name={owner.name} />
+            <MessageOwnerButton ownerId={owner.id} label={t('write')} size="md" />
+          </>
+        }
+      />
       {items.length === 0 ? (
         <EmptyState headingLevel={2} title={t('emptyShop')} />
       ) : (
-        <ul className="grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-4 lg:grid-cols-4">
+        <ul className="grid-cards">
           {items.map((item, i) => (
             <li key={item.id}>
               <ListingCard item={item} eager={i < 4} />

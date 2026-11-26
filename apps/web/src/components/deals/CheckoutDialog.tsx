@@ -117,7 +117,7 @@ export function CheckoutDialog({ booking, open, onClose }: { booking: BookingVie
         </dl>
 
         <fieldset className="flex flex-col gap-2" aria-describedby={`${groupId}-hint`}>
-          <legend className="mb-2 text-sm font-bold tracking-[0.03em] uppercase">{t('method')}</legend>
+          <legend className="mb-2 type-label">{t('method')}</legend>
           {(['WALLET', 'CARD'] as const).map((value) => (
             <label
               key={value}

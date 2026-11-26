@@ -44,7 +44,7 @@ function Swatch({ name, token, hex }: { name: string; token: string; hex?: strin
     <div className="flex items-center gap-3">
       <span
         aria-hidden="true"
-        className="rounded-card border-ink size-12 shrink-0 border"
+        className="rounded-media border-ink size-12 shrink-0 border"
         style={{ background: `var(${token})` }}
       />
       <span className="flex flex-col">
@@ -64,12 +64,12 @@ export default async function StyleguidePage({ params }: { params: Promise<{ loc
   return (
     // The style guide's texts are left out of the site-wide provider (i18n/client-messages.ts).
     <NextIntlClientProvider messages={await getMessages()}>
-      <main className="page flex flex-col gap-14 pt-12 pb-16">
+      <main className="page page-y stack-page">
         <header className="@container flex flex-col items-start gap-5">
           <Mark size={48} />
           <h1
-            style={displayFit(t('title'), { max: '5rem' })}
-            className="font-display text-display-fit leading-[0.85] font-black uppercase"
+            style={displayFit(t('title'), { min: '1.75rem', max: 'var(--text-display-l)' })}
+            className="font-display text-display-fit leading-[0.88] font-black uppercase"
           >
             {t('title')}
           </h1>
@@ -79,13 +79,13 @@ export default async function StyleguidePage({ params }: { params: Promise<{ loc
 
         <Section title={t('colors')}>
           <h3 className="text-2xl font-bold">{t('surfaces')}</h3>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid-tiles">
             {SURFACES.map(([name, token]) => (
               <Swatch key={token} name={name} token={token} />
             ))}
           </div>
           <h3 className="text-2xl font-bold">{t('stickers')}</h3>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid-tiles">
             {STICKER_SWATCHES.map(([name, token, hex]) => (
               <Swatch key={token} name={name} token={token} hex={hex} />
             ))}
@@ -95,28 +95,43 @@ export default async function StyleguidePage({ params }: { params: Promise<{ loc
         <Section title={t('typography')}>
           <div className="flex flex-col gap-6">
             <div>
-              <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('display')}</p>
+              <p className="type-caption">{t('display')}</p>
               <p className="text-[clamp(4rem,18vw,12.5rem)]">
                 <Wordmark />
               </p>
             </div>
-            <div>
-              <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('heading')} · 64 / 30 / 24</p>
-              <p className="text-display-l leading-none font-bold">{t('headingSample')}</p>
-              <p className="mt-2 text-3xl leading-tight font-bold">{t('headingSample')}</p>
-              <p className="mt-1 text-2xl leading-tight font-bold">{t('headingSample')}</p>
+            {/* The four heading roles of DESIGN.md "Type", named by place; token names are shown as-is. */}
+            <div className="flex flex-col gap-4">
+              <p className="type-caption text-ink/70">{t('heading')}</p>
+              {(
+                [
+                  ['type-hero', '48 → 96'],
+                  ['type-title', '40 → 64'],
+                  ['type-section', '32 → 46'],
+                  ['type-block', '26 → 34'],
+                ] as const
+              ).map(([role, size]) => (
+                <div key={role} className="flex flex-col gap-1">
+                  <p className="type-caption text-ink/70 tabular-nums">
+                    {role} · {size}px
+                  </p>
+                  <p className={role}>{t('headingSample')}</p>
+                </div>
+              ))}
+              <p className="type-caption text-ink/70">type-label · 14px</p>
+              <p className="type-label">{t('headingSample')}</p>
             </div>
             <div>
-              <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('body')} · 16 / 15</p>
+              <p className="type-caption">{t('body')} · 16 / 15</p>
               <p className="max-w-read text-base leading-relaxed">{t('cardStaticBody')}</p>
               <p className="max-w-read text-base leading-relaxed">{t('cardInteractiveBody')}</p>
             </div>
             <div>
-              <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('caption')} · 12</p>
-              <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('marqueeItem4')}</p>
+              <p className="type-caption">{t('caption')} · 12</p>
+              <p className="type-caption">{t('marqueeItem4')}</p>
             </div>
             <div className="flex flex-col gap-3">
-              <p className="text-xs font-bold tracking-[0.032em] uppercase">{t('languages')}</p>
+              <p className="type-caption">{t('languages')}</p>
               {SAMPLES.map(([lang, text]) => (
                 <div key={lang} lang={lang} className="flex flex-col gap-1">
                   <p className="font-display text-2xl leading-tight font-black">{text}</p>

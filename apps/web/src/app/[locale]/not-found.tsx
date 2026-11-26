@@ -14,7 +14,7 @@ export default function NotFound() {
       >
         404
       </p>
-      <h1 className="font-display text-display-l leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]">{t('title')}</h1>
+      <h1 className="type-title hyphens-auto [overflow-wrap:anywhere]">{t('title')}</h1>
       <p className="max-w-lead leading-relaxed">{t('body')}</p>
       <Button href="/">{t('back')}</Button>
     </main>

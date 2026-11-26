@@ -49,18 +49,19 @@ export function RecentlyViewed({ except }: { except?: string }) {
 
   if (items.length === 0) return null;
   return (
-    <section aria-labelledby="recently-viewed" className="flex flex-col gap-4">
-      <div className="flex items-baseline justify-between gap-4">
-        <h2 id="recently-viewed" className="font-display text-display-s leading-none font-black uppercase">
+    <section aria-labelledby="recently-viewed" className="stack-section">
+      <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
+        <h2 id="recently-viewed" className="type-section">
           {t('title')}
         </h2>
         <button type="button" onClick={forgetViewed} className="min-h-10 text-sm font-bold underline decoration-1 underline-offset-4">
           {t('clear')}
         </button>
       </div>
-      <ul className="-mx-4 flex snap-x scroll-px-4 gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0">
+      {/* A strip that scrolls sideways on a phone; from sm up the page's card grid, like the cards above it. */}
+      <ul className="-mx-4 flex snap-x scroll-px-4 gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-x-4 sm:gap-y-8 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4">
         {items.map((item) => (
-          <li key={item.id} className="w-[min(46vw,240px)] shrink-0 snap-start">
+          <li key={item.id} className="w-[min(46vw,240px)] shrink-0 snap-start sm:w-auto">
             <ListingCard item={item} />
           </li>
         ))}

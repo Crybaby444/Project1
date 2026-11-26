@@ -14,6 +14,7 @@ import { useWallet, useWalletHistory } from '@/lib/deals/queries';
 import { useErrorText } from '@/lib/forms/error-text';
 import { MoneyDialog, type MoneyMode } from './MoneyDialog';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { Sheet } from '@/components/ui/Sheet';
 import { PageHeader } from '@/components/ui/PageHeader';
 
 type Tile = { key: 'available' | 'deposits' | 'incoming' | 'earned'; cents: number; hint?: string };
@@ -75,8 +76,8 @@ function History() {
   }
 
   return (
-    <section aria-labelledby="wallet-history" className="flex flex-col gap-4">
-      <h2 id="wallet-history" className="font-display text-display-s leading-[0.95] font-black uppercase">
+    <section aria-labelledby="wallet-history" className="stack-section">
+      <h2 id="wallet-history" className="type-section">
         {t('history')}
       </h2>
       <div
@@ -105,7 +106,7 @@ function History() {
       ) : query.isError ? (
         <div
           role="alert"
-          className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6"
+          className="sheet border-ink/15 rounded-media flex flex-col items-start gap-3 border p-5 sm:p-6"
         >
           <p className="font-bold">{t('loadFailed')}</p>
           <p>{errorText(query.error)}</p>
@@ -117,13 +118,14 @@ function History() {
         <EmptyState headingLevel={3} title={kind === 'ALL' ? t('emptyAll') : t('empty')} />
       ) : (
         <>
-          <ul className="border-ink/15 divide-ink/15 flex flex-col divide-y border-y" data-ledger="">
+          <Sheet as="div" pad="none" className="overflow-hidden">
+          <ul className="divide-ink/10 flex flex-col divide-y" data-ledger="">
             {query.data.items.map((item) => {
               const incoming = item.amountCents > 0;
               return (
                 <li
                   key={`${item.id}-${item.amountCents}`}
-                  className="flex flex-wrap items-center gap-x-4 gap-y-1 py-4"
+                  className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-4 sm:px-5"
                   data-ledger-kind={item.kind}
                 >
                   <span
@@ -169,6 +171,7 @@ function History() {
               );
             })}
           </ul>
+          </Sheet>
           {pages > 1 && (
             <nav
               aria-label={t('page', { page, pages })}
@@ -200,24 +203,23 @@ export function WalletView() {
   const [mode, setMode] = useState<MoneyMode | null>(null);
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="stack-page">
       <PageHeader
         title={t('title')}
         intro={t('intro')}
         action={
-          <div className="flex flex-wrap gap-3">
-            <Button size="lg" onClick={() => setMode('topUp')} disabled={!wallet.data}>
+          <>
+            <Button onClick={() => setMode('topUp')} disabled={!wallet.data}>
               {t('topUp')}
             </Button>
             <Button
-              size="lg"
               variant="ghost"
               onClick={() => setMode('withdraw')}
               disabled={!wallet.data || wallet.data.balanceCents === 0}
             >
               {t('withdraw')}
             </Button>
-          </div>
+          </>
         }
       />
 
@@ -230,7 +232,7 @@ export function WalletView() {
       ) : wallet.isError ? (
         <div
           role="alert"
-          className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6"
+          className="sheet border-ink/15 rounded-media flex flex-col items-start gap-3 border p-5 sm:p-6"
         >
           <p className="font-bold">{t('loadFailed')}</p>
           <p>{errorText(wallet.error)}</p>

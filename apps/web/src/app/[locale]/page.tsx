@@ -2,7 +2,6 @@ import type { Locale } from '@yoyo/shared';
 import { ForYou } from '@/components/market/ForYou';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { ListingCard } from '@/components/catalog/ListingCard';
 import { RecentlyViewed } from '@/components/catalog/RecentlyViewed';
 import { HomeFaq } from '@/components/market/HomeFaq';
 import { HomeSearch } from '@/components/market/HomeSearch';
@@ -112,7 +111,7 @@ export default async function HomePage({ params }: Params) {
                     <span className="bg-canvas h-[3px] w-6 rounded-full" />
                   </span>
                   <span className="flex flex-col gap-2">
-                    <span className="font-display text-display-s leading-[0.9] font-black uppercase">{t('fresh.spot.title')}</span>
+                    <span className="type-block">{t('fresh.spot.title')}</span>
                     <span className="text-ink/75 max-w-[36ch] text-base leading-relaxed">{t('fresh.spot.body')}</span>
                     <span className="mt-2 inline-flex items-center gap-2 text-base font-bold underline decoration-1 underline-offset-4">{t('fresh.spot.cta')}</span>
                   </span>
