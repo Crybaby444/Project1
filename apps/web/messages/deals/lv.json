@@ -321,8 +321,8 @@
       "total": "Kopā jāmaksā",
       "empty": "Izvēlieties dienas, lai redzētu cenu.",
       "depositNote": "Drošības nauda atgriežas pilnībā, kad īpašnieks apstiprina, ka viss kārtībā.",
-      "feePromo": "Maksa {percent}% līdz {date}",
-      "feePromoLabel": "Starta piedāvājums: servisa maksa ir {percent}% pieprasījumiem, kas nosūtīti līdz {date}.",
+      "feePromo": "Bez maksas līdz {date}",
+      "feePromoLabel": "Jūsu pirmais mēnesis Yoyo: bez servisa maksas pieprasījumiem, kas nosūtīti līdz {date}.",
       "feeName": "Servisa maksa"
     },
     "shareLink": "Rezervācijas saite",

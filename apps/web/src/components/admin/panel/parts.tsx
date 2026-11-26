@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useId, type ReactNode } from 'react';
 import { Select, type SelectOption } from '@/components/ui/Select';
+import { useCountUp } from '@/lib/motion/use-count-up';
 
 /** Admin tables: hairline rows, small caps headers, numbers in tabular figures. */
 export const TABLE_CLASS = 'w-full min-w-[720px] border-collapse text-left text-base';
@@ -42,7 +43,7 @@ export function Pager({ page, pages, onPage }: { page: number; pages: number; on
 /** A titled block of the deal page and the money page. */
 export function Panel({ title, children, className = '' }: { title: string; children: ReactNode; className?: string }) {
   return (
-    <section className={`border-ink/15 rounded-media flex flex-col gap-4 border p-5 sm:p-6 ${className}`}>
+    <section className={`admin-glass border-ink/15 rounded-media flex flex-col gap-4 border p-5 sm:p-6 ${className}`}>
       <h2 className="text-ink/70 text-sm font-bold tracking-[0.04em] uppercase">{title}</h2>
       {children}
     </section>
@@ -77,6 +78,28 @@ export function AdminSelect({
         {label}
       </label>
       <Select id={id} value={value} options={options} onChange={onChange} disabled={disabled} className={className} />
+    </div>
+  );
+}
+
+/** A whole number (or, with `format`, money or a percentage) that counts up as it arrives. */
+export function CountUp({ value, format }: { value: number; format?: (n: number) => string }) {
+  const shown = Math.round(useCountUp(value));
+  return <>{format ? format(shown) : shown}</>;
+}
+
+/** One figure of a page's summary row: its name, the figure, a note or two, and room for a small drawing. */
+export function StatCard({ label, value, notes = [], children }: { label: string; value: ReactNode; notes?: string[]; children?: ReactNode }) {
+  return (
+    <div className="admin-glass border-ink/15 rounded-media flex flex-col gap-1 border p-5">
+      <dt className="text-ink/70 text-sm font-semibold">{label}</dt>
+      <dd className="font-display text-display-m leading-none font-black tabular-nums">{value}</dd>
+      {notes.map((note) => (
+        <dd key={note} className="text-ink/70 text-sm">
+          {note}
+        </dd>
+      ))}
+      {children && <dd className="mt-auto pt-3">{children}</dd>}
     </div>
   );
 }

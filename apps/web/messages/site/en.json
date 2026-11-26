@@ -294,7 +294,7 @@
         "items": {
           "cost": {
             "q": "How much does Yoyo cost?",
-            "a": "Creating an account and listing items is free. When online payments are live, the renter pays a 10% service fee on top of the rent. Owners pay no fee."
+            "a": "Creating an account and listing items is free. When online payments are live, the renter pays a 10% service fee on top of the rent. Owners pay no fee. In the first 30 days after you sign up, you pay no service fee."
           },
           "payNow": {
             "q": "Can I already pay through Yoyo?",

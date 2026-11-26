@@ -83,8 +83,8 @@ test('catalog → search with suggestions → filter → item → calculator →
   await expect(page.getByRole('heading', { level: 1, name: drill.title })).toBeVisible();
   await expect(page.locator('[data-range-status]')).toHaveText(book.pickStart);
 
-  // 7 days at 15 € with 10 % off for a week: 94.50 rent, the fee in force (10 % unless a launch offer
-  // runs, from the booking terms) and the 50 € deposit, as the domain's quote computes it.
+  // 7 days at 15 € with 10 % off for a week: 94.50 rent, the fee in force (10 %: the specs turn a new account's
+  // free month off; from the booking terms) and the 50 € deposit, as the domain's quote computes it.
   await pickPeriod(page, dayFromToday(2), dayFromToday(8));
   await expect(page.locator('[data-range-status]')).toContainText('7 days');
   const terms = (await (await page.request.get(`/api/v1/listings/${drill.id}/booking-terms`)).json()) as { servicePercent: number };

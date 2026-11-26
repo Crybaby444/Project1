@@ -19,12 +19,14 @@ export const SETTING_DEFAULTS = {
   'booking.damageReplyHours': 48,
   /** How long after a closed deal both sides may leave a review. */
   'review.windowDays': 14,
-  /** Service fee paid by the renter, in percent of the rental price (outside the launch offer). */
+  /** Service fee paid by the renter, in percent of the rental price. */
   'fees.servicePercent': 10,
-  /** The fee during the launch offer, in percent (owner's decision of 2026-11-06: 0 % for 3 months). */
-  'fees.promoServicePercent': 0,
-  /** The launch offer's last day (`YYYY-MM-DD`, where the item is); empty: no offer. */
-  'fees.promoServiceUntil': '',
+  /** A new account's first days without the fee (owner, 2026-11-26: the first month after sign-up); 0: off. */
+  'fees.welcomeDays': 30,
+  /** From this deposit (euros) a deal is high-value: the renter confirms phone and identity first. */
+  'checks.highValueDepositEur': 300,
+  /** From this rent (euros) a deal is high-value too. */
+  'checks.highValueRentEur': 500,
 } as const;
 
 export type SettingKey = keyof typeof SETTING_DEFAULTS;

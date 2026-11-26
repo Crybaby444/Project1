@@ -247,12 +247,14 @@ export const BookingTermsSchema = z.object({
     minDays: z.number().int(),
     maxDays: z.number().int(),
   }),
-  /** The fee percent a request sent now pays (the launch offer's while it lasts). */
+  /** The fee percent a request sent now pays, for a visitor (a new account's first days pay 0, see below). */
   servicePercent: z.number().int(),
-  /** The launch offer's last day while it lasts, otherwise null. */
+  /** The last fee-free day, when the price is for someone in their free first days; otherwise null. */
   servicePromoUntil: LocalDateSchema.nullable(),
-  /** The fee after the launch offer. */
+  /** The regular fee. */
   regularServicePercent: z.number().int(),
+  /** A new account's first days without the fee (0: none); the browser checks them against the signed-in renter. */
+  welcomeFeeDays: z.number().int(),
   /** The latest first day of a request, counted from `today`. */
   maxAdvanceDays: z.number().int(),
   timeZone: z.string(),

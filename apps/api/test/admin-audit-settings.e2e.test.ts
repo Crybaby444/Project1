@@ -45,7 +45,7 @@ describe('admin: audit log and platform settings', () => {
     expect(all.find((s: { key: string }) => s.key === 'review.windowDays')).toMatchObject({ value: 14, default: 14, changed: false });
     await admin.put('/admin/settings').send({ 'fees.servicePercent': 12, 'review.windowDays': 21 }).expect(200);
     await admin.put('/admin/settings').send({ 'booking.requestTtlHours': 0 }).expect(400);
-    await admin.put('/admin/settings').send({ 'fees.promoServiceUntil': 'tomorrow' }).expect(400);
+    await admin.put('/admin/settings').send({ 'fees.welcomeDays': -1 }).expect(400);
     const after = (await admin.get('/admin/settings').expect(200)).body.items;
     expect(after.find((s: { key: string }) => s.key === 'fees.servicePercent')).toMatchObject({ value: 12, changed: true });
     // The deal rules use the new value at once.

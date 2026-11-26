@@ -3051,6 +3051,7 @@ export interface components {
             servicePercent: number;
             servicePromoUntil: string | null;
             regularServicePercent: number;
+            welcomeFeeDays: number;
             maxAdvanceDays: number;
             timeZone: string;
             today: string;
@@ -4229,8 +4230,9 @@ export interface components {
             "booking.maxAdvanceDays"?: number;
             "review.windowDays"?: number;
             "fees.servicePercent"?: number;
-            "fees.promoServicePercent"?: number;
-            "fees.promoServiceUntil"?: "" | string;
+            "fees.welcomeDays"?: number;
+            "checks.highValueDepositEur"?: number;
+            "checks.highValueRentEur"?: number;
         };
         AdminUserDetailDto_Output: {
             user: {

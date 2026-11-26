@@ -11,7 +11,7 @@ import { formatEuros } from '@/lib/listings/money';
 /**
  * The booking side of the item page (spec §4.2): the price a day, the weekly discount, the deposit and
  * how long it can be rented, then the deal screens' booking panel (plan 8b: the calendar, the price from
- * the domain rules with the launch offer, the request with an Idempotency-Key). On a phone a bar at the
+ * the domain rules with a new account's free first month, the request with an Idempotency-Key). On a phone a bar at the
  * bottom of the screen («from €15 a day · Choose dates») leads to it until the panel itself is in view.
  */
 export function BookingPanel({ item }: { item: AvailableItem }) {

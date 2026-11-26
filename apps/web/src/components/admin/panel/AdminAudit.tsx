@@ -65,9 +65,9 @@ export function AdminAudit() {
           </Button>
         </div>
       ) : log.data.items.length === 0 ? (
-        <p className="border-ink/15 rounded-media border px-5 py-10 text-center">{ta('empty')}</p>
+        <p className="admin-glass border-ink/15 rounded-media border px-5 py-10 text-center">{ta('empty')}</p>
       ) : (
-        <ol className="border-ink/15 divide-ink/10 rounded-media divide-y border">
+        <ol className="admin-glass border-ink/15 divide-ink/10 rounded-media divide-y border">
           {log.data.items.map((e) => {
             const href = targetHref(e);
             const hasDiff = e.before != null || e.after != null;

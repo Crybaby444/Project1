@@ -10,24 +10,32 @@ export const SETTING_KEY_OF: Record<keyof BookingSettings, SettingKey> = {
   inspectionHours: 'booking.inspectionHours',
   damageReplyHours: 'booking.damageReplyHours',
   servicePercent: 'fees.servicePercent',
-  promoServicePercent: 'fees.promoServicePercent',
-  promoServiceUntil: 'fees.promoServiceUntil',
+  welcomeFeeDays: 'fees.welcomeDays',
+  highValueDepositCents: 'checks.highValueDepositEur',
+  highValueRentCents: 'checks.highValueRentEur',
   maxAdvanceDays: 'booking.maxAdvanceDays',
   reviewWindowDays: 'review.windowDays',
 };
 
-/** The fee settings from the environment (FEE_PERCENT, FEE_PROMO_PERCENT, FEE_PROMO_UNTIL), over the domain defaults. */
-export function feeSettingsFromEnv(env: { FEE_PERCENT?: number | undefined; FEE_PROMO_PERCENT?: number | undefined; FEE_PROMO_UNTIL?: string | undefined }): BookingSettings {
+/** The fee settings from the environment (FEE_PERCENT, FEE_WELCOME_DAYS), over the domain defaults. */
+export function feeSettingsFromEnv(env: { FEE_PERCENT?: number | undefined; FEE_WELCOME_DAYS?: number | undefined }): BookingSettings {
   return Object.freeze({
     ...DEFAULT_BOOKING_SETTINGS,
     ...(env.FEE_PERCENT !== undefined && { servicePercent: env.FEE_PERCENT }),
-    ...(env.FEE_PROMO_PERCENT !== undefined && { promoServicePercent: env.FEE_PROMO_PERCENT }),
-    ...(env.FEE_PROMO_UNTIL !== undefined && { promoServiceUntil: env.FEE_PROMO_UNTIL as BookingSettings['promoServiceUntil'] }),
+    ...(env.FEE_WELCOME_DAYS !== undefined && { welcomeFeeDays: env.FEE_WELCOME_DAYS }),
   });
 }
 
-/** A stored value as the domain field takes it: the launch offer's last day is stored as '' for "none". */
-const fieldValue = (field: keyof BookingSettings, value: unknown) => (field === 'promoServiceUntil' && value === '' ? null : value);
+/** The thresholds are stored in whole euros (what an administrator types) and used in cents. */
+const IN_EUROS: readonly (keyof BookingSettings)[] = ['highValueDepositCents', 'highValueRentCents'];
+
+/** A stored value as the domain field takes it. */
+export const fieldValue = (field: keyof BookingSettings, value: unknown) =>
+  IN_EUROS.includes(field) && typeof value === 'number' ? value * 100 : value;
+
+/** A domain value as it is stored and shown to an administrator. */
+export const storedValue = (field: keyof BookingSettings, value: unknown) =>
+  IN_EUROS.includes(field) && typeof value === 'number' ? Math.round(value / 100) : value;
 
 /**
  * The deal rules' settings from stored values over `base` (the domain defaults, with the fee from the

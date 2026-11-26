@@ -96,7 +96,7 @@ const en: LegalDoc = {
         },
         {
           list: [
-            'The renter pays the rent for the chosen days plus a service fee of 10% of the rent. The owner pays no fee.',
+            'The renter pays the rent for the chosen days plus a service fee of 10% of the rent. Requests sent in the first 30 days after the renter signs up carry no service fee. The owner pays no fee.',
             'The deposit is frozen for the rental and is not paid to the owner while the rental runs.',
             'The rent is released to the owner once both sides confirm the handover; the service fee goes to Yoyo at the same moment.',
             'Refunds and payouts go back the way the money came in.',
@@ -310,7 +310,7 @@ const lv: LegalDoc = {
         },
         {
           list: [
-            'Nomnieks maksā nomu par izvēlētajām dienām un servisa maksu 10% apmērā no nomas. Īpašnieks maksu nemaksā.',
+            'Nomnieks maksā nomu par izvēlētajām dienām un servisa maksu 10% apmērā no nomas. Pieprasījumiem, kas nosūtīti pirmajās 30 dienās pēc nomnieka reģistrācijas, servisa maksas nav. Īpašnieks maksu nemaksā.',
             'Depozīts nomas laikā ir iesaldēts un netiek izmaksāts īpašniekam, kamēr noma turpinās.',
             'Nomas maksu īpašnieks saņem, kad abas puses apstiprina nodošanu; servisa maksa tajā pašā brīdī pāriet Yoyo.',
             'Atmaksas un izmaksas notiek tādā pašā veidā, kā nauda tika iemaksāta.',
@@ -524,7 +524,7 @@ const ru: LegalDoc = {
         },
         {
           list: [
-            'Арендатор платит за аренду выбранных дней и сервисный сбор 10% от суммы аренды. Владелец сбор не платит.',
+            'Арендатор платит за аренду выбранных дней и сервисный сбор 10% от суммы аренды. За запросы, отправленные в первые 30 дней после регистрации арендатора, сбор не берётся. Владелец сбор не платит.',
             'На время аренды залог замораживается и не выплачивается владельцу, пока аренда идёт.',
             'Плата за аренду переходит владельцу, когда обе стороны подтвердили передачу; сервисный сбор в тот же момент переходит Yoyo.',
             'Возвраты и выплаты идут тем же способом, которым деньги поступили.',

@@ -57,7 +57,7 @@ export function AdminReports({ status, page }: { status: ReportStatus; page: num
           </Button>
         </div>
       ) : reports.data.items.length === 0 ? (
-        <p className="border-ink/15 rounded-media border px-5 py-10 text-center">{t('reports.empty')}</p>
+        <p className="admin-glass border-ink/15 rounded-media border px-5 py-10 text-center">{t('reports.empty')}</p>
       ) : (
         <ul className="flex flex-col gap-3">
           {reports.data.items.map((r) => (

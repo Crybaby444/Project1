@@ -1,6 +1,6 @@
 'use client';
 
-import { cents, DomainError, quote as priceDays, type LocalDate } from '@yoyo/domain';
+import { cents, DEFAULT_BOOKING_SETTINGS, DomainError, quote as priceDays, serviceFeeAt, type LocalDate } from '@yoyo/domain';
 import { BOOKING_LIMITS, type BookingTerms, type QuoteView } from '@yoyo/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
@@ -25,19 +25,30 @@ import { PriceSummary } from './PriceSummary';
 type Problem = 'tooShort' | 'tooLong' | 'crossesTaken' | null;
 
 /**
+ * The fee a request sent now would pay: the terms' (a visitor's) unless the signed-in renter is within their
+ * first fee-free days (owner, 2026-11-26), worked out with the domain's own rule, as the API will.
+ */
+export function feeFor(terms: BookingTerms, renterJoinedAt: string | null, now: Date = new Date()): { percent: number; promoUntil: LocalDate | null } {
+  if (!renterJoinedAt || !terms.welcomeFeeDays) return { percent: terms.servicePercent, promoUntil: terms.servicePromoUntil as LocalDate | null };
+  const settings = { ...DEFAULT_BOOKING_SETTINGS, servicePercent: terms.regularServicePercent, welcomeFeeDays: terms.welcomeFeeDays };
+  return serviceFeeAt(settings, now, terms.timeZone, new Date(renterJoinedAt));
+}
+
+/**
  * The price of a picked range with the domain's own `quote` (the same rules the API uses), or why the
  * range does not work. The API's answer to the request is the final word.
  */
-export function priceRange(terms: BookingTerms, range: Range | null): { quote: QuoteView | null; problem: Problem } {
+export function priceRange(terms: BookingTerms, range: Range | null, renterJoinedAt: string | null = null): { quote: QuoteView | null; problem: Problem } {
   if (!range?.end) return { quote: null, problem: null };
+  const fee = feeFor(terms, renterJoinedAt);
   if (crossesTaken(terms.blocked, range.start, range.end)) return { quote: null, problem: 'crossesTaken' };
   const days = daysBetween(range.start, range.end);
   try {
     const q = priceDays({
       pricing: { ...terms.pricing, dailyCents: cents(terms.pricing.dailyCents), depositCents: cents(terms.pricing.depositCents) },
       days,
-      servicePercent: terms.servicePercent,
-      servicePromoUntil: terms.servicePromoUntil as LocalDate | null,
+      servicePercent: fee.percent,
+      servicePromoUntil: fee.promoUntil,
     });
     return { quote: { ...q }, problem: null };
   } catch (error) {
@@ -72,7 +83,8 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
   const [sent, setSent] = useState(false);
   const hintId = useId();
 
-  const priced = useMemo(() => (terms.data ? priceRange(terms.data, range) : { quote: null, problem: null }), [terms.data, range]);
+  const joined = user?.createdAt ?? null;
+  const priced = useMemo(() => (terms.data ? priceRange(terms.data, range, joined) : { quote: null, problem: null }), [terms.data, range, joined]);
 
   const send = useIdempotentMutation<{ start: string; end: string; message: string }, string>({
     intent: (vars) => JSON.stringify(vars),

@@ -17,7 +17,6 @@ import { ModerationCard } from './ModerationCard';
 import { EditListingDialog, type ListingFixes } from './EditListingDialog';
 import { MoveCategoryDialog } from './MoveCategoryDialog';
 import { RejectDialog } from './RejectDialog';
-import { EmptyState } from '@/components/ui/EmptyState';
 
 /**
  * The review queue (spec §4.8), administrators only (the page is behind RequireRole; the API checks
@@ -213,7 +212,11 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
           </Button>
         </div>
       ) : items.length === 0 ? (
-        <EmptyState title={queue === 'other' ? t('otherEmptyTitle') : t('emptyTitle')} body={queue === 'other' ? t('otherEmptyBody') : t('emptyBody')} />
+        // Like every other empty list of the panel: a quiet box, not the site's big empty scene.
+        <div className="admin-glass border-ink/15 rounded-media flex flex-col items-center gap-1 border px-5 py-10 text-center">
+          <h2 className="text-base font-bold">{queue === 'other' ? t('otherEmptyTitle') : t('emptyTitle')}</h2>
+          <p className="text-ink/70 max-w-md text-sm">{queue === 'other' ? t('otherEmptyBody') : t('emptyBody')}</p>
+        </div>
       ) : (
         <>
           <div className="flex flex-wrap items-center justify-between gap-3">

@@ -33,7 +33,7 @@ function Check({ item }: { item: Item }) {
     );
 
   return (
-    <li className="border-ink/15 rounded-media flex flex-col gap-4 border p-5">
+    <li className="admin-glass border-ink/15 rounded-media flex flex-col gap-4 border p-5">
       <header className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="text-lg font-bold">{item.user.name}</h2>
         <p className="text-ink/70 text-sm">
@@ -97,7 +97,7 @@ export function AdminIdentity() {
           </Button>
         </div>
       ) : queue.data.items.length === 0 ? (
-        <p className="border-ink/15 rounded-media border px-5 py-10 text-center">{t('identityCheck.empty')}</p>
+        <p className="admin-glass border-ink/15 rounded-media border px-5 py-10 text-center">{t('identityCheck.empty')}</p>
       ) : (
         <ul className="m-0 flex list-none flex-col gap-4 p-0">
           {queue.data.items.map((item) => (

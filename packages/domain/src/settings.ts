@@ -1,4 +1,4 @@
-import { endOfDayIn, localDate, type LocalDate } from './dates';
+import { localDateIn, type LocalDate } from './dates';
 import { DomainError } from './errors';
 
 /**
@@ -18,15 +18,20 @@ export interface BookingSettings {
   readonly inspectionHours: number;
   /** The renter answers a damage claim within this time, or it goes to an admin. */
   readonly damageReplyHours: number;
-  /** Service fee paid by the renter, in whole percent of the rent (outside the launch offer). */
+  /** Service fee paid by the renter, in whole percent of the rent. */
   readonly servicePercent: number;
-  /** The fee during the launch offer, in whole percent (owner's decision of 2026-11-06: 0 %). */
-  readonly promoServicePercent: number;
   /**
-   * The last day of the launch offer, in the listing's time zone, or null when there is none. A request
-   * sent before the end of that day pays `promoServicePercent`; from the next day on, `servicePercent`.
+   * A new account's first days without the fee (owner, 2026-11-26: the first month after sign-up, instead
+   * of a launch offer for everyone): a request sent within this many days of the renter's sign-up pays 0 %.
+   * 0 turns it off.
    */
-  readonly promoServiceUntil: LocalDate | null;
+  readonly welcomeFeeDays: number;
+  /**
+   * From this deposit, or this rent, a deal is high-value and the renter must have confirmed both phone and
+   * identity (value checks, D4). In cents.
+   */
+  readonly highValueDepositCents: number;
+  readonly highValueRentCents: number;
   /** How many days ahead a rental may start. */
   readonly maxAdvanceDays: number;
   /** How long after a completed deal both sides may leave a review. */
@@ -41,8 +46,9 @@ export const DEFAULT_BOOKING_SETTINGS: BookingSettings = Object.freeze({
   inspectionHours: 48,
   damageReplyHours: 48,
   servicePercent: 10,
-  promoServicePercent: 0,
-  promoServiceUntil: null,
+  welcomeFeeDays: 30,
+  highValueDepositCents: 30_000,
+  highValueRentCents: 50_000,
   maxAdvanceDays: 365,
   reviewWindowDays: 14,
 });
@@ -73,21 +79,13 @@ export function validateBookingSettings(s: BookingSettings): void {
     const value: unknown = s[field];
     if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) invalidSetting(field, value);
   }
-  for (const field of ['servicePercent', 'promoServicePercent'] as const) {
-    const percent: unknown = s[field];
-    if (typeof percent !== 'number' || !Number.isInteger(percent) || percent < 0 || percent > 100) {
-      invalidSetting(field, percent);
-    }
+  const percent: unknown = s.servicePercent;
+  if (typeof percent !== 'number' || !Number.isInteger(percent) || percent < 0 || percent > 100) {
+    invalidSetting('servicePercent', percent);
   }
-  const until: unknown = s.promoServiceUntil;
-  if (until !== null) {
-    try {
-      if (typeof until !== 'string') throw new DomainError('INVALID_DATE');
-      localDate(until);
-    } catch (error) {
-      if (!(error instanceof DomainError)) throw error;
-      invalidSetting('promoServiceUntil', until);
-    }
+  for (const field of ['welcomeFeeDays', 'highValueDepositCents', 'highValueRentCents'] as const) {
+    const value: unknown = s[field];
+    if (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 0) invalidSetting(field, value);
   }
   for (const field of ['maxAdvanceDays', 'reviewWindowDays'] as const) {
     const value: unknown = s[field];
@@ -95,21 +93,28 @@ export function validateBookingSettings(s: BookingSettings): void {
   }
 }
 
-/** The fee a request sent at `now` pays: the percent and, during the launch offer, its last day. */
+/** The fee a request sent at `now` pays: the percent and, in the renter's free first days, the last of them. */
 export interface ServiceFee {
   readonly percent: number;
   readonly promoUntil: LocalDate | null;
 }
 
+/** The moment a new account's fee-free days end, or null when there are none. */
+export function welcomeFeeEnds(settings: BookingSettings, joinedAt: Date | null): Date | null {
+  if (joinedAt === null || settings.welcomeFeeDays <= 0) return null;
+  return new Date(joinedAt.getTime() + settings.welcomeFeeDays * 86_400_000);
+}
+
 /**
- * The service fee that applies at `now` for an item in `timeZone`: the launch offer's percent until the
- * end of `promoServiceUntil` there (exclusive: the first moment of the next day pays the regular fee),
- * otherwise `servicePercent`. `createRequest` freezes the answer into the booking's quote.
+ * The service fee a request sent at `now` pays: 0 % while the renter is within their first
+ * `welcomeFeeDays` after sign-up (`promoUntil` is then the last of those days, in `timeZone`), otherwise
+ * `servicePercent`. Without a renter (a price shown to a visitor) the regular fee. `createRequest` freezes
+ * the answer into the booking's quote.
  */
-export function serviceFeeAt(settings: BookingSettings, now: Date, timeZone: string): ServiceFee {
-  const until = settings.promoServiceUntil;
-  if (until !== null && now.getTime() < endOfDayIn(until, timeZone).getTime()) {
-    return { percent: settings.promoServicePercent, promoUntil: until };
+export function serviceFeeAt(settings: BookingSettings, now: Date, timeZone: string, renterJoinedAt: Date | null = null): ServiceFee {
+  const ends = welcomeFeeEnds(settings, renterJoinedAt);
+  if (ends !== null && now.getTime() < ends.getTime()) {
+    return { percent: 0, promoUntil: localDateIn(new Date(ends.getTime() - 1), timeZone) };
   }
   return { percent: settings.servicePercent, promoUntil: null };
 }

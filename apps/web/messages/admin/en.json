@@ -69,7 +69,10 @@
         "DEAL_REQUESTED": "{who} asked to rent “{title}”",
         "DISPUTE_OPENED": "Dispute opened on “{title}”"
       },
-      "reportsWaiting": "{count, plural, one {report to look at} other {reports to look at}}"
+      "reportsWaiting": "{count, plural, one {report to look at} other {reports to look at}}",
+      "vsLastWeek": "{delta} vs last week",
+      "shareLive": "{percent}% live in the catalog",
+      "today": "Today"
     },
     "deals": {
       "title": "Deals",
@@ -178,7 +181,8 @@
         "RENT_RELEASE": "Rent to owner",
         "DEPOSIT_REFUND": "Deposit returned",
         "DEPOSIT_TO_OWNER": "Deposit to owner",
-        "BOOKING_REFUND": "Deal refund"
+        "BOOKING_REFUND": "Deal refund",
+        "BOOKING_PARTIAL_REFUND": "Partly refunded"
       }
     },
     "reports": {
@@ -306,7 +310,11 @@
         "CATEGORY_DELETED": "Category deleted",
         "USER_CREATED": "Person added",
         "USER_EDITED": "Person edited",
-        "USER_DELETED": "Person deleted"
+        "USER_DELETED": "Person deleted",
+        "LISTING_EDITED": "Listing edited",
+        "IDENTITY_VIEWED": "Identity documents viewed",
+        "IDENTITY_APPROVED": "Identity confirmed",
+        "IDENTITY_REJECTED": "Identity check rejected"
       }
     },
     "settings": {
@@ -322,32 +330,69 @@
       "group": {
         "fees": "Fee",
         "deals": "Deal deadlines",
-        "other": "Other"
+        "checks": "High-value deals",
+        "reviews": "Reviews"
       },
       "key": {
         "fees": {
-          "servicePercent": "Service fee, %",
-          "promoServicePercent": "Launch offer fee, %",
-          "promoServiceUntil": "Launch offer until"
+          "servicePercent": "Service fee",
+          "welcomeDays": "No fee after sign-up for"
         },
         "booking": {
-          "requestTtlHours": "Owner answers a request within, hours",
-          "paymentTtlHours": "Renter pays within, hours",
-          "handoverConfirmHours": "Renter can object to the handover within, hours",
-          "returnConfirmHours": "Owner can object to the return within, hours",
-          "inspectionHours": "Owner inspects the returned item within, hours",
-          "damageReplyHours": "Renter answers a damage claim within, hours",
-          "maxAdvanceDays": "Rentals can start up to, days ahead"
+          "requestTtlHours": "Owner answers a request within",
+          "paymentTtlHours": "Renter pays within",
+          "handoverConfirmHours": "Renter can object to the handover within",
+          "returnConfirmHours": "Owner can object to the return within",
+          "inspectionHours": "Owner inspects the returned item within",
+          "damageReplyHours": "Renter answers a damage claim within",
+          "maxAdvanceDays": "Rentals can start up to"
         },
         "review": {
-          "windowDays": "Reviews can be written within, days"
+          "windowDays": "Reviews can be written within"
+        },
+        "checks": {
+          "highValueDepositEur": "Deposit from",
+          "highValueRentEur": "Rent from"
         }
       },
-      "hint": {
-        "fees": {
-          "promoServiceUntil": "Empty: no launch offer."
+      "unit": {
+        "hours": "h",
+        "days": "days",
+        "percent": "%",
+        "eur": "€"
+      },
+      "asDays": "= {days, plural, one {# day} other {# days}}",
+      "asMonths": "≈ {months, plural, one {# month} other {# months}}",
+      "feeExample": "On a {rent} rental: {fee}",
+      "range": "From {min} to {max}",
+      "was": "was {value}",
+      "undo": "Undo this change",
+      "less": "Less",
+      "more": "More",
+      "changes": "{count, plural, one {# change} other {# changes}}",
+      "discard": "Undo all",
+      "saveCount": "Save ({count})",
+      "invalid": "Fix the marked values first.",
+      "groupNote": {
+        "fees": "The renter pays the fee on top of the rent. Every deal keeps the fee it was requested with.",
+        "checks": "From this deposit or this rent, the renter confirms their phone and identity first.",
+        "reviews": "After a completed deal both sides may leave a review."
+      },
+      "phase": {
+        "booking": {
+          "title": "Booking",
+          "note": "The request, the owner's answer and the payment. Without an answer or a payment the request closes by itself."
+        },
+        "handover": {
+          "title": "Handover",
+          "note": "The owner marks the handover; unless the renter objects, it counts."
+        },
+        "return": {
+          "title": "Return and deposit",
+          "note": "The renter brings the item back and the owner inspects it. Without an answer the deposit goes back to the renter and a dispute goes to an administrator."
         }
-      }
+      },
+      "off": "Off"
     },
     "person": {
       "back": "All users",

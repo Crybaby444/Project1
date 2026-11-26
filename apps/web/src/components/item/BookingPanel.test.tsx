@@ -19,6 +19,7 @@ const TERMS: BookingTerms = {
   servicePercent: 10,
   servicePromoUntil: null,
   regularServicePercent: 10,
+  welcomeFeeDays: 0,
   maxAdvanceDays: 180,
   timeZone: 'Europe/Riga',
   today: '2026-12-01',

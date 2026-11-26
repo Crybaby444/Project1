@@ -18,6 +18,8 @@ export default defineConfig({
       WEB_ORIGIN: 'http://localhost:3000',
       // Test-only key; production gets a generated one from Render (render.yaml).
       JWT_SECRET: 'test-only-jwt-secret-0123456789abcdef',
+      // The people the tests register pay the fee their money checks expect (fees.e2e turns the free days on).
+      FEE_WELCOME_DAYS: '0',
     },
   },
 });

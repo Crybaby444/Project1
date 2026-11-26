@@ -88,6 +88,8 @@ export default defineConfig({
         REGISTRATION_HOURLY_CAP: '1000',
         // People registered by the specs lend and rent at once; the identity check has its own tests.
         IDENTITY_REQUIRED: 'false',
+        // The people the specs register pay the regular fee their prices expect.
+        FEE_WELCOME_DAYS: '0',
         // The one e2e administrator signs in from a fresh browser in many specs (20 an hour in production).
         LOGIN_EMAIL_HOURLY_CAP: '500',
       } as Record<string, string>,

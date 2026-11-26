@@ -321,8 +321,8 @@
       "total": "Total to pay",
       "empty": "Pick the days to see the price.",
       "depositNote": "The deposit comes back in full when the owner confirms all is fine.",
-      "feePromo": "{percent}% fee until {date}",
-      "feePromoLabel": "Launch offer: the service fee is {percent}% for requests sent until {date}.",
+      "feePromo": "No fee until {date}",
+      "feePromoLabel": "Your first month on Yoyo: no service fee for requests sent until {date}.",
       "feeName": "Service fee"
     },
     "shareLink": "Booking link",

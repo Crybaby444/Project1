@@ -294,7 +294,7 @@
         "items": {
           "cost": {
             "q": "Cik maksā Yoyo?",
-            "a": "Konta izveide un sludinājumi ir bez maksas. Kad darbosies tiešsaistes maksājumi, nomnieks papildus nomai maksās 10% servisa maksu. Īpašnieki nemaksā neko."
+            "a": "Konta izveide un sludinājumi ir bez maksas. Kad darbosies tiešsaistes maksājumi, nomnieks papildus nomai maksās 10% servisa maksu. Īpašnieki nemaksā neko. Pirmajās 30 dienās pēc reģistrācijas servisa maksa nav jāmaksā."
           },
           "payNow": {
             "q": "Vai jau tagad var maksāt caur Yoyo?",
