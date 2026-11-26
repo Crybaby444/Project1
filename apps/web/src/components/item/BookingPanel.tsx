@@ -48,7 +48,8 @@ export function BookingPanel({ item }: { item: AvailableItem }) {
       {/* Phones: the way to the panel stays at hand while the photos and the description scroll by. */}
       <div
         aria-hidden={panelInView || undefined}
-        className={`border-ink bg-surface ease-yoyo fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-3 border-t px-4 py-3 transition-transform duration-250 motion-reduce:transition-none lg:hidden ${
+        data-book-bar={panelInView ? 'away' : 'shown'}
+        className={`border-ink bg-surface ease-yoyo fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-3 border-t px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-transform duration-250 motion-reduce:transition-none lg:hidden ${
           panelInView ? 'translate-y-full' : ''
         }`}
       >

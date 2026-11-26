@@ -835,3 +835,9 @@ html:has([data-home-root]) [data-header-spacer] {
     animation: none;
   }
 }
+
+/* A listing on a phone has its own bottom bar ("Choose dates"); the tab bar steps aside while it shows,
+   or the raised + button peeks over it. */
+html:has([data-book-bar='shown']) [data-tab-bar] {
+  transform: translateY(calc(100% + 24px));
+}

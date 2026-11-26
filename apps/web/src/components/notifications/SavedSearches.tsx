@@ -68,11 +68,11 @@ export function SavedSearches() {
       {searches.data.length === 0 ? (
         <p className="text-ink/75 text-sm">{t('empty')}</p>
       ) : (
-        <ul aria-label={t('title')} className="divide-ink/10 border-ink/15 divide-y border-y">
+        <ul aria-label={t('title')} className="sheet divide-ink/10 border-ink/15 rounded-media divide-y overflow-hidden border">
           {searches.data.map((s) => {
             const { text, href } = describe(s);
             return (
-              <li key={s.id} className="flex items-center justify-between gap-3 py-3">
+              <li key={s.id} className="flex items-center justify-between gap-3 px-4 py-3">
                 <Link href={href} className="min-w-0 truncate font-semibold hover:underline hover:decoration-1 hover:underline-offset-2">
                   {text}
                 </Link>
