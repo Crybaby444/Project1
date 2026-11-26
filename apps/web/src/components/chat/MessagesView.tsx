@@ -170,21 +170,21 @@ function ConversationList({ items, activeId }: { items: ConversationSummary[]; a
 function useFitAboveTabBar(ref: RefObject<HTMLDivElement | null>, open: boolean): number | null {
   const [height, setHeight] = useState<number | null>(null);
   useEffect(() => {
-    if (!open) {
-      setHeight(null);
-      return;
-    }
+    if (!open) return;
     const measure = () => {
       const el = ref.current;
       if (!el || window.innerWidth >= 1024) return setHeight(null);
       const top = el.getBoundingClientRect().top + window.scrollY;
       setHeight(Math.max(320, Math.round(window.innerHeight - top - 104)));
     };
-    measure();
+    const frame = requestAnimationFrame(measure);
     window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('resize', measure);
+    };
   }, [ref, open]);
-  return height;
+  return open ? height : null;
 }
 
 /** A personal conversation has no item photo: the other person's initials instead. */
