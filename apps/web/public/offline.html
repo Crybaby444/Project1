@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0b0e" />
+    <title>Yoyo — offline</title>
+    <link rel="icon" href="/icons/icon-192.png" />
+    <style>
+      :root { --canvas: #f4f1e6; --ink: #0a0b0e; color-scheme: light dark; }
+      @media (prefers-color-scheme: dark) { :root { --canvas: #0a0b0e; --ink: #f4f1e6; } }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; background: var(--canvas); color: var(--ink); }
+      body { display: grid; place-items: center; padding: 24px; font: 500 17px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif; }
+      main { max-width: 30rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+      svg { width: 56px; height: 72px; animation: sway 3.2s ease-in-out infinite; transform-origin: 50% 0; }
+      @keyframes sway { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+      @media (prefers-reduced-motion: reduce) { svg { animation: none; } }
+      h1 { margin: 0; font: 900 clamp(2.4rem, 9vw, 3.4rem)/0.9 'Arial Narrow', system-ui, sans-serif; text-transform: uppercase; letter-spacing: -0.01em; }
+      p { margin: 0; opacity: 0.78; }
+      button { margin-top: 8px; min-height: 48px; padding: 0 28px; border: 0; border-radius: 999px; background: var(--ink); color: var(--canvas); font: 700 15px/1 system-ui, sans-serif; letter-spacing: 0.03em; text-transform: uppercase; cursor: pointer; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <svg viewBox="0 0 24 31" aria-hidden="true">
+        <path d="M12 0v9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+        <circle cx="12" cy="19.6" r="10.4" fill="currentColor" />
+        <path d="M2.4 19.6h19.2" stroke="var(--canvas)" stroke-width="2.4" />
+      </svg>
+      <h1 id="title">You are offline</h1>
+      <p id="body">Yoyo needs the internet for this page. It comes back as soon as you are online again.</p>
+      <button id="retry" type="button">Try again</button>
+    </main>
+    <script>
+      // The language of the page that could not load: /lv/… or /ru/…, else English.
+      var words = {
+        lv: ['Nav savienojuma', 'Šai lapai Yoyo vajag internetu. Tā atgriezīsies, tiklīdz būsiet tiešsaistē.', 'Mēģināt vēlreiz'],
+        ru: ['Нет соединения', 'Для этой страницы Yoyo нужен интернет. Она вернётся, как только вы снова будете онлайн.', 'Попробовать снова'],
+      };
+      var lang = (location.pathname.match(/^\/(lv|ru)(\/|$)/) || [])[1];
+      if (lang) {
+        document.documentElement.lang = lang;
+        document.getElementById('title').textContent = words[lang][0];
+        document.getElementById('body').textContent = words[lang][1];
+        document.getElementById('retry').textContent = words[lang][2];
+        document.title = 'Yoyo — ' + words[lang][0];
+      }
+      document.getElementById('retry').addEventListener('click', function () { location.reload(); });
+      window.addEventListener('online', function () { location.reload(); });
+    </script>
+  </body>
+</html>

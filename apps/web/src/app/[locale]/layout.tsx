@@ -1,10 +1,12 @@
+import { ServiceWorker } from '@/components/pwa/ServiceWorker';
+import { manifestHref } from '@/lib/pwa/manifest';
 import { currentCountry } from '@/lib/country/server';
 import { Suspense } from 'react';
 import { PageCounter } from '@/components/analytics/PageCounter';
 import { AdminOnly } from '@/lib/session/AdminOnly';
 import { LOCALES, parseThemePreference, THEME_COOKIE, type Locale } from '@yoyo/shared';
 import { ProfileIncompleteBanner } from '@/components/auth/ProfileIncompleteBanner';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { cookies, headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
@@ -44,11 +46,27 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f4f1e6' },
+    { media: '(prefers-color-scheme: dark)', color: '#0a0b0e' },
+  ],
+  viewportFit: 'cover',
+};
+
 export async function generateMetadata({ params }: LocaleParams): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'meta' });
   // Relative URLs in page metadata (Open Graph images, alternates) resolve against the live site.
-  return { metadataBase: new URL(SITE_URL), title: t('title'), description: t('description') };
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: t('title'),
+    description: t('description'),
+    // Installable as an app (owner, 2026-11-26): each language's manifest opens it in that language.
+    manifest: manifestHref(locale as Locale),
+    appleWebApp: { capable: true, title: 'Yoyo', statusBarStyle: 'black-translucent' },
+    icons: { apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180' }] },
+  };
 }
 
 export default async function LocaleLayout({ children, params }: LocaleParams & { children: ReactNode }) {
@@ -78,6 +96,7 @@ export default async function LocaleLayout({ children, params }: LocaleParams & 
               <ThemeProvider initialPreference={preference}>
                 <ToastProvider>
                   <SyncThemeWithProfile />
+                  <ServiceWorker />
                   <div lang={locale} className="contents">
                     <Chrome>
                       <SiteHeader catalog={catalog} country={await currentCountry()} />
