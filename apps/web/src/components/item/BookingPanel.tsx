@@ -45,12 +45,13 @@ export function BookingPanel({ item }: { item: AvailableItem }) {
         <MessageOwnerButton ownerId={item.owner.id} about={{ id: listing.id, title: listing.title ?? '' }} />
       </section>
 
-      {/* Phones: the way to the panel stays at hand while the photos and the description scroll by. */}
+      {/* Phones: the way to the panel stays at hand while the photos and the description scroll by. It floats
+          just above the tab bar, which never moves (owner, 2026-11-26). */}
       <div
         aria-hidden={panelInView || undefined}
         data-book-bar={panelInView ? 'away' : 'shown'}
-        className={`border-ink bg-surface ease-yoyo fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-3 border-t px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-transform duration-250 motion-reduce:transition-none lg:hidden ${
-          panelInView ? 'translate-y-full' : ''
+        className={`border-ink bg-surface ease-yoyo fixed inset-x-3 bottom-[calc(max(10px,env(safe-area-inset-bottom))+80px)] z-30 flex items-center justify-between gap-3 rounded-[22px] border py-2 pr-2 pl-4 shadow-[0_18px_40px_-18px_rgba(10,11,14,0.45)] transition-[translate,opacity] duration-300 motion-reduce:transition-none lg:hidden ${
+          panelInView ? 'pointer-events-none translate-y-3 opacity-0' : ''
         }`}
       >
         <p className="min-w-0 font-bold tabular-nums">{t('from', { price: formatEuros(daily, locale) })}</p>

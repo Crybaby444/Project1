@@ -819,9 +819,10 @@ html:has([data-home-root]) [data-header-spacer] {
   }
 }
 
-/* A listing on a phone has its own bottom bar ("Choose dates"), and an open conversation its box to
-   write in; the tab bar steps aside for both, or it covers them (the raised + button peeks over). */
-html:has([data-book-bar='shown']) [data-tab-bar],
-html:has([data-thread-open]) [data-tab-bar] {
-  transform: translateY(calc(100% + 24px));
+/* The tab bar never moves (owner, 2026-11-26); a listing's "Choose dates" bar floats above it, so the
+   page keeps room for both. */
+@media (max-width: 1023px) {
+  body:has([data-book-bar]) {
+    padding-bottom: calc(160px + env(safe-area-inset-bottom));
+  }
 }

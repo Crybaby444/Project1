@@ -148,7 +148,7 @@ export function SiteHeader({ catalog = [], country = HOME_COUNTRY }: { catalog?:
       {/* Room for the floating bar at the top of every page (the cinematic page runs under it). */}
       <div data-header-spacer aria-hidden="true" className="h-[72px] lg:h-[84px]" />
       <VerifyEmailBanner />
-      <MobileTabBar roots={catalog} hidden={hidden} />
+      <MobileTabBar roots={catalog} />
     </>
   );
 }
