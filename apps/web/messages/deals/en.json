@@ -163,7 +163,8 @@
       "none": "No photos yet.",
       "hint": "Photos of the item's condition help if anything goes wrong.",
       "alt": "Photo {n} of the item ({kind})"
-    }
+    },
+    "closedTitle": "Deal closed"
   },
   "dealActions": {
     "ACCEPT": "Accept",
@@ -267,10 +268,13 @@
       "renter": "You have not rented anything yet",
       "owner": "Nobody has asked for your items yet",
       "action": "Nothing waits for you. Nice.",
-      "closed": "No closed deals yet."
+      "closed": "No closed deals yet.",
+      "renterBody": "Find an item in the catalog and choose the days: the request, its chat and the contract will be here.",
+      "ownerBody": "When someone asks for one of your items, the request lands here and you answer it."
     },
     "lend": "Lend an item",
-    "myItems": "My items"
+    "myItems": "My items",
+    "browse": "Open the catalog"
   },
   "booking": {
     "title": "Book {item}",

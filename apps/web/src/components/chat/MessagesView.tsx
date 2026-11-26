@@ -4,12 +4,13 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import type { ChatMessage, ConversationSummary, ConversationThread } from '@yoyo/shared';
 import { MESSAGE_TEXT } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
-import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent, type RefObject } from 'react';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Link } from '@/i18n/navigation';
 import { ReportButton } from '@/components/reports/ReportButton';
 import { DealStrip } from './DealStrip';
+import { initials } from '@/components/item/OwnerCard';
 import { useConversations, useMarkRead, useSendMessage, useThread } from '@/lib/chat/queries';
 import { dealKeys } from '@/lib/deals/queries';
 import { useQueryClient } from '@tanstack/react-query';
@@ -51,6 +52,8 @@ function useLineText() {
 export function MessagesView({ activeId }: { activeId?: string }) {
   const t = useTranslations('chat');
   const conversations = useConversations();
+  const frame = useRef<HTMLDivElement>(null);
+  const fit = useFitAboveTabBar(frame, Boolean(activeId) && conversations.isSuccess);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
@@ -78,7 +81,10 @@ export function MessagesView({ activeId }: { activeId?: string }) {
         />
       ) : (
         <div
-          className={`border-ink/15 rounded-media grid h-[max(26rem,calc(100svh-15rem))] grid-cols-[minmax(0,1fr)] overflow-hidden border lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] ${activeId ? 'max-lg:h-[calc(100svh-7.5rem)]' : ''}`}
+          ref={frame}
+          data-thread-open={activeId ? '' : undefined}
+          style={fit ? ({ '--frame-h': `${fit}px` } as CSSProperties) : undefined}
+          className={`sheet border-ink/15 rounded-media grid h-[max(26rem,calc(100svh-15rem))] grid-cols-[minmax(0,1fr)] overflow-hidden border lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] ${activeId && fit ? 'max-lg:h-[var(--frame-h)]' : ''}`}
         >
           <div
             className={`border-ink/15 min-h-0 overflow-y-auto lg:border-r ${activeId ? 'max-lg:hidden' : ''}`}
@@ -156,13 +162,34 @@ function ConversationList({ items, activeId }: { items: ConversationSummary[]; a
   );
 }
 
+/**
+ * On a phone an open conversation fills the screen from where it starts down to the tab bar, which never
+ * moves (owner, 2026-11-26), so the box to write in is always above it, whatever sits over the frame (the
+ * email banner, for one). Measured, as that top is not known in CSS; null on wider screens.
+ */
+function useFitAboveTabBar(ref: RefObject<HTMLDivElement | null>, open: boolean): number | null {
+  const [height, setHeight] = useState<number | null>(null);
+  useEffect(() => {
+    if (!open) return;
+    const measure = () => {
+      const el = ref.current;
+      if (!el || window.innerWidth >= 1024) return setHeight(null);
+      const top = el.getBoundingClientRect().top + window.scrollY;
+      setHeight(Math.max(320, Math.round(window.innerHeight - top - 104)));
+    };
+    const frame = requestAnimationFrame(measure);
+    window.addEventListener('resize', measure);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('resize', measure);
+    };
+  }, [ref, open]);
+  return open ? height : null;
+}
+
 /** A personal conversation has no item photo: the other person's initials instead. */
 function Initials({ name }: { name: string }) {
-  const letters = name
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((w) => w[0]?.toUpperCase() ?? '')
-    .join('');
+  const letters = initials(name);
   return (
     <span
       aria-hidden="true"

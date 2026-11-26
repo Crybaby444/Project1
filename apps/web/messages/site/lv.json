@@ -26,11 +26,11 @@
     },
     "whatIs": {
       "title": "Kas ir Yoyo: īrējiet no cilvēkiem tuvumā, izīrējiet to, ko lietojat reti",
-      "description": "Tirgus starp cilvēkiem eirozonā: īrē lietas uz dienu vai nedēļu vai izīrē savas un pelni. Abu parakstīts līgums, depozīts atgriežas."
+      "description": "Tirgus starp cilvēkiem eirozonā: īrējiet lietas uz dienu vai nedēļu vai izīrējiet savas un pelniet. Abu parakstīts līgums, depozīts atgriežas."
     }
   },
   "footer": {
-    "tagline": "Paņem, izmanto, atdod. Lietas atgriežas kā jojo.",
+    "tagline": "Paņemiet, izmantojiet, atdodiet. Lietas atgriežas kā jojo.",
     "pagesLabel": "Vietnes lapas",
     "service": "Yoyo",
     "documents": "Dokumenti",
@@ -59,9 +59,9 @@
       "scroll": "Ritini"
     },
     "night": {
-      "rent": "Paņem",
-      "use": "Izīrē",
-      "back": "Saņem atpakaļ",
+      "rent": "Paņemiet",
+      "use": "Izīrējiet",
+      "back": "Saņemiet atpakaļ",
       "line": "Lielākā daļa lietu lielāko laiku stāv. Yoyo tās aiziet pie kāda tuvumā, padara savu darbu un atgriežas.",
       "catalog": "Atvērt katalogu"
     },
@@ -363,16 +363,16 @@
   "categoryIntro": {
     "roots": {
       "electronics": "Spēļu konsoles nedēļas nogalei, projektors filmu vakaram, klēpjdators, kamēr jūsējais ir remontā, droni un rācijas ceļojumam. Īrējiet elektroniku no cilvēkiem tuvumā uz vajadzīgajām dienām un atdodiet, kad tā vairs nav vajadzīga.",
-      "photo-video": "Kameras, objektīvi, sporta kameras, statīvi un studijas gaismas fotosesijai, kāzām vai atvaļinājumam. Izmēģini objektīvu pirms pirkšanas vai paņem visu komplektu vienai nedēļas nogalei.",
-      "tools": "Urbjmašīnas, perforatori, slīpmašīnas, zāģi un tīrīšanas iekārtas darbiem, ko dari reizi vai divas gadā. Īrē instrumentu no kāda savā rajonā, pabeidz darbu un atdod.",
+      "photo-video": "Kameras, objektīvi, sporta kameras, statīvi un studijas gaismas fotosesijai, kāzām vai atvaļinājumam. Izmēģiniet objektīvu pirms pirkšanas vai paņemiet visu komplektu vienai nedēļas nogalei.",
+      "tools": "Urbjmašīnas, perforatori, slīpmašīnas, zāģi un tīrīšanas iekārtas darbiem, ko darāt reizi vai divas gadā. Īrējiet instrumentu no kāda savā rajonā, pabeidziet darbu un atdodiet.",
       "construction": "Blietes, betona maisītāji, flīžu griezēji, ģeneratori, mitruma savācēji, kāpnes un sastatnes remontam. Dārga tehnika, ko reti vajag, uz tik dienām, cik ilgst darbs.",
       "garden": "Zāles pļāvēji, trimmeri, augstspiediena mazgātāji, motorzāģi, sniega metēji un batuti. Sezonas lietas dārzam un pagalmam, īrētas uz nedēļas nogali, nevis glabātas visu gadu.",
-      "home-kitchen": "Putekļsūcēji, ventilatori, sildītāji un virtuves tehnika pārvākšanās, viesu nedēļas vai lielas gatavošanas dienai. Īrē uz dažām dienām, nevis pērc vēl vienu lietu skapim.",
-      "sports": "Velosipēdi, elektriskie skrejriteņi, skrituļslidas, slēpes, snovborda dēļi un ragavas. Izmēģini sportu pirms ekipējuma pirkšanas vai paņem vajadzīgo vienam braucienam.",
+      "home-kitchen": "Putekļsūcēji, ventilatori, sildītāji un virtuves tehnika pārvākšanās, viesu nedēļas vai lielas gatavošanas dienai. Īrējiet uz dažām dienām, nevis pērciet vēl vienu lietu skapim.",
+      "sports": "Velosipēdi, elektriskie skrejriteņi, skrituļslidas, slēpes, snovborda dēļi un ragavas. Izmēģiniet sportu pirms ekipējuma pirkšanas vai paņemiet vajadzīgo vienam braucienam.",
       "camping": "Teltis, guļammaisi, kempinga mēbeles, plītiņas, mugursomas, laivas un kāpšanas ekipējums. Viss nedēļas nogalei dabā no cilvēkiem tuvumā, kuri savējo pašlaik nelieto.",
-      "kids": "Ratiņi, autosēdeklīši, līdzsvara velosipēdi, rotaļu mājiņas, rotaļlietas un bērnu mēbeles. Bērni ātri izaug: īrē uz tiem mēnešiem, kad der, vai mazbērnu ciemošanās laikam.",
+      "kids": "Ratiņi, autosēdeklīši, līdzsvara velosipēdi, rotaļu mājiņas, rotaļlietas un bērnu mēbeles. Bērni ātri izaug: īrējiet uz tiem mēnešiem, kad der, vai mazbērnu ciemošanās laikam.",
       "events-party": "Pasākumu teltis, galdi un krēsli, skaņa un gaismas, kostīmi un dekorācijas. Viss dzimšanas dienai, kāzām vai dārza ballītei, īrēts uz vienu dienu.",
-      "music": "Mūzikas instrumenti un DJ aprīkojums koncertam, ballītei vai lai saprastu, vai nodarbības patiks, pirms pērc.",
+      "music": "Mūzikas instrumenti un DJ aprīkojums koncertam, ballītei vai lai saprastu, vai nodarbības patiks, pirms pērkat.",
       "car-travel": "Jumta kastes, bagāžnieki, velosipēdu turētāji, videoreģistratori un akumulatoru lādētāji ceļojumam ar auto. Īrējiet uz braucienu un atdodiet, kad esat mājās."
     },
     "about": {

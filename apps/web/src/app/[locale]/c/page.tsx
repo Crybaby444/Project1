@@ -23,7 +23,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-/** All categories (`/c`, W03 CATS): every root with its subcategories, as plain links. */
+/**
+ * The catalog (`/c`): every category first (that is what people come here for), then what is new,
+ * then what this visitor looked at last.
+ */
 export default async function CategoriesPage({ params }: Props) {
   const { locale } = (await params) as { locale: Locale };
   setRequestLocale(locale);
@@ -46,7 +49,12 @@ export default async function CategoriesPage({ params }: Props) {
         </p>
       ) : (
         <>
-          <RecentlyViewed />
+          <section aria-labelledby="catalog-all" className="flex flex-col gap-4">
+            <h2 id="catalog-all" className="font-display text-display-s leading-none font-black uppercase">
+              {t('allCategories')}
+            </h2>
+            <CategoryIndex roots={tree.data} locale={locale} counts={counts} />
+          </section>
           {fresh.length > 0 && (
             <section aria-labelledby="catalog-fresh" className="flex flex-col gap-4">
               <div className="flex items-baseline justify-between gap-4">
@@ -66,12 +74,7 @@ export default async function CategoriesPage({ params }: Props) {
               </ul>
             </section>
           )}
-          <section aria-labelledby="catalog-all" className="flex flex-col gap-4">
-            <h2 id="catalog-all" className="font-display text-display-s leading-none font-black uppercase">
-              {t('allCategories')}
-            </h2>
-            <CategoryIndex roots={tree.data} locale={locale} counts={counts} />
-          </section>
+          <RecentlyViewed />
         </>
       )}
     </main>

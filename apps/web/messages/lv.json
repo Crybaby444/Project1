@@ -4,7 +4,7 @@
     "description": "Nomājiet to, kas vajadzīgs, no cilvēkiem tuvumā, un iznomājiet to, ko lietojat reti. Sarakstieties, parakstiet līgumu un maksājiet ar aizsargātu drošības naudu Yoyo."
   },
   "home": {
-    "tagline": "Īrē no cilvēkiem sev apkārt, tik ilgi, cik vajag.",
+    "tagline": "Īrējiet no cilvēkiem sev apkārt, tik ilgi, cik vajag.",
     "lead": "Nomājiet to, kas vajadzīgs, no cilvēkiem tuvumā. Iznomājiet to, ko lietojat reti. Tas vienmēr atgriežas, gluži kā jojo."
   },
   "language": {
@@ -18,7 +18,7 @@
     "toggle": "Pārslēgt tēmu",
     "light": "Gaišā",
     "dark": "Tumšā",
-    "system": "Kā sistēmā",
+    "system": "Sistēmas",
     "label": "Tēma"
   },
   "notFound": {
@@ -169,7 +169,7 @@
   "banner": {
     "verifyEmail": {
       "title": "Lūdzu, apstipriniet e-pastu: mēs jums nosūtījām saiti.",
-      "resend": "Sūtīt vēstuli vēlreiz",
+      "resend": "Sūtīt vēlreiz",
       "sent": "Vēstule nosūtīta. Pārbaudiet iesūtni."
     }
   },
@@ -682,7 +682,7 @@
   },
   "myListings": {
     "title": "Manas lietas",
-    "intro": "Viss, ko izīrē, no melnrakstiem līdz publicētiem sludinājumiem.",
+    "intro": "Viss, ko jūs izīrējat, no melnrakstiem līdz publicētiem sludinājumiem.",
     "lend": "Izīrēt lietu",
     "filters": "Rādīt",
     "filter": {

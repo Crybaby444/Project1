@@ -152,7 +152,7 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
   return (
     // `stacked`: one column, for a side column such as the item page's (the calendar keeps its width).
     <div className={`grid gap-6 ${layout === 'wide' ? 'lg:grid-cols-[minmax(0,1fr)_22rem]' : ''}`} data-booking-panel="">
-      <section aria-labelledby="booking-dates" className="border-ink/15 flex flex-col gap-4 border-t pt-6">
+      <section aria-labelledby="booking-dates" className={`flex flex-col gap-4 ${layout === 'wide' ? 'sheet border-ink/15 rounded-media border p-5 sm:p-6' : 'border-ink/15 border-t pt-6'}`}>
         <div className="flex flex-col gap-1">
           <h2 id="booking-dates" className="font-display text-display-s leading-[0.95] font-black uppercase">
             {t('dates')}
@@ -189,7 +189,7 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
         )}
       </section>
 
-      <aside className={`border-ink flex flex-col gap-5 self-start border-t-2 pt-6 ${layout === 'wide' ? 'lg:sticky lg:top-24' : ''}`}>
+      <aside className={`flex flex-col gap-5 self-start ${layout === 'wide' ? 'sheet border-ink rounded-media border-2 p-5 sm:p-6 lg:sticky lg:top-24' : 'border-ink border-t-2 pt-6'}`}>
         <PriceSummary quote={priced.quote} />
         {own ? (
           <p className="bg-mist rounded-media p-4 text-sm font-bold">{t('own')}</p>

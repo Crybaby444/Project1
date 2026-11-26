@@ -35,7 +35,7 @@ export function DealCard({ booking, index }: { booking: BookingView; index: numb
       <TransitionLink
         href={`/bookings/${booking.id}`}
         data-deal-card={booking.id}
-        className="group border-ink/15 relative flex h-full items-start gap-4 border-b py-5 after:absolute after:inset-x-0 after:-bottom-px after:h-[1.5px] after:origin-right after:scale-x-0 after:bg-current after:transition-transform after:duration-[600ms] after:ease-[cubic-bezier(0.16,1,0.3,1)] hover:after:origin-left hover:after:scale-x-100 focus-visible:after:origin-left focus-visible:after:scale-x-100 sm:items-center"
+        className="group sheet border-ink/15 rounded-media hover:border-ink focus-visible:border-ink relative flex h-full items-start gap-3 border p-3 transition-[border-color,translate] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 sm:items-center sm:gap-4 sm:p-5"
       >
         <DealCover booking={booking} size="card" />
         <div className="flex min-w-0 flex-1 flex-col gap-2 transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1.5">
@@ -87,7 +87,7 @@ function Page({ role, page, onTotal }: { role: DealRole; page: number; onTotal(t
     return (
       <>
         {[0, 1, 2].map((key) => (
-          <li key={key} aria-hidden="true" className="border-ink/15 bg-mist/50 h-32 animate-pulse border-b" />
+          <li key={key} aria-hidden="true" className="border-ink/15 bg-mist/50 rounded-media h-32 animate-pulse border" />
         ))}
       </>
     );
@@ -118,13 +118,8 @@ function Empty({ role }: { role: DealRole }) {
   return (
     <EmptyState
       title={t(`empty.${role}`)}
-      action={
-        role === 'owner' ? (
-          <Button href="/listings/new" size="lg">
-            {t('lend')}
-          </Button>
-        ) : null
-      }
+      body={t(`empty.${role}Body`)}
+      action={role === 'owner' ? <Button href="/listings/new">{t('lend')}</Button> : <Button href="/c">{t('browse')}</Button>}
     />
   );
 }
@@ -240,7 +235,7 @@ export function MyDeals({ initialRole }: { initialRole: DealRole }) {
               </p>
             )}
             <ul
-              className="border-ink/15 grid border-t lg:grid-cols-2 lg:gap-x-[clamp(24px,3vw,56px)]"
+              className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-2"
               key={role}
             >
               {Array.from({ length: pages }, (_, i) => (

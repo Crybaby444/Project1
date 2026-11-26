@@ -34,7 +34,7 @@ export function DealSummary({ booking }: { booking: BookingView }) {
   const deposit = depositState(booking);
 
   return (
-    <section aria-labelledby="deal-money" className="border-ink/15 flex flex-col gap-3 border-t pt-6">
+    <section aria-labelledby="deal-money" className="sheet border-ink/15 rounded-media border p-5 sm:p-6 flex flex-col gap-3">
       <h2 id="deal-money" className="font-display text-4xl leading-[0.95] font-black uppercase">
         {t('title')}
       </h2>

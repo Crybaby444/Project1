@@ -134,7 +134,7 @@ export function LegalDocument({ doc, effective }: { doc: LegalDoc; effective: st
             </ol>
           </nav>
 
-          <article className="flex max-w-read flex-col gap-12 text-base">
+          <article className="flex max-w-[40rem] flex-col gap-12 text-base">
             <section aria-labelledby="summary" className="border-ink text-ink flex flex-col gap-3 border-t-2 pt-6">
               <h2 id="summary" className="font-display text-display-s leading-[0.95] font-black uppercase">
                 {t('summary')}

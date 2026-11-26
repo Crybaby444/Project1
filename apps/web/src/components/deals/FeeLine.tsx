@@ -14,8 +14,8 @@ export function FeeLine({ quote }: { quote: Pick<QuoteView, 'servicePercent' | '
   const promo = quote.servicePromoUntil;
   const date = promo ? formatDay(promo, locale) : '';
   return (
-    <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-      <dt className="flex flex-wrap items-center gap-2">
+    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-3">
+      <dt className="flex flex-col items-start gap-1">
         {promo ? t('feeName') : t('fee', { percent: quote.servicePercent })}
         {promo && (
           <span
@@ -28,7 +28,7 @@ export function FeeLine({ quote }: { quote: Pick<QuoteView, 'servicePercent' | '
           </span>
         )}
       </dt>
-      <dd className="font-bold tabular-nums">{money(quote.serviceFeeCents)}</dd>
+      <dd className="col-start-2 row-start-1 font-bold tabular-nums">{money(quote.serviceFeeCents)}</dd>
     </div>
   );
 }

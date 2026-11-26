@@ -63,7 +63,7 @@ export function DealReviewsPanel({ bookingId, otherName }: { bookingId: string; 
   }
 
   return (
-    <section aria-labelledby={`${textId}-heading`} className="border-ink/15 flex flex-col gap-5 border-t pt-6" data-deal-reviews="">
+    <section aria-labelledby={`${textId}-heading`} className="sheet border-ink/15 rounded-media border p-5 sm:p-6 flex flex-col gap-5" data-deal-reviews="">
       <h2 id={`${textId}-heading`} className="font-display m-0 text-display-s leading-[0.95] font-black uppercase">
         {t('heading')}
       </h2>

@@ -46,7 +46,7 @@ export function DealCover({ booking, size }: { booking: Pick<BookingView, 'id' |
 
 function Panel({ title, tone = '', children }: { title: string; tone?: string; children: React.ReactNode }) {
   return (
-    <section className={`border-ink/15 flex flex-col gap-2 border-t pt-5 ${tone}`}>
+    <section className={`sheet border-ink/15 rounded-media flex flex-col gap-2 border p-5 sm:p-6 ${tone}`}>
       <h2 className="text-sm font-bold tracking-[0.03em] uppercase">{title}</h2>
       {children}
     </section>
@@ -199,7 +199,7 @@ export function DealView({ id }: { id: string }) {
             </Panel>
           )}
           {booking.dispute && (
-            <section className="flex flex-col gap-2 border-t-2 border-[var(--danger)] pt-5" data-dispute="">
+            <section className="sheet rounded-media flex flex-col gap-2 border-2 border-[var(--danger)] p-5 sm:p-6" data-dispute="">
               <h2 className="text-sm font-bold tracking-[0.03em] uppercase">
                 {t('dispute.title')} · {t(`dispute.reason.${booking.dispute.reason}`)}
               </h2>
@@ -225,7 +225,10 @@ export function DealView({ id }: { id: string }) {
         {/* On a phone the step to take comes first, right under the header (audit 2026-11-14): the aside
             dissolves into the grid and its first panel moves to the top; the rest follows the timeline. */}
         <aside className="flex flex-col gap-6 max-lg:contents lg:sticky lg:top-24">
-          <section aria-label={myTurn ? t('yourTurn') : t('theirTurn')} className="border-ink flex flex-col gap-3 border-t-2 pt-5 max-lg:order-first">
+          <section aria-labelledby="deal-turn" className={`sheet rounded-media flex flex-col gap-3 border p-5 max-lg:order-first sm:p-6 ${myTurn && !closed ? 'border-ink border-2' : 'border-ink/15'}`}>
+            <h2 id="deal-turn" className="text-sm font-bold tracking-[0.03em] uppercase">
+              {closed ? t('closedTitle') : myTurn ? t('yourTurn') : t('theirTurn')}
+            </h2>
             {notice && (
               <p role="alert" className="rounded-media border-ink/15 flex items-start gap-2 border p-3 text-sm font-bold">
                 <span aria-hidden="true" className="bg-ink text-canvas mt-0.5 inline-block size-4 shrink-0 rounded-full border border-ink/15" />

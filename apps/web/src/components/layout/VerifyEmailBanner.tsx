@@ -40,12 +40,15 @@ function Banner() {
 
   return (
     <div className="border-ink/15 bg-surface border-b">
-      <div className="page flex flex-wrap items-center gap-x-4 gap-y-2 py-2.5">
-        <MailIcon />
-        <p className="min-w-48 flex-1 text-sm font-semibold">{t('title')}</p>
+      {/* One row on a phone too: the strip shows on every page until the email is confirmed. */}
+      <div className="page flex flex-wrap items-center gap-x-3 gap-y-1.5 py-2 sm:gap-x-4 sm:py-2.5">
+        <span className="max-sm:hidden">
+          <MailIcon />
+        </span>
+        <p className="min-w-0 flex-1 text-xs leading-snug font-semibold sm:min-w-48 sm:text-sm">{t('title')}</p>
         <div className="flex flex-wrap items-center gap-3">
           <RetryAfterNotice seconds={retryInSeconds} inline />
-          <Button variant="ghost" onClick={resend} loading={busy} disabled={retryInSeconds > 0}>
+          <Button variant="ghost" onClick={resend} loading={busy} disabled={retryInSeconds > 0} className="max-sm:min-h-9 max-sm:px-3 max-sm:text-xs">
             {t('resend')}
           </Button>
         </div>

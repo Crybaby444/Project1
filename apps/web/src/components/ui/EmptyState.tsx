@@ -10,42 +10,28 @@ type EmptyStateProps = {
 };
 
 /**
- * What an empty list shows (v16): the logo's yo-yo going down its string and climbing back, spinning,
- * over a display title, one line and maybe an action, between hairlines. The yo-yo is decoration
- * (aria-hidden) and holds still for people who prefer reduced motion.
+ * What an empty list shows: a quiet sheet like every other block of the account (owner, 2026-11-26:
+ * no swinging yo-yo and no poster-size title). A small empty-tray mark, the title at block-heading
+ * size, one line of what to do, and the action at the end of the row on wider screens.
  */
 export function EmptyState({ title, body, action, headingLevel = 2, className = '' }: EmptyStateProps) {
   const Heading = headingLevel === 3 ? 'h3' : 'h2';
   return (
-    <section className={`border-ink/15 flex flex-col items-center gap-4 border-y px-6 py-14 text-center sm:py-20 ${className}`}>
-      <svg
-        viewBox="0 0 48 96"
-        aria-hidden="true"
-        focusable="false"
-        className="h-24 w-12 overflow-visible motion-reduce:[&_*]:!animate-none"
-      >
-        <line
-          x1="24"
-          y1="0"
-          x2="24"
-          y2="64"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          className="origin-top animate-[empty-string_2.6s_cubic-bezier(0.65,0,0.35,1)_infinite]"
-        />
-        <g className="animate-[empty-drop_2.6s_cubic-bezier(0.65,0,0.35,1)_infinite]">
-          <g className="origin-[24px_70px] animate-[empty-spin_2.6s_cubic-bezier(0.65,0,0.35,1)_infinite]">
-            <circle cx="24" cy="70" r="15" fill="currentColor" />
-            <path d="M10 70h28" stroke="var(--canvas)" strokeWidth="3" />
-          </g>
-        </g>
-      </svg>
-      <Heading className="font-display m-0 max-w-[18ch] text-display-m leading-[0.95] font-black text-balance uppercase">
-        {title}
-      </Heading>
-      {body ? <p className="text-ink/80 m-0 max-w-lead leading-relaxed">{body}</p> : null}
-      {action ? <div className="mt-2 flex flex-wrap justify-center gap-2.5">{action}</div> : null}
+    <section
+      data-empty-state=""
+      className={`sheet border-ink/15 rounded-media flex flex-col items-start gap-4 border p-5 sm:flex-row sm:items-center sm:gap-5 sm:p-6 ${className}`}
+    >
+      <span aria-hidden="true" className="border-ink/15 bg-mist text-ink/70 grid size-12 shrink-0 place-items-center rounded-[14px] border">
+        <svg viewBox="0 0 24 24" className="size-6 fill-none stroke-current [stroke-linecap:round] [stroke-linejoin:round] [stroke-width:1.6]">
+          <path d="M4 13.5 6.2 6.6A2 2 0 0 1 8.1 5.2h7.8a2 2 0 0 1 1.9 1.4L20 13.5" />
+          <path d="M4 13.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3.5h-4.5a1 1 0 0 0-.9.6l-.4.8a1 1 0 0 1-.9.6h-2.6a1 1 0 0 1-.9-.6l-.4-.8a1 1 0 0 0-.9-.6Z" />
+        </svg>
+      </span>
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+        <Heading className="font-display m-0 text-2xl leading-[0.95] font-black text-balance uppercase sm:text-[1.75rem]">{title}</Heading>
+        {body ? <p className="text-ink/75 m-0 max-w-[62ch] text-sm leading-relaxed sm:text-base">{body}</p> : null}
+      </div>
+      {action ? <div className="flex flex-wrap gap-2.5 sm:shrink-0 sm:justify-end">{action}</div> : null}
     </section>
   );
 }

@@ -50,22 +50,22 @@ export function ProfileSocial({
   const stat = (value: number, label: string, onClick?: () => void) => {
     const inner = (
       <>
-        <span className="font-display block text-3xl leading-none font-black tabular-nums sm:text-4xl">{value}</span>
+        <span className="font-display block text-[1.75rem] leading-none font-black tabular-nums sm:text-4xl">{value}</span>
         <span className={`block text-sm font-semibold ${night ? 'text-[var(--paper)]/70' : 'text-ink/70'}`}>{label}</span>
       </>
     );
     return onClick ? (
-      <button type="button" onClick={onClick} className="rounded-md text-left transition-opacity hover:opacity-80">
+      <button type="button" onClick={onClick} className="min-w-0 rounded-md text-left transition-opacity hover:opacity-80">
         {inner}
       </button>
     ) : (
-      <div>{inner}</div>
+      <div className="min-w-0">{inner}</div>
     );
   };
 
   return (
     <div className={`flex flex-wrap items-center justify-between gap-x-8 gap-y-5 ${night ? '[--cta-bg:var(--paper)] [--cta-fg:var(--night)] text-[var(--paper)]' : ''}`} data-profile-social="">
-      <div className="flex flex-wrap gap-x-6 gap-y-3 sm:gap-x-8">
+      <div className="grid w-full grid-cols-2 gap-x-4 gap-y-4 sm:flex sm:w-auto sm:flex-wrap sm:gap-x-8 sm:gap-y-3">
         {stat(deals, tp('deals', { count: deals }))}
         {stat(followers + delta, t('followers', { count: followers + delta }), () => setOpen('followers'))}
         {stat(following, t('followingCount'), () => setOpen('following'))}

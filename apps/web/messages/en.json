@@ -169,7 +169,7 @@
   "banner": {
     "verifyEmail": {
       "title": "Please confirm your email: we sent you a link.",
-      "resend": "Send the email again",
+      "resend": "Send again",
       "sent": "Email sent. Check your inbox."
     }
   },

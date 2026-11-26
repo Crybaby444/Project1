@@ -70,7 +70,7 @@ export function NotificationList({ limit, compact = false, onNavigate }: { limit
           <EmptyState title={t('emptyTitle')} body={t('emptyBody')} />
         )
       ) : (
-        <ul className={`divide-ink/10 divide-y ${compact ? 'max-h-[min(60vh,28rem)] overflow-y-auto' : 'border-ink/15 border-y'}`}>
+        <ul className={`divide-ink/10 divide-y ${compact ? 'max-h-[min(60vh,28rem)] overflow-y-auto' : 'sheet border-ink/15 rounded-media overflow-hidden border'}`}>
           {shown.map((n) => (
             <li key={n.id}>
               <Link

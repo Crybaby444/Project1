@@ -163,7 +163,8 @@
       "none": "Foto vēl nav.",
       "hint": "Foto ar lietas stāvokli palīdz, ja kaut kas noiet greizi.",
       "alt": "Lietas foto {n} ({kind})"
-    }
+    },
+    "closedTitle": "Darījums noslēgts"
   },
   "dealActions": {
     "ACCEPT": "Pieņemt",
@@ -267,10 +268,13 @@
       "renter": "Jums vēl nav nevienas nomas",
       "owner": "Jūsu lietas vēl neviens nav prasījis",
       "action": "Nekas jūs negaida. Lieliski.",
-      "closed": "Noslēgtu darījumu vēl nav."
+      "closed": "Noslēgtu darījumu vēl nav.",
+      "renterBody": "Atrodiet lietu katalogā un izvēlieties dienas: pieprasījums, sarakste un līgums būs šeit.",
+      "ownerBody": "Kad kāds pieprasīs kādu no jūsu lietām, pieprasījums nonāks šeit, un jūs uz to atbildēsiet."
     },
     "lend": "Iznomāt lietu",
-    "myItems": "Manas lietas"
+    "myItems": "Manas lietas",
+    "browse": "Atvērt katalogu"
   },
   "booking": {
     "title": "Rezervēt: {item}",

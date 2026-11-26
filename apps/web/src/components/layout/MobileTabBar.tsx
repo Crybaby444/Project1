@@ -32,7 +32,7 @@ const icon = 'size-[22px] fill-none stroke-current [stroke-linecap:round] [strok
  * is — Home, Catalog (a sheet of every category), Lend (the raised chrome button), Messages, You — that
  * steps away while you scroll down and comes back when you scroll up.
  */
-export function MobileTabBar({ roots, hidden }: { roots: MenuRoot[]; hidden: boolean }) {
+export function MobileTabBar({ roots }: { roots: MenuRoot[] }) {
   const t = useTranslations('nav');
   const th = useTranslations('header');
   const locale = useLocale() as Locale;
@@ -58,7 +58,7 @@ export function MobileTabBar({ roots, hidden }: { roots: MenuRoot[]; hidden: boo
       <nav
         aria-label={t('tabs')}
         data-tab-bar=""
-        className={`border-ink/10 bg-canvas/90 fixed inset-x-3 bottom-[max(10px,env(safe-area-inset-bottom))] z-30 flex items-stretch rounded-[26px] border px-1 shadow-[0_18px_40px_-18px_rgba(10,11,14,0.45)] backdrop-blur-xl transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden ${hidden && !sheet ? 'translate-y-[calc(100%+24px)]' : ''}`}
+        className={`border-ink/10 bg-canvas/90 fixed inset-x-3 bottom-[max(10px,env(safe-area-inset-bottom))] z-30 flex items-stretch rounded-[26px] border px-1 shadow-[0_18px_40px_-18px_rgba(10,11,14,0.45)] backdrop-blur-xl lg:hidden`}
       >
         <Tab href="/" label={t('home')} active={at('/')}>
           <svg viewBox="0 0 24 24" aria-hidden="true" className={icon}>

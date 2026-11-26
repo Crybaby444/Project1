@@ -583,23 +583,6 @@ html[data-staged] .home-loader {
   }
 }
 
-/* The empty state's yo-yo (components/ui/EmptyState): down the string, spinning, and back up. */
-@keyframes empty-drop {
-  0%, 12% { transform: translateY(-40px); }
-  50%, 58% { transform: translateY(0); }
-  100% { transform: translateY(-40px); }
-}
-@keyframes empty-string {
-  0%, 12% { transform: scaleY(0.375); }
-  50%, 58% { transform: scaleY(1); }
-  100% { transform: scaleY(0.375); }
-}
-@keyframes empty-spin {
-  0%, 12% { transform: rotate(0deg); }
-  58% { transform: rotate(540deg); }
-  100% { transform: rotate(720deg); }
-}
-
 /* The admin panel is a tool: no site footer under it (AdminShell). */
 html:has([data-admin-root]) [data-site-footer],
 html:has([data-admin-root]) [data-site-header] {
@@ -833,5 +816,13 @@ html:has([data-home-root]) [data-header-spacer] {
 @media (prefers-reduced-motion: reduce) {
   .rise {
     animation: none;
+  }
+}
+
+/* The tab bar never moves (owner, 2026-11-26); a listing's "Choose dates" bar floats above it, so the
+   page keeps room for both. */
+@media (max-width: 1023px) {
+  body:has([data-book-bar]) {
+    padding-bottom: calc(160px + env(safe-area-inset-bottom));
   }
 }
