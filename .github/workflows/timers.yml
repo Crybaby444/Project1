@@ -1,4 +1,5 @@
-# Fires due deal deadlines (requests that expire, 48-hour inspections, damage replies…) every 10 minutes.
+# Fires due deal deadlines (requests that expire, 48-hour inspections, damage replies…) and sends the
+# reminders the day before a handover or a return, every 10 minutes.
 # The API on Render's free tier sleeps when idle and keeps no timers in memory: deadlines live in the
 # database and POST /api/v1/internal/timers/run fires the due ones. This call also wakes the server.
 #

@@ -577,7 +577,13 @@
         "DISPUTE_OPENED": "«{title}»: открыт спор",
         "DISPUTE_RESOLVED": "«{title}»: спор решён",
         "RENTER_SIGNED": "«{title}»: арендатор подписал — ваша очередь",
-        "CONTRACT_SIGNED": "«{title}»: договор подписан — можно оплатить"
+        "CONTRACT_SIGNED": "«{title}»: договор подписан — можно оплатить",
+        "REMINDER_START": "«{title}»: завтра передача",
+        "REMINDER_END": "«{title}»: завтра возврат",
+        "REMINDER_ANSWER": "«{title}»: запрос скоро истечёт — ответьте",
+        "REMINDER_SIGN": "«{title}»: подпишите договор, пока бронь не истекла",
+        "REMINDER_PAY": "«{title}»: бронь скоро истечёт — завершите её",
+        "REMINDER_REVIEW": "«{title}»: как всё прошло? Оставьте отзыв"
       },
       "OFFER": {
         "OFFER_MADE": "Новое предложение цены за «{title}»",

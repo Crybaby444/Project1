@@ -577,7 +577,13 @@
         "DISPUTE_OPENED": "“{title}”: atvērts strīds",
         "DISPUTE_RESOLVED": "“{title}”: strīds izlemts",
         "RENTER_SIGNED": "“{title}”: nomnieks parakstīja — jūsu kārta",
-        "CONTRACT_SIGNED": "“{title}”: līgums parakstīts — varat maksāt"
+        "CONTRACT_SIGNED": "“{title}”: līgums parakstīts — varat maksāt",
+        "REMINDER_START": "“{title}”: nodošana ir rīt",
+        "REMINDER_END": "“{title}”: atdošana ir rīt",
+        "REMINDER_ANSWER": "“{title}”: pieprasījums drīz beigsies — atbildiet",
+        "REMINDER_SIGN": "“{title}”: parakstiet līgumu, pirms rezervācija beidzas",
+        "REMINDER_PAY": "“{title}”: rezervācija drīz beigsies — pabeidziet to",
+        "REMINDER_REVIEW": "“{title}”: kā gāja? Atstājiet atsauksmi"
       },
       "OFFER": {
         "OFFER_MADE": "Jauns cenas piedāvājums par “{title}”",

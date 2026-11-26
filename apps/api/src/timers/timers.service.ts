@@ -9,6 +9,7 @@ import { ENV, type Env } from '../config/env';
 import { OffersService } from '../offers/offers.service';
 import { MoneyOutService } from '../payments/money-out.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { RemindersService } from './reminders.service';
 
 const DAY = 24 * 3_600_000;
 
@@ -21,12 +22,14 @@ export interface TimersRun {
   /** Refunds and payouts sent (or retried). */
   moneyJobs: number;
   keysForgotten: number;
+  /** Deals whose people were reminded: tomorrow's handover or return, a request or booking about to expire, a review. */
+  reminders: number;
   /** Stopped at the limit or the time budget with deadlines still due. */
   more: boolean;
 }
 
 /**
- * Fires due deadlines of deals (plan 8, Task 10). Render's free server sleeps, so nothing waits in
+ * Fires due deadlines of deals (plan 8, Task 10), then sends the day-before reminders (RemindersService). Render's free server sleeps, so nothing waits in
  * memory: the deadline is in the row (`timerDueAt`), and this runs at every start and whenever the
  * scheduled GitHub workflow calls POST /internal/timers/run. Safe to run late, twice or at once: rows are
  * taken one by one with FOR UPDATE SKIP LOCKED, and the domain ignores a TIMEOUT that is not armed or due.
@@ -43,6 +46,7 @@ export class TimersService implements OnApplicationBootstrap {
     private readonly rules: BookingRulesService,
     private readonly offers: OffersService,
     private readonly moneyOut: MoneyOutService,
+    private readonly reminders: RemindersService,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(ENV) private readonly env: Pick<Env, 'NODE_ENV'>,
   ) {}
@@ -81,6 +85,11 @@ export class TimersService implements OnApplicationBootstrap {
     }
     const offersExpired = await this.offers.expireDue();
     const moneyJobs = await this.moneyOut.processPending();
+    // A reminder that fails must not hold up refunds and payouts (above) or the clean-up (below).
+    const reminders = await this.reminders.sendDue().catch((error: unknown) => {
+      this.logger.error(`reminders failed: ${error instanceof Error ? (error.stack ?? error.message) : String(error)}`);
+      return 0;
+    });
     const { count: keysForgotten } = await this.prisma.idempotencyKey.deleteMany({
       where: { createdAt: { lt: new Date(this.clock.now().getTime() - DAY) } },
     });
@@ -88,7 +97,7 @@ export class TimersService implements OnApplicationBootstrap {
     await this.errorLog.prune();
     // Activity older than 180 days goes (GDPR: kept no longer than the admin needs it).
     await this.activity.prune();
-    return { fired, failed, offersExpired, moneyJobs, keysForgotten, more };
+    return { fired, failed, offersExpired, moneyJobs, keysForgotten, reminders, more };
   }
 
   /** Fires the deadline of the most overdue deal nobody else is handling; null when none is due. */

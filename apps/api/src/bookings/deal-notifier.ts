@@ -2,11 +2,11 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { publicName } from '../common/public-name';
 import { cents, formatMoney } from '@yoyo/domain';
 import { isLocale, type Locale } from '@yoyo/shared';
-import { formatDay } from '../common/format';
+import { formatDayInText as formatDay } from '../common/format';
 import { ENV, type Env } from '../config/env';
 import type { User } from '../generated/prisma/client';
 import { MailService } from '../mail/mail.service';
-import { dealRole } from '../mail/templates/deal-texts';
+import { dealRole, type ReminderTemplate } from '../mail/templates/deal-texts';
 import { sitePath } from '../moderation/moderation.service';
 import { NotificationsService, wantsEmail } from '../notifications/notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -35,7 +35,8 @@ export class DealNotifier {
     @Inject(ENV) private readonly env: Pick<Env, 'WEB_ORIGIN'>,
   ) {}
 
-  async booking(notices: readonly DealNotice[]): Promise<void> {
+  /** The steps of a deal (`DealNotice`s from the domain) and the timers' reminders (RemindersService). */
+  async booking(notices: readonly (Omit<DealNotice, 'template'> & { template: DealNotice['template'] | ReminderTemplate })[]): Promise<void> {
     if (notices.length === 0) return;
     try {
       const booking = await this.prisma.booking.findUniqueOrThrow({

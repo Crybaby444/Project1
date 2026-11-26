@@ -522,6 +522,17 @@ model Booking {
   cancelledAt         DateTime?
   timerKind           TimerKind?
   timerDueAt          DateTime?
+  /// When both people were reminded that the handover is tomorrow (a paid deal, the day before its first
+  /// day); null until then. Sent once.
+  startRemindedAt     DateTime?
+  /// When both people were reminded that the item goes back tomorrow (an active deal, the day before its
+  /// last day); null until then. Sent once.
+  endRemindedAt       DateTime?
+  /// When the person whose turn it is was last told that the request or the booking expires soon; a later
+  /// step (`updatedAt` after it) makes it someone's turn again.
+  deadlineRemindedAt  DateTime?
+  /// When the sides that had not reviewed a completed deal were asked how it went (3 days after); once.
+  reviewRemindedAt    DateTime?
   /// daterange of the taken days while reserved (RESERVE_DATES … RELEASE_DATES); written with raw SQL.
   reserved            Unsupported("daterange")?
   /// Counts every change; an action with an older version is refused (optimistic locking).
