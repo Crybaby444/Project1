@@ -294,11 +294,11 @@
         "items": {
           "cost": {
             "q": "Cik maksā Yoyo?",
-            "a": "Konta izveide un sludinājumi ir bez maksas. Kad darbosies tiešsaistes maksājumi, nomnieks papildus nomai maksās 10% servisa maksu. Īpašnieki nemaksā neko. Pirmajās 30 dienās pēc reģistrācijas servisa maksa nav jāmaksā."
+            "a": "Konta izveide un sludinājumi ir bez maksas. Nomnieks papildus nomai maksā 10% servisa maksu. Īpašnieki nemaksā neko. Pirmajās 30 dienās pēc reģistrācijas servisa maksa nav jāmaksā."
           },
           "payNow": {
             "q": "Vai jau tagad var maksāt caur Yoyo?",
-            "a": "Vēl nē. Mēs atveram Yoyo pakāpeniski, un tiešsaistes maksājumi parādīsies kopā ar rezervācijām. Līdz tam caur Yoyo nauda neplūst, un mēs nekad neprasām jūsu kartes datus."
+            "a": "Jā. Jūs rezervējat dienas, abi parakstāt līgumu, un nomu, servisa maksu un drošības naudu samaksājat ar karti Yoyo. Pagaidām maksājumi darbojas testa režīmā: lapā tas ir norādīts, un īsta nauda netiek kustināta."
           },
           "deposit": {
             "q": "Kas notiek ar depozītu?",
@@ -323,7 +323,7 @@
           },
           "report": {
             "q": "Kā ziņot par sludinājumu vai cilvēku?",
-            "a": "Rakstiet uz admin@yoyo.rent, pievienojiet saiti un dažos vārdos aprakstiet, kas noticis. Mēs izlasām katru vēstuli. Ziņošanas pogas pie sludinājumiem, ziņām un profiliem drīz būs."
+            "a": "Nospiediet «Ziņot» pie lietas, profilā vai sarakstē: moderators izskata katru ziņojumu, un cilvēkam netiek pateikts, kas ziņoja. Par visu pārējo rakstiet uz support@yoyo.rent."
           },
           "insurance": {
             "q": "Vai mana lieta ir apdrošināta?",
@@ -348,7 +348,7 @@
           },
           "contact": {
             "q": "Kā ar jums sazināties?",
-            "a": "Rakstiet uz admin@yoyo.rent. Katru vēstuli izlasa īsts cilvēks."
+            "a": "Rakstiet uz support@yoyo.rent. Katru vēstuli izlasa īsts cilvēks."
           }
         }
       }
