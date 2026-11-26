@@ -123,7 +123,7 @@ export function SuggestionList({
     );
   };
   return (
-    <div hidden={hidden} className={`border-ink/15 bg-surface rounded-media animate-pop-in absolute z-30 origin-top border p-2 ${className}`}>
+    <div hidden={hidden} className={`border-ink/15 bg-surface rounded-media animate-pop-in shadow-pop absolute z-30 origin-top border p-2 ${className}`}>
       <ul id={id} role="listbox" aria-label={t('label')} className="flex flex-col gap-1">
         {categories.length > 0 && (
           <li role="presentation">

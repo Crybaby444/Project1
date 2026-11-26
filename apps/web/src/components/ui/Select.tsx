@@ -178,7 +178,7 @@ export function Select({
           role="listbox"
           aria-labelledby={boxId}
           tabIndex={-1}
-          className="border-ink/15 bg-surface text-ink rounded-media animate-pop-in absolute inset-x-0 top-full z-40 mt-2 max-h-72 origin-top overflow-y-auto border p-1.5 shadow-[0_18px_40px_-24px_rgba(10,11,14,0.45)]"
+          className="border-ink/15 bg-surface text-ink rounded-media animate-pop-in absolute inset-x-0 top-full z-40 mt-2 max-h-72 origin-top overflow-y-auto border p-1.5 shadow-pop"
         >
           {options.map((option, index) => {
             const selected = option.value === value;

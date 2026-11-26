@@ -66,7 +66,7 @@ export function NotificationBell() {
         <section
           id={panelId}
           aria-label={t('title')}
-          className="border-ink/15 bg-surface text-ink animate-pop-in rounded-media absolute top-full right-0 z-40 mt-2 flex w-[min(24rem,calc(100vw-2rem))] origin-top-right max-sm:fixed max-sm:inset-x-4 max-sm:top-[4.25rem] max-sm:w-auto flex-col overflow-hidden border shadow-[0_24px_48px_-28px_rgba(10,11,14,0.5)]"
+          className="border-ink/15 bg-surface text-ink animate-pop-in rounded-media absolute top-full right-0 z-40 mt-2 flex w-[min(24rem,calc(100vw-2rem))] origin-top-right max-sm:fixed max-sm:inset-x-4 max-sm:top-[4.25rem] max-sm:w-auto flex-col overflow-hidden border shadow-pop"
         >
           <NotificationList limit={PANEL_LIMIT} compact onNavigate={() => setOpen(false)} />
           <Link href="/notifications" onClick={() => setOpen(false)} className="border-ink/15 hover:bg-mist border-t px-4 py-3 text-center text-sm font-bold">

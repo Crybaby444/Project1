@@ -95,7 +95,7 @@ export function HomeSearch({ country, today }: { country: Country; today: string
           placeholder={t('whatPlaceholder')}
           className="placeholder:text-ink/60 min-w-0 bg-transparent text-lg font-semibold outline-none [&::-webkit-search-cancel-button]:hidden"
         />
-        <SuggestionList id={ids.list} options={suggest.options} active={suggest.active} onActive={suggest.setActive} onPick={pick} hidden={!whatExpanded} className="top-[calc(100%+10px)] right-0 left-0 w-[min(92vw,560px)] shadow-[0_32px_64px_-32px_rgba(10,11,14,0.5)]" />
+        <SuggestionList id={ids.list} options={suggest.options} active={suggest.active} onActive={suggest.setActive} onPick={pick} hidden={!whatExpanded} className="top-[calc(100%+10px)] right-0 left-0 w-[min(92vw,560px)] shadow-pop" />
       </div>
       <div className={`${cell} border-ink/15 max-md:border-b md:border-l`}>
         <label htmlFor={ids.where} className={caption}>
@@ -111,7 +111,7 @@ export function HomeSearch({ country, today }: { country: Country; today: string
           {range ? (range.end && range.end !== range.start ? `${label(range.start)} – ${label(range.end)}` : label(range.start)) : <span className="text-ink/60">{t('anyDays')}</span>}
         </button>
         {calendar && (
-          <div className="border-ink/15 bg-surface rounded-media animate-pop-in absolute top-[calc(100%+10px)] right-0 z-30 w-[min(92vw,640px)] border p-4 shadow-[0_32px_64px_-32px_rgba(10,11,14,0.5)] max-md:left-0">
+          <div className="border-ink/15 bg-surface rounded-media animate-pop-in absolute top-[calc(100%+10px)] right-0 z-30 w-[min(92vw,640px)] border p-4 shadow-pop max-md:left-0">
             <RangeCalendar
               value={range}
               today={today}

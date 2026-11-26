@@ -24,6 +24,8 @@
   --color-sticker-sun: var(--sticker-sun);
   --color-sticker-violet: var(--sticker-violet);
 
+  /* `shadow-pop`: everything that pops over the page from a control (tokens.css, per theme). */
+  --shadow-pop: var(--pop-shadow);
   --font-display: var(--font-display-face), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-body-face), ui-sans-serif, system-ui, sans-serif;
 }

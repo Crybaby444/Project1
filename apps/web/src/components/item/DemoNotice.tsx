@@ -5,13 +5,13 @@ import { Sheet } from '@/components/ui/Sheet';
 
 /**
  * In place of the booking panel on an example listing (owner, 2026-11-16: demo items on the live site,
- * marked and never rented): what this is, and the two real things to do instead.
+ * marked and never rented): what this is, and the two real things to do instead. The title says it is an
+ * example; no badge repeats it above (DESIGN.md: no kicker above a heading).
  */
 export async function DemoNotice() {
   const t = await getTranslations('item.demo');
   return (
     <Sheet aria-labelledby="demo-title" tone="ring" className="flex flex-col gap-4" data-demo-notice="">
-      <span className="rounded-pill bg-ink text-canvas self-start px-2.5 py-1 type-caption">{t('badge')}</span>
       <h2 id="demo-title" className="type-block">
         {t('title')}
       </h2>
