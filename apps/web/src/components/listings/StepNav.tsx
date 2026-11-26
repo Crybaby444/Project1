@@ -50,7 +50,8 @@ export function StepNav({ current, onSelect }: { current: BuilderStep; onSelect(
                 <span aria-hidden="true" className="text-xs font-bold tabular-nums">
                   {String(index + 1).padStart(2, '0')}
                 </span>
-                <span className="font-display leading-none font-black uppercase transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] max-lg:sr-only lg:text-3xl lg:group-hover:translate-x-1.5">
+                {/* Read out on a phone (the dots carry no names); the display face only where it shows, from lg up. */}
+                <span className="max-lg:sr-only lg:font-display transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] lg:text-3xl lg:leading-none lg:font-black lg:uppercase lg:group-hover:translate-x-1.5">
                   {t(step)}
                 </span>
                 {isCurrent ? (
