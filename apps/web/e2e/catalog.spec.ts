@@ -26,13 +26,24 @@ const dayButton = (page: Page, day: string) => page.locator(`[data-booking-panel
 /** The panel loads the booking terms itself: wait for its calendar before paging it. */
 const calendarReady = (page: Page) => expect(page.locator('[data-range-status]')).toBeVisible();
 
-/** Picks a period on the booking calendar, paging months forward as needed. */
+/**
+ * Pages the booking calendar to the month of `day`, back or forward. Forward only failed near a month's
+ * end: on 27 Nov the test paged on to December to see day +4, then could not find day +2 (29 Nov).
+ */
+async function showMonthOf(page: Page, day: string) {
+  const panel = page.locator('[data-booking-panel]');
+  for (let i = 0; i < 6 && !(await dayButton(page, day).count()); i++) {
+    const shown = await panel.locator('[data-date]').evaluateAll((days) => days.map((d) => d.getAttribute('data-date') ?? '').sort());
+    const back = shown.length > 0 && day < shown[0]!;
+    await panel.getByRole('button', { name: back ? book.calendar.previous : book.calendar.next }).click();
+  }
+}
+
+/** Picks a period on the booking calendar, paging to each day's month. */
 async function pickPeriod(page: Page, start: string, end: string) {
   await calendarReady(page);
   for (const day of [start, end]) {
-    for (let i = 0; i < 3 && !(await dayButton(page, day).count()); i++) {
-      await page.locator('[data-booking-panel]').getByRole('button', { name: book.calendar.next }).click();
-    }
+    await showMonthOf(page, day);
     await dayButton(page, day).click();
   }
 }
@@ -106,9 +117,7 @@ test('days the owner closed are struck through and cannot be picked; a renter re
   await registerByApi(page.request, { name: 'Līga Kalniņa' });
   await page.goto(`/listings/${listing.id}-${listing.slug}`);
   await calendarReady(page);
-  for (let i = 0; i < 2 && !(await dayButton(page, dayFromToday(4)).count()); i++) {
-    await page.locator('[data-booking-panel]').getByRole('button', { name: book.calendar.next }).click();
-  }
+  await showMonthOf(page, dayFromToday(4));
   await expect(dayButton(page, dayFromToday(4))).toHaveAccessibleName(new RegExp(book.taken));
   await expect(dayButton(page, dayFromToday(4))).toHaveAttribute('aria-disabled', 'true');
 
