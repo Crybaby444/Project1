@@ -24,6 +24,8 @@
   --color-sticker-sun: var(--sticker-sun);
   --color-sticker-violet: var(--sticker-violet);
 
+  /* `shadow-pop`: everything that pops over the page from a control (tokens.css, per theme). */
+  --shadow-pop: var(--pop-shadow);
   --font-display: var(--font-display-face), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-body-face), ui-sans-serif, system-ui, sans-serif;
 }
@@ -114,6 +116,27 @@
  * heading of a sheet or a group. `type-label` names a field or a group (14px), `type-caption` tags a
  * small fact or sits on a chip (12px). None of them sets a colour: a quiet label adds `text-ink/70`.
  */
+/*
+ * A moment (DESIGN.md "Surfaces"): the one block of a page that matters most right now (your turn in a deal,
+ * the money you can spend, a deal that has come back, the first steps of a new account) is drawn in the
+ * night, with the one blue light pooled in its corner, inside an otherwise quiet page. Everything inside
+ * turns over with it: ink becomes paper, the filled button becomes paper on night. A dialog opened from
+ * inside takes the page's colours back (base layer, `dialog`).
+ */
+@utility moment {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--night);
+  color: var(--paper);
+  --ink: var(--paper);
+  --canvas: var(--night);
+  --surface: color-mix(in srgb, var(--paper) 7%, var(--night));
+  --mist: color-mix(in srgb, var(--paper) 12%, var(--night));
+  --cta-bg: var(--paper);
+  --cta-fg: var(--night);
+}
+
 @utility type-hero {
   @apply font-display text-display-xl leading-[0.86] font-black uppercase;
 }
@@ -318,6 +341,16 @@
   ::selection {
     background-color: var(--ink);
     color: var(--canvas);
+  }
+
+  /* A dialog is always in the page's own colours, even when it was opened from inside a moment. */
+  dialog {
+    --ink: var(--base-ink);
+    --canvas: var(--base-canvas);
+    --surface: var(--base-surface);
+    --mist: var(--base-mist);
+    --cta-bg: var(--base-cta-bg);
+    --cta-fg: var(--base-cta-fg);
   }
 
   body {

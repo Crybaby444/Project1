@@ -164,7 +164,37 @@
       "hint": "Photos of the item's condition help if anything goes wrong.",
       "alt": "Photo {n} of the item ({kind})"
     },
-    "closedTitle": "Deal closed"
+    "closedTitle": "Deal closed",
+    "doneBy": {
+      "ACCEPT": "Request accepted. Next comes the contract.",
+      "DECLINE": "Request declined.",
+      "WITHDRAW": "Request withdrawn.",
+      "SIGN": "Contract signed.",
+      "PAY": "Paid. The deposit is held until the return.",
+      "CANCEL": "Deal cancelled.",
+      "MARK_HANDED_OVER": "Handover noted. Waiting for the renter to confirm.",
+      "CONFIRM_RECEIVED": "Received. Enjoy it, and bring it back on time.",
+      "REPORT_NOT_RECEIVED": "Noted. The owner and Yoyo have been told.",
+      "MARK_RETURNED": "Return noted. Waiting for the owner to confirm.",
+      "CONFIRM_RETURNED": "It is back with you. Check it and release the deposit.",
+      "REPORT_NOT_RETURNED": "A dispute is open. Yoyo will look at the deal.",
+      "ALL_FINE": "Deposit released to the renter. Thank you!",
+      "REPORT_DAMAGE": "The claim has gone to the renter.",
+      "ACCEPT_DAMAGE": "The deposit goes to the owner.",
+      "REJECT_DAMAGE": "Yoyo will decide and write to you both.",
+      "RESOLVE": "Decision recorded."
+    },
+    "closing": {
+      "title": "It all came back",
+      "renterRefunded": "Your deposit of {amount} is back in your Yoyo wallet.",
+      "renterToOwner": "The deposit of {amount} went to the owner, as the deal decided.",
+      "renterNone": "Thank you for bringing it back.",
+      "owner": "The rent, {amount}, is in your Yoyo wallet.",
+      "review": "Leave a review",
+      "reviewed": "Thank you for your review.",
+      "moreRenter": "Find something else",
+      "moreOwner": "Lend another item"
+    }
   },
   "dealActions": {
     "ACCEPT": "Accept",

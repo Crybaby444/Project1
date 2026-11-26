@@ -35,8 +35,15 @@ function BalanceTiles({ summary }: { summary: WalletSummary }) {
         <Reveal
           key={tile.key}
           index={index}
-          className={`sheet rounded-media flex flex-col gap-2 border p-5 ${tile.key === 'available' ? 'border-ink/40' : 'border-ink/15'}`}
+          // The money you can spend is the page's moment (DESIGN.md "Surfaces"): in the night, with the light.
+          className={`rounded-media flex flex-col gap-2 p-5 ${tile.key === 'available' ? 'moment' : 'sheet border-ink/15 border'}`}
         >
+          {tile.key === 'available' && (
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -top-1/2 -right-1/4 -z-10 size-[28rem] rounded-full bg-[radial-gradient(closest-side,rgb(77_124_255/0.42),transparent)]"
+            />
+          )}
           <dt className="text-ink/70 text-sm font-semibold">{t(tile.key)}</dt>
           <dd
             className="font-display text-display-m leading-[0.9] font-black tabular-nums"

@@ -93,7 +93,8 @@ export function DealActions({ booking, onError }: { booking: BookingView; onErro
       setText('');
       setPhotoIds([]);
       setTried(false);
-      toast.show(td('done'));
+      // Say what just happened and what comes next, not a bare "Done" (owner, 2026-11-26: a positive path).
+      toast.show(td.has(`doneBy.${kind}`) ? td(`doneBy.${kind}`) : td('done'));
     } catch (error) {
       setOpen(null);
       onError(error);

@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import en from '../../../messages/en.json';
@@ -14,7 +14,7 @@ vi.mock('@/i18n/navigation', async (importOriginal) => ({
 }));
 
 describe('ProfileTabs', () => {
-  it('shows the items, and the reviews placeholder; arrows move between the tabs', async () => {
+  it('shows the items, and the reviews placeholder; arrows move between the tabs; no empty shops tab for a visitor', async () => {
     const user = userEvent.setup();
     const api = fakeApi({
       ...meRoute(null),
@@ -25,16 +25,23 @@ describe('ProfileTabs', () => {
     const items = screen.getByRole('tab', { name: /^Items\s*1$/ });
     expect(items).toHaveAttribute('aria-selected', 'true');
     expect(screen.getByRole('link', { name: 'Cordless drill' })).toBeVisible();
+    await waitFor(() => expect(screen.queryByRole('tab', { name: new RegExp(`^${en.profile.shops}`) })).toBeNull());
     items.focus();
-    await user.keyboard('{ArrowRight}');
-    const shops = screen.getByRole('tab', { name: new RegExp(`^${en.profile.shops}`) });
-    expect(shops).toHaveFocus();
-    expect(await screen.findByText(en.profile.noShops.replace('{name}', 'Jānis'))).toBeVisible();
     await user.keyboard('{ArrowRight}');
     const reviews = screen.getByRole('tab', { name: new RegExp(`^${en.profile.reviews}`) });
     expect(reviews).toHaveFocus();
     expect(reviews).toHaveAttribute('aria-selected', 'true');
     expect(await screen.findByText(en.profile.noReviewsTitle)).toBeVisible();
+  });
+
+  it('shows a visitor the shops tab when the person has shops, with how many', async () => {
+    const api = fakeApi({
+      ...meRoute(null),
+      'GET /api/v1/users/owner-1/shops': { status: 200, body: { items: [{ id: 'shop-1', name: 'Garage', about: null, category: null, itemCount: 2, covers: [] }] } },
+      'GET /api/v1/users/owner-1/reviews': { status: 200, body: { items: [], total: 0, page: 1, pageSize: 10, average: 0 } },
+    });
+    renderWithSession(<ProfileTabs listings={[catalogItem()]} name="Jānis" userId="owner-1" />, { client: api.client, hasSession: false });
+    expect(await screen.findByRole('tab', { name: new RegExp(`^${en.profile.shops}\\s*1$`) })).toBeVisible();
   });
 
   it('your own profile manages everything: drafts in Items, and ?tab= opens a tab (no separate dashboard, 2026-11-19)', async () => {

@@ -112,7 +112,7 @@ export function CityInput({
           id={listId}
           role="listbox"
           aria-label={t('where')}
-          className="border-ink/15 bg-surface rounded-media animate-pop-in absolute top-[calc(100%+12px)] left-0 z-30 w-[min(86vw,320px)] overflow-hidden border p-1.5 shadow-[0_32px_64px_-32px_rgba(10,11,14,0.5)]"
+          className="border-ink/15 bg-surface rounded-media animate-pop-in absolute top-[calc(100%+12px)] left-0 z-30 w-[min(86vw,320px)] overflow-hidden border p-1.5 shadow-pop"
         >
           {items.map((city, index) => (
             <li

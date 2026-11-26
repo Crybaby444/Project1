@@ -934,7 +934,9 @@
     },
     "saveSearch": {
       "save": "Paziņot par jaunām lietām",
-      "saved": "Saglabāts: paziņosim par jaunām lietām"
+      "saved": "Saglabāts: paziņosim par jaunām lietām",
+      "saveShort": "Paziņot man",
+      "savedShort": "Paziņosim"
     }
   },
   "rangeCalendar": {
@@ -1381,6 +1383,34 @@
       "pending": {
         "lend": "Jūsu identitātes pārbaude ir pie moderatora. Lietas pārbaudei varēsiet nosūtīt, kad tā būs apstiprināta.",
         "rent": "Jūsu identitātes pārbaude ir pie moderatora. Nomāt varēsiet, kad tā būs apstiprināta."
+      }
+    }
+  },
+  "firstSteps": {
+    "title": "Pirmie soļi",
+    "progress": "Izdarīti {done} no {total}",
+    "done": "Izdarīts",
+    "welcome": "Jūsu pirmajā mēnesī Yoyo servisa maksa nav jāmaksā.",
+    "steps": {
+      "account": {
+        "title": "Konts izveidots",
+        "hint": "Laipni lūdzam Yoyo."
+      },
+      "email": {
+        "title": "Apstipriniet e-pastu",
+        "hint": "Atveriet saiti, ko jums nosūtījām."
+      },
+      "identity": {
+        "title": "Apstipriniet identitāti",
+        "hint": "Moderators to pārbauda vienreiz; tad varat īrēt un izīrēt."
+      },
+      "about": {
+        "title": "Pastāstiet par sevi",
+        "hint": "Pilsēta un pāris vārdu par sevi vairo uzticību."
+      },
+      "first": {
+        "title": "Jūsu pirmā lieta",
+        "hint": "Atrodiet, ko nomāt, vai izīrējiet kādu savu."
       }
     }
   }

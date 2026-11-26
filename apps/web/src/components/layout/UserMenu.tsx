@@ -126,7 +126,7 @@ export function UserMenu({ user }: { user: PublicUser }) {
       </button>
 
       {open && (
-        <div className="border-ink/15 bg-surface text-ink animate-pop-in rounded-media absolute top-full right-0 z-40 mt-2 w-80 max-w-[calc(100vw-2rem)] origin-top-right overflow-hidden border p-2 shadow-[0_24px_48px_-28px_rgba(10,11,14,0.5)]">
+        <div className="border-ink/15 bg-surface text-ink animate-pop-in rounded-media absolute top-full right-0 z-40 mt-2 w-80 max-w-[calc(100vw-2rem)] origin-top-right overflow-hidden border p-2 shadow-pop">
           <div className="border-ink/15 flex items-center gap-3 border-b px-3 pt-2 pb-4">
             <span
               aria-hidden="true"

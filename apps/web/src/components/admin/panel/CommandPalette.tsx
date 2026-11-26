@@ -154,7 +154,7 @@ export function CommandPalette() {
         aria-modal="true"
         aria-label={t('search.open')}
         onMouseDown={(e) => e.stopPropagation()}
-        className="border-ink/15 bg-surface text-ink animate-pop-in rounded-media flex w-full max-w-xl flex-col overflow-hidden border shadow-[0_40px_80px_-30px_rgba(10,11,14,0.6)]"
+        className="border-ink/15 bg-surface text-ink animate-pop-in rounded-media flex w-full max-w-xl flex-col overflow-hidden border shadow-pop"
       >
         <div className="border-ink/15 flex items-center gap-3 border-b px-4">
           <svg

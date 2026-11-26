@@ -36,7 +36,7 @@ export function SearchCell() {
         </svg>
       </button>
       {open && (
-        <div ref={panel} className="border-ink/15 bg-canvas animate-pop-in absolute inset-x-0 top-full z-40 border-b px-8 py-5 shadow-[0_30px_60px_-40px_rgba(10,11,14,0.55)]">
+        <div ref={panel} className="border-ink/15 bg-canvas animate-pop-in absolute inset-x-0 top-full z-40 border-b px-8 py-5 shadow-pop">
           <SearchBox label={tn('search')} className="mx-auto max-w-3xl" />
         </div>
       )}
