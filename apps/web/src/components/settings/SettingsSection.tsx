@@ -11,7 +11,7 @@ export function SettingsSection({
   children: ReactNode;
 }) {
   return (
-    <section className="border-ink/15 flex flex-col gap-5 border-t pt-8">
+    <section className="sheet border-ink/15 rise rounded-media flex flex-col gap-5 border p-5 sm:p-7">
       <header className="flex flex-col gap-1.5">
         <h2 className="font-display text-display-s leading-[0.95] font-black uppercase">{title}</h2>
         {intro && <p className="leading-relaxed">{intro}</p>}

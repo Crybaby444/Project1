@@ -786,3 +786,38 @@ html:has([data-home-root]) [data-header-spacer] {
     padding-bottom: calc(96px + env(safe-area-inset-bottom));
   }
 }
+
+/*
+ * The site's sheets and arrivals, in the admin panel's language (owner, 2026-11-26: the whole site in the
+ * style of the admin). A sheet is a quiet card a little lighter than the page with a lit top edge and a soft
+ * fall of shadow; blocks of an account page come out of a blur in turn (`.rise`, `--i`).
+ */
+.sheet {
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.45));
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 24px 48px -36px rgb(10 11 14 / 0.25);
+}
+[data-theme='dark']:not(:has([data-home-root])) .sheet {
+  background: linear-gradient(180deg, rgb(244 241 230 / 0.06), rgb(244 241 230 / 0.025));
+  box-shadow:
+    inset 0 1px 0 rgb(244 241 230 / 0.09),
+    0 28px 56px -36px rgb(0 0 0 / 0.85);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]):not(:has([data-home-root])) .sheet {
+    background: linear-gradient(180deg, rgb(244 241 230 / 0.06), rgb(244 241 230 / 0.025));
+    box-shadow:
+      inset 0 1px 0 rgb(244 241 230 / 0.09),
+      0 28px 56px -36px rgb(0 0 0 / 0.85);
+  }
+}
+.rise {
+  animation: admin-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none;
+  }
+}

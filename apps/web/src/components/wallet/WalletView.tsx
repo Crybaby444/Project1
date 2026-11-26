@@ -8,17 +8,17 @@ import { Reveal } from '@/components/motion/Reveal';
 import { TransitionLink } from '@/components/motion/TransitionLink';
 import { Button } from '@/components/ui/Button';
 import { Chip } from '@/components/ui/Chip';
-import { displayFit } from '@/lib/display-fit';
 import { formatMoment } from '@/lib/deals/dates';
 import { useMoney } from '@/lib/deals/money';
 import { useWallet, useWalletHistory } from '@/lib/deals/queries';
 import { useErrorText } from '@/lib/forms/error-text';
 import { MoneyDialog, type MoneyMode } from './MoneyDialog';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { PageHeader } from '@/components/ui/PageHeader';
 
 type Tile = { key: 'available' | 'deposits' | 'incoming' | 'earned'; cents: number; hint?: string };
 
-/** The four sums as sticker tiles; each counts up the first time it is seen (CountUp keeps its width). */
+/** The four sums on sheets, the available one ringed; each counts up the first time it is seen. */
 function BalanceTiles({ summary }: { summary: WalletSummary }) {
   const t = useTranslations('wallet');
   const money = useMoney();
@@ -29,15 +29,18 @@ function BalanceTiles({ summary }: { summary: WalletSummary }) {
     { key: 'earned', cents: summary.earnedCents, hint: t('earnedHint') },
   ];
   return (
-    <dl className="border-ink/15 grid border-t sm:grid-cols-2 xl:grid-cols-4">
+    <dl className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
       {tiles.map((tile, index) => (
         <Reveal
           key={tile.key}
           index={index}
-          className="border-ink/15 flex flex-col gap-2 border-b py-6 sm:px-6 sm:odd:border-r sm:odd:pl-0 xl:border-r xl:odd:pl-6 xl:first:pl-0 xl:last:border-r-0"
+          className={`sheet rounded-media flex flex-col gap-2 border p-5 ${tile.key === 'available' ? 'border-ink/40' : 'border-ink/15'}`}
         >
-          <dt className="text-ink/70 text-xs font-bold tracking-[0.08em] uppercase">{t(tile.key)}</dt>
-          <dd className="font-display text-display-l leading-[0.9] font-black tabular-nums" data-tile={tile.key}>
+          <dt className="text-ink/70 text-sm font-semibold">{t(tile.key)}</dt>
+          <dd
+            className="font-display text-display-m leading-[0.9] font-black tabular-nums"
+            data-tile={tile.key}
+          >
             <CountUp value={tile.cents} format={money} />
           </dd>
           {tile.hint && <dd className="text-ink/80 max-w-[34ch] text-sm">{tile.hint}</dd>}
@@ -76,9 +79,19 @@ function History() {
       <h2 id="wallet-history" className="font-display text-display-s leading-[0.95] font-black uppercase">
         {t('history')}
       </h2>
-      <div role="group" aria-label={t('filters')} className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
+      <div
+        role="group"
+        aria-label={t('filters')}
+        className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0"
+      >
         {(['ALL', ...LEDGER_KINDS] as const).map((k, index) => (
-          <Chip key={k} pressed={kind === k} onPressedChange={() => choose(k)} tilt={index % 2 ? 'right' : 'left'} className="shrink-0">
+          <Chip
+            key={k}
+            pressed={kind === k}
+            onPressedChange={() => choose(k)}
+            tilt={index % 2 ? 'right' : 'left'}
+            className="shrink-0"
+          >
             {k === 'ALL' ? t('all') : tk(k)}
           </Chip>
         ))}
@@ -90,7 +103,10 @@ function History() {
           ))}
         </ul>
       ) : query.isError ? (
-        <div role="alert" className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6">
+        <div
+          role="alert"
+          className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6"
+        >
           <p className="font-bold">{t('loadFailed')}</p>
           <p>{errorText(query.error)}</p>
           <Button variant="ghost" onClick={() => void query.refetch()}>
@@ -105,27 +121,47 @@ function History() {
             {query.data.items.map((item) => {
               const incoming = item.amountCents > 0;
               return (
-                <li key={`${item.id}-${item.amountCents}`} className="flex flex-wrap items-center gap-x-4 gap-y-1 py-4" data-ledger-kind={item.kind}>
+                <li
+                  key={`${item.id}-${item.amountCents}`}
+                  className="flex flex-wrap items-center gap-x-4 gap-y-1 py-4"
+                  data-ledger-kind={item.kind}
+                >
                   <span
                     aria-hidden="true"
                     className={`grid size-9 shrink-0 place-items-center rounded-full border ${incoming ? 'bg-ink border-ink text-canvas' : 'border-ink text-ink'}`}
                   >
-                    <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="size-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <path d={incoming ? 'M12 19V5m0 14-6-6m6 6 6-6' : 'M12 5v14m0-14-6 6m6-6 6 6'} />
                     </svg>
                   </span>
                   <div className="flex min-w-0 flex-1 flex-col">
                     <span className="font-bold">{tk(item.kind)}</span>
                     <span className="flex flex-wrap gap-x-3 text-sm">
-                      <time dateTime={item.createdAt}>{formatMoment(item.createdAt, locale, 'Europe/Riga')}</time>
+                      <time dateTime={item.createdAt}>
+                        {formatMoment(item.createdAt, locale, 'Europe/Riga')}
+                      </time>
                       {item.bookingId && (
-                        <TransitionLink href={`/bookings/${item.bookingId}`} className="font-bold underline underline-offset-2 [overflow-wrap:anywhere]">
+                        <TransitionLink
+                          href={`/bookings/${item.bookingId}`}
+                          className="font-bold [overflow-wrap:anywhere] underline underline-offset-2"
+                        >
                           {item.listingTitle ? t('deal', { item: item.listingTitle }) : t('dealFallback')}
                         </TransitionLink>
                       )}
                     </span>
                   </div>
-                  <span className="font-display ml-auto text-3xl leading-none font-black tabular-nums" data-amount={item.amountCents}>
+                  <span
+                    className="font-display ml-auto text-3xl leading-none font-black tabular-nums"
+                    data-amount={item.amountCents}
+                  >
                     {incoming ? '+' : ''}
                     {money(item.amountCents)}
                   </span>
@@ -134,7 +170,10 @@ function History() {
             })}
           </ul>
           {pages > 1 && (
-            <nav aria-label={t('page', { page, pages })} className="flex flex-wrap items-center justify-center gap-3">
+            <nav
+              aria-label={t('page', { page, pages })}
+              className="flex flex-wrap items-center justify-center gap-3"
+            >
               <Button variant="ghost" onClick={() => setPage((p) => p - 1)} disabled={page <= 1}>
                 ← {t('previous')}
               </Button>
@@ -162,31 +201,37 @@ export function WalletView() {
 
   return (
     <div className="flex flex-col gap-10">
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="@container flex min-w-0 flex-1 flex-col gap-2">
-          <h1 style={displayFit(t('title'), { max: '3.5rem' })} className="font-display text-display-fit leading-[0.85] font-black uppercase">
-            {t('title')}
-          </h1>
-          <p className="max-w-read leading-relaxed">{t('intro')}</p>
-        </div>
-        <div className="flex flex-wrap gap-3">
-          <Button size="lg" onClick={() => setMode('topUp')} disabled={!wallet.data}>
-            {t('topUp')}
-          </Button>
-          <Button size="lg" variant="ghost" onClick={() => setMode('withdraw')} disabled={!wallet.data || wallet.data.balanceCents === 0}>
-            {t('withdraw')}
-          </Button>
-        </div>
-      </header>
+      <PageHeader
+        title={t('title')}
+        intro={t('intro')}
+        action={
+          <div className="flex flex-wrap gap-3">
+            <Button size="lg" onClick={() => setMode('topUp')} disabled={!wallet.data}>
+              {t('topUp')}
+            </Button>
+            <Button
+              size="lg"
+              variant="ghost"
+              onClick={() => setMode('withdraw')}
+              disabled={!wallet.data || wallet.data.balanceCents === 0}
+            >
+              {t('withdraw')}
+            </Button>
+          </div>
+        }
+      />
 
       {wallet.isPending ? (
-        <div aria-busy="true" className="grid gap-px sm:grid-cols-2 xl:grid-cols-4">
+        <div aria-busy="true" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {[0, 1, 2, 3].map((k) => (
-            <div key={k} aria-hidden="true" className="bg-mist/60 h-32 animate-pulse" />
+            <div key={k} aria-hidden="true" className="bg-mist/60 rounded-media h-32 animate-pulse" />
           ))}
         </div>
       ) : wallet.isError ? (
-        <div role="alert" className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6">
+        <div
+          role="alert"
+          className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6"
+        >
           <p className="font-bold">{t('loadFailed')}</p>
           <p>{errorText(wallet.error)}</p>
           <Button variant="ghost" onClick={() => void wallet.refetch()}>
@@ -199,7 +244,9 @@ export function WalletView() {
 
       <History />
 
-      {mode && wallet.data && <MoneyDialog mode={mode} balanceCents={wallet.data.balanceCents} onClose={() => setMode(null)} />}
+      {mode && wallet.data && (
+        <MoneyDialog mode={mode} balanceCents={wallet.data.balanceCents} onClose={() => setMode(null)} />
+      )}
     </div>
   );
 }

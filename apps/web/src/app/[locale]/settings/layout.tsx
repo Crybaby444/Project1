@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import { SettingsTabs } from '@/components/settings/SettingsTabs';
-import { displayFit } from '@/lib/display-fit';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { RequireSession } from '@/lib/session/RequireSession';
 
 type Props = { params: Promise<{ locale: string }>; children: ReactNode };
@@ -20,13 +20,8 @@ export default async function SettingsLayout({ params, children }: Props) {
   const t = await getTranslations('settings');
 
   return (
-    <main className="page-narrow @container flex flex-col gap-6 page-y">
-      <h1
-        style={displayFit(t('title'), { max: '3.25rem' })}
-        className="font-display text-display-fit leading-[0.85] font-black uppercase"
-      >
-        {t('title')}
-      </h1>
+    <main className="page-narrow page-y @container flex flex-col gap-6">
+      <PageHeader title={t('title')} />
       <SettingsTabs />
       <RequireSession>{children}</RequireSession>
     </main>
