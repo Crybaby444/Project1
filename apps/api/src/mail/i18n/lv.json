@@ -260,6 +260,72 @@
         "heading": "Līgums ir parakstīts",
         "body": "{other} parakstīja nomas līgumu par “{title}” no {start} līdz {end}. Samaksājiet {total} (ieskaitot drošības naudu {deposit}), lai apstiprinātu rezervāciju."
       }
+    },
+    "REMINDER_START": {
+      "renter": {
+        "subject": "Rīt jūs saņemat “{title}”",
+        "preview": "Jūs un {other} satiekaties rīt, {start}.",
+        "heading": "Nodošana ir rīt",
+        "body": "“{title}” noma sākas rīt, {start}. Vienojieties par vietu un laiku darījuma čatā un, satiekoties, apstipriniet Yoyo, ka saņēmāt lietu."
+      },
+      "owner": {
+        "subject": "Rīt jūs nododat “{title}”",
+        "preview": "Jūs un {other} satiekaties rīt, {start}.",
+        "heading": "Nodošana ir rīt",
+        "body": "“{title}” noma sākas rīt, {start}. Vienojieties par vietu un laiku darījuma čatā un, satiekoties, atzīmējiet nodošanu Yoyo."
+      }
+    },
+    "REMINDER_END": {
+      "renter": {
+        "subject": "Rīt jāatdod “{title}”",
+        "preview": "Jūs un {other} satiekaties rīt, {end}.",
+        "heading": "Atdošana ir rīt",
+        "body": "“{title}” noma beidzas rīt, {end}. Vienojieties par atdošanas vietu un laiku darījuma čatā un atzīmējiet atdošanu Yoyo, kad lieta būs atdota."
+      },
+      "owner": {
+        "subject": "Rīt jums atdos “{title}”",
+        "preview": "Jūs un {other} satiekaties rīt, {end}.",
+        "heading": "Atdošana ir rīt",
+        "body": "“{title}” noma beidzas rīt, {end}. Vienojieties par atdošanas vietu un laiku darījuma čatā un apstipriniet Yoyo, kad lieta būs saņemta atpakaļ."
+      }
+    },
+    "REMINDER_ANSWER": {
+      "owner": {
+        "subject": "Pieprasījums par “{title}” drīz beigsies",
+        "preview": "Pieņemiet vai noraidiet to tuvāko stundu laikā.",
+        "heading": "Pieprasījums gaida jūsu atbildi",
+        "body": "{other} vēlas nomāt “{title}” no {start} līdz {end}. Pieprasījums beigsies pēc mazāk nekā 6 stundām, un datumi atkal būs brīvi. Pieņemiet vai noraidiet to darījumā."
+      }
+    },
+    "REMINDER_SIGN": {
+      "owner": {
+        "subject": "Parakstiet līgumu par “{title}”",
+        "preview": "Rezervācija beigsies pēc mazāk nekā 6 stundām.",
+        "heading": "Trūkst tikai jūsu paraksta",
+        "body": "{other} parakstīja līgumu par “{title}” no {start} līdz {end}. Parakstiet arī jūs, lai {other} varētu samaksāt: rezervācija beigsies pēc mazāk nekā 6 stundām."
+      }
+    },
+    "REMINDER_PAY": {
+      "renter": {
+        "subject": "Pabeidziet “{title}” rezervāciju",
+        "preview": "Rezervācija beigsies pēc mazāk nekā 6 stundām.",
+        "heading": "Rezervācija drīz beigsies",
+        "body": "{other} pieņēma jūsu pieprasījumu par “{title}” no {start} līdz {end}. Rezervācijas pabeigšana darījumā aizņem pāris minūtes; tā beigsies pēc mazāk nekā 6 stundām, un datumi atkal būs brīvi."
+      }
+    },
+    "REMINDER_REVIEW": {
+      "renter": {
+        "subject": "Kā noritēja “{title}” noma?",
+        "preview": "Atsauksme aizņems minūti.",
+        "heading": "Pastāstiet, kā gāja",
+        "body": "“{title}” noma ir beigusies. Daži vārdi par to, kā viss noritēja, palīdz cilvēkiem tuvumā uzticēties cits citam. Jūsu atsauksme parādīsies, kad arī otra puse uzrakstīs savējo vai kad beigsies atsauksmju laiks."
+      },
+      "owner": {
+        "subject": "Kā noritēja “{title}” noma?",
+        "preview": "Atsauksme aizņems minūti.",
+        "heading": "Pastāstiet, kā gāja",
+        "body": "“{title}” noma ir beigusies. Daži vārdi par to, kā viss noritēja, palīdz cilvēkiem tuvumā uzticēties cits citam. Jūsu atsauksme parādīsies, kad arī otra puse uzrakstīs savējo vai kad beigsies atsauksmju laiks."
+      }
     }
   },
   "listingMoved": {

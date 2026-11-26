@@ -18,7 +18,7 @@ import { describe, expect, it } from 'vitest';
 import en from './i18n/en.json';
 import lv from './i18n/lv.json';
 import ru from './i18n/ru.json';
-import { DEAL_PLACEHOLDERS, dealRole } from './templates/deal-texts';
+import { DEAL_PLACEHOLDERS, dealRole, REMINDER_TEMPLATES } from './templates/deal-texts';
 
 const RENTER: Actor = { kind: 'RENTER', userId: 'renter' };
 const OWNER: Actor = { kind: 'OWNER', userId: 'owner' };
@@ -138,7 +138,16 @@ describe('deal email texts', () => {
   });
 
   it('has a subject, preview, heading and body for each of them in English, Latvian and Russian', () => {
-    for (const pair of [...pairs, 'OFFER_MADE/OWNER', 'OFFER_ACCEPTED/RENTER', 'OFFER_DECLINED/RENTER']) {
+    const reminders = [
+      ...(['REMINDER_START', 'REMINDER_END'] as const).flatMap((template) => [`${template}/RENTER`, `${template}/OWNER`]),
+      'REMINDER_ANSWER/OWNER',
+      'REMINDER_SIGN/OWNER',
+      'REMINDER_PAY/RENTER',
+      'REMINDER_REVIEW/RENTER',
+      'REMINDER_REVIEW/OWNER',
+    ];
+    expect(new Set(reminders.map((pair) => pair.split('/')[0]))).toEqual(new Set(REMINDER_TEMPLATES));
+    for (const pair of [...pairs, 'OFFER_MADE/OWNER', 'OFFER_ACCEPTED/RENTER', 'OFFER_DECLINED/RENTER', ...reminders]) {
       const [template, to] = pair.split('/') as [string, string];
       const role = dealRole(to as 'RENTER' | 'OWNER' | 'ADMINS');
       const english = (en.deal as unknown as Record<string, Record<string, Record<string, string>>>)[template]?.[role];

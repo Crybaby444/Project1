@@ -260,6 +260,72 @@
         "heading": "The contract is signed",
         "body": "{other} countersigned the rental contract for “{title}” from {start} to {end}. Pay {total} (deposit {deposit} included) to confirm the booking."
       }
+    },
+    "REMINDER_START": {
+      "renter": {
+        "subject": "Tomorrow you pick up “{title}”",
+        "preview": "You and {other} meet tomorrow, {start}.",
+        "heading": "The handover is tomorrow",
+        "body": "The rental of “{title}” starts tomorrow, {start}. Agree on a place and time in the deal’s chat, and when you meet, confirm in Yoyo that you got the item."
+      },
+      "owner": {
+        "subject": "Tomorrow you hand over “{title}”",
+        "preview": "You and {other} meet tomorrow, {start}.",
+        "heading": "The handover is tomorrow",
+        "body": "The rental of “{title}” starts tomorrow, {start}. Agree on a place and time in the deal’s chat, and mark the handover in Yoyo when you meet."
+      }
+    },
+    "REMINDER_END": {
+      "renter": {
+        "subject": "“{title}” goes back tomorrow",
+        "preview": "You and {other} meet tomorrow, {end}.",
+        "heading": "The return is tomorrow",
+        "body": "The rental of “{title}” ends tomorrow, {end}. Agree on a place and time for the return in the deal’s chat, and mark the return in Yoyo when you give the item back."
+      },
+      "owner": {
+        "subject": "“{title}” comes back tomorrow",
+        "preview": "You and {other} meet tomorrow, {end}.",
+        "heading": "The return is tomorrow",
+        "body": "The rental of “{title}” ends tomorrow, {end}. Agree on a place and time for the return in the deal’s chat, and confirm in Yoyo when you get the item back."
+      }
+    },
+    "REMINDER_ANSWER": {
+      "owner": {
+        "subject": "The request for “{title}” expires soon",
+        "preview": "Accept or decline it in the next few hours.",
+        "heading": "A request is waiting for your answer",
+        "body": "{other} wants to rent “{title}” from {start} to {end}. The request expires in less than 6 hours, and then the dates are free again. Accept or decline it in the deal."
+      }
+    },
+    "REMINDER_SIGN": {
+      "owner": {
+        "subject": "Sign the contract for “{title}”",
+        "preview": "The booking expires in less than 6 hours.",
+        "heading": "Only your signature is missing",
+        "body": "{other} signed the contract for “{title}” from {start} to {end}. Sign it too, so {other} can pay: the booking expires in less than 6 hours."
+      }
+    },
+    "REMINDER_PAY": {
+      "renter": {
+        "subject": "Finish booking “{title}”",
+        "preview": "The booking expires in less than 6 hours.",
+        "heading": "The booking expires soon",
+        "body": "{other} accepted your request for “{title}” from {start} to {end}. Finishing the booking takes a couple of minutes in the deal; it expires in less than 6 hours, and then the dates are free again."
+      }
+    },
+    "REMINDER_REVIEW": {
+      "renter": {
+        "subject": "How did renting “{title}” go?",
+        "preview": "A review takes a minute.",
+        "heading": "Tell others how it went",
+        "body": "The rental of “{title}” is over. A few words on how it went help people nearby trust each other. Your review shows once the other side has written theirs too, or when the time for reviews runs out."
+      },
+      "owner": {
+        "subject": "How did renting “{title}” go?",
+        "preview": "A review takes a minute.",
+        "heading": "Tell others how it went",
+        "body": "The rental of “{title}” is over. A few words on how it went help people nearby trust each other. Your review shows once the other side has written theirs too, or when the time for reviews runs out."
+      }
     }
   },
   "listingMoved": {

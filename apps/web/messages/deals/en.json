@@ -577,7 +577,13 @@
         "DISPUTE_OPENED": "“{title}”: a dispute was opened",
         "DISPUTE_RESOLVED": "“{title}”: the dispute was decided",
         "RENTER_SIGNED": "“{title}”: the renter signed — your turn to sign",
-        "CONTRACT_SIGNED": "“{title}”: the contract is signed — you can pay"
+        "CONTRACT_SIGNED": "“{title}”: the contract is signed — you can pay",
+        "REMINDER_START": "“{title}”: the handover is tomorrow",
+        "REMINDER_END": "“{title}”: the return is tomorrow",
+        "REMINDER_ANSWER": "“{title}”: the request expires soon — answer it",
+        "REMINDER_SIGN": "“{title}”: sign the contract before the booking expires",
+        "REMINDER_PAY": "“{title}”: the booking expires soon — finish it",
+        "REMINDER_REVIEW": "“{title}”: how did it go? Leave a review"
       },
       "OFFER": {
         "OFFER_MADE": "New price offer for “{title}”",

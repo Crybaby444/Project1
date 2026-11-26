@@ -9,3 +9,12 @@ export function formatDay(day: string, locale: string): string {
   const style: Intl.DateTimeFormatOptions = known === 'lv' ? { day: '2-digit', month: '2-digit', year: 'numeric' } : { dateStyle: 'long' };
   return new Intl.DateTimeFormat(known, { ...style, timeZone: 'UTC' }).format(new Date(`${day}T12:00:00Z`));
 }
+
+/**
+ * The same day inside a sentence of an email. Russian loses its year mark: «30 ноября 2026 г.» ends with a
+ * period that doubled the sentence's own («…по 30 ноября 2026 г.. Yoyo хранит…»). The contract keeps the
+ * full form (`formatDay`).
+ */
+export function formatDayInText(day: string, locale: string): string {
+  return formatDay(day, locale).replace(/\s*г\.$/u, '');
+}
