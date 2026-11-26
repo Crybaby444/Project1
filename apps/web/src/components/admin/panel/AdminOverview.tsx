@@ -25,14 +25,20 @@ export function AdminOverview() {
   const { user } = useSession();
   const locale = useLocale();
   const now = useNow({ updateInterval: 60_000 });
-  const today = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(now);
+  const today = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(
+    now,
+  );
 
   return (
     <div className="flex flex-col gap-10">
       <header {...rise(0)} className="admin-rise flex flex-col gap-1">
         <p className="text-ink/70 text-sm font-semibold first-letter:uppercase">{today}</p>
-        <h1 className="font-display text-display-l leading-[0.92] font-black uppercase">{t('overview.title')}</h1>
-        {user && <p className="text-ink/75">{t('overview.hello', { name: user.name.split(' ')[0] ?? user.name })}</p>}
+        <h1 className="font-display text-display-l leading-[0.92] font-black uppercase">
+          {t('overview.title')}
+        </h1>
+        {user && (
+          <p className="text-ink/75">{t('overview.hello', { name: user.name.split(' ')[0] ?? user.name })}</p>
+        )}
       </header>
 
       {overview.isPending ? (
@@ -66,11 +72,27 @@ function Body({ data }: { data: Overview }) {
   const t = useTranslations('admin.overview');
   const money = useMoney();
   const waits = [
-    { count: data.listings.pendingReview, label: t('toReview', { count: data.listings.pendingReview }), href: '/admin/listings' },
-    { count: data.deals.disputed, label: t('disputes', { count: data.deals.disputed }), href: '/admin/deals?view=disputes' },
+    {
+      count: data.listings.pendingReview,
+      label: t('toReview', { count: data.listings.pendingReview }),
+      href: '/admin/listings',
+    },
+    {
+      count: data.deals.disputed,
+      label: t('disputes', { count: data.deals.disputed }),
+      href: '/admin/deals?view=disputes',
+    },
     // `?.`: an API one release behind has no complaints yet (the site may deploy first).
-    { count: data.reports?.open ?? 0, label: t('reportsWaiting', { count: data.reports?.open ?? 0 }), href: '/admin/reports' },
-    { count: data.deals.requested, label: t('requests', { count: data.deals.requested }), href: '/admin/deals?status=REQUESTED' },
+    {
+      count: data.reports?.open ?? 0,
+      label: t('reportsWaiting', { count: data.reports?.open ?? 0 }),
+      href: '/admin/reports',
+    },
+    {
+      count: data.deals.requested,
+      label: t('requests', { count: data.deals.requested }),
+      href: '/admin/deals?status=REQUESTED',
+    },
   ];
   const anything = waits.some((w) => w.count > 0);
   const users = data.series.map((d) => d.users);
@@ -89,7 +111,9 @@ function Body({ data }: { data: Overview }) {
                 <Link
                   href={w.href}
                   className={`group rounded-media ease-yoyo relative flex h-full items-center gap-4 border p-4 transition-[transform,border-color] duration-200 hover:-translate-y-0.5 sm:flex-col sm:items-stretch sm:justify-between sm:gap-6 sm:p-5 ${
-                    w.count > 0 ? 'admin-glass border-ink/25 hover:border-ink/45' : 'border-ink/10 text-ink/55'
+                    w.count > 0
+                      ? 'admin-glass border-ink/25 hover:border-ink/45'
+                      : 'border-ink/10 text-ink/55'
                   }`}
                 >
                   <span className="sr-only">{`${w.count} ${w.label}`}</span>
@@ -100,12 +124,20 @@ function Body({ data }: { data: Overview }) {
                       <span className="relative size-2.5 rounded-full bg-[rgb(var(--admin-light))]" />
                     </span>
                   )}
-                  <span aria-hidden="true" className="font-display min-w-[2ch] text-display-l leading-[0.8] font-black tabular-nums">
+                  <span
+                    aria-hidden="true"
+                    className="font-display text-display-l min-w-[2ch] leading-[0.8] font-black tabular-nums"
+                  >
                     <CountUp value={w.count} />
                   </span>
-                  <span aria-hidden="true" className="flex flex-1 items-center justify-between gap-3 sm:items-end">
+                  <span
+                    aria-hidden="true"
+                    className="flex flex-1 items-center justify-between gap-3 sm:items-end"
+                  >
                     <span className="text-base leading-snug font-semibold">{w.label}</span>
-                    <span className="ease-yoyo text-lg transition-transform duration-200 group-hover:translate-x-1">→</span>
+                    <span className="ease-yoyo text-lg transition-transform duration-200 group-hover:translate-x-1">
+                      →
+                    </span>
                   </span>
                 </Link>
               </li>
@@ -113,30 +145,56 @@ function Body({ data }: { data: Overview }) {
           </ul>
         ) : (
           <p className="admin-glass border-ink/15 rounded-media flex items-center gap-3 border px-5 py-4 font-semibold">
-            <span aria-hidden="true" className="inline-block size-2 rounded-full bg-[rgb(var(--admin-light))]" />
+            <span
+              aria-hidden="true"
+              className="inline-block size-2 rounded-full bg-[rgb(var(--admin-light))]"
+            />
             {t('allClear')}
           </p>
         )}
       </section>
 
       <dl {...rise(2)} className="admin-rise grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label={t('users')} value={<CountUp value={data.users.total} />} notes={[t('newWeek', { count: data.users.new7d }), ...(data.users.blocked ? [t('blocked', { count: data.users.blocked })] : [])]}>
+        <StatCard
+          label={t('users')}
+          value={<CountUp value={data.users.total} />}
+          notes={[
+            t('newWeek', { count: data.users.new7d }),
+            ...(data.users.blocked ? [t('blocked', { count: data.users.blocked })] : []),
+          ]}
+        >
           <Trend values={users} />
         </StatCard>
-        <StatCard label={t('listings')} value={<CountUp value={data.listings.total} />} notes={[t('published', { count: data.listings.published })]}>
+        <StatCard
+          label={t('listings')}
+          value={<CountUp value={data.listings.total} />}
+          notes={[t('published', { count: data.listings.published })]}
+        >
           <Share part={data.listings.published} whole={data.listings.total} />
         </StatCard>
-        <StatCard label={t('deals')} value={<CountUp value={data.deals.open} />} notes={[t('completed', { count: data.deals.completed30d })]}>
+        <StatCard
+          label={t('deals')}
+          value={<CountUp value={data.deals.open} />}
+          notes={[t('completed', { count: data.deals.completed30d })]}
+        >
           <Trend values={deals} />
         </StatCard>
-        <StatCard label={t('turnover')} value={<CountUp value={data.money.turnover30dCents} format={money} />} notes={[t('turnoverHint')]} />
+        <StatCard
+          label={t('turnover')}
+          value={<CountUp value={data.money.turnover30dCents} format={money} />}
+          notes={[t('turnoverHint')]}
+        />
       </dl>
 
       <div className="grid gap-8 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <div {...rise(3)} className="admin-rise min-w-0">
           <Chart series={data.series} />
         </div>
-        <section {...rise(4)} aria-labelledby="admin-money" className="admin-rise admin-glass min-w-0 border-ink/15 rounded-media flex flex-col gap-5 border p-5 sm:p-6">
+        <section
+          {...rise(4)}
+          aria-labelledby="admin-money"
+          className="admin-rise admin-glass border-ink/15 rounded-media flex min-w-0 flex-col gap-5 border p-5 sm:p-6"
+        >
           <h2 id="admin-money" className="text-ink/70 text-sm font-bold tracking-[0.04em] uppercase">
             {t('money')}
           </h2>
@@ -146,14 +204,24 @@ function Body({ data }: { data: Overview }) {
               <CountUp value={data.money.revenueCents} format={money} />
             </p>
           </div>
-          <Held escrow={data.money.escrowCents} deposits={data.money.depositsCents} wallets={data.money.walletsCents} />
+          <Held
+            escrow={data.money.escrowCents}
+            deposits={data.money.depositsCents}
+            wallets={data.money.walletsCents}
+          />
           {data.ledgerOk ? (
             <p className="mt-auto flex items-center gap-2 text-sm font-semibold">
-              <span aria-hidden="true" className="inline-block size-2 rounded-full bg-[rgb(var(--admin-light))]" />
+              <span
+                aria-hidden="true"
+                className="inline-block size-2 rounded-full bg-[rgb(var(--admin-light))]"
+              />
               {t('ledgerOk')}
             </p>
           ) : (
-            <Link href="/admin/money" className="bg-ink text-canvas rounded-media mt-auto flex items-center justify-between gap-3 px-4 py-3 text-sm font-bold">
+            <Link
+              href="/admin/money"
+              className="bg-ink text-canvas rounded-media mt-auto flex items-center justify-between gap-3 px-4 py-3 text-sm font-bold"
+            >
               <span>{t('ledgerBad')}</span>
               <span aria-hidden="true">→</span>
             </Link>
@@ -176,12 +244,28 @@ function Trend({ values }: { values: number[] }) {
   const W = 120;
   const H = 28;
   const step = values.length > 1 ? W / (values.length - 1) : W;
-  const points = values.map((v, i) => `${(i * step).toFixed(1)},${(H - (v / max) * (H - 4) - 2).toFixed(1)}`).join(' ');
+  const points = values
+    .map((v, i) => `${(i * step).toFixed(1)},${(H - (v / max) * (H - 4) - 2).toFixed(1)}`)
+    .join(' ');
   const sign = delta > 0 ? '+' : delta < 0 ? '−' : '±';
   return (
     <div className="flex flex-col gap-1.5">
-      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true" className="admin-draw h-7 w-full overflow-visible">
-        <polyline points={points} fill="none" stroke="currentColor" strokeOpacity="0.55" strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        preserveAspectRatio="none"
+        aria-hidden="true"
+        className="admin-draw h-7 w-full overflow-visible"
+      >
+        <polyline
+          points={points}
+          fill="none"
+          stroke="currentColor"
+          strokeOpacity="0.55"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+          strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
+        />
         {values.length > 0 && (
           <line
             x1={(values.length - 1) * step}
@@ -195,7 +279,11 @@ function Trend({ values }: { values: number[] }) {
           />
         )}
       </svg>
-      <span className={`text-xs font-bold whitespace-nowrap tabular-nums ${delta > 0 ? 'text-ink' : 'text-ink/60'}`}>{t('vsLastWeek', { delta: `${sign}${Math.abs(delta)}` })}</span>
+      <span
+        className={`text-xs font-bold whitespace-nowrap tabular-nums ${delta > 0 ? 'text-ink' : 'text-ink/60'}`}
+      >
+        {t('vsLastWeek', { delta: `${sign}${Math.abs(delta)}` })}
+      </span>
     </div>
   );
 }
@@ -207,9 +295,14 @@ function Share({ part, whole }: { part: number; whole: number }) {
   return (
     <div className="flex flex-col gap-1.5">
       <div className="bg-ink/10 h-1.5 overflow-hidden rounded-full">
-        <div className="admin-grow-x h-full rounded-full bg-[rgb(var(--admin-light))]" style={{ width: `${Math.round(share * 100)}%` }} />
+        <div
+          className="admin-grow-x h-full rounded-full bg-[rgb(var(--admin-light))]"
+          style={{ width: `${Math.round(share * 100)}%` }}
+        />
       </div>
-      <span className="text-ink/60 text-xs font-bold tabular-nums">{t('shareLive', { percent: Math.round(share * 100) })}</span>
+      <span className="text-ink/60 text-xs font-bold tabular-nums">
+        {t('shareLive', { percent: Math.round(share * 100) })}
+      </span>
     </div>
   );
 }
@@ -229,7 +322,13 @@ function Held({ escrow, deposits, wallets }: { escrow: number; deposits: number;
       <div className="bg-ink/10 flex h-2.5 gap-0.5 overflow-hidden rounded-full" aria-hidden="true">
         {total > 0 &&
           parts.map((p) =>
-            p.value > 0 ? <div key={p.key} className={`admin-grow-x h-full ${p.tone}`} style={{ width: `${(p.value / total) * 100}%` }} /> : null,
+            p.value > 0 ? (
+              <div
+                key={p.key}
+                className={`admin-grow-x h-full ${p.tone}`}
+                style={{ width: `${(p.value / total) * 100}%` }}
+              />
+            ) : null,
           )}
       </div>
       <dl className="flex flex-col gap-2 text-base">
@@ -262,7 +361,12 @@ function Chart({ series }: { series: Overview['series'] }) {
   const dealsWeek = week(series.map((d) => d.deals));
   const usersWeek = week(series.map((d) => d.users));
   const short = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'numeric', timeZone: 'UTC' });
-  const long = new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'long', timeZone: 'UTC' });
+  const long = new Intl.DateTimeFormat(locale, {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'long',
+    timeZone: 'UTC',
+  });
   const last = series.length - 1;
   const shown = hover ?? last;
   const day = series[shown];
@@ -272,7 +376,10 @@ function Chart({ series }: { series: Overview['series'] }) {
   const signed = (n: number) => `${n > 0 ? '+' : n < 0 ? '−' : '±'}${Math.abs(n)}`;
 
   return (
-    <section aria-labelledby="admin-chart" className="admin-glass border-ink/15 rounded-media flex h-full flex-col gap-5 border p-5 sm:p-6">
+    <section
+      aria-labelledby="admin-chart"
+      className="admin-glass border-ink/15 rounded-media flex h-full flex-col gap-5 border p-5 sm:p-6"
+    >
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h2 id="admin-chart" className="text-ink/70 text-sm font-bold tracking-[0.04em] uppercase">
           {t('chart')}
@@ -281,12 +388,19 @@ function Chart({ series }: { series: Overview['series'] }) {
           <li className="flex items-center gap-2">
             <span aria-hidden="true" className="bg-ink inline-block size-2.5 rounded-full" />
             {t('chartDeals')} · {deals}
-            <span className="text-ink/55 text-xs tabular-nums">{t('vsLastWeek', { delta: signed(dealsWeek.delta) })}</span>
+            <span className="text-ink/55 text-xs tabular-nums">
+              {t('vsLastWeek', { delta: signed(dealsWeek.delta) })}
+            </span>
           </li>
           <li className="flex items-center gap-2">
-            <span aria-hidden="true" className="border-ink inline-block size-2.5 rounded-full border-[1.5px]" />
+            <span
+              aria-hidden="true"
+              className="border-ink inline-block size-2.5 rounded-full border-[1.5px]"
+            />
             {t('chartUsers')} · {users}
-            <span className="text-ink/55 text-xs tabular-nums">{t('vsLastWeek', { delta: signed(usersWeek.delta) })}</span>
+            <span className="text-ink/55 text-xs tabular-nums">
+              {t('vsLastWeek', { delta: signed(usersWeek.delta) })}
+            </span>
           </li>
         </ul>
       </div>
@@ -295,9 +409,15 @@ function Chart({ series }: { series: Overview['series'] }) {
         <p className="sr-only">{t('chartSummary', { users, deals })}</p>
         {/* The day being read: the one pointed at, else today. */}
         {day && (
-          <p id={tipId} aria-live="polite" className="text-ink/80 flex min-h-6 flex-wrap items-baseline gap-x-3 text-sm tabular-nums">
+          <p
+            id={tipId}
+            aria-live="polite"
+            className="text-ink/80 flex min-h-6 flex-wrap items-baseline gap-x-3 text-sm tabular-nums"
+          >
             <span className="font-bold first-letter:uppercase">
-              {hover === null && day.day === todayKey ? t('today') : long.format(new Date(`${day.day}T00:00:00Z`))}
+              {hover === null && day.day === todayKey
+                ? t('today')
+                : long.format(new Date(`${day.day}T00:00:00Z`))}
             </span>
             <span>
               {t('chartDeals')}: <b>{day.deals}</b>
@@ -322,8 +442,24 @@ function Chart({ series }: { series: Overview['series'] }) {
                   onBlur={() => setHover(null)}
                   className={`group relative flex h-full w-full items-end justify-center gap-[12%] rounded-[10px] px-[6%] pb-0 transition-colors duration-150 ${active ? 'bg-ink/[0.06]' : 'hover:bg-ink/[0.04]'}`}
                 >
-                  <Bar value={d.deals} max={max} index={i} className={lit ? 'bg-[rgb(var(--admin-light))] shadow-[0_0_18px_rgb(var(--admin-light)/0.55)]' : 'bg-ink'} />
-                  <Bar value={d.users} max={max} index={i} className={lit ? 'border-[1.5px] border-[rgb(var(--admin-light))]' : 'border-ink/70 border-[1.5px]'} />
+                  <Bar
+                    value={d.deals}
+                    max={max}
+                    index={i}
+                    className={
+                      lit
+                        ? 'bg-[rgb(var(--admin-light))] shadow-[0_0_18px_rgb(var(--admin-light)/0.55)]'
+                        : 'bg-ink'
+                    }
+                  />
+                  <Bar
+                    value={d.users}
+                    max={max}
+                    index={i}
+                    className={
+                      lit ? 'border-[1.5px] border-[rgb(var(--admin-light))]' : 'border-ink/70 border-[1.5px]'
+                    }
+                  />
                 </button>
               </li>
             );
@@ -331,7 +467,10 @@ function Chart({ series }: { series: Overview['series'] }) {
         </ol>
         <div aria-hidden="true" className="text-ink/60 flex gap-[3%] text-xs tabular-nums">
           {series.map((d, i) => (
-            <span key={d.day} className={`min-w-0 flex-1 text-center ${i === last ? 'text-ink font-bold' : ''} ${(last - i) % 2 ? 'max-sm:invisible' : ''}`}>
+            <span
+              key={d.day}
+              className={`min-w-0 flex-1 text-center ${i === last ? 'text-ink font-bold' : ''} ${(last - i) % 2 ? 'max-sm:invisible' : ''}`}
+            >
               {short.format(new Date(`${d.day}T00:00:00Z`))}
             </span>
           ))}
@@ -342,7 +481,17 @@ function Chart({ series }: { series: Overview['series'] }) {
 }
 
 /** One pill of the chart, grown from the floor after the days before it. An empty day keeps a stub. */
-function Bar({ value, max, index, className }: { value: number; max: number; index: number; className: string }) {
+function Bar({
+  value,
+  max,
+  index,
+  className,
+}: {
+  value: number;
+  max: number;
+  index: number;
+  className: string;
+}) {
   const height = value > 0 ? Math.max(6, (value / max) * 100) : 0;
   return (
     <span
@@ -364,10 +513,14 @@ function activityHref(a: AdminActivity): string {
 }
 
 const KIND_ICON: Record<AdminActivity['kind'], ReactNode> = {
-  USER_JOINED: <path d="M15 19v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 8v6M22 11h-6" />,
+  USER_JOINED: (
+    <path d="M15 19v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 8v6M22 11h-6" />
+  ),
   LISTING_SUBMITTED: <path d="M9 12l2 2 4-4M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z" />,
   DEAL_REQUESTED: <path d="M7 7h11l-3-3M17 17H6l3 3" />,
-  DISPUTE_OPENED: <path d="M12 9v4M12 17h.01M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />,
+  DISPUTE_OPENED: (
+    <path d="M12 9v4M12 17h.01M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+  ),
 };
 
 /** The newest events, under a heading per day (today, yesterday, then dates), each with its kind's mark. */
@@ -410,11 +563,17 @@ function Activity({ items }: { items: AdminActivity[] }) {
                       aria-hidden="true"
                       className={`grid size-8 shrink-0 place-items-center rounded-full border ${a.kind === 'DISPUTE_OPENED' ? 'border-[rgb(var(--admin-light))] text-[rgb(var(--admin-light))]' : 'border-ink/20 text-ink/75'}`}
                     >
-                      <svg viewBox="0 0 24 24" className="size-4 fill-none stroke-current [stroke-linecap:round] [stroke-linejoin:round] [stroke-width:1.7]">
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="size-4 fill-none stroke-current [stroke-width:1.7] [stroke-linecap:round] [stroke-linejoin:round]"
+                      >
                         {KIND_ICON[a.kind]}
                       </svg>
                     </span>
-                    <Link href={activityHref(a)} className="min-w-0 flex-1 truncate font-semibold hover:underline hover:decoration-1 hover:underline-offset-2">
+                    <Link
+                      href={activityHref(a)}
+                      className="min-w-0 flex-1 truncate font-semibold hover:underline hover:decoration-1 hover:underline-offset-2"
+                    >
                       {t(`kind.${a.kind}`, { who: a.who, title: a.title })}
                     </Link>
                     <time dateTime={a.at} className="text-ink/60 shrink-0 text-sm tabular-nums">

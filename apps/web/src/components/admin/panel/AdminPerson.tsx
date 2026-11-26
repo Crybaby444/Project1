@@ -67,7 +67,12 @@ function Body({ d }: { d: AdminUserDetail }) {
   const [reason, setReason] = useState('');
   const [note, setNote] = useState('');
   const date = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric' });
-  const moment = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  const moment = new Intl.DateTimeFormat(locale, {
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
   const done = { onSuccess: () => toast.show(t('done')), onError: () => toast.show(t('failed')) };
   const state = d.user.deletedAt ? 'deleted' : d.user.blockedAt ? 'blocked' : 'active';
 
@@ -75,31 +80,45 @@ function Body({ d }: { d: AdminUserDetail }) {
     <>
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex min-w-0 flex-col gap-2">
-          <h1 className="font-display text-display-m leading-[0.92] font-black uppercase [overflow-wrap:anywhere]">{d.user.name}</h1>
+          <h1 className="font-display text-display-m leading-[0.92] font-black [overflow-wrap:anywhere] uppercase">
+            {d.user.name}
+          </h1>
           <p className="text-ink/80 [overflow-wrap:anywhere]">{d.user.email}</p>
           <ul className="flex flex-wrap gap-1.5 text-xs font-bold">
-            <li className={`rounded-pill px-2.5 py-0.5 ${state === 'active' ? 'border-ink/25 border' : 'bg-ink text-canvas'}`}>{tu(state)}</li>
+            <li
+              className={`rounded-pill px-2.5 py-0.5 ${state === 'active' ? 'border-ink/25 border' : 'bg-ink text-canvas'}`}
+            >
+              {tu(state)}
+            </li>
             <li className="border-ink/25 rounded-pill border px-2.5 py-0.5">{tu(`roles.${d.user.role}`)}</li>
-            <li className="border-ink/25 rounded-pill border px-2.5 py-0.5">{d.user.emailVerified ? tu('verified') : tu('unverified')}</li>
+            <li className="border-ink/25 rounded-pill border px-2.5 py-0.5">
+              {d.user.emailVerified ? tu('verified') : tu('unverified')}
+            </li>
             <li className="border-ink/25 rounded-pill border px-2.5 py-0.5 uppercase">{d.user.locale}</li>
           </ul>
           <p className="text-ink/70 text-sm">
             {t('joined', { date: date.format(new Date(d.user.createdAt)) })} ·{' '}
-            {d.user.lastSeenAt ? t('lastSeen', { date: moment.format(new Date(d.user.lastSeenAt)) }) : t('never')}
+            {d.user.lastSeenAt
+              ? t('lastSeen', { date: moment.format(new Date(d.user.lastSeenAt)) })
+              : t('never')}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {managesStaff && viewer?.id !== d.user.id && !d.user.deletedAt && staff.data && (
-            <StaffRoleSelect id={d.user.id} value={staff.data.find((m) => m.id === d.user.id)?.staffRole ?? null} label={t('staffRole')} />
+            <StaffRoleSelect
+              id={d.user.id}
+              value={staff.data.find((m) => m.id === d.user.id)?.staffRole ?? null}
+              label={t('staffRole')}
+            />
           )}
           {d.user.role !== 'ADMIN' && !d.user.deletedAt && (
-          <Button
-            variant={d.user.blockedAt ? 'primary' : 'ghost'}
-            loading={block.isPending}
-            onClick={() => block.mutate({ id: d.user.id, block: !d.user.blockedAt }, done)}
-          >
-            {d.user.blockedAt ? tu('unblock') : tu('block')}
-          </Button>
+            <Button
+              variant={d.user.blockedAt ? 'primary' : 'ghost'}
+              loading={block.isPending}
+              onClick={() => block.mutate({ id: d.user.id, block: !d.user.blockedAt }, done)}
+            >
+              {d.user.blockedAt ? tu('unblock') : tu('block')}
+            </Button>
           )}
           {!d.user.deletedAt && <EditPersonButton user={d.user} />}
           {d.user.role !== 'ADMIN' && !d.user.deletedAt && <DeletePersonButton user={d.user} />}
@@ -121,7 +140,9 @@ function Body({ d }: { d: AdminUserDetail }) {
         ).map(([key, value]) => (
           <div key={key} className="border-ink/10 flex flex-col gap-1 border-b px-1 py-4 sm:px-3">
             <dt className="text-ink/70 text-sm font-semibold">{t(`stats.${key}`)}</dt>
-            <dd className={`font-display text-3xl leading-none font-black tabular-nums ${key === 'reportsAgainst' && d.stats.reportsAgainst > 0 ? 'underline decoration-2 underline-offset-4' : ''}`}>
+            <dd
+              className={`font-display text-3xl leading-none font-black tabular-nums ${key === 'reportsAgainst' && d.stats.reportsAgainst > 0 ? 'underline decoration-2 underline-offset-4' : ''}`}
+            >
               {value}
             </dd>
           </div>
@@ -138,9 +159,15 @@ function Body({ d }: { d: AdminUserDetail }) {
                 </Link>
                 <div className="flex flex-wrap items-center gap-3">
                   <ListingStatusBadge status={l.status as never} />
-                  {l.dailyCents !== null && <span className="tabular-nums text-sm">{money(l.dailyCents)}</span>}
+                  {l.dailyCents !== null && (
+                    <span className="text-sm tabular-nums">{money(l.dailyCents)}</span>
+                  )}
                   {(l.status === 'PUBLISHED' || l.status === 'HIDDEN') && (
-                    <button type="button" onClick={() => setAsk({ kind: 'takedown', id: l.id, title: l.title })} className="ml-auto text-sm font-bold underline decoration-1 underline-offset-4">
+                    <button
+                      type="button"
+                      onClick={() => setAsk({ kind: 'takedown', id: l.id, title: l.title })}
+                      className="ml-auto text-sm font-bold underline decoration-1 underline-offset-4"
+                    >
                       {t('takedown')}
                     </button>
                   )}
@@ -160,7 +187,7 @@ function Body({ d }: { d: AdminUserDetail }) {
                 <div className="flex flex-wrap items-center gap-3">
                   <DealStatusBadge status={deal.status as never} />
                   <span className="text-ink/70 text-sm">{t(`role.${deal.role}`)}</span>
-                  <span className="ml-auto tabular-nums text-sm font-semibold">{money(deal.totalCents)}</span>
+                  <span className="ml-auto text-sm font-semibold tabular-nums">{money(deal.totalCents)}</span>
                 </div>
               </li>
             ))}
@@ -175,10 +202,18 @@ function Body({ d }: { d: AdminUserDetail }) {
                   <Stars value={r.rating} size={13} />
                   <span className="text-sm font-semibold">{r.author}</span>
                   <span className="text-ink/70 text-sm">{date.format(new Date(r.createdAt))}</span>
-                  {r.hidden && <span className="bg-ink text-canvas rounded-pill px-2 py-0.5 text-xs font-bold">{t('hidden')}</span>}
+                  {r.hidden && (
+                    <span className="bg-ink text-canvas rounded-pill px-2 py-0.5 text-xs font-bold">
+                      {t('hidden')}
+                    </span>
+                  )}
                   <button
                     type="button"
-                    onClick={() => (r.hidden ? act.mutate({ kind: 'showReview', reviewId: r.id }, done) : setAsk({ kind: 'hide', id: r.id }))}
+                    onClick={() =>
+                      r.hidden
+                        ? act.mutate({ kind: 'showReview', reviewId: r.id }, done)
+                        : setAsk({ kind: 'hide', id: r.id })
+                    }
                     className="ml-auto text-sm font-bold underline decoration-1 underline-offset-4"
                   >
                     {r.hidden ? t('show') : t('hide')}
@@ -195,9 +230,13 @@ function Body({ d }: { d: AdminUserDetail }) {
             {d.reports.map((r) => (
               <li key={r.id} className="flex flex-col gap-1 py-3">
                 <p className="flex flex-wrap items-center gap-2 text-sm">
-                  <span className="bg-ink text-canvas rounded-pill px-2 py-0.5 text-xs font-bold">{trs.has(r.reason) ? trs(r.reason) : r.reason}</span>
+                  <span className="bg-ink text-canvas rounded-pill px-2 py-0.5 text-xs font-bold">
+                    {trs.has(r.reason) ? trs(r.reason) : r.reason}
+                  </span>
                   <span className="text-ink/70">{date.format(new Date(r.createdAt))}</span>
-                  <span className="border-ink/25 rounded-pill border px-2 py-0.5 text-xs font-bold">{tst(r.status.toLowerCase() as 'open' | 'resolved' | 'dismissed')}</span>
+                  <span className="border-ink/25 rounded-pill border px-2 py-0.5 text-xs font-bold">
+                    {tst(r.status.toLowerCase() as 'open' | 'resolved' | 'dismissed')}
+                  </span>
                 </p>
                 {r.note && <p className="text-base [overflow-wrap:anywhere]">{r.note}</p>}
               </li>
@@ -213,13 +252,29 @@ function Body({ d }: { d: AdminUserDetail }) {
           onSubmit={(e) => {
             e.preventDefault();
             if (!note.trim()) return;
-            act.mutate({ kind: 'note', userId: d.user.id, text: note.trim() }, { ...done, onSuccess: () => { setNote(''); toast.show(t('done')); } });
+            act.mutate(
+              { kind: 'note', userId: d.user.id, text: note.trim() },
+              {
+                ...done,
+                onSuccess: () => {
+                  setNote('');
+                  toast.show(t('done'));
+                },
+              },
+            );
           }}
         >
           <label className="sr-only" htmlFor="admin-note">
             {t('addNote')}
           </label>
-          <textarea id="admin-note" value={note} onChange={(e) => setNote(e.target.value)} placeholder={t('notePlaceholder')} maxLength={2000} className={`${TEXTAREA_CLASS} min-h-20`} />
+          <textarea
+            id="admin-note"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder={t('notePlaceholder')}
+            maxLength={2000}
+            className={`${TEXTAREA_CLASS} min-h-20`}
+          />
           <Button type="submit" className="self-start" disabled={!note.trim()} loading={act.isPending}>
             {t('addNote')}
           </Button>
@@ -228,7 +283,7 @@ function Body({ d }: { d: AdminUserDetail }) {
           <ol className="divide-ink/10 flex flex-col divide-y">
             {d.notes.map((n) => (
               <li key={n.id} className="py-3">
-                <p className="whitespace-pre-wrap [overflow-wrap:anywhere]">{n.text}</p>
+                <p className="[overflow-wrap:anywhere] whitespace-pre-wrap">{n.text}</p>
                 <p className="text-ink/70 mt-1 text-sm">
                   {n.admin} · {moment.format(new Date(n.createdAt))}
                 </p>
@@ -251,15 +306,28 @@ function Body({ d }: { d: AdminUserDetail }) {
           onSubmit={(e) => {
             e.preventDefault();
             if (!ask || reason.trim().length < 3) return;
-            const after = { onSuccess: () => { setAsk(null); setReason(''); toast.show(t('done')); }, onError: () => toast.show(t('failed')) };
-            if (ask.kind === 'takedown') act.mutate({ kind: 'takedown', listingId: ask.id, reason: reason.trim() }, after);
+            const after = {
+              onSuccess: () => {
+                setAsk(null);
+                setReason('');
+                toast.show(t('done'));
+              },
+              onError: () => toast.show(t('failed')),
+            };
+            if (ask.kind === 'takedown')
+              act.mutate({ kind: 'takedown', listingId: ask.id, reason: reason.trim() }, after);
             else act.mutate({ kind: 'hideReview', reviewId: ask.id, reason: reason.trim() }, after);
           }}
         >
           <p className="leading-relaxed">{ask?.kind === 'takedown' ? t('takedownBody') : t('hideBody')}</p>
           <label className="flex flex-col gap-2">
             <span className="text-sm font-semibold">{t('reason')}</span>
-            <textarea value={reason} onChange={(e) => setReason(e.target.value)} maxLength={1000} className={`${TEXTAREA_CLASS} min-h-20`} />
+            <textarea
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              maxLength={1000}
+              className={`${TEXTAREA_CLASS} min-h-20`}
+            />
           </label>
           <div className="flex flex-wrap justify-end gap-2">
             <Button type="button" variant="ghost" onClick={() => setAsk(null)}>

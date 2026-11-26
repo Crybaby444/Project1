@@ -41,7 +41,7 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
   const since = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(owner.memberSince));
 
   return (
-    <div className={`flex flex-col gap-4 ${heading === 'h1' ? '' : 'border-ink/15 border-t pt-6'}`}>
+    <div className={`flex flex-col gap-4 ${heading === 'h1' ? '' : 'sheet border-ink/15 rounded-media border p-5'}`}>
       <div className="flex items-center gap-4">
         <span aria-hidden="true" className="bg-ink text-canvas font-display grid size-14 shrink-0 place-items-center rounded-full text-2xl font-black">
           {initials(owner.name)}

@@ -20,14 +20,43 @@ const disputed = testBooking({
   status: 'DISPUTED',
   viewerRole: 'ADMIN',
   version: 7,
-  dispute: { reason: 'DAMAGE', openedAt: '2026-11-13T10:00:00.000Z', note: 'The lens is cracked', resolution: null },
+  dispute: {
+    reason: 'DAMAGE',
+    openedAt: '2026-11-13T10:00:00.000Z',
+    note: 'The lens is cracked',
+    resolution: null,
+  },
 });
 
 function detail(booking = disputed) {
   return {
     booking,
-    events: [{ id: 'e1', type: 'OPEN_DISPUTE', actorKind: 'OWNER', actorId: 'u1', fromStatus: 'RETURNED', toStatus: 'DISPUTED', data: {}, messages: [], createdAt: '2026-11-13T10:00:00.000Z' }],
-    operations: [{ id: 'o1', kind: 'BOOKING_PAYMENT', bookingId: 'b1', userId: 'u2', createdAt: '2026-11-10T10:00:00.000Z', postings: [{ account: 'wallet:u2', amount: -5000 }, { account: 'escrow:b1', amount: 5000 }] }],
+    events: [
+      {
+        id: 'e1',
+        type: 'OPEN_DISPUTE',
+        actorKind: 'OWNER',
+        actorId: 'u1',
+        fromStatus: 'RETURNED',
+        toStatus: 'DISPUTED',
+        data: {},
+        messages: [],
+        createdAt: '2026-11-13T10:00:00.000Z',
+      },
+    ],
+    operations: [
+      {
+        id: 'o1',
+        kind: 'BOOKING_PAYMENT',
+        bookingId: 'b1',
+        userId: 'u2',
+        createdAt: '2026-11-10T10:00:00.000Z',
+        postings: [
+          { account: 'wallet:u2', amount: -5000 },
+          { account: 'escrow:b1', amount: 5000 },
+        ],
+      },
+    ],
     photos: [],
     payments: [],
   };
@@ -38,7 +67,10 @@ describe('AdminDealDetail', () => {
     const api = fakeApi({
       ...meRoute(testUser({ role: 'ADMIN' })),
       'GET /api/v1/admin/bookings/b1': { status: 200, body: detail() },
-      'POST /api/v1/admin/bookings/b1/resolve': { status: 200, body: { booking: { ...disputed, status: 'COMPLETED' } } },
+      'POST /api/v1/admin/bookings/b1/resolve': {
+        status: 200,
+        body: { booking: { ...disputed, status: 'COMPLETED' } },
+      },
       'GET /api/v1/admin/overview': { status: 404 },
     });
     renderWithSession(<AdminDealDetail id="b1" />, { client: api.client });
@@ -48,7 +80,10 @@ describe('AdminDealDetail', () => {
 
     const form = screen.getByRole('form', { name: t.resolve.title });
     await userEvent.click(within(form).getByRole('radio', { name: t.decision.DEPOSIT_TO_OWNER }));
-    await userEvent.type(within(form).getByRole('textbox', { name: t.resolve.comment }), 'Photos show the crack.');
+    await userEvent.type(
+      within(form).getByRole('textbox', { name: t.resolve.comment }),
+      'Photos show the crack.',
+    );
     await userEvent.click(within(form).getByRole('button', { name: t.resolve.submit }));
     expect(screen.getByText(t.resolve.confirm)).toBeInTheDocument();
     expect(api.calls.some((c) => c.path.endsWith('/resolve'))).toBe(false);
@@ -56,7 +91,11 @@ describe('AdminDealDetail', () => {
 
     await waitFor(() => {
       const call = api.calls.find((c) => c.path.endsWith('/resolve'));
-      expect(call?.body).toEqual({ version: 7, decision: 'DEPOSIT_TO_OWNER', comment: 'Photos show the crack.' });
+      expect(call?.body).toEqual({
+        version: 7,
+        decision: 'DEPOSIT_TO_OWNER',
+        comment: 'Photos show the crack.',
+      });
       expect(call?.headers.get('Idempotency-Key')).toBeTruthy();
     });
   });
@@ -64,7 +103,10 @@ describe('AdminDealDetail', () => {
   it('offers no decision for a deal that is not in dispute', async () => {
     const api = fakeApi({
       ...meRoute(testUser({ role: 'ADMIN' })),
-      'GET /api/v1/admin/bookings/b1': { status: 200, body: detail(testBooking({ id: 'b1', status: 'ACTIVE', viewerRole: 'ADMIN' })) },
+      'GET /api/v1/admin/bookings/b1': {
+        status: 200,
+        body: detail(testBooking({ id: 'b1', status: 'ACTIVE', viewerRole: 'ADMIN' })),
+      },
     });
     renderWithSession(<AdminDealDetail id="b1" />, { client: api.client });
     expect(await screen.findByRole('link', { name: t.publicPage })).toHaveAttribute('href', '/bookings/b1');

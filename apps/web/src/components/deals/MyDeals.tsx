@@ -8,7 +8,7 @@ import { TransitionLink } from '@/components/motion/TransitionLink';
 import { Reveal } from '@/components/motion/Reveal';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { displayFit } from '@/lib/display-fit';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { formatPeriod } from '@/lib/deals/dates';
 import { useDeadline } from '@/lib/deals/deadline';
 import { useMoney } from '@/lib/deals/money';
@@ -35,22 +35,32 @@ export function DealCard({ booking, index }: { booking: BookingView; index: numb
       <TransitionLink
         href={`/bookings/${booking.id}`}
         data-deal-card={booking.id}
-        className="group border-ink/15 relative flex h-full items-start gap-4 border-b py-5 sm:items-center after:absolute after:inset-x-0 after:-bottom-px after:h-[1.5px] after:origin-right after:scale-x-0 after:bg-current after:transition-transform after:duration-[600ms] after:ease-[cubic-bezier(0.16,1,0.3,1)] hover:after:origin-left hover:after:scale-x-100 focus-visible:after:origin-left focus-visible:after:scale-x-100"
+        className="group border-ink/15 relative flex h-full items-start gap-4 border-b py-5 after:absolute after:inset-x-0 after:-bottom-px after:h-[1.5px] after:origin-right after:scale-x-0 after:bg-current after:transition-transform after:duration-[600ms] after:ease-[cubic-bezier(0.16,1,0.3,1)] hover:after:origin-left hover:after:scale-x-100 focus-visible:after:origin-left focus-visible:after:scale-x-100 sm:items-center"
       >
         <DealCover booking={booking} size="card" />
         <div className="flex min-w-0 flex-1 flex-col gap-2 transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1.5">
           <div className="flex flex-wrap items-center gap-2">
             <DealStatusBadge status={booking.status} />
             {mine && (
-              <span className="rounded-pill bg-ink text-canvas border-ink inline-flex min-h-7 items-center border px-3 text-sm font-bold" data-your-turn="">
+              <span
+                className="rounded-pill bg-ink text-canvas border-ink inline-flex min-h-7 items-center border px-3 text-sm font-bold"
+                data-your-turn=""
+              >
                 {t('yourTurn')}
               </span>
             )}
           </div>
-          <h2 data-cursor-text className="font-display text-3xl leading-[0.95] font-black uppercase [overflow-wrap:anywhere]">{booking.listing.title}</h2>
+          <h2
+            data-cursor-text
+            className="font-display text-3xl leading-[0.95] font-black [overflow-wrap:anywhere] uppercase"
+          >
+            {booking.listing.title}
+          </h2>
           <p className="flex flex-wrap gap-x-3 gap-y-0.5 text-sm">
             <span>{t(`with.${booking.viewerRole === 'OWNER' ? 'owner' : 'renter'}`, { name: other })}</span>
-            <span className="font-bold">{formatPeriod(booking.period.start, booking.period.end, locale)}</span>
+            <span className="font-bold">
+              {formatPeriod(booking.period.start, booking.period.end, locale)}
+            </span>
             <span className="font-bold tabular-nums">{money(booking.quote.totalCents)}</span>
           </p>
           {booking.deadline && left && !left.overdue && (
@@ -144,11 +154,21 @@ export function MyDeals({ initialRole }: { initialRole: DealRole }) {
   }
 
   function onTabKey(event: KeyboardEvent<HTMLButtonElement>) {
-    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight' && event.key !== 'Home' && event.key !== 'End') return;
+    if (
+      event.key !== 'ArrowLeft' &&
+      event.key !== 'ArrowRight' &&
+      event.key !== 'Home' &&
+      event.key !== 'End'
+    )
+      return;
     event.preventDefault();
     const index = DEAL_ROLES.indexOf(role);
     const next =
-      event.key === 'Home' ? 0 : event.key === 'End' ? DEAL_ROLES.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + DEAL_ROLES.length) % DEAL_ROLES.length;
+      event.key === 'Home'
+        ? 0
+        : event.key === 'End'
+          ? DEAL_ROLES.length - 1
+          : (index + (event.key === 'ArrowRight' ? 1 : -1) + DEAL_ROLES.length) % DEAL_ROLES.length;
     const nextRole = DEAL_ROLES[next]!;
     remember(nextRole);
     tabs.current.get(nextRole)?.focus();
@@ -160,16 +180,13 @@ export function MyDeals({ initialRole }: { initialRole: DealRole }) {
 
   return (
     <div className="flex flex-col gap-8">
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="@container flex min-w-0 flex-1 flex-col gap-2">
-          <h1 style={displayFit(t('title'), { max: '3.5rem' })} className="font-display text-display-fit leading-[0.85] font-black uppercase">
-            {t('title')}
-          </h1>
-          <p className="leading-relaxed">{t('intro')}</p>
-        </div>
-      </header>
+      <PageHeader title={t('title')} intro={t('intro')} count={total} />
 
-      <div role="tablist" aria-label={t('roles')} className="border-ink bg-surface rounded-pill flex w-full max-w-md gap-1 self-start border p-1">
+      <div
+        role="tablist"
+        aria-label={t('roles')}
+        className="border-ink bg-surface rounded-pill flex w-full max-w-md gap-1 self-start border p-1"
+      >
         {DEAL_ROLES.map((r) => (
           <button
             key={r}
@@ -190,7 +207,11 @@ export function MyDeals({ initialRole }: { initialRole: DealRole }) {
           >
             {t(r)}
             {waiting(r) > 0 && (
-              <span aria-hidden="true" className="rounded-pill bg-ink text-canvas animate-pop-in inline-flex min-h-5 min-w-5 items-center justify-center border border-ink/15 px-1.5 text-xs tabular-nums" data-badge={r}>
+              <span
+                aria-hidden="true"
+                className="rounded-pill bg-ink text-canvas animate-pop-in border-ink/15 inline-flex min-h-5 min-w-5 items-center justify-center border px-1.5 text-xs tabular-nums"
+                data-badge={r}
+              >
                 {waiting(r)}
               </span>
             )}
@@ -203,7 +224,12 @@ export function MyDeals({ initialRole }: { initialRole: DealRole }) {
         ))}
       </div>
 
-      <div id="deals-panel" role="tabpanel" aria-labelledby={`deals-tab-${role}`} className="flex flex-col gap-6">
+      <div
+        id="deals-panel"
+        role="tabpanel"
+        aria-labelledby={`deals-tab-${role}`}
+        className="flex flex-col gap-6"
+      >
         {total === 0 ? (
           <Empty role={role} />
         ) : (
@@ -213,7 +239,10 @@ export function MyDeals({ initialRole }: { initialRole: DealRole }) {
                 {t('count', { count: total })}
               </p>
             )}
-            <ul className="border-ink/15 grid border-t lg:grid-cols-2 lg:gap-x-[clamp(24px,3vw,56px)]" key={role}>
+            <ul
+              className="border-ink/15 grid border-t lg:grid-cols-2 lg:gap-x-[clamp(24px,3vw,56px)]"
+              key={role}
+            >
               {Array.from({ length: pages }, (_, i) => (
                 <Page
                   key={i}

@@ -32,7 +32,9 @@ function OpenDialog({ onClose, title, children, wide = false }: DialogProps) {
     const dialog = ref.current!;
     const opener = document.activeElement as HTMLElement | null;
     if (!dialog.open) dialog.showModal();
-    dialog.querySelector<HTMLElement>(FOCUSABLE)?.focus();
+    // The chosen option of a choice dialog (or one marked data-autofocus) takes the focus, not the first one:
+    // a ring on another option read as a second selection (owner, 2026-11-26).
+    (dialog.querySelector<HTMLElement>('[data-autofocus], [aria-pressed="true"], [aria-checked="true"]') ?? dialog.querySelector<HTMLElement>(FOCUSABLE))?.focus();
     return () => {
       if (dialog.open) dialog.close();
       opener?.focus();

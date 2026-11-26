@@ -34,7 +34,14 @@ export function AdminSeo() {
             <StatCard label={t('published')} value={<CountUp value={seo.data.published} />} />
             <StatCard
               label={t('healthy')}
-              value={<CountUp value={seo.data.published > 0 ? Math.round((seo.data.healthy / seo.data.published) * 100) : 100} format={(n) => `${n}%`} />}
+              value={
+                <CountUp
+                  value={
+                    seo.data.published > 0 ? Math.round((seo.data.healthy / seo.data.published) * 100) : 100
+                  }
+                  format={(n) => `${n}%`}
+                />
+              }
             />
           </dl>
 
@@ -67,14 +74,21 @@ export function AdminSeo() {
                         {l.score}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <Link href={`/listings/${l.id}`} className="block truncate font-semibold underline decoration-1 underline-offset-2">
+                        <Link
+                          href={`/listings/${l.id}`}
+                          className="block truncate font-semibold underline decoration-1 underline-offset-2"
+                        >
                           {l.title || '—'}
                         </Link>
-                        <span className="text-ink/75 block text-sm">{l.issues.map((i) => t(`issue.${i}`)).join(' · ')}</span>
+                        <span className="text-ink/75 block text-sm">
+                          {l.issues.map((i) => t(`issue.${i}`)).join(' · ')}
+                        </span>
                       </span>
                     </li>
                   ))}
-                {seo.data.listings.every((l) => l.issues.length === 0) && <li className="py-3">{t('allGood')}</li>}
+                {seo.data.listings.every((l) => l.issues.length === 0) && (
+                  <li className="py-3">{t('allGood')}</li>
+                )}
               </ul>
             </Panel>
           </div>
@@ -91,13 +105,23 @@ export function AdminSeo() {
           ).map(([key, href]) => (
             <li key={key} className="flex items-center justify-between gap-4 py-3">
               <span className="font-semibold">{t(key)}</span>
-              <a href={href} target="_blank" rel="noreferrer" className="font-mono text-sm underline decoration-1 underline-offset-2">
+              <a
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                className="font-mono text-sm underline decoration-1 underline-offset-2"
+              >
                 {href}
               </a>
             </li>
           ))}
           <li className="flex flex-col gap-1 py-3">
-            <a href="https://search.google.com/search-console" target="_blank" rel="noreferrer" className="font-semibold underline decoration-1 underline-offset-2">
+            <a
+              href="https://search.google.com/search-console"
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold underline decoration-1 underline-offset-2"
+            >
               {t('console')}
             </a>
             <span className="text-ink/75 text-sm">{t('consoleHint')}</span>

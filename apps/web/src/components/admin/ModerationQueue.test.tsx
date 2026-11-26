@@ -72,14 +72,22 @@ describe('ModerationQueue', () => {
   it('fixes a listing: only what changed is sent, with the version it showed (owner, 2026-11-16)', async () => {
     const user = userEvent.setup();
     const calls = renderQueue({
-      'PATCH /api/v1/admin/listings/listing-1': { status: 200, body: { listing: adminListing({ title: 'PlayStation 5 Pro' }) } },
+      'PATCH /api/v1/admin/listings/listing-1': {
+        status: 200,
+        body: { listing: adminListing({ title: 'PlayStation 5 Pro' }) },
+      },
     });
     await user.click(await screen.findByRole('button', { name: m.edit.button }));
     const title = screen.getByLabelText(m.edit.fieldTitle);
     await user.clear(title);
     await user.type(title, 'PlayStation 5 Pro');
     await user.click(screen.getByRole('button', { name: m.edit.save }));
-    await waitFor(() => expect(calls.find((c) => c.method === 'PATCH')?.body).toEqual({ title: 'PlayStation 5 Pro', version: 3 }));
+    await waitFor(() =>
+      expect(calls.find((c) => c.method === 'PATCH')?.body).toEqual({
+        title: 'PlayStation 5 Pro',
+        version: 3,
+      }),
+    );
     expect(await screen.findByText(m.edit.done)).toBeVisible();
   });
 
@@ -135,10 +143,17 @@ describe('ModerationQueue', () => {
 
   it('approves the picked listings one by one, each with its own version, and says what stayed', async () => {
     const user = userEvent.setup();
-    const items = [adminListing(), adminListing({ id: 'listing-2', title: 'Drill', version: 5 }), adminListing({ id: 'listing-3', title: 'Tent', version: 1 })];
+    const items = [
+      adminListing(),
+      adminListing({ id: 'listing-2', title: 'Drill', version: 5 }),
+      adminListing({ id: 'listing-3', title: 'Tent', version: 1 }),
+    ];
     const calls = renderQueue(
       {
-        'POST /api/v1/admin/listings/listing-1/approve': { status: 200, body: { listing: adminListing({ status: 'PUBLISHED' }) } },
+        'POST /api/v1/admin/listings/listing-1/approve': {
+          status: 200,
+          body: { listing: adminListing({ status: 'PUBLISHED' }) },
+        },
         'POST /api/v1/admin/listings/listing-2/approve': apiError(409, 'LISTING_STALE'),
       },
       items,
@@ -148,11 +163,15 @@ describe('ModerationQueue', () => {
     await user.click(within(tent).getByRole('checkbox', { name: m.bulk.select }));
     const bar = screen.getByRole('region', { name: m.bulk.bar });
     await user.click(within(bar).getByRole('button', { name: m.bulk.approve.replace('{count}', '2') }));
-    await waitFor(() => expect(calls.filter((c) => c.path.endsWith('/approve')).map((c) => [c.path, c.body])).toEqual([
-      ['/api/v1/admin/listings/listing-1/approve', { version: 3 }],
-      ['/api/v1/admin/listings/listing-2/approve', { version: 5 }],
-    ]));
-    expect(await screen.findByText('1 done; 1 changed meanwhile or failed and stay in the queue.')).toBeVisible();
+    await waitFor(() =>
+      expect(calls.filter((c) => c.path.endsWith('/approve')).map((c) => [c.path, c.body])).toEqual([
+        ['/api/v1/admin/listings/listing-1/approve', { version: 3 }],
+        ['/api/v1/admin/listings/listing-2/approve', { version: 5 }],
+      ]),
+    );
+    expect(
+      await screen.findByText('1 done; 1 changed meanwhile or failed and stay in the queue.'),
+    ).toBeVisible();
   });
 
   it('has a friendly empty state', async () => {
@@ -173,7 +192,12 @@ describe('ModerationQueue', () => {
     it('moves a listing to the chosen subcategory with the version it showed', async () => {
       const user = userEvent.setup();
       const calls = renderQueue(
-        { 'POST /api/v1/admin/listings/listing-1/category': { status: 200, body: { listing: adminListing() } } },
+        {
+          'POST /api/v1/admin/listings/listing-1/category': {
+            status: 200,
+            body: { listing: adminListing() },
+          },
+        },
         [adminListing({ status: 'PUBLISHED', categoryId: null })],
         'other',
       );
@@ -184,9 +208,14 @@ describe('ModerationQueue', () => {
       await choose(user, within(dialog).getByRole('combobox', { name: m.move.label }), 'Game consoles');
       await user.click(within(dialog).getByRole('button', { name: m.move.submit }));
       await waitFor(() =>
-        expect(calls.find((c) => c.path.endsWith('/category'))?.body).toEqual({ categoryId: 'cat-consoles', version: 3 }),
+        expect(calls.find((c) => c.path.endsWith('/category'))?.body).toEqual({
+          categoryId: 'cat-consoles',
+          version: 3,
+        }),
       );
-      expect(await screen.findByText('Moved to Electronics · Game consoles. The owner gets an email.')).toBeVisible();
+      expect(
+        await screen.findByText('Moved to Electronics · Game consoles. The owner gets an email.'),
+      ).toBeVisible();
     });
   });
 });

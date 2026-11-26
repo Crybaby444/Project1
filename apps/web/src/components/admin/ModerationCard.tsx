@@ -76,13 +76,20 @@ export function ModerationCard({
     <article className="border-ink flex flex-col gap-6 border-t-2 pt-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-2">
-          <h2 className="font-display text-display-m leading-[0.95] font-black uppercase [overflow-wrap:anywhere]">{listing.title}</h2>
+          <h2 className="font-display text-display-m leading-[0.95] font-black [overflow-wrap:anywhere] uppercase">
+            {listing.title}
+          </h2>
           <p className="text-sm">{t('waiting', { date: date(listing.submittedAt) })}</p>
         </div>
         <div className="flex items-center gap-3 self-start">
           {onSelect && listing.status === 'PENDING_REVIEW' && (
             <label className="rounded-pill border-ink/20 inline-flex min-h-10 cursor-pointer items-center gap-2 border px-3 text-sm font-bold">
-              <input type="checkbox" checked={selected ?? false} onChange={(event) => onSelect(event.target.checked)} className="accent-cta size-4" />
+              <input
+                type="checkbox"
+                checked={selected ?? false}
+                onChange={(event) => onSelect(event.target.checked)}
+                className="accent-cta size-4"
+              />
               {t('bulk.select')}
             </label>
           )}
@@ -113,10 +120,7 @@ export function ModerationCard({
       <dl className="grid gap-5 sm:grid-cols-2">
         <Row term={t('category')}>
           {path.length > 0 ? (
-            <span
-              
-              className="rounded-pill inline-block border border-ink/15 px-2.5 py-0.5 text-sm font-bold"
-            >
+            <span className="rounded-pill border-ink/15 inline-block border px-2.5 py-0.5 text-sm font-bold">
               {path.map((node) => localized(node.names, locale)).join(' · ')}
             </span>
           ) : (

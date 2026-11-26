@@ -7,18 +7,54 @@ import { useCountUp } from '@/lib/motion/use-count-up';
 
 /** Admin tables: hairline rows, small caps headers, numbers in tabular figures. */
 export const TABLE_CLASS = 'w-full min-w-[720px] border-collapse text-left text-base';
-export const TH = 'border-ink/15 text-ink/70 border-b px-4 py-3 text-xs font-bold tracking-[0.04em] uppercase';
+export const TH =
+  'border-ink/15 text-ink/70 border-b px-4 py-3 text-xs font-bold tracking-[0.04em] uppercase';
 export const TD = 'border-ink/10 border-b px-4 py-3 align-middle';
 
-export function AdminPageHeader({ title, note, action }: { title: string; note?: string; action?: ReactNode }) {
+export function AdminPageHeader({
+  title,
+  note,
+  count,
+  action,
+}: {
+  title: string;
+  note?: string;
+  count?: number;
+  action?: ReactNode;
+}) {
   return (
     <header className="flex flex-wrap items-end justify-between gap-4">
-      <div className="flex flex-col gap-1">
-        <h1 className="font-display text-display-l leading-[0.92] font-black uppercase">{title}</h1>
-        {note && <p className="text-ink/70 text-sm font-semibold">{note}</p>}
+      <div className="flex min-w-0 flex-col gap-2">
+        <h1 className="font-display text-display-l flex flex-wrap items-baseline gap-x-4 leading-[0.92] font-black uppercase">
+          {title}
+          {/* How many there are, beside the title (owner, 2026-11-26: not a stray total line under it). */}
+          {count !== undefined && (
+            <span className="border-ink/20 rounded-pill inline-flex min-h-9 -translate-y-1.5 items-center border px-3 font-sans text-base font-bold tracking-normal normal-case tabular-nums">
+              <CountUp value={count} />
+            </span>
+          )}
+        </h1>
+        {note && <p className="text-ink/70 max-w-[70ch] text-sm leading-relaxed font-semibold">{note}</p>}
       </div>
       {action}
     </header>
+  );
+}
+
+/** An empty list of the panel: a quiet sheet with a mark, what is empty and, if useful, what to do. */
+export function AdminEmpty({ title, hint }: { title: string; hint?: string }) {
+  return (
+    <div className="admin-glass border-ink/15 rounded-media flex flex-col items-center gap-2 border px-5 py-10 text-center">
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        className="text-ink/40 size-6 fill-none stroke-current [stroke-width:1.6] [stroke-linecap:round] [stroke-linejoin:round]"
+      >
+        <path d="M4 7h16M4 12h10M4 17h7" />
+      </svg>
+      <h2 className="text-base font-bold">{title}</h2>
+      {hint && <p className="text-ink/65 max-w-md text-sm">{hint}</p>}
+    </div>
   );
 }
 
@@ -26,7 +62,8 @@ export function AdminPageHeader({ title, note, action }: { title: string; note?:
 export function Pager({ page, pages, onPage }: { page: number; pages: number; onPage(page: number): void }) {
   const t = useTranslations('admin.common');
   if (pages <= 1) return null;
-  const button = 'border-ink rounded-pill min-h-10 border px-4 text-sm font-bold tracking-[0.03em] uppercase disabled:opacity-40';
+  const button =
+    'border-ink rounded-pill min-h-10 border px-4 text-sm font-bold tracking-[0.03em] uppercase disabled:opacity-40';
   return (
     <nav aria-label={t('page', { page, pages })} className="flex items-center justify-between gap-3">
       <button type="button" className={button} disabled={page <= 1} onClick={() => onPage(page - 1)}>
@@ -41,9 +78,19 @@ export function Pager({ page, pages, onPage }: { page: number; pages: number; on
 }
 
 /** A titled block of the deal page and the money page. */
-export function Panel({ title, children, className = '' }: { title: string; children: ReactNode; className?: string }) {
+export function Panel({
+  title,
+  children,
+  className = '',
+}: {
+  title: string;
+  children: ReactNode;
+  className?: string;
+}) {
   return (
-    <section className={`admin-glass border-ink/15 rounded-media flex flex-col gap-4 border p-5 sm:p-6 ${className}`}>
+    <section
+      className={`admin-glass border-ink/15 rounded-media flex flex-col gap-4 border p-5 sm:p-6 ${className}`}
+    >
       <h2 className="text-ink/70 text-sm font-bold tracking-[0.04em] uppercase">{title}</h2>
       {children}
     </section>
@@ -77,7 +124,14 @@ export function AdminSelect({
       <label htmlFor={id} className={hideLabel ? 'sr-only' : undefined}>
         {label}
       </label>
-      <Select id={id} value={value} options={options} onChange={onChange} disabled={disabled} className={className} />
+      <Select
+        id={id}
+        value={value}
+        options={options}
+        onChange={onChange}
+        disabled={disabled}
+        className={className}
+      />
     </div>
   );
 }
@@ -89,7 +143,17 @@ export function CountUp({ value, format }: { value: number; format?: (n: number)
 }
 
 /** One figure of a page's summary row: its name, the figure, a note or two, and room for a small drawing. */
-export function StatCard({ label, value, notes = [], children }: { label: string; value: ReactNode; notes?: string[]; children?: ReactNode }) {
+export function StatCard({
+  label,
+  value,
+  notes = [],
+  children,
+}: {
+  label: string;
+  value: ReactNode;
+  notes?: string[];
+  children?: ReactNode;
+}) {
   return (
     <div className="admin-glass border-ink/15 rounded-media flex flex-col gap-1 border p-5">
       <dt className="text-ink/70 text-sm font-semibold">{label}</dt>

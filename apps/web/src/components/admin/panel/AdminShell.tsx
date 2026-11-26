@@ -7,11 +7,18 @@ import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { panelRole } from '@/lib/admin/staff';
 import { useSession } from '@/lib/session/SessionProvider';
 import { useAdminOverview } from '@/lib/admin/queries';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 import { CommandPalette, OPEN_PALETTE } from './CommandPalette';
 
 type Section = Exclude<AdminSection, 'content'>;
 
-const SECTIONS: { key: Section; group: 'insight' | 'work' | 'money' | 'system'; href: string; icon: ReactNode }[] = [
+const SECTIONS: {
+  key: Section;
+  group: 'insight' | 'work' | 'money' | 'system';
+  href: string;
+  icon: ReactNode;
+}[] = [
   {
     key: 'overview',
     group: 'insight',
@@ -46,7 +53,9 @@ const SECTIONS: { key: Section; group: 'insight' | 'work' | 'money' | 'system'; 
     key: 'identity',
     group: 'work',
     href: '/admin/identity',
-    icon: <path d="M4 6h16v12H4zM8.5 12.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM5.5 16c.6-1.5 1.7-2.2 3-2.2s2.4.7 3 2.2M14 10h4M14 13.5h3" />,
+    icon: (
+      <path d="M4 6h16v12H4zM8.5 12.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM5.5 16c.6-1.5 1.7-2.2 3-2.2s2.4.7 3 2.2M14 10h4M14 13.5h3" />
+    ),
   },
   {
     key: 'deals',
@@ -70,7 +79,9 @@ const SECTIONS: { key: Section; group: 'insight' | 'work' | 'money' | 'system'; 
     key: 'users',
     group: 'work',
     href: '/admin/users',
-    icon: <path d="M16 19v-1a4 4 0 00-4-4H7a4 4 0 00-4 4v1M9.5 10a3 3 0 100-6 3 3 0 000 6zM21 19v-1a4 4 0 00-3-3.9M15.5 4.1a3 3 0 010 5.8" />,
+    icon: (
+      <path d="M16 19v-1a4 4 0 00-4-4H7a4 4 0 00-4 4v1M9.5 10a3 3 0 100-6 3 3 0 000 6zM21 19v-1a4 4 0 00-3-3.9M15.5 4.1a3 3 0 010 5.8" />
+    ),
   },
   {
     key: 'money',
@@ -94,7 +105,9 @@ const SECTIONS: { key: Section; group: 'insight' | 'work' | 'money' | 'system'; 
     key: 'staff',
     group: 'system',
     href: '/admin/staff',
-    icon: <path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6zM12 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM8.5 15.5a4 4 0 0 1 7 0" />,
+    icon: (
+      <path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6zM12 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM8.5 15.5a4 4 0 0 1 7 0" />
+    ),
   },
   {
     key: 'security',
@@ -106,7 +119,9 @@ const SECTIONS: { key: Section; group: 'insight' | 'work' | 'money' | 'system'; 
     key: 'settings',
     group: 'system',
     href: '/admin/settings',
-    icon: <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" />,
+    icon: (
+      <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" />
+    ),
   },
 ];
 
@@ -131,7 +146,12 @@ function activeSection(pathname: string): Section {
 
 function Icon({ children }: { children: ReactNode }) {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="size-[18px] shrink-0 fill-none stroke-current [stroke-linecap:round] [stroke-linejoin:round] [stroke-width:1.7]">
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+      className="size-[18px] shrink-0 fill-none stroke-current [stroke-width:1.7] [stroke-linecap:round] [stroke-linejoin:round]"
+    >
       {children}
     </svg>
   );
@@ -164,8 +184,11 @@ export function AdminShell({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div data-admin-root className="-mx-4 grid min-h-svh grid-cols-[minmax(0,1fr)] sm:-mx-8 lg:grid-cols-[248px_minmax(0,1fr)] ">
-      <aside className="border-ink/10 text-ink min-w-0 border-b bg-[var(--night)]/80 backdrop-blur-xl lg:border-r lg:border-b-0 lg:sticky lg:top-0 lg:flex lg:h-svh lg:flex-col">
+    <div
+      data-admin-root
+      className="-mx-4 grid min-h-svh grid-cols-[minmax(0,1fr)] sm:-mx-8 lg:grid-cols-[248px_minmax(0,1fr)]"
+    >
+      <aside className="border-ink/10 text-ink bg-band/60 min-w-0 border-b backdrop-blur-xl lg:sticky lg:top-0 lg:flex lg:h-svh lg:flex-col lg:border-r lg:border-b-0">
         <p className="font-display hidden px-6 pt-7 pb-6 text-3xl leading-none font-black uppercase lg:block">
           Yoyo <span className="text-ink/60">/ {t('brand')}</span>
         </p>
@@ -203,7 +226,9 @@ export function AdminShell({ children }: { children: ReactNode }) {
               return (
                 <li key={key} className="shrink-0">
                   {firstOfGroup && (
-                    <p className={`text-ink/65 hidden px-3.5 pb-1 text-xs font-bold tracking-[0.08em] uppercase lg:block ${index === 0 ? '' : 'pt-4'}`}>
+                    <p
+                      className={`text-ink/65 hidden px-3.5 pb-1 text-xs font-bold tracking-[0.08em] uppercase lg:block ${index === 0 ? '' : 'pt-4'}`}
+                    >
                       {t(`groups.${group}`)}
                     </p>
                   )}
@@ -229,6 +254,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
                 </li>
               );
             })}
+            <li className="flex shrink-0 items-center gap-2 lg:hidden">
+              <LanguageSwitcher />
+              <ThemeToggle />
+            </li>
             <li className="shrink-0 lg:hidden">
               <button
                 type="button"
@@ -241,6 +270,11 @@ export function AdminShell({ children }: { children: ReactNode }) {
           </ul>
         </nav>
         <div className="border-ink/15 hidden border-t px-3 py-4 lg:block">
+          {/* The panel's own language and theme (owner, 2026-11-26), the same choices as the site's. */}
+          <div className="flex items-center gap-2 px-2 pb-3" data-admin-prefs="">
+            <LanguageSwitcher />
+            <ThemeToggle />
+          </div>
           {user && <p className="text-ink/70 truncate px-3.5 pb-2 text-sm">{user.email}</p>}
           <button
             type="button"

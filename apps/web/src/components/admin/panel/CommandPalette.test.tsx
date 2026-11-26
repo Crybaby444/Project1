@@ -21,7 +21,11 @@ describe('CommandPalette', () => {
       ...meRoute(testUser({ role: 'ADMIN' })),
       'GET /api/v1/admin/search': {
         status: 200,
-        body: { users: [{ id: 'u1', name: 'Olga Kalniņa', email: 'olga@x.lv', blocked: false }], listings: [{ id: 'l1', title: 'Drill', status: 'PUBLISHED', owner: 'Olga' }], deals: [] },
+        body: {
+          users: [{ id: 'u1', name: 'Olga Kalniņa', email: 'olga@x.lv', blocked: false }],
+          listings: [{ id: 'l1', title: 'Drill', status: 'PUBLISHED', owner: 'Olga' }],
+          deals: [],
+        },
       },
     });
     renderWithSession(<CommandPalette />, { client: api.client });

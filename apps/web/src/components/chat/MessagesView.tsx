@@ -1,5 +1,6 @@
 'use client';
 
+import { PageHeader } from '@/components/ui/PageHeader';
 import type { ChatMessage, ConversationSummary, ConversationThread } from '@yoyo/shared';
 import { MESSAGE_TEXT } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
@@ -53,11 +54,9 @@ export function MessagesView({ activeId }: { activeId?: string }) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
-      <h1
-        className={`font-display text-display-l leading-[0.95] font-black uppercase ${activeId ? 'max-lg:sr-only' : ''}`}
-      >
-        {t('title')}
-      </h1>
+      <div className={activeId ? 'max-lg:sr-only' : ''}>
+        <PageHeader title={t('title')} count={conversations.data?.length} />
+      </div>
       {conversations.isPending ? (
         <div aria-busy="true" className="border-ink/15 rounded-media h-64 border" />
       ) : conversations.isError ? (
@@ -78,7 +77,9 @@ export function MessagesView({ activeId }: { activeId?: string }) {
           }
         />
       ) : (
-        <div className={`border-ink/15 rounded-media grid h-[max(26rem,calc(100svh-15rem))] grid-cols-[minmax(0,1fr)] overflow-hidden border lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] ${activeId ? 'max-lg:h-[calc(100svh-7.5rem)]' : ''}`}>
+        <div
+          className={`border-ink/15 rounded-media grid h-[max(26rem,calc(100svh-15rem))] grid-cols-[minmax(0,1fr)] overflow-hidden border lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] ${activeId ? 'max-lg:h-[calc(100svh-7.5rem)]' : ''}`}
+        >
           <div
             className={`border-ink/15 min-h-0 overflow-y-auto lg:border-r ${activeId ? 'max-lg:hidden' : ''}`}
           >
@@ -163,7 +164,10 @@ function Initials({ name }: { name: string }) {
     .map((w) => w[0]?.toUpperCase() ?? '')
     .join('');
   return (
-    <span aria-hidden="true" className="bg-ink text-canvas font-display grid size-12 shrink-0 place-items-center rounded-full text-xl font-black">
+    <span
+      aria-hidden="true"
+      className="bg-ink text-canvas font-display grid size-12 shrink-0 place-items-center rounded-full text-xl font-black"
+    >
       {letters}
     </span>
   );
@@ -238,16 +242,21 @@ function ThreadBody({ data, inDeal }: { data: ConversationThread; inDeal: boolea
   return (
     <>
       <header className="border-ink/15 flex items-center gap-3 border-b px-4 py-3">
-        {!inDeal && <Link
-          href="/messages"
-          className="rounded-pill hover:bg-ink/[0.06] -ml-1 inline-grid size-10 place-items-center lg:hidden"
-        >
-          <span aria-hidden="true">←</span>
-          <span className="sr-only">{t('back')}</span>
-        </Link>}
+        {!inDeal && (
+          <Link
+            href="/messages"
+            className="rounded-pill hover:bg-ink/[0.06] -ml-1 inline-grid size-10 place-items-center lg:hidden"
+          >
+            <span aria-hidden="true">←</span>
+            <span className="sr-only">{t('back')}</span>
+          </Link>
+        )}
         {data.listing ? <Thumb url={data.listing.photoUrl} /> : <Initials name={data.other.name} />}
         <span className="min-w-0 flex-1">
-          <Link href={`/u/${data.other.id}`} className="font-display block text-3xl leading-none font-black uppercase [overflow-wrap:anywhere] hover:underline">
+          <Link
+            href={`/u/${data.other.id}`}
+            className="font-display block text-3xl leading-none font-black [overflow-wrap:anywhere] uppercase hover:underline"
+          >
             {data.other.name}
           </Link>
           {data.listing && (

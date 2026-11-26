@@ -8,7 +8,7 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { useAdminDeals } from '@/lib/admin/queries';
 import { formatPeriod } from '@/lib/deals/dates';
 import { useMoney } from '@/lib/deals/money';
-import { AdminPageHeader, AdminSelect, Pager, TABLE_CLASS, TD, TH } from './parts';
+import { AdminEmpty, AdminPageHeader, AdminSelect, Pager, TABLE_CLASS, TD, TH } from './parts';
 
 export type DealsView = { disputed: boolean; status?: BookingStatus; page: number };
 
@@ -39,10 +39,13 @@ export function AdminDeals({ view }: { view: DealsView }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <AdminPageHeader title={t('deals.title')} note={deals.data ? t('common.total', { count: total }) : undefined} />
+      <AdminPageHeader title={t('deals.title')} count={deals.data ? total : undefined} />
 
       <div className="flex flex-wrap items-center gap-3">
-        <nav aria-label={t('deals.filterLabel')} className="border-ink/15 rounded-pill inline-flex border p-1">
+        <nav
+          aria-label={t('deals.filterLabel')}
+          className="border-ink/15 rounded-pill inline-flex border p-1"
+        >
           {([false, true] as const).map((disputed) => (
             <button
               key={String(disputed)}
@@ -60,7 +63,10 @@ export function AdminDeals({ view }: { view: DealsView }) {
             label={t('deals.status')}
             value={view.status ?? ''}
             onChange={(v) => go({ status: (v || undefined) as BookingStatus | undefined })}
-            options={[{ value: '', label: t('deals.anyStatus') }, ...BOOKING_STATUSES.map((s) => ({ value: s, label: ts(s) }))]}
+            options={[
+              { value: '', label: t('deals.anyStatus') },
+              ...BOOKING_STATUSES.map((s) => ({ value: s, label: ts(s) })),
+            ]}
           />
         )}
       </div>
@@ -75,9 +81,14 @@ export function AdminDeals({ view }: { view: DealsView }) {
           </Button>
         </div>
       ) : deals.data.items.length === 0 ? (
-        <p className="admin-glass border-ink/15 rounded-media border px-5 py-10 text-center">{t('deals.empty')}</p>
+        <AdminEmpty title={t('deals.empty')} />
       ) : (
-        <div className="admin-glass border-ink/15 rounded-media relative overflow-x-auto border" tabIndex={0} role="region" aria-label={t('deals.title')}>
+        <div
+          className="admin-glass border-ink/15 rounded-media relative overflow-x-auto border"
+          tabIndex={0}
+          role="region"
+          aria-label={t('deals.title')}
+        >
           <table className={TABLE_CLASS}>
             <thead>
               <tr>
@@ -93,7 +104,10 @@ export function AdminDeals({ view }: { view: DealsView }) {
               {deals.data.items.map((d) => (
                 <tr key={d.id} className="hover:bg-ink/[0.03]">
                   <td className={`${TD} max-w-[18rem]`}>
-                    <Link href={`/admin/deals/${d.id}`} className="block truncate font-semibold underline decoration-1 underline-offset-2">
+                    <Link
+                      href={`/admin/deals/${d.id}`}
+                      className="block truncate font-semibold underline decoration-1 underline-offset-2"
+                    >
                       {d.listing.title}
                     </Link>
                   </td>
@@ -102,8 +116,12 @@ export function AdminDeals({ view }: { view: DealsView }) {
                   </td>
                   <td className={TD}>{d.renter.name}</td>
                   <td className={TD}>{d.owner.name}</td>
-                  <td className={`${TD} whitespace-nowrap tabular-nums`}>{formatPeriod(d.period.start, d.period.end, locale)}</td>
-                  <td className={`${TD} text-right font-semibold whitespace-nowrap tabular-nums`}>{money(d.quote.totalCents)}</td>
+                  <td className={`${TD} whitespace-nowrap tabular-nums`}>
+                    {formatPeriod(d.period.start, d.period.end, locale)}
+                  </td>
+                  <td className={`${TD} text-right font-semibold whitespace-nowrap tabular-nums`}>
+                    {money(d.quote.totalCents)}
+                  </td>
                 </tr>
               ))}
             </tbody>

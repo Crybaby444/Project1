@@ -2,6 +2,7 @@ import type { PublicProfile } from '@yoyo/shared';
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server';
 import { answerSpeed, initials } from '@/components/item/OwnerCard';
 import { ProfileSocial } from '@/components/people/ProfileSocial';
+import { ProfileAbout } from './ProfileAbout';
 
 function Mark({ children, strong = false }: { children: React.ReactNode; strong?: boolean }) {
   return (
@@ -49,6 +50,7 @@ export async function ProfileHero({ user }: { user: PublicProfile['user'] }) {
               {user.phoneVerified && <Mark>{t('phoneVerified')}</Mark>}
               {answers && <Mark>{t(`answers.${answers}`)}</Mark>}
             </ul>
+            <ProfileAbout userId={user.id} about={user.about} />
           </div>
         </div>
         <div className="flex flex-col gap-1 lg:items-end lg:text-right">

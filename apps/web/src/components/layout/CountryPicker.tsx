@@ -57,7 +57,12 @@ export function CountryPicker({ country }: { country: Country }) {
                 }`}
               >
                 <span className="text-xs font-bold opacity-60 tabular-nums">{code}</span>
-                {name}
+                <span className="flex-1">{name}</span>
+                {code === country && (
+                  <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4 shrink-0 fill-none stroke-current [stroke-linecap:round] [stroke-linejoin:round] [stroke-width:2.5]">
+                    <path d="M5 12.5l4.5 4.5L19 7.5" />
+                  </svg>
+                )}
               </button>
             </li>
           ))}

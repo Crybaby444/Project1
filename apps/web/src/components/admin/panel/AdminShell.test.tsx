@@ -16,7 +16,10 @@ const t = admin.admin;
 
 function shell(staffRole: 'OWNER' | 'EDITOR' | null, at: string) {
   path = at;
-  const api = fakeApi({ ...meRoute(testUser({ role: 'ADMIN', staffRole })), 'GET /api/v1/admin/overview': { status: 500, body: {} } });
+  const api = fakeApi({
+    ...meRoute(testUser({ role: 'ADMIN', staffRole })),
+    'GET /api/v1/admin/overview': { status: 500, body: {} },
+  });
   renderWithSession(
     <AdminShell>
       <p>page body</p>

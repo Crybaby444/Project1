@@ -10,7 +10,7 @@ import { useToast } from '@/components/ui/Toast';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useAdminUsers, useBlockUser } from '@/lib/admin/queries';
 import { AddPersonButton } from './AdminCrud';
-import { AdminPageHeader, Pager, TABLE_CLASS, TD, TH } from './parts';
+import { AdminEmpty, AdminPageHeader, Pager, TABLE_CLASS, TD, TH } from './parts';
 
 /**
  * Every account, newest first, 20 a page, searched by name or email (the search lives in the address).
@@ -64,7 +64,11 @@ export function AdminUsers({ search, page }: { search: string; page: number }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <AdminPageHeader title={t('users.title')} note={users.data ? t('common.total', { count: total }) : undefined} action={<AddPersonButton />} />
+      <AdminPageHeader
+        title={t('users.title')}
+        count={users.data ? total : undefined}
+        action={<AddPersonButton />}
+      />
 
       <input
         type="search"
@@ -85,9 +89,14 @@ export function AdminUsers({ search, page }: { search: string; page: number }) {
           </Button>
         </div>
       ) : users.data.items.length === 0 ? (
-        <p className="admin-glass border-ink/15 rounded-media border px-5 py-10 text-center">{t('users.empty')}</p>
+        <AdminEmpty title={t('users.empty')} />
       ) : (
-        <div className="admin-glass border-ink/15 rounded-media relative overflow-x-auto border" tabIndex={0} role="region" aria-label={t('users.title')}>
+        <div
+          className="admin-glass border-ink/15 rounded-media relative overflow-x-auto border"
+          tabIndex={0}
+          role="region"
+          aria-label={t('users.title')}
+        >
           <table className={TABLE_CLASS}>
             <thead>
               <tr>
@@ -107,16 +116,23 @@ export function AdminUsers({ search, page }: { search: string; page: number }) {
                 return (
                   <tr key={u.id} className="hover:bg-ink/[0.03]">
                     <td className={`${TD} font-semibold`}>
-                      <Link href={`/admin/users/${u.id}`} className="underline decoration-1 underline-offset-2">
+                      <Link
+                        href={`/admin/users/${u.id}`}
+                        className="underline decoration-1 underline-offset-2"
+                      >
                         {u.name}
                       </Link>
                     </td>
                     <td className={TD}>
                       <span className="block max-w-[16rem] truncate">{u.email}</span>
-                      <span className="text-ink/70 text-xs">{u.emailVerified ? t('users.verified') : t('users.unverified')}</span>
+                      <span className="text-ink/70 text-xs">
+                        {u.emailVerified ? t('users.verified') : t('users.unverified')}
+                      </span>
                     </td>
                     <td className={TD}>{t(`users.roles.${u.role}`)}</td>
-                    <td className={`${TD} whitespace-nowrap tabular-nums`}>{joined.format(new Date(u.createdAt))}</td>
+                    <td className={`${TD} whitespace-nowrap tabular-nums`}>
+                      {joined.format(new Date(u.createdAt))}
+                    </td>
                     <td className={TD}>
                       <span
                         className={`rounded-pill inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-bold ${
@@ -149,7 +165,11 @@ export function AdminUsers({ search, page }: { search: string; page: number }) {
 
       <Pager page={page} pages={pages} onPage={go} />
 
-      <Dialog open={asking !== null} onClose={() => setAsking(null)} title={asking ? t('users.blockTitle', { name: asking.name }) : ''}>
+      <Dialog
+        open={asking !== null}
+        onClose={() => setAsking(null)}
+        title={asking ? t('users.blockTitle', { name: asking.name }) : ''}
+      >
         <p className="leading-relaxed">{t('users.blockBody')}</p>
         <div className="mt-5 flex flex-wrap gap-2">
           <Button onClick={() => asking && setBlocked(asking, true)} loading={block.isPending}>
