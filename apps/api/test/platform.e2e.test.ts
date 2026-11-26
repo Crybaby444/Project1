@@ -3,7 +3,7 @@ import { Body, Controller, Get, HttpCode, Post, Req } from '@nestjs/common';
 import type { Request } from 'express';
 import { createZodDto } from 'nestjs-zod';
 import request from 'supertest';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 import { RateLimitedError } from '../src/common/app-error';
 import { signedInClient } from './support/listings';
@@ -100,8 +100,16 @@ describe('API platform: errors, validation and protection', () => {
     await t.prisma.serverError.deleteMany();
     await request(t.server).get('/api/v1/__test/boom?x=1').expect(500);
     await request(t.server).get('/api/v1/__test/boom').expect(500);
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    const rows = await t.prisma.serverError.findMany();
+    // The log is written after the answer goes out: wait for it, not for a fixed 50 ms (a slow CI runner
+    // took longer and the test failed with no row at all).
+    const rows = await vi.waitFor(
+      async () => {
+        const found = await t.prisma.serverError.findMany();
+        expect(found).toMatchObject([{ count: 2 }]);
+        return found;
+      },
+      { timeout: 5_000, interval: 25 },
+    );
     expect(rows).toHaveLength(1);
     expect(rows[0]).toMatchObject({ method: 'GET', path: '/api/v1/__test/boom', message: 'Error: secret-detail', count: 2 });
     const admin = await signedInClient(t, { name: 'Admin', role: 'ADMIN', staffRole: 'OWNER' });
