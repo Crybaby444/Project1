@@ -31,7 +31,7 @@ type TestLocale = keyof typeof messages;
 /** Renders a component the way the app does: inside next-intl with real messages. */
 export function renderWithIntl(ui: ReactElement, locale: TestLocale = 'en'): RenderResult {
   return render(
-    <NextIntlClientProvider locale={locale} messages={messages[locale]}>
+    <NextIntlClientProvider locale={locale} messages={messages[locale]} timeZone="Europe/Riga">
       {ui}
     </NextIntlClientProvider>,
   );
@@ -63,7 +63,7 @@ export function renderWithSession(
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   });
   const result = render(
-    <NextIntlClientProvider locale={locale} messages={messages[locale]}>
+    <NextIntlClientProvider locale={locale} messages={messages[locale]} timeZone="Europe/Riga">
       <QueryClientProvider client={queryClient}>
         <SessionProvider
           client={client}
