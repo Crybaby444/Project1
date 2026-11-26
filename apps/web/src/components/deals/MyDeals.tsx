@@ -118,13 +118,8 @@ function Empty({ role }: { role: DealRole }) {
   return (
     <EmptyState
       title={t(`empty.${role}`)}
-      action={
-        role === 'owner' ? (
-          <Button href="/listings/new" size="lg">
-            {t('lend')}
-          </Button>
-        ) : null
-      }
+      body={t(`empty.${role}Body`)}
+      action={role === 'owner' ? <Button href="/listings/new">{t('lend')}</Button> : <Button href="/c">{t('browse')}</Button>}
     />
   );
 }

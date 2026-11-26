@@ -583,23 +583,6 @@ html[data-staged] .home-loader {
   }
 }
 
-/* The empty state's yo-yo (components/ui/EmptyState): down the string, spinning, and back up. */
-@keyframes empty-drop {
-  0%, 12% { transform: translateY(-40px); }
-  50%, 58% { transform: translateY(0); }
-  100% { transform: translateY(-40px); }
-}
-@keyframes empty-string {
-  0%, 12% { transform: scaleY(0.375); }
-  50%, 58% { transform: scaleY(1); }
-  100% { transform: scaleY(0.375); }
-}
-@keyframes empty-spin {
-  0%, 12% { transform: rotate(0deg); }
-  58% { transform: rotate(540deg); }
-  100% { transform: rotate(720deg); }
-}
-
 /* The admin panel is a tool: no site footer under it (AdminShell). */
 html:has([data-admin-root]) [data-site-footer],
 html:has([data-admin-root]) [data-site-header] {
@@ -836,8 +819,9 @@ html:has([data-home-root]) [data-header-spacer] {
   }
 }
 
-/* A listing on a phone has its own bottom bar ("Choose dates"); the tab bar steps aside while it shows,
-   or the raised + button peeks over it. */
-html:has([data-book-bar='shown']) [data-tab-bar] {
+/* A listing on a phone has its own bottom bar ("Choose dates"), and an open conversation its box to
+   write in; the tab bar steps aside for both, or it covers them (the raised + button peeks over). */
+html:has([data-book-bar='shown']) [data-tab-bar],
+html:has([data-thread-open]) [data-tab-bar] {
   transform: translateY(calc(100% + 24px));
 }

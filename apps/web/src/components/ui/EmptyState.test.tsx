@@ -3,13 +3,13 @@ import { describe, expect, it } from 'vitest';
 import { EmptyState } from './EmptyState';
 
 describe('EmptyState', () => {
-  it('says what is empty in a title and a line, with the yo-yo as decoration only', () => {
+  it('says what is empty in a title and a line, with a still mark as decoration only', () => {
     const { container } = render(<EmptyState title="No closed deals yet" body="Finished deals land here." />);
     expect(screen.getByRole('heading', { name: 'No closed deals yet' })).toBeInTheDocument();
     expect(screen.getByText('Finished deals land here.')).toBeInTheDocument();
     const art = container.querySelector('svg')!;
-    expect(art).toHaveAttribute('aria-hidden', 'true');
-    expect(art.getAttribute('class')).toMatch(/motion-reduce/);
+    expect(art.closest('[aria-hidden="true"]')).not.toBeNull();
+    expect(container.innerHTML).not.toMatch(/animate-/);
   });
 
   it('takes an action and a heading level', () => {

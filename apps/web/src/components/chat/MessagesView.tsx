@@ -10,6 +10,7 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { Link } from '@/i18n/navigation';
 import { ReportButton } from '@/components/reports/ReportButton';
 import { DealStrip } from './DealStrip';
+import { initials } from '@/components/item/OwnerCard';
 import { useConversations, useMarkRead, useSendMessage, useThread } from '@/lib/chat/queries';
 import { dealKeys } from '@/lib/deals/queries';
 import { useQueryClient } from '@tanstack/react-query';
@@ -78,7 +79,8 @@ export function MessagesView({ activeId }: { activeId?: string }) {
         />
       ) : (
         <div
-          className={`border-ink/15 rounded-media grid h-[max(26rem,calc(100svh-15rem))] grid-cols-[minmax(0,1fr)] overflow-hidden border lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] ${activeId ? 'max-lg:h-[calc(100svh-7.5rem)]' : ''}`}
+          data-thread-open={activeId ? '' : undefined}
+          className={`sheet border-ink/15 rounded-media grid h-[max(26rem,calc(100svh-15rem))] grid-cols-[minmax(0,1fr)] overflow-hidden border lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] ${activeId ? 'max-lg:h-[calc(100svh-7.5rem)]' : ''}`}
         >
           <div
             className={`border-ink/15 min-h-0 overflow-y-auto lg:border-r ${activeId ? 'max-lg:hidden' : ''}`}
@@ -158,11 +160,7 @@ function ConversationList({ items, activeId }: { items: ConversationSummary[]; a
 
 /** A personal conversation has no item photo: the other person's initials instead. */
 function Initials({ name }: { name: string }) {
-  const letters = name
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((w) => w[0]?.toUpperCase() ?? '')
-    .join('');
+  const letters = initials(name);
   return (
     <span
       aria-hidden="true"
