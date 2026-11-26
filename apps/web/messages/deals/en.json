@@ -204,7 +204,8 @@
     "remindHandover": "The day before the handover, Yoyo reminds you both.",
     "remindReturn": "The day before the last day, Yoyo reminds you both about the return.",
     "waitHandoverDay": "Waiting for the handover day",
-    "rentalOn": "The rental is on"
+    "rentalOn": "The rental is on",
+    "yoyoDecides": "Yoyo is deciding"
   },
   "dealActions": {
     "ACCEPT": "Accept",

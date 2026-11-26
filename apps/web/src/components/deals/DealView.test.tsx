@@ -125,6 +125,11 @@ describe('DealView', () => {
     expect(screen.getByRole('button', { name: 'I returned it' })).toBeVisible();
   });
 
+  it('says Yoyo is deciding while a dispute is open', async () => {
+    setup(testBooking({ status: 'DISPUTED', hasContract: true, actions: [] }));
+    expect(await screen.findByRole('heading', { name: 'Yoyo is deciding' })).toBeVisible();
+  });
+
   it('makes the last day of a rental the renter’s turn', async () => {
     vi.setSystemTime(new Date('2026-11-12T08:00:00.000Z'));
     setup(testBooking({ status: 'ACTIVE', hasContract: true, actions: ['MARK_RETURNED'] }));

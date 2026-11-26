@@ -204,7 +204,8 @@
     "remindHandover": "Накануне передачи Yoyo напомнит вам обоим о встрече.",
     "remindReturn": "Накануне последнего дня Yoyo напомнит вам обоим о возврате.",
     "waitHandoverDay": "Ждём дня передачи",
-    "rentalOn": "Идёт аренда"
+    "rentalOn": "Идёт аренда",
+    "yoyoDecides": "Решает Yoyo"
   },
   "dealActions": {
     "ACCEPT": "Принять",

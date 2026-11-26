@@ -49,14 +49,15 @@ export function isMyTurn(booking: Pick<BookingView, 'status' | 'actions' | 'peri
 
 /**
  * Whose move it is, in words for the deal page and its chat strip: this side's, or what the deal waits for
- * when it is nobody's step yet (the day of the handover, the end of the rental) rather than "the other
- * side", who is not holding anything up then.
+ * when it is nobody's step yet (the day of the handover, the end of the rental, Yoyo's decision in a
+ * dispute) rather than "the other side", who is not holding anything up then.
  */
 export function turnKey(
   booking: Pick<BookingView, 'status' | 'actions' | 'period' | 'timeZone'>,
   now: Date,
-): 'yourTurn' | 'waitHandoverDay' | 'rentalOn' | 'theirTurn' {
+): 'yourTurn' | 'waitHandoverDay' | 'rentalOn' | 'yoyoDecides' | 'theirTurn' {
   if (isMyTurn(booking, now)) return 'yourTurn';
+  if (booking.status === 'DISPUTED') return 'yoyoDecides';
   const today = todayIn(booking.timeZone, now);
   if (booking.status === 'PAID' && today < addDays(booking.period.start, -1)) return 'waitHandoverDay';
   if (booking.status === 'ACTIVE' && today < booking.period.end) return 'rentalOn';
