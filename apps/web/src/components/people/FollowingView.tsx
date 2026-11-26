@@ -24,7 +24,7 @@ export function FollowingView({ embedded = false }: { embedded?: boolean }) {
         <p className="text-ink/75 max-w-read leading-relaxed">{t('feedIntro')}</p>
       </header>
       {people.data && people.data.length === 0 ? (
-        <EmptyState headingLevel={3} title={t('nobody')} body={t('nobodyHint')} action={<Button href="/c">{t('browse')}</Button>} />
+        <EmptyState headingLevel={2} title={t('nobody')} body={t('nobodyHint')} action={<Button href="/c">{t('browse')}</Button>} />
       ) : (
         <>
           <section aria-labelledby="feed-people" className="flex flex-col gap-4">

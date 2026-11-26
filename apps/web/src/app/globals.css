@@ -199,6 +199,20 @@
 }
 
 @layer base {
+  /* Headings break into even lines and body text keeps no word alone on its last line (audit 2026-11-26). */
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+  p,
+  li,
+  dd,
+  figcaption {
+    text-wrap: pretty;
+  }
+
   html {
     background-color: var(--canvas);
     color: var(--ink);

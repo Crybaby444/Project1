@@ -116,7 +116,7 @@ export function ProfileTabs({ listings, name, userId, reviewCount = 0 }: { listi
         {mine ? (
           tab === 'items' && <MyListings key={status} initialStatus={status} embedded />
         ) : listings.length === 0 ? (
-          <EmptyState headingLevel={3} title={t('noItems', { name })} />
+          <EmptyState headingLevel={2} title={t('noItems', { name })} />
         ) : (
           <ul className="grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-4 lg:grid-cols-4">
             {listings.map((item, index) => (
@@ -128,7 +128,7 @@ export function ProfileTabs({ listings, name, userId, reviewCount = 0 }: { listi
         )}
       </div>
       <div role="tabpanel" id={`${base}-shops`} aria-labelledby={`${base}-shops-tab`} hidden={tab !== 'shops'}>
-        {tab === 'shops' && (mine ? <MyShops embedded /> : <ShopsGrid userId={userId} empty={<EmptyState headingLevel={3} title={t('noShops', { name })} />} />)}
+        {tab === 'shops' && (mine ? <MyShops embedded /> : <ShopsGrid userId={userId} empty={<EmptyState headingLevel={2} title={t('noShops', { name })} />} />)}
       </div>
       {mine && (
         <div role="tabpanel" id={`${base}-favorites`} aria-labelledby={`${base}-favorites-tab`} hidden={tab !== 'favorites'}>
@@ -139,7 +139,7 @@ export function ProfileTabs({ listings, name, userId, reviewCount = 0 }: { listi
             </Button>
           </div>
           {(favorites.data ?? []).length === 0 ? (
-            <EmptyState headingLevel={3} title={t('noFavoritesTitle')} body={t('noFavoritesBody')} />
+            <EmptyState headingLevel={2} title={t('noFavoritesTitle')} body={t('noFavoritesBody')} />
           ) : (
             <ul className="grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-4 lg:grid-cols-4">
               {(favorites.data ?? []).map((item) => (
@@ -157,7 +157,7 @@ export function ProfileTabs({ listings, name, userId, reviewCount = 0 }: { listi
         </div>
       )}
       <div role="tabpanel" id={`${base}-reviews`} aria-labelledby={`${base}-reviews-tab`} hidden={tab !== 'reviews'}>
-        {tab === 'reviews' && <ReviewsFeed source={{ kind: 'user', id: userId }} empty={<EmptyState headingLevel={3} title={t('noReviewsTitle')} body={t('noReviewsBody')} />} />}
+        {tab === 'reviews' && <ReviewsFeed source={{ kind: 'user', id: userId }} empty={<EmptyState headingLevel={2} title={t('noReviewsTitle')} body={t('noReviewsBody')} />} />}
       </div>
     </div>
   );
