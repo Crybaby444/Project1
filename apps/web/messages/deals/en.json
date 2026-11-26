@@ -65,7 +65,10 @@
       "DAMAGE_REPLY": "Goes to a dispute automatically in {time}"
     },
     "overdue": "The time is up. Updating…",
-    "at": "{when}"
+    "at": "{when}",
+    "deadlineMissed": {
+      "HANDOVER_DEADLINE": "If the item is not handed over within {time}, Yoyo steps in"
+    }
   },
   "countdown": {
     "days": "{days} d {hours} h",

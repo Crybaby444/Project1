@@ -102,7 +102,7 @@ export function DealTimeline({
                 {step.state === 'current' && step.key !== 'request' && step.key !== 'end' && (
                   <div className="animate-step-in flex flex-col gap-1">
                     <p className="text-sm">{t(`hint.${step.key}`)}</p>
-                    {booking.deadline && <Countdown deadline={booking.deadline} timeZone={booking.timeZone} onExpire={onDeadline} />}
+                    <Countdown booking={booking} onExpire={onDeadline} />
                   </div>
                 )}
               </div>

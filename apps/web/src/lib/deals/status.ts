@@ -63,3 +63,21 @@ export function turnKey(
   if (booking.status === 'ACTIVE' && today < booking.period.end) return 'rentalOn';
   return 'theirTurn';
 }
+
+/**
+ * The words for a deal's deadline on this side, or null when it needs no clock yet. The handover deadline
+ * is the owner's to meet ("Hand over within…"); the renter reads what happens if it is missed. Days before
+ * the handover day it gets no clock: the page says the deal waits for that day.
+ */
+export function deadlineKey(
+  booking: Pick<BookingView, 'deadline' | 'viewerRole' | 'status' | 'period' | 'timeZone'>,
+  now: Date,
+): string | null {
+  const timer = booking.deadline?.timer;
+  if (!timer) return null;
+  if (timer === 'HANDOVER_DEADLINE') {
+    if (todayIn(booking.timeZone, now) < addDays(booking.period.start, -1)) return null;
+    if (booking.viewerRole !== 'OWNER') return 'deadlineMissed.HANDOVER_DEADLINE';
+  }
+  return `deadline.${timer}`;
+}

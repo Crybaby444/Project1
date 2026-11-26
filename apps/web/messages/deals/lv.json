@@ -65,7 +65,10 @@
       "DAMAGE_REPLY": "Strīds sāksies automātiski pēc {time}"
     },
     "overdue": "Laiks beidzies. Atjaunojam…",
-    "at": "{when}"
+    "at": "{when}",
+    "deadlineMissed": {
+      "HANDOVER_DEADLINE": "Ja lieta netiks nodota {time} laikā, iesaistīsies Yoyo"
+    }
   },
   "countdown": {
     "days": "{days} d. {hours} st.",

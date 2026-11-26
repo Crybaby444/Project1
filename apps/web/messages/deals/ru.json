@@ -65,7 +65,10 @@
       "DAMAGE_REPLY": "Спор откроется сам через {time}"
     },
     "overdue": "Время вышло. Обновляем…",
-    "at": "{when}"
+    "at": "{when}",
+    "deadlineMissed": {
+      "HANDOVER_DEADLINE": "Если вещь не передадут за {time}, подключится Yoyo"
+    }
   },
   "countdown": {
     "days": "{days} д {hours} ч",
