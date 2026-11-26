@@ -18,7 +18,7 @@
     "toggle": "Pārslēgt tēmu",
     "light": "Gaišā",
     "dark": "Tumšā",
-    "system": "Kā sistēmā",
+    "system": "Sistēmas",
     "label": "Tēma"
   },
   "notFound": {
@@ -169,7 +169,7 @@
   "banner": {
     "verifyEmail": {
       "title": "Lūdzu, apstipriniet e-pastu: mēs jums nosūtījām saiti.",
-      "resend": "Sūtīt vēstuli vēlreiz",
+      "resend": "Sūtīt vēlreiz",
       "sent": "Vēstule nosūtīta. Pārbaudiet iesūtni."
     }
   },
