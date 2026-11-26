@@ -200,7 +200,9 @@
       "expired": "The request ran out without an answer. Nothing was charged.",
       "cancelled": "The deal is cancelled. Whatever you paid is back in your wallet.",
       "find": "Find another item"
-    }
+    },
+    "remindHandover": "The day before the handover, Yoyo reminds you both.",
+    "remindReturn": "The day before the last day, Yoyo reminds you both about the return."
   },
   "dealActions": {
     "ACCEPT": "Accept",
