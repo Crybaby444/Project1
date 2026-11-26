@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { Button } from '@/components/ui/Button';
 import { LIST_ITEM_HREF } from '@/lib/site';
+import { Sheet } from '@/components/ui/Sheet';
 
 /**
  * In place of the booking panel on an example listing (owner, 2026-11-16: demo items on the live site,
@@ -9,9 +10,9 @@ import { LIST_ITEM_HREF } from '@/lib/site';
 export async function DemoNotice() {
   const t = await getTranslations('item.demo');
   return (
-    <section aria-labelledby="demo-title" className="border-ink rounded-media bg-surface flex flex-col gap-4 border p-6" data-demo-notice="">
-      <span className="rounded-pill bg-ink text-canvas self-start px-2.5 py-1 text-xs font-bold tracking-[0.04em] uppercase">{t('badge')}</span>
-      <h2 id="demo-title" className="font-display text-display-s leading-[0.9] font-black uppercase">
+    <Sheet aria-labelledby="demo-title" tone="ring" className="flex flex-col gap-4" data-demo-notice="">
+      <span className="rounded-pill bg-ink text-canvas self-start px-2.5 py-1 type-caption">{t('badge')}</span>
+      <h2 id="demo-title" className="type-block">
         {t('title')}
       </h2>
       <p className="leading-relaxed">{t('body')}</p>
@@ -23,6 +24,6 @@ export async function DemoNotice() {
           </Button>
         )}
       </div>
-    </section>
+    </Sheet>
   );
 }

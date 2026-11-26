@@ -13,17 +13,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: `${t('title')} · Yoyo`, robots: { index: false } };
 }
 
-/** All my notifications (signed-in only, see RequireSession). */
+/**
+ * All my notifications (signed-in only, see RequireSession) in the page's split: the list on the left, the
+ * searches that ring the bell in the side column (below it on a phone).
+ */
 export default async function NotificationsPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations('notifications');
   return (
-    <main className="page-narrow page-y flex flex-1 flex-col gap-6">
+    <main className="page page-y stack-page flex-1">
       <PageHeader title={t('title')} />
       <RequireSession>
-        <NotificationList />
-        <SavedSearches />
+        <div className="layout-split">
+          <NotificationList />
+          <aside className="lg:sticky lg:top-24">
+            <SavedSearches />
+          </aside>
+        </div>
       </RequireSession>
     </main>
   );

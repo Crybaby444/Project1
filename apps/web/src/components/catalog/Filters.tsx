@@ -6,7 +6,6 @@ import { useId, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Dialog } from '@/components/ui/Dialog';
 import { Field } from '@/components/ui/Field';
-import { Select } from '@/components/ui/Select';
 import { INPUT_CLASS } from '@/components/ui/inputs';
 import { catalogSearch, filterCount, type CatalogParams } from '@/lib/catalog/params';
 import type { Range } from '@/lib/catalog/range';
@@ -78,7 +77,7 @@ function FilterFields({ params, cities, country, today }: Omit<FiltersProps, 'to
   return (
     <div className="flex flex-col gap-6">
       <fieldset className="flex flex-col gap-3" aria-describedby={priceError ? `${ids.price}-error` : undefined}>
-        <legend className="mb-3 text-sm font-bold tracking-[0.03em] uppercase">{t('price')}</legend>
+        <legend className="mb-3 type-label">{t('price')}</legend>
         <div className="grid grid-cols-2 gap-3">
           {(
             [
@@ -113,7 +112,7 @@ function FilterFields({ params, cities, country, today }: Omit<FiltersProps, 'to
       </fieldset>
 
       <fieldset className="flex flex-col gap-3">
-        <legend className="mb-1 text-sm font-bold tracking-[0.03em] uppercase">{t('dates')}</legend>
+        <legend className="mb-1 type-label">{t('dates')}</legend>
         <button
           type="button"
           aria-expanded={datesOpen}
@@ -149,7 +148,7 @@ function FilterFields({ params, cities, country, today }: Omit<FiltersProps, 'to
       </fieldset>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor={ids.city} className="text-sm font-bold tracking-[0.03em] uppercase">
+        <label htmlFor={ids.city} className="type-label">
           {t('city')}
         </label>
         <div className="border-ink bg-surface rounded-pill flex min-h-12 items-center border px-5">

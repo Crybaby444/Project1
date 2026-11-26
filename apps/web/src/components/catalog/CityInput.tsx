@@ -125,7 +125,7 @@ export function CityInput({
                 choose({ name: city.name, slug: city.slug });
               }}
               onPointerEnter={() => setActive(index)}
-              className={`flex cursor-pointer items-baseline justify-between gap-3 rounded-[14px] px-3.5 py-2.5 text-base font-semibold ${index === active ? 'bg-ink text-canvas' : ''}`}
+              className={`flex cursor-pointer items-baseline justify-between gap-3 rounded-media px-3.5 py-2.5 text-base font-semibold ${index === active ? 'bg-ink text-canvas' : ''}`}
             >
               <span className="truncate">{city.name}</span>
               {city.count > 0 && <span className={`shrink-0 text-sm tabular-nums ${index === active ? 'text-canvas/70' : 'text-ink/60'}`}>{t('cityCount', { count: city.count })}</span>}

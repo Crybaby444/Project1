@@ -41,24 +41,26 @@ export function AdminPageHeader({
   );
 }
 
-/** An empty list of the panel: a quiet sheet with a mark, what is empty and, if useful, what to do. */
+/**
+ * An empty list of the panel: the site's empty state on the panel's glass (DESIGN.md "Surfaces"): a small
+ * still mark in its square, what is empty at the block step, and, if useful, what to do.
+ */
 export function AdminEmpty({ title, hint }: { title: string; hint?: string }) {
   return (
-    <div className="admin-glass border-ink/15 rounded-media flex flex-col items-center gap-2 border px-5 py-10 text-center">
-      <svg
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        className="text-ink/40 size-6 fill-none stroke-current [stroke-width:1.6] [stroke-linecap:round] [stroke-linejoin:round]"
-      >
-        <path d="M4 7h16M4 12h10M4 17h7" />
-      </svg>
-      <h2 className="text-base font-bold">{title}</h2>
-      {hint && <p className="text-ink/65 max-w-md text-sm">{hint}</p>}
+    <div className="admin-glass border-ink/15 rounded-media flex flex-col items-start gap-4 border p-5 sm:flex-row sm:items-center sm:gap-5 sm:p-6">
+      <span aria-hidden="true" className="border-ink/15 text-ink/60 rounded-tile grid size-12 shrink-0 place-items-center border">
+        <svg viewBox="0 0 24 24" className="size-6 fill-none stroke-current [stroke-width:1.6] [stroke-linecap:round] [stroke-linejoin:round]">
+          <path d="M4 7h16M4 12h10M4 17h7" />
+        </svg>
+      </span>
+      <div className="flex min-w-0 flex-col gap-1.5">
+        <h2 className="type-block">{title}</h2>
+        {hint && <p className="text-ink/70 max-w-read text-sm leading-relaxed">{hint}</p>}
+      </div>
     </div>
   );
 }
 
-/** Previous / next with "Page 2 of 5"; nothing when there is one page. */
 export function Pager({ page, pages, onPage }: { page: number; pages: number; onPage(page: number): void }) {
   const t = useTranslations('admin.common');
   if (pages <= 1) return null;
@@ -91,7 +93,7 @@ export function Panel({
     <section
       className={`admin-glass border-ink/15 rounded-media flex flex-col gap-4 border p-5 sm:p-6 ${className}`}
     >
-      <h2 className="text-ink/70 text-sm font-bold tracking-[0.04em] uppercase">{title}</h2>
+      <h2 className="text-ink/70 type-label">{title}</h2>
       {children}
     </section>
   );

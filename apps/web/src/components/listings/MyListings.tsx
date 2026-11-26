@@ -100,7 +100,7 @@ export function MyListings({
       )}
 
       {query.isPending ? (
-        <ul aria-busy="true" className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        <ul aria-busy="true" className="grid-tiles">
           {[0, 1, 2].map((key) => (
             <li
               key={key}
@@ -112,7 +112,7 @@ export function MyListings({
       ) : query.isError ? (
         <div
           role="alert"
-          className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6"
+          className="sheet border-ink/15 rounded-media flex flex-col items-start gap-3 border p-5 sm:p-6"
         >
           <p className="font-bold">{t('loadFailed')}</p>
           <p>{errorText(query.error)}</p>
@@ -135,7 +135,7 @@ export function MyListings({
           <p className="sr-only" role="status">
             {t('count', { count: items.length })}
           </p>
-          <ul className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          <ul className="grid-tiles">
             {items.map((listing) => (
               <li key={listing.id}>
                 <MyListingCard listing={listing} perform={(action) => perform(listing.id, action)} />
@@ -161,7 +161,7 @@ export function MyListings({
           ) : (deleted.data ?? []).length === 0 ? (
             <p className="text-ink/70 text-sm">{t('deleted.none')}</p>
           ) : (
-            <ul className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            <ul className="grid-tiles">
               {(deleted.data ?? []).map((listing) => (
                 <li key={listing.id}>
                   <MyListingCard listing={listing} perform={(action) => perform(listing.id, action)} />

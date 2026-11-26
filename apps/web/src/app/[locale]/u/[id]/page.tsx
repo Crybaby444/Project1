@@ -37,7 +37,7 @@ export default async function ProfilePage({ params }: Props) {
   const { user, listings } = loaded.data;
 
   return (
-    <main className="page flex flex-col gap-10 py-8 sm:py-10">
+    <main className="page page-y stack-page">
       <ProfileHero user={user} />
       <ProfileTabs listings={listings} name={user.name} userId={user.id} reviewCount={user.reviewCount} />
       <ReportButton target="USER" id={user.id} ownerId={user.id} className="self-start" />

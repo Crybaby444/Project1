@@ -15,8 +15,8 @@ function Photo({ id, which, alt }: { id: string; which: 'document' | 'selfie'; a
   const photo = useIdentityPhoto(id, which);
   if (!photo.data)
     return <div aria-busy={photo.isPending || undefined} className="bg-mist rounded-media aspect-[4/3]" />;
-  // eslint-disable-next-line @next/next/no-img-element -- a private object URL, never cached
   return (
+    // eslint-disable-next-line @next/next/no-img-element -- a private object URL, never cached
     <img src={photo.data} alt={alt} className="rounded-media aspect-[4/3] w-full bg-black object-contain" />
   );
 }

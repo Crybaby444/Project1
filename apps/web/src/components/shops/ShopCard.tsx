@@ -10,7 +10,7 @@ import type { ReactNode } from 'react';
 export function ShopCard({ shop }: { shop: ShopSummary }) {
   const t = useTranslations('shops');
   return (
-    <Link href={`/shops/${shop.id}`} className="group border-ink/15 bg-surface rounded-media flex flex-col overflow-hidden border" data-shop={shop.id}>
+    <Link href={`/shops/${shop.id}`} className="group sheet border-ink/15 rounded-media flex flex-col overflow-hidden border" data-shop={shop.id}>
       <div className="bg-mist grid aspect-[3/2] grid-cols-3 gap-0.5">
         {[0, 1, 2].map((i) =>
           shop.covers[i] ? (
@@ -36,7 +36,7 @@ export function ShopsGrid({ userId, empty }: { userId: string; empty: ReactNode 
   if (shops.isPending) return <div aria-busy="true" className="bg-mist rounded-media h-48" />;
   if (!shops.data || shops.data.length === 0) return <>{empty}</>;
   return (
-    <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <ul className="grid-tiles">
       {shops.data.map((s) => (
         <li key={s.id}>
           <ShopCard shop={s} />

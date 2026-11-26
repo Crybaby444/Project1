@@ -10,7 +10,7 @@ import { FollowButton } from './FollowButton';
 export function PersonCard({ person }: { person: Person }) {
   const t = useTranslations('people');
   return (
-    <li className="border-ink/15 bg-surface rounded-media flex items-center gap-4 border p-4" data-person={person.id}>
+    <li className="sheet border-ink/15 rounded-media flex items-center gap-4 border p-4 sm:p-5" data-person={person.id}>
       <span aria-hidden="true" className="bg-ink text-canvas font-display grid size-14 shrink-0 place-items-center rounded-full text-2xl font-black">
         {initials(person.name)}
       </span>

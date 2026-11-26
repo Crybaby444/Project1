@@ -104,7 +104,7 @@ export default async function ItemPage({ params }: Props) {
   ];
 
   return (
-    <main className="page flex flex-col gap-8 pt-6 pb-28 lg:pb-16">
+    <main className="page page-y stack-page">
       <ContentLanguage lang={detail.listing.contentLocale} />
       <Breadcrumbs items={crumbs} label={tCatalog('breadcrumbs.label')} />
       {detail.available ? (
@@ -114,7 +114,7 @@ export default async function ItemPage({ params }: Props) {
           <p className="bg-ink text-canvas rounded-pill inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold uppercase before:size-1.5 before:rounded-full before:bg-[var(--glow)] before:content-['']">
             {t('away.badge')}
           </p>
-          <h1 className="font-display text-display-l leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]" lang={detail.listing.contentLocale}>
+          <h1 className="type-title hyphens-auto [overflow-wrap:anywhere]" lang={detail.listing.contentLocale}>
             {title}
           </h1>
           <p className="max-w-lead text-lg">{t('away.body')}</p>
@@ -125,11 +125,11 @@ export default async function ItemPage({ params }: Props) {
       )}
       {detail.available && <RentalRules name={category ? categoryName(category, locale) : title} />}
       {similar.length > 0 && (
-        <section aria-labelledby="similar" className="flex flex-col gap-4">
-          <h2 id="similar" className="font-display text-display-s leading-[0.9] font-black uppercase">
+        <section aria-labelledby="similar" className="stack-section">
+          <h2 id="similar" className="type-section">
             {t('similar')}
           </h2>
-          <ul className="grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 lg:grid-cols-4">
+          <ul className="grid-cards">
             {similar.map((item) => (
               <li key={item.id}>
                 <ListingCard item={item} />
@@ -172,11 +172,13 @@ async function Available({ item, title, category, locale }: { item: AvailableIte
           demo: item.demo,
         }}
       />
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-start xl:gap-12">
+      {/* The item's own split: the photos and the story get more room than the 24rem tool column of a deal,
+          as the calendar beside them needs two months side by side. */}
+      <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] xl:gap-12">
         <div className="flex min-w-0 flex-col gap-8">
           <Gallery listingId={listing.id} title={title} photos={listing.photos} />
           <div className="flex items-start justify-between gap-4">
-            <h1 className="font-display min-w-0 text-display-l leading-[0.95] font-black uppercase hyphens-auto [overflow-wrap:anywhere]" lang={listing.contentLocale}>
+            <h1 className="type-title min-w-0 hyphens-auto [overflow-wrap:anywhere]" lang={listing.contentLocale}>
               {title}
             </h1>
             <div className="flex shrink-0 gap-2">
@@ -200,7 +202,7 @@ async function Available({ item, title, category, locale }: { item: AvailableIte
           )}
           {listing.description && (
             <section aria-labelledby="item-about" className="flex flex-col gap-3">
-              <h2 id="item-about" className="font-display text-display-s leading-[0.9] font-black uppercase">
+              <h2 id="item-about" className="type-block">
                 {t('about')}
               </h2>
               <p className="max-w-read text-lg leading-relaxed whitespace-pre-line [overflow-wrap:anywhere]" lang={listing.contentLocale}>
@@ -212,11 +214,11 @@ async function Available({ item, title, category, locale }: { item: AvailableIte
           <ReviewsFeed
             source={{ kind: 'listing', id: listing.id }}
             heading={
-              <h2 className="font-display m-0 text-display-s leading-[0.9] font-black uppercase">{tr('itemHeading')}</h2>
+              <h2 className="type-block m-0">{tr('itemHeading')}</h2>
             }
           />
         </div>
-        <aside className="flex flex-col gap-6 lg:sticky lg:top-6">
+        <aside className="stack-sheets lg:sticky lg:top-24">
           {item.demo ? <DemoNotice /> : <BookingPanel item={item} />}
           <OwnerCard owner={owner} />
           <ReportButton target="LISTING" id={listing.id} ownerId={owner.id} className="self-start" />

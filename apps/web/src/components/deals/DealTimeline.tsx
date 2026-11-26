@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { formatMoment } from '@/lib/deals/dates';
 import { dealTimeline, type StepState } from '@/lib/deals/timeline';
 import { Countdown } from './Countdown';
+import { Sheet } from '@/components/ui/Sheet';
 
 const DOT: Record<StepState, string> = {
   done: 'bg-ink text-canvas border-ink',
@@ -59,8 +60,8 @@ export function DealTimeline({
   const steps = dealTimeline(booking, history);
 
   return (
-    <section aria-labelledby="deal-timeline" className="sheet border-ink/15 rounded-media border p-5 sm:p-6 flex flex-col gap-4">
-      <h2 id="deal-timeline" className="font-display text-display-s leading-[0.95] font-black uppercase">
+    <Sheet aria-labelledby="deal-timeline" className="flex flex-col gap-4">
+      <h2 id="deal-timeline" className="type-block">
         {t('title')}
       </h2>
       <ol className="flex flex-col" data-timeline="">
@@ -88,7 +89,7 @@ export function DealTimeline({
               <div className={`flex min-w-0 flex-1 flex-col gap-1 pt-1 ${step.state === 'skipped' ? 'opacity-60' : ''}`}>
                 <p className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
                   <span className={`font-bold [overflow-wrap:anywhere] ${step.state === 'skipped' ? 'line-through' : ''}`}>{title}</span>
-                  <span className="text-xs font-bold tracking-[0.03em] uppercase">
+                  <span className="type-caption">
                     <span className="sr-only">, </span>
                     {t(`state.${step.state}`)}
                   </span>
@@ -109,6 +110,6 @@ export function DealTimeline({
           );
         })}
       </ol>
-    </section>
+    </Sheet>
   );
 }

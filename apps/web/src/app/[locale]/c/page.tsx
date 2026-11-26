@@ -7,8 +7,9 @@ import { SearchBox } from '@/components/catalog/SearchBox';
 import { ListingCard } from '@/components/catalog/ListingCard';
 import { RecentlyViewed } from '@/components/catalog/RecentlyViewed';
 import { loadCategories, loadCategoryCounts, loadSearch } from '@/lib/catalog/server-api';
-import { displayFit } from '@/lib/display-fit';
 import { Link } from '@/i18n/navigation';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Section } from '@/components/ui/Section';
 import { localePath, seoMetadata } from '@/lib/seo';
 
 type Props = { params: Promise<{ locale: string }> };
@@ -35,44 +36,40 @@ export default async function CategoriesPage({ params }: Props) {
   const fresh = newest.ok ? newest.data.items.slice(0, 4) : [];
   const title = t('allTitle');
   return (
-    <main className="page @container flex flex-col gap-8 py-8 sm:py-10">
-      <Breadcrumbs items={[{ label: t('breadcrumbs.home'), href: '/' }, { label: t('breadcrumbs.catalog') }]} label={t('breadcrumbs.label')} />
-      <div className="flex flex-col gap-4">
-        <h1 style={displayFit(title, { min: '2rem', max: '4rem' })} className="font-display text-display-fit leading-[0.9] font-black uppercase">
-          {title}
-        </h1>
+    <main className="page page-y stack-page">
+      <PageHeader
+        title={title}
+        crumbs={<Breadcrumbs items={[{ label: t('breadcrumbs.home'), href: '/' }, { label: t('breadcrumbs.catalog') }]} label={t('breadcrumbs.label')} />}
+      >
         <SearchBox className="max-w-3xl" />
-      </div>
+      </PageHeader>
       {!tree.ok ? (
         <p role="alert" className="font-bold">
           {t('error.body')}
         </p>
       ) : (
         <>
-          <section aria-labelledby="catalog-all" className="flex flex-col gap-4">
-            <h2 id="catalog-all" className="font-display text-display-s leading-none font-black uppercase">
-              {t('allCategories')}
-            </h2>
+          <Section title={t('allCategories')} id="catalog-all">
             <CategoryIndex roots={tree.data} locale={locale} counts={counts} />
-          </section>
+          </Section>
           {fresh.length > 0 && (
-            <section aria-labelledby="catalog-fresh" className="flex flex-col gap-4">
-              <div className="flex items-baseline justify-between gap-4">
-                <h2 id="catalog-fresh" className="font-display text-display-s leading-none font-black uppercase">
-                  {t('fresh')}
-                </h2>
+            <Section
+              title={t('fresh')}
+              id="catalog-fresh"
+              action={
                 <Link href="/search?sort=new" className="text-sm font-bold underline decoration-1 underline-offset-4">
                   {t('freshAll')}
                 </Link>
-              </div>
-              <ul className="grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-4 lg:grid-cols-4">
+              }
+            >
+              <ul className="grid-cards">
                 {fresh.map((item, i) => (
                   <li key={item.id}>
                     <ListingCard item={item} eager={i < 2} />
                   </li>
                 ))}
               </ul>
-            </section>
+            </Section>
           )}
           <RecentlyViewed />
         </>

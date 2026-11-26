@@ -9,6 +9,7 @@ import { formatMoment } from '@/lib/deals/dates';
 import { useErrorText } from '@/lib/forms/error-text';
 import { toApiError } from '@/lib/session/api-error';
 import { fetchWithRefresh } from '@/lib/session/fetch-with-refresh';
+import { Sheet } from '@/components/ui/Sheet';
 
 /**
  * Downloads the contract PDF through the site's /api proxy with the session renewed if needed (a plain
@@ -44,7 +45,7 @@ function Signature({ who, at, timeZone, typed, waiting }: { who: string; at: str
         )}
       </span>
       <p className="flex flex-col">
-        <span className="text-sm font-bold tracking-[0.03em] uppercase">{who}</span>
+        <span className="type-label">{who}</span>
         <span className="text-sm">{at ? t('signed', { when: formatMoment(at, locale, timeZone) }) : (waiting ?? t('notSigned'))}</span>
         {typed && (
           <span className="text-ink/70 text-sm">
@@ -88,9 +89,9 @@ export function ContractCard({ booking }: { booking: BookingView }) {
   }
 
   return (
-    <section aria-labelledby="deal-contract" className="sheet border-ink/15 rounded-media border p-5 sm:p-6 flex flex-col gap-4" data-contract="">
+    <Sheet aria-labelledby="deal-contract" className="flex flex-col gap-4" data-contract="">
       <div className="flex flex-col gap-1">
-        <h2 id="deal-contract" className="font-display text-4xl leading-[0.95] font-black uppercase">
+        <h2 id="deal-contract" className="type-block">
           {t('title')}
         </h2>
         <p className="text-sm">{booking.hasContract ? t('body') : t('notYet')}</p>
@@ -110,7 +111,7 @@ export function ContractCard({ booking }: { booking: BookingView }) {
           </div>
           <div className="flex flex-wrap items-end gap-3">
             <div className="flex flex-col gap-1.5">
-              <label htmlFor={selectId} className="text-sm font-bold tracking-[0.03em] uppercase">
+              <label htmlFor={selectId} className="type-label">
                 {t('language')}
               </label>
               <Select
@@ -135,6 +136,6 @@ export function ContractCard({ booking }: { booking: BookingView }) {
           )}
         </>
       )}
-    </section>
+    </Sheet>
   );
 }

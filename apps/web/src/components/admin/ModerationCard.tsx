@@ -12,7 +12,7 @@ import { formatEuros } from '@/lib/listings/money';
 function Row({ term, children, wide = false }: { term: string; children: ReactNode; wide?: boolean }) {
   return (
     <div className={`flex flex-col gap-0.5 ${wide ? 'sm:col-span-2' : ''}`}>
-      <dt className="text-sm font-bold tracking-[0.03em] uppercase">{term}</dt>
+      <dt className="type-label">{term}</dt>
       <dd className="[overflow-wrap:anywhere]">{children}</dd>
     </div>
   );

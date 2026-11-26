@@ -48,7 +48,7 @@ export function Card({
       {...rest}
       onPointerMove={handleMove}
       onPointerLeave={handleLeave}
-      className={`rounded-card border border-ink ${fill} ${motion} ${className}`}
+      className={`rounded-media border border-ink ${fill} ${motion} ${className}`}
     >
       {children}
     </div>

@@ -12,7 +12,7 @@ export default function ProfileSettingsPage() {
   // RequireSession (settings/layout) renders this only for a signed-in user.
   if (!user) return null;
   return (
-    <div className="flex flex-col gap-10">
+    <div className="stack-sheets">
       <ProfileForm key={user.id} user={user} />
       <div id="identity" className="scroll-mt-28">
         <SettingsSection title={t('title')} intro={t('intro')}>

@@ -5,7 +5,6 @@ import { UsernameSchema } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { useEffect, useId, useState, type InputHTMLAttributes, type ReactNode } from 'react';
-import { INPUT_CLASS } from '@/components/ui/inputs';
 import { unwrap } from '@/lib/session/api-error';
 import { useApiClient } from '@/lib/session/SessionProvider';
 

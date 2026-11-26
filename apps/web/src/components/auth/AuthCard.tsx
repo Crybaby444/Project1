@@ -30,7 +30,7 @@ export function AuthCard({ title, subtitle, children, footer, focusTitle = false
   }, [focusTitle]);
 
   return (
-    <main className="flex flex-1 justify-center px-4 py-10 sm:py-16">
+    <main className="page page-y flex flex-1 justify-center">
       <div className="flex w-full max-w-[30rem] flex-col gap-6">
         <section data-card-rise="" className="relative flex flex-col gap-7">
           <header className="@container flex flex-col items-center gap-3 text-center">
@@ -38,8 +38,8 @@ export function AuthCard({ title, subtitle, children, footer, focusTitle = false
             <h1
               ref={titleRef}
               tabIndex={focusTitle ? -1 : undefined}
-              style={displayFit(title, { max: '4.5rem' })}
-              className="font-display text-display-fit leading-[0.85] font-black uppercase focus:outline-none"
+              style={displayFit(title, { min: '1.75rem', max: 'var(--text-display-l)' })}
+              className="font-display text-display-fit leading-[0.88] font-black uppercase focus:outline-none"
             >
               <LetterRise text={title} stagger={18} />
             </h1>

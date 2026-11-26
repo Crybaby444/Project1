@@ -4,6 +4,7 @@ import type { BookingView } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
 import { useDealConversation } from '@/lib/chat/queries';
 import { Thread } from './MessagesView';
+import { Sheet } from '@/components/ui/Sheet';
 
 /**
  * The deal's own chat (owner, 2026-11-16: deals have their own chat; Messages are personal): write to the
@@ -14,13 +15,13 @@ export function DealChat({ booking }: { booking: BookingView }) {
   const conversation = useDealConversation(booking.id, booking.viewerRole !== 'ADMIN');
   if (booking.viewerRole === 'ADMIN') return null;
   return (
-    <section aria-labelledby="deal-chat" className="sheet border-ink/15 rounded-media border p-5 sm:p-6 flex flex-col gap-3" data-deal-chat="">
-      <h2 id="deal-chat" className="font-display text-4xl leading-[0.95] font-black uppercase">
+    <Sheet aria-labelledby="deal-chat" className="flex flex-col gap-3" data-deal-chat="">
+      <h2 id="deal-chat" className="type-block">
         {t('inDealTitle')}
       </h2>
       <div className="rounded-media border-ink/15 bg-surface flex h-[min(34rem,70svh)] flex-col overflow-hidden border">
         {conversation.data ? <Thread id={conversation.data.id} inDeal /> : <div aria-busy="true" className="flex-1" />}
       </div>
-    </section>
+    </Sheet>
   );
 }

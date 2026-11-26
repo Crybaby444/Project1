@@ -20,7 +20,7 @@ export function FollowingView({ embedded = false }: { embedded?: boolean }) {
   return (
     <div className="flex flex-col gap-8">
       <header className="flex flex-col gap-2">
-        {!embedded && <h1 className="font-display text-display-l leading-[0.9] font-black uppercase">{t('feedTitle')}</h1>}
+        {!embedded && <h1 className="type-title">{t('feedTitle')}</h1>}
         <p className="text-ink/75 max-w-read leading-relaxed">{t('feedIntro')}</p>
       </header>
       {people.data && people.data.length === 0 ? (
@@ -28,21 +28,21 @@ export function FollowingView({ embedded = false }: { embedded?: boolean }) {
       ) : (
         <>
           <section aria-labelledby="feed-people" className="flex flex-col gap-4">
-            <h2 id="feed-people" className="text-ink/70 text-sm font-bold tracking-[0.04em] uppercase">
+            <h2 id="feed-people" className="text-ink/70 type-label">
               {t('youFollow', { count: people.data?.length ?? 0 })}
             </h2>
-            <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="grid-tiles">
               {people.data?.map((p) => (
                 <PersonCard key={p.id} person={p} />
               ))}
             </ul>
           </section>
           <section aria-labelledby="feed-items" className="flex flex-col gap-4">
-            <h2 id="feed-items" className="text-ink/70 text-sm font-bold tracking-[0.04em] uppercase">
+            <h2 id="feed-items" className="text-ink/70 type-label">
               {t('newItems')}
             </h2>
             {feed.data && feed.data.items.length === 0 && <p className="text-ink/75">{t('noNewItems')}</p>}
-            <ul className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 xl:grid-cols-4">
+            <ul className="grid-cards">
               {feed.data?.items.map((item) => (
                 <li key={item.id} className="flex flex-col gap-2">
                   <ListingCard item={item} />

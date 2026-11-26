@@ -11,10 +11,10 @@ export function PeopleResults({ q }: { q: string }) {
   if (!people.data || people.data.length === 0) return null;
   return (
     <section aria-labelledby="people-results" className="page flex flex-col gap-3 pt-8" data-people-results="">
-      <h2 id="people-results" className="font-display text-4xl leading-none font-black uppercase">
+      <h2 id="people-results" className="type-section">
         {t('searchTitle')}
       </h2>
-      <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid-tiles">
         {people.data.slice(0, 6).map((p) => (
           <PersonCard key={p.id} person={p} />
         ))}

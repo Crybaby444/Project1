@@ -152,7 +152,7 @@ function ReportCard({ report: r }: { report: AdminReport }) {
           </div>
         </div>
       ) : (
-        r.resolution && <p className="bg-mist rounded-[12px] px-3 py-2 text-sm">{r.resolution}</p>
+        r.resolution && <p className="bg-mist rounded-tile px-3 py-2 text-sm">{r.resolution}</p>
       )}
     </article>
   );

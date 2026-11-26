@@ -63,7 +63,7 @@ export function HomeSearch({ country, today }: { country: Country; today: string
   const cell = 'flex min-w-0 flex-col justify-center gap-0.5 px-5 py-2.5';
   const caption = 'text-ink/60 text-xs font-bold tracking-[0.06em] uppercase';
   return (
-    <form role="search" onSubmit={submit} data-home-search="" className="border-ink bg-surface relative grid w-full grid-cols-1 rounded-[28px] border sm:rounded-[999px] md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_minmax(0,1fr)_auto]">
+    <form role="search" onSubmit={submit} data-home-search="" className="border-ink bg-surface relative grid w-full grid-cols-1 rounded-float border sm:rounded-pill md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_minmax(0,1fr)_auto]">
       <div className={`${cell} max-md:border-ink/15 relative max-md:border-b`}>
         <label htmlFor={ids.q} className={caption}>
           {t('what')}

@@ -8,7 +8,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 /** The intro is 520vh; the hero was tuned for 230vh of travel and keeps it (concept v16, HK). */
 export const HK = 420 / 230;
-const clamp = (x: number, a: number, b: number) => Math.min(b, Math.max(a, x));
 
 /**
  * Plays the home as you scroll: smooth scrolling (Lenis), the intro, the night story, What is Yoyo, the

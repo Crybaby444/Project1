@@ -111,7 +111,7 @@ export function AdminMoney({ kind, page }: { kind?: LedgerKind; page: number }) 
                   .map(([key, list]) => (
                     <div key={key}>
                       <p className="text-sm font-semibold">{tm(key)}</p>
-                      <ul className="bg-mist mt-1 rounded-[12px] px-3 py-2 font-mono text-sm">
+                      <ul className="bg-mist mt-1 rounded-tile px-3 py-2 font-mono text-sm">
                         {list.map((line) => (
                           <li key={line}>{line}</li>
                         ))}
@@ -126,7 +126,7 @@ export function AdminMoney({ kind, page }: { kind?: LedgerKind; page: number }) 
 
       <section className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="font-display text-4xl leading-none font-black uppercase">{tm('operations')}</h2>
+          <h2 className="type-section">{tm('operations')}</h2>
           <AdminSelect
             label={tm('kindLabel')}
             value={kind ?? ''}

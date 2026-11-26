@@ -138,7 +138,7 @@ function Body({ data }: { data: AdminBookingDetail }) {
                         {moment(op.createdAt)}
                       </time>
                     </p>
-                    <ul className="bg-mist rounded-[12px] px-3 py-2 font-mono text-sm">
+                    <ul className="bg-mist rounded-tile px-3 py-2 font-mono text-sm">
                       {op.postings.map((p) => (
                         <li key={p.account} className="flex justify-between gap-4">
                           <span className="truncate">{p.account}</span>
@@ -229,7 +229,7 @@ function Body({ data }: { data: AdminBookingDetail }) {
                         alt={p.kind}
                         width={p.width}
                         height={p.height}
-                        className="bg-mist aspect-square w-full rounded-[12px] object-cover"
+                        className="bg-mist aspect-square w-full rounded-tile object-cover"
                       />
                     </a>
                   </li>

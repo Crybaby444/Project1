@@ -224,7 +224,7 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
       ) : query.isError ? (
         <div
           role="alert"
-          className="border-ink/15 bg-surface rounded-media flex flex-col items-start gap-3 border p-6"
+          className="sheet border-ink/15 rounded-media flex flex-col items-start gap-3 border p-5 sm:p-6"
         >
           <p className="font-bold">{t('loadFailed')}</p>
           <p>{errorText(query.error)}</p>

@@ -47,7 +47,7 @@ export function useSuggestions(text: string, open: boolean) {
     const key = `${locale}:${query.toLowerCase()}`;
     const cached = cache.current.get(key);
     if (cached) {
-      setAnswer(cached); // eslint-disable-line react-hooks/set-state-in-effect -- a remembered answer
+      setAnswer(cached);
       return;
     }
     const controller = new AbortController();
@@ -127,7 +127,7 @@ export function SuggestionList({
       <ul id={id} role="listbox" aria-label={t('label')} className="flex flex-col gap-1">
         {categories.length > 0 && (
           <li role="presentation">
-            <p id={`${id}-categories`} className="px-3 pt-1 pb-1 text-xs font-bold tracking-[0.032em] uppercase">
+            <p id={`${id}-categories`} className="px-3 pt-1 pb-1 type-caption">
               {t('categories')}
             </p>
             <ul role="group" aria-labelledby={`${id}-categories`}>
@@ -137,7 +137,7 @@ export function SuggestionList({
         )}
         {listings.length > 0 && (
           <li role="presentation">
-            <p id={`${id}-listings`} className="px-3 pt-2 pb-1 text-xs font-bold tracking-[0.032em] uppercase">
+            <p id={`${id}-listings`} className="px-3 pt-2 pb-1 type-caption">
               {t('items')}
             </p>
             <ul role="group" aria-labelledby={`${id}-listings`}>

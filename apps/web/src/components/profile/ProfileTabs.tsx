@@ -118,7 +118,7 @@ export function ProfileTabs({ listings, name, userId, reviewCount = 0 }: { listi
         ) : listings.length === 0 ? (
           <EmptyState headingLevel={2} title={t('noItems', { name })} />
         ) : (
-          <ul className="grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-4 lg:grid-cols-4">
+          <ul className="grid-cards">
             {listings.map((item, index) => (
               <li key={item.id}>
                 <ListingCard item={item} eager={index < 4} />
@@ -141,7 +141,7 @@ export function ProfileTabs({ listings, name, userId, reviewCount = 0 }: { listi
           {(favorites.data ?? []).length === 0 ? (
             <EmptyState headingLevel={2} title={t('noFavoritesTitle')} body={t('noFavoritesBody')} />
           ) : (
-            <ul className="grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-4 lg:grid-cols-4">
+            <ul className="grid-cards">
               {(favorites.data ?? []).map((item) => (
                 <li key={item.id}>
                   <ListingCard item={item} unavailable={!item.available} />

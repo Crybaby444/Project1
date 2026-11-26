@@ -105,7 +105,7 @@ export function AdminAudit() {
                         {(['before', 'after'] as const).map((side) => (
                           <pre
                             key={side}
-                            className="bg-mist overflow-x-auto rounded-[12px] px-3 py-2 font-mono text-xs whitespace-pre-wrap"
+                            className="bg-mist overflow-x-auto rounded-tile px-3 py-2 font-mono text-xs whitespace-pre-wrap"
                           >
                             <span className="text-ink/60 block font-sans text-xs font-bold uppercase">
                               {ta(side)}

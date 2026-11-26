@@ -79,7 +79,7 @@ export function ProfileForm({ user }: { user: PublicUser }) {
   const aboutLength = (form.watch('about') ?? '').length;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="stack-sheets">
       <SettingsSection title={t('title')} intro={t('intro')}>
         <form noValidate onSubmit={submit} className="flex flex-col gap-5">
           <FormError message={formError} />

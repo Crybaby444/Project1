@@ -62,9 +62,11 @@ export function SiteHeader({ catalog = [], country = HOME_COUNTRY }: { catalog?:
     <>
       <header
         data-site-header
-        className={`pointer-events-none fixed inset-x-0 top-0 z-30 px-3 pt-3 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus-within:translate-y-0 focus-within:transition-none sm:px-5 ${hidden ? '-translate-y-[calc(100%+8px)]' : ''}`}
+        className={`pointer-events-none fixed inset-x-0 top-0 z-30 pt-3 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus-within:translate-y-0 focus-within:transition-none ${hidden ? '-translate-y-[calc(100%+8px)]' : ''}`}
       >
-        <div className="border-ink/10 bg-canvas pointer-events-auto relative mx-auto flex h-14 max-w-[1280px] items-center gap-2 rounded-full border pr-2 pl-4 shadow-[0_16px_40px_-22px_rgba(10,11,14,0.45),0_1px_0_rgba(255,255,255,0.6)_inset] backdrop-blur-xl lg:h-[60px] lg:gap-3 lg:pl-5">
+        {/* The capsule sits on the page's grid: its edges are the content's edges on every width. */}
+        <div className="page">
+        <div className="border-ink/10 bg-canvas pointer-events-auto relative flex h-14 items-center gap-2 rounded-full border pr-2 pl-4 shadow-[0_16px_40px_-22px_rgba(10,11,14,0.45),0_1px_0_rgba(255,255,255,0.6)_inset] backdrop-blur-xl lg:h-[60px] lg:gap-3 lg:pl-5">
           <Link href="/" data-site-brand aria-label={tn('homeLabel')} className="rounded-pill flex shrink-0 items-center gap-2 pr-1">
             <Mark size={22} />
             <Wordmark className="text-2xl lg:text-2xl" />
@@ -143,6 +145,7 @@ export function SiteHeader({ catalog = [], country = HOME_COUNTRY }: { catalog?:
           </div>
 
           {/* Catalog's sheet is positioned against this capsule. */}
+        </div>
         </div>
       </header>
       {/* Room for the floating bar at the top of every page (the cinematic page runs under it). */}

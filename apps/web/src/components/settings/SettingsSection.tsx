@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
+import { Sheet } from '@/components/ui/Sheet';
 
-/** One card of the settings: surface, 1px outline, 40px corners, a plain heading. */
+/** One block of the settings: a sheet with its heading at the block step and a line on what it is for. */
 export function SettingsSection({
   title,
   intro,
@@ -11,12 +12,12 @@ export function SettingsSection({
   children: ReactNode;
 }) {
   return (
-    <section className="sheet border-ink/15 rounded-media flex flex-col gap-5 border p-5 sm:p-7">
-      <header className="flex flex-col gap-1.5">
-        <h2 className="font-display text-display-s leading-[0.95] font-black uppercase">{title}</h2>
-        {intro && <p className="leading-relaxed">{intro}</p>}
+    <Sheet className="flex flex-col gap-5">
+      <header className="flex flex-col gap-2">
+        <h2 className="type-block">{title}</h2>
+        {intro && <p className="text-ink/75 max-w-read leading-relaxed">{intro}</p>}
       </header>
       {children}
-    </section>
+    </Sheet>
   );
 }

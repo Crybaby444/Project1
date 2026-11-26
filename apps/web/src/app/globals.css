@@ -37,8 +37,10 @@
  * (an unexpected translation) is hyphenated in the page language or, failing that, broken.
  */
 /*
- * One grid (audit 2026-11-16, G1): every page sits in `page` (1440px, 16px gutter, 32px from 640px) or,
- * for forms and settings, `page-narrow` (48rem); `page-y` is the vertical rhythm of a page's main part.
+ * The grid (DESIGN.md "Grid"). One container for everything that is not a scene: `page` is 1440px wide at
+ * most with a 16px gutter (32px from 640px). The floating header, the email strip, the footer and the
+ * phone's tab bar sit on the same edges, so every page starts at the same line. `page-narrow` (48rem) is
+ * kept only for a lone form (sign-in, a status page). `page-y` is a page's top and bottom.
  */
 @utility page {
   @apply mx-auto w-full max-w-[1440px] px-4 sm:px-8;
@@ -49,7 +51,86 @@
 }
 
 @utility page-y {
-  @apply py-10 sm:py-14;
+  @apply pt-8 pb-14 sm:pt-12 sm:pb-20;
+}
+
+/*
+ * Rhythm: one 4px scale used in three intervals, tight inside, generous between. A page stacks its
+ * header and sections 40px apart (56px from 640px); a section stacks its heading and content 16px apart
+ * (20px); a sheet keeps 20px (24px) inside. Everything else is a gap of the 4px scale inside these.
+ */
+@utility stack-page {
+  @apply flex flex-col gap-10 sm:gap-14;
+}
+
+@utility stack-section {
+  @apply flex flex-col gap-4 sm:gap-5;
+}
+
+/* A column of sheets (the settings, a deal's blocks): 16px apart on a phone, 24px from 640px. */
+@utility stack-sheets {
+  @apply flex flex-col gap-4 sm:gap-6;
+}
+
+/*
+ * Three page layouts, nothing in between. `layout-split`: the work on the left, a 24rem column of
+ * tools on the right (a deal, a booking, an item). `layout-rail`: an 18rem rail of navigation or
+ * filters on the left, the content on the right (search, settings, legal, FAQ). Below lg both are one
+ * column, in reading order; that column is never wider than the screen (a wide table scrolls inside it).
+ */
+@utility layout-split {
+  @apply grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-8;
+}
+
+@utility layout-rail {
+  @apply grid grid-cols-[minmax(0,1fr)] items-start gap-8 lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-12;
+}
+
+/*
+ * Card grids. `grid-cards` for item cards across the page (2 → 4 columns), `grid-cards-rail` beside a
+ * rail (2 → 3), `grid-tiles` for wider cards: people, shops, my items (1 → 2 → 3). One gutter for all:
+ * 12px on a phone, 16px from 640px; 32px between rows (the card's text needs the air).
+ */
+@utility grid-cards {
+  @apply grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-4 lg:grid-cols-4;
+}
+
+@utility grid-cards-rail {
+  @apply grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-4 xl:grid-cols-3;
+}
+
+@utility grid-tiles {
+  @apply grid gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3;
+}
+
+/*
+ * Type roles (DESIGN.md "Type"). Headings are named by their place, never by a size: `type-hero` for a
+ * scene, `type-title` for a page's h1, `type-section` for a section of a page, `type-block` for the
+ * heading of a sheet or a group. `type-label` names a field or a group (14px), `type-caption` tags a
+ * small fact or sits on a chip (12px). None of them sets a colour: a quiet label adds `text-ink/70`.
+ */
+@utility type-hero {
+  @apply font-display text-display-xl leading-[0.86] font-black uppercase;
+}
+
+@utility type-title {
+  @apply font-display text-display-l leading-[0.88] font-black uppercase;
+}
+
+@utility type-section {
+  @apply font-display text-display-m leading-[0.92] font-black uppercase;
+}
+
+@utility type-block {
+  @apply font-display text-display-s leading-[0.95] font-black uppercase;
+}
+
+@utility type-label {
+  @apply text-sm font-bold tracking-[0.03em] uppercase;
+}
+
+@utility type-caption {
+  @apply text-xs font-bold tracking-[0.04em] uppercase;
 }
 
 @utility text-display-fit {
@@ -67,15 +148,19 @@
 @theme {
   /*
    * One type scale (owner, 2026-11-16: "everywhere a different grid and font sizes; there must be a
-   * system"). Interface text uses Tailwind's steps only: xs 12 · sm 14 · base 16 · lg 18 · xl 20 ·
-   * 2xl 24 · 3xl 30 px. Display headings (Sofia Sans Extra Condensed) use four fluid steps:
-   * display-s for a card or block, display-m for a section, display-l for a page title, display-xl for
-   * a page's hero. Nothing else; the giant decorative words of What is Yoyo are artwork.
+   * system"; 2026-11-26: "one style, one beautiful grid"). Interface text uses Tailwind's steps only:
+   * xs 12 · sm 14 · base 16 · lg 18 · xl 20 · 2xl 24 px. Display headings (Sofia Sans Extra Condensed)
+   * use four fluid steps about 1.4× apart, so a heading's role reads at a glance:
+   *   display-s  26 → 34px  a sheet or a group        (type-block)
+   *   display-m  32 → 46px  a section of a page       (type-section)
+   *   display-l  40 → 64px  the page's title          (type-title)
+   *   display-xl 48 → 96px  a scene or a hero         (type-hero)
+   * Nothing else; the giant decorative words of What is Yoyo are artwork.
    */
-  --text-display-s: clamp(1.8rem, 3vw, 2.8rem);
-  --text-display-m: clamp(2.2rem, 3.8vw, 3.4rem);
-  --text-display-l: clamp(2.6rem, 6vw, 4.8rem);
-  --text-display-xl: clamp(3rem, 8vw, 6rem);
+  --text-display-s: clamp(1.625rem, 1.2rem + 1vw, 2.125rem);
+  --text-display-m: clamp(2rem, 1.4rem + 1.8vw, 2.875rem);
+  --text-display-l: clamp(2.5rem, 1.6rem + 3vw, 4rem);
+  --text-display-xl: clamp(3rem, 1.5rem + 6vw, 6rem);
   --animate-sticker-wobble: sticker-wobble 450ms var(--ease-yoyo);
   --animate-sticker-spin: sticker-spin 450ms var(--ease-yoyo);
   --animate-marquee: marquee 30s linear infinite;
@@ -218,6 +303,16 @@
     color: var(--ink);
     /* The page never shifts sideways when its height changes (a scrollbar coming or going). */
     scrollbar-gutter: stable;
+    /* What the browser draws itself carries the palette too: a thin ink scrollbar on the paper, the caret
+       and checkboxes in ink. */
+    scrollbar-color: color-mix(in srgb, var(--ink) 28%, transparent) transparent;
+    caret-color: var(--ink);
+    accent-color: var(--ink);
+  }
+
+  ::selection {
+    background-color: var(--ink);
+    color: var(--canvas);
   }
 
   body {
@@ -789,25 +884,12 @@ html:has([data-home-root]) [data-header-spacer] {
  * style of the admin). A sheet is a quiet card a little lighter than the page with a lit top edge and a soft
  * fall of shadow; blocks of an account page come out of a blur in turn (`.rise`, `--i`).
  */
-.sheet {
-  background: linear-gradient(180deg, rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.45));
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.9),
-    0 24px 48px -36px rgb(10 11 14 / 0.25);
-}
-[data-theme='dark']:not(:has([data-home-root])) .sheet {
-  background: linear-gradient(180deg, rgb(244 241 230 / 0.06), rgb(244 241 230 / 0.025));
-  box-shadow:
-    inset 0 1px 0 rgb(244 241 230 / 0.09),
-    0 28px 56px -36px rgb(0 0 0 / 0.85);
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]):not(:has([data-home-root])) .sheet {
-    background: linear-gradient(180deg, rgb(244 241 230 / 0.06), rgb(244 241 230 / 0.025));
-    box-shadow:
-      inset 0 1px 0 rgb(244 241 230 / 0.09),
-      0 28px 56px -36px rgb(0 0 0 / 0.85);
-  }
+/* Its paint is a token of the theme (`--sheet-bg`, `--sheet-shadow` in tokens.css), so it follows the
+   theme by itself and takes variants (`lg:sheet`). Components use `<Sheet>` (ui/Sheet), which adds the
+   corners, the edge and the padding. */
+@utility sheet {
+  background: var(--sheet-bg);
+  box-shadow: var(--sheet-shadow);
 }
 .rise {
   animation: admin-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;

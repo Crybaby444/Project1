@@ -76,7 +76,7 @@ function BlockView({ block, fill }: { block: Block; fill: (text: string) => stri
         <thead className="bg-mist">
           <tr>
             {block.table.head.map((cell) => (
-              <th key={cell} scope="col" className="border-ink/15 border-b px-4 py-3 text-xs font-bold tracking-[0.032em] uppercase">
+              <th key={cell} scope="col" className="border-ink/15 border-b px-4 py-3 type-caption">
                 {cell}
               </th>
             ))}
@@ -111,15 +111,15 @@ export function LegalDocument({ doc, effective }: { doc: LegalDoc; effective: st
   return (
     <main className="flex flex-1 flex-col">
       <PageBanner title={doc.title} stickers={[{ kind: 'shield', size: 96, top: '-14%', right: '4%', rotate: 10, className: 'max-sm:hidden' }]}>
-        <p className="border-ink bg-surface rounded-pill self-start border px-3 py-1.5 text-xs font-bold tracking-[0.032em] uppercase">
+        <p className="border-ink bg-surface rounded-pill self-start border px-3 py-1.5 type-caption">
           {t('effective', { date })}
         </p>
       </PageBanner>
 
       <div className="bg-surface">
-        <div className="page grid grid-cols-[minmax(0,1fr)] gap-10 py-14 sm:py-20 lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-16">
-          <nav aria-label={t('contents')} className="lg:sticky lg:top-6 lg:self-start">
-            <h2 className="mb-3 text-xs font-bold tracking-[0.032em] uppercase">{t('contents')}</h2>
+        <div className="page page-y layout-rail">
+          <nav aria-label={t('contents')} className="lg:sticky lg:top-24 lg:self-start">
+            <h2 className="type-caption text-ink/70 mb-3">{t('contents')}</h2>
             <ol className="flex flex-col gap-1">
               {doc.sections.map((section) => (
                 <li key={section.id}>
@@ -136,7 +136,7 @@ export function LegalDocument({ doc, effective }: { doc: LegalDoc; effective: st
 
           <article className="flex max-w-[40rem] flex-col gap-12 text-base">
             <section aria-labelledby="summary" className="border-ink text-ink flex flex-col gap-3 border-t-2 pt-6">
-              <h2 id="summary" className="font-display text-display-s leading-[0.95] font-black uppercase">
+              <h2 id="summary" className="type-block">
                 {t('summary')}
               </h2>
               <ul className="flex list-disc flex-col gap-2 pl-6 leading-relaxed">

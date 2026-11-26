@@ -45,7 +45,17 @@ export async function overflows(page: Page): Promise<Overflow[]> {
         clientWidth: window.innerWidth,
       });
     }
-    for (const el of document.querySelectorAll<HTMLElement>('h1, .font-display')) {
+    // Text kept for screen readers only (a 1px clipped box, `sr-only`) cannot stick out of anything.
+    const visuallyHidden = (el: HTMLElement) => {
+      for (let e: HTMLElement | null = el; e && e !== document.body; e = e.parentElement) {
+        const style = getComputedStyle(e);
+        if (e.getBoundingClientRect().width <= 1 && style.overflow === 'hidden') return true;
+      }
+      return false;
+    };
+    // Display text: the face itself, or one of the heading roles of DESIGN.md "Type" that set it.
+    for (const el of document.querySelectorAll<HTMLElement>('h1, .font-display, .type-hero, .type-title, .type-section, .type-block')) {
+      if (visuallyHidden(el)) continue;
       // Inline display text (the wordmark inside the hero h1) is measured through its block.
       if (getComputedStyle(el).display === 'inline') continue;
       if (el.scrollWidth > el.clientWidth) {

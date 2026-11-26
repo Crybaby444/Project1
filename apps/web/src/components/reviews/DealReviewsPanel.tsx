@@ -11,6 +11,7 @@ import { useApiClient } from '@/lib/session/SessionProvider';
 import { useErrorText } from '@/lib/forms/error-text';
 import { ReviewList } from './ReviewList';
 import { StarInput } from './StarInput';
+import { Sheet } from '@/components/ui/Sheet';
 
 const key = (bookingId: string) => ['bookings', bookingId, 'reviews'] as const;
 
@@ -63,8 +64,8 @@ export function DealReviewsPanel({ bookingId, otherName }: { bookingId: string; 
   }
 
   return (
-    <section aria-labelledby={`${textId}-heading`} className="sheet border-ink/15 rounded-media border p-5 sm:p-6 flex flex-col gap-5" data-deal-reviews="">
-      <h2 id={`${textId}-heading`} className="font-display m-0 text-display-s leading-[0.95] font-black uppercase">
+    <Sheet aria-labelledby={`${textId}-heading`} className="flex flex-col gap-5" data-deal-reviews="">
+      <h2 id={`${textId}-heading`} className="type-block m-0">
         {t('heading')}
       </h2>
 
@@ -75,7 +76,7 @@ export function DealReviewsPanel({ bookingId, otherName }: { bookingId: string; 
           <StarInput legend={t('aboutPerson', { name: otherName })} name="person" value={rating} onChange={setRating} invalid={tried && rating === 0} />
           {asRenter && <StarInput legend={t('aboutItem')} name="item" value={itemRating} onChange={setItemRating} invalid={tried && itemRating === 0} />}
           <div className="flex flex-col gap-1.5">
-            <label htmlFor={textId} className="text-sm font-bold tracking-[0.03em] uppercase">
+            <label htmlFor={textId} className="type-label">
               {t('text')}
             </label>
             <textarea
@@ -108,17 +109,17 @@ export function DealReviewsPanel({ bookingId, otherName }: { bookingId: string; 
       {data.mine && !data.theirs && <p className="m-0 max-w-read leading-relaxed">{t('sent', { name: otherName, date })}</p>}
       {data.mine && (
         <div className="flex flex-col gap-2">
-          <h3 className="m-0 text-sm font-bold tracking-[0.03em] uppercase">{t('mine')}</h3>
+          <h3 className="type-label m-0">{t('mine')}</h3>
           <ReviewList reviews={[data.mine]} showItem={asRenter} />
         </div>
       )}
       {data.theirs && (
         <div className="flex flex-col gap-2">
-          <h3 className="m-0 text-sm font-bold tracking-[0.03em] uppercase">{t('theirs', { name: otherName })}</h3>
+          <h3 className="type-label m-0">{t('theirs', { name: otherName })}</h3>
           <ReviewList reviews={[data.theirs]} />
         </div>
       )}
       {!data.canReview && !data.mine && !data.theirs && <p className="m-0">{t('closed')}</p>}
-    </section>
+    </Sheet>
   );
 }

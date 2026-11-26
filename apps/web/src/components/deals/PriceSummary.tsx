@@ -16,7 +16,7 @@ export function PriceSummary({ quote, title }: { quote: QuoteView | null; title?
 
   return (
     <section aria-labelledby="price-summary" className="flex flex-col gap-3" data-price-summary="">
-      <h3 id="price-summary" className="text-sm font-bold tracking-[0.03em] uppercase">
+      <h3 id="price-summary" className="type-label">
         {title ?? t('title')}
       </h3>
       {quote === null ? (

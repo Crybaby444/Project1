@@ -22,7 +22,7 @@ export function TestModeNotice({ onUse }: { onUse(number: string): void }) {
       data-test-mode=""
       className="rounded-media bg-ink text-canvas flex flex-col gap-2 border border-ink/15 p-4"
     >
-      <h3 id="test-mode" className="flex items-center gap-2 text-sm font-bold tracking-[0.03em] uppercase">
+      <h3 id="test-mode" className="flex items-center gap-2 type-label">
         <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M9 3h6M10 3v6L4.5 18.5A1.7 1.7 0 0 0 6 21h12a1.7 1.7 0 0 0 1.5-2.5L14 9V3" />
         </svg>
@@ -85,7 +85,7 @@ export function CardForm({
   return (
     <div className="flex flex-col gap-4" data-card-form="">
       <div className="flex flex-col gap-1.5">
-        <label htmlFor={`${id}-number`} className="text-sm font-bold tracking-[0.03em] uppercase">
+        <label htmlFor={`${id}-number`} className="type-label">
           {t('number')}
         </label>
         <div className="relative">
@@ -181,7 +181,7 @@ function StripeCardFields({ value, onChange, holderError, disabled }: { value: C
   return (
     <div className="flex flex-col gap-4" data-card-form="" data-stripe="">
       <div className="flex flex-col gap-1.5">
-        <span className="text-sm font-bold tracking-[0.03em] uppercase">{t('number')}</span>
+        <span className="type-label">{t('number')}</span>
         <div ref={host} className={`${INPUT_CLASS} flex items-center py-3`} aria-describedby={problem ? 'stripe-card-error' : undefined} />
         {(problem || failed) && (
           <p id="stripe-card-error" role="alert" className="text-sm text-[var(--danger)]">

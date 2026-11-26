@@ -150,10 +150,10 @@ function Bars({ rows, name }: { rows: Row[]; name?: (key: string) => string | nu
   return (
     <ol className="flex flex-col gap-2">
       {rows.map((r) => (
-        <li key={r.key} className="relative overflow-hidden rounded-[10px] px-3 py-2">
+        <li key={r.key} className="relative overflow-hidden rounded-tile px-3 py-2">
           <span
             aria-hidden="true"
-            className="admin-grow-x bg-ink/[0.07] absolute inset-y-0 left-0 rounded-[10px]"
+            className="admin-grow-x bg-ink/[0.07] absolute inset-y-0 left-0 rounded-tile"
             style={{ width: `${Math.max(4, (r.value / max) * 100)}%` }}
           />
           <span className="relative flex items-baseline justify-between gap-3 text-base">

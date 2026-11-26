@@ -33,7 +33,7 @@ type TiltProps = {
  * The shadow is a separate ink layer the face lifts off, so only transforms animate. No tilt for
  * touch or pen, and nothing moves with reduced motion.
  */
-export function Tilt({ children, className = '', radius = 'rounded-card' }: TiltProps) {
+export function Tilt({ children, className = '', radius = 'rounded-media' }: TiltProps) {
   function onPointerMove(event: PointerEvent<HTMLDivElement>) {
     if (event.pointerType !== 'mouse' || prefersReducedMotion()) return;
     const box = event.currentTarget;

@@ -139,11 +139,11 @@ export function TwoFactorSettings({ hasPassword }: { hasPassword: boolean }) {
       </ol>
       <div className="flex flex-wrap items-center gap-6">
         <div className="rounded-media grid size-44 shrink-0 place-items-center border border-[color-mix(in_srgb,var(--ink)_15%,transparent)] bg-white p-3">
-          {qr ? <div role="img" aria-label={t('qrLabel')} className="size-full [&>svg]:size-full" dangerouslySetInnerHTML={{ __html: qr }} /> : <div aria-busy="true" className="bg-mist size-full rounded-[8px]" />}
+          {qr ? <div role="img" aria-label={t('qrLabel')} className="size-full [&>svg]:size-full" dangerouslySetInnerHTML={{ __html: qr }} /> : <div aria-busy="true" className="bg-mist size-full rounded-tile" />}
         </div>
         <div className="flex min-w-0 flex-col gap-1.5">
           <p className="text-ink/75 text-sm">{t('keyLabel')}</p>
-          <code className="bg-mist rounded-[10px] px-3 py-2 font-mono text-base font-semibold tracking-[0.08em] [overflow-wrap:anywhere] select-all">
+          <code className="bg-mist rounded-tile px-3 py-2 font-mono text-base font-semibold tracking-[0.08em] [overflow-wrap:anywhere] select-all">
             {setup.secret.match(/.{1,4}/g)?.join(' ')}
           </code>
         </div>

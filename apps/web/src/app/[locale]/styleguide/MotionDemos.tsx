@@ -76,7 +76,7 @@ export function MotionDemos() {
           {([1, 2, 3] as const).map((step, index) => (
             <div
               key={step}
-              className={`border-ink rounded-card-xl flex min-h-56 flex-col gap-3 border p-6 text-black sm:p-8 ${STEP_TONES[index]}`}
+              className={`border-ink rounded-media flex min-h-56 flex-col gap-3 border p-6 text-black sm:p-8 ${STEP_TONES[index]}`}
             >
               <span className="font-display text-5xl leading-none font-black">{step}</span>
               <p className="text-2xl leading-tight font-bold">{t(`step${step}Title`)}</p>

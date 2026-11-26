@@ -186,7 +186,7 @@ export function Select({
             return (
               <Fragment key={option.value}>
               {heading ? (
-                <li role="presentation" className="text-ink/70 px-4 pt-3 pb-1 text-xs font-bold tracking-[0.08em] uppercase">
+                <li role="presentation" className="text-ink/70 px-4 pt-3 pb-1 type-caption">
                   {heading}
                 </li>
               ) : null}

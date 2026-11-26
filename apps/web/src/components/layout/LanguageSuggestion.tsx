@@ -79,7 +79,7 @@ export function LanguageSuggestion() {
       className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
     >
       {/* v16: a quiet ink bar that floats over the page bottom: the question in the suggested language, the switch, stay. */}
-      <div className="bg-ink text-canvas animate-toast-in pointer-events-auto flex w-full max-w-2xl flex-wrap items-center gap-x-5 gap-y-3 rounded-[28px] py-3 pr-3 pl-5 shadow-[0_24px_48px_-24px_rgba(10,11,14,0.55)] sm:rounded-full">
+      <div className="bg-ink text-canvas animate-toast-in pointer-events-auto flex w-full max-w-2xl flex-wrap items-center gap-x-5 gap-y-3 rounded-float py-3 pr-3 pl-5 shadow-[0_24px_48px_-24px_rgba(10,11,14,0.55)] sm:rounded-full">
         <Mark size={22} string={false} className="text-canvas shrink-0 [--mark-cut:var(--ink)]" />
         <p className="m-0 min-w-0 flex-[1_1_14rem] text-base leading-snug font-semibold">{text.text}</p>
         <div className="flex shrink-0 items-center gap-1">

@@ -56,12 +56,12 @@ export function ForYou({
   return (
     <>
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <h2 id={headingId} className="font-display text-display-l leading-[0.88] font-black uppercase">
+        <h2 id={headingId} className="type-title">
           {data.personal ? titles.personal : titles.popular}
         </h2>
         {action}
       </div>
-      <ul className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-4 lg:grid-cols-4">
+      <ul className="grid-cards">
         {data.items.slice(0, 8).map((item, i) => (
           <li key={item.id}>
             <ListingCard item={item} eager={i < 4} />

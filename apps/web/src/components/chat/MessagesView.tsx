@@ -56,7 +56,7 @@ export function MessagesView({ activeId }: { activeId?: string }) {
   const fit = useFitAboveTabBar(frame, Boolean(activeId) && conversations.isSuccess);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-6">
+    <div className="stack-page min-h-0 flex-1">
       <div className={activeId ? 'max-lg:sr-only' : ''}>
         <PageHeader title={t('title')} count={conversations.data?.length} />
       </div>
@@ -84,7 +84,7 @@ export function MessagesView({ activeId }: { activeId?: string }) {
           ref={frame}
           data-thread-open={activeId ? '' : undefined}
           style={fit ? ({ '--frame-h': `${fit}px` } as CSSProperties) : undefined}
-          className={`sheet border-ink/15 rounded-media grid h-[max(26rem,calc(100svh-15rem))] grid-cols-[minmax(0,1fr)] overflow-hidden border lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] ${activeId && fit ? 'max-lg:h-[var(--frame-h)]' : ''}`}
+          className={`sheet border-ink/15 rounded-media grid h-[max(26rem,calc(100svh-17rem))] grid-cols-[minmax(0,1fr)] overflow-hidden border lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] ${activeId && fit ? 'max-lg:h-[var(--frame-h)]' : ''}`}
         >
           <div
             className={`border-ink/15 min-h-0 overflow-y-auto lg:border-r ${activeId ? 'max-lg:hidden' : ''}`}
@@ -208,10 +208,10 @@ function Thumb({ url }: { url: string | null }) {
       alt=""
       width={48}
       height={48}
-      className="bg-mist size-12 shrink-0 rounded-[12px] object-cover"
+      className="bg-mist size-12 shrink-0 rounded-tile object-cover"
     />
   ) : (
-    <span aria-hidden="true" className="bg-mist border-ink/10 size-12 shrink-0 rounded-[12px] border" />
+    <span aria-hidden="true" className="bg-mist border-ink/10 size-12 shrink-0 rounded-tile border" />
   );
 }
 
@@ -330,7 +330,7 @@ function ThreadBody({ data, inDeal }: { data: ConversationThread; inDeal: boolea
                   </span>
                 ) : (
                   <span
-                    className={`max-w-[min(80%,34rem)] rounded-[20px] px-4 py-2.5 break-words whitespace-pre-wrap ${
+                    className={`max-w-[min(80%,34rem)] rounded-float px-4 py-2.5 break-words whitespace-pre-wrap ${
                       m.mine
                         ? 'bg-ink text-canvas self-end rounded-br-[6px]'
                         : 'border-ink/15 bg-surface self-start rounded-bl-[6px] border'
@@ -398,7 +398,7 @@ function Composer({ id, aboutItem }: { id: string; aboutItem: boolean }) {
           rows={1}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={onKeyDown}
-          className="border-ink bg-surface text-ink placeholder:text-ink/60 field-sizing-content max-h-40 min-h-11 flex-1 resize-none rounded-[22px] border px-4 py-2.5 text-base"
+          className="border-ink bg-surface text-ink placeholder:text-ink/60 field-sizing-content max-h-40 min-h-11 flex-1 resize-none rounded-float border px-4 py-2.5 text-base"
         />
         <Button type="submit" disabled={!ready} aria-busy={send.isPending}>
           {send.isPending ? t('sending') : t('send')}
