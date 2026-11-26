@@ -9,8 +9,14 @@ const asDay = (day: string) => new Date(`${day}T00:00:00Z`);
 /** Yoyo's English reads British-style in the Baltics: "12 Nov 2026", not "Nov 12, 2026". */
 export const dateLocale = (locale: string) => (locale === 'en' ? 'en-GB' : locale);
 
-/** Intl puts thin and narrow spaces around range dashes and inside dates; plain ones wrap the same everywhere. */
-const plain = (text: string) => text.replace(/[  ]/g, ' ');
+/**
+ * Intl puts thin and narrow spaces around range dashes and inside dates, and Node and the browsers do not
+ * agree on the range dash: Node's ICU gives «6—8 дек.», Chrome «6–8 дек.», so every page that showed a
+ * range rendered on the server failed to hydrate. Plain spaces and an en dash read and wrap the same
+ * everywhere.
+ */
+export const plainDates = (text: string) => text.replace(/[\u2009\u202f]/g, ' ').replace(/\u2014/g, '\u2013');
+const plain = plainDates;
 
 /** "12 Nov 2026" / "2026. gada 12. nov." / "12 нояб. 2026 г." */
 export function formatDay(day: string, locale: string): string {

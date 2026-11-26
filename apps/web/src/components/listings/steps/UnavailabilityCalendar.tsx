@@ -12,6 +12,7 @@ import {
   toggleRange,
   weekStartFor,
 } from '@/lib/listings/calendar';
+import { plainDates } from '@/lib/deals/dates';
 import { monthLabel } from '@/lib/month-label';
 
 type Props = {
@@ -37,8 +38,6 @@ function sameDayIn(day: string, target: Month): string {
   return `${monthKey(target)}-${String(Math.min(wanted, last)).padStart(2, '0')}`;
 }
 const asDate = (day: string) => new Date(`${day}T00:00:00Z`);
-/** Intl puts thin spaces around the dash of a range; plain spaces read and wrap the same everywhere. */
-const plainSpaces = (text: string) => text.replace(/[  ]/g, ' ');
 
 /** Whether the screen is wide enough for two months side by side. */
 function useTwoMonths(): boolean {
@@ -97,7 +96,7 @@ export function UnavailabilityCalendar({ periods, today, onChange, readOnly }: P
     timeZone: 'UTC',
   });
   const describe = (period: DatePeriod) =>
-    plainSpaces(
+    plainDates(
       period.start === period.end
         ? rangeLabel.format(asDate(period.start))
         : rangeLabel.formatRange(asDate(period.start), asDate(period.end)),
