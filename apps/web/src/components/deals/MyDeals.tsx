@@ -2,7 +2,7 @@
 
 import type { BookingView } from '@yoyo/shared';
 import { BOOKINGS_PAGE_SIZE } from '@yoyo/shared';
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale, useNow, useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { TransitionLink } from '@/components/motion/TransitionLink';
 import { Reveal } from '@/components/motion/Reveal';
@@ -26,7 +26,8 @@ export function DealCard({ booking, index }: { booking: BookingView; index: numb
   const locale = useLocale();
   const money = useMoney();
   const duration = useDurationText();
-  const mine = isMyTurn(booking.actions);
+  const now = useNow({ updateInterval: 60_000 });
+  const mine = isMyTurn(booking, now);
   const other = booking.viewerRole === 'OWNER' ? booking.renter.name : booking.owner.name;
   const left = useDeadline(booking.deadline?.dueAt ?? null);
 

@@ -360,3 +360,17 @@ export type SigningStart = z.infer<typeof SigningStartSchema>;
 /** What the provider says about this person's latest signing; SIGNED means the deal has the signature. */
 export const SigningCheckSchema = z.object({ state: z.enum(['SIGNED', 'PENDING', 'FAILED', 'UNKNOWN']) });
 export type SigningCheck = z.infer<typeof SigningCheckSchema>;
+
+/** Steps that are a way out (or the administrator's) and do not mean the deal waits for you (owner, 2026-11-16). */
+export const WAY_OUT_STEPS: readonly string[] = ['CANCEL', 'WITHDRAW', 'RESOLVE'];
+
+/**
+ * Whether a deal waits for this side's step now: one that moves it forward, not a way out. During a rental
+ * the renter may bring the item back early and the owner may take it back, but it is nobody's turn before
+ * the last day (`today`, in the deal's time zone), or "your turn" would hang over the whole rental. The deal
+ * page, the list, the chat and the count in the menu all ask this one question.
+ */
+export function waitsForStep(deal: { status: string; actions: readonly string[]; period: { end: string } }, today: string): boolean {
+  if (deal.status === 'ACTIVE' && today < deal.period.end) return false;
+  return deal.actions.some((action) => !WAY_OUT_STEPS.includes(action));
+}

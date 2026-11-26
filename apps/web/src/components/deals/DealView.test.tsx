@@ -113,6 +113,24 @@ describe('DealView', () => {
     expect(await screen.findByText('The day before the last day, Yoyo reminds you both about the return.')).toBeVisible();
   });
 
+  it('waits for the handover day, not for "the other side", while a paid deal is days ahead', async () => {
+    setup(testBooking({ status: 'PAID', hasContract: true, actions: ['CANCEL'] })); // starts 10 Nov; today is 6 Nov
+    expect(await screen.findByRole('heading', { name: 'Waiting for the handover day' })).toBeVisible();
+    expect(screen.queryByText('Your turn')).toBeNull();
+  });
+
+  it('calls a rental on its way "the rental is on", even with an early return possible; the last day is the turn', async () => {
+    setup(testBooking({ status: 'ACTIVE', hasContract: true, actions: ['MARK_RETURNED'] })); // ends 12 Nov
+    expect(await screen.findByRole('heading', { name: 'The rental is on' })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'I returned it' })).toBeVisible();
+  });
+
+  it('makes the last day of a rental the renter’s turn', async () => {
+    vi.setSystemTime(new Date('2026-11-12T08:00:00.000Z'));
+    setup(testBooking({ status: 'ACTIVE', hasContract: true, actions: ['MARK_RETURNED'] }));
+    expect(await screen.findByRole('heading', { name: 'Your turn' })).toBeVisible();
+  });
+
   it('says nothing about a reminder once its day has come', async () => {
     setup(testBooking({ status: 'PAID', hasContract: true, actions: ['CANCEL'], period: { start: '2026-11-07', end: '2026-11-09' } }));
     await screen.findByRole('heading', { level: 1 });

@@ -1,4 +1,5 @@
-import { CLOSED_BOOKING_STATUSES, type BookingStatus, type StatusTone } from '@yoyo/shared';
+import { CLOSED_BOOKING_STATUSES, waitsForStep, type BookingStatus, type BookingView, type StatusTone } from '@yoyo/shared';
+import { addDays, todayIn } from '@/lib/listings/calendar';
 
 /**
  * Deal statuses in the sticker palette (DESIGN.md "Project adaptations" §4, spec §4.4): a request and a
@@ -37,10 +38,27 @@ export const DEAL_ROLES = ['renter', 'owner'] as const;
 
 export type DealRole = (typeof DEAL_ROLES)[number];
 
-/** Steps that are always open but don't mean the deal waits for you (owner walk, 2026-11-16). */
-const NOT_A_TURN = new Set(['RESOLVE', 'CANCEL', 'WITHDRAW']);
+/**
+ * The deal waits for this side now: a step that moves it forward, not a way out, and nobody's turn during a
+ * rental before its last day (shared with the API's count in the menu: `waitsForStep`). `now` is the page's
+ * clock (next-intl `useNow`); the day is the deal's own, where the item is.
+ */
+export function isMyTurn(booking: Pick<BookingView, 'status' | 'actions' | 'period' | 'timeZone'>, now: Date): boolean {
+  return waitsForStep(booking, todayIn(booking.timeZone, now));
+}
 
-/** The deal waits for this side: a step that moves it forward, not just a way out. */
-export function isMyTurn(actions: readonly string[]): boolean {
-  return actions.some((a) => !NOT_A_TURN.has(a));
+/**
+ * Whose move it is, in words for the deal page and its chat strip: this side's, or what the deal waits for
+ * when it is nobody's step yet (the day of the handover, the end of the rental) rather than "the other
+ * side", who is not holding anything up then.
+ */
+export function turnKey(
+  booking: Pick<BookingView, 'status' | 'actions' | 'period' | 'timeZone'>,
+  now: Date,
+): 'yourTurn' | 'waitHandoverDay' | 'rentalOn' | 'theirTurn' {
+  if (isMyTurn(booking, now)) return 'yourTurn';
+  const today = todayIn(booking.timeZone, now);
+  if (booking.status === 'PAID' && today < addDays(booking.period.start, -1)) return 'waitHandoverDay';
+  if (booking.status === 'ACTIVE' && today < booking.period.end) return 'rentalOn';
+  return 'theirTurn';
 }

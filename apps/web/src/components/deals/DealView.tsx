@@ -1,7 +1,7 @@
 'use client';
 
 import { DealChat } from '@/components/chat/DealChat';
-import { isMyTurn } from '@/lib/deals/status';
+import { isMyTurn, turnKey } from '@/lib/deals/status';
 import type { BookingView } from '@yoyo/shared';
 import { useLocale, useNow, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -140,7 +140,8 @@ export function DealView({ id }: { id: string }) {
       : booking.viewerRole === 'OWNER'
         ? t('youLend', { name: booking.renter.name })
         : t('adminView', { renter: booking.renter.name, owner: booking.owner.name });
-  const myTurn = isMyTurn(booking.actions);
+  const myTurn = isMyTurn(booking, now);
+  const turn = t(turnKey(booking, now));
   const canAct = booking.actions.some((a) => a !== 'RESOLVE');
   const closed = ['COMPLETED', 'DECLINED', 'EXPIRED', 'CANCELLED'].includes(booking.status);
   const completed = booking.status === 'COMPLETED';
@@ -177,7 +178,7 @@ export function DealView({ id }: { id: string }) {
                 data-turn={myTurn ? 'mine' : 'theirs'}
                 className={`rounded-pill inline-flex min-h-7 items-center border px-3 text-sm font-bold ${myTurn ? 'bg-ink text-canvas border-ink' : 'border-ink/40'}`}
               >
-                {myTurn ? t('yourTurn') : t('theirTurn')}
+                {turn}
               </span>
             )}
             <span>{parties}</span>
@@ -248,7 +249,7 @@ export function DealView({ id }: { id: string }) {
           ) : (
           <Sheet aria-labelledby="deal-turn" tone={myTurn && !closed ? 'night' : 'quiet'} className="flex flex-col gap-3 max-lg:order-first">
             <h2 id="deal-turn" className="type-label">
-              {closed ? t('closedTitle') : myTurn ? t('yourTurn') : t('theirTurn')}
+              {closed ? t('closedTitle') : turn}
             </h2>
             {notice && (
               <p role="alert" className="rounded-media border-ink/15 flex items-start gap-2 border p-3 text-sm font-bold">

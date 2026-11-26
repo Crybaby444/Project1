@@ -202,7 +202,9 @@
       "find": "Atrast citu lietu"
     },
     "remindHandover": "Dienu pirms nodošanas Yoyo atgādinās jums abiem par tikšanos.",
-    "remindReturn": "Dienu pirms pēdējās dienas Yoyo atgādinās jums abiem par atdošanu."
+    "remindReturn": "Dienu pirms pēdējās dienas Yoyo atgādinās jums abiem par atdošanu.",
+    "waitHandoverDay": "Gaidām nodošanas dienu",
+    "rentalOn": "Noma notiek"
   },
   "dealActions": {
     "ACCEPT": "Pieņemt",
