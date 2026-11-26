@@ -286,7 +286,7 @@ function LanguageMenu({ href, className }: { href: string; className: string }) 
         data-language-focus="menu-button"
         onClick={() => (open ? closeMenu({ refocus: false }) : openMenu('current'))}
         onKeyDown={onButtonKeyDown}
-        className="group border-ink bg-surface text-ink rounded-pill ease-yoyo aria-expanded:bg-mist inline-flex h-10 min-w-10 items-center justify-center gap-1.5 border px-2.5 text-xs font-bold tracking-[0.06em] uppercase transition-transform duration-150 select-none hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.94] sm:pr-2 sm:pl-1.5"
+        className="group border-ink/15 hover:border-ink/50 bg-surface text-ink rounded-pill ease-yoyo aria-expanded:bg-mist inline-flex h-10 min-w-10 items-center justify-center gap-1.5 border px-2.5 text-xs font-bold tracking-[0.06em] uppercase transition-transform duration-150 select-none hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.94] sm:pr-2 sm:pl-1.5"
       >
         <LanguageSticker />
         {/* The name says the language in full and still contains the visible code (WCAG 2.5.3). */}
@@ -361,7 +361,7 @@ function LanguageMenu({ href, className }: { href: string; className: string }) 
   );
 }
 
-/** A tiny globe sticker (Sunburst, ink outline) that wobbles when the pill is hovered. */
+/** A small globe, drawn at the header icons' weight (about 1.3px on screen), that wobbles when the pill is hovered. */
 function LanguageSticker() {
   return (
     <svg
@@ -369,9 +369,9 @@ function LanguageSticker() {
       aria-hidden="true"
       className="hidden size-[18px] shrink-0 sm:block"
     >
-      <circle cx="10" cy="10" r="8.5" fill="none" stroke="currentColor" strokeWidth="1.3" />
-      <ellipse cx="10" cy="10" rx="3.6" ry="8.5" fill="none" stroke="currentColor" strokeWidth="1.3" />
-      <path d="M1.8 7.2h16.4M1.8 12.8h16.4" fill="none" stroke="currentColor" strokeWidth="1.3" />
+      <circle cx="10" cy="10" r="8.5" fill="none" stroke="currentColor" strokeWidth="1.45" />
+      <ellipse cx="10" cy="10" rx="3.6" ry="8.5" fill="none" stroke="currentColor" strokeWidth="1.45" />
+      <path d="M1.8 7.2h16.4M1.8 12.8h16.4" fill="none" stroke="currentColor" strokeWidth="1.45" />
     </svg>
   );
 }

@@ -67,7 +67,7 @@ export function MyListings({
           <p className="text-ink/75 max-w-read leading-relaxed">{t('intro')}</p>
           {/* With nothing yet, the empty state below carries the one Lend button (the header has its own). */}
           {items.length > 0 && (
-            <Button href="/listings/new" size="lg" className="self-start sm:self-auto">
+            <Button href="/listings/new" className="self-start sm:self-auto">
               <span aria-hidden="true">+</span> {t('lend')}
             </Button>
           )}
@@ -83,7 +83,7 @@ export function MyListings({
             </h1>
             <p className="leading-relaxed">{t('intro')}</p>
           </div>
-          <Button href="/listings/new" size="lg" className="self-start sm:self-auto">
+          <Button href="/listings/new" className="self-start sm:self-auto">
             <span aria-hidden="true">+</span> {t('lend')}
           </Button>
         </header>
@@ -125,7 +125,7 @@ export function MyListings({
           title={t('emptyTitle')}
           body={t('emptyBody')}
           action={
-            <Button href="/listings/new" size="lg">
+            <Button href="/listings/new">
               {t('lend')}
             </Button>
           }

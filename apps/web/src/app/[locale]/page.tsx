@@ -88,7 +88,7 @@ export default async function HomePage({ params }: Params) {
 
 
       {items.length > 0 && (
-        <section aria-labelledby="home-fresh" className="page flex flex-col gap-6 py-16 sm:py-20">
+        <section aria-labelledby="home-fresh" className="page page-chapter stack-page">
           <ForYou
             initial={initial}
             country={await currentCountry()}

@@ -13,8 +13,8 @@ export async function TwoDoors() {
     ...(LIST_ITEM_HREF ? [{ key: 'have', href: LIST_ITEM_HREF }] : []),
   ] as const;
   return (
-    <section aria-labelledby="home-doors" className="bg-[var(--night)] px-4 py-20 text-[var(--paper)] sm:px-8 sm:py-28">
-      <div className="page flex flex-col gap-10">
+    <section aria-labelledby="home-doors" className="page-chapter bg-[var(--night)] text-[var(--paper)]">
+      <div className="page stack-section">
         <h2 id="home-doors" className="type-title max-w-[14em]">
           {t('title')}
         </h2>

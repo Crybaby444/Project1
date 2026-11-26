@@ -44,6 +44,7 @@ A 4px scale used in a few named intervals, tight inside, generous between:
 | Utility | Phone / from 640px | Between |
 |---|---|---|
 | `page-y` | 32 top, 56 bottom / 48, 80 | the header and the page, the page and the footer |
+| `page-chapter` | 80 / 112, top and bottom | the chapters of a page that persuades (the home) |
 | `stack-page` | 40 / 56 | the page header and each section |
 | `stack-section` | 16 / 20 | a section's heading and its content |
 | `stack-sheets` | 16 / 24 | sheets in a column |
@@ -78,6 +79,20 @@ Slogans are general, never a list of concrete things.
   sheet, a chat bubble), `rounded-pill` (buttons, fields, chips, the header capsule).
 - An empty list is a quiet sheet (`EmptyState`): a small still mark, the title at the block step, one line,
   the next step at the end of the row.
+
+### Controls
+
+- **Buttons** are pills in two sizes: `lg` (48px) only for the one decisive action at the end of a form
+  (sign in, save, pay, send the request) and a scene's call to action; `md` (40px) everywhere else: a page
+  header's actions, a sheet, a row, an empty state. One filled (the main action), the rest outlined.
+- **Badges** (a status, "Your turn") are 28px pills, 14px bold, an icon at 14px; a count beside a heading is a
+  plain outlined pill sized to its heading.
+- **Switches between views**: a segmented pill for two or three views of the same thing (I rent / I lend,
+  list / map, the theme, the settings on a phone); underlined tabs for four or more sections of a page (the
+  profile).
+- **Icons** are drawn line icons, one family: round caps, about 1.3px of line on screen whatever the
+  viewBox (24-unit icons at 16–18px take 1.75–2); a "+" on a filled button is bolder.
+- **Dialogs** float: `rounded-float`, a 24px (32px) inside, the title at the block step.
 
 ### Page
 
