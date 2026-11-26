@@ -1,5 +1,6 @@
 # Fires due deal deadlines (requests that expire, 48-hour inspections, damage replies…) and sends the
-# reminders the day before a handover or a return, every 10 minutes.
+# reminders, every 10 minutes. GitHub runs schedules as a best effort (hours apart at times), so an awake
+# API also runs the same work every 10 minutes on its own (TimersService); this call wakes a sleeping one.
 # The API on Render's free tier sleeps when idle and keeps no timers in memory: deadlines live in the
 # database and POST /api/v1/internal/timers/run fires the due ones. This call also wakes the server.
 #

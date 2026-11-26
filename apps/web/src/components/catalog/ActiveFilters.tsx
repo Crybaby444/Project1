@@ -3,6 +3,7 @@
 import type { PlacesResponse } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { catalogSearch, type CatalogParams } from '@/lib/catalog/params';
+import { plainDates } from '@/lib/deals/dates';
 import { useCatalogNavigation } from './CatalogShell';
 
 const asDate = (day: string) => new Date(`${day}T00:00:00Z`);
@@ -27,7 +28,7 @@ export function ActiveFilters({ params, cities }: { params: CatalogParams; citie
   }
   if (params.from && params.to) {
     const format = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', timeZone: 'UTC' });
-    const dates = (params.from === params.to ? format.format(asDate(params.from)) : format.formatRange(asDate(params.from), asDate(params.to))).replace(/[  ]/g, ' ');
+    const dates = plainDates(params.from === params.to ? format.format(asDate(params.from)) : format.formatRange(asDate(params.from), asDate(params.to)));
     chips.push({ key: 'dates', label: t('dates', { dates }), patch: { from: undefined, to: undefined } });
   }
   if (params.city) {
