@@ -150,7 +150,7 @@ export async function CatalogResults({ params: raw, category, related, path, tit
                   <ul className="grid-cards-rail">
                     {items.map((item, index) => (
                       <li key={item.id}>
-                        <ListingCard item={item} eager={index < 3} days={days} />
+                        <ListingCard item={item} eager={index < 3} days={days} dates={params.from && params.to ? { from: params.from, to: params.to } : undefined} />
                       </li>
                     ))}
                   </ul>

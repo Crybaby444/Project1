@@ -107,6 +107,23 @@ describe('BookingPanel', () => {
     expect(posts[0]!.body).toEqual({ listingId: 'listing-1', start: '2026-11-08', end: '2026-11-10', message: 'Saturday morning?' });
   });
 
+  it('opens with the days a search asked for picked, when they work for this item', async () => {
+    window.history.replaceState(null, '', '/listings/listing-1?from=2026-11-08&to=2026-11-10');
+    setup();
+    await screen.findByRole('grid');
+    expect(rangeStatus()).toHaveTextContent('3 days');
+    expect(within(screen.getByRole('region', { name: 'Price' })).getByText('€99.50')).toBeVisible();
+    window.history.replaceState(null, '', '/');
+  });
+
+  it('ignores asked days across a taken one (they would only be refused)', async () => {
+    window.history.replaceState(null, '', '/listings/listing-1?from=2026-11-19&to=2026-11-21');
+    setup();
+    await screen.findByRole('grid');
+    expect(rangeStatus()).toHaveTextContent('Pick the first day');
+    window.history.replaceState(null, '', '/');
+  });
+
   it('crosses out taken days and does not let them be picked', async () => {
     const user = userEvent.setup();
     setup();

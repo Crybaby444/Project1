@@ -76,7 +76,17 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
   const toast = useToast();
   const queryClient = useQueryClient();
   const terms = useBookingTerms(listingId);
-  const [range, setRange] = useState<Range | null>(null);
+  // The days a search asked for (`?from=&to=` on the item's address) are picked already when they work for
+  // this item (owner, 2026-11-26: a positive path; no picking the same days twice). `undefined` = untouched,
+  // so the asked days show; anything picked or cleared by hand wins.
+  const [picked, setRange] = useState<Range | null | undefined>(undefined);
+  const [asked] = useState<Range | null>(() => {
+    if (typeof window === 'undefined') return null;
+    const query = new URLSearchParams(window.location.search);
+    const from = query.get('from');
+    const to = query.get('to');
+    return from && to && /^\d{4}-\d{2}-\d{2}$/.test(from) && /^\d{4}-\d{2}-\d{2}$/.test(to) && from <= to ? ({ start: from, end: to } as Range) : null;
+  });
   const [message, setMessage] = useState('');
   const [error, setError] = useState<string | null>(null);
   // Once the request is in, the button stays busy until the deal page opens: nothing to send twice.
@@ -84,6 +94,13 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
   const hintId = useId();
 
   const joined = user?.createdAt ?? null;
+  const askedWorks =
+    asked !== null &&
+    terms.data !== undefined &&
+    asked.start >= terms.data.today &&
+    asked.end! <= addDays(terms.data.today, terms.data.maxAdvanceDays) &&
+    priceRange(terms.data, asked, joined).problem === null;
+  const range = picked !== undefined ? picked : askedWorks ? asked : null;
   const priced = useMemo(() => (terms.data ? priceRange(terms.data, range, joined) : { quote: null, problem: null }), [terms.data, range, joined]);
 
   const send = useIdempotentMutation<{ start: string; end: string; message: string }, string>({
