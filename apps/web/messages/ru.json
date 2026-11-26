@@ -1137,7 +1137,7 @@
     "followName": "Подписаться на {name}",
     "unfollowName": "Отписаться от {name}",
     "followers": "{count, plural, one {подписчик} few {подписчика} many {подписчиков} other {подписчика}}",
-    "followingCount": "подписки",
+    "followingCount": "{count, plural, one {подписка} few {подписки} many {подписок} other {подписки}}",
     "reviews": "{count, plural, one {отзыв} few {отзыва} many {отзывов} other {отзыва}}",
     "itemsCount": "{count, plural, one {# вещь} few {# вещи} many {# вещей} other {# вещи}}",
     "searchTitle": "Люди",

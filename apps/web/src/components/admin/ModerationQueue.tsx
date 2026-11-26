@@ -23,6 +23,7 @@ import { ModerationCard } from './ModerationCard';
 import { EditListingDialog, type ListingFixes } from './EditListingDialog';
 import { MoveCategoryDialog } from './MoveCategoryDialog';
 import { RejectDialog } from './RejectDialog';
+import { adminKeys } from '@/lib/admin/queries';
 
 /**
  * The review queue (spec §4.8), administrators only (the page is behind RequireRole; the API checks
@@ -77,6 +78,8 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
     } finally {
       setBusyId(null);
       await queryClient.invalidateQueries({ queryKey: listingKeys.queue(page, queue) });
+      // The sidebar's "waiting" counts come from the overview: they move with every decision.
+      void queryClient.invalidateQueries({ queryKey: adminKeys.overview });
     }
   }
 
@@ -122,6 +125,8 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
       toast.show(t(decision.action === 'approve' ? 'bulk.approved' : 'bulk.rejected', { count: done }));
     else setNotice(t('bulk.partly', { done, failed }));
     await queryClient.invalidateQueries({ queryKey: listingKeys.queue(page, queue) });
+      // The sidebar's "waiting" counts come from the overview: they move with every decision.
+      void queryClient.invalidateQueries({ queryKey: adminKeys.overview });
   }
 
   const pickable = (query.data?.items ?? []).filter((listing) => listing.status === 'PENDING_REVIEW');
@@ -146,6 +151,7 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
     } finally {
       setBusyId(null);
       await queryClient.invalidateQueries({ queryKey: ['listings', 'queue'] });
+      void queryClient.invalidateQueries({ queryKey: adminKeys.overview });
     }
   }
 
@@ -169,6 +175,7 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
       setMoving(null);
       setBusyId(null);
       await queryClient.invalidateQueries({ queryKey: ['listings', 'queue'] });
+      void queryClient.invalidateQueries({ queryKey: adminKeys.overview });
     }
   }
 

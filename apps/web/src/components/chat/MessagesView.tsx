@@ -362,11 +362,12 @@ function ThreadBody({ data, inDeal }: { data: ConversationThread; inDeal: boolea
 function Composer({ id, aboutItem }: { id: string; aboutItem: boolean }) {
   const t = useTranslations('chat');
   const send = useSendMessage(id);
-  // Opened from an item ("Write to the owner"): the box starts with the item's link.
+  // Opened from an item ("Write to the owner"): the box starts with a greeting and the item's link, so the
+  // first line the owner reads is a person's, not a bare address (audit 2026-11-26).
   const [draft, setDraft] = useState(() => {
     if (typeof window === 'undefined') return '';
     const about = new URLSearchParams(window.location.search).get('about');
-    return about && /^[\w-]{1,64}$/.test(about) ? `${window.location.origin}/listings/${about}\n` : '';
+    return about && /^[\w-]{1,64}$/.test(about) ? `${t('aboutItemStart', { link: `${window.location.origin}/listings/${about}` })}\n` : '';
   });
   const ready = draft.trim().length > 0 && !send.isPending;
 

@@ -1137,7 +1137,7 @@
     "followName": "Follow {name}",
     "unfollowName": "Unfollow {name}",
     "followers": "{count, plural, one {follower} other {followers}}",
-    "followingCount": "following",
+    "followingCount": "{count, plural, one {following} other {following}}",
     "reviews": "{count, plural, one {review} other {reviews}}",
     "itemsCount": "{count, plural, one {# item} other {# items}}",
     "searchTitle": "People",

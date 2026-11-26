@@ -30,6 +30,7 @@ export function HeartButton({ listingId, title, className = '' }: { listingId: s
   const position = /(^|\s)(absolute|fixed|sticky)(\s|$)/.test(className) ? '' : 'relative';
 
   function onClick() {
+    if (status === 'loading') return; // the session is still being read: not a visitor yet
     if (status !== 'authenticated') {
       const next = `${pathname}${typeof window === 'undefined' ? '' : window.location.search}`;
       router.push(`/login?next=${encodeURIComponent(next)}`);
@@ -69,7 +70,7 @@ export function HeartButton({ listingId, title, className = '' }: { listingId: s
         <span key={`sparks-${burst}`} aria-hidden="true" className="pointer-events-none absolute inset-0">
           {SPARKS.map((color, i) => (
             <span
-              key={color}
+              key={i}
               style={{ '--spark-angle': `${i * 60}deg`, backgroundColor: color } as React.CSSProperties}
               className="animate-spark absolute top-1/2 left-1/2 size-1.5 rounded-full border border-black opacity-0"
             />

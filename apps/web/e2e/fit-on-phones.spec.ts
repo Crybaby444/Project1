@@ -95,7 +95,8 @@ for (const { locale, prefix, m } of LOCALES) {
         for (const step of ['photos', 'basics', 'attributes', 'price', 'place', 'rules'] as const) {
           await page.goto(`${prefix}/listings/${listing.id}/edit?step=${step}`);
           await expect(page.getByRole('heading', { level: 2, name: m.builder.steps[step] })).toBeVisible();
-          await fits(page, `builder: ${step}`, m.builder.titleEdit);
+          // A draft keeps the new listing's title ("Lend an item") until it is sent for review.
+          await fits(page, `builder: ${step}`, m.builder.titleNew);
         }
         await page.goto(`${prefix}/dashboard/lending`);
         await expect(page.getByRole('tab', { name: m.profile.myItems, selected: true })).toBeVisible();

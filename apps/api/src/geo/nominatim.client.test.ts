@@ -26,14 +26,16 @@ describe('NominatimClient', () => {
     expect(results[6]).toMatchObject({ status: 'rejected', reason: { code: 'GEO_UNAVAILABLE', status: 503 } });
   });
 
-  it('asks for jsonv2 with addresses, in the given language, as Yoyo', async () => {
+  it('asks for jsonv2 with addresses, in the place\'s own language whatever the interface\'s, as Yoyo', async () => {
     clock.advance(60_000);
     const client = new NominatimClient(nominatim.url, clock, async () => undefined);
-    const places = await client.search('Brīvības iela 1', 'lv');
+    const places = await client.search('Brīvības iela 1', 'ru');
 
     const sent = nominatim.requests.at(-1)!;
     expect(sent.path).toBe('/search');
-    expect(Object.fromEntries(sent.query)).toMatchObject({ q: 'Brīvības iela 1', format: 'jsonv2', addressdetails: '1', limit: '5', 'accept-language': 'lv' });
+    expect(Object.fromEntries(sent.query)).toMatchObject({ q: 'Brīvības iela 1', format: 'jsonv2', addressdetails: '1', limit: '5' });
+    // No accept-language: the city is stored as on the signs ("Rīga"), not as "Рига" for a Russian page.
+    expect(sent.query.has('accept-language')).toBe(false);
     expect(sent.userAgent).toBe('Yoyo/1.0 (+https://yoyo.rent)');
     expect(places[0]).toEqual({ label: 'Brīvības iela 1, Centrs, Rīga, LV-1010, Latvija', city: 'Rīga', district: 'Centrs', country: 'LV', lat: 56.949649, lng: 24.105187 });
     expect(places[1]).toMatchObject({ city: 'Jūrmala', district: 'Majori' });

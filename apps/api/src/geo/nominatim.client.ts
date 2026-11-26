@@ -79,8 +79,13 @@ export class NominatimClient {
     this.baseUrl = baseUrl.replace(/\/$/, '');
   }
 
-  async search(query: string, lang: Locale): Promise<GeoPlace[]> {
-    const found = await this.get<NominatimPlace[]>('/search', { q: query, format: 'jsonv2', addressdetails: '1', limit: '5', 'accept-language': lang });
+  /**
+   * Places come back in their own language, as on the street signs (no accept-language: OpenStreetMap's own
+   * `name`): a listing's city and district are what filters and cards group by, so "Rīga" stays "Rīga" in
+   * every interface language, never "Рига" or "Riga" (audit 2026-11-26). `lang` is kept for the cache key.
+   */
+  async search(query: string, _lang: Locale): Promise<GeoPlace[]> {
+    const found = await this.get<NominatimPlace[]>('/search', { q: query, format: 'jsonv2', addressdetails: '1', limit: '5' });
     if (!Array.isArray(found)) throw unavailable();
     return found
       .filter((place) => place.lat !== undefined && place.lon !== undefined)
@@ -95,14 +100,13 @@ export class NominatimClient {
       }));
   }
 
-  async reverse(lat: number, lng: number, lang: Locale): Promise<{ city: string | null; district: string | null; country: string | null }> {
+  async reverse(lat: number, lng: number, _lang: Locale): Promise<{ city: string | null; district: string | null; country: string | null }> {
     const place = await this.get<NominatimPlace>('/reverse', {
       lat: String(lat),
       lon: String(lng),
       format: 'jsonv2',
       addressdetails: '1',
       zoom: '16',
-      'accept-language': lang,
     });
     return { city: cityOf(place.address), district: districtOf(place.address), country: countryOf(place.address) };
   }

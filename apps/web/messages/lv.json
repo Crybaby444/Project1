@@ -1137,7 +1137,7 @@
     "followName": "Sekot: {name}",
     "unfollowName": "Pārtraukt sekot: {name}",
     "followers": "{count, plural, zero {sekotāju} one {sekotājs} other {sekotāji}}",
-    "followingCount": "seko",
+    "followingCount": "{count, plural, zero {seko} one {seko} other {seko}}",
     "reviews": "{count, plural, zero {atsauksmju} one {atsauksme} other {atsauksmes}}",
     "itemsCount": "{count, plural, zero {# lietu} one {# lieta} other {# lietas}}",
     "searchTitle": "Cilvēki",

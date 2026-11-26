@@ -539,7 +539,8 @@
       "EXPIRED": "Pieprasījuma termiņš beidzās",
       "CANCELLED": "Darījums atcelts"
     },
-    "inDealTitle": "Sarakste"
+    "inDealTitle": "Sarakste",
+    "aboutItemStart": "Labdien! Rakstu par šo lietu: {link}"
   },
   "notifications": {
     "title": "Paziņojumi",
@@ -637,6 +638,7 @@
     "cancel": "Atpakaļ",
     "sent": "Paldies. Administrators to izskatīs.",
     "already": "Jūs jau ziņojāt par šo; tas tiek izskatīts.",
-    "failed": "Ziņojums netika nosūtīts. Mēģiniet vēlreiz."
+    "failed": "Ziņojums netika nosūtīts. Mēģiniet vēlreiz.",
+    "close": "Aizvērt"
   }
 }
