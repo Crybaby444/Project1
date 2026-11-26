@@ -194,6 +194,12 @@
       "reviewed": "Paldies par atsauksmi.",
       "moreRenter": "Atrast vēl ko",
       "moreOwner": "Izīrēt vēl vienu lietu"
+    },
+    "closedNext": {
+      "declined": "Īpašnieks šajās dienās nevar. Līdzīgas lietas parasti ir arī citiem tuvumā.",
+      "expired": "Pieprasījums beidzās bez atbildes. Nekas netika iekasēts.",
+      "cancelled": "Darījums atcelts. Viss, ko samaksājāt, ir atpakaļ jūsu makā.",
+      "find": "Atrast citu lietu"
     }
   },
   "dealActions": {
