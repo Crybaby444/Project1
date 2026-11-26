@@ -294,11 +294,11 @@
         "items": {
           "cost": {
             "q": "How much does Yoyo cost?",
-            "a": "Creating an account and listing items is free. When online payments are live, the renter pays a 10% service fee on top of the rent. Owners pay no fee. In the first 30 days after you sign up, you pay no service fee."
+            "a": "Creating an account and listing items is free. The renter pays a 10% service fee on top of the rent. Owners pay no fee. In the first 30 days after you sign up, you pay no service fee."
           },
           "payNow": {
             "q": "Can I already pay through Yoyo?",
-            "a": "Not yet. We are opening Yoyo step by step, and online payment comes together with bookings. Until then no money moves through Yoyo, and we never ask you for card details."
+            "a": "Yes. You book the days, both sign the contract, and you pay the rent, the service fee and the deposit by card on Yoyo. For now payments run in test mode: the page says so, and no real money moves."
           },
           "deposit": {
             "q": "What happens to the deposit?",
@@ -323,7 +323,7 @@
           },
           "report": {
             "q": "How do I report a listing or a person?",
-            "a": "Write to admin@yoyo.rent with a link and a few words about what happened. We read every message. Report buttons on listings, messages and profiles are on the way."
+            "a": "Press \"Report\" on the item, the profile or in the chat: a moderator looks at every report, and the person is not told who sent it. For anything else, write to support@yoyo.rent."
           },
           "insurance": {
             "q": "Is my item insured?",
@@ -348,7 +348,7 @@
           },
           "contact": {
             "q": "How do I contact you?",
-            "a": "Write to admin@yoyo.rent. A real person reads every message."
+            "a": "Write to support@yoyo.rent. A real person reads every message."
           }
         }
       }
