@@ -54,6 +54,11 @@
   @apply pt-8 pb-14 sm:pt-12 sm:pb-20;
 }
 
+/* A chapter of a page that persuades (the home): one generous interval above and below, 80px (112px). */
+@utility page-chapter {
+  @apply py-20 sm:py-28;
+}
+
 /*
  * Rhythm: one 4px scale used in three intervals, tight inside, generous between. A page stacks its
  * header and sections 40px apart (56px from 640px); a section stacks its heading and content 16px apart

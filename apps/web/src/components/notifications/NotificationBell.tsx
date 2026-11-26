@@ -51,7 +51,7 @@ export function NotificationBell() {
         aria-controls={open ? panelId : undefined}
         aria-label={unread > 0 ? `${t('bell')}, ${t('unread', { count: unread })}` : t('bell')}
         onClick={() => setOpen((v) => !v)}
-        className="border-ink bg-surface text-ink rounded-pill ease-yoyo relative inline-grid size-10 place-items-center border transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.96]"
+        className="border-ink/15 hover:border-ink/50 bg-surface text-ink rounded-pill ease-yoyo relative inline-grid size-10 place-items-center border transition-[transform,border-color] duration-150 hover:-translate-y-0.5 active:scale-[0.96]"
       >
         <svg viewBox="0 0 24 24" aria-hidden="true" className={`size-[18px] fill-none stroke-current [stroke-linecap:round] [stroke-linejoin:round] [stroke-width:1.7] ${unread > 0 ? 'origin-top animate-[bell-ring_1.2s_ease-in-out_1]' : ''}`}>
           <path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0" />

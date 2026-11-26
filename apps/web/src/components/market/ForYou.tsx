@@ -54,8 +54,8 @@ export function ForYou({
   });
   const data = personal.data && personal.data.items.length > 0 ? personal.data : initial;
   return (
-    <>
-      <div className="flex flex-wrap items-end justify-between gap-4">
+    <div className="stack-section">
+      <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
         <h2 id={headingId} className="type-title">
           {data.personal ? titles.personal : titles.popular}
         </h2>
@@ -69,6 +69,6 @@ export function ForYou({
         ))}
         {children}
       </ul>
-    </>
+    </div>
   );
 }

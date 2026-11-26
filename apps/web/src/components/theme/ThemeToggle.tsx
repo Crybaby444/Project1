@@ -20,7 +20,7 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
   }
 
   return (
-    <IconButton label={t('toggle')} title={dark ? t('light') : t('dark')} onClick={onClick} className={className}>
+    <IconButton tone="quiet" label={t('toggle')} title={dark ? t('light') : t('dark')} onClick={onClick} className={className}>
       {/* Sun (light) and moon (dark) swap with a quarter turn. */}
       <svg
         viewBox="0 0 24 24"
@@ -28,7 +28,7 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
         className={`${ICON} ${dark ? 'scale-50 rotate-90 opacity-0' : 'scale-100 rotate-0 opacity-100'}`}
         fill="none"
         stroke="currentColor"
-        strokeWidth="1.5"
+        strokeWidth="1.75"
         strokeLinecap="round"
       >
         <circle cx="12" cy="12" r="4" />
@@ -40,7 +40,7 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
         className={`${ICON} ${dark ? 'scale-100 rotate-0 opacity-100' : 'scale-50 -rotate-90 opacity-0'}`}
         fill="none"
         stroke="currentColor"
-        strokeWidth="1.5"
+        strokeWidth="1.75"
         strokeLinejoin="round"
       >
         <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />

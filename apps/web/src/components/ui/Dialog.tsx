@@ -69,9 +69,9 @@ function OpenDialog({ onClose, title, children, wide = false }: DialogProps) {
       onClick={(event) => {
         if (event.target === ref.current) onClose();
       }}
-      className={`relative border-ink/15 bg-surface text-ink animate-pop-in rounded-media m-auto w-[calc(100%-2rem)] border p-6 backdrop:bg-black/60 sm:p-8 ${wide ? 'max-w-2xl' : 'max-w-md'}`}
+      className={`relative border-ink/15 bg-surface text-ink animate-pop-in rounded-float m-auto w-[calc(100%-2rem)] border p-6 backdrop:bg-black/60 sm:p-8 ${wide ? 'max-w-2xl' : 'max-w-md'}`}
     >
-      <h2 id={titleId} className="font-display mb-3 pr-12 text-display-s leading-[0.95] font-black uppercase [overflow-wrap:anywhere]">
+      <h2 id={titleId} className="type-block mb-3 pr-12 [overflow-wrap:anywhere]">
         {title}
       </h2>
       {children}

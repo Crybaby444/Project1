@@ -104,7 +104,7 @@ export function MobileTabBar({ roots }: { roots: MenuRoot[] }) {
         onClick={(e) => {
           if (e.target === dialog.current || (e.target as HTMLElement).closest('a')) setSheet(false);
         }}
-        className="bg-canvas text-ink open:animate-sheet-up m-0 mt-auto max-h-[88dvh] w-full max-w-none overflow-y-auto rounded-t-[30px] p-0 backdrop:bg-[color-mix(in_srgb,var(--night)_55%,transparent)] lg:hidden"
+        className="bg-canvas text-ink open:animate-sheet-up m-0 mt-auto max-h-[88dvh] w-full max-w-none overflow-y-auto rounded-t-float p-0 backdrop:bg-[color-mix(in_srgb,var(--night)_55%,transparent)] lg:hidden"
       >
         <div className="flex flex-col gap-5 px-5 pt-3 pb-[max(24px,env(safe-area-inset-bottom))]">
           <span aria-hidden="true" className="bg-ink/20 mx-auto h-1.5 w-12 rounded-full" />

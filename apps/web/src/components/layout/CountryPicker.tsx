@@ -33,7 +33,7 @@ export function CountryPicker({ country }: { country: Country }) {
         onClick={() => setOpen(true)}
         aria-busy={pending || undefined}
         data-country-picker=""
-        className="border-ink/25 hover:border-ink rounded-pill inline-flex h-10 items-center gap-1.5 border px-3 text-sm font-bold transition-colors"
+        className="border-ink/15 hover:border-ink/50 bg-surface rounded-pill inline-flex h-10 items-center gap-1.5 border px-3 text-sm font-bold transition-colors"
       >
         <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z" />

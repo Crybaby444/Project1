@@ -36,7 +36,7 @@ export function FavoritesList() {
           title={t('emptyTitle')}
           body={t('emptyBody')}
           action={
-            <Button href="/c" size="lg">
+            <Button href="/c">
               {t('browse')}
             </Button>
           }
