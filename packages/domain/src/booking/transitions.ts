@@ -409,7 +409,19 @@ export const TRANSITIONS: readonly Transition[] = [
       effects: [notify('RENTER', 'HANDED_OVER'), message('HANDED_OVER')],
     }),
   }),
-  row({ from: 'PAID', on: 'CONFIRM_RECEIVED', by: ['RENTER'], to: 'ACTIVE', run: handoverConfirmed }),
+  row({
+    from: 'PAID',
+    on: 'CONFIRM_RECEIVED',
+    by: ['RENTER'],
+    to: 'ACTIVE',
+    // Like "handed over": from the evening before the first day, not weeks ahead. Before, the renter's
+    // page offered "I got it" right after paying, and a tap by mistake gave the owner the rent early.
+    guard(s, actor, ctx) {
+      if (compareDates(localDateIn(ctx.now, s.timeZone), addDays(s.period.start, -1)) < 0)
+        throw notAllowed(s, actor, 'CONFIRM_RECEIVED', 'TOO_EARLY');
+    },
+    run: handoverConfirmed,
+  }),
   row({
     from: 'PAID',
     on: 'TIMEOUT',

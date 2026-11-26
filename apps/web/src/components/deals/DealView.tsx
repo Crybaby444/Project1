@@ -1,14 +1,15 @@
 'use client';
 
 import { DealChat } from '@/components/chat/DealChat';
-import { isMyTurn } from '@/lib/deals/status';
+import { isMyTurn, turnKey } from '@/lib/deals/status';
 import type { BookingView } from '@yoyo/shared';
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale, useNow, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Mark } from '@/components/brand/Mark';
 import { TransitionLink } from '@/components/motion/TransitionLink';
 import { Button } from '@/components/ui/Button';
 import { formatMoment, formatPeriod } from '@/lib/deals/dates';
+import { addDays, todayIn } from '@/lib/listings/calendar';
 import { useDeal, useDealHistory, useRefreshAfterDeal } from '@/lib/deals/queries';
 import { useErrorText } from '@/lib/forms/error-text';
 import { ApiError } from '@/lib/session/api-error';
@@ -72,6 +73,7 @@ export function DealView({ id }: { id: string }) {
   const [notice, setNotice] = useState<string | null>(null);
   const [announce, setAnnounce] = useState('');
   const lastStatus = useRef<string | null>(null);
+  const now = useNow({ updateInterval: 60_000 });
 
   const status = deal.data?.status;
   useEffect(() => {
@@ -138,10 +140,22 @@ export function DealView({ id }: { id: string }) {
       : booking.viewerRole === 'OWNER'
         ? t('youLend', { name: booking.renter.name })
         : t('adminView', { renter: booking.renter.name, owner: booking.owner.name });
-  const myTurn = isMyTurn(booking.actions);
+  const myTurn = isMyTurn(booking, now);
+  const turn = t(turnKey(booking, now));
   const canAct = booking.actions.some((a) => a !== 'RESOLVE');
   const closed = ['COMPLETED', 'DECLINED', 'EXPIRED', 'CANCELLED'].includes(booking.status);
   const completed = booking.status === 'COMPLETED';
+  // Yoyo reminds both sides the day before the handover and the day before the last day (the API's
+  // RemindersService); the page says so while that day is still ahead, so nobody has to keep it in mind.
+  const today = todayIn(booking.timeZone, now);
+  const reminder =
+    booking.viewerRole === 'ADMIN'
+      ? null
+      : booking.status === 'PAID' && today < addDays(booking.period.start, -1)
+        ? t('remindHandover')
+        : booking.status === 'ACTIVE' && today < addDays(booking.period.end, -1)
+          ? t('remindReturn')
+          : null;
 
   return (
     <div className="stack-page" data-deal={booking.id} data-deal-status={booking.status}>
@@ -164,7 +178,7 @@ export function DealView({ id }: { id: string }) {
                 data-turn={myTurn ? 'mine' : 'theirs'}
                 className={`rounded-pill inline-flex min-h-7 items-center border px-3 text-sm font-bold ${myTurn ? 'bg-ink text-canvas border-ink' : 'border-ink/40'}`}
               >
-                {myTurn ? t('yourTurn') : t('theirTurn')}
+                {turn}
               </span>
             )}
             <span>{parties}</span>
@@ -235,7 +249,7 @@ export function DealView({ id }: { id: string }) {
           ) : (
           <Sheet aria-labelledby="deal-turn" tone={myTurn && !closed ? 'night' : 'quiet'} className="flex flex-col gap-3 max-lg:order-first">
             <h2 id="deal-turn" className="type-label">
-              {closed ? t('closedTitle') : myTurn ? t('yourTurn') : t('theirTurn')}
+              {closed ? t('closedTitle') : turn}
             </h2>
             {notice && (
               <p role="alert" className="rounded-media border-ink/15 flex items-start gap-2 border p-3 text-sm font-bold">
@@ -263,6 +277,7 @@ export function DealView({ id }: { id: string }) {
             ) : (
               <p className="text-sm">{t('nothingToDo')}</p>
             )}
+            {reminder && <p className="text-ink/70 text-sm">{reminder}</p>}
           </Sheet>
           )}
           <ContractCard booking={booking} />

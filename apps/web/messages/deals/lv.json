@@ -65,7 +65,10 @@
       "DAMAGE_REPLY": "Strīds sāksies automātiski pēc {time}"
     },
     "overdue": "Laiks beidzies. Atjaunojam…",
-    "at": "{when}"
+    "at": "{when}",
+    "deadlineMissed": {
+      "HANDOVER_DEADLINE": "Ja lieta netiks nodota {time} laikā, iesaistīsies Yoyo"
+    }
   },
   "countdown": {
     "days": "{days} d. {hours} st.",
@@ -200,7 +203,12 @@
       "expired": "Pieprasījums beidzās bez atbildes. Nekas netika iekasēts.",
       "cancelled": "Darījums atcelts. Viss, ko samaksājāt, ir atpakaļ jūsu makā.",
       "find": "Atrast citu lietu"
-    }
+    },
+    "remindHandover": "Dienu pirms nodošanas Yoyo atgādinās jums abiem par tikšanos.",
+    "remindReturn": "Dienu pirms pēdējās dienas Yoyo atgādinās jums abiem par atdošanu.",
+    "waitHandoverDay": "Gaidām nodošanas dienu",
+    "rentalOn": "Noma notiek",
+    "yoyoDecides": "Lemj Yoyo"
   },
   "dealActions": {
     "ACCEPT": "Pieņemt",

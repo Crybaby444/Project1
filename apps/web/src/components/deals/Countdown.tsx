@@ -1,9 +1,10 @@
 'use client';
 
 import type { BookingView } from '@yoyo/shared';
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale, useNow, useTranslations } from 'next-intl';
 import { formatMoment } from '@/lib/deals/dates';
 import { useDeadline, type Remaining } from '@/lib/deals/deadline';
+import { deadlineKey } from '@/lib/deals/status';
 
 /** "1 d 2 h", "2 h 5 min", "4 min 10 s" or "9 s": the two largest units, so it stays short. */
 export function useDurationText() {
@@ -24,22 +25,15 @@ export function useDurationText() {
  * The exact moment is in a <time> for the curious and for assistive tech. When it runs out, `onExpire`
  * reads the deal again (the server's timer has probably moved it on).
  */
-export function Countdown({
-  deadline,
-  timeZone,
-  onExpire,
-  className = '',
-}: {
-  deadline: NonNullable<BookingView['deadline']>;
-  timeZone: string;
-  onExpire?: () => void;
-  className?: string;
-}) {
+export function Countdown({ booking, onExpire, className = '' }: { booking: BookingView; onExpire?: () => void; className?: string }) {
   const t = useTranslations('dealTimeline');
   const locale = useLocale();
-  const left = useDeadline(deadline.dueAt, onExpire);
+  const now = useNow({ updateInterval: 60_000 });
+  const deadline = booking.deadline;
+  const left = useDeadline(deadline?.dueAt ?? null, onExpire);
   const duration = useDurationText();
-  if (!left) return null;
+  const label = deadlineKey(booking, now);
+  if (!deadline || !left || label === null) return null;
 
   if (left.overdue) {
     return (
@@ -53,9 +47,9 @@ export function Countdown({
   return (
     <p data-countdown="" data-urgent={urgent || undefined} className={`flex min-h-6 flex-wrap items-center gap-x-2 text-sm font-bold ${className}`}>
       <span aria-hidden="true" className={`size-2 shrink-0 rounded-full bg-ink ${urgent ? 'animate-pulse' : ''}`} />
-      <span className="tabular-nums">{t(`deadline.${deadline.timer}`, { time: duration(left) })}</span>
+      <span className="tabular-nums">{t(label, { time: duration(left) })}</span>
       <time dateTime={deadline.dueAt} className="text-ink/80 font-medium">
-        ({formatMoment(deadline.dueAt, locale, timeZone)})
+        ({formatMoment(deadline.dueAt, locale, booking.timeZone)})
       </time>
     </p>
   );

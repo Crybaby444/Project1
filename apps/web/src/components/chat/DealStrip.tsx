@@ -1,13 +1,13 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale, useNow, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { DealActions } from '@/components/deals/DealActions';
 import { DealStatusBadge } from '@/components/deals/DealStatusBadge';
 import { Link } from '@/i18n/navigation';
 import { formatPeriod } from '@/lib/deals/dates';
 import { useDeal } from '@/lib/deals/queries';
-import { isMyTurn } from '@/lib/deals/status';
+import { isMyTurn, turnKey } from '@/lib/deals/status';
 import { useErrorText } from '@/lib/forms/error-text';
 
 /**
@@ -21,9 +21,10 @@ export function DealStrip({ id }: { id: string }) {
   const errorText = useErrorText();
   const deal = useDeal(id);
   const [error, setError] = useState<string | null>(null);
+  const now = useNow({ updateInterval: 60_000 });
   if (!deal.data) return null;
   const b = deal.data;
-  const myTurn = isMyTurn(b.actions);
+  const myTurn = isMyTurn(b, now);
   const closed = ['COMPLETED', 'DECLINED', 'EXPIRED', 'CANCELLED'].includes(b.status);
 
   return (
@@ -32,7 +33,7 @@ export function DealStrip({ id }: { id: string }) {
         <DealStatusBadge status={b.status} />
         {!closed && (
           <span className={`rounded-pill inline-flex min-h-7 items-center border px-3 text-sm font-bold ${myTurn ? 'bg-ink text-canvas border-ink' : 'border-ink/40'}`}>
-            {myTurn ? t('yourTurn') : t('theirTurn')}
+            {t(turnKey(b, now))}
           </span>
         )}
         <span className="font-semibold">{formatPeriod(b.period.start, b.period.end, locale)}</span>

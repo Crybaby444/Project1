@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { resetAccounts, resetDeals } from './support/db';
-import { cardToken, day, requestBooking, step, topUp } from './support/deals';
+import { act, cardToken, day, requestBooking, step, topUp } from './support/deals';
 import { resetListings, seedListing, signedInClient, type Client } from './support/listings';
 import { createTestApp, type TestApp } from './support/test-app';
 
@@ -116,11 +116,31 @@ describe('GET /me/bookings with a group, and the summary', () => {
       renter: { open: 0, needsAction: 0 },
       owner: { open: 1, needsAction: 1 },
     });
-    // The renter can only withdraw: that is a step they may take, so it counts as theirs.
+    // The renter can only withdraw: a way out, not their turn (the deal page says "waiting for the other
+    // side", and the menu does not call them for it).
     expect((await renter.get('/me/bookings/summary').expect(200)).body).toEqual({
-      renter: { open: 1, needsAction: 1 },
+      renter: { open: 1, needsAction: 0 },
       owner: { open: 0, needsAction: 0 },
     });
+  });
+});
+
+describe('a paid deal days ahead', () => {
+  it('is nobody’s turn until the evening before, and "received" cannot be confirmed early', async () => {
+    const listing = await published();
+    await topUp(renter, 20_000);
+    const booking = await requestBooking(t, renter, listing.id, 5, 6);
+    await step(owner, booking.id, { type: 'ACCEPT' });
+    await step(renter, booking.id, { type: 'SIGN' });
+    await step(owner, booking.id, { type: 'SIGN' });
+    await step(renter, booking.id, { type: 'PAY', method: 'WALLET' });
+
+    expect((await renter.get(`/bookings/${booking.id}`).expect(200)).body.booking.actions).toEqual(['CANCEL']);
+    expect((await renter.get('/me/bookings/summary').expect(200)).body.renter).toEqual({ open: 1, needsAction: 0 });
+    expect((await owner.get('/me/bookings/summary').expect(200)).body.owner).toEqual({ open: 1, needsAction: 0 });
+    const early = await act(renter, booking.id, { type: 'CONFIRM_RECEIVED' });
+    expect(early.status).toBe(409);
+    expect(early.body.error?.details).toMatchObject({ why: 'TOO_EARLY' });
   });
 });
 

@@ -2,7 +2,7 @@
 
 import type { BookingView } from '@yoyo/shared';
 import { BOOKINGS_PAGE_SIZE } from '@yoyo/shared';
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale, useNow, useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { TransitionLink } from '@/components/motion/TransitionLink';
 import { Reveal } from '@/components/motion/Reveal';
@@ -13,7 +13,7 @@ import { formatPeriod } from '@/lib/deals/dates';
 import { useDeadline } from '@/lib/deals/deadline';
 import { useMoney } from '@/lib/deals/money';
 import { useDealsSummary, useMyDeals } from '@/lib/deals/queries';
-import { DEAL_ROLES, isMyTurn, type DealRole } from '@/lib/deals/status';
+import { DEAL_ROLES, deadlineKey, isMyTurn, type DealRole } from '@/lib/deals/status';
 import { useErrorText } from '@/lib/forms/error-text';
 import { useDurationText } from './Countdown';
 import { DealStatusBadge } from './DealStatusBadge';
@@ -26,7 +26,9 @@ export function DealCard({ booking, index }: { booking: BookingView; index: numb
   const locale = useLocale();
   const money = useMoney();
   const duration = useDurationText();
-  const mine = isMyTurn(booking.actions);
+  const now = useNow({ updateInterval: 60_000 });
+  const mine = isMyTurn(booking, now);
+  const deadlineLabel = deadlineKey(booking, now);
   const other = booking.viewerRole === 'OWNER' ? booking.renter.name : booking.owner.name;
   const left = useDeadline(booking.deadline?.dueAt ?? null);
 
@@ -63,10 +65,8 @@ export function DealCard({ booking, index }: { booking: BookingView; index: numb
             </span>
             <span className="font-bold tabular-nums">{money(booking.quote.totalCents)}</span>
           </p>
-          {booking.deadline && left && !left.overdue && (
-            <p className="text-sm tabular-nums">
-              {td(`deadline.${booking.deadline.timer}`, { time: duration(left) })}
-            </p>
+          {deadlineLabel && left && !left.overdue && (
+            <p className="text-sm tabular-nums">{td(deadlineLabel, { time: duration(left) })}</p>
           )}
         </div>
       </TransitionLink>

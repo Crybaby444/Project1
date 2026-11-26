@@ -103,6 +103,45 @@ describe('DealView', () => {
     expect(await screen.findByText('Declined')).toBeVisible();
   });
 
+  it('says Yoyo reminds both sides the day before the handover, while that day is ahead', async () => {
+    setup(testBooking({ status: 'PAID', hasContract: true, actions: ['CANCEL'] })); // starts 10 Nov; today is 6 Nov
+    expect(await screen.findByText('The day before the handover, Yoyo reminds you both.')).toBeVisible();
+  });
+
+  it('says Yoyo reminds both sides the day before the last day of a rental', async () => {
+    setup(testBooking({ status: 'ACTIVE', hasContract: true, actions: [] })); // ends 12 Nov
+    expect(await screen.findByText('The day before the last day, Yoyo reminds you both about the return.')).toBeVisible();
+  });
+
+  it('waits for the handover day, not for "the other side", while a paid deal is days ahead', async () => {
+    setup(testBooking({ status: 'PAID', hasContract: true, actions: ['CANCEL'] })); // starts 10 Nov; today is 6 Nov
+    expect(await screen.findByRole('heading', { name: 'Waiting for the handover day' })).toBeVisible();
+    expect(screen.queryByText('Your turn')).toBeNull();
+  });
+
+  it('calls a rental on its way "the rental is on", even with an early return possible; the last day is the turn', async () => {
+    setup(testBooking({ status: 'ACTIVE', hasContract: true, actions: ['MARK_RETURNED'] })); // ends 12 Nov
+    expect(await screen.findByRole('heading', { name: 'The rental is on' })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'I returned it' })).toBeVisible();
+  });
+
+  it('says Yoyo is deciding while a dispute is open', async () => {
+    setup(testBooking({ status: 'DISPUTED', hasContract: true, actions: [] }));
+    expect(await screen.findByRole('heading', { name: 'Yoyo is deciding' })).toBeVisible();
+  });
+
+  it('makes the last day of a rental the renter’s turn', async () => {
+    vi.setSystemTime(new Date('2026-11-12T08:00:00.000Z'));
+    setup(testBooking({ status: 'ACTIVE', hasContract: true, actions: ['MARK_RETURNED'] }));
+    expect(await screen.findByRole('heading', { name: 'Your turn' })).toBeVisible();
+  });
+
+  it('says nothing about a reminder once its day has come', async () => {
+    setup(testBooking({ status: 'PAID', hasContract: true, actions: ['CANCEL'], period: { start: '2026-11-07', end: '2026-11-09' } }));
+    await screen.findByRole('heading', { level: 1 });
+    expect(screen.queryByText(/Yoyo reminds you both/)).toBeNull();
+  });
+
   it('asks before a step that moves money', async () => {
     const user = userEvent.setup();
     const { calls } = setup(testBooking({ status: 'RETURNED', viewerRole: 'OWNER', paymentMethod: 'CARD', hasContract: true, actions: ['ALL_FINE', 'REPORT_DAMAGE'] }));

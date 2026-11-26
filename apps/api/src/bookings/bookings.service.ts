@@ -25,6 +25,7 @@ import {
 import {
   BOOKINGS_PAGE_SIZE,
   CLOSED_BOOKING_STATUSES,
+  waitsForStep,
   type BookingGroup,
   type BookingHistoryResponse,
   type BookingTerms,
@@ -603,7 +604,9 @@ export class BookingsService {
       const actor = actorFor(row, user)!;
       const side = actor.kind === 'RENTER' ? summary.renter : summary.owner;
       side.open += 1;
-      if ((await this.serialize(row, actor, settings)).actions.length > 0) side.needsAction += 1;
+      // The same question as the deal page: a step that moves the deal, not a way out, and not during a rental.
+      const view = await this.serialize(row, actor, settings);
+      if (waitsForStep(view, localDateIn(this.clock.now(), row.timeZone))) side.needsAction += 1;
     }
     return summary;
   }

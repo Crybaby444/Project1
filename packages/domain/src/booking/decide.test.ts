@@ -1181,6 +1181,17 @@ describe('the handover deadline (F2)', () => {
     });
   });
 
+  it('"received" can be confirmed from the day before the start, not earlier (no early rent by mistake)', () => {
+    const paid = paidEarly();
+    const tooEarly = { ...ctx, now: new Date('2026-11-08T21:59:59Z') }; // 23:59:59 on 8 Nov in Riga
+    expect(() => decide(paid, renter, { type: 'CONFIRM_RECEIVED' }, tooEarly)).toThrow(
+      expect.objectContaining({ code: 'TRANSITION_NOT_ALLOWED', details: expect.objectContaining({ why: 'TOO_EARLY' }) }),
+    );
+    expect(availableActions(paid, renter, tooEarly)).not.toContain('CONFIRM_RECEIVED');
+    const eveningBefore = { ...ctx, now: new Date('2026-11-08T22:00:00Z') }; // 00:00 on 9 Nov in Riga
+    expect(decide(paid, renter, { type: 'CONFIRM_RECEIVED' }, eveningBefore).next.status).toBe('ACTIVE');
+  });
+
   it('"handed over" can be marked from the day before the start, not earlier', () => {
     const paid = paidEarly();
     const tooEarly = { ...ctx, now: new Date('2026-11-08T21:59:59Z') }; // 23:59:59 on 8 Nov in Riga

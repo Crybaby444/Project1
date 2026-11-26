@@ -65,7 +65,10 @@
       "DAMAGE_REPLY": "Goes to a dispute automatically in {time}"
     },
     "overdue": "The time is up. Updating…",
-    "at": "{when}"
+    "at": "{when}",
+    "deadlineMissed": {
+      "HANDOVER_DEADLINE": "If the item is not handed over within {time}, Yoyo steps in"
+    }
   },
   "countdown": {
     "days": "{days} d {hours} h",
@@ -200,7 +203,12 @@
       "expired": "The request ran out without an answer. Nothing was charged.",
       "cancelled": "The deal is cancelled. Whatever you paid is back in your wallet.",
       "find": "Find another item"
-    }
+    },
+    "remindHandover": "The day before the handover, Yoyo reminds you both.",
+    "remindReturn": "The day before the last day, Yoyo reminds you both about the return.",
+    "waitHandoverDay": "Waiting for the handover day",
+    "rentalOn": "The rental is on",
+    "yoyoDecides": "Yoyo is deciding"
   },
   "dealActions": {
     "ACCEPT": "Accept",
