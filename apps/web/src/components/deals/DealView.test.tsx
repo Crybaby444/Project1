@@ -53,7 +53,8 @@ describe('DealView', () => {
     const current = document.querySelector('[aria-current="step"]')!;
     expect(current).toHaveAttribute('data-step', 'answer');
     expect(within(current as HTMLElement).getByText(/The request expires in/)).toBeVisible();
-    expect(screen.getByText('Your turn')).toBeVisible();
+    expect(screen.getAllByText('Your turn')[0]).toBeVisible();
+    expect(screen.getByRole('heading', { name: 'Your turn' })).toBeVisible();
   });
 
   it.each([

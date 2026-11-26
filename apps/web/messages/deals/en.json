@@ -163,7 +163,8 @@
       "none": "No photos yet.",
       "hint": "Photos of the item's condition help if anything goes wrong.",
       "alt": "Photo {n} of the item ({kind})"
-    }
+    },
+    "closedTitle": "Deal closed"
   },
   "dealActions": {
     "ACCEPT": "Accept",

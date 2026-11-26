@@ -163,7 +163,8 @@
       "none": "Foto vēl nav.",
       "hint": "Foto ar lietas stāvokli palīdz, ja kaut kas noiet greizi.",
       "alt": "Lietas foto {n} ({kind})"
-    }
+    },
+    "closedTitle": "Darījums noslēgts"
   },
   "dealActions": {
     "ACCEPT": "Pieņemt",

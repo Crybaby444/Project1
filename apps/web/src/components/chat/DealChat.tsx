@@ -14,7 +14,7 @@ export function DealChat({ booking }: { booking: BookingView }) {
   const conversation = useDealConversation(booking.id, booking.viewerRole !== 'ADMIN');
   if (booking.viewerRole === 'ADMIN') return null;
   return (
-    <section aria-labelledby="deal-chat" className="border-ink/15 flex flex-col gap-3 border-t pt-6" data-deal-chat="">
+    <section aria-labelledby="deal-chat" className="sheet border-ink/15 rounded-media border p-5 sm:p-6 flex flex-col gap-3" data-deal-chat="">
       <h2 id="deal-chat" className="font-display text-4xl leading-[0.95] font-black uppercase">
         {t('inDealTitle')}
       </h2>

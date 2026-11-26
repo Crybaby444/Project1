@@ -88,7 +88,7 @@ export function ContractCard({ booking }: { booking: BookingView }) {
   }
 
   return (
-    <section aria-labelledby="deal-contract" className="border-ink/15 flex flex-col gap-4 border-t pt-6" data-contract="">
+    <section aria-labelledby="deal-contract" className="sheet border-ink/15 rounded-media border p-5 sm:p-6 flex flex-col gap-4" data-contract="">
       <div className="flex flex-col gap-1">
         <h2 id="deal-contract" className="font-display text-4xl leading-[0.95] font-black uppercase">
           {t('title')}
@@ -97,7 +97,7 @@ export function ContractCard({ booking }: { booking: BookingView }) {
       </div>
       {booking.hasContract && (
         <>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 sm:max-lg:grid-cols-2">
             {/* The renter signs first, then the owner countersigns (owner, 2026-11-15). */}
             <Signature who={`1 · ${t('renter')}`} at={booking.renterSignedAt} timeZone={booking.timeZone} typed={typed('RENTER')} />
             <Signature
