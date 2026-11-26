@@ -20,6 +20,14 @@ export function MessageOwnerButton({ ownerId, about, label, size = 'lg' }: { own
   const text = label ?? t('messageOwner');
 
   if (user?.id === ownerId) return null;
+  // While the session is being read the button waits; only a visitor is sent to sign in.
+  if (status === 'loading') {
+    return (
+      <Button variant="ghost" size={size} disabled>
+        {text}
+      </Button>
+    );
+  }
   if (status !== 'authenticated') {
     return (
       <Button variant="ghost" size={size} href={`/login?next=${encodeURIComponent(pathname)}`}>

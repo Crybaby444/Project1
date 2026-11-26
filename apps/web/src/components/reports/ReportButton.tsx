@@ -39,7 +39,12 @@ export function ReportButton({ target, id, ownerId, className = '' }: { target: 
     <>
       <button
         type="button"
-        onClick={() => (status === 'authenticated' ? setOpen(true) : router.push(`/login?next=${encodeURIComponent(pathname)}`))}
+        // Only a visitor is sent to sign in; while the session is still being read a click waits for it
+        // (audit 2026-11-26: a quick click sent a signed-in person to the sign-in page).
+        onClick={() => {
+          if (status === 'authenticated') setOpen(true);
+          else if (status === 'anonymous') router.push(`/login?next=${encodeURIComponent(pathname)}`);
+        }}
         className={`text-ink/70 hover:text-ink inline-flex min-h-9 items-center gap-1.5 text-sm font-semibold underline decoration-1 underline-offset-4 ${className}`}
       >
         <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4 fill-none stroke-current [stroke-linecap:round] [stroke-linejoin:round] [stroke-width:1.8]">
@@ -54,7 +59,7 @@ export function ReportButton({ target, id, ownerId, className = '' }: { target: 
               {already ? t('already') : t('sent')}
             </p>
             <Button className="self-start" onClick={() => setOpen(false)}>
-              {t('cancel')}
+              {t('close')}
             </Button>
           </div>
         ) : (

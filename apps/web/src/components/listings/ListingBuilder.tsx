@@ -106,7 +106,9 @@ export function ListingBuilder({
       <BuilderLayout
         step={step}
         moved={moved}
-        isNew={initial === null && draft.listing === null}
+        // A draft is still being lent for the first time: "Lend an item", not "Edit listing", even after the
+        // first autosave gave it an address of its own (audit 2026-11-26: the title flipped on the first photo).
+        isNew={draft.listing === null ? initial === null : draft.listing.status === 'DRAFT'}
         categoriesFailed={categoriesQuery.isError ? categoriesQuery.error : null}
         retryCategories={() => void categoriesQuery.refetch()}
       />

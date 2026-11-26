@@ -194,6 +194,12 @@
       "reviewed": "Thank you for your review.",
       "moreRenter": "Find something else",
       "moreOwner": "Lend another item"
+    },
+    "closedNext": {
+      "declined": "The owner cannot make these days. Similar things are usually near you too.",
+      "expired": "The request ran out without an answer. Nothing was charged.",
+      "cancelled": "The deal is cancelled. Whatever you paid is back in your wallet.",
+      "find": "Find another item"
     }
   },
   "dealActions": {
@@ -539,7 +545,8 @@
       "EXPIRED": "The request expired",
       "CANCELLED": "The deal was cancelled"
     },
-    "inDealTitle": "Chat"
+    "inDealTitle": "Chat",
+    "aboutItemStart": "Hello! I am writing about this item: {link}"
   },
   "notifications": {
     "title": "Notifications",
@@ -637,6 +644,7 @@
     "cancel": "Back",
     "sent": "Thank you. An administrator will look at it.",
     "already": "You have already reported this; it is being looked at.",
-    "failed": "The report was not sent. Try again."
+    "failed": "The report was not sent. Try again.",
+    "close": "Close"
   }
 }

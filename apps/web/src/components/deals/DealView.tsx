@@ -250,6 +250,16 @@ export function DealView({ id }: { id: string }) {
                   onError(error);
                 }}
               />
+            ) : closed && booking.viewerRole === 'RENTER' && booking.status !== 'COMPLETED' ? (
+              // A deal that did not happen is not a dead end for the renter: what happened, then the next item.
+              <>
+                <p className="text-ink/80 leading-relaxed">
+                  {t(`closedNext.${booking.status === 'DECLINED' ? 'declined' : booking.status === 'EXPIRED' ? 'expired' : 'cancelled'}`)}
+                </p>
+                <Button href="/c" className="self-start">
+                  {t('closedNext.find')}
+                </Button>
+              </>
             ) : (
               <p className="text-sm">{t('nothingToDo')}</p>
             )}

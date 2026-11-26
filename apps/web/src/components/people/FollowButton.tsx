@@ -17,6 +17,8 @@ export function FollowButton({ userId, name, onChange }: { userId: string; name:
   const ids = useFollowingIds();
   const toggle = useToggleFollow(userId);
   if (user?.id === userId) return null;
+  // While the session is being read the button waits; only a visitor is sent to sign in.
+  if (status === 'loading') return <Button disabled>{t('follow')}</Button>;
   if (status !== 'authenticated') {
     return <Button href={`/login?next=${encodeURIComponent(pathname)}`}>{t('follow')}</Button>;
   }

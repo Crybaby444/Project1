@@ -115,7 +115,9 @@ describe('address search', () => {
     it('names the city and district of a point', async () => {
       const res = await anna.get('/geo/reverse?lat=56.9496&lng=24.1052&lang=lv').expect(200);
       expect(res.body).toEqual({ city: 'Rīga', district: 'Centrs', country: 'LV', attribution: '© OpenStreetMap contributors' });
-      expect(Object.fromEntries(nominatim.requests[0]!.query)).toMatchObject({ lat: '56.9496', lon: '24.1052', 'accept-language': 'lv' });
+      expect(Object.fromEntries(nominatim.requests[0]!.query)).toMatchObject({ lat: '56.9496', lon: '24.1052' });
+      // The place's own names, whatever the page's language (a listing's city is grouped and filtered by it).
+      expect(nominatim.requests[0]!.query.has('accept-language')).toBe(false);
     });
 
     it('answers nulls for a point with no address, and refuses points off the globe', async () => {

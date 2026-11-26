@@ -57,6 +57,7 @@ export function SaveSearchButton({ query }: { query: SearchToSave }) {
         type="button"
         disabled={save.isPending}
         onClick={() => {
+          if (status === 'loading') return; // the session is still being read: not a visitor yet
           if (status !== 'authenticated') {
             const next = `${pathname}${window.location.search}`;
             router.push(`/login?next=${encodeURIComponent(next)}`);

@@ -29,12 +29,15 @@ export function ListingCard({
   eager = false,
   unavailable = false,
   days,
+  dates,
 }: {
   item: CatalogItem;
   eager?: boolean;
   unavailable?: boolean;
   /** The days the search asks for: the card then also says what the rent comes to for them. */
   days?: number;
+  /** The searched days themselves: the item opens with them picked in its calendar. */
+  dates?: { from: string; to: string } | undefined;
 }) {
   const t = useTranslations('catalog.card');
   const locale = useLocale();
@@ -80,7 +83,7 @@ export function ListingCard({
             lang={item.contentLocale}
           >
             <TransitionLink
-              href={listingPath(item.id, item.title)}
+              href={dates ? `${listingPath(item.id, item.title)}?from=${dates.from}&to=${dates.to}` : listingPath(item.id, item.title)}
               // Only the photo of the card that was opened flies to the item page.
               onClick={() => photo.current?.setAttribute('data-shared-photo', '')}
               className="after:rounded-media focus-visible:after:outline-ink rounded-[6px] after:absolute after:inset-0 after:content-[''] focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-3"

@@ -70,7 +70,7 @@ export function ProfileSocial({
         <div className="grid w-full grid-cols-2 gap-x-4 gap-y-4 sm:flex sm:w-auto sm:flex-wrap sm:gap-x-8 sm:gap-y-3">
           {deals > 0 && stat(deals, tp('deals', { count: deals }))}
           {followers + delta > 0 && stat(followers + delta, t('followers', { count: followers + delta }), () => setOpen('followers'))}
-          {following > 0 && stat(following, t('followingCount'), () => setOpen('following'))}
+          {following > 0 && stat(following, t('followingCount', { count: following }), () => setOpen('following'))}
           {reviews > 0 && stat(reviews, t('reviews', { count: reviews }))}
         </div>
       )}

@@ -35,6 +35,12 @@ describe('ListingCard', () => {
     expect(await screen.findByText('€63 for 7 days')).toBeInTheDocument();
   });
 
+  it('takes the searched days along to the item, so its calendar opens with them picked', async () => {
+    const api = fakeApi({ ...meRoute(null) });
+    renderWithSession(<ListingCard item={catalogItem()} days={3} dates={{ from: '2026-12-11', to: '2026-12-13' }} />, { client: api.client, hasSession: false });
+    expect(screen.getByRole('link', { name: 'Cordless drill' }).getAttribute('href')).toMatch(/\?from=2026-12-11&to=2026-12-13$/);
+  });
+
   it('gives the heart a touch area wider than its circle, so a near miss does not open the item', async () => {
     const api = fakeApi(meRoute(null));
     renderWithSession(<ListingCard item={catalogItem()} />, { client: api.client, hasSession: false });
