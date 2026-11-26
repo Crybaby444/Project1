@@ -166,20 +166,26 @@ function FilterFields({ params, cities, country, today }: Omit<FiltersProps, 'to
   );
 }
 
+/** The filters as the rail beside the results, from lg up. */
+export function FiltersRail(props: FiltersProps) {
+  const t = useTranslations('catalog.filters');
+  return (
+    <div className="hidden lg:block">
+      <h2 className="sr-only">{t('title')}</h2>
+      <FilterFields {...props} />
+    </div>
+  );
+}
+
 /**
- * The filters: a column next to the results on a computer; on a phone a "Filters (N)" button opens
- * them in a sheet whose button shows how many items they find.
+ * Below lg: a "Filters (N)" button in the results' toolbar that opens them in a sheet, whose button says
+ * how many items they find.
  */
-export function Filters(props: FiltersProps) {
+export function FiltersButton(props: FiltersProps) {
   const t = useTranslations('catalog.filters');
   const [open, setOpen] = useState(false);
   const count = filterCount(props.params);
   return (
-    <>
-      <div className="hidden lg:block">
-        <h2 className="sr-only">{t('title')}</h2>
-        <FilterFields {...props} />
-      </div>
       <div className="lg:hidden">
         <Button variant="ghost" onClick={() => setOpen(true)} aria-haspopup="dialog">
           <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4">
@@ -198,6 +204,15 @@ export function Filters(props: FiltersProps) {
           </div>
         </Dialog>
       </div>
+  );
+}
+
+/** Both: the rail on a computer and the sheet's button on a phone (one place shows at each width). */
+export function Filters(props: FiltersProps) {
+  return (
+    <>
+      <FiltersRail {...props} />
+      <FiltersButton {...props} />
     </>
   );
 }

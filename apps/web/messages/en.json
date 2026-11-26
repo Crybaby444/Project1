@@ -934,7 +934,9 @@
     },
     "saveSearch": {
       "save": "Tell me about new items",
-      "saved": "Saved: we will tell you about new items"
+      "saved": "Saved: we will tell you about new items",
+      "saveShort": "Notify me",
+      "savedShort": "We will tell you"
     }
   },
   "rangeCalendar": {

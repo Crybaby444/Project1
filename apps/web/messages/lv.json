@@ -934,7 +934,9 @@
     },
     "saveSearch": {
       "save": "Paziņot par jaunām lietām",
-      "saved": "Saglabāts: paziņosim par jaunām lietām"
+      "saved": "Saglabāts: paziņosim par jaunām lietām",
+      "saveShort": "Paziņot man",
+      "savedShort": "Paziņosim"
     }
   },
   "rangeCalendar": {

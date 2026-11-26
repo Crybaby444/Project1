@@ -15,7 +15,7 @@ import { Breadcrumbs, type Crumb } from './Breadcrumbs';
 import { CatalogMapLoader } from './CatalogMapLoader';
 import { CatalogShell, ResultsRegion } from './CatalogShell';
 import { EmptyResults } from './EmptyResults';
-import { Filters } from './Filters';
+import { FiltersButton, FiltersRail } from './Filters';
 import { ListingCard } from './ListingCard';
 import { Pagination } from './Pagination';
 import { SearchBox } from './SearchBox';
@@ -116,21 +116,26 @@ export async function CatalogResults({ params: raw, category, related, path, tit
         </PageHeader>
 
         <div className="layout-rail">
-          <aside className="flex flex-col gap-4">
-            <Filters params={params} cities={cities} country={country} today={today} total={total} />
+          <aside className="flex flex-col gap-4 max-lg:hidden">
+            <FiltersRail params={params} cities={cities} country={country} today={today} total={total} />
           </aside>
           <div className="flex min-w-0 flex-col gap-5">
-            <Toolbar params={params} />
+            <Toolbar
+              params={params}
+              filters={<FiltersButton params={params} cities={cities} country={country} today={today} total={total} />}
+              save={
+                <SaveSearchButton
+                  query={{
+                    q: params.q,
+                    category: category?.slug,
+                    priceMax: params.priceMax,
+                    city: params.city,
+                  }}
+                />
+              }
+            />
             <ActiveFilters params={params} cities={cities} />
             {params.q && <span hidden data-search-q={params.q} data-search-results={total} />}
-            <SaveSearchButton
-              query={{
-                q: params.q,
-                category: category?.slug,
-                priceMax: params.priceMax,
-                city: params.city,
-              }}
-            />
             <ResultsRegion status={status}>
               <div className="flex flex-col gap-6">
                 {params.view === 'map' && map?.ok && (
