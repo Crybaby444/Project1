@@ -1,63 +1,66 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useEffect, useRef } from 'react';
 import { isLeaf } from '@/lib/listings/categories';
 import { BUILDER_STEPS, stepOf, type BuilderStep } from '@/lib/listings/listing-checks';
 import { useBuilder } from './BuilderContext';
 
 /**
  * The steps as links (`?step=…`) with `aria-current="step"` on the open one. A step whose fields
- * review needs no more gets a check mark ("done" for screen readers). On a phone the row scrolls.
+ * review needs no more gets a check mark ("done" for screen readers). On a phone the steps are a row of
+ * six numbered dots joined by a line that fits the screen (the step's name is the section's heading
+ * right below); from lg up, the named list in the side column.
  */
 export function StepNav({ current, onSelect }: { current: BuilderStep; onSelect(step: BuilderStep): void }) {
   const t = useTranslations('builder.steps');
   const { missing, draft, category } = useBuilder();
-  const active = useRef<HTMLAnchorElement>(null);
   const missingSteps = new Set(Object.keys(missing).map(stepOf));
   const started = draft.listing !== null;
 
-  useEffect(() => {
-    active.current?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
-  }, [current]);
+  // Details are only done once there is a subcategory whose details they are.
+  const isDone = (step: BuilderStep) =>
+    started && step !== 'rules' && !missingSteps.has(step) && (step !== 'attributes' || (category !== undefined && isLeaf(category)));
 
   return (
-    <nav aria-label={t('label')} className="-mx-4 min-w-0 lg:mx-0">
-      <ol className="border-ink/15 m-0 flex snap-x scroll-px-4 list-none gap-5 overflow-x-auto border-b px-4 p-0 lg:flex-col lg:gap-0 lg:overflow-visible lg:border-t lg:border-b-0 lg:px-0">
+    <nav aria-label={t('label')} className="min-w-0">
+      <ol className="lg:border-ink/15 m-0 grid list-none grid-cols-6 p-0 lg:flex lg:flex-col lg:border-t">
         {BUILDER_STEPS.map((step, index) => {
           const isCurrent = step === current;
-          // Details are only done once there is a subcategory whose details they are.
-          const done =
-            started &&
-            step !== 'rules' &&
-            !missingSteps.has(step) &&
-            (step !== 'attributes' || (category !== undefined && isLeaf(category)));
+          const done = isDone(step);
           return (
-            <li key={step} className="lg:border-ink/15 shrink-0 snap-start lg:border-b">
+            <li
+              key={step}
+              className="max-lg:before:bg-ink/20 lg:border-ink/15 relative flex justify-center max-lg:before:absolute max-lg:before:top-1/2 max-lg:before:right-1/2 max-lg:before:left-[-50%] max-lg:before:h-px max-lg:first:before:hidden lg:block lg:border-b"
+            >
               <a
-                ref={isCurrent ? active : undefined}
                 href={`?step=${step}`}
                 aria-current={isCurrent ? 'step' : undefined}
                 onClick={(event) => {
                   event.preventDefault();
                   onSelect(step);
                 }}
-                className={`group relative flex min-h-11 items-center gap-2.5 py-3 whitespace-nowrap transition-colors duration-300 lg:whitespace-normal lg:grid lg:grid-cols-[2.2em_1fr_18px] lg:py-3.5 ${
+                className={`group relative transition-colors duration-300 max-lg:grid max-lg:size-10 max-lg:place-items-center max-lg:rounded-full max-lg:border lg:grid lg:min-h-11 lg:grid-cols-[2.2em_1fr_18px] lg:items-center lg:gap-2.5 lg:py-3.5 ${
                   isCurrent
-                    ? 'text-ink after:bg-ink after:absolute after:inset-x-0 after:-bottom-px after:h-[2px] lg:after:hidden'
-                    : 'text-ink/65 hover:text-ink'
+                    ? 'text-ink max-lg:bg-ink max-lg:text-canvas max-lg:border-ink'
+                    : done
+                      ? 'text-ink max-lg:bg-surface max-lg:border-ink lg:text-ink/65 lg:hover:text-ink'
+                      : 'text-ink/65 hover:text-ink max-lg:bg-canvas max-lg:border-ink/25'
                 }`}
               >
-                <span aria-hidden="true" className="self-start pt-[0.35em] text-xs font-bold tabular-nums lg:self-center lg:pt-0">
+                <span aria-hidden="true" className="text-xs font-bold tabular-nums">
                   {String(index + 1).padStart(2, '0')}
                 </span>
-                <span className="font-display text-2xl leading-none font-black uppercase transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] lg:text-3xl lg:group-hover:translate-x-1.5">
+                <span className="font-display leading-none font-black uppercase transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] max-lg:sr-only lg:text-3xl lg:group-hover:translate-x-1.5">
                   {t(step)}
                 </span>
                 {isCurrent ? (
                   <span aria-hidden="true" className="bg-ink hidden size-2.5 justify-self-end rounded-full lg:block" />
                 ) : done ? (
-                  <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4 justify-self-end">
+                  <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    className="max-lg:bg-ink max-lg:text-canvas max-lg:ring-canvas size-4 justify-self-end max-lg:absolute max-lg:-top-1 max-lg:-right-1 max-lg:size-4 max-lg:rounded-full max-lg:p-0.5 max-lg:ring-2"
+                  >
                     <path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 ) : null}
