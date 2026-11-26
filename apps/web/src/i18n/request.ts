@@ -20,5 +20,8 @@ export default getRequestConfig(async ({ requestLocale }) => {
   return {
     locale,
     messages: { ...base.default, ...site.default, ...deals.default, ...admin.default },
+    // Dates formatted through next-intl (an identity check's day, the admin's lists) read in the market's
+    // time, the same on the server and in any browser; a deal's own moments use its zone (lib/deals/dates).
+    timeZone: 'Europe/Riga',
   };
 });
