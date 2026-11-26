@@ -22,16 +22,16 @@ describe('ProfileTabs', () => {
       'GET /api/v1/users/owner-1/reviews': { status: 200, body: { items: [], total: 0, page: 1, pageSize: 10, average: 0 } },
     });
     renderWithSession(<ProfileTabs listings={[catalogItem()]} name="Jānis" userId="owner-1" />, { client: api.client, hasSession: false });
-    const items = screen.getByRole('tab', { name: '1 item' });
+    const items = screen.getByRole('tab', { name: /^Items\s*1$/ });
     expect(items).toHaveAttribute('aria-selected', 'true');
     expect(screen.getByRole('link', { name: 'Cordless drill' })).toBeVisible();
     items.focus();
     await user.keyboard('{ArrowRight}');
-    const shops = screen.getByRole('tab', { name: en.profile.shops });
+    const shops = screen.getByRole('tab', { name: new RegExp(`^${en.profile.shops}`) });
     expect(shops).toHaveFocus();
     expect(await screen.findByText(en.profile.noShops.replace('{name}', 'Jānis'))).toBeVisible();
     await user.keyboard('{ArrowRight}');
-    const reviews = screen.getByRole('tab', { name: en.profile.reviews });
+    const reviews = screen.getByRole('tab', { name: new RegExp(`^${en.profile.reviews}`) });
     expect(reviews).toHaveFocus();
     expect(reviews).toHaveAttribute('aria-selected', 'true');
     expect(await screen.findByText(en.profile.noReviewsTitle)).toBeVisible();
@@ -56,8 +56,8 @@ describe('ProfileTabs', () => {
     window.history.replaceState(null, '', '/u/me-1');
     const { unmount } = renderWithSession(<ProfileTabs listings={[]} name="Me" userId="me-1" />, { client: api.client });
     expect(await screen.findByText('Bosch drill draft')).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: en.profile.myItems })).toHaveAttribute('aria-selected', 'true');
-    expect(screen.getByRole('tab', { name: en.profile.following })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: new RegExp(`^${en.profile.myItems}`) })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('tab', { name: new RegExp(`^${en.profile.following}`) })).toBeInTheDocument();
     unmount();
 
     window.history.replaceState(null, '', '/u/me-1?tab=following');

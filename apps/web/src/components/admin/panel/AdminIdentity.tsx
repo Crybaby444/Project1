@@ -7,15 +7,18 @@ import { Button } from '@/components/ui/Button';
 import { TEXTAREA_CLASS } from '@/components/ui/inputs';
 import { useToast } from '@/components/ui/Toast';
 import { useDecideIdentity, useIdentityPhoto, useIdentityQueue } from '@/lib/identity/queries';
-import { AdminPageHeader } from './parts';
+import { AdminEmpty, AdminPageHeader } from './parts';
 
 type Item = AdminIdentityQueue['items'][number];
 
 function Photo({ id, which, alt }: { id: string; which: 'document' | 'selfie'; alt: string }) {
   const photo = useIdentityPhoto(id, which);
-  if (!photo.data) return <div aria-busy={photo.isPending || undefined} className="bg-mist rounded-media aspect-[4/3]" />;
+  if (!photo.data)
+    return <div aria-busy={photo.isPending || undefined} className="bg-mist rounded-media aspect-[4/3]" />;
   // eslint-disable-next-line @next/next/no-img-element -- a private object URL, never cached
-  return <img src={photo.data} alt={alt} className="rounded-media aspect-[4/3] w-full bg-black object-contain" />;
+  return (
+    <img src={photo.data} alt={alt} className="rounded-media aspect-[4/3] w-full bg-black object-contain" />
+  );
 }
 
 function Check({ item }: { item: Item }) {
@@ -29,7 +32,10 @@ function Check({ item }: { item: Item }) {
   const act = (decision: 'approve' | 'reject') =>
     decide.mutate(
       { id: item.id, decision: decision === 'approve' ? { decision } : { decision, reason: reason.trim() } },
-      { onSuccess: () => toast.show(decision === 'approve' ? t('approved') : t('rejected')), onError: () => toast.show(t('failed')) },
+      {
+        onSuccess: () => toast.show(decision === 'approve' ? t('approved') : t('rejected')),
+        onError: () => toast.show(t('failed')),
+      },
     );
 
   return (
@@ -38,7 +44,8 @@ function Check({ item }: { item: Item }) {
         <h2 className="text-lg font-bold">{item.user.name}</h2>
         <p className="text-ink/70 text-sm">
           {item.user.email}
-          {item.user.birthDate && ` · ${t('born', { date: format.dateTime(new Date(item.user.birthDate), { dateStyle: 'medium' }) })}`}
+          {item.user.birthDate &&
+            ` · ${t('born', { date: format.dateTime(new Date(item.user.birthDate), { dateStyle: 'medium' }) })}`}
           {` · ${td(item.documentType)} · ${format.relativeTime(new Date(item.submittedAt))}`}
         </p>
       </header>
@@ -51,7 +58,13 @@ function Check({ item }: { item: Item }) {
         <div className="flex flex-col gap-3">
           <label className="flex flex-col gap-1.5 text-sm font-bold">
             {t('reason')}
-            <textarea value={reason} onChange={(e) => setReason(e.target.value)} maxLength={500} rows={2} className={TEXTAREA_CLASS} />
+            <textarea
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              maxLength={500}
+              rows={2}
+              className={TEXTAREA_CLASS}
+            />
           </label>
           <div className="flex flex-wrap gap-2">
             <Button onClick={() => act('reject')} disabled={!reason.trim()} loading={decide.isPending}>
@@ -85,7 +98,7 @@ export function AdminIdentity() {
   const queue = useIdentityQueue();
   return (
     <div className="flex flex-col gap-6">
-      <AdminPageHeader title={t('nav.identity')} note={queue.data ? t('common.total', { count: queue.data.items.length }) : undefined} />
+      <AdminPageHeader title={t('nav.identity')} count={queue.data ? queue.data.items.length : undefined} />
       <p className="max-w-read leading-relaxed">{t('identityCheck.intro')}</p>
       {queue.isPending ? (
         <div aria-busy="true" className="bg-mist rounded-media h-64" />
@@ -97,7 +110,7 @@ export function AdminIdentity() {
           </Button>
         </div>
       ) : queue.data.items.length === 0 ? (
-        <p className="admin-glass border-ink/15 rounded-media border px-5 py-10 text-center">{t('identityCheck.empty')}</p>
+        <AdminEmpty title={t('identityCheck.empty')} />
       ) : (
         <ul className="m-0 flex list-none flex-col gap-4 p-0">
           {queue.data.items.map((item) => (

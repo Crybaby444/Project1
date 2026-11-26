@@ -1077,7 +1077,6 @@
     "noFollowers": "{name} vēl neviens neseko.",
     "noFollowing": "{name} vēl nevienam neseko.",
     "favorites": "Izlase",
-    "noFavorites": "Vēl nekas nav saglabāts. Nospiediet sirsniņu uz lietas, lai to paturētu šeit.",
     "deals": "{count, plural, zero {darījumu} one {darījums} other {darījumi}}",
     "findPeople": "Atrast cilvēkus",
     "hero": {
@@ -1094,7 +1093,13 @@
       "wallet": "Maks",
       "messages": "Ziņas",
       "notifications": "Paziņojumi"
-    }
+    },
+    "addAbout": "Pievienojiet dažus vārdus par sevi",
+    "itemsTab": "Lietas",
+    "favoritesIntro": "Lietas, ko saglabājāt ar sirsniņu. Tā, kas pazudusi no kataloga, paliek šeit ar atzīmi.",
+    "noFavoritesTitle": "Vēl nekas nav saglabāts",
+    "noFavoritesBody": "Nospiediet sirsniņu uz lietas, lai to paturētu šeit.",
+    "browse": "Atvērt katalogu"
   },
   "consent": {
     "label": "Sīkdatņu izvēle",

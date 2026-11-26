@@ -1,5 +1,6 @@
 'use client';
 
+import { AdminEmpty } from './panel/parts';
 import { displayFit } from '@/lib/display-fit';
 import { useQueryClient } from '@tanstack/react-query';
 import { ADMIN_LISTINGS_PAGE_SIZE, type AdminListing } from '@yoyo/shared';
@@ -10,7 +11,12 @@ import { useToast } from '@/components/ui/Toast';
 import { useErrorText } from '@/lib/forms/error-text';
 import { Link } from '@/i18n/navigation';
 import { findPath } from '@/lib/listings/categories';
-import { listingKeys, useCategories, useModerationQueue, type ModerationQueueName } from '@/lib/listings/queries';
+import {
+  listingKeys,
+  useCategories,
+  useModerationQueue,
+  type ModerationQueueName,
+} from '@/lib/listings/queries';
 import { ApiError, unwrap } from '@/lib/session/api-error';
 import { useApiClient } from '@/lib/session/SessionProvider';
 import { ModerationCard } from './ModerationCard';
@@ -79,7 +85,9 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
    * version check (a listing changed meanwhile is skipped, not approved unseen) and its audit entry.
    */
   async function decideAll(decision: { action: 'approve' } | { action: 'reject'; reason: string }) {
-    const chosen = (query.data?.items ?? []).filter((listing) => picked.has(listing.id) && listing.status === 'PENDING_REVIEW');
+    const chosen = (query.data?.items ?? []).filter(
+      (listing) => picked.has(listing.id) && listing.status === 'PENDING_REVIEW',
+    );
     if (chosen.length === 0) return;
     setBulkBusy(true);
     setNotice(null);
@@ -88,9 +96,19 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
       const path = { params: { path: { id: listing.id } } };
       try {
         if (decision.action === 'approve') {
-          await unwrap(client.POST('/api/v1/admin/listings/{id}/approve', { ...path, body: { version: listing.version } }));
+          await unwrap(
+            client.POST('/api/v1/admin/listings/{id}/approve', {
+              ...path,
+              body: { version: listing.version },
+            }),
+          );
         } else {
-          await unwrap(client.POST('/api/v1/admin/listings/{id}/reject', { ...path, body: { reason: decision.reason, version: listing.version } }));
+          await unwrap(
+            client.POST('/api/v1/admin/listings/{id}/reject', {
+              ...path,
+              body: { reason: decision.reason, version: listing.version },
+            }),
+          );
         }
       } catch {
         failed += 1;
@@ -100,7 +118,8 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
     setPicked(new Set());
     setBulkRejecting(false);
     setBulkBusy(false);
-    if (failed === 0) toast.show(t(decision.action === 'approve' ? 'bulk.approved' : 'bulk.rejected', { count: done }));
+    if (failed === 0)
+      toast.show(t(decision.action === 'approve' ? 'bulk.approved' : 'bulk.rejected', { count: done }));
     else setNotice(t('bulk.partly', { done, failed }));
     await queryClient.invalidateQueries({ queryKey: listingKeys.queue(page, queue) });
   }
@@ -113,7 +132,12 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
     setBusyId(listing.id);
     setNotice(null);
     try {
-      await unwrap(client.PATCH('/api/v1/admin/listings/{id}', { params: { path: { id: listing.id } }, body: { ...fixes, version: listing.version } }));
+      await unwrap(
+        client.PATCH('/api/v1/admin/listings/{id}', {
+          params: { path: { id: listing.id } },
+          body: { ...fixes, version: listing.version },
+        }),
+      );
       toast.show(t('edit.done'));
       setEditing(null);
     } catch (error) {
@@ -182,10 +206,7 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
       </nav>
 
       {notice && (
-        <p
-          role="alert"
-          className="bg-mist rounded-media border border-ink/15 p-4 font-bold text-ink"
-        >
+        <p role="alert" className="bg-mist rounded-media border-ink/15 text-ink border p-4 font-bold">
           {notice}
         </p>
       )}
@@ -212,11 +233,10 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
           </Button>
         </div>
       ) : items.length === 0 ? (
-        // Like every other empty list of the panel: a quiet box, not the site's big empty scene.
-        <div className="admin-glass border-ink/15 rounded-media flex flex-col items-center gap-1 border px-5 py-10 text-center">
-          <h2 className="text-base font-bold">{queue === 'other' ? t('otherEmptyTitle') : t('emptyTitle')}</h2>
-          <p className="text-ink/70 max-w-md text-sm">{queue === 'other' ? t('otherEmptyBody') : t('emptyBody')}</p>
-        </div>
+        <AdminEmpty
+          title={queue === 'other' ? t('otherEmptyTitle') : t('emptyTitle')}
+          hint={queue === 'other' ? t('otherEmptyBody') : t('emptyBody')}
+        />
       ) : (
         <>
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -224,8 +244,19 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
               {t('showing', { from, to, total })}
             </p>
             {pickable.length > 1 && (
-              <Button variant="ghost" onClick={() => setPicked(pickedCount === pickable.length ? new Set() : new Set(pickable.map((listing) => listing.id)))}>
-                {pickedCount === pickable.length ? t('bulk.clear') : t('bulk.all', { count: pickable.length })}
+              <Button
+                variant="ghost"
+                onClick={() =>
+                  setPicked(
+                    pickedCount === pickable.length
+                      ? new Set()
+                      : new Set(pickable.map((listing) => listing.id)),
+                  )
+                }
+              >
+                {pickedCount === pickable.length
+                  ? t('bulk.clear')
+                  : t('bulk.all', { count: pickable.length })}
               </Button>
             )}
           </div>
@@ -273,16 +304,34 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
       )}
 
       {pickedCount > 0 && (
-        <div role="region" aria-label={t('bulk.bar')} className="bg-night rounded-media text-[var(--paper)] animate-pop-in sticky bottom-4 z-10 flex flex-wrap items-center justify-between gap-3 p-4 shadow-lg">
+        <div
+          role="region"
+          aria-label={t('bulk.bar')}
+          className="bg-night rounded-media animate-pop-in sticky bottom-4 z-10 flex flex-wrap items-center justify-between gap-3 p-4 text-[var(--paper)] shadow-lg"
+        >
           <p className="font-bold">{t('bulk.picked', { count: pickedCount })}</p>
           <div className="flex flex-wrap gap-2">
-            <Button onClick={() => void decideAll({ action: 'approve' })} loading={bulkBusy} className="[--cta-bg:var(--paper)] [--cta-fg:var(--night)]">
+            <Button
+              onClick={() => void decideAll({ action: 'approve' })}
+              loading={bulkBusy}
+              className="[--cta-bg:var(--paper)] [--cta-fg:var(--night)]"
+            >
               {t('bulk.approve', { count: pickedCount })}
             </Button>
-            <Button variant="ghost" onClick={() => setBulkRejecting(true)} disabled={bulkBusy} className="border-[var(--paper)] text-[var(--paper)]">
+            <Button
+              variant="ghost"
+              onClick={() => setBulkRejecting(true)}
+              disabled={bulkBusy}
+              className="border-[var(--paper)] text-[var(--paper)]"
+            >
               {t('bulk.reject')}
             </Button>
-            <Button variant="ghost" onClick={() => setPicked(new Set())} disabled={bulkBusy} className="border-[var(--paper)]/40 text-[var(--paper)]">
+            <Button
+              variant="ghost"
+              onClick={() => setPicked(new Set())}
+              disabled={bulkBusy}
+              className="border-[var(--paper)]/40 text-[var(--paper)]"
+            >
               {t('bulk.clear')}
             </Button>
           </div>
@@ -290,7 +339,12 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
       )}
 
       {bulkRejecting && (
-        <RejectDialog open busy={bulkBusy} onClose={() => setBulkRejecting(false)} onReject={(reason) => void decideAll({ action: 'reject', reason })} />
+        <RejectDialog
+          open
+          busy={bulkBusy}
+          onClose={() => setBulkRejecting(false)}
+          onReject={(reason) => void decideAll({ action: 'reject', reason })}
+        />
       )}
 
       {moving && (
@@ -306,7 +360,13 @@ export function ModerationQueue({ page, queue = 'review' }: { page: number; queu
       )}
 
       {editing && (
-        <EditListingDialog key={editing.id} listing={editing} busy={busyId === editing.id} onClose={() => setEditing(null)} onSave={(fixes) => void edit(editing, fixes)} />
+        <EditListingDialog
+          key={editing.id}
+          listing={editing}
+          busy={busyId === editing.id}
+          onClose={() => setEditing(null)}
+          onSave={(fixes) => void edit(editing, fixes)}
+        />
       )}
 
       {rejecting && (

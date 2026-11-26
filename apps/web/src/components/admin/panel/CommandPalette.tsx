@@ -9,7 +9,13 @@ import { unwrap } from '@/lib/session/api-error';
 import { panelRole } from '@/lib/admin/staff';
 import { useApiClient, useSession } from '@/lib/session/SessionProvider';
 
-type Hit = { key: string; group: 'pages' | 'users' | 'listings' | 'deals'; label: string; detail: string; href: string };
+type Hit = {
+  key: string;
+  group: 'pages' | 'users' | 'listings' | 'deals';
+  label: string;
+  detail: string;
+  href: string;
+};
 
 const PAGES: { key: string; section: AdminSection; href: string }[] = [
   { key: 'overview', section: 'overview', href: '/admin' },
@@ -92,18 +98,38 @@ export function CommandPalette() {
 
   const hits = useMemo<Hit[]>(() => {
     const needle = q.trim().toLowerCase();
-    const pages = PAGES.filter((p) => staffMay(panelRole(user), p.section)).filter((p) => !needle || t(`nav.${p.key}`).toLowerCase().includes(needle)).map<Hit>((p) => ({
-      key: `p-${p.key}`,
-      group: 'pages',
-      label: t(`nav.${p.key}`),
-      detail: p.href,
-      href: p.href,
-    }));
+    const pages = PAGES.filter((p) => staffMay(panelRole(user), p.section))
+      .filter((p) => !needle || t(`nav.${p.key}`).toLowerCase().includes(needle))
+      .map<Hit>((p) => ({
+        key: `p-${p.key}`,
+        group: 'pages',
+        label: t(`nav.${p.key}`),
+        detail: p.href,
+        href: p.href,
+      }));
     const data = debounced.length >= 2 ? search.data : undefined;
     return [
-      ...(data?.users ?? []).map<Hit>((u) => ({ key: `u-${u.id}`, group: 'users', label: u.name, detail: u.blocked ? `${u.email} · ${t('search.blocked')}` : u.email, href: `/admin/users/${u.id}` })),
-      ...(data?.listings ?? []).map<Hit>((l) => ({ key: `l-${l.id}`, group: 'listings', label: l.title || '—', detail: `${l.owner} · ${l.status}`, href: `/listings/${l.id}` })),
-      ...(data?.deals ?? []).map<Hit>((d) => ({ key: `d-${d.id}`, group: 'deals', label: d.title || d.id, detail: `${d.renter} → ${d.owner} · ${d.status}`, href: `/admin/deals/${d.id}` })),
+      ...(data?.users ?? []).map<Hit>((u) => ({
+        key: `u-${u.id}`,
+        group: 'users',
+        label: u.name,
+        detail: u.blocked ? `${u.email} · ${t('search.blocked')}` : u.email,
+        href: `/admin/users/${u.id}`,
+      })),
+      ...(data?.listings ?? []).map<Hit>((l) => ({
+        key: `l-${l.id}`,
+        group: 'listings',
+        label: l.title || '—',
+        detail: `${l.owner} · ${l.status}`,
+        href: `/listings/${l.id}`,
+      })),
+      ...(data?.deals ?? []).map<Hit>((d) => ({
+        key: `d-${d.id}`,
+        group: 'deals',
+        label: d.title || d.id,
+        detail: `${d.renter} → ${d.owner} · ${d.status}`,
+        href: `/admin/deals/${d.id}`,
+      })),
       ...pages,
     ];
   }, [q, debounced, search.data, t, user]);
@@ -119,7 +145,10 @@ export function CommandPalette() {
   let lastGroup = '';
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-start justify-center bg-[color-mix(in_srgb,var(--night)_45%,transparent)] px-4 pt-[12vh] backdrop-blur-[2px]" onMouseDown={() => setOpen(false)}>
+    <div
+      className="fixed inset-0 z-[70] flex items-start justify-center bg-[color-mix(in_srgb,var(--night)_45%,transparent)] px-4 pt-[12vh] backdrop-blur-[2px]"
+      onMouseDown={() => setOpen(false)}
+    >
       <div
         role="dialog"
         aria-modal="true"
@@ -128,7 +157,11 @@ export function CommandPalette() {
         className="border-ink/15 bg-surface text-ink animate-pop-in rounded-media flex w-full max-w-xl flex-col overflow-hidden border shadow-[0_40px_80px_-30px_rgba(10,11,14,0.6)]"
       >
         <div className="border-ink/15 flex items-center gap-3 border-b px-4">
-          <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5 shrink-0 fill-none stroke-current [stroke-linecap:round] [stroke-width:1.8]">
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            className="size-5 shrink-0 fill-none stroke-current [stroke-width:1.8] [stroke-linecap:round]"
+          >
             <circle cx="11" cy="11" r="7" />
             <path d="M20 20l-4-4" />
           </svg>
@@ -164,15 +197,29 @@ export function CommandPalette() {
           />
           <kbd className="border-ink/20 rounded-[6px] border px-1.5 text-xs font-semibold">Esc</kbd>
         </div>
-        <ul id={listId} role="listbox" aria-label={t('search.open')} className="max-h-[min(60vh,28rem)] overflow-y-auto p-2">
-          {hits.length === 0 && <li className="text-ink/70 px-3 py-6 text-center text-sm">{t('search.empty')}</li>}
+        <ul
+          id={listId}
+          role="listbox"
+          aria-label={t('search.open')}
+          className="max-h-[min(60vh,28rem)] overflow-y-auto p-2"
+        >
+          {hits.length === 0 && (
+            <li className="text-ink/70 px-3 py-6 text-center text-sm">{t('search.empty')}</li>
+          )}
           {hits.map((hit, i) => {
             const heading = hit.group !== lastGroup ? hit.group : null;
             lastGroup = hit.group;
             const isActive = i === Math.min(active, hits.length - 1);
             return (
               <li key={hit.key} role="presentation">
-                {heading && <p className="text-ink/60 px-3 pt-3 pb-1 text-xs font-bold tracking-[0.08em] uppercase" aria-hidden="true">{t(`search.${heading}`)}</p>}
+                {heading && (
+                  <p
+                    className="text-ink/60 px-3 pt-3 pb-1 text-xs font-bold tracking-[0.08em] uppercase"
+                    aria-hidden="true"
+                  >
+                    {t(`search.${heading}`)}
+                  </p>
+                )}
                 <div
                   id={optionId(i)}
                   role="option"
@@ -182,7 +229,11 @@ export function CommandPalette() {
                   className={`flex cursor-pointer items-baseline justify-between gap-4 rounded-[12px] px-3 py-2.5 ${isActive ? 'bg-ink text-canvas' : ''}`}
                 >
                   <span className="min-w-0 truncate font-semibold">{hit.label}</span>
-                  <span className={`shrink-0 truncate text-sm ${isActive ? 'text-canvas/75' : 'text-ink/65'}`}>{hit.detail}</span>
+                  <span
+                    className={`shrink-0 truncate text-sm ${isActive ? 'text-canvas/75' : 'text-ink/65'}`}
+                  >
+                    {hit.detail}
+                  </span>
                 </div>
               </li>
             );

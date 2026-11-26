@@ -5,7 +5,7 @@ import { useFormatter, useNow, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useActivity } from '@/lib/admin/activity';
-import { AdminPageHeader } from './parts';
+import { AdminEmpty, AdminPageHeader } from './parts';
 
 const GROUPS = Object.keys(ACTIVITY_GROUPS) as ActivityGroup[];
 
@@ -65,7 +65,11 @@ export function AdminActivity({ group, userId }: { group?: ActivityGroup; userId
           </button>
         ))}
         {userId && (
-          <button type="button" onClick={() => go({ userId: undefined })} className="rounded-pill border-ink bg-mist min-h-9 border px-4 text-sm font-bold">
+          <button
+            type="button"
+            onClick={() => go({ userId: undefined })}
+            className="rounded-pill border-ink bg-mist min-h-9 border px-4 text-sm font-bold"
+          >
             {t('clearPerson')} ✕
           </button>
         )}
@@ -73,20 +77,32 @@ export function AdminActivity({ group, userId }: { group?: ActivityGroup; userId
       {feed.isPending ? (
         <div aria-busy="true" className="bg-mist rounded-media h-64" />
       ) : items.length === 0 ? (
-        <p className="admin-glass border-ink/15 rounded-media border px-5 py-10 text-center">{t('empty')}</p>
+        <AdminEmpty title={t('empty')} />
       ) : (
         <ol className="admin-glass divide-ink/10 border-ink/15 rounded-media m-0 list-none divide-y border p-0">
           {items.map((e) => {
             const href = targetHref(e);
             const at = new Date(e.at);
             return (
-              <li key={e.id} className="grid gap-x-4 gap-y-1 px-4 py-3 sm:grid-cols-[7.5rem_minmax(0,14rem)_minmax(0,1fr)] sm:items-baseline">
-                <time dateTime={e.at} title={format.dateTime(at, { dateStyle: 'medium', timeStyle: 'short' })} className="text-ink/60 text-sm tabular-nums">
+              <li
+                key={e.id}
+                className="grid gap-x-4 gap-y-1 px-4 py-3 sm:grid-cols-[7.5rem_minmax(0,14rem)_minmax(0,1fr)] sm:items-baseline"
+              >
+                <time
+                  dateTime={e.at}
+                  title={format.dateTime(at, { dateStyle: 'medium', timeStyle: 'short' })}
+                  className="text-ink/60 text-sm tabular-nums"
+                >
                   {format.relativeTime(at, now)}
                 </time>
                 <span className="min-w-0 text-sm font-bold">
                   {e.actor ? (
-                    <button type="button" onClick={() => go({ userId: e.actor!.id })} className="truncate text-left underline-offset-4 hover:underline" title={t('person')}>
+                    <button
+                      type="button"
+                      onClick={() => go({ userId: e.actor!.id })}
+                      className="truncate text-left underline-offset-4 hover:underline"
+                      title={t('person')}
+                    >
                       {e.actor.username ? `@${e.actor.username}` : e.actor.name}
                     </button>
                   ) : (
@@ -121,7 +137,12 @@ export function AdminActivity({ group, userId }: { group?: ActivityGroup; userId
         </ol>
       )}
       {feed.hasNextPage && (
-        <Button variant="ghost" className="self-start" onClick={() => void feed.fetchNextPage()} loading={feed.isFetchingNextPage}>
+        <Button
+          variant="ghost"
+          className="self-start"
+          onClick={() => void feed.fetchNextPage()}
+          loading={feed.isFetchingNextPage}
+        >
           {t('more')}
         </Button>
       )}

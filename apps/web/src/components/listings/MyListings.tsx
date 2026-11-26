@@ -31,7 +31,13 @@ const rank = (l: { status: ListingStatus }) => {
  * `embedded`: inside the own profile's Items tab (owner, 2026-11-19: no separate dashboard), without the
  * page frame and title; the tab names it.
  */
-export function MyListings({ initialStatus, embedded = false }: { initialStatus: MyListingsFilter; embedded?: boolean }) {
+export function MyListings({
+  initialStatus,
+  embedded = false,
+}: {
+  initialStatus: MyListingsFilter;
+  embedded?: boolean;
+}) {
   const Wrapper = embedded ? 'div' : 'main';
   const t = useTranslations('myListings');
   const errorText = useErrorText();
@@ -50,10 +56,12 @@ export function MyListings({ initialStatus, embedded = false }: { initialStatus:
   }
 
   const items = [...(query.data ?? [])].sort((a, b) => rank(a) - rank(b));
-  const counts = ORDER.map((st) => [st, items.filter((l) => l.status === st).length] as const).filter(([, n]) => n > 0);
+  const counts = ORDER.map((st) => [st, items.filter((l) => l.status === st).length] as const).filter(
+    ([, n]) => n > 0,
+  );
 
   return (
-    <Wrapper className={embedded ? 'flex flex-col gap-8' : 'page flex flex-col gap-8 page-y'}>
+    <Wrapper className={embedded ? 'flex flex-col gap-8' : 'page page-y flex flex-col gap-8'}>
       {embedded ? (
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-ink/75 max-w-read leading-relaxed">{t('intro')}</p>
@@ -113,17 +121,15 @@ export function MyListings({ initialStatus, embedded = false }: { initialStatus:
           </Button>
         </div>
       ) : items.length === 0 ? (
-        (
-          <EmptyState
-            title={t('emptyTitle')}
-            body={t('emptyBody')}
-            action={
-              <Button href="/listings/new" size="lg">
-                {t('lend')}
-              </Button>
-            }
-          />
-        )
+        <EmptyState
+          title={t('emptyTitle')}
+          body={t('emptyBody')}
+          action={
+            <Button href="/listings/new" size="lg">
+              {t('lend')}
+            </Button>
+          }
+        />
       ) : (
         <>
           <p className="sr-only" role="status">
@@ -140,7 +146,7 @@ export function MyListings({ initialStatus, embedded = false }: { initialStatus:
       )}
 
       {/* Deleted items stay out of the way: asked for only when opened. */}
-      <section className="border-ink/15 flex flex-col gap-4 border-t pt-6">
+      <section className={`flex flex-col gap-4 ${embedded ? '' : 'border-ink/15 border-t pt-6'}`}>
         <button
           type="button"
           aria-expanded={showDeleted}

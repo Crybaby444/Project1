@@ -6,7 +6,18 @@ import { Button } from '@/components/ui/Button';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useLedgerOperations, useLedgerSummary } from '@/lib/admin/queries';
 import { useMoney } from '@/lib/deals/money';
-import { AdminPageHeader, AdminSelect, CountUp, Pager, Panel, StatCard, TABLE_CLASS, TD, TH } from './parts';
+import {
+  AdminEmpty,
+  AdminPageHeader,
+  AdminSelect,
+  CountUp,
+  Pager,
+  Panel,
+  StatCard,
+  TABLE_CLASS,
+  TD,
+  TH,
+} from './parts';
 
 /**
  * The platform's books: what it holds by kind of account, the audit of the whole journal (balances
@@ -21,7 +32,12 @@ export function AdminMoney({ kind, page }: { kind?: LedgerKind; page: number }) 
   const router = useRouter();
   const summary = useLedgerSummary();
   const ops = useLedgerOperations(kind, page);
-  const when = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  const when = new Intl.DateTimeFormat(locale, {
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 
   const go = (next: { kind?: LedgerKind; page?: number }) => {
     const merged = { kind, page: 1, ...next };
@@ -34,7 +50,12 @@ export function AdminMoney({ kind, page }: { kind?: LedgerKind; page: number }) 
 
   const pages = Math.max(1, Math.ceil((ops.data?.total ?? 0) / ADMIN_PAGE_SIZE));
   const audit = summary.data?.audit;
-  const auditOk = audit && audit.sumOfAll === 0 && audit.mismatched.length === 0 && audit.unbalancedOperations.length === 0 && audit.negative.length === 0;
+  const auditOk =
+    audit &&
+    audit.sumOfAll === 0 &&
+    audit.mismatched.length === 0 &&
+    audit.unbalancedOperations.length === 0 &&
+    audit.negative.length === 0;
 
   return (
     <div className="flex flex-col gap-8">
@@ -76,7 +97,12 @@ export function AdminMoney({ kind, page }: { kind?: LedgerKind; page: number }) 
                 <p className="font-bold">{tm('auditBad')}</p>
                 {(
                   [
-                    ['mismatched', audit!.mismatched.map((m) => `${m.account}: ${money(m.cached)} ≠ ${money(m.fromEntries)}`)],
+                    [
+                      'mismatched',
+                      audit!.mismatched.map(
+                        (m) => `${m.account}: ${money(m.cached)} ≠ ${money(m.fromEntries)}`,
+                      ),
+                    ],
                     ['unbalanced', audit!.unbalancedOperations],
                     ['negative', audit!.negative],
                   ] as const
@@ -105,7 +131,10 @@ export function AdminMoney({ kind, page }: { kind?: LedgerKind; page: number }) 
             label={tm('kindLabel')}
             value={kind ?? ''}
             onChange={(v) => go({ kind: (v || undefined) as LedgerKind | undefined })}
-            options={[{ value: '', label: tm('anyKind') }, ...LEDGER_KINDS.map((k) => ({ value: k, label: tm(`kind.${k}`) }))]}
+            options={[
+              { value: '', label: tm('anyKind') },
+              ...LEDGER_KINDS.map((k) => ({ value: k, label: tm(`kind.${k}`) })),
+            ]}
           />
         </div>
         {ops.isPending ? (
@@ -118,9 +147,14 @@ export function AdminMoney({ kind, page }: { kind?: LedgerKind; page: number }) 
             </Button>
           </div>
         ) : ops.data.items.length === 0 ? (
-          <p className="admin-glass border-ink/15 rounded-media border px-5 py-10 text-center">{t('common.empty')}</p>
+          <AdminEmpty title={t('common.empty')} />
         ) : (
-          <div className="admin-glass border-ink/15 rounded-media relative overflow-x-auto border" tabIndex={0} role="region" aria-label={tm('operations')}>
+          <div
+            className="admin-glass border-ink/15 rounded-media relative overflow-x-auto border"
+            tabIndex={0}
+            role="region"
+            aria-label={tm('operations')}
+          >
             <table className={TABLE_CLASS}>
               <thead>
                 <tr>
@@ -133,11 +167,16 @@ export function AdminMoney({ kind, page }: { kind?: LedgerKind; page: number }) 
               <tbody>
                 {ops.data.items.map((op) => (
                   <tr key={op.id} className="align-top">
-                    <td className={`${TD} whitespace-nowrap tabular-nums`}>{when.format(new Date(op.createdAt))}</td>
+                    <td className={`${TD} whitespace-nowrap tabular-nums`}>
+                      {when.format(new Date(op.createdAt))}
+                    </td>
                     <td className={`${TD} font-semibold`}>{tm(`kind.${op.kind}`)}</td>
                     <td className={TD}>
                       {op.bookingId ? (
-                        <Link href={`/admin/deals/${op.bookingId}`} className="font-mono text-sm underline decoration-1 underline-offset-2">
+                        <Link
+                          href={`/admin/deals/${op.bookingId}`}
+                          className="font-mono text-sm underline decoration-1 underline-offset-2"
+                        >
                           {op.bookingId.slice(-8)}
                         </Link>
                       ) : (

@@ -12,6 +12,9 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { ReviewsFeed } from '@/components/reviews/ReviewsFeed';
 import { ShopsGrid } from '@/components/shops/ShopCard';
 import { useFavorites } from '@/lib/catalog/use-favorites';
+import { useMyListings } from '@/lib/listings/queries';
+import { useFollowing } from '@/lib/people/queries';
+import { Button } from '@/components/ui/Button';
 import { useSession } from '@/lib/session/SessionProvider';
 
 const PUBLIC_TABS = ['items', 'shops', 'reviews'] as const;
@@ -25,10 +28,12 @@ type Tab = (typeof OWN_TABS)[number];
 const isTab = (value: string | null): value is Tab => (OWN_TABS as readonly string[]).includes(value ?? '');
 
 /**
- * A profile's two tabs (WAI-ARIA tabs, arrows move between them): the person's items in the catalog,
- * and their reviews, which arrive with plan 10 (until then a placeholder).
+ * A profile's tabs (WAI-ARIA tabs, arrows move between them), each with how many it holds. Anyone sees the
+ * person's items, shops and reviews; your own profile adds favourites and the people you follow, and its
+ * items tab manages every item you have. Every panel opens the same way: a line on what it is, its action
+ * on the right, then the list or a short empty state.
  */
-export function ProfileTabs({ listings, name, userId }: { listings: CatalogItem[]; name: string; userId: string }) {
+export function ProfileTabs({ listings, name, userId, reviewCount = 0 }: { listings: CatalogItem[]; name: string; userId: string; reviewCount?: number }) {
   const t = useTranslations('profile');
   const base = useId();
   const { user } = useSession();
@@ -57,6 +62,15 @@ export function ProfileTabs({ listings, name, userId }: { listings: CatalogItem[
     window.history.replaceState(window.history.state, '', url);
   }
   const favorites = useFavorites();
+  // How many each tab holds, beside its name (owner, 2026-11-26: the profile reads at a glance).
+  const mineAll = useMyListings(mine ? 'ALL' : null);
+  const followingList = useFollowing();
+  const counts: Partial<Record<Tab, number | undefined>> = {
+    items: mine ? mineAll.data?.length : listings.length,
+    favorites: mine ? favorites.data?.length : undefined,
+    following: mine ? followingList.data?.length : undefined,
+    reviews: reviewCount,
+  };
 
   function onKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
     if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft' && event.key !== 'Home' && event.key !== 'End') return;
@@ -89,7 +103,12 @@ export function ProfileTabs({ listings, name, userId }: { listings: CatalogItem[
               tab === key ? 'text-ink after:bg-ink after:absolute after:inset-x-3 after:-bottom-px after:h-[3px] after:rounded-full' : 'text-ink/65 hover:text-ink'
             }`}
           >
-            {key === 'items' ? (mine ? t('myItems') : t('items', { count: listings.length })) : key === 'following' ? t('following') : t(key)}
+            {key === 'items' ? (mine ? t('myItems') : t('itemsTab')) : key === 'following' ? t('following') : t(key)}
+            {counts[key] !== undefined && (
+              <span className={`rounded-pill ml-2 inline-flex min-w-6 items-center justify-center px-1.5 text-xs tabular-nums ${tab === key ? 'bg-ink text-canvas' : 'bg-ink/10 text-ink/70'}`}>
+                {counts[key]}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -113,8 +132,14 @@ export function ProfileTabs({ listings, name, userId }: { listings: CatalogItem[
       </div>
       {mine && (
         <div role="tabpanel" id={`${base}-favorites`} aria-labelledby={`${base}-favorites-tab`} hidden={tab !== 'favorites'}>
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-ink/75 max-w-read leading-relaxed">{t('favoritesIntro')}</p>
+            <Button href="/c" variant="ghost" size="md">
+              {t('browse')}
+            </Button>
+          </div>
           {(favorites.data ?? []).length === 0 ? (
-            <EmptyState headingLevel={3} title={t('noFavorites')} />
+            <EmptyState headingLevel={3} title={t('noFavoritesTitle')} body={t('noFavoritesBody')} />
           ) : (
             <ul className="grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-4 lg:grid-cols-4">
               {(favorites.data ?? []).map((item) => (
@@ -132,7 +157,7 @@ export function ProfileTabs({ listings, name, userId }: { listings: CatalogItem[
         </div>
       )}
       <div role="tabpanel" id={`${base}-reviews`} aria-labelledby={`${base}-reviews-tab`} hidden={tab !== 'reviews'}>
-        <ReviewsFeed source={{ kind: 'user', id: userId }} empty={<EmptyState headingLevel={3} title={t('noReviewsTitle')} body={t('noReviewsBody')} />} />
+        {tab === 'reviews' && <ReviewsFeed source={{ kind: 'user', id: userId }} empty={<EmptyState headingLevel={3} title={t('noReviewsTitle')} body={t('noReviewsBody')} />} />}
       </div>
     </div>
   );

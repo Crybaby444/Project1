@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Link } from '@/i18n/navigation';
 import { useAdminAudit } from '@/lib/admin/queries';
-import { AdminPageHeader, AdminSelect, Pager } from './parts';
+import { AdminEmpty, AdminPageHeader, AdminSelect, Pager } from './parts';
 
 /** Where an entry's object lives in the panel or on the site. */
 function targetHref(e: AuditEntry): string | null {
@@ -36,7 +36,12 @@ export function AdminAudit() {
   const [action, setAction] = useState<string>('');
   const [page, setPage] = useState(1);
   const log = useAdminAudit(action || undefined, page);
-  const when = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  const when = new Intl.DateTimeFormat(locale, {
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
   const pages = Math.max(1, Math.ceil((log.data?.total ?? 0) / ADMIN_AUDIT_PAGE_SIZE));
 
   return (
@@ -52,7 +57,10 @@ export function AdminAudit() {
             setAction(v);
             setPage(1);
           }}
-          options={[{ value: '', label: ta('all') }, ...AUDIT_ACTIONS.map((a) => ({ value: a, label: ta(`action.${a}`) }))]}
+          options={[
+            { value: '', label: ta('all') },
+            ...AUDIT_ACTIONS.map((a) => ({ value: a, label: ta(`action.${a}`) })),
+          ]}
         />
       </div>
       {log.isPending ? (
@@ -65,7 +73,7 @@ export function AdminAudit() {
           </Button>
         </div>
       ) : log.data.items.length === 0 ? (
-        <p className="admin-glass border-ink/15 rounded-media border px-5 py-10 text-center">{ta('empty')}</p>
+        <AdminEmpty title={ta('empty')} />
       ) : (
         <ol className="admin-glass border-ink/15 divide-ink/10 rounded-media divide-y border">
           {log.data.items.map((e) => {
@@ -95,8 +103,13 @@ export function AdminAudit() {
                       </summary>
                       <div className="mt-2 grid gap-2 sm:grid-cols-2">
                         {(['before', 'after'] as const).map((side) => (
-                          <pre key={side} className="bg-mist overflow-x-auto rounded-[12px] px-3 py-2 font-mono text-xs whitespace-pre-wrap">
-                            <span className="text-ink/60 block font-sans text-xs font-bold uppercase">{ta(side)}</span>
+                          <pre
+                            key={side}
+                            className="bg-mist overflow-x-auto rounded-[12px] px-3 py-2 font-mono text-xs whitespace-pre-wrap"
+                          >
+                            <span className="text-ink/60 block font-sans text-xs font-bold uppercase">
+                              {ta(side)}
+                            </span>
                             {e[side] == null ? '—' : JSON.stringify(e[side], null, 2)}
                           </pre>
                         ))}

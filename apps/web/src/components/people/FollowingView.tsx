@@ -9,7 +9,7 @@ import { Link } from '@/i18n/navigation';
 import { useFollowFeed, useFollowing } from '@/lib/people/queries';
 import { PersonCard } from './PersonCard';
 
-/** Dashboard → Following: new items from the people you follow, and the people themselves. */
+/** Profile → Following: the people you follow, then what they listed lately. Small section labels, like every profile panel. */
 export function FollowingView({ embedded = false }: { embedded?: boolean }) {
   const t = useTranslations('people');
   const [page, setPage] = useState(1);
@@ -18,17 +18,27 @@ export function FollowingView({ embedded = false }: { embedded?: boolean }) {
   const pages = Math.max(1, Math.ceil((feed.data?.total ?? 0) / 24));
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-8">
       <header className="flex flex-col gap-2">
         {!embedded && <h1 className="font-display text-display-l leading-[0.9] font-black uppercase">{t('feedTitle')}</h1>}
-        <p className="text-ink/75">{t('feedIntro')}</p>
+        <p className="text-ink/75 max-w-read leading-relaxed">{t('feedIntro')}</p>
       </header>
       {people.data && people.data.length === 0 ? (
-        <EmptyState headingLevel={2} title={t('nobody')} body={t('nobodyHint')} action={<Button href="/c">{t('browse')}</Button>} />
+        <EmptyState headingLevel={3} title={t('nobody')} body={t('nobodyHint')} action={<Button href="/c">{t('browse')}</Button>} />
       ) : (
         <>
+          <section aria-labelledby="feed-people" className="flex flex-col gap-4">
+            <h2 id="feed-people" className="text-ink/70 text-sm font-bold tracking-[0.04em] uppercase">
+              {t('youFollow', { count: people.data?.length ?? 0 })}
+            </h2>
+            <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {people.data?.map((p) => (
+                <PersonCard key={p.id} person={p} />
+              ))}
+            </ul>
+          </section>
           <section aria-labelledby="feed-items" className="flex flex-col gap-4">
-            <h2 id="feed-items" className="font-display text-4xl leading-none font-black uppercase">
+            <h2 id="feed-items" className="text-ink/70 text-sm font-bold tracking-[0.04em] uppercase">
               {t('newItems')}
             </h2>
             {feed.data && feed.data.items.length === 0 && <p className="text-ink/75">{t('noNewItems')}</p>}
@@ -52,16 +62,6 @@ export function FollowingView({ embedded = false }: { embedded?: boolean }) {
                 </Button>
               </div>
             )}
-          </section>
-          <section aria-labelledby="feed-people" className="flex flex-col gap-4">
-            <h2 id="feed-people" className="font-display text-4xl leading-none font-black uppercase">
-              {t('youFollow', { count: people.data?.length ?? 0 })}
-            </h2>
-            <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {people.data?.map((p) => (
-                <PersonCard key={p.id} person={p} />
-              ))}
-            </ul>
           </section>
         </>
       )}

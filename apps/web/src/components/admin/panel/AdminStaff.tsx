@@ -33,23 +33,24 @@ export function StaffRoleSelect({
       className="min-w-44"
       value={value ?? ''}
       disabled={change.isPending}
-      options={[{ value: '', label: ts('none') }, ...STAFF_ROLES.map((r) => ({ value: r, label: ts(`roles.${r}`) }))]}
+      options={[
+        { value: '', label: ts('none') },
+        ...STAFF_ROLES.map((r) => ({ value: r, label: ts(`roles.${r}`) })),
+      ]}
       onChange={(v) =>
-          change.mutate(
-            { id, staffRole: (v || null) as StaffRole | null },
-            {
-              onSuccess: () => toast.show(ts('changed')),
-              onError: (err) => {
-                const why = err instanceof ApiError ? (err.details?.why as string | undefined) : undefined;
-                toast.show(
-                  why === 'SELF' || why === 'LAST_OWNER' || why === 'BLOCKED'
-                    ? ts(`why.${why}`)
-                    : ts('failed'),
-                );
-              },
+        change.mutate(
+          { id, staffRole: (v || null) as StaffRole | null },
+          {
+            onSuccess: () => toast.show(ts('changed')),
+            onError: (err) => {
+              const why = err instanceof ApiError ? (err.details?.why as string | undefined) : undefined;
+              toast.show(
+                why === 'SELF' || why === 'LAST_OWNER' || why === 'BLOCKED' ? ts(`why.${why}`) : ts('failed'),
+              );
             },
-          )
-        }
+          },
+        )
+      }
     />
   );
 }
@@ -111,7 +112,12 @@ export function AdminStaff() {
                   {m.twoFactor && !me && (
                     <button
                       type="button"
-                      onClick={() => reset.mutate(m.id, { onSuccess: () => toast.show(ts('resetDone')), onError: () => toast.show(ts('failed')) })}
+                      onClick={() =>
+                        reset.mutate(m.id, {
+                          onSuccess: () => toast.show(ts('resetDone')),
+                          onError: () => toast.show(ts('failed')),
+                        })
+                      }
                       disabled={reset.isPending}
                       className="ml-2 font-bold underline decoration-1 underline-offset-4"
                     >

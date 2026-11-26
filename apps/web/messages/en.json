@@ -1077,7 +1077,6 @@
     "noFollowers": "Nobody follows {name} yet.",
     "noFollowing": "{name} follows nobody yet.",
     "favorites": "Favourites",
-    "noFavorites": "Nothing saved yet. Press the heart on an item to keep it here.",
     "deals": "{count, plural, one {deal} other {deals}}",
     "findPeople": "Find people",
     "hero": {
@@ -1094,7 +1093,13 @@
       "wallet": "Wallet",
       "messages": "Messages",
       "notifications": "Notifications"
-    }
+    },
+    "addAbout": "Add a few words about yourself",
+    "itemsTab": "Items",
+    "favoritesIntro": "Things you saved with the heart. One that left the catalog stays here, marked.",
+    "noFavoritesTitle": "Nothing saved yet",
+    "noFavoritesBody": "Press the heart on an item to keep it here.",
+    "browse": "Open the catalog"
   },
   "consent": {
     "label": "Cookie choice",

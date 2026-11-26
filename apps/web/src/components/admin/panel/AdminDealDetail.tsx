@@ -56,7 +56,9 @@ function Body({ data }: { data: AdminBookingDetail }) {
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex min-w-0 flex-col gap-2">
           <DealStatusBadge status={b.status} className="self-start" />
-          <h1 className="font-display text-display-m leading-[0.92] font-black uppercase [overflow-wrap:anywhere]">{b.listing.title}</h1>
+          <h1 className="font-display text-display-m leading-[0.92] font-black [overflow-wrap:anywhere] uppercase">
+            {b.listing.title}
+          </h1>
           <p className="text-ink/70 text-sm tabular-nums">
             {formatPeriod(b.period.start, b.period.end, locale)} · {b.id}
           </p>
@@ -91,7 +93,9 @@ function Body({ data }: { data: AdminBookingDetail }) {
               {b.dispute.resolution ? (
                 <p className="bg-mist rounded-media p-4 font-semibold">
                   {t('resolved', { decision: t(`decision.${b.dispute.resolution.decision}`) })}
-                  <span className="text-ink/75 mt-1 block font-normal whitespace-pre-wrap">{b.dispute.resolution.comment}</span>
+                  <span className="text-ink/75 mt-1 block font-normal whitespace-pre-wrap">
+                    {b.dispute.resolution.comment}
+                  </span>
                 </p>
               ) : (
                 b.status === 'DISPUTED' && <ResolveForm id={b.id} version={b.version} />
@@ -102,7 +106,10 @@ function Body({ data }: { data: AdminBookingDetail }) {
           <Panel title={t('journal')}>
             <ol className="flex flex-col">
               {data.events.map((e) => (
-                <li key={e.id} className="border-ink/10 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 border-b py-2.5 last:border-b-0">
+                <li
+                  key={e.id}
+                  className="border-ink/10 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 border-b py-2.5 last:border-b-0"
+                >
                   <time dateTime={e.createdAt} className="text-ink/70 text-sm whitespace-nowrap tabular-nums">
                     {moment(e.createdAt)}
                   </time>
@@ -197,7 +204,12 @@ function Body({ data }: { data: AdminBookingDetail }) {
                     </span>
                     <span className="tabular-nums">
                       {money(p.amountCents)}
-                      {p.refundedCents > 0 && <span className="text-ink/70"> · {t('refunded', { amount: money(p.refundedCents) })}</span>}
+                      {p.refundedCents > 0 && (
+                        <span className="text-ink/70">
+                          {' '}
+                          · {t('refunded', { amount: money(p.refundedCents) })}
+                        </span>
+                      )}
                     </span>
                   </li>
                 ))}
@@ -212,7 +224,13 @@ function Body({ data }: { data: AdminBookingDetail }) {
                   <li key={p.id}>
                     <a href={p.urls.full} target="_blank" rel="noreferrer" className="block">
                       {/* eslint-disable-next-line @next/next/no-img-element -- deal photos from the photo store */}
-                      <img src={p.urls.thumb} alt={p.kind} width={p.width} height={p.height} className="bg-mist aspect-square w-full rounded-[12px] object-cover" />
+                      <img
+                        src={p.urls.thumb}
+                        alt={p.kind}
+                        width={p.width}
+                        height={p.height}
+                        className="bg-mist aspect-square w-full rounded-[12px] object-cover"
+                      />
                     </a>
                   </li>
                 ))}
@@ -253,7 +271,11 @@ function ResolveForm({ id, version }: { id: string; version: number }) {
   }
 
   return (
-    <form aria-labelledby={titleId} onSubmit={submit} className="border-ink/15 flex flex-col gap-4 border-t pt-5">
+    <form
+      aria-labelledby={titleId}
+      onSubmit={submit}
+      className="border-ink/15 flex flex-col gap-4 border-t pt-5"
+    >
       <h3 id={titleId} className="font-display text-3xl leading-none font-black uppercase">
         {t('resolve.title')}
       </h3>
@@ -264,7 +286,14 @@ function ResolveForm({ id, version }: { id: string; version: number }) {
             key={d}
             className={`rounded-media flex min-h-11 cursor-pointer items-center gap-3 border px-4 py-2.5 text-base ${decision === d ? 'border-ink bg-ink/[0.04] font-semibold' : 'border-ink/20'}`}
           >
-            <input type="radio" name="decision" value={d} checked={decision === d} onChange={() => setDecision(d)} className="accent-[var(--ink)] size-4" />
+            <input
+              type="radio"
+              name="decision"
+              value={d}
+              checked={decision === d}
+              onChange={() => setDecision(d)}
+              className="size-4 accent-[var(--ink)]"
+            />
             {t(`decision.${d}`)}
           </label>
         ))}
@@ -292,7 +321,11 @@ function ResolveForm({ id, version }: { id: string; version: number }) {
         </p>
       )}
       {confirming ? (
-        <div role="alertdialog" aria-labelledby={`${titleId}-confirm`} className="border-ink bg-surface rounded-media flex flex-col gap-3 border-2 p-4">
+        <div
+          role="alertdialog"
+          aria-labelledby={`${titleId}-confirm`}
+          className="border-ink bg-surface rounded-media flex flex-col gap-3 border-2 p-4"
+        >
           <p id={`${titleId}-confirm`} className="font-semibold">
             {t('resolve.confirm')}
           </p>
@@ -300,7 +333,12 @@ function ResolveForm({ id, version }: { id: string; version: number }) {
             <Button type="submit" loading={resolve.isPending}>
               {t('resolve.submit')}
             </Button>
-            <Button type="button" variant="ghost" onClick={() => setConfirming(false)} disabled={resolve.isPending}>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setConfirming(false)}
+              disabled={resolve.isPending}
+            >
               {t('resolve.cancel')}
             </Button>
           </div>

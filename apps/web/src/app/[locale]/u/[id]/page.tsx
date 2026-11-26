@@ -34,21 +34,12 @@ export default async function ProfilePage({ params }: Props) {
     if (loaded.status === 404) notFound();
     throw new Error(`The profile could not be loaded (${loaded.status})`);
   }
-  const t = await getTranslations('profile');
   const { user, listings } = loaded.data;
 
   return (
     <main className="page flex flex-col gap-10 py-8 sm:py-10">
       <ProfileHero user={user} />
-      {user.about && (
-        <section aria-labelledby="profile-about" className="grid gap-3 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-10">
-          <h2 id="profile-about" className="font-display text-display-s leading-[0.95] font-black uppercase">
-            {t('about')}
-          </h2>
-          <p className="max-w-read text-lg leading-relaxed whitespace-pre-line [overflow-wrap:anywhere]">{user.about}</p>
-        </section>
-      )}
-      <ProfileTabs listings={listings} name={user.name} userId={user.id} />
+      <ProfileTabs listings={listings} name={user.name} userId={user.id} reviewCount={user.reviewCount} />
       <ReportButton target="USER" id={user.id} ownerId={user.id} className="self-start" />
     </main>
   );

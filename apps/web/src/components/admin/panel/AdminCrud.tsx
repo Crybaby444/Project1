@@ -15,7 +15,23 @@ import { AdminSelect } from './parts';
 type Lang = 'en' | 'lv' | 'ru';
 const LANGS: Lang[] = ['lv', 'en', 'ru'];
 
-function TextField({ label, value, onChange, type = 'text', hint, required = false, multiline = false }: { label: string; value: string; onChange(v: string): void; type?: string; hint?: string; required?: boolean; multiline?: boolean }) {
+function TextField({
+  label,
+  value,
+  onChange,
+  type = 'text',
+  hint,
+  required = false,
+  multiline = false,
+}: {
+  label: string;
+  value: string;
+  onChange(v: string): void;
+  type?: string;
+  hint?: string;
+  required?: boolean;
+  multiline?: boolean;
+}) {
   const id = useId();
   return (
     <div className="flex flex-col gap-1.5">
@@ -23,9 +39,23 @@ function TextField({ label, value, onChange, type = 'text', hint, required = fal
         {label}
       </label>
       {multiline ? (
-        <textarea id={id} value={value} onChange={(e) => onChange(e.target.value)} rows={3} maxLength={500} className={`${INPUT_CLASS} min-h-24 rounded-[22px] py-2.5`} />
+        <textarea
+          id={id}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          rows={3}
+          maxLength={500}
+          className={`${INPUT_CLASS} min-h-24 rounded-[22px] py-2.5`}
+        />
       ) : (
-        <input id={id} type={type} value={value} required={required} onChange={(e) => onChange(e.target.value)} className={INPUT_CLASS} />
+        <input
+          id={id}
+          type={type}
+          value={value}
+          required={required}
+          onChange={(e) => onChange(e.target.value)}
+          className={INPUT_CLASS}
+        />
       )}
       {hint && <span className="text-ink/65 text-xs">{hint}</span>}
     </div>
@@ -39,14 +69,42 @@ function useWhy() {
     if (error instanceof ApiError) {
       if (error.code === 'AUTH_EMAIL_TAKEN') return t('emailTaken');
       const why = error.details?.why;
-      if (typeof why === 'string' && ['SELF', 'STAFF', 'OPEN_DEALS', 'WALLET_NOT_EMPTY', 'HAS_CHILDREN', 'HAS_LISTINGS', 'TOO_DEEP'].includes(why)) return t(`why.${why}`);
+      if (
+        typeof why === 'string' &&
+        [
+          'SELF',
+          'STAFF',
+          'OPEN_DEALS',
+          'WALLET_NOT_EMPTY',
+          'HAS_CHILDREN',
+          'HAS_LISTINGS',
+          'TOO_DEEP',
+        ].includes(why)
+      )
+        return t(`why.${why}`);
       if (error.code === 'VALIDATION_FAILED') return t('invalid');
     }
     return t('failed');
   };
 }
 
-function Form({ children, onSubmit, error, busy, submit, onCancel, danger = false }: { children: ReactNode; onSubmit(): void; error: string | null; busy: boolean; submit: string; onCancel(): void; danger?: boolean }) {
+function Form({
+  children,
+  onSubmit,
+  error,
+  busy,
+  submit,
+  onCancel,
+  danger = false,
+}: {
+  children: ReactNode;
+  onSubmit(): void;
+  error: string | null;
+  busy: boolean;
+  submit: string;
+  onCancel(): void;
+  danger?: boolean;
+}) {
   const t = useTranslations('admin.crud');
   return (
     <form
@@ -66,7 +124,11 @@ function Form({ children, onSubmit, error, busy, submit, onCancel, danger = fals
         <Button type="button" variant="ghost" onClick={onCancel} disabled={busy}>
           {t('cancel')}
         </Button>
-        <Button type="submit" loading={busy} className={danger ? 'bg-[var(--danger)] border-[var(--danger)]' : undefined}>
+        <Button
+          type="submit"
+          loading={busy}
+          className={danger ? 'border-[var(--danger)] bg-[var(--danger)]' : undefined}
+        >
           {submit}
         </Button>
       </div>
@@ -99,9 +161,15 @@ export function AddPersonButton() {
           submit={t('add')}
           onCancel={close}
           onSubmit={() => {
-            if (!v.name.trim() || !v.email.trim() || (v.password && v.password.length < 8)) return setError(t('invalid'));
+            if (!v.name.trim() || !v.email.trim() || (v.password && v.password.length < 8))
+              return setError(t('invalid'));
             crud.addPerson.mutate(
-              { name: v.name.trim(), email: v.email.trim(), locale: v.locale, ...(v.password ? { password: v.password } : {}) },
+              {
+                name: v.name.trim(),
+                email: v.email.trim(),
+                locale: v.locale,
+                ...(v.password ? { password: v.password } : {}),
+              },
               {
                 onSuccess: (r) => {
                   toast.show(r.passwordLinkSent ? t('addedLink') : t('added'));
@@ -114,9 +182,26 @@ export function AddPersonButton() {
           }}
         >
           <TextField label={t('name')} value={v.name} onChange={(name) => setV({ ...v, name })} required />
-          <TextField label={t('email')} type="email" value={v.email} onChange={(email) => setV({ ...v, email })} required />
-          <TextField label={t('password')} type="password" value={v.password} onChange={(password) => setV({ ...v, password })} hint={t('passwordHint')} />
-          <AdminSelect label={t('language')} value={v.locale} onChange={(locale) => setV({ ...v, locale: locale as Lang })} options={LANGS.map((l) => ({ value: l, label: l.toUpperCase() }))} />
+          <TextField
+            label={t('email')}
+            type="email"
+            value={v.email}
+            onChange={(email) => setV({ ...v, email })}
+            required
+          />
+          <TextField
+            label={t('password')}
+            type="password"
+            value={v.password}
+            onChange={(password) => setV({ ...v, password })}
+            hint={t('passwordHint')}
+          />
+          <AdminSelect
+            label={t('language')}
+            value={v.locale}
+            onChange={(locale) => setV({ ...v, locale: locale as Lang })}
+            options={LANGS.map((l) => ({ value: l, label: l.toUpperCase() }))}
+          />
         </Form>
       </Dialog>
     </>
@@ -157,7 +242,13 @@ export function EditPersonButton({ user }: { user: AdminUserDetail['user'] }) {
           onSubmit={() => {
             if (!v.name.trim() || !v.email.trim()) return setError(t('invalid'));
             crud.editPerson.mutate(
-              { id: user.id, name: v.name.trim(), email: v.email.trim(), city: v.city.trim() || null, about: v.about.trim() || null },
+              {
+                id: user.id,
+                name: v.name.trim(),
+                email: v.email.trim(),
+                city: v.city.trim() || null,
+                about: v.about.trim() || null,
+              },
               {
                 onSuccess: () => {
                   toast.show(t('saved'));
@@ -169,9 +260,20 @@ export function EditPersonButton({ user }: { user: AdminUserDetail['user'] }) {
           }}
         >
           <TextField label={t('name')} value={v.name} onChange={(name) => setV({ ...v, name })} required />
-          <TextField label={t('email')} type="email" value={v.email} onChange={(email) => setV({ ...v, email })} required />
+          <TextField
+            label={t('email')}
+            type="email"
+            value={v.email}
+            onChange={(email) => setV({ ...v, email })}
+            required
+          />
           <TextField label={t('city')} value={v.city} onChange={(city) => setV({ ...v, city })} />
-          <TextField label={t('about')} value={v.about} onChange={(about) => setV({ ...v, about })} multiline />
+          <TextField
+            label={t('about')}
+            value={v.about}
+            onChange={(about) => setV({ ...v, about })}
+            multiline
+          />
         </Form>
       </Dialog>
     </>
@@ -235,7 +337,11 @@ export function AddCategoryButton({ parent }: { parent?: Pick<AdminCategory, 'id
   return (
     <>
       {parent ? (
-        <button type="button" onClick={() => setOpen(true)} className="border-ink/25 hover:border-ink rounded-pill min-h-9 border px-3 text-xs font-bold uppercase">
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="border-ink/25 hover:border-ink rounded-pill min-h-9 border px-3 text-xs font-bold uppercase"
+        >
           {t('addSubShort')}
         </button>
       ) : (
@@ -250,7 +356,10 @@ export function AddCategoryButton({ parent }: { parent?: Pick<AdminCategory, 'id
           onSubmit={() => {
             if (LANGS.some((l) => !names[l].trim())) return setError(t('allNames'));
             crud.addCategory.mutate(
-              { names: { en: names.en.trim(), lv: names.lv.trim(), ru: names.ru.trim() }, parentId: parent?.id ?? null },
+              {
+                names: { en: names.en.trim(), lv: names.lv.trim(), ru: names.ru.trim() },
+                parentId: parent?.id ?? null,
+              },
               {
                 onSuccess: () => {
                   toast.show(t('added'));
@@ -262,7 +371,13 @@ export function AddCategoryButton({ parent }: { parent?: Pick<AdminCategory, 'id
           }}
         >
           {LANGS.map((l) => (
-            <TextField key={l} label={l.toUpperCase()} value={names[l]} onChange={(x) => setNames({ ...names, [l]: x })} required />
+            <TextField
+              key={l}
+              label={l.toUpperCase()}
+              value={names[l]}
+              onChange={(x) => setNames({ ...names, [l]: x })}
+              required
+            />
           ))}
           <p className="text-ink/70 text-sm">{t('categoryHint')}</p>
         </Form>
@@ -272,7 +387,13 @@ export function AddCategoryButton({ parent }: { parent?: Pick<AdminCategory, 'id
 }
 
 /** Admin → Categories: delete one; its listings move to the subcategory the admin picks. */
-export function DeleteCategoryButton({ category, targets }: { category: Pick<AdminCategory, 'id' | 'names' | 'allListings'>; targets: { id: string; label: string }[] }) {
+export function DeleteCategoryButton({
+  category,
+  targets,
+}: {
+  category: Pick<AdminCategory, 'id' | 'names' | 'allListings'>;
+  targets: { id: string; label: string }[];
+}) {
   const t = useTranslations('admin.crud');
   const locale = useLocale() as Lang;
   const crud = useAdminCrud();
@@ -284,10 +405,18 @@ export function DeleteCategoryButton({ category, targets }: { category: Pick<Adm
   const options = targets.filter((x) => x.id !== category.id);
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} className="border-ink/25 hover:border-ink rounded-pill min-h-9 border px-3 text-xs font-bold uppercase">
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="border-ink/25 hover:border-ink rounded-pill min-h-9 border px-3 text-xs font-bold uppercase"
+      >
         {t('delete')}
       </button>
-      <Dialog open={open} onClose={() => setOpen(false)} title={t('deleteCategory', { name: category.names[locale] })}>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        title={t('deleteCategory', { name: category.names[locale] })}
+      >
         <Form
           danger
           busy={crud.deleteCategory.isPending}
@@ -308,9 +437,22 @@ export function DeleteCategoryButton({ category, targets }: { category: Pick<Adm
             );
           }}
         >
-          <p>{category.allListings > 0 ? t('deleteCategoryMove', { count: category.allListings }) : t('deleteCategoryEmpty')}</p>
+          <p>
+            {category.allListings > 0
+              ? t('deleteCategoryMove', { count: category.allListings })
+              : t('deleteCategoryEmpty')}
+          </p>
           {category.allListings > 0 && (
-            <AdminSelect label={t('moveTo')} value={moveTo} onChange={setMoveTo} className="min-w-64" options={[{ value: '', label: t('choose') }, ...options.map((o) => ({ value: o.id, label: o.label }))]} />
+            <AdminSelect
+              label={t('moveTo')}
+              value={moveTo}
+              onChange={setMoveTo}
+              className="min-w-64"
+              options={[
+                { value: '', label: t('choose') },
+                ...options.map((o) => ({ value: o.id, label: o.label })),
+              ]}
+            />
           )}
         </Form>
       </Dialog>

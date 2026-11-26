@@ -60,7 +60,12 @@ export function MoveCategoryDialog({
             aria-invalid={missing || undefined}
             aria-describedby={missing ? errorId : undefined}
             options={roots.flatMap((root) =>
-              root.children.map((leaf) => ({ value: leaf.id, label: leaf.names[locale], group: root.names[locale], disabled: leaf.id === currentId })),
+              root.children.map((leaf) => ({
+                value: leaf.id,
+                label: leaf.names[locale],
+                group: root.names[locale],
+                disabled: leaf.id === currentId,
+              })),
             )}
           />
           {missing && (

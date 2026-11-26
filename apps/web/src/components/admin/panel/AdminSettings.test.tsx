@@ -13,7 +13,12 @@ vi.mock('@/i18n/navigation', async (importOriginal) => ({
 }));
 
 const s = en.admin.settings;
-const item = (key: string, value: number | string, def = value) => ({ key, value, default: def, changed: value !== def });
+const item = (key: string, value: number | string, def = value) => ({
+  key,
+  value,
+  default: def,
+  changed: value !== def,
+});
 
 function renderSettings() {
   const api = fakeApi({

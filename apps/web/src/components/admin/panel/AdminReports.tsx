@@ -8,7 +8,7 @@ import { TEXTAREA_CLASS } from '@/components/ui/inputs';
 import { useToast } from '@/components/ui/Toast';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useAdminReports, useCloseReport } from '@/lib/admin/queries';
-import { AdminPageHeader, Pager } from './parts';
+import { AdminEmpty, AdminPageHeader, Pager } from './parts';
 
 const STATUSES: ReportStatus[] = ['OPEN', 'RESOLVED', 'DISMISSED'];
 
@@ -33,8 +33,11 @@ export function AdminReports({ status, page }: { status: ReportStatus; page: num
 
   return (
     <div className="flex flex-col gap-6">
-      <AdminPageHeader title={t('reports.title')} note={reports.data ? t('common.total', { count: reports.data.total }) : undefined} />
-      <nav aria-label={t('reports.title')} className="border-ink/15 rounded-pill inline-flex self-start border p-1">
+      <AdminPageHeader title={t('reports.title')} count={reports.data ? reports.data.total : undefined} />
+      <nav
+        aria-label={t('reports.title')}
+        className="border-ink/15 rounded-pill inline-flex self-start border p-1"
+      >
         {STATUSES.map((s) => (
           <button
             key={s}
@@ -57,7 +60,7 @@ export function AdminReports({ status, page }: { status: ReportStatus; page: num
           </Button>
         </div>
       ) : reports.data.items.length === 0 ? (
-        <p className="admin-glass border-ink/15 rounded-media border px-5 py-10 text-center">{t('reports.empty')}</p>
+        <AdminEmpty title={t('reports.empty')} />
       ) : (
         <ul className="flex flex-col gap-3">
           {reports.data.items.map((r) => (
@@ -79,11 +82,19 @@ function ReportCard({ report: r }: { report: AdminReport }) {
   const toast = useToast();
   const close = useCloseReport();
   const [resolution, setResolution] = useState('');
-  const when = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(r.createdAt));
-  const subjectHref = r.target === 'LISTING' ? `/listings/${r.subject.id}` : r.subject.userId ? `/u/${r.subject.userId}` : null;
+  const when = new Intl.DateTimeFormat(locale, {
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(r.createdAt));
+  const subjectHref =
+    r.target === 'LISTING' ? `/listings/${r.subject.id}` : r.subject.userId ? `/u/${r.subject.userId}` : null;
 
   return (
-    <article className={`rounded-media flex flex-col gap-3 border p-5 ${r.status === 'OPEN' ? 'border-ink' : 'border-ink/15'}`}>
+    <article
+      className={`rounded-media flex flex-col gap-3 border p-5 ${r.status === 'OPEN' ? 'border-ink' : 'border-ink/15'}`}
+    >
       <div className="flex flex-wrap items-center gap-2 text-sm font-bold">
         <span className="bg-ink text-canvas rounded-pill px-2.5 py-0.5">{tr(r.reason)}</span>
         <span className="border-ink/25 rounded-pill border px-2.5 py-0.5">{t(`target.${r.target}`)}</span>
@@ -91,7 +102,9 @@ function ReportCard({ report: r }: { report: AdminReport }) {
           {t('from', { name: r.reporter.name })} · {when}
         </span>
       </div>
-      <p className={`text-lg leading-snug font-semibold [overflow-wrap:anywhere] ${r.target === 'MESSAGE' ? 'border-ink/20 border-l-2 pl-3 font-normal italic' : ''}`}>
+      <p
+        className={`text-lg leading-snug font-semibold [overflow-wrap:anywhere] ${r.target === 'MESSAGE' ? 'border-ink/20 border-l-2 pl-3 font-normal italic' : ''}`}
+      >
         {subjectHref && r.target !== 'MESSAGE' ? (
           <Link href={subjectHref} className="underline decoration-1 underline-offset-4">
             {r.subject.label}
@@ -100,9 +113,12 @@ function ReportCard({ report: r }: { report: AdminReport }) {
           r.subject.label
         )}
       </p>
-      {r.note && <p className="text-ink/80 whitespace-pre-wrap [overflow-wrap:anywhere]">{r.note}</p>}
+      {r.note && <p className="text-ink/80 [overflow-wrap:anywhere] whitespace-pre-wrap">{r.note}</p>}
       {r.subject.userId && (
-        <Link href={`/u/${r.subject.userId}`} className="text-sm font-bold underline decoration-1 underline-offset-4 self-start">
+        <Link
+          href={`/u/${r.subject.userId}`}
+          className="self-start text-sm font-bold underline decoration-1 underline-offset-4"
+        >
           {t('viewUser')}
         </Link>
       )}
@@ -110,7 +126,12 @@ function ReportCard({ report: r }: { report: AdminReport }) {
         <div className="border-ink/15 flex flex-col gap-3 border-t pt-4">
           <label className="flex flex-col gap-2">
             <span className="text-sm font-semibold">{t('resolution')}</span>
-            <textarea value={resolution} onChange={(e) => setResolution(e.target.value)} maxLength={1000} className={`${TEXTAREA_CLASS} min-h-20`} />
+            <textarea
+              value={resolution}
+              onChange={(e) => setResolution(e.target.value)}
+              maxLength={1000}
+              className={`${TEXTAREA_CLASS} min-h-20`}
+            />
           </label>
           <div className="flex flex-wrap gap-2">
             {(['RESOLVED', 'DISMISSED'] as const).map((status) => (

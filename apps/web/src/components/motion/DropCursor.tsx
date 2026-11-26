@@ -15,6 +15,11 @@ function subscribeFine(onChange: () => void): () => void {
 const subscribeNone = () => () => {};
 const CLICKABLE =
   'a[href], button:not([disabled]), [role="button"], [role="combobox"], [role="option"]:not([aria-disabled="true"]), [role="tab"], summary, label[for]';
+/**
+ * A choice (a tab, a pressed or checked option, a radio): pouring ink into it looks exactly like choosing it
+ * (owner, 2026-11-26: "the wrong one is highlighted"), so over these the drop stays a drop.
+ */
+const CHOICE = '[role="tab"], [role="radio"], [role="option"], [aria-pressed], [aria-checked], [aria-selected]';
 
 const VERT = 'attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }';
 // One signed-distance field: the stretched drop melted (smooth-min) into its tapering tail, morphing into the
@@ -126,7 +131,8 @@ export function DropCursor() {
     const pick = (node: EventTarget | null) => {
       const e = node instanceof Element ? node : null;
       typing = stepsAside(e);
-      const hit = typing ? null : (e?.closest(CLICKABLE) ?? null);
+      const found = typing ? null : (e?.closest(CLICKABLE) ?? null);
+      const hit = found?.matches(CHOICE) ? null : found;
       // A map marker's own box sits at its anchor, under the price pin it draws: pour into the pin itself
       // (owner, 2026-11-16: a dark box showed under the price on the map).
       const next = hit?.classList.contains('leaflet-marker-icon') ? (hit.querySelector<HTMLElement>('.yoyo-map-pin') ?? hit) : hit;

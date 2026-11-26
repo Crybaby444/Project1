@@ -13,8 +13,13 @@ import { AdminPageHeader, Panel } from './parts';
 /** A green-or-not light: a filled dot when fine, a ring with words when not. */
 function Light({ ok, label }: { ok: boolean; label: string }) {
   return (
-    <span className={`rounded-pill inline-flex items-center gap-2 self-start px-3 py-1 text-sm font-bold ${ok ? 'border-ink/20 border' : 'bg-ink text-canvas'}`}>
-      <span aria-hidden="true" className={`inline-block size-2 rounded-full ${ok ? 'bg-ink' : 'bg-[var(--danger)]'}`} />
+    <span
+      className={`rounded-pill inline-flex items-center gap-2 self-start px-3 py-1 text-sm font-bold ${ok ? 'border-ink/20 border' : 'bg-ink text-canvas'}`}
+    >
+      <span
+        aria-hidden="true"
+        className={`inline-block size-2 rounded-full ${ok ? 'bg-ink' : 'bg-[var(--danger)]'}`}
+      />
       {label}
     </span>
   );
@@ -57,13 +62,23 @@ export function AdminSystem() {
                 <span className="text-ink/50"> / {system.data.mail.limit}</span>
               </p>
               <div className="bg-ink/10 h-2 overflow-hidden rounded-full" role="presentation">
-                <div className="bg-ink h-full rounded-full" style={{ width: `${Math.min(100, (system.data.mail.sent / Math.max(1, system.data.mail.limit)) * 100)}%` }} />
+                <div
+                  className="bg-ink h-full rounded-full"
+                  style={{
+                    width: `${Math.min(100, (system.data.mail.sent / Math.max(1, system.data.mail.limit)) * 100)}%`,
+                  }}
+                />
               </div>
               <p className="text-ink/75 text-sm">{ts('mailHint')}</p>
             </Panel>
             <Panel title={ts('timers')}>
-              <p className="font-display text-5xl leading-none font-black tabular-nums">{system.data.overdueTimers}</p>
-              <Light ok={system.data.overdueTimers === 0} label={system.data.overdueTimers === 0 ? ts('timersOk') : ts('timersBad')} />
+              <p className="font-display text-5xl leading-none font-black tabular-nums">
+                {system.data.overdueTimers}
+              </p>
+              <Light
+                ok={system.data.overdueTimers === 0}
+                label={system.data.overdueTimers === 0 ? ts('timersOk') : ts('timersBad')}
+              />
             </Panel>
           </div>
 
@@ -90,7 +105,9 @@ export function AdminSystem() {
                 {(['users', 'listings', 'bookings', 'messages', 'reviews'] as const).map((key) => (
                   <div key={key}>
                     <dt className="text-ink/70 text-sm font-semibold">{ts(`counts.${key}`)}</dt>
-                    <dd className="font-display text-4xl leading-none font-black tabular-nums">{nf.format(system.data.counts[key])}</dd>
+                    <dd className="font-display text-4xl leading-none font-black tabular-nums">
+                      {nf.format(system.data.counts[key])}
+                    </dd>
                   </div>
                 ))}
               </dl>
@@ -110,7 +127,11 @@ export function AdminSystem() {
                 className="border-ink rounded-media hover:bg-mist flex items-center justify-between gap-3 border px-4 py-3 font-semibold"
               >
                 <span>{ts(`export.${kind}`)}</span>
-                <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4 fill-none stroke-current [stroke-linecap:round] [stroke-linejoin:round] [stroke-width:2]">
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  className="size-4 fill-none stroke-current [stroke-width:2] [stroke-linecap:round] [stroke-linejoin:round]"
+                >
                   <path d="M12 4v11m-4-4 4 4 4-4M5 20h14" />
                 </svg>
                 <span className="sr-only">{ts('download')}</span>
@@ -145,10 +166,13 @@ function ServerErrors() {
                 <summary className="flex cursor-pointer flex-wrap items-baseline gap-x-3 gap-y-1">
                   <span className="font-mono text-sm font-bold break-all">{e.message}</span>
                   <span className="text-ink/60 text-sm">
-                    {e.method} {e.path} · {ts('times', { count: e.count })} · {format.relativeTime(new Date(e.lastAt))}
+                    {e.method} {e.path} · {ts('times', { count: e.count })} ·{' '}
+                    {format.relativeTime(new Date(e.lastAt))}
                   </span>
                 </summary>
-                <pre className="bg-mist rounded-media mt-2 overflow-x-auto p-3 text-xs leading-relaxed">{e.stack || e.message}</pre>
+                <pre className="bg-mist rounded-media mt-2 overflow-x-auto p-3 text-xs leading-relaxed">
+                  {e.stack || e.message}
+                </pre>
               </details>
             </li>
           ))}
@@ -206,12 +230,25 @@ function DemoListings() {
       <p className="text-base font-bold" role="status">
         {state ? ts('count', { count: state.count, total: state.total }) : '…'}
       </p>
-      {problem && <p role="alert" className="text-sm text-[var(--danger)]">{ts('failed')}</p>}
+      {problem && (
+        <p role="alert" className="text-sm text-[var(--danger)]">
+          {ts('failed')}
+        </p>
+      )}
       <div className="flex flex-wrap gap-2">
-        <Button onClick={() => void add()} loading={busy === 'add'} disabled={busy !== null || (state !== null && state.count >= state.total)}>
+        <Button
+          onClick={() => void add()}
+          loading={busy === 'add'}
+          disabled={busy !== null || (state !== null && state.count >= state.total)}
+        >
           {ts('add')}
         </Button>
-        <Button variant="ghost" onClick={() => void remove()} loading={busy === 'remove'} disabled={busy !== null || state?.count === 0}>
+        <Button
+          variant="ghost"
+          onClick={() => void remove()}
+          loading={busy === 'remove'}
+          disabled={busy !== null || state?.count === 0}
+        >
           {ts('remove')}
         </Button>
       </div>

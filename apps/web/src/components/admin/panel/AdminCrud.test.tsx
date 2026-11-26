@@ -22,7 +22,9 @@ describe('admin add / delete dialogs', () => {
     const api = fakeApi({
       ...meRoute(testUser({ role: 'ADMIN', staffRole: 'OWNER' })),
       'POST /api/v1/admin/users': (body) =>
-        (body as { email: string }).email === 'taken@mail.lv' ? apiError(409, 'AUTH_EMAIL_TAKEN') : { status: 201, body: { id: 'u9', passwordLinkSent: true } },
+        (body as { email: string }).email === 'taken@mail.lv'
+          ? apiError(409, 'AUTH_EMAIL_TAKEN')
+          : { status: 201, body: { id: 'u9', passwordLinkSent: true } },
     });
     renderWithSession(<AddPersonButton />, { client: api.client });
     await user.click(screen.getByRole('button', { name: t.addPerson }));
@@ -35,14 +37,27 @@ describe('admin add / delete dialogs', () => {
     await user.type(within(dialog).getByLabelText(t.email), 'lina@mail.lv');
     await user.click(within(dialog).getByRole('button', { name: t.add }));
     await waitFor(() => expect(push).toHaveBeenCalledWith('/admin/users/u9'));
-    expect(api.calls.filter((c) => c.method === 'POST').at(-1)?.body).toEqual({ name: 'Lina', email: 'lina@mail.lv', locale: 'lv' });
+    expect(api.calls.filter((c) => c.method === 'POST').at(-1)?.body).toEqual({
+      name: 'Lina',
+      email: 'lina@mail.lv',
+      locale: 'lv',
+    });
   });
 
   it('asks where the listings go before deleting a category that has some', async () => {
     const user = userEvent.setup();
-    const api = fakeApi({ ...meRoute(testUser({ role: 'ADMIN', staffRole: 'OWNER' })), 'DELETE /api/v1/admin/categories/c1': { status: 204 } });
+    const api = fakeApi({
+      ...meRoute(testUser({ role: 'ADMIN', staffRole: 'OWNER' })),
+      'DELETE /api/v1/admin/categories/c1': { status: 204 },
+    });
     renderWithSession(
-      <DeleteCategoryButton category={{ id: 'c1', names: { en: 'Drills', lv: 'Urbji', ru: 'Дрели' }, allListings: 3 }} targets={[{ id: 'c1', label: 'Tools → Drills' }, { id: 'c2', label: 'Tools → Saws' }]} />,
+      <DeleteCategoryButton
+        category={{ id: 'c1', names: { en: 'Drills', lv: 'Urbji', ru: 'Дрели' }, allListings: 3 }}
+        targets={[
+          { id: 'c1', label: 'Tools → Drills' },
+          { id: 'c2', label: 'Tools → Saws' },
+        ]}
+      />,
       { client: api.client },
     );
     await user.click(screen.getByRole('button', { name: t.delete }));
@@ -53,6 +68,8 @@ describe('admin add / delete dialogs', () => {
     expect(screen.queryByRole('option', { name: 'Tools → Drills' })).toBeNull(); // not into itself
     await user.click(screen.getByRole('option', { name: 'Tools → Saws' }));
     await user.click(within(dialog).getByRole('button', { name: t.deleteYes }));
-    await waitFor(() => expect(api.calls.some((c) => c.method === 'DELETE' && c.query === 'moveTo=c2')).toBe(true));
+    await waitFor(() =>
+      expect(api.calls.some((c) => c.method === 'DELETE' && c.query === 'moveTo=c2')).toBe(true),
+    );
   });
 });
