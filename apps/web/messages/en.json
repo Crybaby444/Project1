@@ -221,7 +221,7 @@
     "PROFILE_INCOMPLETE": "Add your username and confirm you are 18 or over in Settings → Profile first.",
     "IDENTITY_REQUIRED": "Confirm who you are first: Settings → Profile → Confirm who you are.",
     "DEMO_LISTING": "This is an example listing: it cannot be rented.",
-    "VERIFICATION_REQUIRED": "For a deal of this value, confirm your phone and who you are first: Settings → Profile."
+    "VERIFICATION_REQUIRED": "A deal of this value needs a confirmed phone."
   },
   "validation": {
     "required": "Fill in this field.",
@@ -1379,11 +1379,13 @@
       "identity": {
         "lend": "To send items for review, confirm who you are first. A moderator checks a document photo and a selfie.",
         "rent": "To rent, confirm who you are first. A moderator checks a document photo and a selfie.",
-        "button": "Confirm who you are"
+        "button": "Confirm who you are",
+        "expensive": "For a deal of this value, confirm who you are first. A moderator checks a document photo and a selfie; then you can send the request."
       },
       "pending": {
         "lend": "Your identity check is with a moderator. You can send items for review once it is confirmed.",
-        "rent": "Your identity check is with a moderator. You can rent once it is confirmed."
+        "rent": "Your identity check is with a moderator. You can rent once it is confirmed.",
+        "expensive": "Your identity check is with a moderator. You can send the request for this item once it is confirmed."
       }
     }
   },

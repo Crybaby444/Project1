@@ -160,6 +160,24 @@ describe('BookingPanel', () => {
     expect(push).not.toHaveBeenCalled();
   });
 
+  it('asks for a confirmed identity when the days are worth that much, and lets other days try again', async () => {
+    const user = userEvent.setup();
+    setup({
+      'POST /api/v1/bookings': apiError(409, 'VERIFICATION_REQUIRED', { details: { missing: ['IDENTITY'] } }),
+      'GET /api/v1/me/identity': { status: 200, body: { status: 'NONE', documentType: null, submittedAt: null, reviewedAt: null, rejectionReason: null } },
+    });
+    await screen.findByRole('grid');
+    await user.click(day(8));
+    await user.click(day(9));
+    await user.click(screen.getByRole('button', { name: 'Send request' }));
+    expect(await screen.findByText(/For a deal of this value, confirm who you are first/)).toBeVisible();
+    expect(screen.getByRole('link', { name: 'Confirm who you are' })).toHaveAttribute('href', expect.stringContaining('/verify-identity?next='));
+    expect(screen.queryByRole('button', { name: 'Send request' })).toBeNull();
+    await user.click(day(12));
+    await user.click(day(12));
+    expect(screen.getByRole('button', { name: 'Send request' })).toBeVisible();
+  });
+
   it('tells the owner it is their own item, and a visitor to sign in', async () => {
     const api = fakeApi({
       ...meRoute(testUser({ id: 'owner-1' })),

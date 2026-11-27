@@ -48,6 +48,7 @@ import { MoneyOutService } from '../payments/money-out.service';
 import { PAYMENT_PROVIDER, type PaymentProvider } from '../payments/payment.provider';
 import { declined, unknownCard } from '../wallet/wallet.service';
 import { STORAGE_PROVIDER, type StorageProvider } from '../media/storage.provider';
+import { SMS_PROVIDER, type SmsProvider } from '../sms/sms.provider';
 import { PrismaService } from '../prisma/prisma.service';
 import { bookingNotFound, staleBooking } from './booking-errors';
 import { assertDamagePhotos } from './booking-photos.service';
@@ -180,6 +181,7 @@ export class BookingsService {
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider,
     @Inject(ENV) private readonly env: Pick<Env, 'IDENTITY_REQUIRED' | 'SIGNATURES'>,
+    @Inject(SMS_PROVIDER) private readonly sms: SmsProvider | null,
   ) {}
 
   readonly urlFor: UrlFor = (key, variant) => this.storage.url(key, variant);
@@ -284,7 +286,10 @@ export class BookingsService {
         { now, settings },
       );
       // An expensive deal asks for more (audit D4): a confirmed phone and identity.
-      const missing = missingForDeal(next.quote, await verifiedOf(tx, renter.id), {
+      // A check nobody can pass is not asked: with no SMS service (production today, render.yaml) no phone
+      // can be confirmed, so an expensive deal asks for the confirmed identity alone.
+      const verified = await verifiedOf(tx, renter.id);
+      const missing = missingForDeal(next.quote, { ...verified, phoneVerified: verified.phoneVerified || this.sms === null }, {
         depositCents: settings.highValueDepositCents,
         rentCents: settings.highValueRentCents,
       });
