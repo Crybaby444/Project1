@@ -3954,6 +3954,7 @@ export interface components {
                 version: number;
                 activity: {
                     requests: number;
+                    offers: number;
                     nextStart: string | null;
                     earnedCents: number;
                 };

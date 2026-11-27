@@ -711,6 +711,7 @@
     "count": "{count, plural, one {# item} other {# items}}",
     "activity": {
       "requests": "{count, plural, one {# request waiting} other {# requests waiting}}",
+      "offers": "{count, plural, one {# price offer} other {# price offers}}",
       "next": "Next rental from {date}",
       "earned": "Earned {amount}"
     },

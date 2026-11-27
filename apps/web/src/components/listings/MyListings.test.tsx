@@ -29,7 +29,7 @@ function summary(overrides: Partial<OwnerListingSummary> = {}): OwnerListingSumm
     publishedAt: null,
     updatedAt: '2026-11-04T10:00:00.000Z',
     version: 2,
-    activity: { requests: 0, nextStart: null, earnedCents: 0 },
+    activity: { requests: 0, offers: 0, nextStart: null, earnedCents: 0 },
     ...overrides,
   };
 }
@@ -45,11 +45,12 @@ describe('MyListings', () => {
     renderMine({
       'GET /api/v1/me/listings': {
         status: 200,
-        body: { items: [summary({ status: 'PUBLISHED', publishedAt: '2026-11-04T10:00:00.000Z', activity: { requests: 2, nextStart: '2026-11-20', earnedCents: 12_500 } })] },
+        body: { items: [summary({ status: 'PUBLISHED', publishedAt: '2026-11-04T10:00:00.000Z', activity: { requests: 2, offers: 1, nextStart: '2026-11-20', earnedCents: 12_500 } })] },
       },
     });
     const waiting = await screen.findByRole('link', { name: '2 requests waiting' });
     expect(waiting).toHaveAttribute('href', '/bookings?role=owner');
+    expect(screen.getByRole('link', { name: '1 price offer' })).toHaveAttribute('href', '/bookings?role=owner');
     expect(screen.getByText('Next rental from 20 Nov')).toBeInTheDocument();
     expect(screen.getByText('Earned €125')).toBeInTheDocument();
   });

@@ -286,6 +286,8 @@ export const OwnerListingSummarySchema = z.object({
   /** What is going on with it: requests waiting for the owner, the next paid rental's first day, what it earned. */
   activity: z.object({
     requests: z.number().int().min(0),
+    /** Price offers waiting for the owner's answer (spec §4.6). */
+    offers: z.number().int().min(0),
     nextStart: LocalDateSchema.nullable(),
     earnedCents: z.number().int().min(0),
   }),

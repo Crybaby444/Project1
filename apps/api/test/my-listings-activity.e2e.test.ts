@@ -39,7 +39,19 @@ describe('my listings: what is going on with each item', () => {
 
     const items = (await owner.get('/me/listings').expect(200)).body.items as { title: string; activity: unknown }[];
     const of = (title: string) => items.find((i) => i.title === title)!.activity;
-    expect(of('Busy drill')).toEqual({ requests: 1, nextStart: day(t, 1), earnedCents: 0 });
-    expect(of('Quiet tent')).toEqual({ requests: 0, nextStart: null, earnedCents: 4500 });
+    expect(of('Busy drill')).toEqual({ requests: 1, offers: 0, nextStart: day(t, 1), earnedCents: 0 });
+    expect(of('Quiet tent')).toEqual({ requests: 0, offers: 0, nextStart: null, earnedCents: 4500 });
+  });
+
+  it('counts the price offers waiting for an answer, not the answered ones', async () => {
+    const drill = await seedListing(t, owner.user, { status: 'PUBLISHED', title: 'Drill' });
+    const offer = async (from: number, to: number) =>
+      (await renter.post(`/listings/${drill.id}/offers`).send({ start: day(t, from), end: day(t, to), dailyCents: 1200 }).expect(201)).body.offer;
+    await offer(3, 4);
+    const other = await signedInClient(t, { name: 'Ilze' });
+    const declined = (await other.post(`/listings/${drill.id}/offers`).send({ start: day(t, 6), end: day(t, 7), dailyCents: 1100 }).expect(201)).body.offer;
+    await owner.post(`/offers/${declined.id}/decline`).expect(200);
+    const items = (await owner.get('/me/listings').expect(200)).body.items as { title: string; activity: { offers: number } }[];
+    expect(items.find((i) => i.title === 'Drill')!.activity.offers).toBe(1);
   });
 });
