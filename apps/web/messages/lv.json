@@ -588,7 +588,7 @@
       "payoutFor": "Par {days, plural, zero {# dienām} one {# dienu} other {# dienām}}",
       "payoutDiscount": "ar −{percent}%",
       "payoutNote": "Īrnieki papildus maksā Yoyo servisa maksu; drošības nauda pēc atgriešanas tiek atdota viņiem.",
-      "payoutWaiting": "Ievadiet derīgu cenu, lai redzētu, cik saņemsiet."
+      "payoutWaiting": "Ievadiet cenu dienā, lai redzētu, cik saņemsiet."
     },
     "rules": {
       "presets": "Gatavi noteikumi",

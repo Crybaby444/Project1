@@ -588,7 +588,7 @@
       "payoutFor": "For {days, plural, one {# day} other {# days}}",
       "payoutDiscount": "with −{percent}%",
       "payoutNote": "Renters pay Yoyo’s service fee on top; the deposit goes back to them after the return.",
-      "payoutWaiting": "Fill in a valid price to see what you receive."
+      "payoutWaiting": "Enter the price a day to see what you receive."
     },
     "rules": {
       "presets": "Ready-made rules",
