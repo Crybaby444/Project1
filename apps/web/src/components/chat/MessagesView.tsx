@@ -14,14 +14,15 @@ import { initials } from '@/components/item/OwnerCard';
 import { useConversations, useMarkRead, useSendMessage, useThread } from '@/lib/chat/queries';
 import { dealKeys } from '@/lib/deals/queries';
 import { useQueryClient } from '@tanstack/react-query';
+import { dateLocale } from '@/lib/deals/dates';
 
 const dayKey = (iso: string) => iso.slice(0, 10);
 
 function useFormats() {
   const locale = useLocale();
   const t = useTranslations('chat');
-  const time = new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' });
-  const date = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' });
+  const time = new Intl.DateTimeFormat(dateLocale(locale), { hour: '2-digit', minute: '2-digit' });
+  const date = new Intl.DateTimeFormat(dateLocale(locale), { day: 'numeric', month: 'short' });
   const day = (iso: string) => {
     const today = new Date();
     const yesterday = new Date(today.getTime() - 86_400_000);
