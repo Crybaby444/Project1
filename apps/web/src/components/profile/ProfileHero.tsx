@@ -3,6 +3,7 @@ import { getFormatter, getLocale, getTranslations } from 'next-intl/server';
 import { answerSpeed, initials } from '@/components/item/OwnerCard';
 import { ProfileSocial } from '@/components/people/ProfileSocial';
 import { ProfileAbout } from './ProfileAbout';
+import { sinceLabel } from '@/lib/month-label';
 
 function Mark({ children, strong = false }: { children: React.ReactNode; strong?: boolean }) {
   return (
@@ -25,7 +26,7 @@ export async function ProfileHero({ user }: { user: PublicProfile['user'] }) {
   const tp = await getTranslations('profile.hero');
   const locale = await getLocale();
   const format = await getFormatter();
-  const since = format.dateTime(new Date(user.memberSince), { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  const since = sinceLabel(user.memberSince, locale);
   const answers = answerSpeed(user.responseMinutes);
   return (
     <section

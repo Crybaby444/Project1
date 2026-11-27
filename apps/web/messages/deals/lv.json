@@ -569,7 +569,11 @@
       "theirs": "{name} par jums",
       "waiting": "{name} ir uzrakstījis atsauksmi. Tā parādīsies, kad uzrakstīsiet savējo.",
       "closed": "Atsauksmju laiks ir beidzies.",
-      "starLabel": "{count, plural, zero {# zvaigžņu} one {# zvaigzne} other {# zvaigznes}}"
+      "starLabel": "{count, plural, zero {# zvaigžņu} one {# zvaigzne} other {# zvaigznes}}",
+      "errors": {
+        "stars": "Ielieciet no 1 līdz 5 zvaigznēm.",
+        "text": "Uzrakstiet no {min} līdz {max} rakstzīmēm."
+      }
     }
   },
   "chat": {

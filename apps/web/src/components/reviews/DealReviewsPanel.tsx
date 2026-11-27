@@ -9,6 +9,7 @@ import { TEXTAREA_CLASS } from '@/components/ui/inputs';
 import { unwrap } from '@/lib/session/api-error';
 import { useApiClient } from '@/lib/session/SessionProvider';
 import { useErrorText } from '@/lib/forms/error-text';
+import { dateLocale } from '@/lib/deals/dates';
 import { ReviewList } from './ReviewList';
 import { StarInput } from './StarInput';
 import { Sheet } from '@/components/ui/Sheet';
@@ -57,7 +58,7 @@ export function DealReviewsPanel({ bookingId, otherName }: { bookingId: string; 
   const data: DealReviews = reviews.data;
   const asRenter = data.viewerRole === 'RENTER';
   const date = data.deadline
-    ? new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', timeZone: 'UTC' }).format(new Date(data.deadline))
+    ? new Intl.DateTimeFormat(dateLocale(locale), { day: 'numeric', month: 'long', timeZone: 'Europe/Riga' }).format(new Date(data.deadline))
     : '';
   const length = text.trim().length;
   const textOk = length >= REVIEW_TEXT.min && length <= REVIEW_TEXT.max;
@@ -79,8 +80,22 @@ export function DealReviewsPanel({ bookingId, otherName }: { bookingId: string; 
         <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
           <p className="m-0 max-w-read leading-relaxed">{t('intro', { name: otherName, date })}</p>
           {data.theirsWaiting && <p className="m-0 text-sm font-bold">{t('waiting', { name: otherName })}</p>}
-          <StarInput legend={t('aboutPerson', { name: otherName })} name="person" value={rating} onChange={setRating} invalid={tried && rating === 0} />
-          {asRenter && <StarInput legend={t('aboutItem')} name="item" value={itemRating} onChange={setItemRating} invalid={tried && itemRating === 0} />}
+          <StarInput
+            legend={t('aboutPerson', { name: otherName })}
+            name="person"
+            value={rating}
+            onChange={setRating}
+            error={tried && rating === 0 ? t('errors.stars') : undefined}
+          />
+          {asRenter && (
+            <StarInput
+              legend={t('aboutItem')}
+              name="item"
+              value={itemRating}
+              onChange={setItemRating}
+              error={tried && itemRating === 0 ? t('errors.stars') : undefined}
+            />
+          )}
           <div className="flex flex-col gap-1.5">
             <label htmlFor={textId} className="type-label">
               {t('text')}
@@ -91,9 +106,15 @@ export function DealReviewsPanel({ bookingId, otherName }: { bookingId: string; 
               onChange={(event) => setText(event.target.value)}
               maxLength={REVIEW_TEXT.max}
               aria-invalid={(tried && !textOk) || undefined}
-              aria-describedby={`${textId}-hint`}
+              aria-describedby={tried && !textOk ? `${textId}-hint ${textId}-error` : `${textId}-hint`}
               className={TEXTAREA_CLASS}
             />
+            {tried && !textOk && (
+              <p id={`${textId}-error`} className="m-0 flex items-start gap-2 text-sm font-bold">
+                <span aria-hidden="true" className="bg-[var(--danger)] border-ink/15 mt-0.5 inline-block size-4 shrink-0 rounded-full border" />
+                {t('errors.text', { min: REVIEW_TEXT.min, max: REVIEW_TEXT.max })}
+              </p>
+            )}
             <p id={`${textId}-hint`} className="m-0 flex justify-between gap-3 text-sm">
               <span>{t('hint', { min: REVIEW_TEXT.min, max: REVIEW_TEXT.max })}</span>
               <span className="tabular-nums">

@@ -569,7 +569,11 @@
       "theirs": "{name} about you",
       "waiting": "{name} has written their review. It shows once you write yours.",
       "closed": "The time for reviews has passed.",
-      "starLabel": "{count, plural, one {# star} other {# stars}}"
+      "starLabel": "{count, plural, one {# star} other {# stars}}",
+      "errors": {
+        "stars": "Give 1 to 5 stars.",
+        "text": "Write {min} to {max} characters."
+      }
     }
   },
   "chat": {

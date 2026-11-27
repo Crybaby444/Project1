@@ -9,13 +9,32 @@ const STAR = 'M12 2.8l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 16.8l-5.4 2.9 1-6.1-4.4-4.3
  * Choosing 1–5 stars: a radio group (arrows move, each radio named "4 stars"), drawn as five stars
  * that fill up to the one under the pointer or the one chosen.
  */
-export function StarInput({ legend, name, value, onChange, invalid }: { legend: string; name: string; value: number; onChange(value: number): void; invalid?: boolean }) {
+export function StarInput({
+  legend,
+  name,
+  value,
+  onChange,
+  error,
+}: {
+  legend: string;
+  name: string;
+  value: number;
+  onChange(value: number): void;
+  /** Said under the stars when the form was sent without them (before, the button did nothing visible). */
+  error?: string;
+}) {
   const t = useTranslations('reviews.deal');
   const id = useId();
   const [hover, setHover] = useState(0);
   const lit = hover || value;
   return (
-    <fieldset role="radiogroup" aria-labelledby={`${id}-legend`} aria-invalid={invalid || undefined} className="m-0 flex flex-col gap-2 border-0 p-0">
+    <fieldset
+      role="radiogroup"
+      aria-labelledby={`${id}-legend`}
+      aria-invalid={error ? true : undefined}
+      aria-describedby={error ? `${id}-error` : undefined}
+      className="m-0 flex flex-col gap-2 border-0 p-0"
+    >
       <legend id={`${id}-legend`} className="mb-1 p-0 type-label">
         {legend}
       </legend>
@@ -33,6 +52,12 @@ export function StarInput({ legend, name, value, onChange, invalid }: { legend: 
           </label>
         ))}
       </div>
+      {error && (
+        <p id={`${id}-error`} className="m-0 flex items-start gap-2 text-sm font-bold">
+          <span aria-hidden="true" className="bg-[var(--danger)] border-ink/15 mt-0.5 inline-block size-4 shrink-0 rounded-full border" />
+          {error}
+        </p>
+      )}
     </fieldset>
   );
 }

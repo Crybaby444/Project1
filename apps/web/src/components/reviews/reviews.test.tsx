@@ -67,6 +67,13 @@ describe('ReviewList', () => {
   });
 });
 
+describe('ReviewList dates', () => {
+  it('dates a review in Riga time: 00:23 there is that day, not the day before in UTC', () => {
+    renderWithIntl(<ReviewList reviews={[review({ createdAt: '2026-11-27T22:23:00.000Z' })]} />);
+    expect(screen.getByRole('listitem')).toHaveTextContent('28 November 2026');
+  });
+});
+
 describe('DealReviewsPanel', () => {
   function renderPanel(reviews: DealReviews, onPost?: (body: unknown) => void) {
     const api = fakeApi({
@@ -91,6 +98,22 @@ describe('DealReviewsPanel', () => {
     await user.type(screen.getByLabelText(r.deal.text), 'Kind owner, the drill worked well.');
     await user.click(screen.getByRole('button', { name: r.deal.submit }));
     await waitFor(() => expect(sent).toEqual({ rating: 5, itemRating: 4, text: 'Kind owner, the drill worked well.' }));
+  });
+
+  it('says what is missing when sent too early, instead of doing nothing', async () => {
+    const user = userEvent.setup();
+    let sent: unknown;
+    renderPanel(state(), (body) => (sent = body));
+    const person = await screen.findByRole('radiogroup', { name: 'Stars for Olga Owner' });
+    await user.click(within(person).getByRole('radio', { name: '5 stars' }));
+    await user.type(screen.getByLabelText(r.deal.text), 'Good');
+    await user.click(screen.getByRole('button', { name: r.deal.submit }));
+    // The item's stars and a too-short text are named; the person's stars are fine.
+    const item = screen.getByRole('radiogroup', { name: r.deal.aboutItem });
+    expect(item).toHaveAccessibleDescription(r.deal.errors.stars);
+    expect(person).not.toHaveAccessibleDescription(r.deal.errors.stars);
+    expect(screen.getByText('Write 10 to 1000 characters.')).toBeVisible();
+    expect(sent).toBeUndefined();
   });
 
   it('does not ask the owner about the item', async () => {

@@ -569,7 +569,11 @@
       "theirs": "{name} о вас",
       "waiting": "{name} уже написал(а) отзыв. Он появится, когда вы напишете свой.",
       "closed": "Время для отзывов прошло.",
-      "starLabel": "{count, plural, one {# звезда} few {# звезды} many {# звёзд} other {# звезды}}"
+      "starLabel": "{count, plural, one {# звезда} few {# звезды} many {# звёзд} other {# звезды}}",
+      "errors": {
+        "stars": "Поставьте от 1 до 5 звёзд.",
+        "text": "Напишите от {min} до {max} символов."
+      }
     }
   },
   "chat": {
