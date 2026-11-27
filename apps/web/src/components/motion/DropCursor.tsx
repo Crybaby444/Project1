@@ -132,10 +132,7 @@ export function DropCursor() {
       const e = node instanceof Element ? node : null;
       typing = stepsAside(e);
       const found = typing ? null : (e?.closest(CLICKABLE) ?? null);
-      const hit = found?.matches(CHOICE) ? null : found;
-      // A map marker's own box sits at its anchor, under the price pin it draws: pour into the pin itself
-      // (owner, 2026-11-16: a dark box showed under the price on the map).
-      const next = hit?.classList.contains('leaflet-marker-icon') ? (hit.querySelector<HTMLElement>('.yoyo-map-pin') ?? hit) : hit;
+      const next = found?.matches(CHOICE) ? null : found;
       if (next !== el) {
         el = next;
         elRadius = el ? radiusOf(el) : 0;

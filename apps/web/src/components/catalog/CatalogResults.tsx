@@ -7,12 +7,11 @@ import { Link } from '@/i18n/navigation';
 import { catalogSearch, type CatalogParams, toApiQuery } from '@/lib/catalog/params';
 import { SaveSearchButton } from './SaveSearchButton';
 import { daysBetween } from '@/lib/deals/dates';
-import { loadMap, loadPlaces, loadSearch } from '@/lib/catalog/server-api';
+import { loadPlaces, loadSearch } from '@/lib/catalog/server-api';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { addDays, todayIn } from '@/lib/listings/calendar';
 import { ActiveFilters } from './ActiveFilters';
 import { Breadcrumbs, type Crumb } from './Breadcrumbs';
-import { CatalogMapLoader } from './CatalogMapLoader';
 import { CatalogShell, ResultsRegion } from './CatalogShell';
 import { EmptyResults } from './EmptyResults';
 import { FiltersButton, FiltersRail } from './Filters';
@@ -63,11 +62,7 @@ export async function CatalogResults({ params: raw, category, related, path, tit
   const params = usableParams(raw, today);
   const days = params.from && params.to ? daysBetween(params.from, params.to) : undefined;
   const query = toApiQuery(params, category?.slug);
-  const [results, places, map] = await Promise.all([
-    loadSearch(query),
-    loadPlaces(),
-    params.view === 'map' ? loadMap({ ...query, page: 1 }) : Promise.resolve(null),
-  ]);
+  const [results, places] = await Promise.all([loadSearch(query), loadPlaces()]);
 
   if (!results.ok) {
     return (
@@ -142,9 +137,6 @@ export async function CatalogResults({ params: raw, category, related, path, tit
             {params.q && <span hidden data-search-q={params.q} data-search-results={total} />}
             <ResultsRegion status={status}>
               <div className="flex flex-col gap-6">
-                {params.view === 'map' && map?.ok && (
-                  <CatalogMapLoader pins={map.data.pins} truncated={map.data.truncated} />
-                )}
                 {items.length === 0 ? (
                   <>
                     <EmptyResults
