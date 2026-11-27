@@ -403,8 +403,8 @@
       "feePromoLabel": "Your first month on Yoyo: no service fee for requests sent until {date}.",
       "feeName": "Service fee"
     },
-    "shareLink": "Booking link",
-    "shareCopied": "Booking link copied.",
+    "shareLink": "Link to the item",
+    "shareCopied": "Link to the item copied: send it to anyone.",
     "offer": {
       "summary": "If the owner agrees",
       "open": "Offer your price",

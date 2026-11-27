@@ -6,15 +6,16 @@ import { useToast } from '@/components/ui/Toast';
 import { getPathname } from '@/i18n/navigation';
 
 /**
- * Copies the item's booking page address (`/items/:id/book`), so the owner can share it. Until the
- * catalog (plan 7) lists items, this is how renters reach a listing. Without a clipboard (an insecure
- * page, an old browser) it opens the page instead.
+ * Copies the address of the item's page (`/listings/:id`: photos, words, the owner and the booking panel in
+ * one place), so the owner can send it to anyone. It used to copy the bare booking page from before the
+ * catalog had item pages; that address still works for links already sent. Without a clipboard (an
+ * insecure page, an old browser) it opens the page instead.
  */
 export function BookingLinkButton({ listingId }: { listingId: string }) {
   const t = useTranslations('booking');
   const locale = useLocale();
   const toast = useToast();
-  const path = getPathname({ href: `/items/${listingId}/book`, locale });
+  const path = getPathname({ href: `/listings/${listingId}`, locale });
 
   async function copy() {
     const url = new URL(path, window.location.origin).toString();

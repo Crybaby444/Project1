@@ -403,8 +403,8 @@
       "feePromoLabel": "Jūsu pirmais mēnesis Yoyo: bez servisa maksas pieprasījumiem, kas nosūtīti līdz {date}.",
       "feeName": "Servisa maksa"
     },
-    "shareLink": "Rezervācijas saite",
-    "shareCopied": "Rezervācijas saite nokopēta.",
+    "shareLink": "Saite uz lietu",
+    "shareCopied": "Saite uz lietu nokopēta: varat to nosūtīt jebkuram.",
     "offer": {
       "summary": "Ja īpašnieks piekritīs",
       "open": "Piedāvāt savu cenu",
