@@ -1,7 +1,7 @@
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import { cents } from './money';
-import { PRICING_LIMITS, WEEKLY_DISCOUNT_FROM_DAYS, quote, validateOffer, validatePricing } from './pricing';
+import { PRICING_LIMITS, WEEKLY_DISCOUNT_FROM_DAYS, offerFloorCents, quote, validateOffer, validatePricing } from './pricing';
 import type { ListingPricing } from './pricing';
 
 const code = (expected: string) => expect.objectContaining({ code: expected });
@@ -245,12 +245,22 @@ describe('quote (Review Focus 5)', () => {
 });
 
 describe('validateOffer', () => {
-  it('accepts a daily price below the listed one, from 1 €', () => {
+  it('accepts a daily price below the listed one, from half of it', () => {
     expect(() => validateOffer(p, cents(1499))).not.toThrow();
-    expect(() => validateOffer(p, cents(100))).not.toThrow();
+    expect(() => validateOffer(p, cents(750))).not.toThrow();
   });
 
-  it.each([1500, 1600, 99, 0])('refuses an offer of %s cents', (offer) => {
+  it.each([1500, 1600, 749, 99, 0])('refuses an offer of %s cents', (offer) => {
     expect(() => validateOffer(p, cents(offer))).toThrow(code('INVALID_OFFER'));
+  });
+
+  it('rounds the floor up to a whole cent and never below the minimum price', () => {
+    expect(offerFloorCents(1500)).toBe(750);
+    expect(offerFloorCents(1999)).toBe(1000);
+    expect(offerFloorCents(150)).toBe(100);
+    // An item at the minimum price takes no offers: the floor is not below the price.
+    const cheapest = { ...p, dailyCents: cents(100) };
+    expect(() => validateOffer(cheapest, cents(100))).toThrow(code('INVALID_OFFER'));
+    expect(() => validateOffer(cheapest, cents(99))).toThrow(code('INVALID_OFFER'));
   });
 });

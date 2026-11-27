@@ -49,6 +49,8 @@
     "common": {
       "button": "Open the deal",
       "offerButton": "See the item",
+      "offerAnswerButton": "Answer the offer",
+      "offerBookButton": "Book at this price",
       "item": "Item",
       "dates": "Dates",
       "total": "Total"

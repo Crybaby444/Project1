@@ -16,7 +16,7 @@ export type OfferRequest = z.infer<typeof OfferRequestSchema>;
 
 export const OfferViewSchema = z.object({
   id: z.string(),
-  listing: z.object({ id: z.string(), title: z.string() }),
+  listing: z.object({ id: z.string(), title: z.string(), coverUrl: z.string().nullable() }),
   renter: z.object({ id: z.string(), name: z.string() }),
   owner: z.object({ id: z.string(), name: z.string() }),
   start: LocalDateSchema,

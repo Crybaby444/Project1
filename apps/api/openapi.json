@@ -22002,11 +22002,18 @@
                   },
                   "title": {
                     "type": "string"
+                  },
+                  "coverUrl": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   }
                 },
                 "required": [
                   "id",
-                  "title"
+                  "title",
+                  "coverUrl"
                 ],
                 "additionalProperties": false
               },
@@ -22129,11 +22136,18 @@
                     },
                     "title": {
                       "type": "string"
+                    },
+                    "coverUrl": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     }
                   },
                   "required": [
                     "id",
-                    "title"
+                    "title",
+                    "coverUrl"
                   ],
                   "additionalProperties": false
                 },

@@ -204,7 +204,10 @@ export const MyBookingsQuerySchema = z.object({
 const RoleSummarySchema = z.object({
   /** Deals still going. */
   open: z.number().int(),
-  /** Open deals where the viewer has a step to take now. */
+  /**
+   * Steps waiting for the viewer now: open deals with a step to take, plus price offers (the owner's to
+   * answer, the renter's accepted ones to book).
+   */
   needsAction: z.number().int(),
 });
 

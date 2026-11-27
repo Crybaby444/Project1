@@ -1,9 +1,8 @@
 'use client';
 
-import { cents, DEFAULT_BOOKING_SETTINGS, DomainError, quote as priceDays, serviceFeeAt, type LocalDate } from '@yoyo/domain';
-import { BOOKING_LIMITS, type BookingTerms, type QuoteView } from '@yoyo/shared';
+import { BOOKING_LIMITS, type OfferView } from '@yoyo/shared';
 import { useQueryClient } from '@tanstack/react-query';
-import { useTranslations } from 'next-intl';
+import { useLocale, useNow, useTranslations } from 'next-intl';
 import { useId, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/Field';
@@ -13,50 +12,21 @@ import { usePathname, useRouter } from '@/i18n/navigation';
 import { useErrorText } from '@/lib/forms/error-text';
 import { daysBetween, formatPeriod } from '@/lib/deals/dates';
 import { useIdempotentMutation } from '@/lib/deals/idempotency';
+import { offerForItem, useMyOffers } from '@/lib/deals/offers';
+import { priceRange } from '@/lib/deals/price';
 import { dealKeys, useBookingTerms } from '@/lib/deals/queries';
 import { addDays } from '@/lib/listings/calendar';
+import { centsToInput } from '@/lib/listings/money';
 import { ApiError, unwrap } from '@/lib/session/api-error';
 import { useApiClient, useSession } from '@/lib/session/SessionProvider';
 import { IdentityNotice, useDealReadiness } from '@/components/identity/IdentityNotice';
-import { useLocale } from 'next-intl';
-import { crossesTaken, DateRangePicker, type Range } from './DateRangePicker';
+import { DateRangePicker, type Range } from './DateRangePicker';
+import { AgreedNotice, checkOffer, OfferForm, OfferStatus, suggestedOffer, takesOffers } from './OfferBox';
+import { OffersBlock } from './Offers';
 import { PriceSummary } from './PriceSummary';
 
-type Problem = 'tooShort' | 'tooLong' | 'crossesTaken' | null;
-
-/**
- * The fee a request sent now would pay: the terms' (a visitor's) unless the signed-in renter is within their
- * first fee-free days (owner, 2026-11-26), worked out with the domain's own rule, as the API will.
- */
-export function feeFor(terms: BookingTerms, renterJoinedAt: string | null, now: Date = new Date()): { percent: number; promoUntil: LocalDate | null } {
-  if (!renterJoinedAt || !terms.welcomeFeeDays) return { percent: terms.servicePercent, promoUntil: terms.servicePromoUntil as LocalDate | null };
-  const settings = { ...DEFAULT_BOOKING_SETTINGS, servicePercent: terms.regularServicePercent, welcomeFeeDays: terms.welcomeFeeDays };
-  return serviceFeeAt(settings, now, terms.timeZone, new Date(renterJoinedAt));
-}
-
-/**
- * The price of a picked range with the domain's own `quote` (the same rules the API uses), or why the
- * range does not work. The API's answer to the request is the final word.
- */
-export function priceRange(terms: BookingTerms, range: Range | null, renterJoinedAt: string | null = null): { quote: QuoteView | null; problem: Problem } {
-  if (!range?.end) return { quote: null, problem: null };
-  const fee = feeFor(terms, renterJoinedAt);
-  if (crossesTaken(terms.blocked, range.start, range.end)) return { quote: null, problem: 'crossesTaken' };
-  const days = daysBetween(range.start, range.end);
-  try {
-    const q = priceDays({
-      pricing: { ...terms.pricing, dailyCents: cents(terms.pricing.dailyCents), depositCents: cents(terms.pricing.depositCents) },
-      days,
-      servicePercent: fee.percent,
-      servicePromoUntil: fee.promoUntil,
-    });
-    return { quote: { ...q }, problem: null };
-  } catch (error) {
-    if (error instanceof DomainError && error.code === 'PERIOD_TOO_SHORT') return { quote: null, problem: 'tooShort' };
-    if (error instanceof DomainError && error.code === 'PERIOD_TOO_LONG') return { quote: null, problem: 'tooLong' };
-    throw error;
-  }
-}
+const sameDays = (range: Range | null, offer: OfferView | null) =>
+  offer !== null && range?.start === offer.start && range.end === offer.end;
 
 /**
  * Booking an item (spec §4.4 step 1): pick the days, see the price from the domain rules, add a note,
@@ -91,25 +61,49 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
   const [error, setError] = useState<string | null>(null);
   // Once the request is in, the button stays busy until the deal page opens: nothing to send twice.
   const [sent, setSent] = useState(false);
+  // The offer being written (its text), or null while booking at the listed price.
+  const [draft, setDraft] = useState<string | null>(null);
   const hintId = useId();
+  const now = useNow({ updateInterval: 60_000 });
 
   const joined = user?.createdAt ?? null;
+  const offers = useMyOffers('renter', status === 'authenticated');
+  const offer = terms.data ? offerForItem(offers.data, listingId, terms.data.today, now.getTime()) : null;
+  // An accepted offer prices exactly its own days: they come picked, like the days a search asked for.
+  const agreed = offer?.status === 'ACCEPTED' ? offer : null;
   const askedWorks =
     asked !== null &&
     terms.data !== undefined &&
     asked.start >= terms.data.today &&
     asked.end! <= addDays(terms.data.today, terms.data.maxAdvanceDays) &&
     priceRange(terms.data, asked, joined).problem === null;
-  const range = picked !== undefined ? picked : askedWorks ? asked : null;
-  const priced = useMemo(() => (terms.data ? priceRange(terms.data, range, joined) : { quote: null, problem: null }), [terms.data, range, joined]);
+  const range = useMemo(
+    () => (picked !== undefined ? picked : agreed ? { start: agreed.start, end: agreed.end } : askedWorks ? asked : null),
+    [picked, agreed, askedWorks, asked],
+  );
+  const agreedApplies = agreed !== null && sameDays(range, agreed);
+  const priced = useMemo(
+    () =>
+      terms.data
+        ? priceRange(terms.data, range, joined, agreedApplies ? agreed.dailyCents : undefined)
+        : { quote: null, problem: null },
+    [terms.data, range, joined, agreedApplies, agreed],
+  );
+  const offerCheck = draft !== null && terms.data && range?.end ? checkOffer(terms.data, range, joined, draft) : null;
 
-  const send = useIdempotentMutation<{ start: string; end: string; message: string }, string>({
+  const send = useIdempotentMutation<{ start: string; end: string; message: string; offerId: string | null }, string>({
     intent: (vars) => JSON.stringify(vars),
     mutate: async (vars, key) => {
       const { booking } = await unwrap(
         client.POST('/api/v1/bookings', {
           params: { header: { 'Idempotency-Key': key } },
-          body: { listingId, start: vars.start, end: vars.end, ...(vars.message.trim() && { message: vars.message.trim() }) },
+          body: {
+            listingId,
+            start: vars.start,
+            end: vars.end,
+            ...(vars.offerId && { offerId: vars.offerId }),
+            ...(vars.message.trim() && { message: vars.message.trim() }),
+          },
         }),
       );
       queryClient.setQueryData(dealKeys.one(booking.id), booking);
@@ -122,7 +116,7 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
     if (sent || !range?.end || priced.quote === null) return;
     setError(null);
     try {
-      const id = await send.run({ start: range.start, end: range.end, message });
+      const id = await send.run({ start: range.start, end: range.end, message, offerId: agreedApplies ? agreed.id : null });
       setSent(true);
       toast.show(t('sent'));
       router.push(`/bookings/${id}`);
@@ -131,6 +125,7 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
         setRange(null);
         await terms.refetch();
       }
+      if (failure instanceof ApiError && failure.code === 'OFFER_UNAVAILABLE') await offers.refetch();
       setError(errorText(failure));
     }
   }
@@ -207,9 +202,38 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
       </section>
 
       <aside className={`flex flex-col gap-5 self-start ${layout === 'wide' ? 'sheet border-ink rounded-media border-2 p-5 sm:p-6 lg:sticky lg:top-24' : 'border-ink border-t-2 pt-6'}`}>
-        <PriceSummary quote={priced.quote} />
+        {!own && agreed && (
+          <AgreedNotice
+            offer={agreed}
+            applies={agreedApplies}
+            onUseDays={() => {
+              setError(null);
+              setDraft(null);
+              setRange({ start: agreed.start, end: agreed.end });
+            }}
+          />
+        )}
+        {/* While an offer is written, the price block shows the days at that price: what the owner would agree to. */}
+        <PriceSummary quote={offerCheck?.quote ?? priced.quote} title={offerCheck?.quote ? t('offer.summary') : undefined} />
         {own ? (
-          <p className="bg-mist rounded-tile p-4 text-sm font-bold">{t('own')}</p>
+          <>
+            <p className="bg-mist rounded-tile p-4 text-sm font-bold">{t('own')}</p>
+            <OffersBlock role="owner" listingId={listingId} />
+          </>
+        ) : draft !== null && range?.end && offerCheck ? (
+          <OfferForm
+            listingId={listingId}
+            terms={data}
+            range={{ start: range.start, end: range.end }}
+            text={draft}
+            check={offerCheck}
+            onText={setDraft}
+            onBack={() => setDraft(null)}
+            onSent={() => {
+              setDraft(null);
+              toast.show(t('offer.sent'));
+            }}
+          />
         ) : (
           <>
             <Field label={t('message')} hint={t('messageHint')}>
@@ -231,7 +255,7 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
               <IdentityNotice action="rent" readiness={readiness} />
             ) : status === 'authenticated' ? (
               <Button size="lg" onClick={() => void submit()} loading={send.pending || sent} disabled={priced.quote === null}>
-                {t('send')}
+                {agreedApplies ? t('sendAgreed') : t('send')}
               </Button>
             ) : (
               <Button size="lg" href={`/login?next=${encodeURIComponent(pathname)}`}>
@@ -239,6 +263,16 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
               </Button>
             )}
             <p className="text-sm">{t('noCharge')}</p>
+            {status === 'authenticated' && (readiness === 'ready' || readiness === 'unknown') && (
+              <OfferStatus
+                offer={agreed ? null : offer}
+                canOffer={takesOffers(data.pricing.dailyCents) && priced.quote !== null && !agreedApplies}
+                onOffer={(fromCents) => {
+                  setError(null);
+                  setDraft(centsToInput(fromCents ?? suggestedOffer(data.pricing.dailyCents), locale));
+                }}
+              />
+            )}
           </>
         )}
       </aside>

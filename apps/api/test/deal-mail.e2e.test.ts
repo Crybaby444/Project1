@@ -62,9 +62,17 @@ describe('deal emails', () => {
     const offer = (await renter.post(`/listings/${listing.id}/offers`).send({ start: day(t, 2), end: day(t, 3), dailyCents: 1200 }).expect(201)).body.offer;
     await t.mailSent();
     expect(subjects(owner)).toEqual([`@${renter.user.username} piedāvā ${formatMoney(cents(1_200), 'lv')} dienā par “Bosch cordless drill”`]);
+    // The owner answers in "My deals"; the renter books on the item page (no dead /items/ links).
+    const made = t.mail.to(owner.email)[0]!;
+    expect(made.text).toContain('/lv/bookings?role=owner');
+    expect(made.text).toContain('Atbildēt uz piedāvājumu');
     await owner.post(`/offers/${offer.id}/accept`).expect(200);
     await t.mailSent();
     expect(subjects(renter)).toEqual(['Ваше предложение за «Bosch cordless drill» принято']);
+    const accepted = t.mail.to(renter.email)[0]!;
+    expect(accepted.text).toContain(`/ru/listings/${listing.id}`);
+    expect(accepted.text).toContain('Забронировать по этой цене');
+    expect(accepted.text).not.toContain('/items/');
   });
 
   it('sends nothing to a deleted account', async () => {

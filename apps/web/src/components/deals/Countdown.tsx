@@ -10,7 +10,10 @@ import { deadlineKey } from '@/lib/deals/status';
 export function useDurationText() {
   const t = useTranslations('countdown');
   return (r: Remaining) =>
-    r.days > 0
+    // "24 h 0 min" rather than "1 d 0 h": a day-long window (an offer, a request) reads in hours.
+    r.days === 1 && r.hours === 0
+      ? t('hours', { hours: 24, minutes: r.minutes })
+      : r.days > 0
       ? t('days', { days: r.days, hours: r.hours })
       : r.hours > 0
         ? t('hours', { hours: r.hours, minutes: r.minutes })

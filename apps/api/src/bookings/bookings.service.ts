@@ -298,6 +298,18 @@ export class BookingsService {
         });
         if (used.count !== 1) throw offerUnavailable();
       }
+      // A waiting offer for any of these days is moot once the renter asks for them: the owner should not
+      // answer it afterwards (accepted, it could only meet days already asked for).
+      await tx.offer.updateMany({
+        where: {
+          renterId: renter.id,
+          listingId: listing.id,
+          status: 'PENDING',
+          start: { lte: dateOf(input.end) },
+          end: { gte: dateOf(input.start) },
+        },
+        data: { status: 'WITHDRAWN' },
+      });
       await tx.booking
         .create({
           data: {
@@ -589,7 +601,7 @@ export class BookingsService {
     };
   }
 
-  /** Open deals and those waiting for the user's step, per side (the tabs of "My deals"). */
+  /** Open deals and the steps waiting for the user (deals and price offers), per side (the tabs of "My deals"). */
   async summaryMine(user: PublicUser): Promise<MyBookingsSummary> {
     const rows = await this.prisma.booking.findMany({
       where: {
@@ -600,6 +612,14 @@ export class BookingsService {
     });
     const settings = await this.rules.settings();
     const summary: MyBookingsSummary = { renter: { open: 0, needsAction: 0 }, owner: { open: 0, needsAction: 0 } };
+    // Price offers wait for a step too: the owner answers a new one, the renter books an accepted one.
+    const until = { gt: this.clock.now() };
+    const [toAnswer, toBook] = await Promise.all([
+      this.prisma.offer.count({ where: { ownerId: user.id, status: 'PENDING', expiresAt: until } }),
+      this.prisma.offer.count({ where: { renterId: user.id, status: 'ACCEPTED', expiresAt: until } }),
+    ]);
+    summary.owner.needsAction += toAnswer;
+    summary.renter.needsAction += toBook;
     for (const row of rows) {
       const actor = actorFor(row, user)!;
       const side = actor.kind === 'RENTER' ? summary.renter : summary.owner;

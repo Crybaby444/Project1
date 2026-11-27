@@ -98,6 +98,7 @@
     "money": {
       "title": "Money",
       "rent": "Rent",
+      "agreed": "Agreed price: {price} × {days, plural, one {# day} other {# days}}",
       "fee": "Service fee",
       "deposit": "Deposit",
       "total": "Total",
@@ -320,6 +321,31 @@
     "myItems": "My items",
     "browse": "Open the catalog"
   },
+  "offers": {
+    "title": {
+      "owner": "Price offers",
+      "renter": "Your offers"
+    },
+    "perDay": "{price} a day",
+    "instead": "instead of {price}",
+    "from": "From {name}",
+    "to": "Owner: {name}",
+    "youGet": "you get {total} for {days, plural, one {# day} other {# days}}",
+    "comesTo": "{total} for {days, plural, one {# day} other {# days}}",
+    "answerWithin": "Answer within {time}",
+    "waitWithin": "The owner answers within {time}",
+    "agreedOwner": "You agreed. {name} can book by the end of {day}",
+    "agreedRenter": "Price accepted. Book by the end of {day}",
+    "accept": "Accept",
+    "decline": "Decline",
+    "withdraw": "Withdraw",
+    "book": "Book",
+    "done": {
+      "accept": "Offer accepted. {name} can book at this price.",
+      "decline": "Offer declined.",
+      "withdraw": "Offer withdrawn."
+    }
+  },
   "booking": {
     "title": "Book {item}",
     "pageTitle": "Book this item",
@@ -345,6 +371,7 @@
     "message": "Message to the owner (optional)",
     "messageHint": "Say when you would like to pick it up, or ask something.",
     "send": "Send request",
+    "sendAgreed": "Send the request at your price",
     "signIn": "Sign in to book",
     "own": "This is your item. Others book it from this page.",
     "noCharge": "Nothing is charged now. You pay after the owner accepts and you both sign the contract.",
@@ -363,7 +390,7 @@
       "title": "Price",
       "days": "{price} × {days, plural, one {# day} other {# days}}",
       "discount": "Weekly discount ({percent}%)",
-      "agreed": "Agreed price",
+      "agreed": "Your price {price} × {days, plural, one {# day} other {# days}}",
       "fee": "Service fee ({percent}%)",
       "deposit": "Deposit, frozen and returned",
       "total": "Total to pay",
@@ -374,7 +401,37 @@
       "feeName": "Service fee"
     },
     "shareLink": "Booking link",
-    "shareCopied": "Booking link copied."
+    "shareCopied": "Booking link copied.",
+    "offer": {
+      "summary": "If the owner agrees",
+      "open": "Offer your price",
+      "label": "Your price a day",
+      "hint": "Listed at {price}. You can offer from {min}.",
+      "saving": "That is {amount} less for {days, plural, one {# day} other {# days}}",
+      "send": "Send the offer",
+      "back": "Book at the listed price",
+      "note": "The owner answers within 24 hours. Until then, someone else can still book these days.",
+      "sent": "Offer sent. We will let you know when the owner answers.",
+      "errors": {
+        "empty": "Type your price a day.",
+        "format": "Type an amount, like 12 or 12.50.",
+        "low": "At least {min}: half the listed price.",
+        "high": "It should be below the listed price of {price}.",
+        "notCheaper": "With the weekly discount it is already {price} a day. Offer less."
+      },
+      "agreed": "Your price is accepted: {price} a day",
+      "agreedUntil": "Request at this price by the end of {day}",
+      "agreedOnly": "This price is for {period} only",
+      "useDays": "Pick these days",
+      "pending": "You offered {price} a day for {period}",
+      "pendingWait": "The owner answers within {time}.",
+      "pendingSoon": "Waiting for the owner's answer.",
+      "change": "Change the price",
+      "withdraw": "Withdraw",
+      "withdrawn": "Offer withdrawn.",
+      "declined": "The owner did not take {price} a day. You can book at the listed price or offer another price.",
+      "expired": "The owner did not answer {price} a day in time. You can offer again."
+    }
   },
   "checkout": {
     "title": "Pay for the booking",

@@ -4751,6 +4751,7 @@ export interface components {
                 listing: {
                     id: string;
                     title: string;
+                    coverUrl: string | null;
                 };
                 renter: {
                     id: string;
@@ -4780,6 +4781,7 @@ export interface components {
                 listing: {
                     id: string;
                     title: string;
+                    coverUrl: string | null;
                 };
                 renter: {
                     id: string;

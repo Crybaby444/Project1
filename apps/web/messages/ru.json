@@ -992,6 +992,7 @@
       "noDeposit": "Без залога",
       "days": "{min}–{max} дн.",
       "exactDays": "{days, plural, one {# день} few {# дня} many {# дней} other {# дня}}",
+      "offers": "Можно предложить свою цену",
       "choose": "Выбрать даты"
     },
     "facts": {

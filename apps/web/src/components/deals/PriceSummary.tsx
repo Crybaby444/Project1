@@ -28,9 +28,7 @@ export function PriceSummary({ quote, title }: { quote: QuoteView | null; title?
           <dl className="m-0 flex flex-col gap-2 text-base">
             <div className="flex flex-wrap items-baseline justify-between gap-x-3">
               <dt>
-                {quote.priceSource === 'AGREED'
-                  ? t('agreed')
-                  : t('days', { price: money(quote.dailyCents), days: quote.days })}
+                {t(quote.priceSource === 'AGREED' ? 'agreed' : 'days', { price: money(quote.dailyCents), days: quote.days })}
               </dt>
               <dd className="font-bold tabular-nums">{money(quote.baseCents)}</dd>
             </div>

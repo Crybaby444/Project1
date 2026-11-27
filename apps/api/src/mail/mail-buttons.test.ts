@@ -56,7 +56,7 @@ const TEMPLATES: Template[] = [
         link: LINK,
       }),
   },
-  ...(['button', 'offerButton'] as const).map((button) => ({
+  ...(['button', 'offerButton', 'offerAnswerButton', 'offerBookButton'] as const).map((button) => ({
     name: `deal event (${button})`,
     button: (t: MailTexts) => t.deal.common[button],
     element: (t: MailTexts, lang: string) =>
