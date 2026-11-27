@@ -221,7 +221,7 @@
     "PROFILE_INCOMPLETE": "Vispirms iestatījumos → Profils pievienojiet lietotājvārdu un apstipriniet, ka jums ir vismaz 18 gadu.",
     "IDENTITY_REQUIRED": "Vispirms apstipriniet savu identitāti: Iestatījumi → Profils → Apstipriniet savu identitāti.",
     "DEMO_LISTING": "Šis ir sludinājuma piemērs: to nevar nomāt.",
-    "VERIFICATION_REQUIRED": "Šādas vērtības darījumam vispirms apstipriniet tālruni un savu identitāti: Iestatījumi → Profils."
+    "VERIFICATION_REQUIRED": "Šādas vērtības darījumam vajag apstiprinātu tālruni."
   },
   "validation": {
     "required": "Aizpildiet šo lauku.",
@@ -1380,11 +1380,13 @@
       "identity": {
         "lend": "Lai nosūtītu lietas pārbaudei, vispirms apstipriniet savu identitāti. Moderators pārbauda dokumenta foto un pašbildi.",
         "rent": "Lai nomātu, vispirms apstipriniet savu identitāti. Moderators pārbauda dokumenta foto un pašbildi.",
-        "button": "Apstiprināt identitāti"
+        "button": "Apstiprināt identitāti",
+        "expensive": "Šādas vērtības darījumam vispirms apstipriniet savu identitāti. Moderators pārbaudīs dokumenta foto un pašbildi — pēc tam varēsiet nosūtīt pieprasījumu."
       },
       "pending": {
         "lend": "Jūsu identitātes pārbaude ir pie moderatora. Lietas pārbaudei varēsiet nosūtīt, kad tā būs apstiprināta.",
-        "rent": "Jūsu identitātes pārbaude ir pie moderatora. Nomāt varēsiet, kad tā būs apstiprināta."
+        "rent": "Jūsu identitātes pārbaude ir pie moderatora. Nomāt varēsiet, kad tā būs apstiprināta.",
+        "expensive": "Jūsu identitātes pārbaude ir pie moderatora. Pieprasījumu šai lietai varēsiet nosūtīt pēc apstiprināšanas."
       }
     }
   },

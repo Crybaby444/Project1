@@ -20,6 +20,7 @@ import { centsToInput } from '@/lib/listings/money';
 import { ApiError, unwrap } from '@/lib/session/api-error';
 import { useApiClient, useSession } from '@/lib/session/SessionProvider';
 import { IdentityNotice, useDealReadiness } from '@/components/identity/IdentityNotice';
+import { useIdentityState } from '@/lib/identity/queries';
 import { DateRangePicker, type Range } from './DateRangePicker';
 import { AgreedNotice, checkOffer, OfferForm, OfferStatus, suggestedOffer, takesOffers } from './OfferBox';
 import { OffersBlock } from './Offers';
@@ -63,6 +64,10 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
   const [sent, setSent] = useState(false);
   // The offer being written (its text), or null while booking at the listed price.
   const [draft, setDraft] = useState<string | null>(null);
+  // The API asked for a confirmed identity for days of this value (audit D4): the panel says how, in place of
+  // the button, until other days are picked.
+  const [expensive, setExpensive] = useState(false);
+  const identity = useIdentityState(expensive);
   const hintId = useId();
   const now = useNow({ updateInterval: 60_000 });
 
@@ -126,6 +131,11 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
         await terms.refetch();
       }
       if (failure instanceof ApiError && failure.code === 'OFFER_UNAVAILABLE') await offers.refetch();
+      const missing = failure instanceof ApiError && failure.code === 'VERIFICATION_REQUIRED' ? failure.details?.['missing'] : undefined;
+      if (Array.isArray(missing) && missing.includes('IDENTITY')) {
+        setExpensive(true);
+        return;
+      }
       setError(errorText(failure));
     }
   }
@@ -181,6 +191,7 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
           range={range}
           onChange={(next) => {
             setError(null);
+            setExpensive(false);
             setRange(next);
           }}
           describedBy={hintId}
@@ -253,6 +264,8 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
             )}
             {status === 'authenticated' && readiness !== 'ready' && readiness !== 'unknown' ? (
               <IdentityNotice action="rent" readiness={readiness} />
+            ) : status === 'authenticated' && expensive ? (
+              <IdentityNotice action="expensive" readiness={identity.data?.status === 'PENDING' ? 'pending' : 'identity'} />
             ) : status === 'authenticated' ? (
               <Button size="lg" onClick={() => void submit()} loading={send.pending || sent} disabled={priced.quote === null}>
                 {agreedApplies ? t('sendAgreed') : t('send')}

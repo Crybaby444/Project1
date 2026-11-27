@@ -24,15 +24,18 @@ export function useDealReadiness(): 'ready' | 'profile' | 'identity' | 'pending'
   return check.data?.status === 'PENDING' ? 'pending' : 'identity';
 }
 
-/** The box shown in place of "Send for review" or "Request to rent" until the person is ready. */
-export function IdentityNotice({ action, readiness }: { action: 'lend' | 'rent'; readiness: ReturnType<typeof useDealReadiness> }) {
+/**
+ * The box shown in place of "Send for review" or "Request to rent" until the person is ready. `expensive`:
+ * a deal of high value asks for a confirmed identity even where ordinary rentals do not (audit D4).
+ */
+export function IdentityNotice({ action, readiness }: { action: 'lend' | 'rent' | 'expensive'; readiness: ReturnType<typeof useDealReadiness> }) {
   const t = useTranslations('identityCheck.notice');
   const pathname = usePathname();
   if (readiness === 'ready' || readiness === 'unknown') return null;
   const href = readiness === 'profile' ? '/settings' : `/verify-identity?next=${encodeURIComponent(pathname)}`;
   return (
     <div role="status" className="border-ink/20 rounded-media flex flex-col items-start gap-3 border p-4" data-identity-notice={readiness}>
-      <p className="text-base leading-relaxed">{t(`${readiness}.${action}`)}</p>
+      <p className="text-base leading-relaxed">{t(`${readiness}.${readiness === 'profile' && action === 'expensive' ? 'rent' : action}`)}</p>
       {readiness !== 'pending' && (
         <Button size="md" href={href}>
           {t(`${readiness}.button`)}

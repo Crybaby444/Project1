@@ -5,6 +5,7 @@ import { AuthModule } from '../auth/auth.module';
 import { ContractService } from '../contracts/contract.service';
 import { MailModule } from '../mail/mail.module';
 import { StorageModule } from '../media/storage.module';
+import { SmsModule } from '../sms/sms.module';
 import { BookingPhotosService } from './booking-photos.service';
 import { DealNotifier } from './deal-notifier';
 import { BookingRulesService } from './booking-rules.service';
@@ -13,7 +14,7 @@ import { BookingsService } from './bookings.service';
 import { EffectsExecutor } from './effects.executor';
 
 @Module({
-  imports: [AuthModule, StorageModule, MailModule, NotificationsModule, AnalyticsCoreModule],
+  imports: [AuthModule, StorageModule, MailModule, NotificationsModule, AnalyticsCoreModule, SmsModule],
   controllers: [BookingsController, MyBookingsController, ListingQuoteController],
   providers: [BookingsService, BookingRulesService, EffectsExecutor, BookingPhotosService, ContractService, DealNotifier],
   exports: [BookingsService, BookingRulesService, BookingPhotosService, DealNotifier],
