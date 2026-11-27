@@ -293,7 +293,7 @@ function ThreadBody({ data, inDeal }: { data: ConversationThread; inDeal: boolea
           {data.listing && (
             <span className="text-ink/65 block truncate text-sm">
               {data.role === 'RENTER' ? t('withOwner') : t('withRenter')} ·{' '}
-              <Link href={`/items/${data.listing.id}`} className="underline decoration-1 underline-offset-2">
+              <Link href={`/listings/${data.listing.id}`} className="underline decoration-1 underline-offset-2">
                 {data.listing.title}
               </Link>
             </span>

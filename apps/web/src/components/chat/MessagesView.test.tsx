@@ -76,6 +76,8 @@ describe('MessagesView', () => {
     expect(within(log).getByText(t.system.REQUESTED)).toBeInTheDocument();
     expect(within(log).getByText('<b>hi</b>')).toBeInTheDocument(); // text, never HTML
     expect(within(log).getByText(t.seen)).toBeInTheDocument();
+    // The item the conversation is about opens its page (it pointed at /items/:id, a 404).
+    expect(screen.getByRole('link', { name: 'Cordless drill' })).toHaveAttribute('href', '/listings/l1');
     // The deal lives in the chat: its link and the next step's button, right here.
     expect(await screen.findByRole('link', { name: t.openDeal })).toHaveAttribute('href', '/bookings/b1');
     expect(screen.getByRole('button', { name: deals.dealActions.SIGN })).toBeInTheDocument();
