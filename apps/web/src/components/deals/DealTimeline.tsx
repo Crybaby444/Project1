@@ -1,8 +1,9 @@
 'use client';
 
 import type { BookingHistoryItem, BookingView } from '@yoyo/shared';
-import { useLocale, useTranslations } from 'next-intl';
-import { formatMoment } from '@/lib/deals/dates';
+import { useLocale, useNow, useTranslations } from 'next-intl';
+import { dateLocale, formatMoment, plainDates } from '@/lib/deals/dates';
+import { addDays, todayIn } from '@/lib/listings/calendar';
 import { dealTimeline, type StepState } from '@/lib/deals/timeline';
 import { Countdown } from './Countdown';
 import { Sheet } from '@/components/ui/Sheet';
@@ -57,6 +58,13 @@ export function DealTimeline({
 }) {
   const t = useTranslations('dealTimeline');
   const locale = useLocale();
+  const now = useNow({ updateInterval: 60_000 });
+  // Paid with the first day still ahead: the handover is "the day", not "now" (the page's own heading says
+  // the deal waits for the handover day; the step agrees and names it).
+  const handoverAhead = booking.status === 'PAID' && todayIn(booking.timeZone, now) < addDays(booking.period.start, -1);
+  const firstDay = plainDates(
+    new Intl.DateTimeFormat(dateLocale(locale), { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(`${booking.period.start}T00:00:00Z`)),
+  );
   const steps = dealTimeline(booking, history);
 
   return (
@@ -91,7 +99,7 @@ export function DealTimeline({
                   <span className={`font-bold [overflow-wrap:anywhere] ${step.state === 'skipped' ? 'line-through' : ''}`}>{title}</span>
                   <span className="type-caption">
                     <span className="sr-only">, </span>
-                    {t(`state.${step.state}`)}
+                    {step.key === 'handover' && step.state === 'current' && handoverAhead ? firstDay : t(`state.${step.state}`)}
                   </span>
                   {step.at && (step.state === 'done' || step.state === 'stopped') && (
                     <time dateTime={step.at} className="text-sm">
@@ -101,7 +109,9 @@ export function DealTimeline({
                 </p>
                 {step.state === 'current' && step.key !== 'request' && step.key !== 'end' && (
                   <div className="animate-step-in flex flex-col gap-1">
-                    <p className="text-sm">{t(`hint.${step.key}`)}</p>
+                    <p className="text-sm">
+                      {step.key === 'handover' && handoverAhead ? t('hint.handoverAhead', { day: firstDay }) : t(`hint.${step.key}`)}
+                    </p>
                     <Countdown booking={booking} onExpire={onDeadline} />
                   </div>
                 )}

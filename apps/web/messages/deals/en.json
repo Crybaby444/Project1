@@ -43,6 +43,7 @@
       "sign": "The contract is ready. Read it, then both of you sign.",
       "pay": "Rent and the service fee go to Yoyo until the handover; the deposit stays frozen.",
       "handover": "Meet, hand the item over, and both of you confirm it here.",
+      "handoverAhead": "You meet on {day} or the evening before. Hand the item over and both confirm it here.",
       "return": "Bring the item back and both of you confirm it here.",
       "inspect": "If nothing is reported in time, the deposit goes back by itself.",
       "damage": "The renter accepts the claim or sends it to Yoyo.",
