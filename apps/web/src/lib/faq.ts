@@ -2,7 +2,7 @@ import type { FaqGroup } from '@/components/pages/FaqList';
 
 /** The FAQ in reading order: groups and the keys of their questions in messages (`faq.groups`). */
 export const FAQ_GROUPS = {
-  renting: ['who', 'days', 'meet', 'longer'],
+  renting: ['who', 'days', 'offer', 'meet', 'longer'],
   lending: ['what', 'price', 'hidden', 'decline'],
   money: ['cost', 'payNow', 'deposit', 'paid'],
   safety: ['broken', 'notReturned', 'report', 'insurance'],

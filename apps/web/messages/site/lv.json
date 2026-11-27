@@ -169,7 +169,7 @@
         },
         "request": {
           "title": "Nosūtiet pieprasījumu",
-          "body": "Izvēlieties veselas dienas un nosūtiet pieprasījumu, ja vēlaties, ar ziņu. Īpašniekam ir {requestHours} stundas, lai to apstiprinātu; pēc tam pieprasījums beidzas un nekas netiek iekasēts."
+          "body": "Izvēlieties veselas dienas un nosūtiet pieprasījumu, ja vēlaties, ar ziņu. Īpašniekam ir {requestHours} stundas, lai to apstiprinātu; pēc tam pieprasījums beidzas un nekas netiek iekasēts. Ja cena šķiet augsta, piedāvājiet savu: īpašnieks atbildēs 24 stundu laikā."
         },
         "contract": {
           "title": "Parakstiet līgumu",
@@ -257,6 +257,10 @@
           "days": {
             "q": "Vai var nomāt uz dažām stundām?",
             "a": "Nē, noma tiek skaitīta veselās dienās. Jūs izvēlaties pirmo un pēdējo dienu, un abas tiek ieskaitītas."
+          },
+          "offer": {
+            "q": "Vai var piedāvāt savu cenu?",
+            "a": "Jā. Izvēlieties dienas lietas lapā un nospiediet “Piedāvāt savu cenu”. Īpašnieks piedāvājumu pieņems vai noraidīs 24 stundu laikā. Piedāvājumam jābūt vismaz pusei no sludinājuma cenas. Pieņemtā cena pati tiek ievietota pieprasījumā uz šīm dienām. Kamēr īpašnieks domā, dienas paliek pieejamas citiem."
           },
           "meet": {
             "q": "Kā es saņemu lietu?",

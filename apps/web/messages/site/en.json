@@ -169,7 +169,7 @@
         },
         "request": {
           "title": "Send a request",
-          "body": "Pick whole days and send a request, with a message if you like. The owner has {requestHours} hours to accept; after that the request expires and nothing is charged."
+          "body": "Pick whole days and send a request, with a message if you like. The owner has {requestHours} hours to accept; after that the request expires and nothing is charged. If the price feels high, offer your own: the owner answers within 24 hours."
         },
         "contract": {
           "title": "Sign the contract",
@@ -257,6 +257,10 @@
           "days": {
             "q": "Can I rent something for a few hours?",
             "a": "No, rentals count in whole days. You pick the first and the last day, and both count."
+          },
+          "offer": {
+            "q": "Can I offer my own price?",
+            "a": "Yes. Pick the days on the item's page and press “Offer your price”. The owner accepts or declines within 24 hours. You can offer from half the listed price. An accepted price goes straight into your request for those days. Until the owner answers, the days stay open to others."
           },
           "meet": {
             "q": "How do I get the item?",
