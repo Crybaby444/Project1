@@ -19,3 +19,10 @@ describe('notificationHref for a price offer', () => {
     expect(notificationHref({ ...offer, event: 'OFFER_DECLINED' })).toBe('/listings/listing-1');
   });
 });
+
+describe('notificationHref for a new line in a deal chat', () => {
+  it('opens the deal at its chat', () => {
+    expect(notificationHref({ ...base, kind: 'DEAL', event: 'MESSAGE', bookingId: 'b1', title: 'Drill' })).toBe('/bookings/b1#deal-chat');
+    expect(notificationHref({ ...base, kind: 'DEAL', event: 'PAID', bookingId: 'b1', title: 'Drill' })).toBe('/bookings/b1');
+  });
+});

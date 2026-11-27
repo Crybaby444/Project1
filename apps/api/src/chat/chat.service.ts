@@ -6,6 +6,7 @@ import { CLOCK, type Clock } from '../clock/clock';
 import { AppError } from '../common/app-error';
 import type { Message, Prisma } from '../generated/prisma/client';
 import { STORAGE_PROVIDER, type StorageProvider } from '../media/storage.provider';
+import { NotificationsService } from '../notifications/notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 /** The most conversations the list shows (newest first). */
@@ -36,6 +37,7 @@ export class ChatService {
   constructor(
     private readonly activity: ActivityService,
     private readonly prisma: PrismaService,
+    private readonly notifications: NotificationsService,
     @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider,
     @Inject(CLOCK) private readonly clock: Clock,
   ) {}
@@ -125,14 +127,7 @@ export class ChatService {
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       take: THREAD_LIMIT,
     });
-    const deal =
-      row.listingId === null
-        ? null
-        : await this.prisma.booking.findFirst({
-            where: { listingId: row.listingId, renterId: row.renterId },
-            orderBy: { createdAt: 'desc' },
-            select: { id: true },
-          });
+    const deal = await this.dealOf(row);
     const asRenter = row.renterId === userId;
     const otherReadAt = asRenter ? row.ownerLastReadAt : row.renterLastReadAt;
     return {
@@ -144,7 +139,7 @@ export class ChatService {
   }
 
   async send(userId: string, id: string, text: string): Promise<ChatMessage> {
-    await this.mine(userId, id);
+    const row = await this.mine(userId, id);
     const now = this.clock.now();
     const [message] = await this.prisma.$transaction([
       this.prisma.message.create({ data: { conversationId: id, authorId: userId, kind: 'TEXT', text, createdAt: now } }),
@@ -152,10 +147,38 @@ export class ChatService {
     ]);
     // That a message was sent, never its words.
     this.activity.record('MESSAGE_SENT', userId, { type: 'CONVERSATION', id });
+    await this.ringTheOtherSide(row, userId);
     return this.message(message, userId);
   }
 
-  /** Marks everything in the conversation as read by me, now. */
+  /**
+   * A deal's chat lives on the deal page, not in Messages (owner, 2026-11-16), so a line from the other side
+   * rang nowhere: a new one lights the bell with "New message about …", leading to the deal's chat. One
+   * notice per deal until it is read, however many lines follow.
+   */
+  private async ringTheOtherSide(row: ConversationRow, authorId: string): Promise<void> {
+    const deal = await this.dealOf(row);
+    if (!deal) return;
+    const to = row.renterId === authorId ? row.ownerId : row.renterId;
+    const waiting = await this.prisma.notification.count({
+      where: { userId: to, kind: 'DEAL', event: 'MESSAGE', bookingId: deal.id, readAt: null },
+    });
+    if (waiting > 0) return;
+    await this.notifications.notify([to], { kind: 'DEAL', event: 'MESSAGE', bookingId: deal.id, listingId: row.listingId, title: deal.title });
+  }
+
+  /** The latest deal of an item's conversation (its two sides and that item), or null for a direct one. */
+  private async dealOf(row: ConversationRow): Promise<{ id: string; title: string } | null> {
+    if (row.listingId === null) return null;
+    const booking = await this.prisma.booking.findFirst({
+      where: { listingId: row.listingId, renterId: row.renterId },
+      orderBy: { createdAt: 'desc' },
+      select: { id: true, listing: { select: { title: true } } },
+    });
+    return booking ? { id: booking.id, title: booking.listing.title ?? '' } : null;
+  }
+
+  /** Marks everything in the conversation as read by me, now, and the bell's notice of its new lines. */
   async read(userId: string, id: string): Promise<void> {
     const row = await this.mine(userId, id);
     const now = this.clock.now();
@@ -163,6 +186,13 @@ export class ChatService {
       where: { id },
       data: row.renterId === userId ? { renterLastReadAt: now } : { ownerLastReadAt: now },
     });
+    const deal = await this.dealOf(row);
+    if (deal) {
+      await this.prisma.notification.updateMany({
+        where: { userId, kind: 'DEAL', event: 'MESSAGE', bookingId: deal.id, readAt: null },
+        data: { readAt: now },
+      });
+    }
   }
 
   /** A conversation I am a side of, or 404. */

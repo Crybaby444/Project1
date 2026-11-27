@@ -577,8 +577,9 @@
     "unread": "{count, plural, zero {# nelasītu} one {# nelasīta} other {# nelasītas}}",
     "listLabel": "Sarunas",
     "emptyTitle": "Sarunu vēl nav",
-    "emptyBody": "Pajautājiet īpašniekam par lietu, un saruna parādīsies šeit.",
+    "emptyBody": "Šeit ir personīgās sarunas: pajautājiet īpašniekam par lietu, un saruna parādīsies. Darījuma sarakste ir paša darījuma lapā.",
     "browse": "Skatīt katalogu",
+    "myDeals": "Mani darījumi",
     "pick": "Izvēlieties sarunu",
     "loadFailed": "Sarunas neielādējās.",
     "retry": "Mēģināt vēlreiz",
@@ -650,7 +651,8 @@
         "REMINDER_ANSWER": "“{title}”: pieprasījums drīz beigsies — atbildiet",
         "REMINDER_SIGN": "“{title}”: parakstiet līgumu, pirms rezervācija beidzas",
         "REMINDER_PAY": "“{title}”: rezervācija drīz beigsies — pabeidziet to",
-        "REMINDER_REVIEW": "“{title}”: kā gāja? Atstājiet atsauksmi"
+        "REMINDER_REVIEW": "“{title}”: kā gāja? Atstājiet atsauksmi",
+        "MESSAGE": "Jauna ziņa par “{title}”"
       },
       "OFFER": {
         "OFFER_MADE": "Jauns cenas piedāvājums par “{title}”",

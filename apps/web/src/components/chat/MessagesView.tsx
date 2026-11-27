@@ -74,9 +74,13 @@ export function MessagesView({ activeId }: { activeId?: string }) {
           title={t('emptyTitle')}
           body={t('emptyBody')}
           action={
-            <Button href="/c">
-              {t('browse')}
-            </Button>
+            <>
+              <Button href="/c">{t('browse')}</Button>
+              {/* A deal's chat is on its page (owner, 2026-11-16): say where to find it. */}
+              <Button variant="ghost" href="/bookings">
+                {t('myDeals')}
+              </Button>
+            </>
           }
         />
       ) : (

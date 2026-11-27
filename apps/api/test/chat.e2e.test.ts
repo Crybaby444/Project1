@@ -93,6 +93,35 @@ describe('chat (plan 9, spec §4.6)', () => {
     expect(thread.dealId).toBe(booking.id);
   });
 
+  it('rings the other side once for new lines in a deal chat, and reading the chat quiets it', async () => {
+    const listing = await seedListing(t, owner.user, { status: 'PUBLISHED' });
+    const booking = await requestBooking(t, renter, listing.id, 1, 3);
+    const { conversation } = (await renter.get(`/bookings/${booking.id}/conversation`).expect(200)).body;
+    const rings = async (client: Client) =>
+      (await client.get('/me/notifications').expect(200)).body.items.filter((n: { event: string }) => n.event === 'MESSAGE');
+
+    await renter.post(`/conversations/${conversation.id}/messages`).send({ text: 'Буду в 18:30 у Centrāltirgus' }).expect(201);
+    await renter.post(`/conversations/${conversation.id}/messages`).send({ text: 'Хорошо?' }).expect(201);
+    // Two lines, one notice: the owner is told once until they read the chat.
+    const rung = await rings(owner);
+    expect(rung).toHaveLength(1);
+    expect(rung[0]).toMatchObject({ kind: 'DEAL', bookingId: booking.id, title: 'Bosch cordless drill', readAt: null });
+    expect(await rings(renter)).toHaveLength(0);
+
+    await owner.post(`/conversations/${conversation.id}/read`).expect(204);
+    expect((await rings(owner))[0].readAt).not.toBeNull();
+    await owner.post(`/conversations/${conversation.id}/messages`).send({ text: 'Да, жду.' }).expect(201);
+    expect(await rings(renter)).toHaveLength(1);
+    await renter.post(`/conversations/${conversation.id}/messages`).send({ text: 'Спасибо!' }).expect(201);
+    expect(await rings(owner)).toHaveLength(2);
+  });
+
+  it('does not ring for a direct conversation (Messages has its own count)', async () => {
+    const { conversation } = (await renter.post(`/users/${owner.user.id}/conversation`).expect(200)).body;
+    await renter.post(`/conversations/${conversation.id}/messages`).send({ text: 'Hi!' }).expect(201);
+    expect((await owner.get('/me/notifications').expect(200)).body.items).toEqual([]);
+  });
+
   it("shows on the item how fast the owner usually answers, once they answered at least twice", async () => {
     const { listing, conversation } = await talk();
     const base = t.clock.now().getTime();
