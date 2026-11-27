@@ -8,6 +8,7 @@ import { BookingLinkButton } from '@/components/deals/BookingLinkButton';
 import { formatEuros } from '@/lib/listings/money';
 import { ListingActions, type ListingAction } from './ListingActions';
 import { ListingStatusBadge } from './ListingStatusBadge';
+import { dateLocale } from '@/lib/deals/dates';
 
 /** One row of "My items": cover, title, state, price, and what can be done with it. */
 export function MyListingCard({
@@ -19,7 +20,7 @@ export function MyListingCard({
 }) {
   const t = useTranslations('myListings');
   const locale = useLocale();
-  const changed = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric' }).format(
+  const changed = new Intl.DateTimeFormat(dateLocale(locale), { day: 'numeric', month: 'short', year: 'numeric' }).format(
     new Date(listing.updatedAt),
   );
   const archived = listing.status === 'ARCHIVED';
@@ -80,7 +81,7 @@ export function MyListingCard({
 function Activity({ activity }: { activity: OwnerListingSummary['activity'] }) {
   const t = useTranslations('myListings.activity');
   const locale = useLocale();
-  const day = (d: string) => new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(`${d}T00:00:00Z`));
+  const day = (d: string) => new Intl.DateTimeFormat(dateLocale(locale), { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(`${d}T00:00:00Z`));
   return (
     <ul className="my-1 flex flex-wrap gap-1.5 text-sm font-semibold">
       {activity.requests > 0 && (

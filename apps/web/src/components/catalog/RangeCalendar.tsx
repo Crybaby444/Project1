@@ -7,6 +7,7 @@ import { IconButton } from '@/components/ui/IconButton';
 import { dayRole, isBlockedDay, pickDay, type Range } from '@/lib/catalog/range';
 import { addDays, monthGrid, weekStartFor } from '@/lib/listings/calendar';
 import { monthLabel } from '@/lib/month-label';
+import { dateLocale } from '@/lib/deals/dates';
 
 type Month = { year: number; month: number };
 
@@ -76,7 +77,7 @@ export function RangeCalendar({ value, onChange, today, lastDay, blocked = [], t
     buttons.current.get(focused)?.focus();
   }, [focused, view]);
 
-  const dayLabel = new Intl.DateTimeFormat(locale, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+  const dayLabel = new Intl.DateTimeFormat(dateLocale(locale), { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
   const monthHeading = monthLabel(locale);
   const weekdayShort = new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' });
   const weekdayLong = new Intl.DateTimeFormat(locale, { weekday: 'long', timeZone: 'UTC' });

@@ -50,7 +50,7 @@ describe('MyListings', () => {
     });
     const waiting = await screen.findByRole('link', { name: '2 requests waiting' });
     expect(waiting).toHaveAttribute('href', '/bookings?role=owner');
-    expect(screen.getByText('Next rental from Nov 20')).toBeInTheDocument();
+    expect(screen.getByText('Next rental from 20 Nov')).toBeInTheDocument();
     expect(screen.getByText('Earned €125')).toBeInTheDocument();
   });
 
