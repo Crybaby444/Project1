@@ -1,6 +1,7 @@
 import { addDays, diffDays, localDate, type LocalDate } from '@yoyo/domain';
 import type { CatalogQuery, CatalogSort, CategoryNode } from '@yoyo/shared';
 import { Prisma } from '../generated/prisma/client';
+import { SEARCH_ALIASES } from './search-aliases';
 import { CATALOG_VISIBLE_SQL } from './visibility';
 
 /** What the query names that only the database or the category tree can resolve. */
@@ -55,13 +56,13 @@ export function stemOf(word: string): string {
 const KIND_ATTRIBUTES = new Set(['type', 'model']);
 
 /**
- * What a category answers to in a search, folded, in every language: its names and the kinds it holds (the
- * choices of its type or model, never "Other"). Items are often written in one language and searched in
+ * What a category answers to in a search, folded, in every language: its names, the kinds it holds (the
+ * choices of its type or model, never "Other") and the everyday words people use for them (`SEARCH_ALIASES`). Items are often written in one language and searched in
  * another (owner, 2026-11-27: Riga reads Latvian and Russian); the category bridges them, so a Russian
  * «велосипед» finds a bike listed as «Velosipēds».
  */
 export function vocabularyOf(node: CategoryNode): string[] {
-  const words = [...Object.values(node.names)];
+  const words = [...Object.values(node.names), ...(SEARCH_ALIASES[node.slug] ?? [])];
   for (const attribute of node.attributes) {
     if (!KIND_ATTRIBUTES.has(attribute.key)) continue;
     for (const option of attribute.options ?? []) if (option.value !== 'other') words.push(...Object.values(option.labels));

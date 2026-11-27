@@ -83,6 +83,13 @@ describe('catalog query building', () => {
     expect(textWords('TV', categories)).toEqual([{ word: 'tv', stem: 'tv', categoryIds: [] }]);
   });
 
+  it('adds the everyday words people use for a category (SEARCH_ALIASES)', () => {
+    const cameras = { id: 'c-cameras', slug: 'cameras', sticker: 'blue', icon: 'camera', names: { en: 'Cameras', lv: 'Fotokameras', ru: 'Фотокамеры' }, slugs: { en: 'cameras', lv: 'fotokameras', ru: 'fotokamery' }, attributes: [], children: [] } satisfies CategoryNode;
+    const vocabulary = vocabularyOf(cameras);
+    expect(vocabulary).toEqual(expect.arrayContaining(['фотоаппарат', 'зеркалка', 'fotoaparats']));
+    expect(textWords('фотоаппарата', [{ ids: ['c-cameras'], vocabulary }])[0]!.categoryIds).toEqual(['c-cameras']);
+  });
+
   it('sorts by relevance only when there is a search text', () => {
     expect(effectiveSort({ page: 1 })).toBe('new');
     expect(effectiveSort({ page: 1, q: 'drill' })).toBe('relevance');
