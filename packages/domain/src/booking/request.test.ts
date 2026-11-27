@@ -83,12 +83,15 @@ describe('createRequest', () => {
     });
   });
 
-  it('uses an agreed daily price, which must be below the listed one', () => {
+  it('uses an agreed daily price, and the listed one when that has since become cheaper', () => {
     const agreed = createRequest(requestInput({ agreedDailyCents: cents(1200) }), ctx).next.quote;
-    expect(agreed).toMatchObject({ dailyCents: 1200, rentCents: 3600 });
-    expect(() => createRequest(requestInput({ agreedDailyCents: cents(1500) }), ctx)).toThrow(
-      code('INVALID_OFFER'),
-    );
+    expect(agreed).toMatchObject({ dailyCents: 1200, rentCents: 3600, priceSource: 'AGREED' });
+    // The owner cut the price to 15 € after accepting 16 €: the request goes at 15 €, not to an error.
+    expect(createRequest(requestInput({ agreedDailyCents: cents(1600) }), ctx).next.quote).toMatchObject({ dailyCents: 1500, priceSource: 'LISTED' });
+    // The owner raised the price after accepting: the agreed price still holds, even under half the new one.
+    const raised = requestInput({ agreedDailyCents: cents(500) });
+    expect(createRequest(raised, ctx).next.quote).toMatchObject({ dailyCents: 500, priceSource: 'AGREED' });
+    expect(() => createRequest(requestInput({ agreedDailyCents: cents(0) }), ctx)).toThrow(code('INVALID_OFFER'));
   });
 
   it('books a week at the listed price when the weekly discount beats the accepted offer (F3)', () => {

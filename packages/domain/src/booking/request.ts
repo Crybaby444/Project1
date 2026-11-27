@@ -3,7 +3,7 @@ import type { Period } from '../dates';
 import { DomainError } from '../errors';
 import { requireId } from '../ids';
 import type { Cents } from '../money';
-import { quote, validateOffer } from '../pricing';
+import { PRICING_LIMITS, quote } from '../pricing';
 import { serviceFeeAt } from '../settings';
 import type { ListingPricing } from '../pricing';
 import { checkContext, checkDate, ttl } from './transitions';
@@ -29,8 +29,8 @@ export interface RequestInput {
 /**
  * Step 1 of a deal: the renter asks for dates. Checks that the renter is not the owner, that the
  * period starts between today (in the item's time zone) and `maxAdvanceDays` ahead and fits the
- * listing's length limits, that the dates are free, and that an agreed price is below the listed one;
- * then prices the rental. The owner has `requestTtlHours` to answer, but no longer than the end of
+ * listing's length limits, that the dates are free, and that an agreed price (an accepted offer) is a
+ * real price; then prices the rental at the cheaper of the agreed and the listed price. The owner has `requestTtlHours` to answer, but no longer than the end of
  * the first rental day.
  */
 export function createRequest(input: RequestInput, ctx: DecideContext): Decision {
@@ -47,7 +47,15 @@ export function createRequest(input: RequestInput, ctx: DecideContext): Decision
   });
   const conflict = firstConflict(input.period, input.blocked);
   if (conflict !== null) throw new DomainError('DATES_UNAVAILABLE', { conflict });
-  if (input.agreedDailyCents !== undefined) validateOffer(input.pricing, input.agreedDailyCents);
+  // An agreed price comes from an offer the owner accepted (checked against the listing when it was made). It
+  // outlives a later change of the listed price: the renter pays whichever is cheaper (`quote`), so a price
+  // cut never strands an accepted offer, and a price rise never undoes what the owner agreed to.
+  if (input.agreedDailyCents !== undefined) {
+    const agreed = input.agreedDailyCents;
+    if (!Number.isSafeInteger(agreed) || agreed < PRICING_LIMITS.dailyCents.min || agreed > PRICING_LIMITS.dailyCents.max) {
+      throw new DomainError('INVALID_OFFER', { offerDailyCents: agreed, dailyCents: input.pricing.dailyCents });
+    }
+  }
 
   // The fee is decided now and frozen into the booking: a later change of settings never alters it.
   const fee = serviceFeeAt(ctx.settings, ctx.now, input.timeZone, input.renterJoinedAt ?? null);

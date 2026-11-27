@@ -138,6 +138,27 @@ describe('price offers', () => {
     expect((await owner.post(`/offers/${sameDays.id}/accept`).expect(409)).body.error.code).toBe('OFFER_UNAVAILABLE');
   });
 
+  it('keeps an accepted offer through a later change of the listed price, at the cheaper of the two', async () => {
+    const listing = await published();
+    const made = (await offer(listing.id, 1200)).body.offer;
+    await owner.post(`/offers/${made.id}/accept`).expect(200);
+    // The owner cuts the price under the agreed one: the request goes at the listed price.
+    await t.prisma.listing.update({ where: { id: listing.id }, data: { dailyCents: 1000 } });
+    const cut = await renter.post('/bookings').send({ listingId: listing.id, start: day(t, 2), end: day(t, 4), offerId: made.id });
+    expect(cut.status).toBe(201);
+    expect(cut.body.booking.quote).toMatchObject({ dailyCents: 1000, priceSource: 'LISTED' });
+
+    // Another renter's accepted 12 € holds after the owner doubles the price.
+    const second = await signedInClient(t, { name: 'Ilze' });
+    await t.prisma.listing.update({ where: { id: listing.id }, data: { dailyCents: 1500 } });
+    const theirs = (await second.post(`/listings/${listing.id}/offers`).send({ start: day(t, 6), end: day(t, 7), dailyCents: 1200 }).expect(201)).body.offer;
+    await owner.post(`/offers/${theirs.id}/accept`).expect(200);
+    await t.prisma.listing.update({ where: { id: listing.id }, data: { dailyCents: 3000 } });
+    const raised = await second.post('/bookings').send({ listingId: listing.id, start: day(t, 6), end: day(t, 7), offerId: theirs.id });
+    expect(raised.status).toBe(201);
+    expect(raised.body.booking.quote).toMatchObject({ dailyCents: 1200, priceSource: 'AGREED' });
+  });
+
   it('refuses offers on a blocked owner\'s listing', async () => {
     const listing = await published();
     await t.prisma.user.update({ where: { id: owner.user.id }, data: { blockedAt: t.clock.now() } });

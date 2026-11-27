@@ -130,7 +130,7 @@ stateDiagram-v2
 
 | Из | Событие (кто) | Условие | В | Эффекты |
 |---|---|---|---|---|
-| — | `createRequest` (арендатор) | не своя вещь (`CANNOT_RENT_OWN`); начало от сегодня до `maxAdvanceDays`, длина в пределах объявления; даты свободны (`DATES_UNAVAILABLE`); договорная цена от половины цены объявления и ниже её (`INVALID_OFFER`) | REQUESTED | SCHEDULE REQUEST_EXPIRY `ttl(requestTtlHours)`; NOTIFY OWNER; SYSTEM_MESSAGE REQUESTED |
+| — | `createRequest` (арендатор) | не своя вещь (`CANNOT_RENT_OWN`); начало от сегодня до `maxAdvanceDays`, длина в пределах объявления; даты свободны (`DATES_UNAVAILABLE`); договорная цена (из принятого предложения) — настоящая сумма (`INVALID_OFFER`); бронь идёт по меньшей из договорной и текущей цены объявления, так что смена цены после согласия не ломает предложение | REQUESTED | SCHEDULE REQUEST_EXPIRY `ttl(requestTtlHours)`; NOTIFY OWNER; SYSTEM_MESSAGE REQUESTED |
 | REQUESTED | ACCEPT (владелец) | `ctx.blocked` передан; даты свободны (`DATES_UNAVAILABLE`) | ACCEPTED | CANCEL_TIMER REQUEST_EXPIRY; SCHEDULE PAYMENT_EXPIRY `ttl(paymentTtlHours)`; RESERVE_DATES; GENERATE_CONTRACT; NOTIFY RENTER; SYSTEM_MESSAGE ACCEPTED |
 | REQUESTED | DECLINE{reason?} (владелец) | — | DECLINED | CANCEL_TIMER; NOTIFY RENTER; SYSTEM_MESSAGE DECLINED |
 | REQUESTED | WITHDRAW (арендатор) | — | CANCELLED (by RENTER) | CANCEL_TIMER; NOTIFY OWNER; SYSTEM_MESSAGE CANCELLED |
