@@ -303,6 +303,7 @@
     },
     "badge": "{count, plural, one {# waits for you} other {# wait for you}}",
     "yourTurn": "Your turn",
+    "unreadMessages": "{count, plural, one {# new message} other {# new messages}}",
     "with": {
       "renter": "From {name}",
       "owner": "To {name}"

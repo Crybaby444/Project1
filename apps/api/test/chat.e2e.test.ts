@@ -116,6 +116,23 @@ describe('chat (plan 9, spec §4.6)', () => {
     expect(await rings(owner)).toHaveLength(2);
   });
 
+  it('counts the unread lines of each deal in "My deals", only from the other side, until read', async () => {
+    const listing = await seedListing(t, owner.user, { status: 'PUBLISHED' });
+    const booking = await requestBooking(t, renter, listing.id, 1, 3);
+    const { conversation } = (await renter.get(`/bookings/${booking.id}/conversation`).expect(200)).body;
+    const unread = async (client: Client, role: 'owner' | 'renter') =>
+      (await client.get(`/me/bookings?role=${role}`).expect(200)).body.items.find((b: { id: string }) => b.id === booking.id).unreadMessages;
+
+    await renter.post(`/conversations/${conversation.id}/messages`).send({ text: 'Буду в 18:30' }).expect(201);
+    await renter.post(`/conversations/${conversation.id}/messages`).send({ text: 'Хорошо?' }).expect(201);
+    expect(await unread(owner, 'owner')).toBe(2);
+    expect(await unread(renter, 'renter')).toBe(0);
+    await owner.post(`/conversations/${conversation.id}/read`).expect(204);
+    expect(await unread(owner, 'owner')).toBe(0);
+    // A single deal page never counts (only the list does).
+    expect((await owner.get(`/bookings/${booking.id}`).expect(200)).body.booking.unreadMessages).toBe(0);
+  });
+
   it('does not ring for a direct conversation (Messages has its own count)', async () => {
     const { conversation } = (await renter.post(`/users/${owner.user.id}/conversation`).expect(200)).body;
     await renter.post(`/conversations/${conversation.id}/messages`).send({ text: 'Hi!' }).expect(201);

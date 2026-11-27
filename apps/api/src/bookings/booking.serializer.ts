@@ -74,6 +74,7 @@ export function serializeBooking(
     deadline: timer ? { timer: timer[0], dueAt: timer[1].toISOString() } : null,
     actions: actions.filter((a): a is BookingAction => a !== 'TIMEOUT'),
     hasContract: row.contract !== null,
+    unreadMessages: 0,
     signatures: (row.contract?.signatures ?? []).map((sig) => ({ side: sig.side, fullName: sig.fullName, signedAt: sig.createdAt.toISOString(), method: sig.method })),
     version: row.version,
     createdAt: s.createdAt.toISOString(),

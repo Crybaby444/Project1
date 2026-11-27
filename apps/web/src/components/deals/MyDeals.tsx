@@ -37,7 +37,8 @@ export function DealCard({ booking, index }: { booking: BookingView; index: numb
   return (
     <Reveal as="li" index={index % 6}>
       <TransitionLink
-        href={`/bookings/${booking.id}`}
+        // Unread lines open the deal right at its chat.
+        href={booking.unreadMessages > 0 ? `/bookings/${booking.id}#deal-chat` : `/bookings/${booking.id}`}
         data-deal-card={booking.id}
         className="group sheet border-ink/15 rounded-media hover:border-ink focus-visible:border-ink relative flex h-full items-start gap-3 border p-3 transition-[border-color,translate] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 sm:items-center sm:gap-4 sm:p-5"
       >
@@ -51,6 +52,14 @@ export function DealCard({ booking, index }: { booking: BookingView; index: numb
                 data-your-turn=""
               >
                 {t('yourTurn')}
+              </span>
+            )}
+            {booking.unreadMessages > 0 && (
+              <span
+                className="rounded-pill border-ink inline-flex min-h-7 items-center gap-1.5 border px-3 text-sm font-bold before:size-1.5 before:rounded-full before:bg-[var(--glow)] before:content-['']"
+                data-unread-messages={booking.unreadMessages}
+              >
+                {t('unreadMessages', { count: booking.unreadMessages })}
               </span>
             )}
           </div>
