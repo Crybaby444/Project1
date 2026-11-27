@@ -4,6 +4,7 @@ import { Link } from '@/i18n/navigation';
 import { profilePath } from '@/lib/seo';
 import { Stars } from '@/components/reviews/Stars';
 import { formatScore } from '@/components/reviews/format';
+import { sinceLabel } from '@/lib/month-label';
 
 /** "AB" from "Anna Bērziņa", "A" from "Anna", "A" from "@444anna". */
 export function initials(name: string): string {
@@ -38,7 +39,7 @@ export function OwnerCard({ owner, heading = 'h2' }: { owner: OwnerSummary; head
   const Heading = heading;
   // On the profile itself (h1) the counts live in the numbers row and the tabs: nothing said twice.
   const profile = heading === 'h1';
-  const since = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(owner.memberSince));
+  const since = sinceLabel(owner.memberSince, locale);
 
   return (
     <div className={`flex flex-col gap-4 ${heading === 'h1' ? '' : 'sheet border-ink/15 rounded-media border p-5 sm:p-6'}`}>

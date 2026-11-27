@@ -2,13 +2,15 @@
 
 import type { PublicReview } from '@yoyo/shared';
 import { useLocale, useTranslations } from 'next-intl';
+import { dateLocale } from '@/lib/deals/dates';
 import { Stars } from './Stars';
 
 /** Reviews as a list of hairline rows: who and from which side, when, the stars, the words. */
 export function ReviewList({ reviews, showItem = false }: { reviews: PublicReview[]; showItem?: boolean }) {
   const t = useTranslations('reviews');
   const locale = useLocale();
-  const date = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+  // A moment, in the market's time zone (a review written at 00:20 in Riga is that day's, not the day before).
+  const date = new Intl.DateTimeFormat(dateLocale(locale), { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Riga' });
   return (
     <ul className="border-ink/15 m-0 list-none border-t p-0">
       {reviews.map((review) => (
