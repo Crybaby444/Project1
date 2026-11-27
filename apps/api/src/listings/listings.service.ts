@@ -141,18 +141,20 @@ export class ListingsService {
     return rows.map((row) => serializeSummary(row, this.urlFor, activity.get(row.id)));
   }
 
-  /** For the owner's list: requests waiting, the next paid rental's first day, what each item earned. */
+  /** For the owner's list: requests and price offers waiting, the next paid rental's first day, what each item earned. */
   private async activityOf(ids: string[]): Promise<Map<string, OwnerListingSummary['activity']>> {
     const out = new Map<string, OwnerListingSummary['activity']>();
     if (ids.length === 0) return out;
     const today = new Date(`${this.clock.now().toISOString().slice(0, 10)}T00:00:00.000Z`);
-    const [requests, next, earned] = await Promise.all([
+    const [requests, offers, next, earned] = await Promise.all([
       this.prisma.booking.groupBy({ by: ['listingId'], where: { listingId: { in: ids }, status: 'REQUESTED' }, _count: { _all: true } }),
+      this.prisma.offer.groupBy({ by: ['listingId'], where: { listingId: { in: ids }, status: 'PENDING', expiresAt: { gt: this.clock.now() } }, _count: { _all: true } }),
       this.prisma.booking.groupBy({ by: ['listingId'], where: { listingId: { in: ids }, status: { in: ['PAID', 'ACTIVE'] }, end: { gte: today } }, _min: { start: true } }),
       this.prisma.booking.groupBy({ by: ['listingId'], where: { listingId: { in: ids }, status: 'COMPLETED' }, _sum: { ownerPayoutCents: true } }),
     ]);
-    for (const id of ids) out.set(id, { requests: 0, nextStart: null, earnedCents: 0 });
+    for (const id of ids) out.set(id, { requests: 0, offers: 0, nextStart: null, earnedCents: 0 });
     for (const r of requests) out.get(r.listingId)!.requests = r._count._all;
+    for (const r of offers) out.get(r.listingId)!.offers = r._count._all;
     for (const r of next) if (r._min.start) out.get(r.listingId)!.nextStart = r._min.start.toISOString().slice(0, 10);
     for (const r of earned) out.get(r.listingId)!.earnedCents = r._sum.ownerPayoutCents ?? 0;
     return out;

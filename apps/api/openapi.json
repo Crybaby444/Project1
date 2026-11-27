@@ -18166,6 +18166,11 @@
                       "minimum": 0,
                       "maximum": 9007199254740991
                     },
+                    "offers": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
                     "nextStart": {
                       "type": "string",
                       "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
@@ -18179,6 +18184,7 @@
                   },
                   "required": [
                     "requests",
+                    "offers",
                     "nextStart",
                     "earnedCents"
                   ],

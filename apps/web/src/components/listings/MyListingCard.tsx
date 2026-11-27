@@ -91,6 +91,13 @@ function Activity({ activity }: { activity: OwnerListingSummary['activity'] }) {
           </Link>
         </li>
       )}
+      {activity.offers > 0 && (
+        <li>
+          <Link href="/bookings?role=owner" className="bg-ink text-canvas rounded-pill inline-flex min-h-7 items-center gap-1.5 px-2.5 before:size-1.5 before:rounded-full before:bg-[var(--glow)] before:content-['']">
+            {t('offers', { count: activity.offers })}
+          </Link>
+        </li>
+      )}
       {activity.nextStart && <li className="border-ink/25 rounded-pill inline-flex min-h-7 items-center border px-2.5">{t('next', { date: day(activity.nextStart) })}</li>}
       {activity.earnedCents > 0 && (
         <li className="border-ink/25 rounded-pill inline-flex min-h-7 items-center border px-2.5">{t('earned', { amount: formatEuros(activity.earnedCents, locale) })}</li>

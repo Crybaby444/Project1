@@ -49,7 +49,7 @@ describe('ProfileTabs', () => {
     const draft = {
       id: 'l1', status: 'DRAFT', title: 'Bosch drill draft', categoryId: null, dailyCents: 800, cover: null, photoCount: 0,
       rejectionReason: null, submittedAt: null, publishedAt: null, updatedAt: '2026-11-04T10:00:00.000Z', version: 1,
-      activity: { requests: 0, nextStart: null, earnedCents: 0 },
+      activity: { requests: 0, offers: 0, nextStart: null, earnedCents: 0 },
     };
     const api = fakeApi({
       ...meRoute(me),

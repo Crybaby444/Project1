@@ -711,6 +711,7 @@
     "count": "{count, plural, zero {# lietas} one {# lieta} other {# lietas}}",
     "activity": {
       "requests": "{count, plural, zero {# pieprasījumu gaida} one {# pieprasījums gaida} other {# pieprasījumi gaida}}",
+      "offers": "{count, plural, zero {# cenas piedāvājumu} one {# cenas piedāvājums} other {# cenas piedāvājumi}}",
       "next": "Nākamā noma no {date}",
       "earned": "Nopelnīts {amount}"
     },
