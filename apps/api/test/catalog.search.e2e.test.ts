@@ -147,6 +147,15 @@ describe('catalog search', () => {
       expect(await ids({ q: 'velosipēdu' })).toEqual([bike.id]);
     });
 
+    it('finds everyday words for a category: «фотоаппарат», «зеркалка», «керхер»', async () => {
+      const camera = await live({ title: 'Canon EOS 250D ar objektīvu', description: 'Spoguļkamera ar 18–55 mm objektīvu.', categoryId: await categoryId(t, 'cameras'), attributes: {} });
+      const washer = await live({ title: 'Augstspiediena mazgātājs K5', description: 'Terases un auto mazgāšanai.', categoryId: await categoryId(t, 'pressure-washers'), attributes: {} });
+      expect(await ids({ q: 'фотоаппарат' })).toEqual([camera.id]);
+      expect(await ids({ q: 'зеркалка' })).toEqual([camera.id]);
+      expect(await ids({ q: 'fotoaparāts' })).toEqual([camera.id]);
+      expect(await ids({ q: 'керхер' })).toEqual([washer.id]);
+    });
+
     it('wants every word, each from the text or the category, in any order', async () => {
       expect(await ids({ q: 'дрель bosch' })).toEqual([drill.id]);
       expect(await ids({ q: 'дрель makita' })).toEqual([]);
