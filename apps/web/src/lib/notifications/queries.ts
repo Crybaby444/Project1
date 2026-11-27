@@ -68,6 +68,7 @@ export function notificationHref(n: Notification): string {
   if (n.kind === 'OFFER' && n.event === 'OFFER_MADE') return '/bookings?role=owner';
   if ((n.kind === 'OFFER' || n.kind === 'SEARCH' || n.kind === 'FOLLOW') && n.listingId) return `/listings/${n.listingId}`;
   if (n.kind === 'IDENTITY') return n.event === 'VERIFIED' ? '/' : '/settings#identity';
-  if (n.bookingId) return `/bookings/${n.bookingId}`;
+  // A new line in a deal's chat opens the deal right at its chat.
+  if (n.bookingId) return n.event === 'MESSAGE' ? `/bookings/${n.bookingId}#deal-chat` : `/bookings/${n.bookingId}`;
   return '/notifications';
 }

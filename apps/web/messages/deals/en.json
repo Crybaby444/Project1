@@ -577,8 +577,9 @@
     "unread": "{count, plural, one {# unread} other {# unread}}",
     "listLabel": "Conversations",
     "emptyTitle": "No conversations yet",
-    "emptyBody": "Ask an owner about an item, and the talk shows up here.",
+    "emptyBody": "Personal conversations live here: ask an owner about an item and it appears. A deal's chat is on the deal's own page.",
     "browse": "Browse the catalog",
+    "myDeals": "My deals",
     "pick": "Pick a conversation",
     "loadFailed": "The conversations did not load.",
     "retry": "Try again",
@@ -650,7 +651,8 @@
         "REMINDER_ANSWER": "“{title}”: the request expires soon — answer it",
         "REMINDER_SIGN": "“{title}”: sign the contract before the booking expires",
         "REMINDER_PAY": "“{title}”: the booking expires soon — finish it",
-        "REMINDER_REVIEW": "“{title}”: how did it go? Leave a review"
+        "REMINDER_REVIEW": "“{title}”: how did it go? Leave a review",
+        "MESSAGE": "New message about “{title}”"
       },
       "OFFER": {
         "OFFER_MADE": "New price offer for “{title}”",
