@@ -19,6 +19,8 @@ describe('DealClosing', () => {
     expect(screen.getByRole('heading', { name: t.title })).toBeVisible();
     expect(screen.getByText(/is back in your Yoyo wallet/)).toBeVisible();
     expect(await screen.findByRole('link', { name: t.review })).toHaveAttribute('href', '#deal-reviews');
+    // The same item again, one click away.
+    expect(screen.getByRole('link', { name: t.again })).toHaveAttribute('href', `/listings/${booking.listing.id}`);
   });
 
   it('tells the owner the rent is in the wallet', () => {
@@ -27,5 +29,6 @@ describe('DealClosing', () => {
     renderWithSession(<DealClosing booking={booking} />, { client: api.client });
     expect(screen.getByText(/is in your Yoyo wallet/)).toBeVisible();
     expect(screen.getByRole('link', { name: t.moreOwner })).toBeVisible();
+    expect(screen.queryByRole('link', { name: t.again })).toBeNull();
   });
 });

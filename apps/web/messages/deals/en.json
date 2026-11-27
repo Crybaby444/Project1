@@ -196,6 +196,7 @@
       "owner": "The rent, {amount}, is in your Yoyo wallet.",
       "review": "Leave a review",
       "reviewed": "Thank you for your review.",
+      "again": "Rent it again",
       "moreRenter": "Find something else",
       "moreOwner": "Lend another item"
     },

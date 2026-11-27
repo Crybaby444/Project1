@@ -38,6 +38,12 @@ export function DealClosing({ booking }: { booking: BookingView }) {
       {reviewed && !canReview && <p className="text-sm font-bold">{t('reviewed')}</p>}
       <div className="flex flex-wrap gap-2.5">
         {canReview && <Button href="#deal-reviews">{t('review')}</Button>}
+        {/* The same item once more is the shortest way back for a renter it served well. */}
+        {!asOwner && (
+          <Button variant={canReview ? 'ghost' : 'primary'} href={`/listings/${booking.listing.id}`}>
+            {t('again')}
+          </Button>
+        )}
         <Button variant="ghost" href={asOwner ? '/listings/new' : '/c'}>
           {asOwner ? t('moreOwner') : t('moreRenter')}
         </Button>
