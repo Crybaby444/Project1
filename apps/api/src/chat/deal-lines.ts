@@ -24,3 +24,21 @@ export async function writeDealLine(tx: Prisma.TransactionClient, line: DealLine
     data: { conversationId: conversation.id, kind: 'SYSTEM', event: line.status, bookingId: line.bookingId, createdAt: line.now },
   });
 }
+
+/**
+ * The renter's note to a request ("Could I pick it up after 18:00?") as their first line in the deal's chat,
+ * just after the request's own line, so the owner reads and answers it where the conversation is.
+ */
+export async function writeRequestNote(
+  tx: Prisma.TransactionClient,
+  note: { listingId: string; renterId: string; ownerId: string; text: string; now: Date },
+): Promise<void> {
+  const conversation = await tx.conversation.upsert({
+    where: { listingId_renterId: { listingId: note.listingId, renterId: note.renterId } },
+    create: { listingId: note.listingId, renterId: note.renterId, ownerId: note.ownerId, lastMessageAt: note.now, createdAt: note.now },
+    update: { lastMessageAt: note.now },
+  });
+  // A millisecond after the request's line, so the chat reads "request sent", then the note.
+  const at = new Date(note.now.getTime() + 1);
+  await tx.message.create({ data: { conversationId: conversation.id, authorId: note.renterId, kind: 'TEXT', text: note.text, createdAt: at } });
+}
