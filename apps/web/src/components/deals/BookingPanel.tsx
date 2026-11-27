@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/Field';
 import { TEXTAREA_CLASS } from '@/components/ui/inputs';
 import { useToast } from '@/components/ui/Toast';
-import { usePathname, useRouter } from '@/i18n/navigation';
+import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { useErrorText } from '@/lib/forms/error-text';
 import { daysBetween, formatPeriod } from '@/lib/deals/dates';
 import { useIdempotentMutation } from '@/lib/deals/idempotency';
@@ -35,7 +35,16 @@ const sameDays = (range: Range | null, offer: OfferView | null) =>
  * catalog (plan 7) can place it in its own column. Sending needs a session; a visitor is sent to sign in
  * and comes back here. The request carries an Idempotency-Key, so a double click sends one request.
  */
-export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string; layout?: 'wide' | 'stacked' }) {
+export function BookingPanel({
+  listingId,
+  layout = 'wide',
+  similarPath,
+}: {
+  listingId: string;
+  layout?: 'wide' | 'stacked';
+  /** The item's category page: picked days that cross taken ones lead to similar items free on them. */
+  similarPath?: string;
+}) {
   const t = useTranslations('booking');
   const locale = useLocale();
   const errorText = useErrorText();
@@ -209,6 +218,16 @@ export function BookingPanel({ listingId, layout = 'wide' }: { listingId: string
             <span aria-hidden="true" className="bg-[var(--danger)] mt-0.5 inline-block size-4 shrink-0 rounded-full border border-ink/15" />
             {problemText}
           </p>
+        )}
+        {/* Taken days in the way are not the end: the same kind of item, free on exactly these days. */}
+        {priced.problem === 'crossesTaken' && similarPath && range?.end && (
+          <Link
+            href={`${similarPath}?from=${range.start}&to=${range.end}`}
+            className="self-start text-sm font-bold underline decoration-1 underline-offset-4"
+            data-similar-free=""
+          >
+            {t('similarFree')} →
+          </Link>
         )}
       </section>
 

@@ -369,6 +369,7 @@
     "tooShort": "Rent at least {min, plural, one {# day} other {# days}}.",
     "tooLong": "Rent at most {max, plural, one {# day} other {# days}}.",
     "crossesTaken": "Some days in between are taken. Pick days next to each other that are free.",
+    "similarFree": "Similar items free on these days",
     "message": "Message to the owner (optional)",
     "messageHint": "Say when you would like to pick it up, or ask something.",
     "send": "Send request",
