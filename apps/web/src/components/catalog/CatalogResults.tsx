@@ -1,4 +1,4 @@
-import { CATALOG_PAGE_SIZE, type CategoryNode, type Locale } from '@yoyo/shared';
+import { CATALOG_PAGE_SIZE, type CatalogQuery, type CategoryNode, type Locale } from '@yoyo/shared';
 import { currentCountry } from '@/lib/country/server';
 import { getTranslations } from 'next-intl/server';
 import { RentalRules } from './RentalRules';
@@ -86,6 +86,10 @@ export async function CatalogResults({ params: raw, category, related, path, tit
 
   const { items, total } = results.data;
   const pages = Math.max(1, Math.ceil(total / CATALOG_PAGE_SIZE));
+  // Nothing found is not a dead end: the newest items of the catalog come under the empty state.
+  const instead = items.length === 0 ? await loadSearch({ sort: 'new', page: 1 } as CatalogQuery) : null;
+  // Four fill two rows of two; where the grid has three columns, the fourth stays out (no lone card).
+  const fresh = instead?.ok ? instead.data.items.slice(0, 4) : [];
   const cities = places.ok ? places.data.cities : [];
   const country = await currentCountry();
   const status = t('found', { count: total });
@@ -142,10 +146,26 @@ export async function CatalogResults({ params: raw, category, related, path, tit
                   <CatalogMapLoader pins={map.data.pins} truncated={map.data.truncated} />
                 )}
                 {items.length === 0 ? (
-                  <EmptyResults
-                    params={params}
-                    resetHref={params.q ? `${path}?q=${encodeURIComponent(params.q)}` : path}
-                  />
+                  <>
+                    <EmptyResults
+                      params={params}
+                      resetHref={params.q ? `${path}?q=${encodeURIComponent(params.q)}` : path}
+                    />
+                    {fresh.length > 0 && (
+                      <section aria-labelledby="catalog-fresh-instead" className="stack-section" data-fresh-instead="">
+                        <h2 id="catalog-fresh-instead" className="type-block">
+                          {t('freshInstead')}
+                        </h2>
+                        <ul className="grid-cards-rail">
+                          {fresh.map((item, index) => (
+                            <li key={item.id} className={index === 3 ? 'xl:hidden' : undefined}>
+                              <ListingCard item={item} />
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
+                    )}
+                  </>
                 ) : (
                   <ul className="grid-cards-rail">
                     {items.map((item, index) => (

@@ -80,10 +80,11 @@ test('catalog → search with suggestions → filter → item → calculator →
   await expect(page.getByRole('button', { name: /€10–20 a day/ })).toBeVisible();
   await expect(page.getByRole('link', { name: drill.title })).toBeVisible();
 
-  // Too cheap a range leaves nothing, with a way back.
+  // Too cheap a range leaves nothing, with a way back, and what is new in the catalog meanwhile.
   await page.getByLabel(m.filters.priceTo).first().fill('12');
   await page.getByLabel(m.filters.priceTo).first().press('Enter');
   await expect(page.getByRole('heading', { name: m.empty.title })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: m.freshInstead })).toBeVisible();
   await page.getByRole('button', { name: m.active.resetAll }).or(page.getByRole('link', { name: m.empty.reset })).first().click();
   await expect(page).not.toHaveURL(/price_max/);
 

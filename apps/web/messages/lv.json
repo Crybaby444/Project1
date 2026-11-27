@@ -927,6 +927,7 @@
     "inCategory": "{count, plural, =0 {Vēl nav lietu} zero {# lietu} one {# lieta} other {# lietas}}",
     "fresh": "Jaunākais katalogā",
     "freshAll": "Skatīt visu",
+    "freshInstead": "Pa to laiku apskatiet jaunāko katalogā",
     "allCategories": "Visas kategorijas",
     "recent": {
       "title": "Nesen skatītās",

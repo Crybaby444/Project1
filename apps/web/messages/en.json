@@ -927,6 +927,7 @@
     "inCategory": "{count, plural, =0 {No items yet} one {# item} other {# items}}",
     "fresh": "New in the catalog",
     "freshAll": "See all",
+    "freshInstead": "Meanwhile, here is what is new",
     "allCategories": "All categories",
     "recent": {
       "title": "Recently viewed",

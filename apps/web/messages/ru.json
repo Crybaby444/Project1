@@ -927,6 +927,7 @@
     "inCategory": "{count, plural, =0 {Пока нет вещей} one {# вещь} few {# вещи} many {# вещей} other {# вещи}}",
     "fresh": "Новое в каталоге",
     "freshAll": "Смотреть все",
+    "freshInstead": "Пока посмотрите новое в каталоге",
     "allCategories": "Все категории",
     "recent": {
       "title": "Недавно смотрели",
