@@ -369,6 +369,7 @@
     "tooShort": "Nomājiet vismaz {min, plural, zero {# dienas} one {# dienu} other {# dienas}}.",
     "tooLong": "Nomājiet ne vairāk kā {max, plural, zero {# dienas} one {# dienu} other {# dienas}}.",
     "crossesTaken": "Dažas dienas starp tām ir aizņemtas. Izvēlieties brīvas dienas pēc kārtas.",
+    "similarFree": "Līdzīgas lietas, kas šajās dienās ir brīvas",
     "message": "Ziņa īpašniekam (nav obligāta)",
     "messageHint": "Pastāstiet, kad gribat to paņemt, vai pajautājiet kaut ko.",
     "send": "Nosūtīt pieprasījumu",

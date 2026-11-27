@@ -219,7 +219,7 @@ async function Available({ item, title, category, locale }: { item: AvailableIte
           />
         </div>
         <aside className="stack-sheets lg:sticky lg:top-24">
-          {item.demo ? <DemoNotice /> : <BookingPanel item={item} />}
+          {item.demo ? <DemoNotice /> : <BookingPanel item={item} similarPath={category ? categoryLink(category, locale) : undefined} />}
           <OwnerCard owner={owner} />
           <ReportButton target="LISTING" id={listing.id} ownerId={owner.id} className="self-start" />
         </aside>

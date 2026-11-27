@@ -15,7 +15,7 @@ import { formatEuros } from '@/lib/listings/money';
  * the domain rules with a new account's free first month, the request with an Idempotency-Key). On a phone a bar at the
  * bottom of the screen («from €15 a day · Choose dates») leads to it until the panel itself is in view.
  */
-export function BookingPanel({ item }: { item: AvailableItem }) {
+export function BookingPanel({ item, similarPath }: { item: AvailableItem; similarPath?: string }) {
   const t = useTranslations('item.booking');
   const locale = useLocale();
   const { listing } = item;
@@ -48,7 +48,7 @@ export function BookingPanel({ item }: { item: AvailableItem }) {
             {takesOffers(daily) && <li className="border-ink rounded-pill border px-2.5 py-0.5">{t('offers')}</li>}
           </ul>
         </div>
-        <DealBookingPanel listingId={listing.id} layout="stacked" />
+        <DealBookingPanel listingId={listing.id} layout="stacked" similarPath={similarPath} />
         <MessageOwnerButton ownerId={item.owner.id} about={{ id: listing.id, title: listing.title ?? '' }} />
       </section>
 

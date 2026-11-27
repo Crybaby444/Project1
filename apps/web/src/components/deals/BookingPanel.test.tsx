@@ -148,6 +148,20 @@ describe('BookingPanel', () => {
     expect(screen.getByText(/Your first month on Yoyo: no service fee for requests sent until 5 Feb 2027/)).toBeInTheDocument();
   });
 
+  it('leads from days across a taken one to similar items free on them', async () => {
+    const user = userEvent.setup();
+    const api = fakeApi({
+      ...meRoute(testUser()),
+      'GET /api/v1/listings/listing-1/booking-terms': { status: 200, body: terms() },
+    });
+    renderWithSession(<BookingPanel listingId="listing-1" similarPath="/c/consoles" />, { client: api.client });
+    await screen.findByRole('grid');
+    expect(document.querySelector('[data-similar-free]')).toBeNull();
+    await user.click(day(19));
+    await user.click(day(21));
+    expect(screen.getByRole('link', { name: /Similar items free on these days/ })).toHaveAttribute('href', '/c/consoles?from=2026-11-19&to=2026-11-21');
+  });
+
   it('says when the days were taken meanwhile, and starts over', async () => {
     const user = userEvent.setup();
     setup({ 'POST /api/v1/bookings': apiError(409, 'DATES_UNAVAILABLE') });
