@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { resetAccounts, resetDeals } from './support/db';
-import { requestBooking, step } from './support/deals';
+import { day, requestBooking, step } from './support/deals';
 import { resetListings, seedListing, signedInClient, type Client } from './support/listings';
 import { createTestApp, type TestApp } from './support/test-app';
 
@@ -120,6 +120,19 @@ describe('chat (plan 9, spec §4.6)', () => {
     const { conversation } = (await renter.post(`/users/${owner.user.id}/conversation`).expect(200)).body;
     await renter.post(`/conversations/${conversation.id}/messages`).send({ text: 'Hi!' }).expect(201);
     expect((await owner.get('/me/notifications').expect(200)).body.items).toEqual([]);
+  });
+
+  it("puts the renter's note to a request into the deal's chat, right after the request's line", async () => {
+    const listing = await seedListing(t, owner.user, { status: 'PUBLISHED' });
+    const made = await renter.post('/bookings').send({ listingId: listing.id, start: day(t, 1), end: day(t, 3), message: 'Could I pick it up after 18:00?' });
+    expect(made.status).toBe(201);
+    const { conversation } = (await owner.get(`/bookings/${made.body.booking.id}/conversation`).expect(200)).body;
+    const thread = (await owner.get(`/conversations/${conversation.id}`).expect(200)).body;
+    expect(thread.messages.map((m: { kind: string; event: string | null; text: string; mine: boolean }) => [m.kind, m.event ?? m.text, m.mine])).toEqual([
+      ['SYSTEM', 'REQUESTED', false],
+      ['TEXT', 'Could I pick it up after 18:00?', false],
+    ]);
+    expect(thread.unread).toBeGreaterThan(0);
   });
 
   it("shows on the item how fast the owner usually answers, once they answered at least twice", async () => {

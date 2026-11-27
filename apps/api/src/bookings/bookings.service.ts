@@ -53,7 +53,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { bookingNotFound, staleBooking } from './booking-errors';
 import { assertDamagePhotos } from './booking-photos.service';
 import { BookingRulesService } from './booking-rules.service';
-import { writeDealLine } from '../chat/deal-lines';
+import { writeDealLine, writeRequestNote } from '../chat/deal-lines';
 import { assertIdentityVerified, assertProfileComplete } from '../auth/identity';
 import { DealNotifier } from './deal-notifier';
 import { AnalyticsService } from '../analytics/analytics.service';
@@ -350,6 +350,9 @@ export class BookingsService {
         },
       });
       await writeDealLine(tx, { bookingId: next.id, listingId: row.listingId, renterId: row.renterId, ownerId: row.ownerId, status: next.status, now });
+      if (input.message) {
+        await writeRequestNote(tx, { listingId: row.listingId, renterId: row.renterId, ownerId: row.ownerId, text: input.message, now });
+      }
       return { id: next.id, after: done.after };
     });
     await this.afterCommit(after);

@@ -197,11 +197,7 @@ export function DealView({ id }: { id: string }) {
           )}
           <DealTimeline booking={booking} history={history.data ?? []} onDeadline={reload} />
           <DealChat booking={booking} />
-          {booking.message && (
-            <Panel title={t('message')}>
-              <p className="[overflow-wrap:anywhere] whitespace-pre-line">{booking.message}</p>
-            </Panel>
-          )}
+          {/* The renter's note to the request is their first line in the chat above (the API writes it there). */}
           {booking.declineReason && (
             <Panel title={t('declined')}>
               <p className="[overflow-wrap:anywhere] whitespace-pre-line">{booking.declineReason}</p>
