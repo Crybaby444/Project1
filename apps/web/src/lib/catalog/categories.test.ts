@@ -1,6 +1,6 @@
 import type { CategoryNode } from '@yoyo/shared';
 import { describe, expect, it } from 'vitest';
-import { categoryHref, findBySlug, pathTo } from './categories';
+import { categoryHref, coversByRoot, findBySlug, pathTo } from './categories';
 
 const node = (slug: string, lv: string, ru: string, children: CategoryNode[] = []): CategoryNode => ({
   id: `id-${slug}`,
@@ -27,5 +27,27 @@ describe('category tree', () => {
     expect(pathTo(tree, 'id-saws').map((n) => n.slug)).toEqual(['tools', 'saws']);
     expect(categoryHref(tree[0]!, 'ru')).toBe('/ru/c/instrumenty');
     expect(categoryHref(tree[0]!, 'en')).toBe('/c/tools');
+  });
+});
+
+describe('coversByRoot', () => {
+  const tree = [node('tools', 'instrumenti', 'instrumenty', [node('drills', 'urbji', 'dreli')]), node('sport', 'sports', 'sport')];
+  const item = (categoryId: string | null, thumb: string | null) => ({ categoryId, cover: thumb ? { thumb } : null });
+
+  it('gives each root up to three thumbnails of its items, newest first, from any depth', () => {
+    const covers = coversByRoot(tree, [
+      item('id-drills', 'd1'),
+      item('id-tools', 't1'),
+      item('id-drills', 'd2'),
+      item('id-drills', 'd3'),
+      item('id-sport', 's1'),
+    ]);
+    expect(covers).toEqual({ 'id-tools': ['d1', 't1', 'd2'], 'id-sport': ['s1'] });
+  });
+
+  it('skips items without a photo or a known category, and repeats', () => {
+    expect(coversByRoot(tree, [item('id-drills', null), item(null, 'x'), item('gone', 'y'), item('id-sport', 's1'), item('id-sport', 's1')])).toEqual({
+      'id-sport': ['s1'],
+    });
   });
 });

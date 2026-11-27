@@ -43,3 +43,24 @@ export function categoryLink(node: CategoryNode, locale: Locale): string {
 export function categoryName(node: CategoryNode, locale: string): string {
   return localized(node.names, locale);
 }
+
+/**
+ * Up to `perRoot` cover thumbnails for each root category, from items newest first: a peek at what each
+ * part of the catalog holds (the catalog's index shows them beside the names).
+ */
+export function coversByRoot(
+  tree: CategoryNode[],
+  items: readonly { categoryId: string | null; cover: { thumb: string } | null }[],
+  perRoot = 3,
+): Record<string, string[]> {
+  const rootOf = new Map<string, string>();
+  for (const root of tree) for (const node of allCategories([root])) rootOf.set(node.id, root.id);
+  const covers: Record<string, string[]> = {};
+  for (const item of items) {
+    const root = item.categoryId ? rootOf.get(item.categoryId) : undefined;
+    if (!root || !item.cover) continue;
+    const list = (covers[root] ??= []);
+    if (list.length < perRoot && !list.includes(item.cover.thumb)) list.push(item.cover.thumb);
+  }
+  return covers;
+}
