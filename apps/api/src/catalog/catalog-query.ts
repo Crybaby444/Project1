@@ -1,5 +1,5 @@
 import { addDays, diffDays, localDate, type LocalDate } from '@yoyo/domain';
-import type { CatalogQuery, CatalogSort } from '@yoyo/shared';
+import type { CatalogQuery, CatalogSort, CategoryNode } from '@yoyo/shared';
 import { Prisma } from '../generated/prisma/client';
 import { CATALOG_VISIBLE_SQL } from './visibility';
 
@@ -7,8 +7,8 @@ import { CATALOG_VISIBLE_SQL } from './visibility';
 export interface FilterContext {
   /** The category and all its subcategories, or null for no category filter. */
   categoryIds: string[] | null;
-  /** Categories whose name matches the search text (their listings match too). */
-  textCategoryIds: string[];
+  /** The words of the search text, each with the categories it names (their listings match that word too). */
+  text: TextWord[];
   /** Districts whose slug is the one asked for, or null for no district filter. */
   districts: string[] | null;
   /** Cities whose slug is the one asked for, or null for no city filter. */
@@ -28,18 +28,81 @@ export function fold(text: string): string {
   return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
 }
 
-/** The search text matches the title or description (substring, or a close word for typos) or the category. */
-export function textMatchSql(q: string, textCategoryIds: string[]): Prisma.Sql {
-  const like = `%${escapeLike(q)}%`;
-  const byCategory = textCategoryIds.length > 0 ? Prisma.sql` OR l."categoryId" IN (${Prisma.join(textCategoryIds)})` : Prisma.empty;
-  return Prisma.sql`(yoyo_fold(coalesce(l."title", '') || ' ' || coalesce(l."description", '')) LIKE yoyo_fold(${like}) ESCAPE '\\'
-    OR yoyo_fold(${q}) <% yoyo_fold(l."title")${byCategory})`;
+/** One word of a search text: as typed (folded), its stem, and the categories it names. */
+export interface TextWord {
+  word: string;
+  stem: string;
+  categoryIds: string[];
+}
+
+/** Words of a search text, folded, without one- and two-letter words (и, в, a, of), at most eight. */
+export function searchWords(q: string): string[] {
+  return [...new Set(fold(q).split(/[^\p{L}\p{N}]+/u).filter((word) => word.length >= 3))].slice(0, 8);
+}
+
+/**
+ * The part of a folded word that stays through its endings, roughly and without a dictionary: Russian and
+ * Latvian change the last letter or two (дрель → дрели, палатка → палатки, urbjmašīna → urbjmašīnas), English
+ * adds them (drill → drills). Long words lose two letters, middling ones one, short ones none.
+ */
+export function stemOf(word: string): string {
+  if (word.length >= 7) return word.slice(0, -2);
+  if (word.length >= 5) return word.slice(0, -1);
+  return word;
+}
+
+/** The attributes whose choices name the kinds of things a category holds ("City bike", "Горный велосипед"). */
+const KIND_ATTRIBUTES = new Set(['type', 'model']);
+
+/**
+ * What a category answers to in a search, folded, in every language: its names and the kinds it holds (the
+ * choices of its type or model, never "Other"). Items are often written in one language and searched in
+ * another (owner, 2026-11-27: Riga reads Latvian and Russian); the category bridges them, so a Russian
+ * «велосипед» finds a bike listed as «Velosipēds».
+ */
+export function vocabularyOf(node: CategoryNode): string[] {
+  const words = [...Object.values(node.names)];
+  for (const attribute of node.attributes) {
+    if (!KIND_ATTRIBUTES.has(attribute.key)) continue;
+    for (const option of attribute.options ?? []) if (option.value !== 'other') words.push(...Object.values(option.labels));
+  }
+  return words.map(fold);
+}
+
+/**
+ * The words of a search text with their stems and the categories each names (by `vocabularyOf`, the whole
+ * subtree of a named parent). A text of only short words is taken whole, as typed.
+ */
+export function textWords(q: string, categories: { ids: string[]; vocabulary: string[] }[]): TextWord[] {
+  const words = searchWords(q);
+  if (words.length === 0) return [{ word: fold(q), stem: fold(q), categoryIds: [] }];
+  return words.map((word) => {
+    const stem = stemOf(word);
+    const named = categories.filter((category) => category.vocabulary.some((name) => name.includes(stem)));
+    return { word, stem, categoryIds: [...new Set(named.flatMap((category) => category.ids))] };
+  });
+}
+
+/**
+ * Every word of the search text matches the item: its title or description holds the word's stem, its
+ * title has a close word (a typo), or its category answers to the word.
+ */
+export function textMatchSql(words: TextWord[]): Prisma.Sql {
+  return Prisma.join(
+    words.map(({ word, stem, categoryIds }) => {
+      const like = `%${escapeLike(stem)}%`;
+      const byCategory = categoryIds.length > 0 ? Prisma.sql` OR l."categoryId" IN (${Prisma.join(categoryIds)})` : Prisma.empty;
+      return Prisma.sql`(yoyo_fold(coalesce(l."title", '') || ' ' || coalesce(l."description", '')) LIKE yoyo_fold(${like}) ESCAPE '\\'
+    OR yoyo_fold(${word}) <% yoyo_fold(l."title")${byCategory})`;
+    }),
+    ' AND ',
+  );
 }
 
 /** The WHERE of a catalog query: visibility, then every filter the query names, all as parameters. */
 export function whereSql(query: CatalogQuery, ctx: FilterContext): Prisma.Sql {
   const parts: Prisma.Sql[] = [CATALOG_VISIBLE_SQL];
-  if (query.q !== undefined) parts.push(textMatchSql(query.q, ctx.textCategoryIds));
+  if (query.q !== undefined && ctx.text.length > 0) parts.push(textMatchSql(ctx.text));
   if (ctx.categoryIds !== null) {
     parts.push(ctx.categoryIds.length > 0 ? Prisma.sql`l."categoryId" IN (${Prisma.join(ctx.categoryIds)})` : Prisma.sql`FALSE`);
   }

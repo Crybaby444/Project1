@@ -137,6 +137,22 @@ describe('catalog search', () => {
       expect(await ids({ q: 'urbjmasinas' })).toEqual([drill.id]);
     });
 
+    it('finds a word typed in another language or form through the category (owner, 2026-11-27)', async () => {
+      // The drill is listed in English; its category answers to its Russian and Latvian names in any form.
+      expect(await ids({ q: 'дрель' })).toEqual([drill.id]);
+      expect(await ids({ q: 'дрели' })).toEqual([drill.id]);
+      expect(await ids({ q: 'urbjmašīna' })).toEqual([drill.id]);
+      // The bike is listed in Latvian; its category holds kinds such as «Городской велосипед».
+      expect(await ids({ q: 'велосипед' })).toEqual([bike.id]);
+      expect(await ids({ q: 'velosipēdu' })).toEqual([bike.id]);
+    });
+
+    it('wants every word, each from the text or the category, in any order', async () => {
+      expect(await ids({ q: 'дрель bosch' })).toEqual([drill.id]);
+      expect(await ids({ q: 'дрель makita' })).toEqual([]);
+      expect(await ids({ q: 'pilsetai velosipeds' })).toEqual([bike.id]);
+    });
+
     it('takes wildcards and quotes literally (Review Focus 2)', async () => {
       expect(await ids({ q: '%_' })).toEqual([]);
       expect(await ids({ q: "'; DROP TABLE \"Listing\"; --" })).toEqual([]);
@@ -218,9 +234,13 @@ describe('catalog search', () => {
     expect(res.body.categories.map((c: { slug: string }) => c.slug)).toEqual(expect.arrayContaining(['electronics', 'e-scooters']));
     const items = await request(t.server).get('/api/v1/catalog/suggest').query({ q: 'dri' }).expect(200);
     expect(items.body.listings).toEqual([{ id: drill.id, title: 'Bosch cordless drill', cover: expect.any(Object) }]);
+    // A Russian word in its own form suggests the category and the item listed in English.
+    const russian = await request(t.server).get('/api/v1/catalog/suggest').query({ q: 'дрель', lang: 'ru' }).expect(200);
+    expect(russian.body.categories[0].names.ru).toMatch(/^Дрели/);
+    expect(russian.body.listings.map((item: { id: string }) => item.id)).toEqual([drill.id]);
     await request(t.server).get('/api/v1/catalog/suggest').query({ q: 'd' }).expect(400);
-    // Two counted above (the one-letter query is refused before it counts): 118 more reach 120.
-    for (let i = 0; i < 118; i++) await request(t.server).get('/api/v1/catalog/suggest').query({ q: 'xx' });
+    // Three counted above (the one-letter query is refused before it counts): 117 more reach 120.
+    for (let i = 0; i < 117; i++) await request(t.server).get('/api/v1/catalog/suggest').query({ q: 'xx' });
     await request(t.server).get('/api/v1/catalog/suggest').query({ q: 'xx' }).expect(429);
   });
 });

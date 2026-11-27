@@ -31,7 +31,7 @@ import { serializeListing, type UrlFor } from '../listings/listing.serializer';
 import { STORAGE_PROVIDER, type StorageProvider } from '../media/storage.provider';
 import { ReviewsService } from '../reviews/reviews.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { fold, orderSql, textMatchSql, VISIBLE_FROM, whereSql, type FilterContext } from './catalog-query';
+import { fold, orderSql, searchWords, stemOf, textMatchSql, textWords, VISIBLE_FROM, vocabularyOf, whereSql, type FilterContext } from './catalog-query';
 import { serializeCatalogItem } from './catalog.serializer';
 import { rankForYou } from './for-you';
 import { CATALOG_VISIBLE_SQL, CATALOG_VISIBLE_WHERE, catalogState } from './visibility';
@@ -46,6 +46,11 @@ const gone = () => new AppError('LISTING_GONE', 410, 'Listing removed');
 /** Every category below `node`, itself included. */
 function subtree(node: CategoryNode): CategoryNode[] {
   return [node, ...node.children.flatMap(subtree)];
+}
+
+/** Every category (flattened) as the search sees it: the ids it stands for and what it answers to. */
+function searchable(all: CategoryNode[]): { ids: string[]; vocabulary: string[] }[] {
+  return all.map((node) => ({ ids: subtree(node).map((below) => below.id), vocabulary: vocabularyOf(node) }));
 }
 
 /** The catalog: search, map, suggestions, the item page and the sitemap. Everything here is public. */
@@ -131,13 +136,18 @@ export class CatalogService {
   /** Up to 3 categories (by their name in any language, `lang` first) and 5 items (by title). */
   async suggest(q: string, lang: Locale): Promise<SuggestResponse> {
     const tree = await this.categories.tree();
-    const wanted = fold(q);
     const all = tree.flatMap(subtree);
+    const words = searchWords(q);
+    const stems = words.length > 0 ? words.map(stemOf) : [fold(q)];
+    // Every word must name the category (by its names or the kinds it holds); its own names rank first,
+    // a name that starts with the first word before one that has it inside, the page's language first.
     const score = (node: CategoryNode) => {
+      const vocabulary = vocabularyOf(node);
+      if (!stems.every((stem) => vocabulary.some((name) => name.includes(stem)))) return -1;
       const names = [node.names[lang], node.names.en, node.names.lv, node.names.ru].map(fold);
-      const at = names.findIndex((name) => name.includes(wanted));
-      if (at === -1) return -1;
-      return (names[at]!.startsWith(wanted) ? 0 : 10) + (at === 0 ? 0 : 1);
+      const at = names.findIndex((name) => name.includes(stems[0]!));
+      if (at === -1) return 20;
+      return (names[at]!.startsWith(stems[0]!) ? 0 : 10) + (at === 0 ? 0 : 1);
     };
     const categories = all
       .map((node) => ({ node, rank: score(node) }))
@@ -146,7 +156,7 @@ export class CatalogService {
       .slice(0, 3)
       .map(({ node }) => ({ slug: node.slug, slugs: node.slugs, names: node.names, sticker: node.sticker }));
     const rows = await this.prisma.$queryRaw<{ id: string }[]>`
-      SELECT l."id" ${VISIBLE_FROM} WHERE ${CATALOG_VISIBLE_SQL} AND ${textMatchSql(q, [])}
+      SELECT l."id" ${VISIBLE_FROM} WHERE ${CATALOG_VISIBLE_SQL} AND ${textMatchSql(textWords(q, searchable(all)))}
       ORDER BY word_similarity(yoyo_fold(${q}), yoyo_fold(coalesce(l."title", ''))) DESC, l."publishedAt" DESC, l."id" DESC
       LIMIT 5`;
     const listings = (await this.items(rows.map((row) => row.id))).map((item) => ({ id: item.id, title: item.title, cover: item.cover }));
@@ -388,12 +398,7 @@ export class CatalogService {
       const node = all.find((candidate) => candidate.slug === query.category);
       categoryIds = node ? subtree(node).map((below) => below.id) : [];
     }
-    let textCategoryIds: string[] = [];
-    if (query.q !== undefined && query.q.length >= 3) {
-      const wanted = fold(query.q);
-      const named = all.filter((node) => Object.values(node.names).some((name) => fold(name).includes(wanted)));
-      textCategoryIds = [...new Set(named.flatMap(subtree).map((node) => node.id))];
-    }
+    const text = query.q !== undefined ? textWords(query.q, searchable(all)) : [];
     let districts: string[] | null = null;
     if (query.district !== undefined) {
       const rows = await this.prisma.$queryRaw<{ district: string }[]>`
@@ -408,6 +413,6 @@ export class CatalogService {
       const aliases = await this.directory.aliases(query.city, query.country);
       cities = rows.map((row) => row.city).filter((name) => aliases.has(slugify(name)));
     }
-    return { categoryIds, textCategoryIds, districts, cities };
+    return { categoryIds, text, districts, cities };
   }
 }
