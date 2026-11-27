@@ -43,6 +43,7 @@
       "sign": "Līgums ir gatavs. Izlasiet to, tad abi parakstiet.",
       "pay": "Nomas maksa un servisa maksa glabājas Yoyo līdz nodošanai; drošības nauda paliek iesaldēta.",
       "handover": "Satiecieties, nododiet lietu un abi apstipriniet to šeit.",
+      "handoverAhead": "Tikšanās — {day} vai iepriekšējā vakarā. Nododiet lietu un abi apstipriniet to šeit.",
       "return": "Atnesiet lietu atpakaļ un abi apstipriniet to šeit.",
       "inspect": "Ja laikā nekas netiek ziņots, drošības nauda atgriežas pati.",
       "damage": "Nomnieks piekrīt prasībai vai nodod to Yoyo.",
