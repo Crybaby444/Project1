@@ -62,6 +62,9 @@ describe('price offers', () => {
     expect(tooHigh.status).toBe(400);
     expect(tooHigh.body.error).toMatchObject({ fields: { dailyCents: expect.any(String) }, details: { reason: 'INVALID_OFFER' } });
     expect((await offer(listing.id, 99)).status).toBe(400);
+    // Half the listed price at least: the owner never gets a lowball offer.
+    expect((await offer(listing.id, 749)).status).toBe(400);
+    expect((await offer(listing.id, 750)).status).toBe(201);
     expect((await owner.post(`/listings/${listing.id}/offers`).send({ start: day(t, 2), end: day(t, 3), dailyCents: 1000 })).body.error.code).toBe(
       'CANNOT_RENT_OWN',
     );
@@ -99,6 +102,40 @@ describe('price offers', () => {
     await t.prisma.offer.update({ where: { id: made.id }, data: { expiresAt: new Date(t.clock.now().getTime() - 1) } });
     expect((await owner.post(`/offers/${made.id}/accept`).expect(409)).body.error.code).toBe('OFFER_UNAVAILABLE');
     expect((await renter.get('/me/offers?role=renter').expect(200)).body.items[0].status).toBe('EXPIRED');
+  });
+
+  it('shows the item\'s cover with the offer', async () => {
+    const listing = await published();
+    const made = (await offer(listing.id)).body.offer;
+    expect(made.listing).toEqual({ id: listing.id, title: 'Bosch cordless drill', coverUrl: expect.any(String) });
+  });
+
+  it('counts offers as steps waiting in "My deals": the owner\'s to answer, the renter\'s to book', async () => {
+    const listing = await published();
+    const summary = async (client: Client) => (await client.get('/me/bookings/summary').expect(200)).body;
+    const made = (await offer(listing.id)).body.offer;
+    expect((await summary(owner)).owner).toEqual({ open: 0, needsAction: 1 });
+    expect((await summary(renter)).renter).toEqual({ open: 0, needsAction: 0 });
+
+    await owner.post(`/offers/${made.id}/accept`).expect(200);
+    expect((await summary(owner)).owner.needsAction).toBe(0);
+    expect((await summary(renter)).renter.needsAction).toBe(1);
+
+    await renter.post('/bookings').send({ listingId: listing.id, start: day(t, 2), end: day(t, 4), offerId: made.id }).expect(201);
+    // The offer is used; the request now waits for the owner as a deal.
+    expect((await summary(renter)).renter).toEqual({ open: 1, needsAction: 0 });
+    expect((await summary(owner)).owner).toEqual({ open: 1, needsAction: 1 });
+  });
+
+  it('retires a waiting offer when the renter asks for those days at the listed price', async () => {
+    const listing = await published();
+    const sameDays = (await offer(listing.id, 1200, 2, 4)).body.offer;
+    const otherItem = await published();
+    const elsewhere = (await offer(otherItem.id, 1200, 2, 4)).body.offer;
+    await renter.post('/bookings').send({ listingId: listing.id, start: day(t, 3), end: day(t, 5) }).expect(201);
+    expect((await t.prisma.offer.findUniqueOrThrow({ where: { id: sameDays.id } })).status).toBe('WITHDRAWN');
+    expect((await t.prisma.offer.findUniqueOrThrow({ where: { id: elsewhere.id } })).status).toBe('PENDING');
+    expect((await owner.post(`/offers/${sameDays.id}/accept`).expect(409)).body.error.code).toBe('OFFER_UNAVAILABLE');
   });
 
   it('refuses offers on a blocked owner\'s listing', async () => {

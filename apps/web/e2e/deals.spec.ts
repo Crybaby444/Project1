@@ -111,6 +111,39 @@ test('owner lists, renter books, pays, handover, return, deposit released', asyn
   await expect(r.getByRole('link', { name: new RegExp(title) })).toBeVisible();
 });
 
+test('a price offer: the renter offers, the owner accepts in My deals, the request goes at that price', async ({ browser, baseURL }) => {
+  const admin = await administrator(browser, baseURL);
+  const owner = await person(browser, baseURL, 'Andris Kalniņš');
+  const renter = await person(browser, baseURL, 'Anna Bērziņa');
+  await serveBlankMapTiles(owner.page);
+  const listingId = await publishedListing(owner.page, admin, `Kayak ${Date.now()}`);
+
+  // The renter offers 12 € a day instead of 15 € for the days they searched for.
+  const r = renter.page;
+  await r.goto(`/listings/${listingId}?from=${rigaDay(2)}&to=${rigaDay(4)}`);
+  await r.getByRole('button', { name: 'Offer your price' }).click();
+  await r.getByLabel('Your price a day').fill('12');
+  await expect(r.locator('[data-offer-saving]')).toContainText('less for 3 days');
+  await r.getByRole('button', { name: 'Send the offer' }).click();
+  await expect(r.locator('[data-offer-pending]')).toContainText('You offered €12.00 a day');
+
+  // The owner finds it waiting in My deals and accepts it with one click.
+  const o = owner.page;
+  await o.goto('/bookings?role=owner');
+  await expect(o.getByRole('tab', { name: 'I lend' })).toHaveAccessibleDescription('1 waits for you');
+  const card = o.locator('[data-offer-card]');
+  await expect(card).toContainText('you get €36.00 for 3 days');
+  await card.getByRole('button', { name: 'Accept' }).click();
+  await expect(card).toHaveAttribute('data-offer-status', 'ACCEPTED');
+
+  // Back on the item, the days come picked at the agreed price, and the request carries it.
+  await r.goto(`/listings/${listingId}`);
+  await expect(r.locator('[data-offer-agreed]')).toContainText('Your price is accepted: €12.00 a day');
+  await r.getByRole('button', { name: 'Send the request at your price' }).click();
+  await expect(r).toHaveURL(/\/bookings\/[^/]+$/);
+  await expect(r.locator('[data-agreed-price]')).toContainText('Agreed price: €12.00 × 3 days');
+});
+
 test('damage claimed with a photo, rejected by the renter, decided by Yoyo', async ({ browser, baseURL }) => {
   const admin = await administrator(browser, baseURL);
   const owner = await person(browser, baseURL, 'Andris Kalniņš');

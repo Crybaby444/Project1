@@ -49,6 +49,8 @@
     "common": {
       "button": "Открыть сделку",
       "offerButton": "Посмотреть вещь",
+      "offerAnswerButton": "Ответить на предложение",
+      "offerBookButton": "Забронировать по этой цене",
       "item": "Вещь",
       "dates": "Даты",
       "total": "Итого"

@@ -992,6 +992,7 @@
       "noDeposit": "Bez drošības naudas",
       "days": "{min}–{max} dienas",
       "exactDays": "{days, plural, zero {# dienas} one {# diena} other {# dienas}}",
+      "offers": "Var piedāvāt savu cenu",
       "choose": "Izvēlēties datumus"
     },
     "facts": {

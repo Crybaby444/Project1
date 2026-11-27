@@ -9,16 +9,17 @@ import { BookingRulesService } from '../bookings/booking-rules.service';
 import { DealNotifier } from '../bookings/deal-notifier';
 import { dayOf, dateOf } from '../bookings/booking.store';
 import { bookableListing, pricingOf } from '../bookings/listing-access';
-import type { Listing, Offer, User } from '../generated/prisma/client';
+import type { Listing, ListingPhoto, Offer, User } from '../generated/prisma/client';
+import { STORAGE_PROVIDER, type StorageProvider } from '../media/storage.provider';
 import { PrismaService } from '../prisma/prisma.service';
 
 const HOUR = 3_600_000;
 /** The owner answers an offer within this long (or before the first day ends). */
 const ANSWER_HOURS = 24;
 
-type OfferRow = Offer & { listing: Listing; renter: User; owner: User };
+type OfferRow = Offer & { listing: Listing & { photos: ListingPhoto[] }; renter: User; owner: User };
 
-const INCLUDE = { listing: true, renter: true, owner: true } as const;
+const INCLUDE = { listing: { include: { photos: true } }, renter: true, owner: true } as const;
 
 const unavailable = () => new AppError('OFFER_UNAVAILABLE', 409);
 const notFound = () => new AppError('NOT_FOUND', 404, 'Offer not found');
@@ -26,7 +27,7 @@ const notFound = () => new AppError('NOT_FOUND', 404, 'Offer not found');
 /**
  * "Offer your own price" (spec §4.6): a renter proposes a daily price for some days, the owner accepts
  * or declines with one click, and an accepted offer prices one booking request for exactly those days.
- * The chat button around it comes with plan 9.
+ * The site makes them on the item page and answers them in "My deals".
  */
 @Injectable()
 export class OffersService {
@@ -36,6 +37,7 @@ export class OffersService {
     private readonly rules: BookingRulesService,
     private readonly notifier: DealNotifier,
     @Inject(CLOCK) private readonly clock: Clock,
+    @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider,
   ) {}
 
   async create(renter: PublicUser, listingId: string, input: OfferRequest): Promise<OfferView> {
@@ -129,9 +131,10 @@ export class OffersService {
   }
 
   private serialize(offer: OfferRow): OfferView {
+    const cover = [...offer.listing.photos].sort((a, b) => a.position - b.position)[0];
     return {
       id: offer.id,
-      listing: { id: offer.listing.id, title: offer.listing.title ?? '' },
+      listing: { id: offer.listing.id, title: offer.listing.title ?? '', coverUrl: cover ? this.storage.url(cover.storageKey, 'thumb') : null },
       renter: { id: offer.renter.id, name: publicName(offer.renter) },
       owner: { id: offer.owner.id, name: publicName(offer.owner) },
       start: dayOf(offer.start),

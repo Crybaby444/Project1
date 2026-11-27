@@ -64,6 +64,8 @@ export function useSaveEmailPreferences() {
 /** Where a notification leads. */
 export function notificationHref(n: Notification): string {
   if (n.kind === 'LISTING' && n.listingId) return n.event === 'APPROVED' ? `/listings/${n.listingId}` : `/listings/${n.listingId}/edit`;
+  // A new offer is answered in "My deals"; an answer to the renter's offer leads back to the item, to book.
+  if (n.kind === 'OFFER' && n.event === 'OFFER_MADE') return '/bookings?role=owner';
   if ((n.kind === 'OFFER' || n.kind === 'SEARCH' || n.kind === 'FOLLOW') && n.listingId) return `/listings/${n.listingId}`;
   if (n.kind === 'IDENTITY') return n.event === 'VERIFIED' ? '/' : '/settings#identity';
   if (n.bookingId) return `/bookings/${n.bookingId}`;

@@ -49,6 +49,8 @@
     "common": {
       "button": "Atvērt darījumu",
       "offerButton": "Apskatīt lietu",
+      "offerAnswerButton": "Atbildēt uz piedāvājumu",
+      "offerBookButton": "Rezervēt par šo cenu",
       "item": "Lieta",
       "dates": "Datumi",
       "total": "Kopā"

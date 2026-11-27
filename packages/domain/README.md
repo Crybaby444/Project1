@@ -25,7 +25,7 @@ const { next, effects } = decide(snapshot, { kind: 'OWNER', userId }, { type: 'A
 | `errors.ts` | `DomainError`, `DOMAIN_ERROR_CODES` |
 | `money.ts` | `Cents`, `cents`, `add`, `sub`, `mulInt`, `percentOf`, `formatMoney` |
 | `dates.ts` | `LocalDate`, `localDate`, `localDateIn`, `addDays`, `diffDays`, `compareDates`, `endOfDayIn`, `Period`, `period`, `daysIn`, `overlaps`, `firstConflict`, `validateRentalPeriod`, `DEFAULT_TIME_ZONE` |
-| `pricing.ts` | `ListingPricing`, `PRICING_LIMITS`, `validatePricing`, `Quote`, `PriceSource`, `quote`, `validateOffer`, `WEEKLY_DISCOUNT_FROM_DAYS` |
+| `pricing.ts` | `ListingPricing`, `PRICING_LIMITS`, `validatePricing`, `Quote`, `PriceSource`, `quote`, `validateOffer`, `offerFloorCents`, `OFFER_FLOOR_PERCENT`, `WEEKLY_DISCOUNT_FROM_DAYS` |
 | `settings.ts` | `BookingSettings`, `DEFAULT_BOOKING_SETTINGS`, `validateBookingSettings` |
 | `ledger.ts` | `AccountId`, `Posting`, `LedgerOperation`, `PaymentMethod`, конструкторы операций, `assertBalanced`, `applyOperation` |
 | `booking/types.ts` | `BookingStatus`, `BookingSnapshot`, `Actor`, `BookingEvent`, `TimerKind`, `Effect`, `Decision`, `DecideContext`, `BOOKING_TEMPLATES` |
@@ -61,7 +61,7 @@ const { next, effects } = decide(snapshot, { kind: 'OWNER', userId }, { type: 'A
    - `createRequest` замораживает процент и день акции в цене брони (`quote.servicePercent`, `quote.servicePromoUntil`). Дальше `decide` цену не пересчитывает: смена настроек и конец акции не меняют уже запрошенные сделки.
 5. `total = rent + fee + deposit` — платит арендатор. `ownerPayout = rent` — получает владелец.
 
-Срок вне `[minDays, maxDays]` объявления — `PERIOD_TOO_SHORT` или `PERIOD_TOO_LONG`. Пределы цен лежат в `PRICING_LIMITS`, их проверяет `validatePricing`. `validateOffer` пропускает предложение от 1 € и строго ниже цены объявления.
+Срок вне `[minDays, maxDays]` объявления — `PERIOD_TOO_SHORT` или `PERIOD_TOO_LONG`. Пределы цен лежат в `PRICING_LIMITS`, их проверяет `validatePricing`. `validateOffer` пропускает предложение от половины цены объявления (`offerFloorCents`: `OFFER_FLOOR_PERCENT` = 50 %, с округлением вверх до цента, и не меньше 1 €) и строго ниже её. Вещь по минимальной цене (1 €) предложений не принимает.
 
 ## Кошелёк: журнал проводок
 
@@ -130,7 +130,7 @@ stateDiagram-v2
 
 | Из | Событие (кто) | Условие | В | Эффекты |
 |---|---|---|---|---|
-| — | `createRequest` (арендатор) | не своя вещь (`CANNOT_RENT_OWN`); начало от сегодня до `maxAdvanceDays`, длина в пределах объявления; даты свободны (`DATES_UNAVAILABLE`); договорная цена ниже цены объявления (`INVALID_OFFER`) | REQUESTED | SCHEDULE REQUEST_EXPIRY `ttl(requestTtlHours)`; NOTIFY OWNER; SYSTEM_MESSAGE REQUESTED |
+| — | `createRequest` (арендатор) | не своя вещь (`CANNOT_RENT_OWN`); начало от сегодня до `maxAdvanceDays`, длина в пределах объявления; даты свободны (`DATES_UNAVAILABLE`); договорная цена от половины цены объявления и ниже её (`INVALID_OFFER`) | REQUESTED | SCHEDULE REQUEST_EXPIRY `ttl(requestTtlHours)`; NOTIFY OWNER; SYSTEM_MESSAGE REQUESTED |
 | REQUESTED | ACCEPT (владелец) | `ctx.blocked` передан; даты свободны (`DATES_UNAVAILABLE`) | ACCEPTED | CANCEL_TIMER REQUEST_EXPIRY; SCHEDULE PAYMENT_EXPIRY `ttl(paymentTtlHours)`; RESERVE_DATES; GENERATE_CONTRACT; NOTIFY RENTER; SYSTEM_MESSAGE ACCEPTED |
 | REQUESTED | DECLINE{reason?} (владелец) | — | DECLINED | CANCEL_TIMER; NOTIFY RENTER; SYSTEM_MESSAGE DECLINED |
 | REQUESTED | WITHDRAW (арендатор) | — | CANCELLED (by RENTER) | CANCEL_TIMER; NOTIFY OWNER; SYSTEM_MESSAGE CANCELLED |

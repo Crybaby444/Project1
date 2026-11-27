@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import { BookingPanel as DealBookingPanel } from '@/components/deals/BookingPanel';
 import { MessageOwnerButton } from '@/components/chat/MessageOwnerButton';
+import { takesOffers } from '@/components/deals/OfferBox';
 import { Button } from '@/components/ui/Button';
 import { formatEuros } from '@/lib/listings/money';
 
@@ -44,6 +45,7 @@ export function BookingPanel({ item }: { item: AvailableItem }) {
             <li className="border-ink rounded-pill border px-2.5 py-0.5">
               {listing.minDays === listing.maxDays ? t('exactDays', { days: listing.minDays }) : t('days', { min: listing.minDays, max: listing.maxDays })}
             </li>
+            {takesOffers(daily) && <li className="border-ink rounded-pill border px-2.5 py-0.5">{t('offers')}</li>}
           </ul>
         </div>
         <DealBookingPanel listingId={listing.id} layout="stacked" />

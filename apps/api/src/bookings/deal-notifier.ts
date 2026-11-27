@@ -109,8 +109,9 @@ export class DealNotifier {
           price: money(offer.dailyCents, locale),
         }),
         summary: (locale) => ({ item: title, dates: `${formatDay(start, locale)} – ${formatDay(end, locale)}`, total: null }),
-        link: sitePath(this.env.WEB_ORIGIN, user.locale, `/items/${offer.listingId}`),
-        button: 'offerButton',
+        // The owner answers in "My deals"; the renter books (or sees the item again) on the item page.
+        link: sitePath(this.env.WEB_ORIGIN, user.locale, toOwner ? '/bookings?role=owner' : `/listings/${offer.listingId}`),
+        button: toOwner ? 'offerAnswerButton' : template === 'OFFER_ACCEPTED' ? 'offerBookButton' : 'offerButton',
       });
     } catch (error) {
       this.logger.error(`offer email for ${offerId} failed: ${error instanceof Error ? error.message : String(error)}`);

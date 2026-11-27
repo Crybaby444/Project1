@@ -992,6 +992,7 @@
       "noDeposit": "No deposit",
       "days": "{min}–{max} days",
       "exactDays": "{days, plural, one {# day} other {# days}}",
+      "offers": "Offers welcome",
       "choose": "Choose dates"
     },
     "facts": {

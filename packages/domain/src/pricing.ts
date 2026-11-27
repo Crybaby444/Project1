@@ -137,12 +137,24 @@ function rentAt(dailyCents: Cents, days: number, discountPercent: number) {
   return { dailyCents, baseCents, discountPercent, discountCents, rentCents: sub(baseCents, discountCents) };
 }
 
+/** An offer names at least this share of the listed daily price: an owner never gets a lowball offer. */
+export const OFFER_FLOOR_PERCENT = 50;
+
 /**
- * Checks a renter's daily price offer (spec §4.6): at least `PRICING_LIMITS.dailyCents.min` and below
- * the listed price. Offering the listed price or more makes no sense.
+ * The lowest daily price an offer may name: half the listed price rounded up to a whole cent, and never
+ * below `PRICING_LIMITS.dailyCents.min`. An item listed at that minimum takes no offers at all.
+ */
+export function offerFloorCents(listedDailyCents: number): Cents {
+  return cents(Math.max(PRICING_LIMITS.dailyCents.min, Math.ceil((listedDailyCents * OFFER_FLOOR_PERCENT) / 100)));
+}
+
+/**
+ * Checks a renter's daily price offer (spec §4.6): from `offerFloorCents` (half the listed price) up to
+ * a cent below the listed price. Offering the listed price or more makes no sense.
  */
 export function validateOffer(pricing: ListingPricing, offerDailyCents: Cents): void {
-  if (!within(offerDailyCents, PRICING_LIMITS.dailyCents.min, pricing.dailyCents - 1)) {
-    throw new DomainError('INVALID_OFFER', { offerDailyCents, dailyCents: pricing.dailyCents });
+  const floorCents = offerFloorCents(pricing.dailyCents);
+  if (!within(offerDailyCents, floorCents, pricing.dailyCents - 1)) {
+    throw new DomainError('INVALID_OFFER', { offerDailyCents, dailyCents: pricing.dailyCents, floorCents });
   }
 }

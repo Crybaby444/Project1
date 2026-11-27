@@ -98,6 +98,7 @@
     "money": {
       "title": "Nauda",
       "rent": "Noma",
+      "agreed": "Saskaņotā cena: {price} × {days, plural, zero {# dienas} one {# diena} other {# dienas}}",
       "fee": "Servisa maksa",
       "deposit": "Drošības nauda",
       "total": "Kopā",
@@ -320,6 +321,31 @@
     "myItems": "Manas lietas",
     "browse": "Atvērt katalogu"
   },
+  "offers": {
+    "title": {
+      "owner": "Cenu piedāvājumi",
+      "renter": "Jūsu piedāvājumi"
+    },
+    "perDay": "{price} dienā",
+    "instead": "{price} vietā",
+    "from": "No {name}",
+    "to": "Īpašnieks: {name}",
+    "youGet": "jūs saņemsiet {total} par {days, plural, zero {# dienām} one {# dienu} other {# dienām}}",
+    "comesTo": "{total} par {days, plural, zero {# dienām} one {# dienu} other {# dienām}}",
+    "answerWithin": "Atbildiet {time} laikā",
+    "waitWithin": "Īpašnieks atbildēs {time} laikā",
+    "agreedOwner": "Jūs piekritāt. {name} var rezervēt līdz {day} beigām",
+    "agreedRenter": "Cena pieņemta. Rezervējiet līdz {day} beigām",
+    "accept": "Pieņemt",
+    "decline": "Noraidīt",
+    "withdraw": "Atsaukt",
+    "book": "Rezervēt",
+    "done": {
+      "accept": "Piedāvājums pieņemts. {name} var rezervēt par šo cenu.",
+      "decline": "Piedāvājums noraidīts.",
+      "withdraw": "Piedāvājums atsaukts."
+    }
+  },
   "booking": {
     "title": "Rezervēt: {item}",
     "pageTitle": "Rezervēt šo lietu",
@@ -345,6 +371,7 @@
     "message": "Ziņa īpašniekam (nav obligāta)",
     "messageHint": "Pastāstiet, kad gribat to paņemt, vai pajautājiet kaut ko.",
     "send": "Nosūtīt pieprasījumu",
+    "sendAgreed": "Nosūtīt pieprasījumu par jūsu cenu",
     "signIn": "Ienāciet, lai rezervētu",
     "own": "Šī ir jūsu lieta. Citi to rezervē šajā lapā.",
     "noCharge": "Tagad nekas netiek iekasēts. Maksā pēc tam, kad īpašnieks pieņem un abi parakstāt līgumu.",
@@ -363,7 +390,7 @@
       "title": "Cena",
       "days": "{price} × {days, plural, zero {# dienas} one {# diena} other {# dienas}}",
       "discount": "Nedēļas atlaide ({percent}%)",
-      "agreed": "Saskaņotā cena",
+      "agreed": "Jūsu cena {price} × {days, plural, zero {# dienas} one {# diena} other {# dienas}}",
       "fee": "Servisa maksa ({percent}%)",
       "deposit": "Drošības nauda, iesaldēta un atgriežama",
       "total": "Kopā jāmaksā",
@@ -374,7 +401,37 @@
       "feeName": "Servisa maksa"
     },
     "shareLink": "Rezervācijas saite",
-    "shareCopied": "Rezervācijas saite nokopēta."
+    "shareCopied": "Rezervācijas saite nokopēta.",
+    "offer": {
+      "summary": "Ja īpašnieks piekritīs",
+      "open": "Piedāvāt savu cenu",
+      "label": "Jūsu cena dienā",
+      "hint": "Sludinājumā — {price}. Var piedāvāt no {min}.",
+      "saving": "Tas ir par {amount} mazāk par {days, plural, zero {# dienām} one {# dienu} other {# dienām}}",
+      "send": "Nosūtīt piedāvājumu",
+      "back": "Rezervēt par sludinājuma cenu",
+      "note": "Īpašnieks atbildēs 24 stundu laikā. Kamēr viņš domā, šīs dienas vēl var rezervēt kāds cits.",
+      "sent": "Piedāvājums nosūtīts. Mēs paziņosim, kad īpašnieks atbildēs.",
+      "errors": {
+        "empty": "Ierakstiet savu cenu dienā.",
+        "format": "Ierakstiet summu, piemēram, 12 vai 12,50.",
+        "low": "Ne mazāk kā {min}: tā ir puse no sludinājuma cenas.",
+        "high": "Cenai jābūt zemākai par sludinājuma cenu {price}.",
+        "notCheaper": "Ar nedēļas atlaidi jau sanāk {price} dienā. Piedāvājiet mazāk."
+      },
+      "agreed": "Jūsu cena pieņemta: {price} dienā",
+      "agreedUntil": "Pieprasījumu par šo cenu var nosūtīt līdz {day} beigām",
+      "agreedOnly": "Šī cena ir spēkā tikai uz {period}",
+      "useDays": "Izvēlēties šīs dienas",
+      "pending": "Jūs piedāvājāt {price} dienā uz {period}",
+      "pendingWait": "Īpašnieks atbildēs {time} laikā.",
+      "pendingSoon": "Gaidām īpašnieka atbildi.",
+      "change": "Mainīt cenu",
+      "withdraw": "Atsaukt",
+      "withdrawn": "Piedāvājums atsaukts.",
+      "declined": "Īpašnieks nepiekrita {price} dienā. Varat rezervēt par sludinājuma cenu vai piedāvāt citu cenu.",
+      "expired": "Īpašnieks laikā neatbildēja uz {price} dienā. Varat piedāvāt vēlreiz."
+    }
   },
   "checkout": {
     "title": "Apmaksāt rezervāciju",

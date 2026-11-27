@@ -31,6 +31,8 @@ describe('@yoyo/domain entry point', () => {
         // pricing and settings
         'PRICING_LIMITS',
         'WEEKLY_DISCOUNT_FROM_DAYS',
+        'OFFER_FLOOR_PERCENT',
+        'offerFloorCents',
         'quote',
         'validateOffer',
         'validatePricing',

@@ -41,7 +41,15 @@ export function DealSummary({ booking }: { booking: BookingView }) {
       </h2>
       <dl className="flex flex-col gap-2 text-base">
         <div className="flex flex-wrap justify-between gap-x-3">
-          <dt>{t('rent')}</dt>
+          <dt className="flex flex-col">
+            {t('rent')}
+            {/* A price offer the owner accepted priced these days (spec §4.6). */}
+            {q.priceSource === 'AGREED' && (
+              <span className="text-ink/75 text-sm" data-agreed-price="">
+                {t('agreed', { price: money(q.dailyCents), days: q.days })}
+              </span>
+            )}
+          </dt>
           <dd className="font-bold tabular-nums">{money(q.rentCents)}</dd>
         </div>
         <FeeLine quote={q} />

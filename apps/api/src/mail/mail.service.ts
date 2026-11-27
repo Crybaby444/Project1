@@ -110,7 +110,7 @@ export class MailService implements OnApplicationShutdown {
       values: (locale: string) => Record<string, string>;
       summary: (locale: string) => { item: string; dates: string; total: string | null };
       link: string;
-      button: 'button' | 'offerButton';
+      button: 'button' | 'offerButton' | 'offerAnswerButton' | 'offerBookButton';
     },
   ): Promise<void> {
     const textsOf = (t: MailTexts) => {

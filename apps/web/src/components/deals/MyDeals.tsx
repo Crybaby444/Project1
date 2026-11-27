@@ -12,12 +12,14 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { formatPeriod } from '@/lib/deals/dates';
 import { useDeadline } from '@/lib/deals/deadline';
 import { useMoney } from '@/lib/deals/money';
+import { isOpen, useMyOffers } from '@/lib/deals/offers';
 import { useDealsSummary, useMyDeals } from '@/lib/deals/queries';
 import { DEAL_ROLES, deadlineKey, isMyTurn, type DealRole } from '@/lib/deals/status';
 import { useErrorText } from '@/lib/forms/error-text';
 import { useDurationText } from './Countdown';
 import { DealStatusBadge } from './DealStatusBadge';
 import { DealCover } from './DealView';
+import { OffersBlock } from './Offers';
 
 /** One deal in the list: the whole card is the link (the cover glides into the deal page). */
 export function DealCard({ booking, index }: { booking: BookingView; index: number }) {
@@ -170,6 +172,10 @@ export function MyDeals({ initialRole }: { initialRole: DealRole }) {
   }
 
   const total = totals[1];
+  // Open price offers sit above the deals: with one there, the tab is not empty.
+  const offers = useMyOffers(role);
+  const now = useNow({ updateInterval: 60_000 });
+  const hasOffers = (offers.data ?? []).some((offer) => isOpen(offer, now.getTime()));
   const loadedAll = total === undefined || pages * BOOKINGS_PAGE_SIZE >= total;
   const waiting = (r: DealRole) => summary.data?.[r].needsAction ?? 0;
 
@@ -226,8 +232,9 @@ export function MyDeals({ initialRole }: { initialRole: DealRole }) {
         aria-labelledby={`deals-tab-${role}`}
         className="flex flex-col gap-6"
       >
+        <OffersBlock role={role} key={`offers-${role}`} />
         {total === 0 ? (
-          <Empty role={role} />
+          !hasOffers && <Empty role={role} />
         ) : (
           <>
             {total !== undefined && (

@@ -5,7 +5,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { apiError, fakeApi, meRoute, testUser, type FakeRoutes } from '@/test/fake-api';
 import { testBooking } from '@/test/deals';
 import { renderWithSession } from '@/test/render';
-import { BookingPanel, priceRange } from './BookingPanel';
+import { priceRange } from '@/lib/deals/price';
+import { BookingPanel } from './BookingPanel';
 import { nextRange } from './DateRangePicker';
 
 const push = vi.fn();
