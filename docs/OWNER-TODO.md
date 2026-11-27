@@ -1,26 +1,79 @@
-# What the owner will do later
+# Перед запуском: список владельца
 
-Owner, 2026-11-19: nothing paid is confirmed for now; keep these as a list. Each item says what it
-unlocks and where the switch is. The code for all of them is ready and off.
+Владелец, 2026-11-27: «главное — запиши всё, что надо будет сделать перед продакшаном». Здесь собрано
+всё, что нужно сделать или решить, прежде чем на Yoyo придут настоящие люди и настоящие деньги. У каждого
+пункта сказано, зачем он, сколько стоит и где включается. Код почти для всего уже готов и выключен.
 
-## Free, done
+Когда пункт сделан, отметьте его здесь и напишите Claude «готово»: обычно включение — это несколько
+переменных окружения из связанного документа.
 
-- [x] Nightly database backup: `BACKUP_DATABASE_URL` and `BACKUP_PASSPHRASE` set in GitHub
-  (2026-11-19). The first run was decrypted and checked. The passphrase is in `.env.deploy`; keep a copy
-  in a password manager.
-- [x] Example listings for Latvia added (Admin → System → Example listings).
+## Сделано
 
-## Paid, or needs a company: later
+- [x] **Ночной бэкап базы.** В GitHub заданы `BACKUP_DATABASE_URL` и `BACKUP_PASSPHRASE` (2026-11-19).
+  Первую копию расшифровали и проверили. Пароль лежит в `.env.deploy`; храните копию в менеджере паролей.
+- [x] **Примеры объявлений для Латвии** (Админка → Система → Примеры объявлений).
+- [x] **Google Search Console** подключён (домен `yoyo.rent`), sitemap отправлен.
 
-| # | What | Why it matters | Cost / condition | Where the switch is |
+## Бесплатно: сделать сейчас
+
+- [ ] **Внешний cron.**
+  - **Зачем.** Ночью сроки сделок и напоминания срабатывают вовремя. Заодно сервер не засыпает, и первый
+    посетитель утром не ждёт минуту. Запуск по расписанию в GitHub идёт «как получится», иногда раз в
+    6–10 часов. Пока сервер не спит, он и так сам проверяет сроки каждые 10 минут.
+  - **Как.**
+    1. Скопируйте ключ в буфер обмена:
+       `grep '^TIMERS_SECRET=' .env.deploy | cut -d= -f2- | tr -d '\n' | pbcopy`
+       Ключ на экране не появится. Тот же ключ есть в Render: yoyo-api → Environment.
+    2. Заведите бесплатный аккаунт на [cron-job.org](https://cron-job.org).
+    3. Create cronjob, URL `https://yoyo-api.onrender.com/api/v1/internal/timers/run`, каждые 10 минут.
+    4. Вкладка Advanced: метод `POST`; заголовок `Authorization` со значением `Bearer <ключ>`; таймаут 30 с.
+    5. Test run: должен прийти статус 200 и `{"fired":…}`.
+  - **Лимит Render.** 750 бесплатных часов в месяц на аккаунт. Сервер без сна тратит до 744 часов, так что
+    хватает, пока yoyo-api — единственный бесплатный веб-сервис в аккаунте. Когда часы кончаются, Render
+    останавливает все бесплатные сервисы до конца месяца.
+- [ ] **Вычитать латышские тексты** (решение владельца: латышский вычитывает он сам).
+  - **Новое за 26–27.11:**
+    - «Предложить свою цену» (панель брони, «Мои сделки», письма);
+    - напоминания о сделках и подсказки поиска;
+    - FAQ «Vai var piedāvāt savu cenu?»;
+    - проверка личности для дорогих сделок.
+  - **Где тексты:**
+    - `apps/web/messages/lv.json`;
+    - `apps/web/messages/deals/lv.json`;
+    - `apps/web/messages/site/lv.json`;
+    - `apps/api/src/mail/i18n/lv.json`.
+
+## Платно или нужна фирма: позже
+
+| # | Что | Зачем | Стоимость / условие | Где включается |
 |---|---|---|---|---|
-| 1 | Paid email plan | Today about 90 emails a day: sign-ups, password resets and deal notices stop beyond that | Paid plan of the email provider | Provider dashboard; nothing changes in code |
-| 2 | Render Starter | The free API sleeps: the first request after a pause takes about a minute, and deal timers can run late | about $7 a month | Render → yoyo-api → plan |
-| 3 | Stripe (real card payments) | Today payments are simulated ("test mode") | Company or sole trader; Stripe fees per payment | `docs/PAYMENTS-STRIPE.md` |
-| 4 | Legal check of the wallet | A balance kept on Yoyo may count as e-money (needs a licence); with Stripe Connect it becomes owner earnings held by Stripe | Lawyer | Before item 3 |
-| 5 | Dokobit e-signatures (Smart-ID, Mobile-ID, eParaksts) | Advanced signatures instead of the typed name (a simple e-signature is already legally valid) | The token form asks for a company; production needs a contract and Dokobit's integration review (checked 2026-11-19) | `docs/SIGNATURES-DOKOBIT.md` |
-| 6 | Company details | The contract, terms and footer name the operator | Registering a company | Legal pages and the contract texts |
-| 7 | Insurance against damage | Deposits cover small damage; expensive items need more | Insurer | Terms and the item page |
+| 1 | Платный тариф почты | Сейчас лимит около 90 писем в день (`MAIL_DAILY_LIMIT`). Сверх него не уходят письма о регистрации, сбросе пароля и сделках. С платным тарифом можно добавить и письмо о непрочитанном сообщении в чате сделки (сейчас о нём говорит только уведомление на сайте) | Платный тариф почтового сервиса | Кабинет почтового сервиса, потом поднять `MAIL_DAILY_LIMIT`; письмо о сообщениях сделает Claude |
+| 2 | Render Starter | С внешним cron бесплатный сервер почти не засыпает. Starter снимает лимит 750 часов и даёт постоянные ресурсы | около $7 в месяц | Render → yoyo-api → plan |
+| 3 | Stripe (настоящие оплаты картой) | Сейчас оплата имитируется (бейдж «Тестовый режим») | Фирма или зарегистрированный предприниматель; комиссия Stripe с каждой оплаты | `docs/PAYMENTS-STRIPE.md` |
+| 4 | Юридическая проверка кошелька | Баланс на Yoyo может считаться электронными деньгами (нужна лицензия). Со Stripe Connect это доход владельца, который держит Stripe | Юрист | До пункта 3 |
+| 5 | Юрист: договор аренды и условия | Тексты договора, условий и политики конфиденциальности написаны без юриста | Юрист | `apps/web/messages/site/*`, шаблон договора в API |
+| 6 | Dokobit (Smart-ID, Mobile-ID, eParaksts) | Усиленная подпись вместо набранного имени. Простая электронная подпись уже имеет силу | Фирма, договор и проверка интеграции у Dokobit | `docs/SIGNATURES-DOKOBIT.md` |
+| 7 | Реквизиты фирмы | Договор, условия и подвал сайта называют оператора | Регистрация фирмы | Юридические страницы и тексты договора |
+| 8 | Страховка от повреждений | Залог покрывает мелкий ущерб, а дорогим вещам нужно больше | Страховая компания | Условия и страница вещи |
+| 9 | SMS-сервис | Подтверждение телефона для дорогих сделок (залог от 300 € или аренда от 500 €). Без SMS для них спрашивается только подтверждённая личность | Несколько центов за SMS (Twilio, Infobip, Vonage); бесплатного для реальных номеров нет | Нужен код: провайдер и шаг «Подтвердить телефон» на сайте. Claude сделает, когда выберете сервис |
 
-When an item is done, tick it here and tell Claude "done"; the matching switch is a few
-environment variables, described in the linked document.
+## Решить до запуска
+
+- [ ] **Когда убрать примеры объявлений.** Как только появятся настоящие вещи, иначе каталог будет пустым.
+  Где: Админка → Система → Примеры объявлений.
+- [ ] **Бейдж «Тестовый режим»** снимается вместе с включением Stripe (решение от 2026-11-06).
+- [ ] **Проверка личности** (`IDENTITY_REQUIRED`, сейчас включена).
+  - Каждый, кто арендует или сдаёт, загружает документ и селфи, а модератор проверяет их в Админка →
+    Проверка личности. Значит, кто-то должен разбирать эту очередь каждый день.
+  - Можно оставить так или на старте выключить: так меньше барьер, а для дорогих сделок проверка остаётся.
+- [ ] **Кто дежурит.**
+  - Модерация объявлений: каждое проверяет человек до публикации, Админка → Модерация.
+  - Жалобы и споры по сделкам: Админка → Жалобы, Сделки.
+  - Почта `support@yoyo.rent`: решите, кто отвечает и как быстро.
+
+## Сделает Claude, когда скажете
+
+- Включит Stripe, Dokobit или SMS, когда будут ключи: только переменные окружения, плюс шаг телефона на
+  сайте для SMS.
+- Снимет бейдж тестового режима и уберёт примеры объявлений.
+- Перед запуском прогонит полный обход сайта на трёх языках и в обеих темах, на телефоне и компьютере.
