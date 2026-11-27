@@ -34,6 +34,14 @@ describe('CategoryIndex', () => {
     expect(within(rows[1]!).getByText('Instrumenti')).toBeInTheDocument();
   });
 
+  it('shows a stack of the newest photos beside a root that has some, hidden from assistive tech', () => {
+    const { container } = renderWithIntl(<CategoryIndex roots={roots} locale="en" covers={{ [root.id]: ['a.jpg', 'b.jpg'] }} />);
+    const peeks = container.querySelectorAll('[data-peek]');
+    expect(peeks).toHaveLength(1);
+    expect(peeks[0]).toHaveAttribute('aria-hidden', 'true');
+    expect([...peeks[0]!.querySelectorAll('img')].map((img) => img.getAttribute('src'))).toEqual(['a.jpg', 'b.jpg']);
+  });
+
   it('names at most two subcategories under a root', () => {
     renderWithIntl(<CategoryIndex roots={roots} locale="en" />);
     const first = screen.getAllByRole('link')[0]!;
