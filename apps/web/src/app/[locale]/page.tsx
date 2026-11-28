@@ -4,12 +4,16 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { RecentlyViewed } from '@/components/catalog/RecentlyViewed';
 import { CategoryShelf } from '@/components/market/CategoryShelf';
+import { HeroYoyo, type HeroItem } from '@/components/market/HeroYoyo';
 import { HomeFaq } from '@/components/market/HomeFaq';
+import { Button } from '@/components/ui/Button';
 import { LendCalculator } from '@/components/market/LendCalculator';
 import { TrustRow } from '@/components/market/TrustRow';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { Link } from '@/i18n/navigation';
 import { loadCategories, loadCategoryOverview, loadForYou } from '@/lib/catalog/server-api';
+import { formatEuros } from '@/lib/listings/money';
+import { listingPath } from '@/lib/seo';
 import { currentCountry } from '@/lib/country/server';
 import { pageMetadata } from '@/lib/seo';
 import { CONTACT_EMAIL, LIST_ITEM_HREF, SITE_URL } from '@/lib/site';
@@ -53,31 +57,61 @@ const SPAN_SM = ['col-span-2', 'col-span-1', 'col-span-2'] as const;
 const SPAN_LG = ['', 'lg:col-span-1', 'lg:col-span-2', 'lg:col-span-3'] as const;
 
 /**
- * The home (owner, 2026-11-28: "the search stays only in the navigation", no extra lines): the promise with
- * four short guarantees beside it, a shelf of the categories that hold something (each with the photo of its
- * newest item), what is popular now, a night band where your own things count up their earnings, and the
- * questions people ask before a first deal. Searching is the header's job, on every page.
+ * The home (owner, 2026-11-28: the search only in the navigation, no extra lines, then "something with a
+ * twist, and beautiful"). The promise beside the Yoyo mark made large: a yo-yo hanging from the bar whose
+ * face is a window with a real item in it, thrown in when the page opens and coming back with another thing.
+ * Under them the four guarantees; then the categories as yo-yos on a string, what is popular now, a night
+ * band where your own things count up their earnings, and the questions before a first deal.
  */
 export default async function HomePage({ params }: Params) {
   const { locale } = (await params) as { locale: Locale };
   setRequestLocale(locale);
-  const [meta, t] = await Promise.all([getTranslations('pages.home'), getTranslations('market')]);
+  const [meta, t, tc] = await Promise.all([getTranslations('pages.home'), getTranslations('market'), getTranslations('catalog.card')]);
   const [feed, tree, overview] = await Promise.all([loadForYou(), loadCategories(), loadCategoryOverview()]);
   const initial = feed.ok ? feed.data : { items: [], personal: false };
   const items = initial.items;
   const shown = items.slice(0, 8);
+  // What the yo-yo brings: popular things that have a photo.
+  const hero: HeroItem[] = items
+    .filter((item) => item.cover)
+    .slice(0, 8)
+    .map((item) => ({
+      id: item.id,
+      title: item.title,
+      href: listingPath(item.id, item.title),
+      photo: item.cover!.card,
+      price: tc('perDay', { price: formatEuros(item.dailyCents, locale) }),
+      place: [item.city, item.district].filter(Boolean).join(', '),
+      demo: item.demo,
+    }));
   // Few things yet: the empty places in the last row invite the visitor to put theirs there.
   const spare = { sm: (2 - (shown.length % 2)) % 2, lg: (4 - (shown.length % 4)) % 4 };
 
   return (
-    <main className="flex flex-1 flex-col" data-market-home="">
+    // The yo-yo's light and the shelf's string reach past the page's edges: clipped sideways, never down.
+    <main className="flex flex-1 flex-col overflow-x-clip" data-market-home="">
       <JsonLd data={structuredData(meta('description'))} />
 
-      <section aria-labelledby="home-title" className="page pt-9 pb-2 sm:pt-12">
-        <div className="grid gap-7 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-16">
-          <h1 id="home-title" className="font-display text-display-xl leading-[0.84] font-black text-balance uppercase">
-            {t('hero.title')}
-          </h1>
+      <section aria-labelledby="home-title" className="page">
+        <div className="grid gap-x-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center">
+          <div className="flex flex-col items-start gap-8 pt-10 sm:pt-14 lg:py-20">
+            <h1 id="home-title" className="font-display text-display-xl leading-[0.84] font-black text-balance uppercase">
+              {t('hero.title')}
+            </h1>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+              <Button href="/c" size="lg">
+                {t('hero.browse')}
+              </Button>
+              {LIST_ITEM_HREF && (
+                <Link href={LIST_ITEM_HREF} className="text-base font-bold underline decoration-1 underline-offset-4">
+                  {t('hero.lend')}
+                </Link>
+              )}
+            </div>
+          </div>
+          <HeroYoyo items={hero} />
+        </div>
+        <div className="border-ink/15 mt-10 border-t pt-6 sm:mt-12">
           <TrustRow />
         </div>
       </section>

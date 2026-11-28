@@ -1209,7 +1209,11 @@
   },
   "market": {
     "hero": {
-      "title": "Rent it nearby. It comes back."
+      "title": "Rent it nearby. It comes back.",
+      "browse": "Browse the catalog",
+      "lend": "Lend one of yours",
+      "next": "Show another",
+      "example": "Example"
     },
     "search": {
       "where": "Where",
@@ -1246,16 +1250,20 @@
     "trust": {
       "label": "Why it is safe",
       "contract": {
-        "title": "Contract before you pay"
+        "title": "Contract before you pay",
+        "body": "Both sides sign online."
       },
       "deposit": {
-        "title": "Deposit comes back"
+        "title": "Deposit comes back",
+        "body": "Once the return is checked."
       },
       "checked": {
-        "title": "Checked by a person"
+        "title": "Checked by a person",
+        "body": "Every listing, before it goes live."
       },
       "reviews": {
-        "title": "Real reviews"
+        "title": "Real reviews",
+        "body": "Only from finished deals."
       }
     },
     "faq": {

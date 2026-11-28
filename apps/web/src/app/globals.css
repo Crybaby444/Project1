@@ -397,6 +397,50 @@
   }
 }
 
+/*
+ * The home's yo-yo (components/market/HeroYoyo; owner, 2026-11-28: "something with a twist"). Thrown in
+ * from the bar above when the page opens, it falls past its rest, bounces on its string and settles while it
+ * spins out; to change the thing it holds it dips, spins twice and comes back. Transforms only. Still with
+ * reduced motion and in automated browsers (`data-no-loader`, set before the first paint).
+ */
+/* A category's yo-yo set swinging on its string by the pointer (CategoryShelf). */
+@keyframes yoyo-swing {
+  0% { transform: rotate(0deg); }
+  18% { transform: rotate(6deg); }
+  40% { transform: rotate(-4deg); }
+  62% { transform: rotate(2.5deg); }
+  82% { transform: rotate(-1deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes yoyo-throw {
+  0% { transform: translateY(calc(-1 * var(--disc) - 60vh)); }
+  58% { transform: translateY(26px); }
+  76% { transform: translateY(-10px); }
+  90% { transform: translateY(4px); }
+  100% { transform: translateY(0); }
+}
+@keyframes yoyo-throw-spin {
+  from { transform: rotate(-1080deg); }
+  to { transform: rotate(0deg); }
+}
+@keyframes yoyo-dip {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(calc(var(--disc) * 0.13)); }
+}
+@keyframes yoyo-dip-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(720deg); }
+}
+.yoyo-throw { animation: yoyo-throw 1.6s cubic-bezier(0.25, 0.7, 0.3, 1) both; }
+.yoyo-throw .yoyo-disc { animation: yoyo-throw-spin 1.6s cubic-bezier(0.12, 0.85, 0.3, 1) both; }
+.yoyo-dip { animation: yoyo-dip 1.1s cubic-bezier(0.45, 0, 0.55, 1) both; }
+.yoyo-dip .yoyo-disc { animation: yoyo-dip-spin 1.1s cubic-bezier(0.45, 0, 0.55, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .yoyo-throw, .yoyo-throw .yoyo-disc, .yoyo-dip, .yoyo-dip .yoyo-disc { animation: none; }
+}
+html[data-no-loader] .yoyo-throw,
+html[data-no-loader] .yoyo-throw .yoyo-disc { animation: none; }
+
 /* Theme switch: the new theme is revealed by a growing circle (see switch-theme.ts), not a cross-fade. */
 ::view-transition-old(root),
 ::view-transition-new(root) {
