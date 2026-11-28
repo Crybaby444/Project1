@@ -15,7 +15,7 @@ const AUTO_TIMES = 3;
 
 /**
  * The home's yo-yo (owner, 2026-11-28: "something with a twist, and beautiful"): the Yoyo mark made large,
- * a disc with the slit across it, hanging on its string from the bar above. Its face is a window with a real
+ * a disc with the slit across it, hanging on its string from the top of the hero's night. Its face is a window with a real
  * item in it. It is thrown in when the page opens; then it dips, spins and comes back with another thing,
  * a few times on its own (pausing while pointed at or focused) and whenever "Show another" is pressed. That
  * is the promise in one gesture: it always comes back. With reduced motion it simply hangs and changes.
@@ -70,7 +70,7 @@ export function HeroYoyo({ items }: { items: HeroItem[] }) {
 
   return (
     <div
-      className="relative flex flex-col items-center [--disc:clamp(13.5rem,27vw,22rem)]"
+      className="relative flex flex-col items-center [--disc:clamp(13rem,24vw,20rem)] [--hang:2.5rem] lg:[--hang:3.5rem]"
       onPointerEnter={holdOn}
       onPointerLeave={holdOff}
       onFocus={holdOn}
@@ -82,18 +82,18 @@ export function HeroYoyo({ items }: { items: HeroItem[] }) {
         aria-hidden="true"
         className="pointer-events-none absolute top-[calc(var(--disc)*0.25)] left-1/2 -z-10 size-[calc(var(--disc)*1.9)] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--accent)_22%,transparent),transparent)]"
       />
-      <div className="relative h-[calc(var(--disc)+3.5rem)] w-full sm:h-[calc(var(--disc)+4.5rem)]">
+      <div className="relative h-[calc(var(--disc)+var(--hang)+1.5rem)] w-full">
         {item ? (
           <Link
             href={item.href}
             aria-label={`${item.title}, ${item.price}`}
-            className={`yoyo-hang group absolute top-8 left-1/2 -ml-[calc(var(--disc)/2)] block outline-offset-8 sm:top-12 ${phase === 'throw' ? 'yoyo-throw' : phase === 'dip' ? 'yoyo-dip' : ''}`}
+            className={`yoyo-hang group absolute top-[var(--hang)] left-1/2 -ml-[calc(var(--disc)/2)] block outline-offset-8 ${phase === 'throw' ? 'yoyo-throw' : phase === 'dip' ? 'yoyo-dip' : ''}`}
             onAnimationEnd={(event) => {
               if (event.target === event.currentTarget && phase === 'throw') setPhase('idle');
             }}
           >
-            {/* Its string: up behind the header from lg (the yo-yo hangs from the bar); on a phone it stops at the stage, clear of the title. */}
-            <span aria-hidden="true" className="bg-ink absolute bottom-full left-1/2 h-8 w-[1.5px] -translate-x-1/2 sm:h-12 lg:h-[100vh]" />
+            {/* Its string, from the top of the night it hangs in (the banner clips what is above): long enough for the throw. */}
+            <span aria-hidden="true" className="bg-ink absolute bottom-full left-1/2 h-[calc(var(--hang)+60vh)] w-[1.5px] -translate-x-1/2" />
             {/* The disc spins (throw, dip); the face inside it grows a little under the pointer. */}
             <span className="yoyo-disc block size-[var(--disc)] rounded-full shadow-[0_48px_70px_-36px_rgb(10_11_14/0.55)]">
               <span className="bg-mist relative block size-full overflow-hidden rounded-full transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-[1.03]">
@@ -106,8 +106,8 @@ export function HeroYoyo({ items }: { items: HeroItem[] }) {
             </span>
           </Link>
         ) : (
-          <span className="absolute top-12 left-1/2 -ml-[calc(var(--disc)/2)] block">
-            <span aria-hidden="true" className="bg-ink absolute bottom-full left-1/2 h-12 w-[1.5px] -translate-x-1/2 lg:h-[100vh]" />
+          <span className="absolute top-[var(--hang)] left-1/2 -ml-[calc(var(--disc)/2)] block">
+            <span aria-hidden="true" className="bg-ink absolute bottom-full left-1/2 h-[var(--hang)] w-[1.5px] -translate-x-1/2" />
             <span aria-hidden="true" className="bg-ink relative block size-[var(--disc)] rounded-full">
               <span className="bg-canvas absolute inset-x-0 top-1/2 h-[4.5%] -translate-y-1/2" />
             </span>
@@ -128,7 +128,8 @@ export function HeroYoyo({ items }: { items: HeroItem[] }) {
             </Link>
             <span className="text-ink/70 text-sm">
               <b className="font-display text-ink text-2xl leading-none font-black tabular-nums uppercase">{item.price}</b>
-              {item.place ? <span className="ml-2">{item.place}</span> : null}
+              {/* The place on wider screens; on a phone the label stays one line under the yo-yo. */}
+              {item.place ? <span className="ml-2 whitespace-nowrap max-sm:hidden">{item.place}</span> : null}
             </span>
           </div>
           {items.length > 1 && (
@@ -138,13 +139,16 @@ export function HeroYoyo({ items }: { items: HeroItem[] }) {
                 auto.current = AUTO_TIMES;
                 next();
               }}
-              className="border-ink/25 hover:border-ink rounded-pill ease-yoyo inline-flex min-h-10 shrink-0 items-center gap-2 border px-4 text-sm font-bold whitespace-nowrap transition-[border-color,transform] duration-200 active:scale-95"
+              aria-label={t('next')}
+              className="border-ink/25 hover:border-ink rounded-pill ease-yoyo inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center gap-2 border text-sm font-bold whitespace-nowrap transition-[border-color,transform] duration-200 active:scale-95 sm:px-4"
             >
               <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4 fill-none stroke-current [stroke-linecap:round] [stroke-linejoin:round] [stroke-width:1.9]">
                 <path d="M12 3v7" />
                 <circle cx="12" cy="15.5" r="5" />
               </svg>
-              {t('next')}
+              <span aria-hidden="true" className="max-sm:hidden">
+                {t('next')}
+              </span>
             </button>
           )}
         </div>

@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import type { CatalogItem, Country, ForYouResponse } from '@yoyo/shared';
 import { useEffect, useState, type ReactNode } from 'react';
 import { ListingCard } from '@/components/catalog/ListingCard';
+import { Rail, RAIL_ITEM } from './Rail';
 import { recallViewed, RECENT_EVENT } from '@/lib/catalog/recently-viewed';
 import { unwrap } from '@/lib/session/api-error';
 import { useApiClient, useSession } from '@/lib/session/SessionProvider';
@@ -25,6 +26,7 @@ export function ForYou({
   titles,
   action,
   children,
+  rail = false,
 }: {
   initial: ForYouResponse;
   country: Country;
@@ -32,6 +34,8 @@ export function ForYou({
   titles: { personal: string; popular: string };
   action?: ReactNode;
   children?: ReactNode;
+  /** A row that scrolls sideways (the home), instead of a grid of eight. */
+  rail?: boolean;
 }) {
   const client = useApiClient();
   const { status } = useSession();
@@ -53,6 +57,18 @@ export function ForYou({
         : unwrap(client.GET('/api/v1/catalog/for-you', { params: { query: { country, categories: categories.join(',') } as never } })),
   });
   const data = personal.data && personal.data.items.length > 0 ? personal.data : initial;
+  if (rail) {
+    return (
+      <Rail id={headingId} title={data.personal ? titles.personal : titles.popular} action={action}>
+        {data.items.slice(0, 12).map((item, i) => (
+          <li key={item.id} className={RAIL_ITEM}>
+            <ListingCard item={item} eager={i < 4} />
+          </li>
+        ))}
+        {children}
+      </Rail>
+    );
+  }
   return (
     <div className="stack-section">
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
