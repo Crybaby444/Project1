@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, type ReactNode } from 'react';
 import { LetterRise } from '@/components/motion/LetterRise';
-import { Mark } from '@/components/brand/Mark';
 import { displayFit } from '@/lib/display-fit';
 
 type AuthCardProps = {
@@ -34,7 +33,6 @@ export function AuthCard({ title, subtitle, children, footer, focusTitle = false
       <div className="flex w-full max-w-[30rem] flex-col gap-6">
         <section data-card-rise="" className="relative flex flex-col gap-7">
           <header className="@container flex flex-col items-center gap-3 text-center">
-            <Mark size={36} />
             <h1
               ref={titleRef}
               tabIndex={focusTitle ? -1 : undefined}

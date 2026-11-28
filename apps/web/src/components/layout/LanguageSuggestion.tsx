@@ -9,7 +9,6 @@ import { readLocaleChoice, suggestLocale } from '@/lib/locale/choice';
 import { useRememberLocale } from '@/lib/locale/use-locale-choice';
 import { prefersReducedMotion } from '@/lib/motion';
 import TEXTS from '../../../messages/language-suggestion.json';
-import { Mark } from '@/components/brand/Mark';
 import { CONSENT_EVENT, GA_ID, readConsent } from '@/lib/analytics/consent';
 import { useSession } from '@/lib/session/SessionProvider';
 
@@ -80,7 +79,10 @@ export function LanguageSuggestion() {
     >
       {/* v16: a quiet ink bar that floats over the page bottom: the question in the suggested language, the switch, stay. */}
       <div className="bg-ink text-canvas animate-toast-in pointer-events-auto flex w-full max-w-2xl flex-wrap items-center gap-x-5 gap-y-3 rounded-float py-3 pr-3 pl-5 shadow-[0_24px_48px_-24px_rgba(10,11,14,0.55)] sm:rounded-full">
-        <Mark size={22} string={false} className="text-canvas shrink-0 [--mark-cut:var(--ink)]" />
+        <svg viewBox="0 0 24 24" aria-hidden="true" className="size-[22px] shrink-0 fill-none stroke-current [stroke-linecap:round] [stroke-linejoin:round] [stroke-width:1.7]">
+          <circle cx="12" cy="12" r="8.5" />
+          <path d="M3.5 12h17M12 3.5c2.4 2.4 3.5 5.3 3.5 8.5s-1.1 6.1-3.5 8.5M12 3.5C9.6 5.9 8.5 8.8 8.5 12s1.1 6.1 3.5 8.5" />
+        </svg>
         <p className="m-0 min-w-0 flex-[1_1_14rem] text-base leading-snug font-semibold">{text.text}</p>
         <div className="flex shrink-0 items-center gap-1">
           <button

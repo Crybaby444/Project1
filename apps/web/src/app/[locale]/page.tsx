@@ -1,24 +1,20 @@
-import type { Locale } from '@yoyo/shared';
-import { ForYou } from '@/components/market/ForYou';
+import type { CatalogQuery, Locale } from '@yoyo/shared';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import type { CatalogItem, CatalogQuery } from '@yoyo/shared';
-import { ListingCard } from '@/components/catalog/ListingCard';
+import { CategoryIndex } from '@/components/catalog/CategoryIndex';
 import { RecentlyViewed } from '@/components/catalog/RecentlyViewed';
-import { CategoryChips } from '@/components/market/CategoryChips';
-import { HeroYoyo, type HeroItem } from '@/components/market/HeroYoyo';
+import { ForYou } from '@/components/market/ForYou';
 import { HomeFaq } from '@/components/market/HomeFaq';
-import { HowItWorks } from '@/components/market/HowItWorks';
-import { Rail, RAIL_ITEM } from '@/components/market/Rail';
-import { Button } from '@/components/ui/Button';
 import { LendCalculator } from '@/components/market/LendCalculator';
 import { TrustRow } from '@/components/market/TrustRow';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { Button } from '@/components/ui/Button';
+import { Section } from '@/components/ui/Section';
 import { Link } from '@/i18n/navigation';
+import { coversByRoot } from '@/lib/catalog/categories';
 import { loadCategories, loadCategoryOverview, loadForYou, loadSearch } from '@/lib/catalog/server-api';
-import { formatEuros } from '@/lib/listings/money';
-import { listingPath } from '@/lib/seo';
 import { currentCountry } from '@/lib/country/server';
+import { displayFit } from '@/lib/display-fit';
 import { pageMetadata } from '@/lib/seo';
 import { CONTACT_EMAIL, LIST_ITEM_HREF, SITE_URL } from '@/lib/site';
 
@@ -57,165 +53,125 @@ function structuredData(description: string) {
   ];
 }
 
+const SPAN_SM = ['col-span-2', 'col-span-1', 'col-span-2'] as const;
+const SPAN_LG = ['', 'lg:col-span-1', 'lg:col-span-2', 'lg:col-span-3'] as const;
+
 /**
- * The home (owner, 2026-11-28: "look at how the big companies do their home page and make ours better"). As
- * the big marketplaces do it, real things first and few words, in Yoyo's own world:
- *   - the hero: a night banner with the promise, the way into the catalog and the Yoyo mark made large, a
- *     yo-yo hanging from the top of the night whose face is a window with a real item (it is thrown in and
- *     comes back with another thing), and the four guarantees at its foot;
- *   - the categories as a row of pills with a photo each;
- *   - shelves that scroll sideways: popular now, new on Yoyo, and a couple of themes when they hold enough;
- *   - how it works in four steps on a string; the night band where your own things count up their earnings;
- *     the questions before a first deal.
- * Searching stays the header's job, on every page.
+ * The home (owner, 2026-11-28: "it still looks cheap", and "no yo-yo used as decoration anywhere on the
+ * site"). Calm and sure of itself, as premium brands are: the promise set large across the page with the way
+ * into the catalog and the four guarantees under it; what is popular now; the catalog as a quiet index; the
+ * night band where your own things count up their earnings; the questions before a first deal. No gimmicks,
+ * no ornament, room to breathe. Searching is the header's job, on every page.
  */
-const SHELF_MIN = 4;
-
-/** A themed shelf: its id, title key, the category whose newest things it shows, and where "See all" goes. */
-const THEMES = [
-  { id: 'home-outdoors', key: 'outdoors', category: 'camping' },
-  { id: 'home-tools', key: 'tools', category: 'tools' },
-] as const;
-
 export default async function HomePage({ params }: Params) {
   const { locale } = (await params) as { locale: Locale };
   setRequestLocale(locale);
-  const [meta, t, tc] = await Promise.all([getTranslations('pages.home'), getTranslations('market'), getTranslations('catalog.card')]);
-  const [feed, tree, overview, newest, ...themed] = await Promise.all([
+  const [meta, t] = await Promise.all([getTranslations('pages.home'), getTranslations('market')]);
+  const [feed, tree, overview, newest] = await Promise.all([
     loadForYou(),
     loadCategories(),
     loadCategoryOverview(),
     loadSearch({ sort: 'new', page: 1 } as CatalogQuery),
-    ...THEMES.map((theme) => loadSearch({ sort: 'new', page: 1, category: theme.category } as CatalogQuery)),
   ]);
   const initial = feed.ok ? feed.data : { items: [], personal: false };
   const items = initial.items;
-  // What the yo-yo brings: popular things that have a photo.
-  const hero: HeroItem[] = items
-    .filter((item) => item.cover)
-    .slice(0, 8)
-    .map((item) => ({
-      id: item.id,
-      title: item.title,
-      href: listingPath(item.id, item.title),
-      photo: item.cover!.card,
-      price: tc('perDay', { price: formatEuros(item.dailyCents, locale) }),
-      place: [item.city, item.district].filter(Boolean).join(', '),
-      demo: item.demo,
-    }));
-  const fresh = newest.ok ? newest.data.items.slice(0, 12) : [];
-  const shelves = THEMES.map((theme, index) => {
-    const found = themed[index];
-    return { ...theme, items: found?.ok ? found.data.items.slice(0, 12) : [] };
-  }).filter((shelf) => shelf.items.length >= SHELF_MIN);
-  const country = await currentCountry();
-  const seeAll = (href: string) => (
-    <Link href={href} className="text-base font-bold underline decoration-1 underline-offset-4">
-      {t('fresh.all')}
-    </Link>
-  );
-  const cards = (list: CatalogItem[]) =>
-    list.map((item) => (
-      <li key={item.id} className={RAIL_ITEM}>
-        <ListingCard item={item} />
-      </li>
-    ));
+  const shown = items.slice(0, 8);
+  // Few things yet: the empty places in the last row invite the visitor to put theirs there.
+  const spare = { sm: (2 - (shown.length % 2)) % 2, lg: (4 - (shown.length % 4)) % 4 };
+  // The index's peek: each category's own newest covers; an API one release behind gives none, so the newest page stands in.
+  const covers = overview?.covers
+    ? Object.fromEntries(Object.entries(overview.covers).map(([root, list]) => [root, list.map((cover) => cover.thumb)]))
+    : tree.ok && newest.ok
+      ? coversByRoot(tree.data, newest.data.items)
+      : undefined;
+  const lines = [t('hero.line1'), t('hero.line2')];
 
   return (
-    // The yo-yo's light reaches past the page's edges: clipped sideways, never down.
-    <main className="flex flex-1 flex-col overflow-x-clip" data-market-home="">
+    <main className="flex flex-1 flex-col" data-market-home="">
       <JsonLd data={structuredData(meta('description'))} />
 
-      <section aria-labelledby="home-title" className="page pt-2 sm:pt-3">
-        <div className="moment rounded-float">
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute -bottom-1/3 -left-[12%] -z-10 size-[38rem] max-w-[110vw] rounded-full bg-[radial-gradient(closest-side,rgb(77_124_255/0.28),transparent)]"
-          />
-          <div className="grid lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
-            <div className="order-2 flex flex-col items-start gap-8 px-6 pt-2 pb-10 sm:px-10 lg:order-1 lg:justify-center lg:px-14 lg:py-20">
-              <h1 id="home-title" className="font-display text-display-xl leading-[0.84] font-black text-balance uppercase">
-                {t('hero.title')}
-              </h1>
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-                <Button href="/c" size="lg">
-                  {t('hero.browse')}
-                </Button>
-                {LIST_ITEM_HREF && (
-                  <Link href={LIST_ITEM_HREF} className="text-base font-bold underline decoration-1 underline-offset-4">
-                    {t('hero.lend')}
-                  </Link>
-                )}
-              </div>
-            </div>
-            <div className="order-1 px-4 pb-4 lg:order-2 lg:px-10 lg:pb-10">
-              <HeroYoyo items={hero} />
-            </div>
-          </div>
-          <div className="border-ink/15 mx-6 border-t py-6 sm:mx-10 lg:mx-14 lg:py-8">
-            <TrustRow />
-          </div>
+      <section aria-labelledby="home-title" className="page @container pt-12 pb-4 sm:pt-20">
+        <h1
+          id="home-title"
+          // As large as the page allows: its longest word always fits the line, on a 320px phone too.
+          style={displayFit(lines.join(' '), { min: '2.5rem', max: 'clamp(3rem, 11.5vw, 12.5rem)' })}
+          className="font-display text-display-fit leading-[0.84] font-black tracking-[-0.01em] uppercase"
+        >
+          {lines.map((line) => (
+            <span key={line} className="block">
+              {line}
+            </span>
+          ))}
+        </h1>
+        <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 sm:mt-14">
+          <Button href="/c" size="lg">
+            {t('hero.browse')}
+          </Button>
+          {LIST_ITEM_HREF && (
+            <Link href={LIST_ITEM_HREF} className="text-base font-bold underline decoration-1 underline-offset-4">
+              {t('hero.lend')}
+            </Link>
+          )}
+        </div>
+        <div className="border-ink/15 mt-14 border-t pt-8 sm:mt-20">
+          <TrustRow />
         </div>
       </section>
 
-      {tree.ok && overview && <CategoryChips roots={tree.data} locale={locale} counts={overview.counts} covers={overview.covers ?? {}} />}
-
       {items.length > 0 && (
-        <div className="page pt-14 sm:pt-20">
+        <section aria-labelledby="home-fresh" className="page page-chapter stack-page">
           <ForYou
-            rail
             initial={initial}
-            country={country}
+            country={await currentCountry()}
             headingId="home-fresh"
             titles={{ personal: t('forYou.personal'), popular: t('forYou.popular') }}
-            action={seeAll('/search')}
+            action={
+              <Link href="/search?sort=new" className="text-base font-bold underline decoration-1 underline-offset-4">
+                {t('fresh.all')}
+              </Link>
+            }
           >
-            {LIST_ITEM_HREF ? (
-              <li className={RAIL_ITEM}>
+            {LIST_ITEM_HREF && spare.lg > 0 ? (
+              <li className={`${SPAN_SM[spare.sm]} ${SPAN_LG[spare.lg]}`}>
                 <Link
                   href={LIST_ITEM_HREF}
-                  className="group border-ink/25 hover:border-ink rounded-media flex aspect-[4/5] h-auto w-full flex-col justify-between gap-6 border-[1.5px] border-dashed p-6 transition-colors"
+                  className="group border-ink/25 hover:border-ink rounded-media flex h-full min-h-[14rem] flex-col justify-between gap-6 border-[1.5px] border-dashed p-6 transition-colors sm:p-8"
                   data-your-spot=""
                 >
-                  <span aria-hidden="true" className="bg-ink grid size-12 place-items-center rounded-full transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:rotate-180">
-                    <span className="bg-canvas h-[3px] w-6 rounded-full" />
+                  <span aria-hidden="true" className="bg-ink text-canvas grid size-12 place-items-center rounded-full transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:rotate-90">
+                    <svg viewBox="0 0 24 24" className="size-5 fill-none stroke-current [stroke-linecap:round] [stroke-width:2.25]">
+                      <path d="M12 5v14M5 12h14" />
+                    </svg>
                   </span>
                   <span className="flex flex-col gap-2">
                     <span className="type-block">{t('fresh.spot.title')}</span>
-                    <span className="inline-flex items-center gap-2 text-base font-bold underline decoration-1 underline-offset-4">{t('fresh.spot.cta')}</span>
+                    <span className="mt-2 inline-flex items-center gap-2 text-base font-bold underline decoration-1 underline-offset-4">{t('fresh.spot.cta')}</span>
                   </span>
                 </Link>
               </li>
             ) : null}
           </ForYou>
+          <RecentlyViewed />
+        </section>
+      )}
+
+      {tree.ok && (
+        <div className="page pb-20 sm:pb-28">
+          <Section
+            title={t('shelf.title')}
+            id="home-catalog"
+            action={
+              <Link href="/c" className="text-base font-bold underline decoration-1 underline-offset-4">
+                {t('shelf.all')}
+              </Link>
+            }
+          >
+            <CategoryIndex roots={tree.data} locale={locale} counts={overview?.counts} covers={covers} />
+          </Section>
         </div>
       )}
 
-      {fresh.length >= SHELF_MIN && (
-        <div className="page pt-14 sm:pt-20">
-          <Rail id="home-new" title={t('rails.new')} action={seeAll('/search?sort=new')}>
-            {cards(fresh)}
-          </Rail>
-        </div>
-      )}
-
-      {shelves.map((shelf) => (
-        <div key={shelf.id} className="page pt-14 sm:pt-20">
-          <Rail id={shelf.id} title={t(`rails.${shelf.key}`)}>
-            {cards(shelf.items)}
-          </Rail>
-        </div>
-      ))}
-
-      <div className="page">
-        <RecentlyViewed />
-      </div>
-
-      <HowItWorks />
-
-      <div className="pt-20 sm:pt-28">
-        <LendCalculator />
-      </div>
+      <LendCalculator />
 
       <HomeFaq />
     </main>

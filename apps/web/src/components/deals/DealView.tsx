@@ -5,7 +5,6 @@ import { isMyTurn, turnKey } from '@/lib/deals/status';
 import type { BookingView } from '@yoyo/shared';
 import { useLocale, useNow, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Mark } from '@/components/brand/Mark';
 import { TransitionLink } from '@/components/motion/TransitionLink';
 import { Button } from '@/components/ui/Button';
 import { formatMoment, formatPeriod } from '@/lib/deals/dates';
@@ -116,7 +115,6 @@ export function DealView({ id }: { id: string }) {
     const missing = deal.error instanceof ApiError && deal.error.code === 'NOT_FOUND';
     return missing ? (
       <section role="alert" className="flex flex-col items-center gap-4 px-6 py-14 text-center">
-        <Mark size={80} string={false} className="animate-[spin_6s_linear_infinite] motion-reduce:animate-none" />
         <h1 className="type-title hyphens-auto [overflow-wrap:anywhere]">{t('notFound')}</h1>
         <p className="max-w-lead">{t('notFoundBody')}</p>
         <Button href="/bookings">{t('back')}</Button>
