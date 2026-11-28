@@ -17,7 +17,6 @@ import { EmptyResults } from './EmptyResults';
 import { FiltersButton, FiltersRail } from './Filters';
 import { ListingCard } from './ListingCard';
 import { Pagination } from './Pagination';
-import { SearchBox } from './SearchBox';
 import { Toolbar } from './Toolbar';
 
 /** Rentals start at most this far ahead by default (the deal settings may say less; the API decides). */
@@ -50,11 +49,13 @@ type Props = {
   crumbs: Crumb[];
   /** The root category's slug and this page's name, for the intro and the rules at the foot (category pages). */
   intro?: { root: string; name: string };
+  /** Above the items: the people the words also found (the search page). */
+  people?: ReactNode;
   children?: ReactNode;
 };
 
 /** Search and category pages: one layout (W03 §B), the results drawn on the server. */
-export async function CatalogResults({ params: raw, category, related, path, title, crumbs, intro }: Props) {
+export async function CatalogResults({ params: raw, category, related, path, title, crumbs, intro, people }: Props) {
   const t = await getTranslations('catalog');
   const ti = await getTranslations('categoryIntro');
   const lead = intro && ti.has(`roots.${intro.root}`) ? ti(`roots.${intro.root}`) : null;
@@ -92,8 +93,8 @@ export async function CatalogResults({ params: raw, category, related, path, tit
   return (
     <CatalogShell>
       <main className="page page-y stack-page">
+        {/* No search box here: the one in the header holds the words (owner, 2026-11-28: search only in the navigation). */}
         <PageHeader title={title} intro={lead} crumbs={<Breadcrumbs items={crumbs} label={t('breadcrumbs.label')} />}>
-          <SearchBox initialQuery={params.q ?? ''} className="max-w-3xl" />
           {related.length > 0 && (
             <nav aria-label={t('related')}>
               {/* One row that scrolls sideways (audit: two wrapped rows of chips pushed the results down). */}
@@ -134,6 +135,7 @@ export async function CatalogResults({ params: raw, category, related, path, tit
               }
             />
             <ActiveFilters params={params} cities={cities} />
+            {people}
             {params.q && <span hidden data-search-q={params.q} data-search-results={total} />}
             <ResultsRegion status={status}>
               <div className="flex flex-col gap-6">

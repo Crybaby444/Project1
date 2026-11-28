@@ -3248,6 +3248,12 @@ export interface components {
             counts: {
                 [key: string]: number;
             };
+            covers?: {
+                [key: string]: {
+                    thumb: string;
+                    card: string;
+                }[];
+            };
         };
         CatalogPageDto_Output: {
             items: {

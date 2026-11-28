@@ -14675,6 +14675,28 @@
               "minimum": 0,
               "maximum": 9007199254740991
             }
+          },
+          "covers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "thumb": {
+                    "type": "string"
+                  },
+                  "card": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "thumb",
+                  "card"
+                ],
+                "additionalProperties": false
+              }
+            }
           }
         },
         "required": [

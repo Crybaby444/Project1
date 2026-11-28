@@ -30,9 +30,9 @@ function useRunning(value: number): number {
 }
 
 /**
- * Your things can earn (owner: keep it). Pick something like what you have — or set its day price — and how
- * many days a month it is out; the month's rent runs up in big figures, and the year under it. The owner
- * keeps the whole rent: the service fee is the renter's.
+ * Your things can earn (owner: keep it), the home's night band with the one blue light pooled in it. Set a
+ * day price and how many days a month it is out; the month's rent runs up in big figures, and the year
+ * beside it. The owner keeps the whole rent: the service fee is the renter's.
  */
 export function LendCalculator() {
   const t = useTranslations('market.lend');
@@ -49,13 +49,17 @@ export function LendCalculator() {
   const euros = (v: number) => money(Math.round(v) * 100, locale).replace(/[.,]00(?=\D*$)/, '');
 
   return (
-    <section aria-labelledby="home-lend" className="page page-chapter grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center" data-home-lend="">
-      <div className="flex flex-col gap-6">
+    <section aria-labelledby="home-lend" className="moment" data-home-lend="">
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-1/3 -right-[10%] -z-10 size-[46rem] max-w-[120vw] rounded-full bg-[radial-gradient(closest-side,rgb(77_124_255/0.4),transparent)]"
+      />
+      <div className="page page-chapter grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center">
+      <div className="flex flex-col items-start gap-8">
         <h2 id="home-lend" className="type-title">
           {t('title')}
         </h2>
-        <p className="text-ink/80 max-w-lead text-lg leading-relaxed">{t('lead')}</p>
-        <Button href="/listings/new" size="lg" className="self-start">
+        <Button href="/listings/new" size="lg">
           {t('cta')}
         </Button>
       </div>
@@ -99,9 +103,10 @@ export function LendCalculator() {
           </div>
         </div>
         <p className="text-ink/70 -mt-4 flex items-center gap-2 text-sm">
-          <span aria-hidden="true" className="size-1.5 rounded-full bg-[var(--glow)] ring-1 ring-black/25" />
+          <span aria-hidden="true" className="size-1.5 rounded-full bg-[rgb(77_124_255)] shadow-[0_0_10px_2px_rgb(77_124_255/0.6)]" />
           {t('note')}
         </p>
+      </div>
       </div>
     </section>
   );

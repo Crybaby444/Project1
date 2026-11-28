@@ -19,7 +19,6 @@ import { MobileTabBar } from './MobileTabBar';
 import { NavPills } from './NavPills';
 import { SearchCell } from './SearchCell';
 import { UserMenu } from './UserMenu';
-import { VerifyEmailBanner } from './VerifyEmailBanner';
 
 const ROUND = 'border-ink/15 hover:border-ink/50 bg-surface text-ink rounded-pill ease-yoyo relative inline-grid size-10 shrink-0 place-items-center border transition-[transform,border-color] duration-200 hover:-translate-y-0.5';
 
@@ -45,7 +44,8 @@ function MessagesLink() {
  * page with real depth: the mark, Catalog (a sheet of every category), What is Yoyo, How it works with one
  * light that slides along under them, the search, lending, messages, notifications and you. Like a yo-yo it
  * goes away while you scroll down and comes back when you scroll up (and at once when the keyboard reaches it). On phones and tablets a slim capsule on
- * top (the mark, the search, you) and a tab bar at the bottom where the thumb is.
+ * top (the mark, the search as a magnifier, you) and a tab bar at the bottom where the thumb is. Confirming the email
+ * is asked on your own profile, not under the bar (owner, 2026-11-28).
  */
 export function SiteHeader({ catalog = [], country = HOME_COUNTRY }: { catalog?: MenuRoot[]; country?: Country }) {
   const t = useTranslations('header');
@@ -94,8 +94,10 @@ export function SiteHeader({ catalog = [], country = HOME_COUNTRY }: { catalog?:
             </NavPills>
           </nav>
 
+          {/* The one search of the site (owner, 2026-11-28: only in the navigation), on every width: a box where
+              there is room, a magnifier that opens it under the bar where there is not. */}
           <div className="flex min-w-0 flex-1 justify-end lg:justify-center">
-            <div className="hidden w-full max-w-[420px] lg:flex">
+            <div className="flex w-full max-w-[420px] justify-end">
               <SearchCell />
             </div>
           </div>
@@ -150,7 +152,6 @@ export function SiteHeader({ catalog = [], country = HOME_COUNTRY }: { catalog?:
       </header>
       {/* Room for the floating bar at the top of every page (the cinematic page runs under it). */}
       <div data-header-spacer aria-hidden="true" className="h-[72px] lg:h-[84px]" />
-      <VerifyEmailBanner />
       <MobileTabBar roots={catalog} />
     </>
   );

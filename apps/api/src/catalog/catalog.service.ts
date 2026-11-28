@@ -40,6 +40,9 @@ import type { CategoryCounts, ForYouResponse } from '@yoyo/shared';
 /** Owners and rentals are counted in the item's own zone; every listing is in Riga for now. */
 const CATALOG_TIME_ZONE = 'Europe/Riga';
 
+/** How many of its newest covers each top-level category carries (the catalog index stacks three). */
+const COVERS_PER_ROOT = 3;
+
 const notFound = () => new AppError('NOT_FOUND', 404, 'Listing not found');
 const gone = () => new AppError('LISTING_GONE', 410, 'Listing removed');
 
@@ -73,10 +76,47 @@ export class CatalogService {
   }
 
   /** Visible items per category (leaf ids; the site adds them up for the parents). */
+  /**
+   * Visible items per category, and for each top-level category the covers of its newest items with a
+   * photo (the home's category shelf and the catalog index show them). Two grouped queries and one
+   * batch of items, however many categories there are.
+   */
   async categoryCounts(): Promise<CategoryCounts> {
-    const rows = await this.prisma.$queryRaw<{ id: string; n: number }[]>`
-      SELECT l."categoryId" AS id, count(*)::int AS n ${VISIBLE_FROM} WHERE ${CATALOG_VISIBLE_SQL} AND l."categoryId" IS NOT NULL GROUP BY l."categoryId"`;
-    return { counts: Object.fromEntries(rows.map((r) => [r.id, r.n])) };
+    const [rows, newest, tree] = await Promise.all([
+      this.prisma.$queryRaw<{ id: string; n: number }[]>`
+        SELECT l."categoryId" AS id, count(*)::int AS n ${VISIBLE_FROM} WHERE ${CATALOG_VISIBLE_SQL} AND l."categoryId" IS NOT NULL GROUP BY l."categoryId"`,
+      this.prisma.$queryRaw<{ id: string; categoryId: string; publishedAt: Date | null }[]>`
+        SELECT "id", "categoryId", "publishedAt" FROM (
+          SELECT l."id", l."categoryId", l."publishedAt",
+                 row_number() OVER (PARTITION BY l."categoryId" ORDER BY l."publishedAt" DESC NULLS LAST, l."id" DESC) AS n
+          ${VISIBLE_FROM}
+          WHERE ${CATALOG_VISIBLE_SQL} AND l."categoryId" IS NOT NULL
+            AND EXISTS (SELECT 1 FROM "ListingPhoto" p WHERE p."listingId" = l."id")
+        ) newest WHERE n <= ${COVERS_PER_ROOT}`,
+      this.categories.tree(),
+    ]);
+    const rootOf = new Map<string, string>();
+    for (const root of tree) for (const node of subtree(root)) rootOf.set(node.id, root.id);
+    const byRoot = new Map<string, typeof newest>();
+    for (const row of newest) {
+      const root = rootOf.get(row.categoryId);
+      if (!root) continue;
+      const list = byRoot.get(root) ?? [];
+      list.push(row);
+      byRoot.set(root, list);
+    }
+    const time = (row: (typeof newest)[number]) => row.publishedAt?.getTime() ?? 0;
+    const picked = [...byRoot].map(([root, list]) => [root, list.sort((a, b) => time(b) - time(a) || b.id.localeCompare(a.id)).slice(0, COVERS_PER_ROOT)] as const);
+    const items = new Map((await this.items(picked.flatMap(([, list]) => list.map((row) => row.id)))).map((item) => [item.id, item]));
+    const covers: Record<string, { thumb: string; card: string }[]> = {};
+    for (const [root, list] of picked) {
+      const found = list.flatMap((row) => {
+        const cover = items.get(row.id)?.cover;
+        return cover ? [{ thumb: cover.thumb, card: cover.card }] : [];
+      });
+      if (found.length > 0) covers[root] = found;
+    }
+    return { counts: Object.fromEntries(rows.map((r) => [r.id, r.n])), covers };
   }
 
   /** Whether a visible item matches a catalog query: the same filters the search uses (saved searches). */

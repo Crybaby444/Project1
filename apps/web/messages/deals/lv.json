@@ -291,7 +291,6 @@
   },
   "myDeals": {
     "title": "Mani darījumi",
-    "intro": "Viss, ko jūs nomājat un iznomājat, un ko katrs darījums gaida.",
     "roles": "Kuri darījumi",
     "renter": "Es nomāju",
     "owner": "Es iznomāju",
@@ -487,7 +486,6 @@
   },
   "wallet": {
     "title": "Maks",
-    "intro": "Nauda Yoyo: ko varat tērēt, kas iesaldēts drošības naudās un ko nopelnīja jūsu lietas.",
     "available": "Pieejams",
     "deposits": "Drošības naudās",
     "depositsHint": "Iesaldēts tavās atvērtajās nomās; atgriežas pēc pārbaudes.",

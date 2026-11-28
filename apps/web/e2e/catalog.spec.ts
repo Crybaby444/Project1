@@ -59,8 +59,8 @@ test('catalog → search with suggestions → filter → item → calculator →
   await page.goto('/c');
   await expect(page.getByRole('heading', { level: 1, name: m.allTitle })).toBeVisible();
 
-  // The combobox suggests the item while typing; Enter on the suggestion opens it, Enter on the text searches.
-  const box = page.getByRole('combobox', { name: m.search.label });
+  // The header's combobox (the site's one search) suggests the item while typing; Enter on the text searches.
+  const box = page.getByRole('banner').getByRole('combobox', { name: en.nav.search });
   await box.fill(word);
   const suggestion = page.getByRole('option', { name: new RegExp(word) });
   await expect(suggestion).toBeVisible();

@@ -3,15 +3,13 @@ import { ForYou } from '@/components/market/ForYou';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { RecentlyViewed } from '@/components/catalog/RecentlyViewed';
+import { CategoryShelf } from '@/components/market/CategoryShelf';
 import { HomeFaq } from '@/components/market/HomeFaq';
-import { HomeSearch } from '@/components/market/HomeSearch';
 import { LendCalculator } from '@/components/market/LendCalculator';
 import { TrustRow } from '@/components/market/TrustRow';
-import { TwoDoors } from '@/components/market/TwoDoors';
-import { FirstSteps } from '@/components/onboarding/FirstSteps';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { Link } from '@/i18n/navigation';
-import { loadForYou } from '@/lib/catalog/server-api';
+import { loadCategories, loadCategoryOverview, loadForYou } from '@/lib/catalog/server-api';
 import { currentCountry } from '@/lib/country/server';
 import { pageMetadata } from '@/lib/seo';
 import { CONTACT_EMAIL, LIST_ITEM_HREF, SITE_URL } from '@/lib/site';
@@ -51,23 +49,22 @@ function structuredData(description: string) {
   ];
 }
 
-/**
- * The home (owner, 2026-11-16): the marketplace. The search (what, where, when) with four promises under
- * it, what is new, what your things could earn, the questions before a first deal, and a door for each end
- * of the string. The catalog itself lives in the header.
- */
-/** Static classes for the spot's width (Tailwind sees whole class names only). */
 const SPAN_SM = ['col-span-2', 'col-span-1', 'col-span-2'] as const;
 const SPAN_LG = ['', 'lg:col-span-1', 'lg:col-span-2', 'lg:col-span-3'] as const;
 
+/**
+ * The home (owner, 2026-11-28: "the search stays only in the navigation", no extra lines): the promise with
+ * four short guarantees beside it, a shelf of the categories that hold something (each with the photo of its
+ * newest item), what is popular now, a night band where your own things count up their earnings, and the
+ * questions people ask before a first deal. Searching is the header's job, on every page.
+ */
 export default async function HomePage({ params }: Params) {
   const { locale } = (await params) as { locale: Locale };
   setRequestLocale(locale);
   const [meta, t] = await Promise.all([getTranslations('pages.home'), getTranslations('market')]);
-  const feed = await loadForYou();
+  const [feed, tree, overview] = await Promise.all([loadForYou(), loadCategories(), loadCategoryOverview()]);
   const initial = feed.ok ? feed.data : { items: [], personal: false };
   const items = initial.items;
-  const today = new Date().toISOString().slice(0, 10);
   const shown = items.slice(0, 8);
   // Few things yet: the empty places in the last row invite the visitor to put theirs there.
   const spare = { sm: (2 - (shown.length % 2)) % 2, lg: (4 - (shown.length % 4)) % 4 };
@@ -76,22 +73,19 @@ export default async function HomePage({ params }: Params) {
     <main className="flex flex-1 flex-col" data-market-home="">
       <JsonLd data={structuredData(meta('description'))} />
 
-      <section aria-labelledby="home-title" className="page flex flex-col gap-7 pt-9 pb-4 sm:pt-12">
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:items-end lg:gap-12">
+      <section aria-labelledby="home-title" className="page pt-9 pb-2 sm:pt-12">
+        <div className="grid gap-7 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-16">
           <h1 id="home-title" className="font-display text-display-xl leading-[0.84] font-black text-balance uppercase">
             {t('hero.title')}
           </h1>
-          <p className="text-ink/80 max-w-lead text-lg leading-relaxed lg:pb-2">{t('hero.lead')}</p>
+          <TrustRow />
         </div>
-        <HomeSearch country={await currentCountry()} today={today} />
-        <TrustRow />
-        {/* A new account's first steps: the home's moment for them (nothing for a visitor). */}
-        <FirstSteps />
       </section>
 
+      {tree.ok && overview && <CategoryShelf roots={tree.data} locale={locale} counts={overview.counts} covers={overview.covers ?? {}} />}
 
       {items.length > 0 && (
-        <section aria-labelledby="home-fresh" className="page page-chapter stack-page">
+        <section aria-labelledby="home-fresh" className="page stack-page pt-14 pb-20 sm:pt-20 sm:pb-28">
           <ForYou
             initial={initial}
             country={await currentCountry()}
@@ -126,16 +120,9 @@ export default async function HomePage({ params }: Params) {
         </section>
       )}
 
-      <div className="border-ink/15 border-t">
-        <LendCalculator />
-      </div>
+      <LendCalculator />
 
-      <div className="border-ink/15 border-t">
-        <HomeFaq />
-      </div>
-
-      <TwoDoors />
-
+      <HomeFaq />
     </main>
   );
 }

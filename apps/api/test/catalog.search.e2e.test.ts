@@ -84,6 +84,9 @@ describe('catalog search', () => {
     await t.prisma.user.update({ where: { id: boris.user.id }, data: { blockedAt: new Date() } });
     const body = (await request(t.server).get('/api/v1/catalog/category-counts').expect(200)).body;
     expect(body.counts).toEqual({ [drills]: 2 });
+    // The top-level category carries the covers of its newest visible items (the home's shelf).
+    expect(Object.keys(body.covers)).toEqual([await categoryId(t, 'tools')]);
+    expect(body.covers[await categoryId(t, 'tools')]).toHaveLength(2);
   });
 
   it('shows only published items of owners who are still here (Review Focus 1)', async () => {

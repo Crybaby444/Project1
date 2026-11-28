@@ -291,7 +291,6 @@
   },
   "myDeals": {
     "title": "My deals",
-    "intro": "Everything you rent and lend, and what each deal is waiting for.",
     "roles": "Whose deals",
     "renter": "I rent",
     "owner": "I lend",
@@ -487,7 +486,6 @@
   },
   "wallet": {
     "title": "Wallet",
-    "intro": "Money in Yoyo: what you can spend, what is frozen in deposits, and what your items earned.",
     "available": "Available",
     "deposits": "In deposits",
     "depositsHint": "Frozen in your open rentals; returned after the check.",
