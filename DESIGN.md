@@ -10,11 +10,19 @@ The reference is `docs/design/concept-v16.html`; the owner's decisions behind it
 | `--canvas` (paper) | `#f4f1e6` | `#0a0b0e` | page |
 | `--ink` | `#0a0b0e` | `#f4f1e6` | text, 1px lines, solid buttons |
 | `--night` | `#0a0b0e` | `#050608` | night scenes (always dark) |
-| `--glow` | `#9ed2ff` | same | the one light: a dot, a unit (`%`, `h`), a fill — never a surface |
+| `--accent` (the blue) | `#2f5ff0` deep | `#9ed2ff` ice | the third colour (owner, 2026-11-28): what is chosen, current, new or waiting for you |
+| `--accent-soft` | `#dfe7ff` | ice at 14% | a pale-blue ground: a chosen filter, the days of a booking, an avatar, an empty state's mark |
+| `--glow` | `#9ed2ff` | same | the light itself: a dot, a unit (`%`, `h`), a pool in the night — never a surface |
 | chrome | `0xbfc4cc`, metalness 1, roughness 0.2, clearcoat 0.8, envMapIntensity 2.6 | same | the yo-yo and its string |
 
 No yellow, no pastel stickers, no gradients on UI. Ember red (`--sticker-ember`) only means "something is wrong".
 The old `--sticker-*` names stay as quiet tones so unported pages keep working.
+
+**The blue** is a role, never a page or a card: the chosen tab, chip, segment, date range and filter; counts and
+unread marks; "Your turn" and a deal under way; the current step of a deal; stars and the favourite heart;
+people's avatars (the account in the header is the bar's blue light); focus rings; an underlined link under the
+pointer; the light pooled in a night block. A night block (`moment`) turns it over: ice on night, deep on cream.
+The main button stays ink.
 
 ## The system (owner, 2026-11-26: "one style, one beautiful grid, the logic worked out")
 
@@ -87,9 +95,9 @@ Slogans are general, never a list of concrete things.
   header's actions, a sheet, a row, an empty state. One filled (the main action), the rest outlined.
 - **Badges** (a status, "Your turn") are 28px pills, 14px bold, an icon at 14px; a count beside a heading is a
   plain outlined pill sized to its heading.
-- **Switches between views**: a segmented pill for two or three views of the same thing (I rent / I lend,
-  list / map, the theme, the settings on a phone); underlined tabs for four or more sections of a page (the
-  profile).
+- **Switches between views**: a segmented pill for two or three views of the same thing (I rent / I lend, the
+  theme, the settings on a phone), the chosen one filled with the blue; the profile's sections are a pill track
+  (a quiet capsule) with a blue pill that slides to the chosen tab, each tab with its count.
 - **Icons** are drawn line icons, one family: round caps, about 1.3px of line on screen whatever the
   viewBox (24-unit icons at 16–18px take 1.75–2); a "+" on a filled button is bolder.
 - **Dialogs** float: `rounded-float`, a 24px (32px) inside, the title at the block step.

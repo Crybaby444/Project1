@@ -3,7 +3,7 @@
 import type { CatalogItem } from '@yoyo/shared';
 import { useTranslations } from 'next-intl';
 import { LISTING_STATUSES } from '@yoyo/shared';
-import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useId, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { MyListings, type MyListingsFilter } from '@/components/listings/MyListings';
 import { FollowingView } from '@/components/people/FollowingView';
 import { MyShops } from '@/components/shops/MyShops';
@@ -75,6 +75,26 @@ export function ProfileTabs({ listings, name, userId, reviewCount = 0 }: { listi
     shops: mine ? undefined : theirShops.data?.length,
   };
 
+  // The blue pill under the chosen tab (owner, 2026-11-28: "make this selection more beautiful"): it slides
+  // to the tab that is opened. Until it is measured, the chosen tab paints its own pill.
+  const track = useRef<HTMLDivElement>(null);
+  const [pill, setPill] = useState<{ x: number; w: number } | null>(null);
+  useLayoutEffect(() => {
+    const element = track.current;
+    if (!element) return;
+    const place = () => {
+      const chosen = buttons.current[tab];
+      setPill(chosen ? { x: chosen.offsetLeft, w: chosen.offsetWidth } : null);
+    };
+    place();
+    // The counts arrive after the first paint and widen the tabs: follow them.
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(place);
+    observer.observe(element);
+    for (const button of Object.values(buttons.current)) if (button) observer.observe(button);
+    return () => observer.disconnect();
+  }, [tab, TABS.length]);
+
   function onKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
     if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft' && event.key !== 'Home' && event.key !== 'End') return;
     event.preventDefault();
@@ -87,7 +107,19 @@ export function ProfileTabs({ listings, name, userId, reviewCount = 0 }: { listi
 
   return (
     <div className="flex flex-col gap-6">
-      <div role="tablist" aria-label={t('tabs', { name })} className="border-ink/15 -mx-4 flex overflow-x-auto border-b px-4 [scrollbar-width:none] sm:mx-0 sm:px-0">
+      <div className="-mx-4 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
+      <div
+        ref={track}
+        role="tablist"
+        aria-label={t('tabs', { name })}
+        className="bg-mist/70 border-ink/10 rounded-pill relative flex w-max gap-1 border p-1"
+        data-profile-tabs=""
+      >
+        <span
+          aria-hidden="true"
+          className="bg-accent rounded-pill pointer-events-none absolute top-1 bottom-1 left-0 shadow-[0_10px_24px_-12px_var(--accent)] transition-[transform,width] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
+          style={{ width: pill?.w ?? 0, transform: `translateX(${pill?.x ?? 0}px)`, opacity: pill ? 1 : 0 }}
+        />
         {TABS.map((key) => (
           <button
             key={key}
@@ -100,22 +132,30 @@ export function ProfileTabs({ listings, name, userId, reviewCount = 0 }: { listi
             aria-selected={tab === key}
             aria-controls={`${base}-${key}`}
             tabIndex={tab === key ? 0 : -1}
-            onClick={() => setTab(key)}
+            onClick={() => {
+              setTab(key);
+              buttons.current[key]?.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+            }}
             onKeyDown={onKeyDown}
-            className={`relative inline-flex min-h-12 shrink-0 items-center px-4 text-base font-bold whitespace-nowrap transition-colors ${
-              tab === key ? 'text-ink after:bg-ink after:absolute after:inset-x-3 after:-bottom-px after:h-[3px] after:rounded-full' : 'text-ink/65 hover:text-ink'
+            className={`rounded-pill relative inline-flex min-h-11 shrink-0 items-center gap-2 px-4 text-[15px] font-bold whitespace-nowrap transition-colors duration-300 ${
+              tab === key ? `text-accent-fg ${pill ? '' : 'bg-accent'}` : 'text-ink/70 hover:text-ink'
             }`}
           >
             {key === 'items' ? (mine ? t('myItems') : t('itemsTab')) : key === 'following' ? t('following') : t(key)}
             {counts[key] !== undefined && (
-              <span className={`rounded-pill ml-2 inline-flex min-w-6 items-center justify-center px-1.5 text-xs tabular-nums ${tab === key ? 'bg-ink text-canvas' : 'bg-ink/10 text-ink/70'}`}>
+              <span
+                className={`rounded-pill inline-flex h-6 min-w-6 items-center justify-center px-1.5 text-xs tabular-nums transition-colors duration-300 ${
+                  tab === key ? 'bg-[color-mix(in_srgb,var(--accent-fg)_22%,transparent)]' : 'bg-ink/10 text-ink/70'
+                }`}
+              >
                 {counts[key]}
               </span>
             )}
           </button>
         ))}
       </div>
-      <div role="tabpanel" id={`${base}-items`} aria-labelledby={`${base}-items-tab`} hidden={tab !== 'items'}>
+      </div>
+      <div role="tabpanel" id={`${base}-items`} aria-labelledby={`${base}-items-tab`} hidden={tab !== 'items'} className="animate-step-in [--step-from:10px]">
         {mine ? (
           tab === 'items' && <MyListings key={status} initialStatus={status} embedded />
         ) : listings.length === 0 ? (
@@ -130,11 +170,11 @@ export function ProfileTabs({ listings, name, userId, reviewCount = 0 }: { listi
           </ul>
         )}
       </div>
-      <div role="tabpanel" id={`${base}-shops`} aria-labelledby={`${base}-shops-tab`} hidden={tab !== 'shops'}>
+      <div role="tabpanel" id={`${base}-shops`} aria-labelledby={`${base}-shops-tab`} hidden={tab !== 'shops'} className="animate-step-in [--step-from:10px]">
         {tab === 'shops' && (mine ? <MyShops embedded /> : <ShopsGrid userId={userId} empty={<EmptyState headingLevel={2} title={t('noShops', { name })} />} />)}
       </div>
       {mine && (
-        <div role="tabpanel" id={`${base}-favorites`} aria-labelledby={`${base}-favorites-tab`} hidden={tab !== 'favorites'}>
+        <div role="tabpanel" id={`${base}-favorites`} aria-labelledby={`${base}-favorites-tab`} hidden={tab !== 'favorites'} className="animate-step-in [--step-from:10px]">
           {(favorites.data ?? []).length === 0 ? (
             <EmptyState headingLevel={2} title={t('noFavoritesTitle')} body={t('noFavoritesBody')} />
           ) : (
@@ -149,11 +189,11 @@ export function ProfileTabs({ listings, name, userId, reviewCount = 0 }: { listi
         </div>
       )}
       {mine && (
-        <div role="tabpanel" id={`${base}-following`} aria-labelledby={`${base}-following-tab`} hidden={tab !== 'following'}>
+        <div role="tabpanel" id={`${base}-following`} aria-labelledby={`${base}-following-tab`} hidden={tab !== 'following'} className="animate-step-in [--step-from:10px]">
           {tab === 'following' && <FollowingView embedded />}
         </div>
       )}
-      <div role="tabpanel" id={`${base}-reviews`} aria-labelledby={`${base}-reviews-tab`} hidden={tab !== 'reviews'}>
+      <div role="tabpanel" id={`${base}-reviews`} aria-labelledby={`${base}-reviews-tab`} hidden={tab !== 'reviews'} className="animate-step-in [--step-from:10px]">
         {tab === 'reviews' && <ReviewsFeed source={{ kind: 'user', id: userId }} empty={<EmptyState headingLevel={2} title={t('noReviewsTitle')} body={t('noReviewsBody')} />} />}
       </div>
     </div>

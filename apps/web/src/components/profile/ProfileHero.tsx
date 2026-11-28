@@ -31,13 +31,13 @@ export async function ProfileHero({ user }: { user: PublicProfile['user'] }) {
   return (
     <section
       aria-labelledby="profile-name"
-      className="rounded-media relative isolate overflow-hidden bg-[var(--night)] px-5 py-8 text-[var(--paper)] sm:px-10 sm:py-12"
+      className="moment rounded-media px-5 py-8 sm:px-10 sm:py-12"
       data-profile-hero=""
     >
       <span aria-hidden="true" className="pointer-events-none absolute -top-1/3 right-[-10%] -z-10 size-[42rem] rounded-full bg-[radial-gradient(closest-side,rgba(77,124,255,0.45),transparent)]" />
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
         <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-end">
-          <span aria-hidden="true" className="font-display grid size-24 shrink-0 place-items-center rounded-full bg-[var(--paper)] text-4xl font-black text-[var(--night)] sm:size-32 sm:text-5xl">
+          <span aria-hidden="true" className="font-display bg-accent text-accent-fg grid size-24 shrink-0 place-items-center rounded-full text-4xl font-black shadow-[0_0_60px_-10px_var(--accent)] sm:size-32 sm:text-5xl">
             {initials(user.name)}
           </span>
           <div className="flex min-w-0 flex-col gap-3">

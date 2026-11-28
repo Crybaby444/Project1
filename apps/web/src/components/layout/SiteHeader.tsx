@@ -31,7 +31,7 @@ function MessagesLink() {
         <path d="M4 5.5h16v10.5H9l-5 4z" />
       </svg>
       {unread > 0 && (
-        <span className="bg-ink text-canvas ring-canvas absolute -top-1 -right-1 grid min-h-5 min-w-5 place-items-center rounded-full px-1 text-xs font-bold tabular-nums ring-2">
+        <span className="bg-accent text-accent-fg ring-canvas absolute -top-1 -right-1 grid min-h-5 min-w-5 place-items-center rounded-full px-1 text-xs font-bold tabular-nums ring-2">
           {unread > 9 ? '9+' : unread}
         </span>
       )}

@@ -212,7 +212,7 @@ export function UnavailabilityCalendar({ periods, today, onChange, readOnly }: P
                                 : off
                                   ? 'bg-mist border-ink line-through decoration-2 hover:-translate-y-0.5 active:scale-[0.96]'
                                   : 'border-ink/30 hover:border-ink hover:-translate-y-0.5 active:scale-[0.96]'
-                            } ${date === today ? 'outline-ink outline-1 outline-dashed' : ''}`}
+                            } ${date === today ? 'outline-accent outline-2 outline-dashed' : ''}`}
                           >
                             {Number(date.slice(8, 10))}
                           </button>

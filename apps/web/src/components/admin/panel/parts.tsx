@@ -157,9 +157,10 @@ export function StatCard({
   children?: ReactNode;
 }) {
   return (
-    <div className="admin-glass border-ink/15 rounded-media flex flex-col gap-1 border p-5">
+    <div className="admin-glass border-ink/15 rounded-media @container flex min-w-0 flex-col gap-1 border p-5">
       <dt className="text-ink/70 text-sm font-semibold">{label}</dt>
-      <dd className="font-display text-display-m leading-none font-black tabular-nums">{value}</dd>
+      {/* The figure keeps to one line and shrinks with its card (five across on a laptop, two on a phone). */}
+      <dd className="font-display text-[clamp(1.375rem,13cqi,var(--text-display-m))] leading-none font-black whitespace-nowrap tabular-nums">{value}</dd>
       {notes.map((note) => (
         <dd key={note} className="text-ink/70 text-sm">
           {note}

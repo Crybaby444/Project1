@@ -173,7 +173,7 @@ export function RangeCalendar({ value, onChange, today, lastDay, blocked = [], t
                       ]
                         .filter(Boolean)
                         .join(', ');
-                      // The chosen period is a flat lavender band behind the days (no gradients, DESIGN.md):
+                      // The chosen period is a flat pale-blue band behind the days (no gradients, DESIGN.md):
                       // full under the days between, half under the start and the end.
                       const band =
                         role === 'inside' || role === 'preview'
@@ -185,7 +185,7 @@ export function RangeCalendar({ value, onChange, today, lastDay, blocked = [], t
                               : null;
                       return (
                         <td key={date} role="gridcell" aria-selected={chosen} className="relative p-0">
-                          {band && <span aria-hidden="true" className={`bg-ink/10 absolute inset-y-0 ${band}`} />}
+                          {band && <span aria-hidden="true" className={`bg-accent-soft absolute inset-y-0 ${band}`} />}
                           <button
                             ref={(element) => {
                               if (element) buttons.current.set(date, element);
@@ -207,9 +207,9 @@ export function RangeCalendar({ value, onChange, today, lastDay, blocked = [], t
                                 : off
                                   ? 'text-ink/45 cursor-default border-transparent'
                                   : role === 'start' || role === 'end'
-                                    ? 'bg-cta text-cta-fg border-cta'
+                                    ? 'bg-accent text-accent-fg border-accent'
                                     : 'border-transparent hover:border-ink hover:-translate-y-0.5 active:scale-[0.92]'
-                            } ${date === today ? 'outline-ink outline-1 outline-dashed' : ''}`}
+                            } ${date === today ? 'outline-accent outline-2 outline-dashed' : ''}`}
                           >
                             {Number(date.slice(8, 10))}
                           </button>

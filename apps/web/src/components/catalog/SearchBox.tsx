@@ -52,7 +52,7 @@ export function SearchBox({ initialQuery = '', className = '', compact = false, 
       <label htmlFor={ids.input} className="sr-only">
         {label ?? t('label')}
       </label>
-      <div className={`bg-surface rounded-pill focus-within:outline-ink flex items-center gap-2 border pr-1 pl-4 focus-within:outline-2 focus-within:outline-offset-3 ${compact ? 'border-ink/25 hover:border-ink/60 min-h-10 py-0.5 transition-colors' : 'border-ink min-h-12 py-1'}`}>
+      <div className={`bg-surface rounded-pill focus-within:outline-accent flex items-center gap-2 border pr-1 pl-4 focus-within:outline-2 focus-within:outline-offset-3 ${compact ? 'border-ink/25 hover:border-ink/60 min-h-10 py-0.5 transition-colors' : 'border-ink min-h-12 py-1'}`}>
         <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5 shrink-0">
           <circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" strokeWidth="1.75" />
           <path d="m16 16 4.5 4.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />

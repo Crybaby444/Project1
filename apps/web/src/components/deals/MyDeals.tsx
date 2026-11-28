@@ -48,7 +48,7 @@ export function DealCard({ booking, index }: { booking: BookingView; index: numb
             <DealStatusBadge status={booking.status} />
             {mine && (
               <span
-                className="rounded-pill bg-ink text-canvas border-ink inline-flex min-h-7 items-center border px-3 text-sm font-bold"
+                className="rounded-pill bg-accent text-accent-fg border-accent inline-flex min-h-7 items-center border px-3 text-sm font-bold"
                 data-your-turn=""
               >
                 {t('yourTurn')}
@@ -56,7 +56,7 @@ export function DealCard({ booking, index }: { booking: BookingView; index: numb
             )}
             {booking.unreadMessages > 0 && (
               <span
-                className="rounded-pill border-ink inline-flex min-h-7 items-center gap-1.5 border px-3 text-sm font-bold before:size-1.5 before:rounded-full before:bg-[var(--glow)] before:content-['']"
+                className="rounded-pill border-accent bg-accent-soft inline-flex min-h-7 items-center gap-1.5 border px-3 text-sm font-bold before:bg-accent before:size-1.5 before:rounded-full before:content-['']"
                 data-unread-messages={booking.unreadMessages}
               >
                 {t('unreadMessages', { count: booking.unreadMessages })}
@@ -213,14 +213,14 @@ export function MyDeals({ initialRole }: { initialRole: DealRole }) {
             onClick={() => remember(r)}
             onKeyDown={onTabKey}
             className={`rounded-pill ease-yoyo flex min-h-10 flex-1 items-center justify-center gap-2 px-4 text-sm font-bold transition-[background-color,color,transform] duration-250 active:scale-[0.96] ${
-              role === r ? 'bg-cta text-cta-fg' : 'hover:bg-mist'
+              role === r ? 'bg-accent text-accent-fg' : 'hover:bg-mist'
             }`}
           >
             {t(r)}
             {waiting(r) > 0 && (
               <span
                 aria-hidden="true"
-                className="rounded-pill bg-ink text-canvas animate-pop-in border-ink/15 inline-flex min-h-5 min-w-5 items-center justify-center border px-1.5 text-xs tabular-nums"
+                className="rounded-pill bg-ink text-canvas animate-pop-in border-canvas/40 inline-flex min-h-5 min-w-5 items-center justify-center border px-1.5 text-xs tabular-nums"
                 data-badge={r}
               >
                 {waiting(r)}

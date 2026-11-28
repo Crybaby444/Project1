@@ -138,7 +138,7 @@ export function SuggestionList({
         className={`rounded-pill ease-yoyo flex min-h-11 cursor-pointer items-center gap-3 px-3 py-1.5 text-sm font-bold transition-colors duration-150 ${selected ? 'bg-cta text-cta-fg' : ''}`}
       >
         {option.kind === 'person' ? (
-          <span aria-hidden="true" className={`font-display grid size-[30px] shrink-0 place-items-center rounded-full text-base font-black ${selected ? 'bg-cta-fg text-cta' : 'bg-ink text-canvas'}`}>
+          <span aria-hidden="true" className={`font-display grid size-[30px] shrink-0 place-items-center rounded-full text-base font-black ${selected ? 'bg-cta-fg text-cta' : 'bg-accent-soft text-accent'}`}>
             {option.initials}
           </span>
         ) : option.kind === 'category' ? (

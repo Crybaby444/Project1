@@ -41,7 +41,7 @@ export function NavPills({ children, activeHref }: { children: ReactNode; active
       {children}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-[7px] size-[7px] rounded-full bg-[var(--glow)] shadow-[0_0_10px_2px_color-mix(in_srgb,var(--glow)_70%,transparent)] transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        className="bg-accent pointer-events-none absolute -bottom-[7px] size-[7px] rounded-full shadow-[0_0_10px_2px_color-mix(in_srgb,var(--accent)_70%,transparent)] transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
         style={{ left: 0, transform: `translateX(${(dot?.x ?? 0) - 3.5}px)`, opacity: dot ? 1 : 0 }}
       />
     </div>

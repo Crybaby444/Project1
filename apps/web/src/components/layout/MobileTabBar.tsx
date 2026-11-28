@@ -17,10 +17,10 @@ function Tab({ href, label, active, children, badge }: { href: string; label: st
     <Link href={href} aria-current={active ? 'page' : undefined} className="relative flex min-w-0 flex-1 flex-col items-center gap-1 py-2 text-xs font-semibold">
       <span className={`relative grid size-7 place-items-center ${active ? 'text-ink' : 'text-ink/60'}`}>
         {children}
-        {badge ? <span className="bg-ink text-canvas ring-canvas absolute -top-1 -right-2 grid min-h-4 min-w-4 place-items-center rounded-full px-1 text-xs font-bold ring-2">{badge > 9 ? '9+' : badge}</span> : null}
+        {badge ? <span className="bg-accent text-accent-fg ring-canvas absolute -top-1 -right-2 grid min-h-4 min-w-4 place-items-center rounded-full px-1 text-xs font-bold ring-2">{badge > 9 ? '9+' : badge}</span> : null}
       </span>
       <span className={active ? 'text-ink' : 'text-ink/60'}>{label}</span>
-      {active && <span aria-hidden="true" className="absolute top-0 size-[5px] rounded-full bg-[var(--glow)] shadow-[0_0_8px_1px_var(--glow)]" />}
+      {active && <span aria-hidden="true" className="bg-accent absolute top-0 size-[5px] rounded-full shadow-[0_0_8px_1px_var(--accent)]" />}
     </Link>
   );
 }

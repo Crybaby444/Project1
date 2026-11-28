@@ -7,7 +7,7 @@ import { usePathname, useRouter } from '@/i18n/navigation';
 import { useFavoriteIds, useToggleFavorite } from '@/lib/catalog/use-favorites';
 import { useSession } from '@/lib/session/SessionProvider';
 
-const SPARKS = ['var(--glow)', 'var(--ink)', 'var(--glow)', 'var(--chrome)', 'var(--glow)', 'var(--ink)']; // v16: the one light
+const SPARKS = ['var(--accent)', 'var(--glow)', 'var(--accent)', 'var(--chrome)', 'var(--accent)', 'var(--glow)']; // the blue, and its light
 
 /**
  * The favourite heart (spec §8): pressed at once, it pops with sparks of the sticker palette when it
@@ -60,7 +60,7 @@ export function HeartButton({ listingId, title, className = '' }: { listingId: s
       >
         <path
           d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"
-          fill={pressed ? 'var(--sticker-ember)' : 'none'}
+          fill={pressed ? 'var(--accent)' : 'none'}
           stroke="currentColor"
           strokeWidth="1.75"
           strokeLinejoin="round"

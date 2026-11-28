@@ -74,7 +74,7 @@ export function Gallery({ listingId, title, photos }: Props) {
                 aria-label={t('show', { number: at + 1, count: photos.length })}
                 onClick={() => setIndex(at)}
                 className={`rounded-media ease-yoyo block overflow-hidden border transition-[transform,opacity] duration-150 hover:-translate-y-0.5 ${
-                  at === index ? 'border-ink/15 outline-ink outline-2 outline-offset-2' : 'border-ink/15 opacity-70 hover:opacity-100'
+                  at === index ? 'border-ink/15 outline-accent outline-2 outline-offset-2' : 'border-ink/15 opacity-70 hover:opacity-100'
                 }`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element -- 160×120 thumbnails */}

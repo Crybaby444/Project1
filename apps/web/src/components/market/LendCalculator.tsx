@@ -45,7 +45,7 @@ export function LendCalculator() {
   const year = useRunning(price * days * 12);
   const slider =
     'h-1.5 w-full cursor-pointer appearance-none rounded-full bg-[color-mix(in_srgb,var(--ink)_14%,transparent)] [&::-webkit-slider-thumb]:size-7 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--ink)] [&::-webkit-slider-thumb]:shadow-[0_0_0_5px_var(--canvas),0_0_0_6px_color-mix(in_srgb,var(--ink)_25%,transparent)] [&::-webkit-slider-thumb]:transition-transform active:[&::-webkit-slider-thumb]:scale-110 [&::-moz-range-thumb]:size-7 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-[var(--ink)]';
-  const fill = (v: number, min: number, max: number) => ({ background: `linear-gradient(to right, var(--ink) ${((v - min) / (max - min)) * 100}%, color-mix(in srgb, var(--ink) 14%, transparent) 0)` });
+  const fill = (v: number, min: number, max: number) => ({ background: `linear-gradient(to right, var(--accent) ${((v - min) / (max - min)) * 100}%, color-mix(in srgb, var(--ink) 14%, transparent) 0)` });
   const euros = (v: number) => money(Math.round(v) * 100, locale).replace(/[.,]00(?=\D*$)/, '');
 
   return (
@@ -103,7 +103,7 @@ export function LendCalculator() {
           </div>
         </div>
         <p className="text-ink/70 -mt-4 flex items-center gap-2 text-sm">
-          <span aria-hidden="true" className="size-1.5 rounded-full bg-[rgb(77_124_255)] shadow-[0_0_10px_2px_rgb(77_124_255/0.6)]" />
+          <span aria-hidden="true" className="bg-accent size-1.5 rounded-full shadow-[0_0_10px_2px_var(--accent)]" />
           {t('note')}
         </p>
       </div>

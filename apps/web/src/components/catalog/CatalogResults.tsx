@@ -104,7 +104,7 @@ export async function CatalogResults({ params: raw, category, related, path, tit
                     <Link
                       href={link.href}
                       aria-current={link.current ? 'page' : undefined}
-                      className={`rounded-pill ease-yoyo inline-flex min-h-10 items-center border px-4 text-sm font-bold transition-transform duration-250 active:scale-95 ${link.current ? 'bg-cta text-cta-fg border-cta' : 'border-ink hover:bg-mist bg-transparent'}`}
+                      className={`rounded-pill ease-yoyo inline-flex min-h-10 items-center border px-4 text-sm font-bold transition-transform duration-250 active:scale-95 ${link.current ? 'bg-accent text-accent-fg border-accent' : 'border-ink hover:bg-mist bg-transparent'}`}
                     >
                       <span className="whitespace-nowrap">{link.label}</span>
                     </Link>
@@ -137,7 +137,7 @@ export async function CatalogResults({ params: raw, category, related, path, tit
             <ActiveFilters params={params} cities={cities} />
             {people}
             {params.q && <span hidden data-search-q={params.q} data-search-results={total} />}
-            <ResultsRegion status={status}>
+            <ResultsRegion status={status} quiet={items.length === 0}>
               <div className="flex flex-col gap-6">
                 {items.length === 0 ? (
                   <>
