@@ -28,8 +28,8 @@ export function ThemeSelect({ compact = false }: { compact?: boolean }) {
               className="peer sr-only"
             />
             <span className={compact
-              ? 'peer-checked:text-ink peer-checked:underline peer-focus-visible:outline-ink text-ink/70 hover:text-ink flex min-h-10 cursor-pointer items-center px-3 text-xs whitespace-nowrap font-bold tracking-[0.03em] uppercase decoration-1 underline-offset-4 transition-colors duration-200 select-none peer-focus-visible:outline-2'
-              : "peer-checked:bg-cta peer-checked:text-cta-fg hover:bg-mist peer-checked:hover:bg-cta rounded-pill ease-yoyo peer-focus-visible:outline-ink flex min-h-10 cursor-pointer items-center justify-center px-2 text-xs whitespace-nowrap sm:px-4 sm:text-sm font-bold tracking-[0.03em] uppercase transition-[background-color,color,transform] duration-200 select-none peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3 active:scale-[0.96]"}>
+              ? 'peer-checked:text-ink peer-checked:underline peer-focus-visible:outline-accent text-ink/70 hover:text-ink flex min-h-10 cursor-pointer items-center px-3 text-xs whitespace-nowrap font-bold tracking-[0.03em] uppercase decoration-1 underline-offset-4 transition-colors duration-200 select-none peer-focus-visible:outline-2'
+              : "peer-checked:bg-accent peer-checked:text-accent-fg hover:bg-mist peer-checked:hover:bg-accent rounded-pill ease-yoyo peer-focus-visible:outline-accent flex min-h-10 cursor-pointer items-center justify-center px-2 text-xs whitespace-nowrap sm:px-4 sm:text-sm font-bold tracking-[0.03em] uppercase transition-[background-color,color,transform] duration-200 select-none peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3 active:scale-[0.96]"}>
               {t(option)}
             </span>
           </label>

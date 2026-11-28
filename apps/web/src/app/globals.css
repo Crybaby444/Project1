@@ -15,6 +15,9 @@
   --color-ink: var(--ink);
   --color-cta: var(--cta-bg);
   --color-cta-fg: var(--cta-fg);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
   --color-marquee: var(--marquee-bg);
   --color-marquee-fg: var(--marquee-fg);
   --color-sticker-blue: var(--sticker-blue);
@@ -135,6 +138,9 @@
   --mist: color-mix(in srgb, var(--paper) 12%, var(--night));
   --cta-bg: var(--paper);
   --cta-fg: var(--night);
+  --accent: var(--accent-inverse);
+  --accent-fg: var(--accent-inverse-fg);
+  --accent-soft: var(--accent-inverse-soft);
 }
 
 @utility type-hero {
@@ -351,6 +357,9 @@
     --mist: var(--base-mist);
     --cta-bg: var(--base-cta-bg);
     --cta-fg: var(--base-cta-fg);
+    --accent: var(--base-accent);
+    --accent-fg: var(--base-accent-fg);
+    --accent-soft: var(--base-accent-soft);
   }
 
   body {
@@ -378,8 +387,13 @@
 
   /* Visible focus everywhere: 2px outline, 3px offset (DESIGN.md §9). */
   :focus-visible {
-    outline: 2px solid var(--ink);
+    outline: 2px solid var(--accent);
     outline-offset: 3px;
+  }
+
+  /* An underlined link lights its line blue under the pointer (owner, 2026-11-28: the third colour). */
+  a:hover {
+    text-decoration-color: var(--accent);
   }
 }
 

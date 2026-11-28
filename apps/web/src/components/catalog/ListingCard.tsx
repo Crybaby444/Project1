@@ -72,7 +72,7 @@ export function ListingCard({
           )}
           {item.weeklyDiscountPercent > 0 && !unavailable && (
             <span className="rounded-pill bg-ink text-canvas absolute bottom-3 left-3 inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold">
-              <i aria-hidden="true" className="size-1.5 rounded-full bg-[var(--glow)]" />
+              <i aria-hidden="true" className="bg-accent size-1.5 rounded-full shadow-[0_0_6px_1px_var(--accent)]" />
               {t('weekly', { percent: item.weeklyDiscountPercent })}
             </span>
           )}

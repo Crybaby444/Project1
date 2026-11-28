@@ -151,7 +151,7 @@ function ConversationList({ items, activeId }: { items: ConversationSummary[]; a
                   </span>
                   {c.unread > 0 && (
                     <span
-                      className={`rounded-pill inline-flex min-h-5 min-w-5 shrink-0 items-center justify-center px-1.5 text-xs font-bold tabular-nums ${active ? 'bg-canvas text-ink' : 'bg-ink text-canvas'}`}
+                      className={`rounded-pill inline-flex min-h-5 min-w-5 shrink-0 items-center justify-center px-1.5 text-xs font-bold tabular-nums ${active ? 'bg-canvas text-ink' : 'bg-accent text-accent-fg'}`}
                     >
                       <span aria-hidden="true">{c.unread}</span>
                       <span className="sr-only">{t('unread', { count: c.unread })}</span>
@@ -198,7 +198,7 @@ function Initials({ name }: { name: string }) {
   return (
     <span
       aria-hidden="true"
-      className="bg-ink text-canvas font-display grid size-12 shrink-0 place-items-center rounded-full text-xl font-black"
+      className="bg-accent-soft text-accent font-display grid size-12 shrink-0 place-items-center rounded-full text-xl font-black"
     >
       {letters}
     </span>

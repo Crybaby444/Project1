@@ -32,7 +32,7 @@ export async function PeopleResults({ found }: { found: Promise<Loaded<PeopleRes
                 className="border-ink/15 hover:border-ink/50 bg-surface rounded-pill ease-yoyo flex min-h-14 max-w-[18rem] items-center gap-3 border py-2 pr-5 pl-2 transition-[border-color,transform] duration-200 hover:-translate-y-0.5"
                 data-person={person.id}
               >
-                <span aria-hidden="true" className="bg-ink text-canvas font-display grid size-10 shrink-0 place-items-center rounded-full text-lg font-black">
+                <span aria-hidden="true" className="bg-accent-soft text-accent font-display grid size-10 shrink-0 place-items-center rounded-full text-lg font-black">
                   {initials(person.name)}
                 </span>
                 <span className="flex min-w-0 flex-col leading-tight">

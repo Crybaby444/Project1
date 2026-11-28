@@ -11,7 +11,7 @@ export function PersonCard({ person }: { person: Person }) {
   const t = useTranslations('people');
   return (
     <li className="sheet border-ink/15 rounded-media flex items-center gap-4 border p-4 sm:p-5" data-person={person.id}>
-      <span aria-hidden="true" className="bg-ink text-canvas font-display grid size-14 shrink-0 place-items-center rounded-full text-2xl font-black">
+      <span aria-hidden="true" className="bg-accent-soft text-accent font-display grid size-14 shrink-0 place-items-center rounded-full text-2xl font-black">
         {initials(person.name)}
       </span>
       <div className="flex min-w-0 flex-1 flex-col">

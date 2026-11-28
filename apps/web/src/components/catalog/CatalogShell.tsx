@@ -25,11 +25,11 @@ export function useCatalogNavigation() {
 }
 
 /** The results: busy while new ones load, and the count read out when it changes. */
-export function ResultsRegion({ children, status }: { children: ReactNode; status: string }) {
+export function ResultsRegion({ children, status, quiet = false }: { children: ReactNode; status: string; /** Said, not shown: the empty state below already says it. */ quiet?: boolean }) {
   const { pending } = useCatalogNavigation();
   return (
     <section aria-busy={pending} aria-label={status} className="flex flex-col gap-6">
-      <p role="status" aria-live="polite" className="text-sm font-bold">
+      <p role="status" aria-live="polite" className={quiet ? 'sr-only' : 'text-sm font-bold'}>
         {status}
       </p>
       <div className={`ease-yoyo transition-opacity duration-250 ${pending ? 'pointer-events-none opacity-50' : ''}`}>{children}</div>

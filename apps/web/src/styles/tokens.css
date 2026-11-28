@@ -12,7 +12,14 @@
   --paper: #f4f1e6;
   --night: #0a0b0e;
   --night-dim: #a9aeb6; /* the quiet third line of the night */
-  --glow: #a9aeb6; /* the one accent: a neutral chrome grey (owner, 2026-11-13: black and white only, no blue) */
+  /*
+   * The third colour (owner, 2026-11-28: "too monotone — add a third colour that fits the concept"): the
+   * concept's one blue light, now a full role. A deep blue on cream, an ice blue on night. It marks what is
+   * chosen, current, new or waiting for you, and the light pooled in the night; never a page or a card.
+   */
+  --blue-deep: #2f5ff0;
+  --blue-ice: #9ed2ff;
+  --glow: var(--blue-ice); /* the light itself: a dot, a unit, a fill */
   --chrome: #c9cdd4;
   --sticker-blue: var(--glow);
   --sticker-mint: var(--chrome);
@@ -77,6 +84,13 @@
   --ink: #0a0b0e; /* night: text and 1px outlines */
   --cta-bg: #0a0b0e;
   --cta-fg: #f4f1e6;
+  /* The blue on this paper, and its pair for a block in the night (a moment turns them over). */
+  --accent: var(--blue-deep);
+  --accent-fg: #ffffff;
+  --accent-soft: #dfe7ff;
+  --accent-inverse: var(--blue-ice);
+  --accent-inverse-fg: #0a0b0e;
+  --accent-inverse-soft: rgb(158 210 255 / 0.16);
   /* The page's own colours, kept as they are on <html>: a moment (globals.css `moment`) turns the working
      ones over for what is inside it, and a dialog opened from inside takes these back. */
   --base-ink: var(--ink);
@@ -85,6 +99,9 @@
   --base-mist: var(--mist);
   --base-cta-bg: var(--cta-bg);
   --base-cta-fg: var(--cta-fg);
+  --base-accent: var(--accent);
+  --base-accent-fg: var(--accent-fg);
+  --base-accent-soft: var(--accent-soft);
   --marquee-bg: #0a0b0e;
   --marquee-fg: #f4f1e6;
   --sticker-edge: transparent;
@@ -106,6 +123,12 @@
   --ink: #f4f1e6;
   --cta-bg: #f4f1e6;
   --cta-fg: #0a0b0e;
+  --accent: var(--blue-ice);
+  --accent-fg: #0a0b0e;
+  --accent-soft: rgb(158 210 255 / 0.14);
+  --accent-inverse: var(--blue-deep);
+  --accent-inverse-fg: #ffffff;
+  --accent-inverse-soft: #dfe7ff;
   /* The page's own colours, kept as they are on <html>: a moment (globals.css `moment`) turns the working
      ones over for what is inside it, and a dialog opened from inside takes these back. */
   --base-ink: var(--ink);
@@ -114,6 +137,9 @@
   --base-mist: var(--mist);
   --base-cta-bg: var(--cta-bg);
   --base-cta-fg: var(--cta-fg);
+  --base-accent: var(--accent);
+  --base-accent-fg: var(--accent-fg);
+  --base-accent-soft: var(--accent-soft);
   --marquee-bg: #f4f1e6;
   --marquee-fg: #0a0b0e;
   --sticker-edge: #f4f1e6; /* die-cut edge around stickers */
@@ -139,6 +165,12 @@
     --ink: #f4f1e6;
     --cta-bg: #f4f1e6;
     --cta-fg: #0a0b0e;
+    --accent: var(--blue-ice);
+    --accent-fg: #0a0b0e;
+    --accent-soft: rgb(158 210 255 / 0.14);
+    --accent-inverse: var(--blue-deep);
+    --accent-inverse-fg: #ffffff;
+    --accent-inverse-soft: #dfe7ff;
     /* The page's own colours, kept as they are on <html>: a moment (globals.css `moment`) turns the working
        ones over for what is inside it, and a dialog opened from inside takes these back. */
     --base-ink: var(--ink);
@@ -147,6 +179,9 @@
     --base-mist: var(--mist);
     --base-cta-bg: var(--cta-bg);
     --base-cta-fg: var(--cta-fg);
+    --base-accent: var(--accent);
+    --base-accent-fg: var(--accent-fg);
+    --base-accent-soft: var(--accent-soft);
     --marquee-bg: #f4f1e6;
     --marquee-fg: #0a0b0e;
     --sticker-edge: #f4f1e6;

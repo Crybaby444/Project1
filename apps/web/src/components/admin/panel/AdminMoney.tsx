@@ -79,7 +79,8 @@ export function AdminMoney({ kind, page }: { kind?: LedgerKind; page: number }) 
                 [to('escrow'), summary.data.escrowCents],
                 [to('deposits'), summary.data.depositsCents],
                 [to('wallets'), summary.data.walletsCents],
-                [tm('external'), summary.data.externalCents],
+                // The card account is the world outside Yoyo: below zero means money came in and is still here.
+                [tm('external'), -summary.data.externalCents],
               ] as const
             ).map(([label, value]) => (
               <StatCard key={label} label={label} value={<CountUp value={value} format={money} />} />

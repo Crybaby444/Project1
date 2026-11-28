@@ -10,7 +10,8 @@ import { Sheet } from '@/components/ui/Sheet';
 
 const DOT: Record<StepState, string> = {
   done: 'bg-ink text-canvas border-ink',
-  current: 'bg-ink text-canvas border-ink/15',
+  // Where the deal is now: the blue, with its light around it.
+  current: 'bg-accent text-accent-fg border-accent shadow-[0_0_0_5px_var(--accent-soft)]',
   upcoming: 'bg-surface text-ink border-ink/40',
   stopped: 'bg-mist text-ink border-ink',
   skipped: 'bg-surface text-ink/50 border-ink/20 border-dashed',
@@ -89,7 +90,7 @@ export function DealTimeline({
               {!last && (
                 <span aria-hidden="true" className="bg-ink/15 absolute top-8 bottom-0 left-[15px] w-0.5 overflow-hidden">
                   <span
-                    className={`bg-ink ease-yoyo block h-full w-full origin-top transition-transform duration-450 ${behind ? 'scale-y-100' : 'scale-y-0'}`}
+                    className={`bg-accent ease-yoyo block h-full w-full origin-top transition-transform duration-450 ${behind ? 'scale-y-100' : 'scale-y-0'}`}
                   />
                 </span>
               )}

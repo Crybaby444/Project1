@@ -73,7 +73,7 @@ export function FirstSteps({ tone = 'night', forUserId }: { tone?: 'night' | 'qu
         ))}
       </ol>
       <p className="text-ink/80 flex items-start gap-2 text-sm leading-relaxed">
-        <span aria-hidden="true" className="mt-1.5 size-2 shrink-0 rounded-full bg-[rgb(77_124_255)] shadow-[0_0_10px_2px_rgb(77_124_255/0.6)]" />
+        <span aria-hidden="true" className="bg-accent mt-1.5 size-2 shrink-0 rounded-full shadow-[0_0_10px_2px_var(--accent)]" />
         {t('welcome')}
       </p>
     </Sheet>
@@ -118,7 +118,7 @@ function StepRow({ step, label, hint, action }: { step: Step; label: string; hin
     <>
       <span
         aria-hidden="true"
-        className={`grid size-7 shrink-0 place-items-center rounded-full border ${step.done ? 'bg-ink text-canvas border-ink' : 'border-ink/35'}`}
+        className={`grid size-7 shrink-0 place-items-center rounded-full border ${step.done ? 'bg-accent text-accent-fg border-accent' : 'border-ink/35'}`}
       >
         {step.done && (
           <svg viewBox="0 0 24 24" className="size-4 fill-none stroke-current [stroke-linecap:round] [stroke-linejoin:round] [stroke-width:2.5]">

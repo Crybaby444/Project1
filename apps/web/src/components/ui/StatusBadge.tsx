@@ -10,12 +10,12 @@ type StatusBadgeProps = {
 };
 
 /**
- * Black and white (v16, owner 2026-11-13: no colour). The tones differ by line and fill, with the icon
- * and the words; a dispute carries the one red.
+ * The tones differ by line and fill, with the icon and the words: a deal under way is filled with the blue
+ * (owner, 2026-11-28: a third colour), a dispute carries the one red, the rest stay ink.
  */
 const TONE: Record<StatusTone, string> = {
   requested: 'border-ink border-dashed text-ink',
-  active: 'border-ink bg-ink text-canvas',
+  active: 'border-accent bg-accent text-accent-fg',
   deposit: 'border-ink bg-mist text-ink',
   dispute: 'border-[var(--danger)] text-ink [&_svg]:text-[var(--danger)]',
   completed: 'border-ink text-ink',

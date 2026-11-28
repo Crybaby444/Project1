@@ -263,7 +263,7 @@ export function PhotosStep() {
               />
               <label
                 htmlFor={inputId}
-                className="rounded-media border-ink/45 hover:border-ink hover:bg-mist peer-focus-visible:outline-ink ease-yoyo flex aspect-[4/3] size-full cursor-pointer flex-col items-center justify-center gap-2 border-2 border-dashed p-3 text-center transition-colors duration-200 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3 peer-disabled:cursor-default peer-disabled:opacity-55"
+                className="rounded-media border-ink/45 hover:border-ink hover:bg-mist peer-focus-visible:outline-accent ease-yoyo flex aspect-[4/3] size-full cursor-pointer flex-col items-center justify-center gap-2 border-2 border-dashed p-3 text-center transition-colors duration-200 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3 peer-disabled:cursor-default peer-disabled:opacity-55"
               >
                 <svg
                   viewBox="0 0 48 48"

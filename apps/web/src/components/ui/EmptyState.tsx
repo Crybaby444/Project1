@@ -19,7 +19,7 @@ export function EmptyState({ title, body, action, headingLevel = 2, className = 
   const Heading = headingLevel === 3 ? 'h3' : 'h2';
   return (
     <Sheet data-empty-state="" className={`flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-5 ${className}`}>
-      <span aria-hidden="true" className="border-ink/15 bg-mist text-ink/70 rounded-tile grid size-12 shrink-0 place-items-center border">
+      <span aria-hidden="true" className="bg-accent-soft text-accent rounded-tile grid size-12 shrink-0 place-items-center">
         <svg viewBox="0 0 24 24" className="size-6 fill-none stroke-current [stroke-linecap:round] [stroke-linejoin:round] [stroke-width:1.6]">
           <path d="M4 13.5 6.2 6.6A2 2 0 0 1 8.1 5.2h7.8a2 2 0 0 1 1.9 1.4L20 13.5" />
           <path d="M4 13.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3.5h-4.5a1 1 0 0 0-.9.6l-.4.8a1 1 0 0 1-.9.6h-2.6a1 1 0 0 1-.9-.6l-.4-.8a1 1 0 0 0-.9-.6Z" />

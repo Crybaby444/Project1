@@ -45,7 +45,7 @@ export function StarInput({
             <svg
               viewBox="0 0 24 24"
               aria-hidden="true"
-              className={`ease-yoyo size-9 transition-transform duration-200 group-hover:scale-110 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-current ${n <= lit ? 'text-ink' : 'text-ink/30'}`}
+              className={`ease-yoyo size-9 transition-transform duration-200 group-hover:scale-110 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-current ${n <= lit ? 'text-accent' : 'text-ink/30'}`}
             >
               <path d={STAR} fill={n <= lit ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
             </svg>

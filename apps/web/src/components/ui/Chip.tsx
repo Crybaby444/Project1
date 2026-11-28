@@ -15,7 +15,7 @@ type ChipProps = {
 };
 
 
-/** Pill toggle (filters, categories). Pressed chips turn into the Carbon/CTA fill. */
+/** Pill toggle (filters, categories). A pressed chip is filled with the blue (what is chosen). */
 export function Chip({
   children,
   pressed,
@@ -27,7 +27,7 @@ export function Chip({
 }: ChipProps) {
   // v16: quiet pills. `color` and `tilt` are still accepted (callers pass them) but no longer drawn.
   void color; void tilt;
-  const fill = pressed ? 'bg-cta text-cta-fg border-cta' : 'bg-transparent text-ink border-ink hover:bg-mist';
+  const fill = pressed ? 'bg-accent text-accent-fg border-accent' : 'bg-transparent text-ink border-ink hover:bg-mist';
 
   return (
     <button

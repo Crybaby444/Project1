@@ -117,8 +117,8 @@ export function UserMenu({ user }: { user: PublicUser }) {
         aria-controls={open ? menuId : undefined}
         onClick={() => (open ? close({ refocus: false }) : openAt('first'))}
         onKeyDown={onButtonKeyDown}
-        style={{ backgroundColor: 'var(--ink)', color: 'var(--canvas)' }} // v16: one ink disc for everyone
-        className="border-ink rounded-pill ease-yoyo relative inline-grid size-10 place-items-center border text-sm font-bold tracking-[0.03em] [filter:drop-shadow(0_0_0.6px_var(--sticker-edge))] transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96]"
+        style={{ backgroundColor: 'var(--accent)', color: 'var(--accent-fg)' }} // the account is the bar's blue light (2026-11-28)
+        className="border-accent rounded-pill ease-yoyo relative inline-grid size-10 place-items-center border text-sm font-bold tracking-[0.03em] [filter:drop-shadow(0_0_0.6px_var(--sticker-edge))] transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.96]"
       >
         {/* The name says what the button is and still contains the visible initials (WCAG 2.5.3). */}
         <span className="sr-only">{t('account')}, </span>
@@ -130,7 +130,7 @@ export function UserMenu({ user }: { user: PublicUser }) {
           <div className="border-ink/15 flex items-center gap-3 border-b px-3 pt-2 pb-4">
             <span
               aria-hidden="true"
-              className="bg-ink text-canvas font-display grid size-11 shrink-0 place-items-center rounded-full text-lg font-black"
+              className="bg-accent text-accent-fg font-display grid size-11 shrink-0 place-items-center rounded-full text-lg font-black"
             >
               {initials(user.name)}
             </span>
