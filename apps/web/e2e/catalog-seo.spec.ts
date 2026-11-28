@@ -94,12 +94,15 @@ test.describe('category pages', () => {
     expect(await robots(page)).toBe('noindex, follow');
   });
 
-  test('filters, sorts and the map point at the bare category and are not indexed; ?page=N alone is', async ({ page }) => {
-    for (const query of ['?price_min=5', '?sort=price_asc', '?view=map', '?city=riga&page=2']) {
+  test('filters and sorts point at the bare category and are not indexed; ?page=N alone is', async ({ page }) => {
+    for (const query of ['?price_min=5', '?sort=price_asc', '?city=riga&page=2']) {
       await page.goto(`/c/projectors${query}`);
       expect(await canonical(page), query).toBe(`${SITE}/c/projectors`);
       expect(await robots(page), query).toBe('noindex, follow');
     }
+    // The map view is gone (owner, 2026-11-28): an old ?view=map link is the bare category.
+    await page.goto('/c/projectors?view=map');
+    expect(await canonical(page)).toBe(`${SITE}/c/projectors`);
     await page.goto('/c/projectors?page=2');
     expect(await canonical(page)).toBe(`${SITE}/c/projectors?page=2`);
     expect(await robots(page)).toBe('index, follow');
