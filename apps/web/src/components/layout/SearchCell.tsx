@@ -36,7 +36,7 @@ export function SearchCell() {
   // inside it, and the panel has to span the whole capsule, not the magnifier's 40px.
   return (
     <>
-    <div className="@container flex min-w-0 flex-1 items-center justify-end">
+    <div className="@container flex min-w-10 flex-1 items-center justify-end">
       <SearchBox key={`bar-${query}`} compact initialQuery={query} label={tn('search')} className="w-full @max-[199px]:hidden" />
       <button
         type="button"

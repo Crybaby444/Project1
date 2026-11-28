@@ -137,19 +137,25 @@ Mark the text to fill with `data-cursor-text`.
 
 ## The home
 
-The marketplace (owner, 2026-11-28: "the search stays only in the navigation", no extra lines):
+The marketplace with one signature (owner, 2026-11-28: the search only in the navigation, no extra lines, then
+"something with a twist, and beautiful"):
 
-1. **The promise** — "Rent it nearby. It comes back." at the hero step, four short guarantees beside it
-   (a column on a desktop, two by two on a phone), titles only.
-2. **Categories** — a shelf of the top categories that hold something, the fullest first, each a square photo
-   of its newest item with its count; one row that scrolls sideways on a phone, two rows of six from lg.
-3. **Popular now** — the item grid, with an invitation to put yours in the empty places of the last row.
-4. **Your things can earn** — the night band (`moment`) with the one blue light pooled in it: two sliders and
-   the month's rent running up in big figures.
-5. **Before your first deal** — four questions from the FAQ.
+1. **The yo-yo** — the promise ("Rent it nearby. It comes back.") with *Browse the catalog* beside the Yoyo
+   mark made large: a disc with the slit across it, hanging on its string from the header. Its face is a
+   window with a real popular item (photo, price, place). Thrown in when the page opens (it falls past its
+   rest, bounces on the string and spins out), it dips, spins twice and comes back with another thing, three
+   times on its own (pausing while pointed at) and on *Show another*. One soft blue light pools behind it.
+   Still with reduced motion and in automated browsers.
+2. **The four guarantees** at the foot of the hero: a black disc with a dash, the title, one line under it.
+3. **Categories as yo-yos on a string** — the top categories that hold something, the fullest first, each a
+   round photo window with the slit, hanging at its own length; pointing at one sets it swinging. One string
+   that scrolls sideways on a phone, two strings of six from lg.
+4. **Popular now** — the item grid, with an invitation to put yours in the empty places of the last row.
+5. **Your things can earn** — the night band (`moment`) with the blue light: two sliders and the month's rent.
+6. **Before your first deal** — four questions from the FAQ.
 
-The scenes with the chrome yo-yo (three.js, GSAP, Lenis) are What is Yoyo (`/what-is-yoyo`); as plain markup
-every scene is complete (no WebGL, no script, reduced motion), and staging CSS lives under `html[data-staged]`.
+The 3D chrome scenes (three.js, GSAP, Lenis) are What is Yoyo (`/what-is-yoyo`); as plain markup every scene
+is complete, and staging CSS lives under `html[data-staged]`.
 
 ## Motion
 

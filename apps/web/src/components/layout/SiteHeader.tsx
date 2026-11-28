@@ -136,7 +136,8 @@ export function SiteHeader({ catalog = [], country = HOME_COUNTRY }: { catalog?:
               </>
             ) : status === 'anonymous' ? (
               <>
-                <Link href="/login" className="rounded-pill hover:bg-ink/[0.06] inline-flex h-10 items-center px-3.5 text-sm font-bold tracking-[0.03em] whitespace-nowrap uppercase">
+                {/* On a phone the tab bar below has "Sign in"; the capsule keeps its room for the search. */}
+                <Link href="/login" className="rounded-pill hover:bg-ink/[0.06] hidden h-10 items-center px-3.5 text-sm font-bold tracking-[0.03em] whitespace-nowrap uppercase sm:inline-flex">
                   {t('signIn')}
                 </Link>
                 <Link href="/register" className="bg-ink text-canvas rounded-pill hidden h-10 items-center px-4 text-sm font-bold tracking-[0.03em] whitespace-nowrap uppercase shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition-transform hover:-translate-y-0.5 sm:inline-flex">

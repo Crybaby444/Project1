@@ -1209,7 +1209,11 @@
   },
   "market": {
     "hero": {
-      "title": "Nomājiet tuvumā. Tas atgriežas."
+      "title": "Nomājiet tuvumā. Tas atgriežas.",
+      "browse": "Skatīt katalogu",
+      "lend": "Iznomāt savu lietu",
+      "next": "Vēl vienu",
+      "example": "Piemērs"
     },
     "search": {
       "where": "Kur",
@@ -1246,16 +1250,20 @@
     "trust": {
       "label": "Kāpēc tas ir droši",
       "contract": {
-        "title": "Līgums pirms maksājuma"
+        "title": "Līgums pirms maksājuma",
+        "body": "Abas puses paraksta tiešsaistē."
       },
       "deposit": {
-        "title": "Depozīts atgriežas"
+        "title": "Depozīts atgriežas",
+        "body": "Kad atgriešana pārbaudīta."
       },
       "checked": {
-        "title": "Pārbauda cilvēks"
+        "title": "Pārbauda cilvēks",
+        "body": "Katru sludinājumu pirms publicēšanas."
       },
       "reviews": {
-        "title": "Īstas atsauksmes"
+        "title": "Īstas atsauksmes",
+        "body": "Tikai no pabeigtiem darījumiem."
       }
     },
     "faq": {
