@@ -44,7 +44,7 @@ export async function CategoryChips({
                 ) : null}
               </span>
               <span>{categoryName(root, locale)}</span>
-              <span className="text-ink/55 font-semibold tabular-nums">{count}</span>
+              <span className="text-ink/70 font-semibold tabular-nums">{count}</span>
             </Link>
           </li>
         ))}
