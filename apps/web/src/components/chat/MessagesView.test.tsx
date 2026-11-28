@@ -68,7 +68,7 @@ describe('MessagesView', () => {
       'GET /api/v1/conversations/c1': { status: 200, body: thread },
       'POST /api/v1/conversations/c1/read': { status: 204 },
       'POST /api/v1/conversations/c1/messages': (body) => ({ status: 201, body: { message: line({ id: 'm3', text: (body as { text: string }).text, mine: true }) } }),
-      'GET /api/v1/me/conversations/unread': { status: 200, body: { count: 0 } },
+      'GET /api/v1/me/badges': { status: 200, body: { messages: 0, notifications: 0, deals: { renter: { open: 0, needsAction: 0 }, owner: { open: 0, needsAction: 0 } } } },
       'GET /api/v1/bookings/b1': { status: 200, body: { booking: testBooking({ id: 'b1', status: 'ACCEPTED', hasContract: true, actions: ['SIGN', 'CANCEL'] }) } },
     });
     renderWithSession(<MessagesView activeId="c1" />, { client: api.client });

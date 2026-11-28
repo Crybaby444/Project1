@@ -99,7 +99,8 @@ export default defineConfig({
     {
       command: 'pnpm start',
       url: webUrl,
-      env: { ...process.env, PROXY_SECRET: E2E_PROXY_SECRET } as Record<string, string>,
+      // Every spec looks at what it has just changed: no catalog page is kept between requests.
+      env: { ...process.env, PROXY_SECRET: E2E_PROXY_SECRET, CATALOG_CACHE_SECONDS: '0' } as Record<string, string>,
       reuseExistingServer: false,
       timeout: 120_000,
     },

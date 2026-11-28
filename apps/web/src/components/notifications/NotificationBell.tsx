@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useEffect, useId, useRef, useState } from 'react';
 import { Link } from '@/i18n/navigation';
-import { useNotifications } from '@/lib/notifications/queries';
+import { useBadges } from '@/lib/badges/queries';
 import { NotificationList } from './NotificationList';
 
 /** How many the panel shows; the page has the rest. */
@@ -11,17 +11,18 @@ const PANEL_LIMIT = 8;
 
 /**
  * The bell in the header (plan 9, spec §4.7): how many notifications are unread, and a panel with the
- * newest, each worded in the reader's language and leading to its deal or item. It asks for news every
- * 30 seconds while the tab is visible. Esc or a click elsewhere closes the panel.
+ * newest, each worded in the reader's language and leading to its deal or item. The count comes with the
+ * header's other counts (every 20 seconds while the tab is visible); the list only while the panel is open.
+ * Esc or a click elsewhere closes the panel.
  */
 export function NotificationBell() {
   const t = useTranslations('notifications');
-  const notifications = useNotifications();
+  // The count comes with the header's other counts; the list is asked for only while the panel is open.
+  const unread = useBadges((badges) => badges.notifications).data ?? 0;
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const button = useRef<HTMLButtonElement>(null);
   const panelId = useId();
-  const unread = notifications.data?.unread ?? 0;
 
   useEffect(() => {
     if (!open) return;

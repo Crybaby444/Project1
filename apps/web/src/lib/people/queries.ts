@@ -60,7 +60,7 @@ export function useFollowFeed(page: number) {
     queryFn: async () => unwrap(client.GET('/api/v1/me/following/feed', { params: { query: { page } } })),
     enabled: status === 'authenticated',
     placeholderData: keepPreviousData,
-    refetchInterval: 30_000,
+    refetchInterval: 60_000, // new items of the people you follow: a minute is soon enough
   });
 }
 

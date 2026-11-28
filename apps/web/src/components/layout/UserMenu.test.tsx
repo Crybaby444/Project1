@@ -126,7 +126,7 @@ describe('UserMenu deal links', () => {
     const person = testUser();
     const { client, calls } = fakeApi({
       ...meRoute(person),
-      'GET /api/v1/me/bookings/summary': { status: 200, body: { renter: { open: 2, needsAction: 1 }, owner: { open: 1, needsAction: 1 } } },
+      'GET /api/v1/me/badges': { status: 200, body: { messages: 0, notifications: 0, deals: { renter: { open: 2, needsAction: 1 }, owner: { open: 1, needsAction: 1 } } } },
     });
     renderWithSession(<UserMenu user={person} />, { client });
     // Nothing is asked before the menu opens.

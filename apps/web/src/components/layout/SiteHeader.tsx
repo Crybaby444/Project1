@@ -69,7 +69,9 @@ export function SiteHeader({ catalog = [], country = HOME_COUNTRY }: { catalog?:
         <div className="border-ink/10 bg-canvas pointer-events-auto relative flex h-14 items-center gap-2 rounded-full border pr-2 pl-4 shadow-[0_16px_40px_-22px_rgba(10,11,14,0.45),0_1px_0_rgba(255,255,255,0.6)_inset] backdrop-blur-xl lg:h-[60px] lg:gap-3 lg:pl-5">
           <Link href="/" data-site-brand aria-label={tn('homeLabel')} className="rounded-pill flex shrink-0 items-center gap-2 pr-1">
             <Mark size={22} />
-            <Wordmark className="text-2xl lg:text-2xl" />
+            {/* On the narrowest phones (320px) the mark alone, so the search, the country, the language and
+                signing in all fit; the link keeps its name. */}
+            <Wordmark className="text-2xl max-[359px]:hidden lg:text-2xl" />
           </Link>
 
           <nav aria-label={tn('main')} className="hidden lg:block">

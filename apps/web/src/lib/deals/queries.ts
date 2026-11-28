@@ -3,6 +3,7 @@
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { BookingEventInput, BookingView, LedgerKind } from '@yoyo/shared';
 import { useCallback } from 'react';
+import { badgeKeys, useBadges } from '@/lib/badges/queries';
 import { unwrap } from '@/lib/session/api-error';
 import { useApiClient } from '@/lib/session/SessionProvider';
 import { useIdempotentMutation } from './idempotency';
@@ -14,7 +15,7 @@ import type { DealRole } from './status';
  * when the tab comes back.
  */
 export const DEAL_POLL_MS = 5_000;
-export const LIST_POLL_MS = 15_000;
+export const LIST_POLL_MS = 20_000;
 
 /**
  * Query keys of deal and wallet data. Everything under `deals` and `wallet` is private: signing out
@@ -79,16 +80,9 @@ export function useMyDeals(role: DealRole, group: 'open' | 'closed' | 'all', pag
   });
 }
 
-/** Counters for the tabs and the user menu. */
+/** Counters for the tabs and the user menu, from the header's one request for its counts. */
 export function useDealsSummary(enabled = true) {
-  const client = useApiClient();
-  return useQuery({
-    queryKey: dealKeys.summary,
-    queryFn: async () => unwrap(client.GET('/api/v1/me/bookings/summary')),
-    enabled,
-    staleTime: 10_000,
-    refetchInterval: LIST_POLL_MS,
-  });
+  return useBadges((badges) => badges.deals, enabled);
 }
 
 /** What anyone needs to price days of a published listing (public). */
@@ -134,6 +128,8 @@ export function useRefreshAfterDeal() {
           predicate: (query) => !booking || query.queryKey.join('/') !== dealKeys.one(booking.id).join('/'),
         }),
         queryClient.invalidateQueries({ queryKey: walletKeys.all }),
+        // The header's counts (a step may have been the one waiting for me).
+        queryClient.invalidateQueries({ queryKey: badgeKeys.all }),
       ]);
     },
     [queryClient],

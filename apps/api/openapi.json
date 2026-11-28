@@ -9444,6 +9444,47 @@
         ]
       }
     },
+    "/api/v1/me/badges": {
+      "get": {
+        "operationId": "BadgesController_badges",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Unread messages and notifications, and my open deals with those waiting for my step",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadgesDto_Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in or wrong credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed (blocked account, wrong role or foreign Origin)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto_Output"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "me"
+        ]
+      }
+    },
     "/api/v1/bookings/{id}/signing": {
       "post": {
         "operationId": "SigningController_start",
@@ -21968,6 +22009,77 @@
         "required": [
           "balanceCents",
           "payout"
+        ],
+        "additionalProperties": false
+      },
+      "BadgesDto_Output": {
+        "type": "object",
+        "properties": {
+          "messages": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "notifications": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "deals": {
+            "type": "object",
+            "properties": {
+              "renter": {
+                "type": "object",
+                "properties": {
+                  "open": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "needsAction": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "open",
+                  "needsAction"
+                ],
+                "additionalProperties": false
+              },
+              "owner": {
+                "type": "object",
+                "properties": {
+                  "open": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "needsAction": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "open",
+                  "needsAction"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "renter",
+              "owner"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "messages",
+          "notifications",
+          "deals"
         ],
         "additionalProperties": false
       },

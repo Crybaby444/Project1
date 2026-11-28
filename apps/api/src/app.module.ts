@@ -3,6 +3,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ZodSerializerInterceptor } from 'nestjs-zod';
 import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
+import { BadgesModule } from './badges/badges.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { SignaturesModule } from './signatures/signatures.module';
 import { OffersModule } from './offers/offers.module';
@@ -78,6 +79,7 @@ class EnvModule {}
     GeoModule,
     WalletModule,
     BookingsModule,
+    BadgesModule,
     SignaturesModule,
     OffersModule,
     TimersModule,
