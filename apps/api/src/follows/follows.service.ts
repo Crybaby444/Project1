@@ -13,6 +13,12 @@ import { NotificationsService } from '../notifications/notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { ReviewsService } from '../reviews/reviews.service';
 
+/**
+ * The newest this many of a follow list (owner, 2026-11-28: the site must carry 1000+ active people): a
+ * popular shop's thousands of followers are counted on its profile, not sent in one answer.
+ */
+export const FOLLOW_LIST_LIMIT = 500;
+
 const FEED_PAGE = 24;
 const SEARCH_LIMIT = 20;
 
@@ -76,6 +82,7 @@ export class FollowsService {
       where: { followeeId: userId, follower: { deletedAt: null, blockedAt: null } },
       orderBy: { createdAt: 'desc' },
       select: { followerId: true },
+      take: FOLLOW_LIST_LIMIT,
     });
     return this.cards(rows.map((r) => r.followerId));
   }
@@ -92,6 +99,7 @@ export class FollowsService {
       where: { followerId: userId, followee: { deletedAt: null, blockedAt: null } },
       orderBy: { createdAt: 'desc' },
       select: { followeeId: true },
+      take: FOLLOW_LIST_LIMIT,
     });
     return this.cards(rows.map((r) => r.followeeId));
   }

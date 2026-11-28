@@ -36,7 +36,7 @@ function BalanceTiles({ summary }: { summary: WalletSummary }) {
           key={tile.key}
           index={index}
           // The money you can spend is the page's moment (DESIGN.md "Surfaces"): in the night, with the light.
-          className={`rounded-media flex flex-col gap-2 p-5 ${tile.key === 'available' ? 'moment' : 'sheet border-ink/15 border'}`}
+          className={`rounded-media @container flex min-w-0 flex-col gap-2 p-5 ${tile.key === 'available' ? 'moment' : 'sheet border-ink/15 border'}`}
         >
           {tile.key === 'available' && (
             <span
@@ -46,7 +46,8 @@ function BalanceTiles({ summary }: { summary: WalletSummary }) {
           )}
           <dt className="text-ink/70 text-sm font-semibold">{t(tile.key)}</dt>
           <dd
-            className="font-display text-display-m leading-[0.9] font-black tabular-nums"
+            // One line whatever the sum: it shrinks with its tile (three across on a laptop, one on a phone).
+            className="font-display text-[clamp(1.5rem,14cqi,var(--text-display-m))] leading-[0.9] font-black whitespace-nowrap tabular-nums"
             data-tile={tile.key}
           >
             <CountUp value={tile.cents} format={money} />

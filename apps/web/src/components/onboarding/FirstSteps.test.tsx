@@ -7,7 +7,7 @@ import { FirstSteps } from './FirstSteps';
 
 const routes = {
   'GET /api/v1/me/listings': { status: 200, body: { items: [] } },
-  'GET /api/v1/me/bookings/summary': { status: 200, body: { renter: { open: 0, needsAction: 0 }, owner: { open: 0, needsAction: 0 } } },
+  'GET /api/v1/me/badges': { status: 200, body: { messages: 0, notifications: 0, deals: { renter: { open: 0, needsAction: 0 }, owner: { open: 0, needsAction: 0 } } } },
 };
 
 describe('FirstSteps', () => {

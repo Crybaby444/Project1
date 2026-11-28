@@ -64,3 +64,18 @@ export type SavedSearch = z.infer<typeof SavedSearchSchema>;
 
 export const SavedSearchListSchema = z.object({ items: z.array(SavedSearchSchema) });
 export type SavedSearchList = z.infer<typeof SavedSearchListSchema>;
+
+/**
+ * Everything the header counts in one answer (owner, 2026-11-28: the site must carry 1000+ active people):
+ * unread personal messages, unread notifications, and the open deals with those waiting for my step.
+ * One request every 30 seconds instead of three every 10 to 15.
+ */
+export const BadgesSchema = z.object({
+  messages: z.number().int().min(0),
+  notifications: z.number().int().min(0),
+  deals: z.object({
+    renter: z.object({ open: z.number().int().min(0), needsAction: z.number().int().min(0) }),
+    owner: z.object({ open: z.number().int().min(0), needsAction: z.number().int().min(0) }),
+  }),
+});
+export type Badges = z.infer<typeof BadgesSchema>;

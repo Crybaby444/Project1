@@ -2148,6 +2148,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/badges": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["BadgesController_badges"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/bookings/{id}/signing": {
         parameters: {
             query?: never;
@@ -4739,6 +4755,20 @@ export interface components {
                 last4: string;
                 /** @enum {string} */
                 status: "PENDING" | "DONE" | "FAILED";
+            };
+        };
+        BadgesDto_Output: {
+            messages: number;
+            notifications: number;
+            deals: {
+                renter: {
+                    open: number;
+                    needsAction: number;
+                };
+                owner: {
+                    open: number;
+                    needsAction: number;
+                };
             };
         };
         SigningStartDto_Output: {
@@ -12545,6 +12575,44 @@ export interface operations {
             };
             /** @description Too many attempts (RATE_LIMITED); see Retry-After */
             429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+        };
+    };
+    BadgesController_badges: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Unread messages and notifications, and my open deals with those waiting for my step */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BadgesDto_Output"];
+                };
+            };
+            /** @description Not signed in or wrong credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorDto_Output"];
+                };
+            };
+            /** @description Not allowed (blocked account, wrong role or foreign Origin) */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };

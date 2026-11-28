@@ -21,7 +21,7 @@ const going = testBooking({ id: 'b-go', status: 'PAID', paymentMethod: 'CARD', a
 function setup(routes: FakeRoutes = {}) {
   const api = fakeApi({
     ...meRoute(testUser()),
-    'GET /api/v1/me/bookings/summary': { status: 200, body: { renter: { open: 2, needsAction: 1 }, owner: { open: 0, needsAction: 0 } } },
+    'GET /api/v1/me/badges': { status: 200, body: { messages: 0, notifications: 0, deals: { renter: { open: 2, needsAction: 1 }, owner: { open: 0, needsAction: 0 } } } },
     'GET /api/v1/me/bookings': { status: 200, body: { items: [waiting, going], total: 2 } },
     ...routes,
   });

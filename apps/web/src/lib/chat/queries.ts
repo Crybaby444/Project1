@@ -1,6 +1,7 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { badgeKeys, useBadges } from '@/lib/badges/queries';
 import { unwrap } from '@/lib/session/api-error';
 import { useApiClient, useSession } from '@/lib/session/SessionProvider';
 
@@ -12,8 +13,8 @@ export const chatKeys = {
   thread: (id: string) => ['chat', 'thread', id] as const,
 };
 
-/** How often an open conversation asks for new lines, and the menu for the unread count. */
-export const THREAD_POLL_MS = 3_000;
+/** How often an open conversation asks for new lines, and the conversation list for its order. */
+export const THREAD_POLL_MS = 4_000;
 export const UNREAD_POLL_MS = 10_000;
 
 /** Messages = personal conversations only (owner, 2026-11-16); a deal's conversation lives in the deal. */
@@ -28,17 +29,9 @@ export function useConversations() {
   });
 }
 
-/** The unread count for the menu badge; asked again every 30 s while the tab is visible. */
+/** The unread count for the menu badge, from the header's one request for its counts. */
 export function useUnreadCount() {
-  const client = useApiClient();
-  const { status } = useSession();
-  return useQuery({
-    queryKey: chatKeys.unread,
-    queryFn: async () => (await unwrap(client.GET('/api/v1/me/conversations/unread', { params: { query: { kind: 'direct' } } }))).count,
-    enabled: status === 'authenticated',
-    refetchInterval: UNREAD_POLL_MS,
-    staleTime: 10_000,
-  });
+  return useBadges((badges) => badges.messages);
 }
 
 export function useThread(id: string) {
@@ -70,7 +63,7 @@ export function useMarkRead(id: string) {
       await unwrap(client.POST('/api/v1/conversations/{id}/read', { params: { path: { id } } }));
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: chatKeys.unread });
+      void queryClient.invalidateQueries({ queryKey: badgeKeys.all });
       void queryClient.invalidateQueries({ queryKey: chatKeys.list });
     },
   });

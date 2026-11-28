@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { EmailPreferences, Notification } from '@yoyo/shared';
+import { badgeKeys } from '@/lib/badges/queries';
 import { unwrap } from '@/lib/session/api-error';
 import { useApiClient, useSession } from '@/lib/session/SessionProvider';
 
@@ -12,16 +13,20 @@ export const notificationKeys = {
   prefs: ['notifications', 'email'] as const,
 };
 
-/** How often the bell asks for news while the tab is visible. */
-export const BELL_POLL_MS = 10_000;
+/** How often an open list of notifications (the bell's panel, the page) asks for news while the tab is visible. */
+export const BELL_POLL_MS = 20_000;
 
-export function useNotifications() {
+/**
+ * The newest notifications. Asked only where they are shown (the open panel, the page): the bell's count
+ * comes with the header's other counts (lib/badges).
+ */
+export function useNotifications(enabled = true) {
   const client = useApiClient();
   const { status } = useSession();
   return useQuery({
     queryKey: notificationKeys.list,
     queryFn: async () => unwrap(client.GET('/api/v1/me/notifications')),
-    enabled: status === 'authenticated',
+    enabled: enabled && status === 'authenticated',
     refetchInterval: BELL_POLL_MS,
     staleTime: 10_000,
   });
@@ -38,7 +43,10 @@ export function useMarkNotificationRead() {
           : client.POST('/api/v1/me/notifications/{id}/read', { params: { path: { id } } }),
       );
     },
-    onSettled: () => void queryClient.invalidateQueries({ queryKey: notificationKeys.list }),
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: notificationKeys.list });
+      void queryClient.invalidateQueries({ queryKey: badgeKeys.all });
+    },
   });
 }
 

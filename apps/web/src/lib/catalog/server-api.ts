@@ -26,6 +26,17 @@ const TIMEOUT_MS = 10_000;
 const CATEGORIES_REVALIDATE = 300;
 
 /**
+ * Seconds a page of the catalog, an item and a public profile are kept by Next's fetch cache (owner,
+ * 2026-11-28: the site must carry 1000+ active people): a popular page is asked from the API about every
+ * 20 seconds, not on every visit. A booking still checks the days on the API, so a calendar a few seconds
+ * old can never double-book. `CATALOG_CACHE_SECONDS=0` keeps everything fresh (the e2e run).
+ */
+const PUBLIC_REVALIDATE = (() => {
+  const seconds = Number(process.env.CATALOG_CACHE_SECONDS ?? 20);
+  return Number.isFinite(seconds) && seconds > 0 ? seconds : undefined;
+})();
+
+/**
  * Every page's header asks for the tree (the catalog menu), so a sleeping API must not hold pages up
  * for long: after this the menu shows only "All categories" and search (as the landing page does).
  */
@@ -72,14 +83,14 @@ export const loadCategoryOverview = cache(async (): Promise<CategoryCounts | und
 });
 
 export const loadItem = cache(async (id: string): Promise<Loaded<ItemDetail>> => {
-  const loaded = await load(() => client().GET('/api/v1/catalog/listings/{id}', { params: { path: { id } } }));
+  const loaded = await load(() => client(PUBLIC_REVALIDATE).GET('/api/v1/catalog/listings/{id}', { params: { path: { id } } }));
   return loaded.ok ? { ok: true, data: loaded.data.item } : loaded;
 });
 
 // React's cache compares arguments by identity, so the queries go in as their JSON.
 const searchByKey = cache(
   async (key: string): Promise<Loaded<CatalogPage>> =>
-    load(() => client().GET('/api/v1/catalog/listings', { params: { query: toApiSearch(JSON.parse(key) as CatalogQuery) as never } })),
+    load(() => client(PUBLIC_REVALIDATE).GET('/api/v1/catalog/listings', { params: { query: toApiSearch(JSON.parse(key) as CatalogQuery) as never } })),
 );
 
 /** The query in the visitor's country, unless it names one (owner, 2026-11-16: one country at a time). */
@@ -105,7 +116,7 @@ export const loadForYou = async (): Promise<Loaded<ForYouResponse>> => forYouIn(
 export const loadPlaces = async (): Promise<Loaded<PlacesResponse>> => placesIn(await currentCountry());
 
 export const loadProfile = cache(
-  async (id: string): Promise<Loaded<PublicProfile>> => load(() => client().GET('/api/v1/users/{id}', { params: { path: { id } } })),
+  async (id: string): Promise<Loaded<PublicProfile>> => load(() => client(PUBLIC_REVALIDATE).GET('/api/v1/users/{id}', { params: { path: { id } } })),
 );
 
 /** People whose name or @username matches the words (the search page shows them above the items); a minute old. */

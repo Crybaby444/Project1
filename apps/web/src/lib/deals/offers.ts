@@ -3,6 +3,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { OfferView } from '@yoyo/shared';
 import { useCallback } from 'react';
+import { badgeKeys } from '@/lib/badges/queries';
 import { unwrap } from '@/lib/session/api-error';
 import { useApiClient, useSession } from '@/lib/session/SessionProvider';
 import { useIdempotentMutation } from './idempotency';
@@ -55,7 +56,7 @@ function useRefreshOffers() {
   return useCallback(async () => {
     await Promise.all([
       queryClient.invalidateQueries({ queryKey: [...dealKeys.all, 'offers'] }),
-      queryClient.invalidateQueries({ queryKey: dealKeys.summary }),
+      queryClient.invalidateQueries({ queryKey: badgeKeys.all }),
     ]);
   }, [queryClient]);
 }
