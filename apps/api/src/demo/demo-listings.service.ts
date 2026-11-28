@@ -12,8 +12,8 @@ export const DEMO_EMAIL = 'demo@yoyo.rent';
 type Db = Pick<PrismaClient, 'listing' | 'user' | 'category'>;
 
 /**
- * Example listings for Latvia (owner, 2026-11-16): one example owner, 24 listings marked `demo` (a badge,
- * never rented), four branded pictures each. Idempotent (a title already there is skipped); `remove`
+ * Example listings for Latvia (owner, 2026-11-16; fifty with real photos since 2026-11-28): one example
+ * owner, listings marked `demo` (a badge, never rented), one to two photos each. Idempotent (a title already there is skipped); `remove`
  * deletes every example listing with its photos, and the owner when nothing of theirs is left.
  */
 /** At most `limit` new ones a call, so one request stays short (the admin button repeats until done). */
@@ -43,7 +43,7 @@ export async function addDemoListings(db: Db, storage: StorageProvider, now: Dat
     const category = await db.category.findUnique({ where: { slug: item.category } });
     if (!category) continue;
     const photos = [];
-    for (const [position, data] of (await demoPhotos(item.pictogram, index)).entries()) {
+    for (const [position, data] of (await demoPhotos(item.photos)).entries()) {
       const storageKey = crypto.randomUUID();
       photos.push({ storageKey, position, ...(await storage.put(storageKey, data, 'image/jpeg')) });
     }

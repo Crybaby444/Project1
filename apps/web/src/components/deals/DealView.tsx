@@ -176,7 +176,7 @@ export function DealView({ id }: { id: string }) {
             {!closed && (
               <span
                 data-turn={myTurn ? 'mine' : 'theirs'}
-                className={`rounded-pill inline-flex min-h-7 items-center border px-3 text-sm font-bold ${myTurn ? 'bg-ink text-canvas border-ink' : 'border-ink/40'}`}
+                className={`rounded-pill inline-flex min-h-7 items-center border px-3 text-sm font-bold ${myTurn ? 'bg-accent text-accent-fg border-accent' : 'border-ink/40'}`}
               >
                 {turn}
               </span>
