@@ -15,7 +15,6 @@ import { useFavorites } from '@/lib/catalog/use-favorites';
 import { useMyListings } from '@/lib/listings/queries';
 import { useUserShops } from '@/lib/shops/queries';
 import { useFollowing } from '@/lib/people/queries';
-import { Button } from '@/components/ui/Button';
 import { useSession } from '@/lib/session/SessionProvider';
 
 const PUBLIC_TABS = ['items', 'shops', 'reviews'] as const;
@@ -31,8 +30,8 @@ const isTab = (value: string | null): value is Tab => (OWN_TABS as readonly stri
 /**
  * A profile's tabs (WAI-ARIA tabs, arrows move between them), each with how many it holds. Anyone sees the
  * person's items, shops and reviews; your own profile adds favourites and the people you follow, and its
- * items tab manages every item you have. Every panel opens the same way: a line on what it is, its action
- * on the right, then the list or a short empty state.
+ * items tab manages every item you have. Every panel is just its list, or a short empty state (owner,
+ * 2026-11-28: no line explaining what a tab is).
  */
 export function ProfileTabs({ listings, name, userId, reviewCount = 0 }: { listings: CatalogItem[]; name: string; userId: string; reviewCount?: number }) {
   const t = useTranslations('profile');
@@ -136,12 +135,6 @@ export function ProfileTabs({ listings, name, userId, reviewCount = 0 }: { listi
       </div>
       {mine && (
         <div role="tabpanel" id={`${base}-favorites`} aria-labelledby={`${base}-favorites-tab`} hidden={tab !== 'favorites'}>
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-ink/75 max-w-read leading-relaxed">{t('favoritesIntro')}</p>
-            <Button href="/c" variant="ghost" size="md">
-              {t('browse')}
-            </Button>
-          </div>
           {(favorites.data ?? []).length === 0 ? (
             <EmptyState headingLevel={2} title={t('noFavoritesTitle')} body={t('noFavoritesBody')} />
           ) : (

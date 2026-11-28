@@ -213,7 +213,6 @@ export function WalletView() {
     <div className="stack-page">
       <PageHeader
         title={t('title')}
-        intro={t('intro')}
         action={
           <>
             <Button onClick={() => setMode('topUp')} disabled={!wallet.data}>

@@ -342,7 +342,11 @@ export type SitemapResponse = z.infer<typeof SitemapResponseSchema>;
 export const CATEGORY_INDEX_MIN_ITEMS = 3;
 
 /** How many visible items each category holds (only categories with any), for the catalog index. */
-export const CategoryCountsSchema = z.object({ counts: z.record(z.string(), z.number().int().min(0)) });
+export const CategoryCountsSchema = z.object({
+  counts: z.record(z.string(), z.number().int().min(0)),
+  /** Per top-level category id: the covers of its newest items with a photo, newest first (thumb and card). */
+  covers: z.record(z.string(), z.array(z.object({ thumb: z.string(), card: z.string() }))).optional(),
+});
 export type CategoryCounts = z.infer<typeof CategoryCountsSchema>;
 
 /** A person in search results and follow lists: enough for a card that leads to their profile. */

@@ -45,16 +45,31 @@ test('What is Yoyo has nothing around it: no header or footer, and the way home 
   await expect(back).toHaveAttribute('href', '/');
 });
 
-test('the home is the marketplace: search what, where and when, items on the string, categories in the header (owner, 2026-11-16)', async ({ page }) => {
-  await page.goto('/');
-  const search = page.locator('[data-home-search]');
-  await search.getByLabel(main.market.search.what).fill('drill');
-  await search.getByRole('button', { name: main.market.search.submit }).click();
-  await expect(page).toHaveURL(/\/search\?q=drill$/);
+test('the home: the promise, and the search only in the header, on the results page too (owner, 2026-11-28)', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1, name: main.market.hero.title })).toBeVisible();
+  await expect(page.getByRole('main').getByRole('search')).toHaveCount(0);
+  const search = page.getByRole('banner').getByRole('combobox', { name: main.nav.search });
+  await search.fill('drill');
+  await search.press('Enter');
+  await expect(page).toHaveURL(/\/search\?q=drill$/);
+  // The results page has no box of its own: the header's holds the words.
+  await expect(page.getByRole('main').getByRole('search')).toHaveCount(0);
+  await expect(page.getByRole('banner').getByRole('combobox', { name: main.nav.search })).toHaveValue('drill');
+  await page.goto('/');
   await expect(page.getByRole('banner').getByRole('navigation', { name: main.nav.main })).toBeVisible();
   await expect(page.getByRole('banner').getByRole('link', { name: main.nav.whatIsYoyo })).toHaveAttribute('href', '/what-is-yoyo');
+});
+
+test('on a phone the header’s magnifier opens the search under the bar', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.getByRole('banner').getByRole('button', { name: main.catalog.search.label }).click();
+  const search = page.getByRole('banner').getByRole('combobox', { name: main.nav.search }).last();
+  await expect(search).toBeFocused();
+  await search.fill('tent');
+  await search.press('Enter');
+  await expect(page).toHaveURL(/\/search\?q=tent$/);
 });
 
 test('a signed-in person also gets the page without the header', async ({ page, context }) => {

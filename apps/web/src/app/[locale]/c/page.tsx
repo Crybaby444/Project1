@@ -3,11 +3,10 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Breadcrumbs } from '@/components/catalog/Breadcrumbs';
 import { CategoryIndex } from '@/components/catalog/CategoryIndex';
-import { SearchBox } from '@/components/catalog/SearchBox';
 import { ListingCard } from '@/components/catalog/ListingCard';
 import { RecentlyViewed } from '@/components/catalog/RecentlyViewed';
 import { coversByRoot } from '@/lib/catalog/categories';
-import { loadCategories, loadCategoryCounts, loadSearch } from '@/lib/catalog/server-api';
+import { loadCategories, loadCategoryOverview, loadSearch } from '@/lib/catalog/server-api';
 import { Link } from '@/i18n/navigation';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Section } from '@/components/ui/Section';
@@ -33,18 +32,22 @@ export default async function CategoriesPage({ params }: Props) {
   const { locale } = (await params) as { locale: Locale };
   setRequestLocale(locale);
   const t = await getTranslations('catalog');
-  const [tree, counts, newest] = await Promise.all([loadCategories(), loadCategoryCounts(), loadSearch({ sort: 'new', page: 1 } as CatalogQuery)]);
+  const [tree, overview, newest] = await Promise.all([loadCategories(), loadCategoryOverview(), loadSearch({ sort: 'new', page: 1 } as CatalogQuery)]);
   const fresh = newest.ok ? newest.data.items.slice(0, 4) : [];
-  const covers = tree.ok && newest.ok ? coversByRoot(tree.data, newest.data.items) : undefined;
+  const counts = overview?.counts;
+  // Each category's own newest covers; an API one release behind gives none, so the newest page stands in.
+  const covers = overview?.covers
+    ? Object.fromEntries(Object.entries(overview.covers).map(([root, list]) => [root, list.map((cover) => cover.thumb)]))
+    : tree.ok && newest.ok
+      ? coversByRoot(tree.data, newest.data.items)
+      : undefined;
   const title = t('allTitle');
   return (
     <main className="page page-y stack-page">
       <PageHeader
         title={title}
         crumbs={<Breadcrumbs items={[{ label: t('breadcrumbs.home'), href: '/' }, { label: t('breadcrumbs.catalog') }]} label={t('breadcrumbs.label')} />}
-      >
-        <SearchBox className="max-w-3xl" />
-      </PageHeader>
+      />
       {!tree.ok ? (
         <p role="alert" className="font-bold">
           {t('error.body')}

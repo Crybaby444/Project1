@@ -24,8 +24,8 @@ tokens in `apps/web/src/styles/tokens.css`, the components in `components/ui`.
 ### Grid
 
 - **One container**, `page`: 1440px at most, a 16px gutter (32px from 640px). The floating header capsule,
-  the email strip, the footer and the phone's tab bar all sit on the same two edges, so the title of every
-  page starts on the same line as the logo above it. `page-narrow` (48rem) is left for a lone form only.
+  the footer and the phone's tab bar all sit on the same two edges, so the title of every page starts on the
+  same line as the logo above it. `page-narrow` (48rem) is left for a lone form only.
 - **Three layouts**, nothing in between:
   - one column;
   - `layout-split`: the work on the left, a **24rem** column of tools on the right (a deal, a booking,
@@ -113,7 +113,13 @@ for anything that spins (the loader), so it turns about its centre.
 A floating capsule on the page's grid: the mark and the wordmark, the catalog and What is Yoyo on the left; the
 search in the middle; theme, country, language, "Lend an item", messages, notifications and the account on the
 right. It hides as you scroll down and comes back as you scroll up. On a phone the capsule keeps the mark, the
-country, the bell and the account, and the tab bar below (Home, Catalog, Lend, Messages, You) never moves.
+search as a magnifier (it opens the box under the bar), the country, the bell and the account, and the tab bar
+below (Home, Catalog, Lend, Messages, You) never moves.
+
+**The search lives only here** (owner, 2026-11-28): no page has a box of its own. It suggests categories, items
+and people (an `@name` looks only for people); on the results page it holds the words, and the people found
+come as a row of pills above the items. Confirming the email is asked on one's own profile (the first steps,
+then a quiet reminder), never as a strip under the bar.
 
 ## Cursor
 
@@ -123,18 +129,19 @@ Mark the text to fill with `data-cursor-text`.
 
 ## The home
 
-Five scenes, each held on screen while it plays (sticky), with transitions out of the yo-yo, never cuts:
+The marketplace (owner, 2026-11-28: "the search stays only in the navigation", no extra lines):
 
-1. **Hero** — YOYO across the screen, the chrome yo-yo hanging on its chrome string in front of it, face-on,
-   the slit level at rest. On scroll it revs, the night spills out of its rim, then the string reels it up.
-2. **Night** — "Rent it · Use it · Bring it back" drift; they light up one by one; a line and the catalog.
-3. **What is Yoyo** — the statement lights up word by word, then four steps arrive under a filling line.
-4. **Facts** — one fact at a time, a huge number counting up; numbers come from `DEFAULT_BOOKING_SETTINGS`.
-5. **Finale** — in the dark the yo-yo comes down on its string, light grows out of it, the string lets go, it
-   lands and rolls away and back under "It always comes back."
+1. **The promise** — "Rent it nearby. It comes back." at the hero step, four short guarantees beside it
+   (a column on a desktop, two by two on a phone), titles only.
+2. **Categories** — a shelf of the top categories that hold something, the fullest first, each a square photo
+   of its newest item with its count; one row that scrolls sideways on a phone, two rows of six from lg.
+3. **Popular now** — the item grid, with an invitation to put yours in the empty places of the last row.
+4. **Your things can earn** — the night band (`moment`) with the one blue light pooled in it: two sliders and
+   the month's rent running up in big figures.
+5. **Before your first deal** — four questions from the FAQ.
 
-Rules: as plain markup every scene is complete (no WebGL, no script, reduced motion); staging CSS lives under
-`html[data-staged]`; three.js, GSAP and Lenis load on the home only.
+The scenes with the chrome yo-yo (three.js, GSAP, Lenis) are What is Yoyo (`/what-is-yoyo`); as plain markup
+every scene is complete (no WebGL, no script, reduced motion), and staging CSS lives under `html[data-staged]`.
 
 ## Motion
 

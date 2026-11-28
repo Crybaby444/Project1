@@ -9,16 +9,16 @@ import { Dialog } from '@/components/ui/Dialog';
 import { Link } from '@/i18n/navigation';
 import { usePeopleOf } from '@/lib/people/queries';
 import { useSession } from '@/lib/session/SessionProvider';
-import { FindPeople } from './FindPeople';
 import { FollowButton } from './FollowButton';
 import { PersonCard } from './PersonCard';
 
-type List = 'followers' | 'following' | 'find';
+type List = 'followers' | 'following';
 
 /**
  * The profile's social row (owner, 2026-11-16: a full profile). Followers and following open their
  * lists; reviews jump to the reviews tab. On someone else's profile: Follow and Write. On your own:
- * Edit profile and Manage my items instead.
+ * Edit profile and the shortcuts to your deals, wallet, messages and notifications. Finding people is the
+ * header's search (owner, 2026-11-28), not a button here.
  */
 export function ProfileSocial({
   userId,
@@ -45,7 +45,7 @@ export function ProfileSocial({
   const mine = user?.id === userId;
   const [delta, setDelta] = useState(0);
   const [open, setOpen] = useState<List | null>(null);
-  const people = usePeopleOf(userId, open === 'find' ? null : open);
+  const people = usePeopleOf(userId, open);
 
   const stat = (value: number, label: string, onClick?: () => void) => {
     const inner = (
@@ -79,9 +79,6 @@ export function ProfileSocial({
           <>
             <Button href="/settings" size="md">
               {tp('edit')}
-            </Button>
-            <Button variant="ghost" size="md" onClick={() => setOpen('find')}>
-              {tp('findPeople')}
             </Button>
             <ShareButton title={name} withoutQuery />
           </>
@@ -124,27 +121,17 @@ export function ProfileSocial({
       <Dialog
         open={open !== null}
         onClose={() => setOpen(null)}
-        title={open === 'find' ? tp('findPeople') : open === 'followers' ? tp('followersOf', { name }) : tp('followingOf', { name })}
+        title={open === 'followers' ? tp('followersOf', { name }) : tp('followingOf', { name })}
       >
-        {open === 'find' ? (
-          <FindPeople />
-        ) : people.isPending ? (
+        {people.isPending ? (
           <p className="text-ink/70">{tp('loading')}</p>
         ) : (people.data ?? []).length === 0 ? (
-          <div className="flex flex-col items-start gap-4">
-            <p className="text-ink/70">{open === 'followers' ? tp('noFollowers', { name }) : tp('noFollowing', { name })}</p>
-            {mine && open === 'following' && (
-              <Button variant="ghost" onClick={() => setOpen('find')}>
-                {tp('findPeople')}
-              </Button>
-            )}
-          </div>
+          <p className="text-ink/70">{open === 'followers' ? tp('noFollowers', { name }) : tp('noFollowing', { name })}</p>
         ) : (
-          <ul className="flex max-h-[60vh] flex-col gap-3 overflow-y-auto">
+          // A person's card is the list item itself; following a link to a profile closes the list.
+          <ul className="flex max-h-[60vh] flex-col gap-3 overflow-y-auto" onClick={(event) => (event.target as HTMLElement).closest('a') && setOpen(null)}>
             {(people.data ?? []).map((person) => (
-              <li key={person.id} onClick={() => setOpen(null)}>
-                <PersonCard person={person} />
-              </li>
+              <PersonCard key={person.id} person={person} />
             ))}
           </ul>
         )}

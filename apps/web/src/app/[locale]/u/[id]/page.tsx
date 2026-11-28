@@ -7,7 +7,7 @@ import { ProfileTabs } from '@/components/profile/ProfileTabs';
 import { ProfileHero } from '@/components/profile/ProfileHero';
 import { loadProfile } from '@/lib/catalog/server-api';
 import { profileSeo, seoMetadata } from '@/lib/seo';
-import { FirstSteps } from '@/components/onboarding/FirstSteps';
+import { EmailReminder, FirstSteps } from '@/components/onboarding/FirstSteps';
 
 type Props = { params: Promise<{ locale: string; id: string }> };
 
@@ -41,6 +41,7 @@ export default async function ProfilePage({ params }: Props) {
     <main className="page page-y stack-page">
       <ProfileHero user={user} />
       <FirstSteps tone="quiet" forUserId={user.id} />
+      <EmailReminder forUserId={user.id} />
       <ProfileTabs listings={listings} name={user.name} userId={user.id} reviewCount={user.reviewCount} />
       <ReportButton target="USER" id={user.id} ownerId={user.id} className="self-start" />
     </main>

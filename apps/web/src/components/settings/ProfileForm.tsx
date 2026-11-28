@@ -80,7 +80,7 @@ export function ProfileForm({ user }: { user: PublicUser }) {
 
   return (
     <div className="stack-sheets">
-      <SettingsSection title={t('title')} intro={t('intro')}>
+      <SettingsSection title={t('title')}>
         <form noValidate onSubmit={submit} className="flex flex-col gap-5">
           <FormError message={formError} />
           <RetryAfterNotice seconds={retryInSeconds} />

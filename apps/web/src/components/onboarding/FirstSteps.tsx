@@ -1,6 +1,9 @@
 'use client';
 
 import { useNow, useTranslations } from 'next-intl';
+import { RetryAfterNotice } from '@/components/auth/RetryAfterNotice';
+import { useResendVerification } from '@/components/auth/use-resend-verification';
+import { Button } from '@/components/ui/Button';
 import { Link } from '@/i18n/navigation';
 import { Sheet } from '@/components/ui/Sheet';
 import { useDealsSummary } from '@/lib/deals/queries';
@@ -15,8 +18,9 @@ type Step = { key: 'account' | 'email' | 'identity' | 'about' | 'first'; done: b
 /**
  * A new account's first steps (owner, 2026-11-26: make using Yoyo as positive as possible): what is done and
  * what is left to rent and lend safely, each with its way there, and the first month without a service fee.
- * Shown to the signed-in person only, in their first month, until every step is done; then it is gone.
- * On the home it is the page's moment (night); on the profile, under its own night card, a quiet sheet.
+ * Shown to the signed-in person only, on their own profile, in their first month, until every step is done;
+ * then it is gone (owner, 2026-11-28: not on the home). Confirming the email is asked here, with "send again"
+ * on its step, instead of a strip under the header on every page.
  */
 export function FirstSteps({ tone = 'night', forUserId }: { tone?: 'night' | 'quiet'; forUserId?: string }) {
   const t = useTranslations('firstSteps');
@@ -59,7 +63,12 @@ export function FirstSteps({ tone = 'night', forUserId }: { tone?: 'night' | 'qu
       <ol className="m-0 grid list-none gap-2 p-0 sm:grid-cols-2 lg:grid-cols-3">
         {steps.map((step) => (
           <li key={step.key} data-step={step.key} data-done={step.done || undefined}>
-            <StepRow step={step} label={t(`steps.${step.key}.title`)} hint={step.done ? t('done') : t(`steps.${step.key}.hint`)} />
+            <StepRow
+              step={step}
+              label={t(`steps.${step.key}.title`)}
+              hint={step.done ? t('done') : t(`steps.${step.key}.hint`)}
+              action={step.key === 'email' && !step.done ? <ResendButton /> : undefined}
+            />
           </li>
         ))}
       </ol>
@@ -71,7 +80,40 @@ export function FirstSteps({ tone = 'night', forUserId }: { tone?: 'night' | 'qu
   );
 }
 
-function StepRow({ step, label, hint }: { step: Step; label: string; hint: string }) {
+/** "Send again" for the confirmation email, on its step; a countdown when asked too often. */
+function ResendButton() {
+  const t = useTranslations('banner.verifyEmail');
+  const { resend, busy, retryInSeconds } = useResendVerification();
+  return (
+    <span className="flex shrink-0 flex-col items-end gap-1">
+      <Button variant="ghost" size="md" onClick={resend} loading={busy} disabled={retryInSeconds > 0} className="min-h-9 px-3.5 text-xs">
+        {t('resend')}
+      </Button>
+      <RetryAfterNotice seconds={retryInSeconds} inline />
+    </span>
+  );
+}
+
+/**
+ * After the first month the steps are gone, but an unconfirmed email is still asked for on one's own
+ * profile: one quiet row with "send again" (it used to be a strip under the header on every page).
+ */
+export function EmailReminder({ forUserId }: { forUserId: string }) {
+  const t = useTranslations('banner.verifyEmail');
+  const { user, status } = useSession();
+  const now = useNow({ updateInterval: 60 * 60 * 1000 });
+  if (status !== 'authenticated' || !user || user.id !== forUserId || user.emailVerified || user.role === 'ADMIN') return null;
+  // In the first month the first steps ask for it (with the same button).
+  if (now.getTime() - new Date(user.createdAt).getTime() <= FIRST_MONTH_MS) return null;
+  return (
+    <Sheet pad="sm" aria-label={t('title')} className="flex flex-wrap items-center justify-between gap-3" data-email-reminder="">
+      <p className="m-0 font-bold">{t('title')}</p>
+      <ResendButton />
+    </Sheet>
+  );
+}
+
+function StepRow({ step, label, hint, action }: { step: Step; label: string; hint: string; action?: React.ReactNode }) {
   const body = (
     <>
       <span
@@ -84,7 +126,7 @@ function StepRow({ step, label, hint }: { step: Step; label: string; hint: strin
           </svg>
         )}
       </span>
-      <span className="flex min-w-0 flex-col">
+      <span className="flex min-w-0 flex-1 flex-col">
         <span className={`font-bold ${step.done ? 'text-ink/60 line-through decoration-1' : ''}`}>{label}</span>
         <span className="text-ink/70 text-sm">{hint}</span>
       </span>
@@ -92,7 +134,10 @@ function StepRow({ step, label, hint }: { step: Step; label: string; hint: strin
   );
   const row = 'border-ink/15 rounded-tile flex items-center gap-3 border p-3';
   return step.done || !step.href ? (
-    <div className={row}>{body}</div>
+    <div className={`${row} ${action ? 'flex-wrap' : ''}`}>
+      {body}
+      {action}
+    </div>
   ) : (
     <Link href={step.href} className={`${row} hover:border-ink/50 transition-colors`}>
       {body}

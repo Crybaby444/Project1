@@ -33,7 +33,8 @@ test.describe('sign-up', () => {
     await expect(page.getByRole('heading', { level: 1, name: en.identityCheck.title })).toBeVisible();
     await page.getByRole('link', { name: en.identityCheck.skip }).click();
     await expect(page).toHaveURL(/\/styleguide$/);
-    await expect(page.getByText(en.banner.verifyEmail.title)).toBeVisible();
+    // Confirming the email is asked on one's own profile, not under the header (owner, 2026-11-28).
+    await expect(page.getByText(en.banner.verifyEmail.title)).toHaveCount(0);
     await expect(page.getByRole('button', { name: new RegExp(`^${en.header.account}`) })).toHaveText(/, AB$/);
   });
 });
@@ -104,14 +105,18 @@ test.describe('email confirmation', () => {
   }) => {
     const { email } = await registerByApi(page.request);
     const link = linkFrom(await latestTo(email), '/verify-email');
-    await page.goto('/');
-    await expect(page.getByText(en.banner.verifyEmail.title)).toBeVisible();
+    // The profile's first steps ask for it, with a way to send the email again.
+    await page.goto('/dashboard');
+    const step = page.locator('[data-first-steps] [data-step="email"]');
+    await expect(step.getByRole('button', { name: en.banner.verifyEmail.resend })).toBeVisible();
 
     await page.goto(link);
     await expect(page.getByRole('heading', { name: en.auth.verify.done.title })).toBeVisible();
     await page.getByRole('link', { name: en.auth.verify.continue }).click();
     await expect(page.getByRole('heading', { level: 1, name: en.market.hero.title })).toBeVisible();
-    await expect(page.getByText(en.banner.verifyEmail.title)).toHaveCount(0);
+    await page.goto('/dashboard');
+    await expect(step).toHaveAttribute('data-done', 'true');
+    await expect(step.getByRole('button', { name: en.banner.verifyEmail.resend })).toHaveCount(0);
 
     await page.goto(link);
     await expect(page.getByRole('heading', { name: en.auth.verify.used.title })).toBeVisible();

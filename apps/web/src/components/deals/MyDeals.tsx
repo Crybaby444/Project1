@@ -190,7 +190,7 @@ export function MyDeals({ initialRole }: { initialRole: DealRole }) {
 
   return (
     <div className="stack-page">
-      <PageHeader title={t('title')} intro={t('intro')} count={total} />
+      <PageHeader title={t('title')} count={total} />
 
       <div className="stack-section">
       <div

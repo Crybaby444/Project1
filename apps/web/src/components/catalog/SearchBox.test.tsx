@@ -18,8 +18,16 @@ const SUGGEST = {
   listings: [{ id: 'cm1abcdefg', title: 'Cordless drill', cover: null }],
 };
 
-function renderBox() {
-  const api = fakeApi({ ...meRoute(null), 'GET /api/v1/catalog/suggest': { status: 200, body: SUGGEST } });
+const PEOPLE = {
+  items: [{ id: 'u1', name: 'Dris Ozola', username: 'dris', city: 'Rīga', listingCount: 2, followers: 5, rating: null, reviewCount: 0 }],
+};
+
+function renderBox(people: typeof PEOPLE = { items: [] }) {
+  const api = fakeApi({
+    ...meRoute(null),
+    'GET /api/v1/catalog/suggest': { status: 200, body: SUGGEST },
+    'GET /api/v1/people': { status: 200, body: people },
+  });
   renderWithSession(<SearchBox />, { client: api.client, hasSession: false });
   return api;
 }
@@ -34,8 +42,28 @@ describe('SearchBox (combobox)', () => {
     expect(screen.getByRole('option', { name: /Cordless drill/ })).toBeInTheDocument();
     expect(box).toHaveAttribute('aria-expanded', 'true');
     // Typing quickly is one request, not one per letter.
-    expect(api.calls.filter((call) => call.path === '/api/v1/catalog/suggest')).toHaveLength(1);
-    expect(api.calls[api.calls.length - 1]!.query).toBe('q=dri&lang=en');
+    const suggest = api.calls.filter((call) => call.path === '/api/v1/catalog/suggest');
+    expect(suggest).toHaveLength(1);
+    expect(suggest[0]!.query).toBe('q=dri&lang=en');
+  });
+
+  it('finds people too, under the items, and opens their profile (owner, 2026-11-28)', async () => {
+    const user = userEvent.setup();
+    renderBox(PEOPLE);
+    const box = screen.getByRole('combobox', { name: s.label });
+    await user.type(box, 'dri');
+    expect(await screen.findByRole('group', { name: s.people })).toBeInTheDocument();
+    await user.click(screen.getByRole('option', { name: /Dris Ozola/ }));
+    expect(push).toHaveBeenLastCalledWith('/u/u1');
+  });
+
+  it('an @name looks only for people', async () => {
+    const user = userEvent.setup();
+    const api = renderBox(PEOPLE);
+    await user.type(screen.getByRole('combobox', { name: s.label }), '@dris');
+    expect(await screen.findByRole('option', { name: /Dris Ozola/ })).toBeInTheDocument();
+    expect(api.calls.filter((call) => call.path === '/api/v1/catalog/suggest')).toHaveLength(0);
+    expect(screen.queryByRole('option', { name: /Cordless drill/ })).not.toBeInTheDocument();
   });
 
   it('arrows move the active option (aria-activedescendant); Enter opens it', async () => {

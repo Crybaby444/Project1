@@ -3,9 +3,11 @@ import { createApiClient } from '@yoyo/api-client';
 import type {
   CatalogPage,
   CatalogQuery,
+  CategoryCounts,
   CategoryNode,
   ItemDetail,
   ForYouResponse,
+  PeopleResponse,
   PlacesResponse,
   PublicProfile,
   SitemapResponse,
@@ -60,10 +62,13 @@ export const loadCategories = cache(async (): Promise<Loaded<CategoryNode[]>> =>
   return isCurrentTree(loaded.data.categories) ? { ok: true, data: loaded.data.categories } : { ok: false, status: 502 };
 });
 
-/** Visible items per category for the catalog index; a minute old at most. An API without it: no counts. */
-export const loadCategoryCounts = cache(async (): Promise<Record<string, number> | undefined> => {
+/**
+ * Visible items per category and the newest covers of each top category (the catalog index, the home's
+ * shelf); a minute old at most. An API without it: no counts, no covers.
+ */
+export const loadCategoryOverview = cache(async (): Promise<CategoryCounts | undefined> => {
   const loaded = await load(() => client(60).GET('/api/v1/catalog/category-counts'));
-  return loaded.ok ? loaded.data.counts : undefined;
+  return loaded.ok ? loaded.data : undefined;
 });
 
 export const loadItem = cache(async (id: string): Promise<Loaded<ItemDetail>> => {
@@ -101,6 +106,11 @@ export const loadPlaces = async (): Promise<Loaded<PlacesResponse>> => placesIn(
 
 export const loadProfile = cache(
   async (id: string): Promise<Loaded<PublicProfile>> => load(() => client().GET('/api/v1/users/{id}', { params: { path: { id } } })),
+);
+
+/** People whose name or @username matches the words (the search page shows them above the items); a minute old. */
+export const loadPeople = cache(
+  async (q: string): Promise<Loaded<PeopleResponse>> => load(() => client(60).GET('/api/v1/people', { params: { query: { q } } })),
 );
 
 export const loadSitemap = cache(async (): Promise<Loaded<SitemapResponse>> => load(() => client().GET('/api/v1/catalog/sitemap')));

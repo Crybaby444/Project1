@@ -63,15 +63,14 @@ export function MyListings({
   return (
     <Wrapper className={embedded ? 'flex flex-col gap-8' : 'page page-y flex flex-col gap-8'}>
       {embedded ? (
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-ink/75 max-w-read leading-relaxed">{t('intro')}</p>
-          {/* With nothing yet, the empty state below carries the one Lend button (the header has its own). */}
-          {items.length > 0 && (
-            <Button href="/listings/new" className="self-start sm:self-auto">
+        // With nothing yet, the empty state below carries the one Lend button (the header has its own).
+        items.length > 0 && (
+          <div className="flex justify-end">
+            <Button href="/listings/new">
               <span aria-hidden="true">+</span> {t('lend')}
             </Button>
-          )}
-        </div>
+          </div>
+        )
       ) : (
         <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="@container flex min-w-0 flex-1 flex-col gap-2">
@@ -81,7 +80,6 @@ export function MyListings({
             >
               {t('title')}
             </h1>
-            <p className="leading-relaxed">{t('intro')}</p>
           </div>
           <Button href="/listings/new" className="self-start sm:self-auto">
             <span aria-hidden="true">+</span> {t('lend')}

@@ -350,7 +350,6 @@
     },
     "profile": {
       "title": "Profils",
-      "intro": "Ko redz cilvēki, ar kuriem nomājaties, un kā Yoyo ar jums sazinās.",
       "name": "Vārds",
       "city": "Pilsēta",
       "cityHint": "Palīdz cilvēkiem tuvumā atrast jūsu lietas.",
@@ -682,7 +681,6 @@
   },
   "myListings": {
     "title": "Manas lietas",
-    "intro": "Viss, ko jūs izīrējat, no melnrakstiem līdz publicētiem sludinājumiem.",
     "lend": "Izīrēt lietu",
     "filters": "Rādīt",
     "filter": {
@@ -853,7 +851,8 @@
       "count": "{count, plural, =0 {Nav ieteikumu} zero {# ieteikumi} one {# ieteikums} other {# ieteikumi}}",
       "none": "Nav ieteikumu. Nospiediet Enter, lai tomēr meklētu.",
       "categories": "Kategorijas",
-      "items": "Lietas"
+      "items": "Lietas",
+      "people": "Cilvēki"
     },
     "filters": {
       "title": "Filtri",
@@ -1069,7 +1068,6 @@
     "noFollowing": "{name} vēl nevienam neseko.",
     "favorites": "Izlase",
     "deals": "{count, plural, zero {darījumu} one {darījums} other {darījumi}}",
-    "findPeople": "Atrast cilvēkus",
     "hero": {
       "cover": "{name} profils",
       "rating": "Vērtējums",
@@ -1087,7 +1085,6 @@
     },
     "addAbout": "Pievienojiet dažus vārdus par sevi",
     "itemsTab": "Lietas",
-    "favoritesIntro": "Lietas, ko saglabājāt ar sirsniņu. Tā, kas pazudusi no kataloga, paliek šeit ar atzīmi.",
     "noFavoritesTitle": "Vēl nekas nav saglabāts",
     "noFavoritesBody": "Nospiediet sirsniņu uz lietas, lai to paturētu šeit.",
     "browse": "Atvērt katalogu"
@@ -1131,19 +1128,13 @@
     "itemsCount": "{count, plural, zero {# lietu} one {# lieta} other {# lietas}}",
     "searchTitle": "Cilvēki",
     "feedTitle": "Sekoju",
-    "feedIntro": "Jaunas lietas no cilvēkiem, kuriem sekojat. Kad viņi kaut ko publicē, to redzēsiet zvaniņā.",
     "nobody": "Jūs vēl nevienam nesekojat",
-    "nobodyHint": "Atveriet kāda profilu — no lietas vai meklējot pēc lietotājvārda — un nospiediet “Sekot”.",
+    "nobodyHint": "Atveriet kāda profilu no lietas vai atrodiet viņu pēc vārda meklēšanā augšā un nospiediet “Sekot”.",
     "browse": "Skatīt katalogu",
     "newItems": "Jaunākais no viņiem",
     "noNewItems": "Pagaidām nekā jauna.",
     "youFollow": "Jūs sekojat: {count}",
-    "write": "Rakstīt ziņu",
-    "findLabel": "Vārds vai @lietotājvārds",
-    "findPlaceholder": "Vārds vai @lietotājvārds",
-    "findHint": "Ierakstiet vismaz divus burtus.",
-    "findLoading": "Meklē…",
-    "findNone": "Pēc “{q}” neviens netika atrasts."
+    "write": "Rakstīt ziņu"
   },
   "identity": {
     "birthDate": "Dzimšanas datums",
@@ -1218,18 +1209,11 @@
   },
   "market": {
     "hero": {
-      "title": "Nomājiet tuvumā. Tas atgriežas.",
-      "lead": "Lietas uz dienu vai nedēļu no cilvēkiem jums apkārt — ar līgumu pirms maksājuma un drošības naudu, kas atgriežas."
+      "title": "Nomājiet tuvumā. Tas atgriežas."
     },
     "search": {
-      "what": "Ko",
-      "whatPlaceholder": "Kas jums vajadzīgs?",
       "where": "Kur",
       "anywhere": "Jebkura pilsēta",
-      "when": "Kad",
-      "anyDays": "Jebkuras dienas",
-      "clearDays": "Notīrīt dienas",
-      "submit": "Meklēt",
       "cityCount": "{count, plural, zero {# lietas} one {# lieta} other {# lietas}}"
     },
     "fresh": {
@@ -1243,7 +1227,6 @@
     },
     "lend": {
       "title": "Jūsu lietas var pelnīt",
-      "lead": "Urbjmašīna skapī, telts no pagājušās vasaras. Ielieciet tās Yoyo, nosakiet cenu un dienas un paturiet visu nomas maksu.",
       "cta": "Izīrēt lietu",
       "price": "Cena dienā",
       "days": "Nomas dienas mēnesī",
@@ -1263,34 +1246,16 @@
     "trust": {
       "label": "Kāpēc tas ir droši",
       "contract": {
-        "title": "Līgums pirms maksājuma",
-        "body": "Abas puses paraksta tiešsaistē."
+        "title": "Līgums pirms maksājuma"
       },
       "deposit": {
-        "title": "Depozīts atgriežas",
-        "body": "Kad atgriešana pārbaudīta."
+        "title": "Depozīts atgriežas"
       },
       "checked": {
-        "title": "Pārbauda cilvēks",
-        "body": "Katru sludinājumu pirms publicēšanas."
+        "title": "Pārbauda cilvēks"
       },
       "reviews": {
-        "title": "Īstas atsauksmes",
-        "body": "Tikai no pabeigtiem darījumiem."
-      }
-    },
-    "doors": {
-      "title": "Kurā auklas galā esat jūs?",
-      "story": "Viss stāsts: kas ir Yoyo",
-      "need": {
-        "who": "Ja jums vajag",
-        "title": "Atrast lietu",
-        "body": "Instrumenti, teltis, kameras un vēl — uz dienu vai nedēļu no cilvēkiem tuvumā."
-      },
-      "have": {
-        "who": "Ja jums ir",
-        "title": "Izīrēt lietu",
-        "body": "Ielieciet Yoyo lietu, ko lietojat reti, un ļaujiet tai pelnīt, kamēr tā gaida."
+        "title": "Īstas atsauksmes"
       }
     },
     "faq": {
@@ -1300,6 +1265,11 @@
     "forYou": {
       "personal": "Jums",
       "popular": "Populārākais tagad"
+    },
+    "shelf": {
+      "title": "Kategorijas",
+      "all": "Visas kategorijas",
+      "count": "{count, plural, zero {# lietas} one {# lieta} other {# lietas}}"
     }
   },
   "mySpace": {

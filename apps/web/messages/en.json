@@ -350,7 +350,6 @@
     },
     "profile": {
       "title": "Profile",
-      "intro": "What people you rent with see, and how Yoyo talks to you.",
       "name": "Name",
       "city": "City",
       "cityHint": "Helps people nearby find your things.",
@@ -682,7 +681,6 @@
   },
   "myListings": {
     "title": "My items",
-    "intro": "Everything you lend out, from drafts to live listings.",
     "lend": "Lend an item",
     "filters": "Show",
     "filter": {
@@ -853,7 +851,8 @@
       "count": "{count, plural, =0 {No suggestions} one {# suggestion} other {# suggestions}}",
       "none": "No suggestions. Press Enter to search anyway.",
       "categories": "Categories",
-      "items": "Items"
+      "items": "Items",
+      "people": "People"
     },
     "filters": {
       "title": "Filters",
@@ -1069,7 +1068,6 @@
     "noFollowing": "{name} follows nobody yet.",
     "favorites": "Favourites",
     "deals": "{count, plural, one {deal} other {deals}}",
-    "findPeople": "Find people",
     "hero": {
       "cover": "Profile of {name}",
       "rating": "Rating",
@@ -1087,7 +1085,6 @@
     },
     "addAbout": "Add a few words about yourself",
     "itemsTab": "Items",
-    "favoritesIntro": "Things you saved with the heart. One that left the catalog stays here, marked.",
     "noFavoritesTitle": "Nothing saved yet",
     "noFavoritesBody": "Press the heart on an item to keep it here.",
     "browse": "Open the catalog"
@@ -1131,19 +1128,13 @@
     "itemsCount": "{count, plural, one {# item} other {# items}}",
     "searchTitle": "People",
     "feedTitle": "Following",
-    "feedIntro": "New items from the people you follow. When they publish something, you hear it in the bell.",
     "nobody": "You don’t follow anyone yet",
-    "nobodyHint": "Open someone’s profile — from an item or by searching their username — and press Follow.",
+    "nobodyHint": "Open someone’s profile from an item, or find them by name in the search at the top, and press Follow.",
     "browse": "Browse the catalog",
     "newItems": "New from them",
     "noNewItems": "Nothing new yet.",
     "youFollow": "You follow {count}",
-    "write": "Write a message",
-    "findLabel": "Name or @username",
-    "findPlaceholder": "Name or @username",
-    "findHint": "Type at least two letters.",
-    "findLoading": "Searching…",
-    "findNone": "Nobody found for “{q}”."
+    "write": "Write a message"
   },
   "identity": {
     "birthDate": "Date of birth",
@@ -1218,18 +1209,11 @@
   },
   "market": {
     "hero": {
-      "title": "Rent it nearby. It comes back.",
-      "lead": "Things for a day or a week from people around you — with a contract before you pay and a deposit that returns."
+      "title": "Rent it nearby. It comes back."
     },
     "search": {
-      "what": "What",
-      "whatPlaceholder": "What do you need?",
       "where": "Where",
       "anywhere": "Any city",
-      "when": "When",
-      "anyDays": "Any days",
-      "clearDays": "Clear the days",
-      "submit": "Search",
       "cityCount": "{count, plural, one {# item} other {# items}}"
     },
     "fresh": {
@@ -1243,7 +1227,6 @@
     },
     "lend": {
       "title": "Your things can earn",
-      "lead": "The drill in the cupboard, the tent from last summer. Put them on Yoyo, set your price and days, and keep the whole rent.",
       "cta": "Lend an item",
       "price": "Price per day",
       "days": "Days rented a month",
@@ -1263,34 +1246,16 @@
     "trust": {
       "label": "Why it is safe",
       "contract": {
-        "title": "Contract before you pay",
-        "body": "Both sides sign online."
+        "title": "Contract before you pay"
       },
       "deposit": {
-        "title": "Deposit comes back",
-        "body": "Once the return is checked."
+        "title": "Deposit comes back"
       },
       "checked": {
-        "title": "Checked by a person",
-        "body": "Every listing, before it goes live."
+        "title": "Checked by a person"
       },
       "reviews": {
-        "title": "Real reviews",
-        "body": "Only from finished deals."
-      }
-    },
-    "doors": {
-      "title": "Which end of the string are you?",
-      "story": "The whole story: What is Yoyo",
-      "need": {
-        "who": "If you need it",
-        "title": "Find something",
-        "body": "Tools, tents, cameras and more, for a day or a week, from people nearby."
-      },
-      "have": {
-        "who": "If you have it",
-        "title": "Lend an item",
-        "body": "Put a thing you rarely use on Yoyo and let it earn while it waits."
+        "title": "Real reviews"
       }
     },
     "faq": {
@@ -1300,6 +1265,11 @@
     "forYou": {
       "personal": "For you",
       "popular": "Popular now"
+    },
+    "shelf": {
+      "title": "Categories",
+      "all": "All categories",
+      "count": "{count, plural, one {# item} other {# items}}"
     }
   },
   "mySpace": {

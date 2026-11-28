@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { CatalogResults } from '@/components/catalog/CatalogResults';
 import { PeopleResults } from '@/components/people/PeopleResults';
 import { parseCatalogParams } from '@/lib/catalog/params';
+import { loadPeople } from '@/lib/catalog/server-api';
 import { searchSeo, seoMetadata } from '@/lib/seo';
 
 type Props = {
@@ -27,9 +28,11 @@ export default async function SearchPage({ params, searchParams }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations('catalog');
   const query = parseCatalogParams(await searchParams);
+  // People by name or @username too (owner, 2026-11-28: the profile's "find people" moved into the search).
+  // Asked now and awaited where it is drawn, so it runs beside the catalog's own requests.
+  const words = query.q?.trim().replace(/^@/, '') ?? '';
+  const people = words.length >= 2 ? loadPeople(query.q!.trim()) : null;
   return (
-    <>
-    {query.q && <PeopleResults q={query.q} />}
     <CatalogResults
       locale={locale}
       params={query}
@@ -42,7 +45,7 @@ export default async function SearchPage({ params, searchParams }: Props) {
         { label: t('breadcrumbs.catalog'), href: '/c' },
         { label: t('breadcrumbs.search') },
       ]}
+      people={people ? <PeopleResults found={people} /> : null}
     />
-    </>
   );
 }
