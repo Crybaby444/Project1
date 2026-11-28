@@ -3,7 +3,6 @@ import { expect, test, type Page } from '@playwright/test';
 import { asOwnVisitor, registerByApi } from './support/accounts';
 import { publishListing, uniqueWord, type Published } from './support/catalog';
 import { overflows } from './support/layout';
-import { serveBlankMapTiles } from './support/listings';
 
 /**
  * The catalog's screens wherever they are read: three languages, both themes, the smallest phones.
@@ -51,16 +50,14 @@ for (const theme of ['light', 'dark'] as const) {
         await context.addCookies([{ name: 'yoyo-theme', value: theme, url: baseURL! }]);
       });
 
-      test('catalog, category, search, map, item and profile: fit, accessible, no console errors', async ({ page }) => {
+      test('catalog, category, search, item and profile: fit, accessible, no console errors', async ({ page }) => {
         test.setTimeout(180_000); // 18 pages, each checked by axe
         const errors = watchConsole(page);
-        await serveBlankMapTiles(page);
         for (const prefix of PREFIXES) {
           const paths = [
             `${prefix}/c`,
             `${prefix}/c/${CATEGORY[prefix]}`,
             `${prefix}/search?q=${encodeURIComponent('urbjmašīna')}`,
-            `${prefix}/search?q=urbj&view=map`,
             `${prefix}/listings/${item.id}-${item.slug}`,
             `${prefix}/u/${item.ownerId}`,
           ];

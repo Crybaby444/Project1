@@ -56,7 +56,7 @@ export function ActiveFilters({ params, cities }: { params: CatalogParams; citie
       <li>
         <button
           type="button"
-          onClick={() => navigate(catalogSearch({ page: 1, view: params.view, ...(params.q !== undefined && { q: params.q }) }))}
+          onClick={() => navigate(catalogSearch({ page: 1, ...(params.q !== undefined && { q: params.q }) }))}
           className="rounded-pill min-h-10 px-3 text-sm font-bold underline underline-offset-4"
         >
           {t('resetAll')}

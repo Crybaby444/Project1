@@ -4,7 +4,7 @@ import { catalogSearch, filterCount, hasFilters, parseCatalogParams, toApiQuery 
 const parse = (search: string) => parseCatalogParams(new URLSearchParams(search));
 
 describe('parseCatalogParams', () => {
-  it('reads only the W03 parameters', () => {
+  it('reads only the W03 parameters (an old `view=map` link just shows the list)', () => {
     expect(parse('q=drill&price_min=5&price_max=20&from=2026-12-01&to=2026-12-03&city=riga&sort=price_asc&view=map&page=2&utm_source=x&gclid=y')).toEqual({
       q: 'drill',
       priceMin: 5,
@@ -13,18 +13,17 @@ describe('parseCatalogParams', () => {
       to: '2026-12-03',
       city: 'riga',
       sort: 'price_asc',
-      view: 'map',
       page: 2,
     });
   });
 
   it('drops a broken parameter and keeps the rest', () => {
-    expect(parse('price_min=abc&city=riga')).toEqual({ city: 'riga', page: 1, view: 'list' });
-    expect(parse('from=2026-12-01')).toEqual({ page: 1, view: 'list' });
-    expect(parse('from=2026-12-05&to=2026-12-01')).toEqual({ page: 1, view: 'list' });
-    expect(parse('from=2026-02-30&to=2026-03-02')).toEqual({ page: 1, view: 'list' });
-    expect(parse('price_min=50&price_max=10')).toEqual({ priceMin: 50, page: 1, view: 'list' });
-    expect(parse('sort=cheapest&page=0&city=Riga&view=grid')).toEqual({ page: 1, view: 'list' });
+    expect(parse('price_min=abc&city=riga')).toEqual({ city: 'riga', page: 1 });
+    expect(parse('from=2026-12-01')).toEqual({ page: 1 });
+    expect(parse('from=2026-12-05&to=2026-12-01')).toEqual({ page: 1 });
+    expect(parse('from=2026-02-30&to=2026-03-02')).toEqual({ page: 1 });
+    expect(parse('price_min=50&price_max=10')).toEqual({ priceMin: 50, page: 1 });
+    expect(parse('sort=cheapest&page=0&city=Riga&view=grid')).toEqual({ page: 1 });
   });
 });
 
@@ -35,7 +34,7 @@ describe('catalogSearch', () => {
     expect(catalogSearch(params, { page: 4 })).toBe('?city=riga&page=4');
     expect(catalogSearch(parse('sort=new&view=list'))).toBe('?sort=new');
     expect(catalogSearch(parse(''))).toBe('');
-    expect(catalogSearch(parse('view=map&q=dril'), { q: 'drill' })).toBe('?q=drill&view=map');
+    expect(catalogSearch(parse('view=map&q=dril'), { q: 'drill' })).toBe('?q=drill');
   });
 
   it('gives one selection one address whatever order it was typed in', () => {
@@ -47,7 +46,7 @@ describe('filters', () => {
   it('knows what narrows the results', () => {
     expect(hasFilters(parse('page=2'))).toBe(false);
     expect(hasFilters(parse('sort=new'))).toBe(true);
-    expect(hasFilters(parse('view=map'))).toBe(true);
+    expect(hasFilters(parse('view=map'))).toBe(false);
     expect(filterCount(parse('price_min=1&price_max=5&from=2026-12-01&to=2026-12-02&sort=price_asc'))).toBe(2);
   });
 

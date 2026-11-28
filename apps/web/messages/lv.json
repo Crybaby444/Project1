@@ -889,11 +889,6 @@
       "price_asc": "Lētākās vispirms",
       "price_desc": "Dārgākās vispirms"
     },
-    "view": {
-      "label": "Skats",
-      "list": "Saraksts",
-      "map": "Karte"
-    },
     "empty": {
       "title": "Šeit vēl nekā nav",
       "body": "Pamēģiniet meklēt plašāk:",
@@ -915,15 +910,6 @@
       "previous": "Iepriekšējā lapa",
       "next": "Nākamā lapa",
       "status": "{page}. lapa no {pages}"
-    },
-    "map": {
-      "label": "Lietu karte",
-      "cell": "{count}",
-      "cellTitle": "{count, plural, zero {Šeit # lietas} one {Šeit # lieta} other {Šeit # lietas}}",
-      "perDay": "{price} / dienā",
-      "more": "{count, plural, zero {un vēl #} one {un vēl #} other {un vēl #}}",
-      "truncated": "Kartē redzamas pirmās 500 lietas. Sašauriniet meklēšanu, lai redzētu pārējās.",
-      "approximate": "Vietas ir aptuvenas: precīzu adresi īpašnieks atsūta pēc rezervācijas."
     },
     "inCategory": "{count, plural, =0 {Vēl nav lietu} zero {# lietu} one {# lieta} other {# lietas}}",
     "fresh": "Jaunākais katalogā",

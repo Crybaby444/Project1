@@ -5,7 +5,6 @@ import type {
   CatalogQuery,
   CategoryNode,
   ItemDetail,
-  MapResponse,
   ForYouResponse,
   PlacesResponse,
   PublicProfile,
@@ -78,18 +77,11 @@ const searchByKey = cache(
     load(() => client().GET('/api/v1/catalog/listings', { params: { query: toApiSearch(JSON.parse(key) as CatalogQuery) as never } })),
 );
 
-const mapByKey = cache(
-  async (key: string): Promise<Loaded<MapResponse>> =>
-    load(() => client().GET('/api/v1/catalog/map', { params: { query: toApiSearch(JSON.parse(key) as CatalogQuery) as never } })),
-);
-
 /** The query in the visitor's country, unless it names one (owner, 2026-11-16: one country at a time). */
 const inCountry = async (query: CatalogQuery): Promise<CatalogQuery> => (query.country ? query : { ...query, country: await currentCountry() });
 
 /** One page of the catalog, in the visitor's country; the same query twice in one render is asked once. */
 export const loadSearch = async (query: CatalogQuery) => searchByKey(JSON.stringify(await inCountry(query)));
-
-export const loadMap = async (query: CatalogQuery) => mapByKey(JSON.stringify(await inCountry(query)));
 
 const placesIn = cache(
   async (country: string): Promise<Loaded<PlacesResponse>> =>

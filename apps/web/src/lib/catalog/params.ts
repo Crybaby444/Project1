@@ -18,11 +18,10 @@ export type CatalogParams = {
   /** A city of the country, by slug (owner, 2026-11-16: search by city, not by district). */
   city?: string;
   sort?: Sort;
-  view: 'list' | 'map';
 };
 
 /** The order parameters are written in, so one selection has exactly one address. */
-const ORDER = ['q', 'price_min', 'price_max', 'from', 'to', 'city', 'sort', 'view', 'page'] as const;
+const ORDER = ['q', 'price_min', 'price_max', 'from', 'to', 'city', 'sort', 'page'] as const;
 
 type Raw = Record<string, string | string[] | undefined> | URLSearchParams;
 
@@ -43,7 +42,7 @@ const MAX_EUROS = 10_000;
 
 /** Reads an address; a broken parameter is dropped on its own, so an old link never fails. */
 export function parseCatalogParams(raw: Raw): CatalogParams {
-  const params: CatalogParams = { page: wholeNumber(read(raw, 'page'), CATALOG_LIMITS.page) || 1, view: 'list' };
+  const params: CatalogParams = { page: wholeNumber(read(raw, 'page'), CATALOG_LIMITS.page) || 1 };
   const q = read(raw, 'q')?.trim().replace(/\s+/g, ' ');
   if (q) params.q = q.slice(0, CATALOG_LIMITS.q);
   const priceMin = wholeNumber(read(raw, 'price_min'), MAX_EUROS);
@@ -64,7 +63,6 @@ export function parseCatalogParams(raw: Raw): CatalogParams {
   if (city && /^[a-z0-9]+(-[a-z0-9]+)*$/.test(city) && city.length <= CATALOG_LIMITS.place) params.city = city;
   const sort = read(raw, 'sort');
   if ((SORTS as readonly string[]).includes(sort ?? '')) params.sort = sort as Sort;
-  if (read(raw, 'view') === 'map') params.view = 'map';
   return params;
 }
 
@@ -81,7 +79,6 @@ export function catalogSearch(params: CatalogParams, patch: Partial<CatalogParam
     to: next.from && next.to ? next.to : undefined,
     city: next.city,
     sort: next.sort,
-    view: next.view === 'map' ? 'map' : undefined,
     page: next.page > 1 ? String(next.page) : undefined,
   };
   const search = new URLSearchParams();
@@ -101,8 +98,7 @@ export function hasFilters(params: CatalogParams): boolean {
     params.priceMax !== undefined ||
     params.from !== undefined ||
     params.city !== undefined ||
-    params.sort !== undefined ||
-    params.view === 'map'
+    params.sort !== undefined
   );
 }
 

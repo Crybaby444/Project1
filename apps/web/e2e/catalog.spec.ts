@@ -3,7 +3,6 @@ import deals from '../messages/deals/en.json' with { type: 'json' };
 import en from '../messages/en.json' with { type: 'json' };
 import { asOwnVisitor, registerByApi } from './support/accounts';
 import { publishListing, uniqueWord, type Published } from './support/catalog';
-import { serveBlankMapTiles } from './support/listings';
 
 const m = en.catalog;
 const book = deals.booking;
@@ -167,17 +166,6 @@ test('a visitor who presses the heart is asked to sign in and brought back', asy
   await page.goto(`/search?q=${word}`);
   await page.getByRole('button', { name: en.favorites.add.replace('{title}', drill.title) }).click();
   await expect(page).toHaveURL(/\/login\?next=%2Fsearch/);
-});
-
-test('the map view shows the item in its district cell, never the exact point', async ({ page }) => {
-  await serveBlankMapTiles(page);
-  await page.goto(`/search?q=${word}&view=map`);
-  await expect(page.getByRole('region', { name: m.map.label })).toBeVisible();
-  await expect(page.getByText(m.map.approximate)).toBeVisible();
-  const pin = page.locator('.yoyo-map-pin').first();
-  await expect(pin).toBeVisible();
-  await pin.click();
-  await expect(page.getByRole('link', { name: drill.title }).last()).toBeVisible();
 });
 
 test('the owner’s public profile lists the item and has no reviews yet', async ({ page }) => {
