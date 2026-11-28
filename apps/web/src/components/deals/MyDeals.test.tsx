@@ -41,6 +41,16 @@ describe('MyDeals', () => {
     expect(within(other).queryByText('Your turn')).toBeNull();
   });
 
+  it('says how many lines wait unread in a deal, and opens it at its chat', async () => {
+    setup({
+      'GET /api/v1/me/bookings': { status: 200, body: { items: [{ ...going, unreadMessages: 2 }, waiting], total: 2 } },
+    });
+    const card = await screen.findByRole('link', { name: /Drill/ });
+    expect(within(card).getByText('2 new messages')).toBeVisible();
+    expect(card).toHaveAttribute('href', '/bookings/b-go#deal-chat');
+    expect(screen.getByRole('link', { name: /PlayStation 5/ })).toHaveAttribute('href', '/bookings/b-wait');
+  });
+
   it('counts the waiting deals on the tab and switches roles with the arrow keys', async () => {
     const user = userEvent.setup();
     const { calls } = setup();

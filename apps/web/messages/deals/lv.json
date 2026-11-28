@@ -303,6 +303,7 @@
     },
     "badge": "{count, plural, zero {# gaida jūs} one {# gaida jūs} other {# gaida jūs}}",
     "yourTurn": "Jūsu gājiens",
+    "unreadMessages": "{count, plural, zero {# jaunu ziņu} one {# jauna ziņa} other {# jaunas ziņas}}",
     "with": {
       "renter": "No {name}",
       "owner": "Nomniekam {name}"

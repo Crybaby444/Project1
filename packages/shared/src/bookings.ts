@@ -170,6 +170,8 @@ export const BookingViewSchema = z.object({
   actions: z.array(z.enum(BOOKING_ACTIONS)),
   /** The contract PDF exists (from ACCEPTED on). */
   hasContract: z.boolean(),
+  /** Lines from the other side in the deal's chat the viewer has not read yet (counted in "My deals", 0 elsewhere). */
+  unreadMessages: z.number().int().min(0),
   /** The electronic signatures on file, renter first: the typed name, when, and how (SIMULATED until a provider is connected). */
   signatures: z.array(z.object({ side: z.enum(['RENTER', 'OWNER']), fullName: z.string().min(1), signedAt: z.iso.datetime(), method: z.string().min(1) })),
   /** Send it back with every action (optimistic locking). */

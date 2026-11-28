@@ -668,9 +668,29 @@ export class BookingsService {
       this.prisma.booking.count({ where }),
     ]);
     const settings = await this.rules.settings();
+    const unread = await this.unreadByDeal(user.id, rows.map((row) => row.id));
     const items: BookingView[] = [];
-    for (const row of rows) items.push(await this.serialize(row, actorFor(row, user)!, settings));
+    for (const row of rows) items.push({ ...(await this.serialize(row, actorFor(row, user)!, settings)), unreadMessages: unread.get(row.id) ?? 0 });
     return { items, total };
+  }
+
+  /**
+   * For "My deals": how many lines from the other side wait unread in each deal's chat (the conversation of
+   * its item and renter; deal steps not counted, the card shows those already).
+   */
+  private async unreadByDeal(userId: string, ids: string[]): Promise<Map<string, number>> {
+    if (ids.length === 0) return new Map();
+    const rows = await this.prisma.$queryRaw<{ id: string; unread: number }[]>`
+      SELECT b."id" AS id, count(m."id")::int AS unread
+      FROM "Booking" b
+      JOIN "Conversation" c ON c."listingId" = b."listingId" AND c."renterId" = b."renterId"
+      JOIN "Message" m ON m."conversationId" = c."id"
+      WHERE b."id" IN (${Prisma.join(ids)})
+        AND m."kind" = 'TEXT'
+        AND m."authorId" <> ${userId}
+        AND m."createdAt" > COALESCE(CASE WHEN c."renterId" = ${userId} THEN c."renterLastReadAt" ELSE c."ownerLastReadAt" END, '-infinity'::timestamp)
+      GROUP BY b."id"`;
+    return new Map(rows.map((row) => [row.id, row.unread]));
   }
 
   /** The view with the actions `actor` may take now (ACCEPT needs the days other deals hold). */

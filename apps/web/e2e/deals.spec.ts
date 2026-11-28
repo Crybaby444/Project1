@@ -40,8 +40,10 @@ test('owner lists, renter books, pays, handover, return, deposit released', asyn
   const o = owner.page;
   await o.goto('/bookings?role=owner');
   await expect(o.getByRole('tab', { name: 'I lend' })).toHaveAccessibleDescription('1 waits for you');
+  // The renter's note is an unread line in the deal's chat, so the card opens the deal at its chat.
+  await expect(o.getByRole('link', { name: new RegExp(title) })).toContainText('1 new message');
   await o.getByRole('link', { name: new RegExp(title) }).click();
-  await expect(o).toHaveURL(new RegExp(`${dealUrl}$`));
+  await expect(o).toHaveURL(new RegExp(`${dealUrl}#deal-chat$`));
   await expect(o.getByText('Could I pick it up after 18:00?')).toBeVisible();
   await takeStep(o, 'Accept', false);
   await expect(o.locator('[data-deal][data-deal-status="ACCEPTED"]')).toBeVisible();
