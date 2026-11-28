@@ -113,8 +113,11 @@ Yoyo), sign-in and status pages (404) keep their own composition, on the same co
 
 ## The mark
 
-`components/brand/Mark`: a solid yo-yo with the slit across its face, on a short string. `string={false}`
-for anything that spins (the loader), so it turns about its centre.
+`components/brand/Mark`: a solid yo-yo with the slit across its face, on a short string. The yo-yo appears in
+two places only: as the **logo** (the header, the favicon, the app icon) and as the hero of **What is Yoyo**,
+the story page with its 3D scenes. It is never used as decoration anywhere else on the site — no yo-yo
+windows, strings, beads, spinners or icons on the home or the working pages (owner, 2026-11-28). Loaders are
+plain spinners; icons are drawn line icons.
 
 ## Header
 
@@ -137,24 +140,20 @@ Mark the text to fill with `data-cursor-text`.
 
 ## The home
 
-Built the way the big marketplaces build theirs (Airbnb, Hygglo, Turo, Peerby, Rent the Runway: real things
-first, few words, quick ways in), in Yoyo's own world (owner, 2026-11-28):
+Calm and sure of itself (owner, 2026-11-28: "it still looks cheap"; no yo-yo as decoration):
 
-1. **The night banner** (`moment`, `rounded-float`): the promise and *Browse the catalog* on the left; on the
-   right the Yoyo mark made large, a yo-yo hanging from the top edge of the night whose face is a window with
-   a real popular item, cut by the slit. Thrown in when the page opens, it dips, spins and comes back with
-   another thing (three times on its own, and on *Show another*). The four guarantees sit at its foot. On a
-   phone the yo-yo hangs first, with a one-line label, then the promise.
-2. **Category pills** — each top category that holds something, a small round photo, the name and the count;
-   the fullest first, *All categories* last. One row that scrolls on a phone, wrapped on a desktop.
-3. **Shelves that scroll sideways** (`Rail`): popular now (personal once the browser knows someone, with an
-   invitation to put yours as the last card), new on Yoyo, then themes (out of town this weekend, tools for a
-   weekend job) when they hold four things or more. Arrows on a desktop, a swipe on a phone.
-4. **How it works** — four steps on a string; the last bead is the blue one (it comes back).
-5. **Your things can earn** — the night band with the blue light: two sliders and the month's rent.
-6. **Before your first deal** — four questions from the FAQ.
+1. **The promise** — "Rent it nearby. / It comes back." set as large as the page allows (its longest word
+   always fits, on a 320px phone too), *Browse the catalog* and *Lend one of yours* under it, and the four
+   guarantees below a hairline, each with its own line icon in an ink disc, the title and one line.
+2. **Popular now** — the item grid (personal once the browser knows someone), with an invitation to put
+   yours in the empty places of the last row.
+3. **Categories** — the catalog's quiet index: number, name in display type, the first subcategories, a peek
+   at the newest photos, an arrow.
+4. **Your things can earn** — the night band with the blue light: two sliders and the month's rent.
+5. **Before your first deal** — four questions from the FAQ.
 
-Searching is the header's job on every page. The 3D chrome scenes are What is Yoyo (`/what-is-yoyo`).
+Searching is the header's job on every page. The yo-yo's own scenes (three.js, GSAP, Lenis) live on What is
+Yoyo (`/what-is-yoyo`), and only there; as plain markup every scene is complete.
 
 ## Motion
 
