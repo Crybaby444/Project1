@@ -1278,6 +1278,37 @@
       "title": "Categories",
       "all": "All categories",
       "count": "{count, plural, one {# item} other {# items}}"
+    },
+    "rail": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "rails": {
+      "new": "New on Yoyo",
+      "outdoors": "Out of town this weekend",
+      "tools": "Tools for a weekend job"
+    },
+    "how": {
+      "title": "How it works",
+      "more": "The whole story",
+      "steps": {
+        "find": {
+          "title": "Find it nearby",
+          "body": "Pick a thing and your days."
+        },
+        "sign": {
+          "title": "Sign, then pay",
+          "body": "One contract for both of you; nothing is paid before it."
+        },
+        "meet": {
+          "title": "Meet and take it",
+          "body": "Agree on a time and place in the chat."
+        },
+        "back": {
+          "title": "Bring it back",
+          "body": "The deposit comes back to you."
+        }
+      }
     }
   },
   "mySpace": {

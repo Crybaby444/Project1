@@ -1278,6 +1278,37 @@
       "title": "Kategorijas",
       "all": "Visas kategorijas",
       "count": "{count, plural, zero {# lietas} one {# lieta} other {# lietas}}"
+    },
+    "rail": {
+      "previous": "Iepriekšējās",
+      "next": "Nākamās"
+    },
+    "rails": {
+      "new": "Jaunumi Yoyo",
+      "outdoors": "Nedēļas nogalei ārpus pilsētas",
+      "tools": "Instrumenti nedēļas nogales darbiem"
+    },
+    "how": {
+      "title": "Kā tas notiek",
+      "more": "Vairāk par Yoyo",
+      "steps": {
+        "find": {
+          "title": "Atrodiet tuvumā",
+          "body": "Izvēlieties lietu un dienas."
+        },
+        "sign": {
+          "title": "Parakstiet, tad maksājiet",
+          "body": "Viens līgums abiem; līdz tam jūs neko nemaksājat."
+        },
+        "meet": {
+          "title": "Satiecieties un paņemiet",
+          "body": "Vienojieties par laiku un vietu sarakstē."
+        },
+        "back": {
+          "title": "Atgrieziet",
+          "body": "Depozīts atgriežas pie jums."
+        }
+      }
     }
   },
   "mySpace": {

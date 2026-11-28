@@ -137,25 +137,24 @@ Mark the text to fill with `data-cursor-text`.
 
 ## The home
 
-The marketplace with one signature (owner, 2026-11-28: the search only in the navigation, no extra lines, then
-"something with a twist, and beautiful"):
+Built the way the big marketplaces build theirs (Airbnb, Hygglo, Turo, Peerby, Rent the Runway: real things
+first, few words, quick ways in), in Yoyo's own world (owner, 2026-11-28):
 
-1. **The yo-yo** — the promise ("Rent it nearby. It comes back.") with *Browse the catalog* beside the Yoyo
-   mark made large: a disc with the slit across it, hanging on its string from the header. Its face is a
-   window with a real popular item (photo, price, place). Thrown in when the page opens (it falls past its
-   rest, bounces on the string and spins out), it dips, spins twice and comes back with another thing, three
-   times on its own (pausing while pointed at) and on *Show another*. One soft blue light pools behind it.
-   Still with reduced motion and in automated browsers.
-2. **The four guarantees** at the foot of the hero: a black disc with a dash, the title, one line under it.
-3. **Categories as yo-yos on a string** — the top categories that hold something, the fullest first, each a
-   round photo window with the slit, hanging at its own length; pointing at one sets it swinging. One string
-   that scrolls sideways on a phone, two strings of six from lg.
-4. **Popular now** — the item grid, with an invitation to put yours in the empty places of the last row.
-5. **Your things can earn** — the night band (`moment`) with the blue light: two sliders and the month's rent.
+1. **The night banner** (`moment`, `rounded-float`): the promise and *Browse the catalog* on the left; on the
+   right the Yoyo mark made large, a yo-yo hanging from the top edge of the night whose face is a window with
+   a real popular item, cut by the slit. Thrown in when the page opens, it dips, spins and comes back with
+   another thing (three times on its own, and on *Show another*). The four guarantees sit at its foot. On a
+   phone the yo-yo hangs first, with a one-line label, then the promise.
+2. **Category pills** — each top category that holds something, a small round photo, the name and the count;
+   the fullest first, *All categories* last. One row that scrolls on a phone, wrapped on a desktop.
+3. **Shelves that scroll sideways** (`Rail`): popular now (personal once the browser knows someone, with an
+   invitation to put yours as the last card), new on Yoyo, then themes (out of town this weekend, tools for a
+   weekend job) when they hold four things or more. Arrows on a desktop, a swipe on a phone.
+4. **How it works** — four steps on a string; the last bead is the blue one (it comes back).
+5. **Your things can earn** — the night band with the blue light: two sliders and the month's rent.
 6. **Before your first deal** — four questions from the FAQ.
 
-The 3D chrome scenes (three.js, GSAP, Lenis) are What is Yoyo (`/what-is-yoyo`); as plain markup every scene
-is complete, and staging CSS lives under `html[data-staged]`.
+Searching is the header's job on every page. The 3D chrome scenes are What is Yoyo (`/what-is-yoyo`).
 
 ## Motion
 
